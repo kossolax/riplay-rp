@@ -1,0 +1,196 @@
+#if defined _roleplay_stock_build_included
+#endinput
+#endif
+#define _roleplay_stock_build_included
+
+#if defined ROLEPLAY_SUB
+	#include "../roleplay.sp"
+#else
+	#include "roleplay.sp"
+#endif
+
+
+public int Native_rp_WeaponMenu_GetOwner(Handle plugin, int numParams) {
+	return g_iOriginOwner[GetNativeCell(1)];
+}
+public int Native_rp_WeaponMenu_Create(Handle plugin, int numParams) {
+	DataPack hBuyMenu = new DataPack();
+	hBuyMenu.WriteCell(0);
+	DataPackPos pos = hBuyMenu.Position;
+	hBuyMenu.Reset();
+	hBuyMenu.WriteCell(pos);
+	return view_as<int>(hBuyMenu);
+}
+public int Native_rp_WeaponMenu_Clear(Handle plugin, int numParams) {
+	DataPack hBuyMenu = view_as<DataPack>(GetNativeCellRef(1));
+	delete hBuyMenu;
+	hBuyMenu = null;
+	SetNativeCellRef(1, hBuyMenu);
+}
+
+public int Native_rp_WeaponMenu_Reset(Handle plugin, int numParams) {
+	DataPack hBuyMenu = view_as<DataPack>(GetNativeCell(1));
+	hBuyMenu.Reset();
+}
+public int Native_rp_WeaponMenu_SetPosition(Handle plugin, int numParams) {
+	DataPack hBuyMenu = view_as<DataPack>(GetNativeCell(1));
+	hBuyMenu.Reset();
+	hBuyMenu.Position = GetNativeCell(2);
+}
+public int Native_rp_WeaponMenu_GetPosition(Handle plugin, int numParams) {
+	DataPack hBuyMenu = view_as<DataPack>(GetNativeCell(1));
+	return view_as<int>(hBuyMenu.Position);
+}
+public int Native_rp_WeaponMenu_GetMax(Handle plugin, int numParams) {
+	DataPack hBuyMenu = view_as<DataPack>(GetNativeCell(1));
+	hBuyMenu.Reset();
+	return hBuyMenu.ReadCell();
+}
+public int Native_rp_WeaponMenu_Add(Handle plugin, int numParams) {
+	DataPack hBuyMenu = view_as<DataPack>(GetNativeCell(1));
+	int weaponID = GetNativeCell(2);
+	int owner = GetNativeCell(3);
+	
+	if( rp_GetWeaponStorage(weaponID) == true )
+		return view_as<bool>(false);
+	
+	char weapon[65];
+	int index = GetEntProp(weaponID, Prop_Send, "m_iItemDefinitionIndex");
+	CSGO_GetItemDefinitionNameByIndex(index, weapon, sizeof(weapon));
+	if( StrEqual(weapon, "weapon_default") ) {
+		GetEntityClassname(weaponID, weapon, sizeof(weapon));
+	}
+	ReplaceString(weapon, sizeof(weapon), "weapon_", "");
+	
+	int data[BM_Max];
+	
+	data[BM_PvP] = rp_GetWeaponGroupID(weaponID);
+	data[BM_Munition] = Weapon_GetPrimaryClip(weaponID);
+	data[BM_Chargeur] = GetEntProp(weaponID, Prop_Send, "m_iPrimaryReserveAmmoCount");
+	data[BM_Type] = view_as<int>(rp_GetWeaponBallType(weaponID));
+	data[BM_Prix] = 50 + rp_GetWeaponPrice(weaponID) / 4;
+	data[BM_Owner] = owner;
+	
+	hBuyMenu.Reset();
+	DataPackPos pos = hBuyMenu.ReadCell();
+	hBuyMenu.Position = pos;
+	hBuyMenu.WriteString(weapon);
+	for (int i = 0; i < view_as<int>(BM_Max); i++) {
+		hBuyMenu.WriteCell(data[i]);
+	}
+	pos = hBuyMenu.Position;
+	hBuyMenu.Reset();
+	hBuyMenu.WriteCell(pos);
+	return view_as<bool>(true);
+}
+public int Native_rp_WeaponMenu_Delete(Handle plugin, int numParams) {
+	DataPack hBuyMenu = view_as<DataPack>(GetNativeCellRef(1));
+	DataPackPos pos = GetNativeCell(2);
+	
+	hBuyMenu.Reset();
+	DataPackPos max = hBuyMenu.ReadCell();
+	DataPackPos position = hBuyMenu.Position;
+	
+	DataPack clone = new DataPack();
+	clone.WriteCell(0);
+	
+	char weapon[65];
+	int data[BM_Max];
+	 
+	while( position < max ) {
+		
+	
+		hBuyMenu.ReadString(weapon, sizeof(weapon));
+		for (int i = 0; i < view_as<int>(BM_Max); i++) {
+			data[i] = hBuyMenu.ReadCell();
+		}
+		
+		if( position != pos) {
+			clone.WriteString(weapon);
+			for (int i = 0; i < view_as<int>(BM_Max); i++) {
+				 clone.WriteCell(data[i]);
+			}
+		}
+		
+		position = hBuyMenu.Position;
+	}
+	position = clone.Position;
+	clone.Reset();
+	clone.WriteCell(position);
+	delete hBuyMenu;
+	SetNativeCellRef(1, clone);
+}
+public int Native_rp_WeaponMenu_Get(Handle plugin, int numParams) {
+	DataPack hBuyMenu = view_as<DataPack>(GetNativeCell(1));
+	DataPackPos pos = GetNativeCell(2);
+	
+	char weapon[65];
+	int[] data = new int[view_as<int>(BM_Max)];
+	hBuyMenu.Position = pos;
+	hBuyMenu.ReadString(weapon, sizeof(weapon));
+	
+	for (int i = 0; i < view_as<int>(BM_Max); i++) {
+		data[i] = hBuyMenu.ReadCell();
+	}
+	SetNativeString(3, weapon, sizeof(weapon));
+	SetNativeArray(4, data, view_as<int>(BM_Max));
+}
+
+
+public Action WeaponEquip(int client, int weapon) {
+	if( g_iOriginOwner[weapon] <= 0 ) {
+		g_iOriginOwner[weapon]  = client;
+	}
+}
+
+void showGraveMenu(int client) {
+	if( !g_bUserData[client][b_HasGrave] )
+		return;
+	if( !IsPlayerAlive(client) )
+		return;
+	if( g_bIsInCaptureMode )
+		return;
+	
+	
+	Handle menu = CreateMenu(eventTombSwitch);
+	SetMenuTitle(menu, "Vous êtes mort...\n\n");
+	
+	AddMenuItem(menu, "tomb", "Revivre sur ma tombe");
+	AddMenuItem(menu, "any", "Revivre n'importe ou");
+	
+	SetMenuExitButton(menu, false);
+	DisplayMenu(menu, client, 1);
+}
+bool CheckBuild(int client, bool showMsg = true) {
+	if( IsInVehicle(client) ) {
+		if( showMsg )
+			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible de construire en voiture.");
+		return false;
+	}
+	if(! (GetEntityFlags(client) & FL_ONGROUND) ) {
+		if( showMsg )
+			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible de construire dans les airs");
+		return false;
+	}
+	if( g_iGrabbing[client] > 0 ) {
+		if( showMsg )
+			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible de construire lorsque vous utilisez la force.");
+		return false;
+	}
+	if( g_iGroundEntity[client] > 0 ) {
+		if( showMsg )
+			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible de construire sur quelque chose");
+		return false;
+	}
+	if( GetZoneBit(GetPlayerZone(client) ) & BITZONE_BLOCKBUILD ) {
+		if( showMsg )
+			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cet objet est interdit où vous êtes.");
+		return false;
+	}
+	if( GetZoneBit(GetPlayerZone(client) ) & BITZONE_EVENT ) {
+		if( showMsg )
+			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cet objet est interdit où vous êtes.");
+		return false;
+	}
+	return true;
+}
