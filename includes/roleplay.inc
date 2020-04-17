@@ -560,6 +560,7 @@ native void rp_ClientMoney(int client, int_user_data type, int amount);
 typedef NextMessageCallback = function void(int client, any data, char[] message);
 native void rp_GetClientNextMessage(int client, any data, NextMessageCallback cb);
 // ----------------------------------------------------------------------------
+
 enum BM_Int {
 	BM_Owner = 0,
 	BM_Prix,
@@ -569,6 +570,7 @@ enum BM_Int {
 	BM_Type,
 	BM_Max
 }
+
 native int rp_WeaponMenu_GetOwner(int wepID);
 native DataPack rp_WeaponMenu_Create();
 native void rp_WeaponMenu_Clear(DataPack& hBuyMenu);

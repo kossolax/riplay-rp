@@ -4,7 +4,7 @@
 #include <sdktools>
 #include <sdkhooks>
 #include <phun>
-#include <colors>
+#include <colors_csgo>
 #include <smlib>
 
 

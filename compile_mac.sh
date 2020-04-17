@@ -20,20 +20,31 @@ cd $PATH
 /bin/mkdir compiled
 
 echo "Compiling core/roleplay.sp \n\n" >> $PATH/compiled/report.txt
+echo "Compiling core/roleplay.sp"
 
 $COMP_PATH -i includes -i core -i scripting "./core/roleplay.sp" -o=compiled/roleplay.smx >> $PATH/compiled/report.txt
 
+NUMB_SP=0
+NUMB_SMX=0
+
 for file in `/usr/bin/find . -type f -name "*.sp" | /usr/bin/egrep "^\./(jobs|quests|utils|weapons)/"`
 do
+	NUMB_SP=$(($NUMB_SP + 1))
+
 	echo "-----------------------------------------------------------------------------------------------\n\n" >> $PATH/compiled/report.txt
 	echo "Compiling $file \n\n" >> $PATH/compiled/report.txt
-
+	echo "Compiling $file"
+	
 	smxfile="`echo ${file#./} | /usr/bin/sed -e 's/\.sp$/\.smx/'`"
 	$COMP_PATH -i includes -i core -i scripting $file -o=$smxfile >> $PATH/compiled/report.txt
 
 	if [ -f $smxfile ]; then
+		NUMB_SMX=$(($NUMB_SMX + 1))
+
 		/usr/bin/rsync -R $smxfile $PATH/compiled/
 		/bin/rm $smxfile
+	else
+		echo "Error on $file"
 	fi
 done 
 
@@ -41,4 +52,4 @@ done
 #/bin/rm $PATH/compiled/roleplay_pvprecord.smx
 #/bin/rm $PATH/compiled/roleplay_pvp.smx
 
-echo "Compilation completed"
+echo "Compilation completed $NUMB_SMX/$NUMB_SP"

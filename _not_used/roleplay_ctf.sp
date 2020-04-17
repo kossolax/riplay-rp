@@ -26,8 +26,8 @@ public Plugin:myinfo =
 
 public OnPluginStart() {
 	RegAdminCmd("sm_spawnflag", 	Cmd_SpawnFlag, ADMFLAG_ROOT);
-	HookEvent("player_death", 		EventDeath, 		EventHookMode_Pre);
-	RegConsoleCmd("drop", FlagDrop);
+	//HookEvent("player_death", 		EventDeath, 		EventHookMode_Pre);
+	//RegConsoleCmd("drop", FlagDrop);
 }
 
 
