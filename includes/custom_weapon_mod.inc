@@ -16,36 +16,6 @@
 #define ROLEPLAY
 //#define DEBUG
 
-native int CWM_Create(char fullname[PLATFORM_MAX_PATH], char name[PLATFORM_MAX_PATH], char weaponToReplace[PLATFORM_MAX_PATH], char v_model[PLATFORM_MAX_PATH], char w_model[PLATFORM_MAX_PATH]);
-
-native void CWM_RegHook(int id, CWM_HookType data, CWM_HookTypeForward fonction);
-
-native void CWM_AddAnimation(int id, CWM_DataAnimation data, int sequence, int frames, int fps);
-native void CWM_RunAnimation(int entity, CWM_DataAnimation data, float time = -1.0);
-
-native int CWM_Spawn(int id, int client, float pos[3], float ang[3]);
-
-native int CWM_ShootProjectile(int client, int entity, char model[PLATFORM_MAX_PATH], char name[32], float spreadAngle = 0.0, float speed = FLT_MAX, CWM_HitCallback fonction);
-native int CWM_ShootHull(int client, int entity, float size, float hit[3]);
-native int CWM_ShootDamage(int client, int entity, float hit[3]);
-native int CWM_ShootExplode(int client, int wpnid, int entity, float radius);
-
-native void CWM_RefreshHUD(int client, int entity);
-
-native int CWM_GetId(char name[PLATFORM_MAX_PATH]);
-
-native void CWM_SetInt(int id, CWM_DataInteger data, int value);
-native int CWM_GetInt(int id, CWM_DataInteger data);
-native void CWM_SetEntityInt(int entity, CWM_DataInteger data, int value);
-native int CWM_GetEntityInt(int entity, CWM_DataInteger data);
-
-native void CWM_SetFloat(int id, CWM_DataFloat data, float value);
-native float CWM_GetFloat(int id, CWM_DataFloat data);
-native void CWM_SetEntityFloat(int entity, CWM_DataFloat data, float value);
-native float CWM_GetEntityFloat(int entity, CWM_DataFloat data);
-
-native bool CWM_IsCustom(int entity);
-
 enum CWM_DataAnimation {
 	WAA_Idle,
 	WAA_Draw,
@@ -157,3 +127,33 @@ stock void AddSoundToDownloadsTable(char file[PLATFORM_MAX_PATH]) {
 		AddFileToDownloadsTable(tmp);
 }
 #endif
+
+native int CWM_Create(char fullname[PLATFORM_MAX_PATH], char name[PLATFORM_MAX_PATH], char weaponToReplace[PLATFORM_MAX_PATH], char v_model[PLATFORM_MAX_PATH], char w_model[PLATFORM_MAX_PATH]);
+
+native void CWM_RegHook(int id, CWM_HookType data, CWM_HookTypeForward fonction);
+
+native void CWM_AddAnimation(int id, CWM_DataAnimation data, int sequence, int frames, int fps);
+native void CWM_RunAnimation(int entity, CWM_DataAnimation data, float time = -1.0);
+
+native int CWM_Spawn(int id, int client, float pos[3], float ang[3]);
+
+native int CWM_ShootProjectile(int client, int entity, char model[PLATFORM_MAX_PATH], char name[32], float spreadAngle = 0.0, float speed = FLT_MAX, CWM_HitCallback fonction = INVALID_FUNCTION);
+native int CWM_ShootHull(int client, int entity, float size, float hit[3]);
+native int CWM_ShootDamage(int client, int entity, float hit[3]);
+native int CWM_ShootExplode(int client, int wpnid, int entity, float radius);
+
+native void CWM_RefreshHUD(int client, int entity);
+
+native int CWM_GetId(char name[PLATFORM_MAX_PATH]);
+
+native void CWM_SetInt(int id, CWM_DataInteger data, int value);
+native int CWM_GetInt(int id, CWM_DataInteger data);
+native void CWM_SetEntityInt(int entity, CWM_DataInteger data, int value);
+native int CWM_GetEntityInt(int entity, CWM_DataInteger data);
+
+native void CWM_SetFloat(int id, CWM_DataFloat data, float value);
+native float CWM_GetFloat(int id, CWM_DataFloat data);
+native void CWM_SetEntityFloat(int entity, CWM_DataFloat data, float value);
+native float CWM_GetEntityFloat(int entity, CWM_DataFloat data);
+
+native bool CWM_IsCustom(int entity);
