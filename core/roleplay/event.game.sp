@@ -132,8 +132,6 @@ public Action PostLoading(Handle timer, any zomg) {
 
 	updateGroupLeader();
 
-
-
 	for(int i=1; i <= MaxClients; i++) {
 		if( IsClientInGame(i) ) {
 			if( IsClientConnected(i) ) {

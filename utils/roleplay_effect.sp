@@ -917,7 +917,9 @@ public Action Effect_Weather(int client, int args) {
 	return Plugin_Handled;
 }
 public Action EffectSun(int client, int arg) {
-	static int id = 0;
+	//static int id = 0;
+	int id = 0;
+
 	if( id <= 0 ) {
 		id = FindEntityByClassname(0, "env_cascade_light");
 		SetEntPropFloat(id, Prop_Send, "m_flMaxShadowDist", 1250.0);

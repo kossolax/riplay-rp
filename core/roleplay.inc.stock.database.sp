@@ -1040,13 +1040,13 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 	
 	CS_SwitchTeam(Client, CS_TEAM_T);
 	
-	char URL[128];
-	Format(URL, sizeof(URL), "https://www.ts-x.eu/api/user/double/steamid/%s", SteamID);
+	//char URL[128];
+	//Format(URL, sizeof(URL), "https://www.ts-x.eu/api/user/double/steamid/%s", SteamID);
 	
-	Handle req = SteamWorks_CreateHTTPRequest(k_EHTTPMethodGET, URL);
-	SteamWorks_SetHTTPCallbacks(req, OnSteamWorksHTTPComplete);
-	SteamWorks_SetHTTPRequestContextValue(req, Client);
-	SteamWorks_SendHTTPRequest(req);
+	//Handle req = SteamWorks_CreateHTTPRequest(k_EHTTPMethodGET, URL);
+	//SteamWorks_SetHTTPCallbacks(req, OnSteamWorksHTTPComplete);
+	//SteamWorks_SetHTTPRequestContextValue(req, Client);
+	//SteamWorks_SendHTTPRequest(req);
 	
 	Call_StartForward( view_as<Handle>(g_hRPNative[Client][RP_OnPlayerDataLoaded]));
 	Call_PushCell(Client);
