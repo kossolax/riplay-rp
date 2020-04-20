@@ -64,8 +64,8 @@ void LoadServerDatabase() {
 	
 	if ((hQuery = SQL_Query(g_hBDD, query)) == INVALID_HANDLE) {
 		LogToGame(query);
-		SetFailState("ERREUR FATAL: Impossible de récuperer le sID: %s", g_szError);
-	}
+		SetFailState("ERREUR FATAL: Impossible de récuperer le sID: %s [%s:%i]", g_szError, strIP, GetConVarInt(port_cvar));
+	} 
 	else {
 		while( SQL_FetchRow(hQuery) ) {
 
@@ -98,8 +98,8 @@ void LoadServerDatabase() {
 		}
 
 		if( g_iSID <= 0 ) {
-
-			SetFailState("ERREUR FATAL: Impossible de valider le sID: %s", g_szError);
+			LogToGame(query);
+			SetFailState("ERREUR FATAL: Impossible de valider le sID: %s [%s:%i]", g_szError, strIP, GetConVarInt(port_cvar));
 			return;
 		}
 	}

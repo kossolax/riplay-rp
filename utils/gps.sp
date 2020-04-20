@@ -24,7 +24,7 @@ char g_szQuery[1024];
 float g_flNode[MAX_NODE][3];
 int g_iArc[MAX_ARC][4], g_cLaser, g_cBeam, g_iMarked[65];
 int g_iTarget[65];
-Handle g_hTimer[65];			
+Handle g_hTimer[65];
 char loadNode[] = "SELECT `id`, `x`, `y`, `z` FROM `fireblue`.`rp_gps_node`;";
 char loadArc[] = "SELECT A.`id`, `src`, `dst`, `length`, length(`zone_type`) as `private` FROM `fireblue`.`rp_gps_arc` A INNER JOIN `rp_csgo`.`rp_location_zones` Z ON Z.`id`=A.`zoneID`;";
 
@@ -60,7 +60,7 @@ public void OnMapStart() {
 	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt");
 	
 	
-	g_hBDD = SQL_Connect("default", true, g_szQuery, sizeof(g_szQuery));
+	g_hBDD = SQL_Connect("rp_gps", true, g_szQuery, sizeof(g_szQuery));
 	if (g_hBDD == INVALID_HANDLE) {
 		SetFailState("Connexion impossible: %s", g_szQuery);
 	}

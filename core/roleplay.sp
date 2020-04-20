@@ -192,17 +192,21 @@ public void OnPluginStart() {
 	Handle KV = INVALID_HANDLE;
 	KV=CreateKeyValues("sql");
 	KvSetString(KV,"driver",	"mysql");
-	KvSetString(KV,"host",		"athos.ts-x.eu");
-	if( GetConVarInt(FindConVar("hostport")) == 27015 ) {
-		KvSetString(KV,"database",	"rp_csgo");
-	}
-	else {
-		KvSetString(KV,"database",	"rp_test");
-	}
-	KvSetString(KV,"user",		"kossolax");
-	KvSetString(KV,"pass",		"QTpAbKfu5X5NupCBAE4tH3bL");
+	KvSetString(KV,"host",		"5.196.39.48");
+	
+	// a modif quand serv test 
+	//if( GetConVarInt(FindConVar("hostport")) == 27015 ) {
+	KvSetString(KV,"database",	"rp_csgo");
+	//}
+	//else {
+	//	KvSetString(KV,"database",	"rp_test");
+	//}
+
+	KvSetString(KV,"user",		"rp_csgo");
+	KvSetString(KV,"pass",		"DYhpWeEaWvDsMDc9");
 	KvSetString(KV,"port",		"3306");
 	g_hBDD = SQL_ConnectCustom(KV, g_szError, sizeof(g_szError), true);
+
 	if( g_hBDD == INVALID_HANDLE ) {
 		SetFailState("ERREUR FATAL: Connexion a la base de donnee impossible: %s", g_szError);
 	}
