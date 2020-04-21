@@ -1,0 +1,317 @@
+// ******************************
+// JEEP
+
+
+"ATV_engine_idle"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"wave"		"*vehicles/v8/v8_idle_loop1.mp3"
+}
+
+"ATV_engine_null"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"wave"		"common/null.mp3"
+}
+
+"ATV_engine_start"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"wave"		"*vehicles/v8/v8_start_loop1.mp3"
+}
+
+"ATV_engine_stop"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"wave"		"*vehicles/v8/v8_stop1.mp3"
+}
+
+"ATV_rev"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"0.9"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"98,105"
+	"wave"		"*vehicles/v8/v8_rev_short_loop1.mp3"
+}
+
+"ATV_reverse"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"			"100"
+	"wave"			"*vehicles/v8/v8_firstgear_rev_loop1.mp3"
+}
+
+
+"ATV_firstgear"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"100"
+	"wave"		"*vehicles/v8/first.mp3"
+}
+
+"ATV_secondgear"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"90,105"
+	"wave"		"*vehicles/v8/second.mp3"
+}
+
+"ATV_thirdgear"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"90,105"
+	"wave"		"*vehicles/v8/third.mp3"
+}
+
+"ATV_fourthgear"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"105,105"
+	"wave"		"*vehicles/v8/fourth_cruise_loop2.mp3"
+}
+
+"ATV_firstgear_noshift"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"105,105"
+	// NOTE: This needs to be a looping sound
+	"wave"		"*vehicles/v8/first.mp3"
+}
+"ATV_secondgear_noshift"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"105,105"
+	// NOTE: This needs to be a looping sound
+	"wave"		"*vehicles/v8/first.mp3"
+}
+"ATV_thirdgear_noshift"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"105,105"
+	// NOTE: This needs to be a looping sound
+	"wave"		"*vehicles/v8/first.mp3"
+}
+
+"ATV_fourthgear_noshift"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"105,105"
+	// NOTE: This needs to be a looping sound
+	"wave"		"*vehicles/v8/fourth_cruise_loop2.mp3"
+}
+
+"ATV_downshift_to_2nd"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"90,105"
+	"wave"		"*vehicles/v8/first_rev.mp3"
+}
+
+"ATV_downshift_to_1st"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"90,105"
+	"wave"		"*vehicles/v8/first_rev.mp3"
+}
+
+"ATV_throttleoff_slowspeed"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"90,105"
+	"wave"		"*vehicles/v8/v8_throttle_off_slow_loop2.mp3"
+}
+
+"ATV_throttleoff_fastspeed"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"90,105"
+	"wave"		"*vehicles/v8/v8_throttle_off_fast_loop1.mp3"
+}
+
+"ATV_skid_lowfriction"
+{
+	"channel"		"CHAN_BODY"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"90,110"
+	"wave"		"*vehicles/v8/skid_lowfriction.mp3"
+}
+
+"ATV_skid_normalfriction"
+{
+	"channel"		"CHAN_BODY"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"90,110"
+	"wave"		"*vehicles/v8/skid_normalfriction.mp3"
+}
+
+"ATV_skid_highfriction"
+{
+	"channel"		"CHAN_BODY"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"90,110"
+	"wave"		"*vehicles/v8/skid_highfriction.mp3"
+}
+
+"ATV_impact_heavy"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"95,110"
+	"rndwave"
+	{
+		"wave"	"*vehicles/v8/vehicle_impact_heavy1.mp3"
+		"wave"	"*vehicles/v8/vehicle_impact_heavy2.mp3"
+		"wave"	"*vehicles/v8/vehicle_impact_heavy3.mp3"
+		"wave"	"*vehicles/v8/vehicle_impact_heavy4.mp3"
+	}
+}
+
+"ATV_impact_medium"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"95,110"
+	"rndwave"
+	{
+		"wave"	"*vehicles/v8/vehicle_impact_medium1.mp3"
+		"wave"	"*vehicles/v8/vehicle_impact_medium2.mp3"
+		"wave"	"*vehicles/v8/vehicle_impact_medium3.mp3"
+		"wave"	"*vehicles/v8/vehicle_impact_medium4.mp3"
+	}
+}
+
+"ATV_rollover"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"95,110"
+	"rndwave"
+	{
+		"wave"	"*vehicles/v8/vehicle_rollover1.mp3"
+		"wave"	"*vehicles/v8/vehicle_rollover2.mp3"
+	}
+}
+
+
+"ATV_turbo_on"
+{
+	"channel"		"CHAN_ITEM"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"90,110"
+	"wave"		"*vehicles/v8/v8_turbo_on_loop1.mp3"
+}
+
+"ATV_turbo_off"
+{
+	"channel"		"CHAN_ITEM"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"90,110"
+	"wave"		"*vehicles/v8/v8_turbo_off.mp3"
+}
+
+"ATV_start_in_water"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"			"100"
+	"wave"			"*vehicles/jetski/jetski_no_gas_start.mp3"
+}
+
+"ATV_stall_in_water"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"			"100"
+	"wave"			"*vehicles/jetski/jetski_off.mp3"
+}
+
+"Jeep.GaussCharge"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"VOL_NORM"
+	"soundlevel"	"SNDLVL_NORM"
+	"wave"		"weapons/gauss/chargeloop.mp3"
+}
+
+"PropJeep.FireCannon"
+{
+	"channel"		"CHAN_AUTO"
+	"volume"		"0.750, 1.000"
+	"pitch"			"95, 105"
+	"soundlevel"	"SNDLVL_NORM"
+	"wave"			"weapons/gauss/fire1.mp3"
+}
+
+"PropJeep.FireChargedCannon"
+{
+	"channel"		"CHAN_AUTO"
+	"volume"		"0.750, 1.000"
+	"pitch"			"95, 105"
+
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"			"weapons/gauss/fire1.mp3"
+}
+
+"PropJeep.AmmoOpen"
+{
+	"channel"		"CHAN_ITEM"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"90,110"
+	"wave"		"*vehicles/atv_ammo_open.mp3"
+}
+
+"PropJeep.AmmoClose"
+{
+	"channel"		"CHAN_ITEM"
+	"volume"		"1.0"
+	"soundlevel"	"SNDLVL_80dB"
+	"pitch"		"90,110"
+	"wave"		"*vehicles/atv_ammo_close.mp3"
+}
