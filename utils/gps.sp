@@ -16,7 +16,7 @@ public Plugin myinfo = {
 
 #define	MAX_NODE	1024
 #define MAX_ARC		MAX_NODE*2
-#define SERV_IP		"127.0.0.1"
+#define SERV_IP		"5.196.39.48"
 //#define SERV_IP		"109.88.12.57"
 
 Handle g_hBDD, g_Socket, g_hShow[65];

@@ -238,7 +238,7 @@ public void OnPluginStart() {
 	RegAdminCmd("sm_effect_resize",		EffectResize,		ADMFLAG_CHEATS,	"sm_effect_resize [entity] [size] [delay]");
 	RegAdminCmd("sm_effect_group",		Effect_Group,		ADMFLAG_BAN,	"sm_effect_group [groupID]");
 	
-	RegAdminCmd("sm_effect_sun",		EffectSun,			ADMFLAG_CHEATS,	"sm_effect_sun [hours] [minutes]");
+	//RegAdminCmd("sm_effect_sun",		EffectSun,			ADMFLAG_CHEATS,	"sm_effect_sun [hours] [minutes]");
 	RegAdminCmd("sm_effect_weather",	Effect_Weather,		ADMFLAG_KICK,	"sm_effect_weather [weather]");
 	
 	RegAdminCmd("sm_effect_loto",		Cmd_Loto,			ADMFLAG_CHEATS, "sm_effect_loto [amount]");
