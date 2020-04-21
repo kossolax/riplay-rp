@@ -49,8 +49,5 @@ done
 
 /bin/rm $PATH/compiled/quests/groups/rp_quest_pve_duo.smx
 /bin/rm $PATH/compiled/quests/groups/rp_quest_pve_solo.smx
-#/bin/rm $PATH/compiled/rp_quest_police-001.smx
-#/bin/rm $PATH/compiled/roleplay_pvprecord.smx
-#/bin/rm $PATH/compiled/roleplay_pvp.smx
 
 echo "Compilation completed $NUMB_SMX/$NUMB_SP"

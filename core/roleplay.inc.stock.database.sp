@@ -812,10 +812,9 @@ void LoadUserData(int Client) {
 		Format(query, sizeof(query), "SELECT `played` FROM `rp_idcard` WHERE `steamid`='%s' AND `played`>'72000' LIMIT 1;", SteamID);
 		SQL_TQuery(g_hBDD, Check_2, query, Client);
 		
-		ReplaceString(SteamID, sizeof(SteamID), "STEAM_1", "STEAM_0");
-		Format(query, sizeof(query), "SELECT `user_id` FROM `ts-x`.`phpbb3_users` WHERE `no_pyj`='1' AND `steamid`='%s' LIMIT 1;", SteamID);
+		//ReplaceString(SteamID, sizeof(SteamID), "STEAM_1", "STEAM_0");
+		Format(query, sizeof(query), "SELECT `steamid` FROM `rp_users` WHERE `no_pyj`='1' AND `steamid`='%s' LIMIT 1;", SteamID);
 		SQL_TQuery(g_hBDD, Check_3, query, Client);
-		
 	}
 }
 public void Check_2(Handle owner, Handle handle, const char[] error, any data) {
@@ -1252,9 +1251,8 @@ void CheckMute(int Client) {
 		
 		char SteamID[64], szQuery[1024];
 		GetClientAuthId(Client, AuthId_Engine, SteamID, sizeof(SteamID), false);
-		ReplaceString(SteamID, sizeof(SteamID), "STEAM_1", "STEAM_0");
-		
-		Format(szQuery, sizeof(szQuery), "SELECT `game` FROM `ts-x`.`srv_bans` WHERE `SteamID`='%s' AND (`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0' AND (`game` LIKE 'rp-%%');", SteamID);
+		//ReplaceString(SteamID, sizeof(SteamID), "STEAM_1", "STEAM_0");
+		Format(szQuery, sizeof(szQuery), "SELECT `game` FROM `srv_bans` WHERE `SteamID`='%s' AND (`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0' AND (`game` LIKE 'rp-%%');", SteamID);
 		
 		SQL_TQuery(g_hBDD, CheckMute_2, szQuery, Client);
 	}

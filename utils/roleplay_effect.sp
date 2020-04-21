@@ -238,7 +238,7 @@ public void OnPluginStart() {
 	RegAdminCmd("sm_effect_resize",		EffectResize,		ADMFLAG_CHEATS,	"sm_effect_resize [entity] [size] [delay]");
 	RegAdminCmd("sm_effect_group",		Effect_Group,		ADMFLAG_BAN,	"sm_effect_group [groupID]");
 	
-	//RegAdminCmd("sm_effect_sun",		EffectSun,			ADMFLAG_CHEATS,	"sm_effect_sun [hours] [minutes]");
+	RegAdminCmd("sm_effect_sun",		EffectSun,			ADMFLAG_CHEATS,	"sm_effect_sun [hours] [minutes]");
 	RegAdminCmd("sm_effect_weather",	Effect_Weather,		ADMFLAG_KICK,	"sm_effect_weather [weather]");
 	
 	RegAdminCmd("sm_effect_loto",		Cmd_Loto,			ADMFLAG_CHEATS, "sm_effect_loto [amount]");
@@ -1758,7 +1758,7 @@ public void think(int i) {
 		SetEntPropFloat(i, Prop_Send, "m_flFlashDuration", GetGameTime()+0.1);
 		SetEntPropFloat(i, Prop_Send, "m_flFlashMaxAlpha", percent);
 	}
-	if( IsValidClient(i) && g_flAlcool_end[i] >= GetGameTime() ) {
+	/*if( IsValidClient(i) && g_flAlcool_end[i] >= GetGameTime() ) {
 		float percent = (1.0/(g_flAlcool_end[i]-g_flAlcool_start[i])) * ( GetGameTime() - g_flAlcool_start[i] );
 		float scale = percent/3.0 + 0.66;
 		scale = percent/2.0 + 0.500;
@@ -1774,7 +1774,7 @@ public void think(int i) {
 		if( percent >= 1.0 )
 			percent = 1.0;
 		if( percent <= 0.0 )
-			percent = 0.0;		
+			percent = 0.0;
 		
 		float punch[3];
 		
@@ -1788,6 +1788,6 @@ public void think(int i) {
 		if( GetGameTickCount()%20 == 0 ) {
 			ClientCommand(i, "firstperson");
 		}
-	}
+	}*/
 }
 
