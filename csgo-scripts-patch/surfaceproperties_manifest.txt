@@ -11,5 +11,5 @@ surfaceproperties_manifest
 	"file"		"scripts/surfaceproperties_cs.txt"
 	// List additional surface property files here
 	"file"  "scripts/roleplay.txt"
-
+	"file"	"scripts/game_sounds_vehicles.txt"
 }

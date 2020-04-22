@@ -272,9 +272,6 @@ public Action Cmd_ItemVehicle(int args) {
 	char arg0[128];
 	GetCmdArg(0, arg0, sizeof(arg0));
 	if( StrEqual(arg0, "rp_item_vehicle2") && StrEqual(arg1, "models/natalya/vehicles/natalya_mustang_csgo_2016.mdl") ) {
-		
-		LogToFile("vehicules.txt", "voiture donateur");
-
 		ServerCommand("sm_effect_colorize %d 255 64 32 255", car);
 		rp_SetVehicleInt(car, car_particle, 9);
 		rp_SetVehicleInt(car, car_battery, 1);
@@ -283,14 +280,10 @@ public Action Cmd_ItemVehicle(int args) {
 		rp_SetVehicleInt(car, car_light_b, 32);
 		rp_SetVehicleInt(car, car_boost, 1);
 		rp_SetVehicleInt(car, car_donateur, 1);
-		
-		LogToFile("vehicules.txt", "before voiture donateur");
 
 		DispatchKeyValue(car, "vehiclescript", 	"scripts/vehicles/natalya_mustang_csgo_20163.txt");
 		ServerCommand("vehicle_flushscript");
 		attachVehicleLight(car);
-
-		LogToFile("vehicules.txt", "after voiture donateur");
 	}
 	
 	if( StrEqual(arg0, "rp_item_vehicle3") ) {
@@ -491,19 +484,33 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 		ReplaceString(buffer[amount-1], sizeof(buffer[]), ".mdl", "");
 		Format(ScriptPath, sizeof(ScriptPath), "scripts/vehicles/%s.txt", buffer[amount-1]);
 		
-		LogToFile("vehicules.txt", "%s", ScriptPath);
+		LogToFile("vehicules.txt", "need to found %s", ScriptPath);
 
-		if( FileExists(ScriptPath) )
+		if(FileExists(ScriptPath)) {
+			LogToFile("vehicules.txt", "yeah, %s exist", ScriptPath);
 			valid = true;
+		}
 	}
-	if( !valid )
-		LogToFile("vehicules.txt", "%s not exist load jeep", ScriptPath);
+
+	if(!valid) {
+		LogToFile("vehicules.txt", "%s not exist, need to load jeep", ScriptPath);
 		Format(ScriptPath, sizeof(ScriptPath), "scripts/vehicles/jeep.txt");
+
+		LogToFile("vehicules.txt", "now script is %s", ScriptPath);
+	}
+
+	LogToFile("vehicules.txt", "final check for %s", ScriptPath);
+
+	if(FileExists(ScriptPath)) {
+		LogToFile("vehicules.txt", "%s exist", ScriptPath);
+	} else {
+		LogToFile("vehicules.txt", "%s not exist", ScriptPath);
+	}
 	
 	DispatchKeyValue(ent, "model", 				model);
-	DispatchKeyValue(ent, "vehiclescript", 		ScriptPath);
+	//DispatchKeyValue(ent, "vehiclescript", 		ScriptPath);
 
-	/*DispatchKeyValue(ent, "solid",				"6");
+	DispatchKeyValue(ent, "solid",				"6");
 	DispatchKeyValue(ent, "actionScale",		"1");
 	DispatchKeyValue(ent, "EnableGun",			"0");
 	DispatchKeyValue(ent, "ignorenormals",		"0");
@@ -515,7 +522,7 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	DispatchKeyValue(ent, "setbodygroup", 		"511" );
 	DispatchKeyValueFloat(ent, "MaxPitch", 		360.00);
 	DispatchKeyValueFloat(ent, "MinPitch", 		-360.00);
-	DispatchKeyValueFloat(ent, "MaxYaw", 		90.00);*/
+	DispatchKeyValueFloat(ent, "MaxYaw", 		90.00);
 	
 	LogToFile("vehicules.txt", "before dispatch");
 
@@ -571,8 +578,8 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	
 	LogToFile("vehicules.txt", "after TeleportEntity");
 
-	//AcceptEntityInput(ent, "HandBrakeOn"); // 
-	//AcceptEntityInput(ent, "TurnOff");
+	//AcceptEntityInput(ent, "HandBrakeOn");
+	AcceptEntityInput(ent, "TurnOff");
 	
 	if( IsValidClient(client) ) {
 		
@@ -592,7 +599,6 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	CreateTimer(3.5, Timer_VehicleRemoveCheck, EntIndexToEntRef(ent));
 
 	LogToFile("vehicules.txt", "end");
-
 	return ent;
 }
 
