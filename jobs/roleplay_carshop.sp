@@ -495,7 +495,7 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 		Format(ScriptPath, sizeof(ScriptPath), "scripts/vehicles/jeep.txt");
 	
 	DispatchKeyValue(ent, "model", 				model);
-	DispatchKeyValue(ent, "vehiclescript", 		ScriptPath);
+	//DispatchKeyValue(ent, "vehiclescript", 		ScriptPath);
 	/*DispatchKeyValue(ent, "solid",				"6");
 	DispatchKeyValue(ent, "actionScale",		"1");
 	DispatchKeyValue(ent, "EnableGun",			"0");
@@ -512,8 +512,8 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	
 	LogToFile("vehicules.txt", "before dispatch");
 
-	/*IntToString(skin, szSkin, sizeof(szSkin));
-	DispatchKeyValue(ent, "skin", szSkin);*/
+	IntToString(skin, szSkin, sizeof(szSkin));
+	DispatchKeyValue(ent, "skin", szSkin);
 	DispatchSpawn(ent);
 	
 	LogToFile("vehicules.txt", "after dispatch");
