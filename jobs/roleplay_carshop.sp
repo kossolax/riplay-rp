@@ -470,6 +470,7 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	char[] model = new char[ l_model + 2];
 	GetNativeString(3, model, l_model + 1);
 
+	PrecacheModel(model);
 	LogToFile("vehicules.txt", "%s", model);
 
 	// Thanks blodia: https://forums.alliedmods.net/showthread.php?p=1268368#post1268368
@@ -477,7 +478,7 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	int ent = CreateEntityByName("prop_vehicle_driveable");
 	if( ent == -1) { return 0; } // Tout le monde sait que ça n'arrive jamais...
 	
-	char ScriptPath[PLATFORM_MAX_PATH], szSkin[12], buffer[8][64];
+	/*char ScriptPath[PLATFORM_MAX_PATH], szSkin[12], buffer[8][64];
 	bool valid = false;
 	int amount = ExplodeString(model, "/", buffer, sizeof(buffer), sizeof(buffer[]));
 
@@ -492,10 +493,10 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	}
 	if( !valid )
 		LogToFile("vehicules.txt", "%s not exist load jeep", ScriptPath);
-		Format(ScriptPath, sizeof(ScriptPath), "scripts/vehicles/jeep.txt");
+		Format(ScriptPath, sizeof(ScriptPath), "scripts/vehicles/jeep.txt");*/
 	
 	DispatchKeyValue(ent, "model", 				model);
-	DispatchKeyValue(ent, "vehiclescript", 		ScriptPath);
+	/*DispatchKeyValue(ent, "vehiclescript", 		ScriptPath);
 	DispatchKeyValue(ent, "solid",				"6");
 	DispatchKeyValue(ent, "actionScale",		"1");
 	DispatchKeyValue(ent, "EnableGun",			"0");
@@ -508,12 +509,12 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	DispatchKeyValue(ent, "setbodygroup", 		"511" );
 	DispatchKeyValueFloat(ent, "MaxPitch", 		360.00);
 	DispatchKeyValueFloat(ent, "MinPitch", 		-360.00);
-	DispatchKeyValueFloat(ent, "MaxYaw", 		90.00);
+	DispatchKeyValueFloat(ent, "MaxYaw", 		90.00);*/
 	
 	LogToFile("vehicules.txt", "before dispatch");
 
-	IntToString(skin, szSkin, sizeof(szSkin));
-	DispatchKeyValue(ent, "skin", szSkin);
+	/*IntToString(skin, szSkin, sizeof(szSkin));
+	DispatchKeyValue(ent, "skin", szSkin);*/
 	DispatchSpawn(ent);
 	
 	LogToFile("vehicules.txt", "after dispatch");
