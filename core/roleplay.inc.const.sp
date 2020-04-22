@@ -48,6 +48,15 @@
 #define BUFFER_SIZE			32
 #define ITEM_BANK_LIMIT		500000
 
+char g_szSuperAdmin[][] = {
+	"STEAM_1:0:13538544", // Gozer
+	"STEAM_1:0:7914753", // Genesys
+	"STEAM_1:0:29334838", // Kriax
+	"STEAM_1:1:59117521", // Cubartiste
+	"STEAM_1:0:41839397", // Demox
+	"STEAM_1:1:12408655", // Loolie
+	"STEAM_1:1:12670286", // Just
+}
 
 int g_iPlayerCount;
 float vecNull[3];
