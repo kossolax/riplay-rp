@@ -273,6 +273,8 @@ public Action Cmd_ItemVehicle(int args) {
 	GetCmdArg(0, arg0, sizeof(arg0));
 	if( StrEqual(arg0, "rp_item_vehicle2") && StrEqual(arg1, "models/natalya/vehicles/natalya_mustang_csgo_2016.mdl") ) {
 		
+		LogToFile("vehicules.txt", "voiture donateur");
+
 		ServerCommand("sm_effect_colorize %d 255 64 32 255", car);
 		rp_SetVehicleInt(car, car_particle, 9);
 		rp_SetVehicleInt(car, car_battery, 1);
@@ -282,9 +284,13 @@ public Action Cmd_ItemVehicle(int args) {
 		rp_SetVehicleInt(car, car_boost, 1);
 		rp_SetVehicleInt(car, car_donateur, 1);
 		
+		LogToFile("vehicules.txt", "before voiture donateur");
+
 		DispatchKeyValue(car, "vehiclescript", 	"scripts/vehicles/natalya_mustang_csgo_20163.txt");
 		ServerCommand("vehicle_flushscript");
 		attachVehicleLight(car);
+
+		LogToFile("vehicules.txt", "after voiture donateur");
 	}
 	
 	if( StrEqual(arg0, "rp_item_vehicle3") ) {
@@ -495,7 +501,8 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 		Format(ScriptPath, sizeof(ScriptPath), "scripts/vehicles/jeep.txt");
 	
 	DispatchKeyValue(ent, "model", 				model);
-	//DispatchKeyValue(ent, "vehiclescript", 		ScriptPath);
+	DispatchKeyValue(ent, "vehiclescript", 		ScriptPath);
+
 	/*DispatchKeyValue(ent, "solid",				"6");
 	DispatchKeyValue(ent, "actionScale",		"1");
 	DispatchKeyValue(ent, "EnableGun",			"0");
@@ -524,18 +531,27 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	GetEntPropVector(ent, Prop_Send, "m_vecMaxs", MaxHull);
 	
 	Handle trace;
+
 	if( client == 0 )
 		trace = TR_TraceHullEx(origin, origin, MinHull, MaxHull, MASK_SOLID);
 	else
 		trace = TR_TraceHullFilterEx(origin, origin, MinHull, MaxHull, MASK_SOLID, FilterToOne, client);
 	
+	LogToFile("vehicules.txt", "tr");
+
 	if( TR_DidHit(trace) ) { 
+		LogToFile("vehicules.txt", "no space to spawn the vehicle");
+
 		delete trace; 
-		AcceptEntityInput(ent, "Kill");	return 0; 
+		AcceptEntityInput(ent, "Kill");	
+		
+		return 0; 
 	}
 
 	delete trace;
-	
+
+	LogToFile("vehicules.txt", "no tr delete trace");
+
 	TeleportEntity(ent, origin, angle, NULL_VECTOR);
 	rp_SetVehicleInt(ent, car_light, -1);
 	rp_SetVehicleInt(ent, car_light_r, -1);
@@ -553,9 +569,10 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	
 	SDKHook(ent, SDKHook_Think, OnThink);	
 	
-	
-//	AcceptEntityInput(ent, "HandBrakeOn");
-	AcceptEntityInput(ent, "TurnOff");
+	LogToFile("vehicules.txt", "after TeleportEntity");
+
+	//AcceptEntityInput(ent, "HandBrakeOn"); // 
+	//AcceptEntityInput(ent, "TurnOff");
 	
 	if( IsValidClient(client) ) {
 		
@@ -563,6 +580,7 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 		rp_SetClientKeyVehicle(client, ent, true);
 	
 		rp_SetClientVehicle(client, ent, true);
+
 		 // PLEASE CHECK AGAIN SERVER WAS SLOW OK?
 		Handle dp;
 		CreateDataTimer(0.1, rp_SetClientVehicleTask, dp, TIMER_DATA_HNDL_CLOSE);
@@ -572,8 +590,12 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	
 //	SDKHook(ent, SDKHook_Touch, VehicleTouch);
 	CreateTimer(3.5, Timer_VehicleRemoveCheck, EntIndexToEntRef(ent));
+
+	LogToFile("vehicules.txt", "end");
+
 	return ent;
 }
+
 public void OnThink(int ent) {
 	SetEntPropFloat(ent, Prop_Data, "m_flTurnOffKeepUpright", 1.0);
 	SetEntProp(ent, Prop_Send, "m_bEnterAnimOn", 0);
