@@ -458,6 +458,8 @@ public Action Cmd_ItemVehicleStuff(int args) {
 }
 // ----------------------------------------------------------------------------
 public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
+	LogToFile("vehicules.txt", "Native_rp_CreateVehicle");
+
 	float origin[3], angle[3];
 	int skin = GetNativeCell(4);
 	int client = GetNativeCell(5);
@@ -467,7 +469,9 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	GetNativeStringLength(3, l_model);
 	char[] model = new char[ l_model + 2];
 	GetNativeString(3, model, l_model + 1);
-	
+
+	LogToFile("vehicules.txt", "%s", model);
+
 	// Thanks blodia: https://forums.alliedmods.net/showthread.php?p=1268368#post1268368
 	
 	int ent = CreateEntityByName("prop_vehicle_driveable");
@@ -476,14 +480,18 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	char ScriptPath[PLATFORM_MAX_PATH], szSkin[12], buffer[8][64];
 	bool valid = false;
 	int amount = ExplodeString(model, "/", buffer, sizeof(buffer), sizeof(buffer[]));
+
 	if( amount > 0 ) {
 		ReplaceString(buffer[amount-1], sizeof(buffer[]), ".mdl", "");
 		Format(ScriptPath, sizeof(ScriptPath), "scripts/vehicles/%s.txt", buffer[amount-1]);
 		
+		LogToFile("vehicules.txt", "%s", ScriptPath);
+
 		if( FileExists(ScriptPath) )
 			valid = true;
 	}
 	if( !valid )
+		LogToFile("vehicules.txt", "%s not exist load jeep", ScriptPath);
 		Format(ScriptPath, sizeof(ScriptPath), "scripts/vehicles/jeep.txt");
 	
 	DispatchKeyValue(ent, "model", 				model);
@@ -502,10 +510,14 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	DispatchKeyValueFloat(ent, "MinPitch", 		-360.00);
 	DispatchKeyValueFloat(ent, "MaxYaw", 		90.00);
 	
+	LogToFile("vehicules.txt", "before dispatch");
+
 	IntToString(skin, szSkin, sizeof(szSkin));
 	DispatchKeyValue(ent, "skin", szSkin);
 	DispatchSpawn(ent);
 	
+	LogToFile("vehicules.txt", "after dispatch");
+
 	// check if theres space to spawn the vehicle.
 	float MinHull[3],  MaxHull[3];
 	GetEntPropVector(ent, Prop_Send, "m_vecMins", MinHull);
