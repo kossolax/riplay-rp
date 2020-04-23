@@ -19,19 +19,24 @@ public Action Command_KriaxVoiture(int client, int args) {
 
  	PrintToChat(client, "debug before");
 
-	SpawnCar(client);
+ 	char arg[4];
+ 	GetCmdArg(1, arg, sizeof(arg));
+ 	int type = StringToInt(arg);
+
+	SpawnCar(client, type);
 
 	PrintToChat(client, "debug after");
 
 	return Plugin_Handled;
 }
 
-public void SpawnCar(client) {
+public void SpawnCar(client, int type) {
 	LogToFile("vehicules.txt", "%s", MODEL);
 
 	int ent = CreateEntityByName("prop_vehicle_driveable");
 
 	if( ent == -1) { 
+		PrintToChatAll("invalid index");
 		LogToFile("vehicules.txt", "end invalid");
 		return;
 	}
@@ -56,40 +61,17 @@ public void SpawnCar(client) {
 	DispatchKeyValue(ent, "spawnflags", "256" );
 	DispatchKeyValue(ent, "setbodygroup", "511" );
 	SetEntProp(ent, Prop_Send, "m_nSolidType", 2);
-	SetEntProp(ent, Prop_Data, "m_nVehicleType", 8);
+	SetEntProp(ent, Prop_Data, "m_nVehicleType", type);
 
-	LogToFile("vehicules.txt", "before dispatch");
-
-	Handle pack = CreateDataPack();
-	CreateTimer(3.0, test, pack);
-	WritePackCell(pack, ent);
-	WritePackCell(pack, client);
-
-	LogToFile("vehicules.txt", "create timer");
-}
-
-public Action test(Handle timer, Handle pack) {
-	ResetPack(pack);
-	int ent = ReadPackCell(pack);
-	int client = ReadPackCell(pack);
-
-	LogToFile("vehicules.txt", "timer callback");
-
-	//AcceptEntityInput(ent, "TurnOff");
+	int test = GetEntProp(ent, Prop_Data, "m_nVehicleType");
+	LogToFile("vehicules.txt", "type %i", test);
 
 	LogToFile("vehicules.txt", "before dispatch");
 
 	DispatchSpawn(ent);
-
-	LogToFile("vehicules.txt", "after dispatch");
-
-	LogToFile("vehicules.txt", "before activate");
-
 	ActivateEntity(ent);
 
-	LogToFile("vehicules.txt", "after activate");
-
-	LogToFile("vehicules.txt", "before teleport");
+	LogToFile("vehicules.txt", "before tele");
 
 	float origin[3], angle[3];
 	GetClientAbsOrigin(client, origin);
@@ -97,7 +79,5 @@ public Action test(Handle timer, Handle pack) {
 
 	TeleportEntity(ent, origin, angle, NULL_VECTOR);
 
-	LogToFile("vehicules.txt", "after teleport");
-
-	LogToFile("vehicules.txt", "end");
+	LogToFile("vehicules.txt", "after tele");
 }
