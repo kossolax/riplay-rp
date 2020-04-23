@@ -199,7 +199,11 @@ void detectCapsLock(int client) {
 }
 void incrementJobPlayTime(int client, int time) {
 	if( g_iUserData[client][i_Job] > 0 ) {
-		g_iJobPlayerTime[client][ GetJobPrimaryID(client) - 1 ] += time;
+		int primaryjob = GetJobPrimaryID(client) - 1; // index out of bound ici ?
+
+		if(primaryjob > -1)
+			g_iJobPlayerTime[client][ primaryjob ] += time;
+		
 		g_iJobPlayerTime[client][g_iUserData[client][i_Job]] += time;
 	}
 }

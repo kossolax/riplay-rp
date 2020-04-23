@@ -256,9 +256,11 @@ public Action Command_LAW(int client, const char[] command, int argc) {
 		int fov = Client_GetFOV(client);
 		if( fov == 30 || (rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_EVENT) )
 			Client_SetFOV(client, 90);
-		else
+		else {
 			Client_SetFOV(client, 30);
+		}
 	}
+
 	g_bUserData[client][b_Pissing] = true;
 }
 public Action Command_LAW2(int client, const char[] command, int argc) {
