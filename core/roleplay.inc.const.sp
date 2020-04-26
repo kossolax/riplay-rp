@@ -56,6 +56,7 @@ char g_szSuperAdmin[][] = {
 	"STEAM_1:0:41839397", // Demox
 	"STEAM_1:1:12408655", // Loolie
 	"STEAM_1:1:12670286", // Just
+	"STEAM_1:0:7490757", // Kosso
 };
 
 int g_iPlayerCount;
