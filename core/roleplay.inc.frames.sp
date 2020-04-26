@@ -305,7 +305,7 @@ void OnGameFrame_10(float time) {
 	static int last_minutes = -1;
 	static char model[255], szHUD[1024], sound[128], szDates[64];
 	
-	if( last_minutes == g_iMinutes )
+	if( last_minutes == g_iMinutes ) 
 		return;
 	
 	last_minutes = g_iMinutes;
@@ -774,8 +774,8 @@ void OnGameFrame_10(float time) {
 			
 			if( GetEntProp(i, Prop_Send, "m_bDrawViewmodel") == 1 ) {
 				Handle hud = CreateHudSynchronizer();
-				SetHudTextParams(-1.0,  0.01, 1.1, 200, 200, 140, 150, 2, 0.0, 0.0, 0.0);
-				//ShowSyncHudText(i, hud, szDates);
+				SetHudTextParams(0.45, 1.0, 1.1, 19, 213, 45, 255, 2, 0.0, 0.0, 0.0);
+				ShowSyncHudText(i, hud, szDates);
 				CloseHandle(hud);
 			}
 			

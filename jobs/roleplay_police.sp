@@ -326,16 +326,17 @@ public Action Cmd_Tazer(int client) {
 	if (rp_GetClientFloat(client, fl_Invincible) > GetGameTime()) {  //le flic utilise une poupée gonflable
 		ACCESS_DENIED(client);
 	}
-	
+
 	int target = rp_GetClientTarget(client);
+
 	if (target <= 0 || !IsValidEdict(target) || !IsValidEntity(target))
 		return Plugin_Handled;
-	
+
 	if (GetEntityMoveType(target) == MOVETYPE_NOCLIP)
 		return Plugin_Handled;
-	
+
 	int Tzone = rp_GetPlayerZone(target);
-	
+
 	if (IsValidClient(target)) {
 		// Joueur:
 		if (GetClientTeam(client) == CS_TEAM_T && job != 1 && job != 2 && job != 4 && job != 5 && job != 101 && job != 102) {
@@ -351,7 +352,9 @@ public Action Cmd_Tazer(int client) {
 		}
 		
 		if (Entity_GetDistance(client, target) > maxDist) {
-			ACCESS_DENIED(client);
+			//ACCESS_DENIED(client);
+			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le joueur est trop éloigné, commande inaccessible");
+			return Plugin_Handled;
 		}
 		
 		if (!(rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PERQUIZ || rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PERQUIZ) && rp_GetClientBool(target, b_Lube) && Math_GetRandomInt(1, 5) != 5) {
@@ -591,8 +594,15 @@ public Action Cmd_Jail(int client) {
 	}
 	
 	int target = rp_GetClientTarget(client);
-	if (target <= 0 || !IsValidEdict(target) || !IsValidEntity(target))
+	
+	if (target <= 0 || !IsValidEdict(target) || !IsValidEntity(target)) {
 		return Plugin_Handled;
+	}
+
+	// target is not a player
+	if (!IsValidClient(target)) {
+		return Plugin_Handled;
+	}
 
 	if (rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PERQUIZ || rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PERQUIZ) { // Les juges peuvent jail en perqui
 		ct = 0;
@@ -604,6 +614,8 @@ public Action Cmd_Jail(int client) {
 	if (rp_GetClientFloat(client, fl_Invincible) > GetGameTime()) {  //le flic utilise une poupée gonflable
 		ACCESS_DENIED(client);
 	}
+
+	// joueur en tuto
 	if (IsValidClient(target) && !rp_IsTutorialOver(target)) {
 		ACCESS_DENIED(client);
 	}
@@ -626,8 +638,11 @@ public Action Cmd_Jail(int client) {
 	if (Cbit & BITZONE_PERQUIZ || Tbit & BITZONE_PERQUIZ)
 		maxDist = 128.0;
 	
+	// too far
 	if (Entity_GetDistance(client, target) > maxDist) {
-		ACCESS_DENIED(client);
+		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le joueur est trop éloigné, commande inaccessible");
+		return Plugin_Handled;
+		//ACCESS_DENIED(client);
 	}
 	
 	if (Cbit & BITZONE_BLOCKJAIL || Tbit & BITZONE_BLOCKJAIL) {

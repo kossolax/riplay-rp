@@ -285,8 +285,6 @@ public Action CmdGps2(int client) {
 	menu.AddItem("266", "L'agence immobilière");
 	menu.AddItem("298", "Le concessionaire");
 	
-	
-	
 	menu.AddItem("226", "La planque des mercenaires");
 	menu.AddItem("95", "La planque des dealers");
 	menu.AddItem("222", "La planque des artificiers");

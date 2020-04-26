@@ -252,7 +252,7 @@ void showPlayerHintBox(int client, int target) {
 			return;
 		}
 		if( g_iClient_OLD[target] ) {
-			PrintHintText(client, "%s%s</font>[HP: %i]%s\n<b>Job:</b> %s", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail, g_szJobList[g_iUserData[target][i_Job]][job_type_name]);
+			PrintHintText(client, "%s%s</font>[HP: %i]%s\nJob: %s", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail, g_szJobList[g_iUserData[target][i_Job]][job_type_name]);
 		}
 		else {
 			
@@ -260,16 +260,16 @@ void showPlayerHintBox(int client, int target) {
 			if (flags & ADMFLAG_GENERIC || flags & ADMFLAG_ROOT ||
 				(GetJobPrimaryID(client) == g_iUserData[client][i_Job] && g_iUserData[client][i_Job] > 0 && g_iUserData[target][i_Job] == 0 ) ||
 				IsJuge(client) || IsPolice(client) ) {
-				PrintHintText(client, "%s%s</font>[HP: %i]%s\n<b>*NEW*Job:</b> %s", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail, g_szJobList[g_iUserData[target][i_Job]][job_type_name]);
+				PrintHintText(client, "%s%s</font>[HP: %i]%s\n*NEW*Job: %s", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail, g_szJobList[g_iUserData[target][i_Job]][job_type_name]);
 			}
 			else {
-				PrintHintText(client, "%s%s</font>[HP: %i]%s\n<b>Job:</b> %s", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail, g_szJobList[g_iUserData[target][i_Job]][job_type_name]);
+				PrintHintText(client, "%s%s</font>[HP: %i]%s\nJob: %s", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail, g_szJobList[g_iUserData[target][i_Job]][job_type_name]);
 			}
 		}
 		
 		if( IsJuge(target) || IsPolice(target) ) {
 			if( GetClientTeam(target) != CS_TEAM_CT ) {
-				PrintHintText(client, "%s%s</font>[HP: %i]%s\n<b>Job:</b> %s", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail, g_szJobList[0][job_type_name]);
+				PrintHintText(client, "%s%s</font>[HP: %i]%s\nJob: %s", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail, g_szJobList[0][job_type_name]);
 			}
 		}
 	}
@@ -288,7 +288,7 @@ void showPlayerHintBox(int client, int target) {
 		ReplaceString(clientname, sizeof(clientname), "<", "");
 		ReplaceString(clientname, sizeof(clientname), ">", "");
 		
-		PrintHintText(client, "<b>Props de</b> %s\n<b>HP:</b> %d", clientname, Entity_GetHealth(target));
+		PrintHintText(client, "Props de %s\nHP: %d", clientname, Entity_GetHealth(target));
 	}
 	else if( StrContains(classname, "vehicle") >= 0 && IsValidClient(g_iVehicleData[target][car_owner]) ) {
 		
@@ -311,7 +311,7 @@ void showPlayerHintBox(int client, int target) {
 			Format(fmt, sizeof(fmt), "\n%N conduit.", target3);
 		}
 		
-		PrintHintText(client, "<b>Voiture de</b> %s\n<b>HP:</b> %d%s", clientname, rp_GetVehicleInt(target, car_health), fmt);
+		PrintHintText(client, "Voiture de %s\nHP: %d%s", clientname, rp_GetVehicleInt(target, car_health), fmt);
 	}
 	else if( StrContains(classname, "door") >= 0 ) {
 		int appart = getDoorAppart(target);
@@ -330,7 +330,7 @@ void showPlayerHintBox(int client, int target) {
 				ReplaceString(clientname, sizeof(clientname), "<", "");
 				ReplaceString(clientname, sizeof(clientname), ">", "");
 				
-				PrintHintText(client, "<b>%s de:</b>\n %s", (appart<100?"Appartement":"Garage"), clientname);
+				PrintHintText(client, "%s de:\n %s", (appart<100?"Appartement":"Garage"), clientname);
 			}
 			else if( appart == 50 ) {
 				rp_GetServerString(villaOwnerName, clientname, sizeof(clientname));
@@ -341,7 +341,7 @@ void showPlayerHintBox(int client, int target) {
 				PrintHintText(client, "Villa de: %s", clientname);
 			}
 			else {
-				PrintHintText(client, "%s %d à louer\n<b>Prix:</b> %s$", (appart<100?"Appartement":"Garage"), appart, g_szSellingKeys[appart][key_type_prix]);
+				PrintHintText(client, "%s %d à louer\nPrix: %s$", (appart<100?"Appartement":"Garage"), appart, g_szSellingKeys[appart][key_type_prix]);
 			}
 		}
 		else {
@@ -355,7 +355,7 @@ void showPlayerHintBox(int client, int target) {
 			if( Entity_GetDistance(client, target) < 512.0 ) {
 				Format(clientname2, sizeof(clientname2), "<font color='#%s</font>,", GetEntProp(target, Prop_Data, "m_bLocked") ? "FF0000'>Fermée" : "00FF00'>Ouverte");			
 				if( rp_GetDoorID(target) > 0 )
-					Format(classname, sizeof(classname), " <font color='#%s</font>.", rp_GetClientKeyDoor(client, rp_GetDoorID(target)) ? "00FF00'>vous avez les clés" : "FF0000'>vous n'avez pas les clés" );
+					Format(classname, sizeof(classname), "<font color='#%s</font>.", rp_GetClientKeyDoor(client, rp_GetDoorID(target)) ? "00FF00'>vous avez les clés" : "FF0000'>vous n'avez pas les clés" );
 			}
 				
 			PrintHintText(client, "Porte: %s\n %s%s", clientname, clientname2, classname);

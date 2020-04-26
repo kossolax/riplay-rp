@@ -55,6 +55,7 @@ public Plugin myinfo = {
 	description = "Counter-Strike Global Offensive - RolePlay",
 	version = __LAST_REV__, url = "http://www.ts-x.eu"
 };
+
 // -----------------------------------------------------------------------------------------------------------------
 //
 //	PLUGIN START
@@ -132,18 +133,18 @@ public void OnPluginStart() {
 	RegAdminCmd("rp_restarttuto", 		cmd_RestartTutorial,ADMFLAG_ROOT);
 	RegAdminCmd("rp_debug", 			cmd_ToggleDebug,	ADMFLAG_ROOT);
 	//
-	if( GetConVarInt(FindConVar("hostport")) == 27015 ) {
-		RegAdminCmd("rp_givemejob",		cmd_ForceMeJob,		ADMFLAG_ROOT);
-		RegAdminCmd("rp_givemegroup",	cmd_ForceMeGroup,	ADMFLAG_ROOT);
-		RegAdminCmd("rp_giveitems",		cmd_GiveItem,		ADMFLAG_ROOT);
-	}
-	else {
+	/*if( GetConVarInt(FindConVar("hostport")) == 27015 ) {*/
+	RegAdminCmd("rp_givemejob",		cmd_ForceMeJob,		ADMFLAG_ROOT);
+	RegAdminCmd("rp_givemegroup",	cmd_ForceMeGroup,	ADMFLAG_ROOT);
+	RegAdminCmd("rp_giveitems",		cmd_GiveItem,		ADMFLAG_ROOT);
+	/*}*/
+	/*else {
 		RegConsoleCmd("rp_givemejob", 	cmd_ForceMeJob);
 		RegConsoleCmd("rp_givemegroup", cmd_ForceMeGroup);
 		RegConsoleCmd("rp_giveitems", 	cmd_GiveItem);
 		RegConsoleCmd("rp_givecash", 	cmd_GiveCash);
 		RegConsoleCmd("rp_givemexp", 	cmd_GiveMeXP);
-	}
+	}*/
 	//
 	RegAdminCmd("rp_create_mapconfig", 	CmdGenMapConfig,	ADMFLAG_ROOT);
 	RegAdminCmd("rp_create_point",		CmdSpawn2_Add,		ADMFLAG_ROOT);
@@ -292,10 +293,9 @@ public void OnPluginStart() {
 	}
 	
 	CloseHandle(hGameData);
-	//
-	//
 }
-public void OnAllPluginsLoaded() {
+
+/*public void OnAllPluginsLoaded() {
 	if( GetConVarInt(FindConVar("hostport")) != 27015 ) {
 		AddCommandOverride("sm_rcon", Override_Command, ReadFlagString("c"));
 		AddCommandOverride("sm_noclip", Override_Command, ReadFlagString("c"));
@@ -317,7 +317,7 @@ public void OnAllPluginsLoaded() {
 		AddCommandOverride("rp_clean", Override_Command, 0);
 		AddCommandOverride("rp_debug", Override_Command, 0);
 	}
-}
+}*/
 public void OnConfigsExecuted() {
 	ServerCommand("weapon_accuracy_nospread 1");
 	ServerCommand("spec_freeze_deathanim_time 999999");

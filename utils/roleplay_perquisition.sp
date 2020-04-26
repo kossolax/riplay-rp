@@ -608,6 +608,7 @@ void Effect_DrawPane(float bottomCorner[3], float upperCorner[3], int subDivisio
 				median[h] = (start[h] + end[h]) / 2.0;
 			
 			rp_GetZoneData(rp_GetZoneFromPoint(median), zone_type_type, tmp2, sizeof(tmp2));
+			
 			if( StrEqual(tmp, tmp2) )
 				continue;
 			

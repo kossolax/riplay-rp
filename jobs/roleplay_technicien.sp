@@ -252,7 +252,7 @@ public Action Cmd_ItemNano(int args) {
 		float vecStart[3];
 		GetClientEyePosition(client, vecStart);
 		vecStart[2] -= 20.0;
-		
+		PrintToChatAll("debug implo, why this fucking shit not working ?");
 		rp_Effect_Push(vecStart, 500.0, -2000.0, client);		
 	}
 	else if( StrEqual(arg1, "flash") ) {

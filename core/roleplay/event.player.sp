@@ -9,6 +9,7 @@
 #else
 	#include "roleplay.sp"
 #endif 
+
 public Action EventFlashPlayer(Handle event, const char[] name, bool dontBroadcast) {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	
