@@ -296,6 +296,7 @@ void SQL_Reconnect() {
 	if( g_hBDD == INVALID_HANDLE ) {
 		PrintToChatAll("ERREUR FATAL, Perte de la connexion à la base de donnée.");
 		LogToGame("ERREUR FATAL, Perte de la connexion à la base de donnée.");
+		LogToFile("roleplay.txt", "ERREUR FATAL, Perte de la connexion à la base de donnée.");
 		g_hBDD = SQL_Connect("default", true, g_szError, sizeof(g_szError));
 	}
 }

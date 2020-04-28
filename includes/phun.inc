@@ -631,7 +631,7 @@ stock void Desyntegrate(int Entity) {
 	SetEntityGravity(Entity, 1.0);
 	
 	char dname[32];
-	Format(dname, sizeof(dname), "dis_%d", int entity);
+	Format(dname, sizeof(dname), "dis_%d", Entity);
 	
 	char cname[64];
 	GetEdictClassname(Entity, cname, 63);
@@ -645,7 +645,7 @@ stock void Desyntegrate(int Entity) {
 		AcceptEntityInput(ent, "kill");
 		
 		if( IsValidClient(Entity) ) {
-			CreateTimer(0.2, RemoveRageDollTask, int entity);
+			CreateTimer(0.2, RemoveRageDollTask, Entity);
 		}
 	}
 }
