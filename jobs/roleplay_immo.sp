@@ -1026,10 +1026,12 @@ public void SQL_GetAppartWiner(Handle owner, Handle hQuery, const char[] error, 
 			for( int i = 1; i <= MaxClients; i++) {
 				if( !IsValidClient(i) )
 					continue;
+
 				rp_SetClientBool(i, b_HasVilla, false);
 				rp_SetClientKeyAppartement(i, 50, false);
 				
 				GetClientAuthId(i, AuthId_Engine, szSteamID2, sizeof(szSteamID2));
+				
 				if( StrEqual(szSteamID, szSteamID2) ) {
 					rp_SetClientBool(i, b_HasVilla, true);
 					rp_SetClientKeyAppartement(i, 50, true);
