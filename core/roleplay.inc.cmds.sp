@@ -844,21 +844,6 @@ public Action cmd_SetColor(int client, int args) {
 	GetCmdArg(4, arg4, sizeof(arg4));
 	GetCmdArg(5, arg5, sizeof(arg5));
 
-	if(StrEqual(arg1, "@event")) {
-		for(int i = 1; i <= MaxClients; i++) {
-			if(!IsValidClient(i) || !IsPlayerAlive(i)) {
-				continue;
-			}
-
-			if(rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_EVENT) {
-				ReplyToCommand(client, "[TSX-RP] %N a été coloré.", i);
-				Colorize(i, StringToInt(arg2), StringToInt(arg3), StringToInt(arg4), StringToInt(arg5));
-			}
-		}
-		
-		return Plugin_Handled;
-	}
-	
 	char target_name[MAX_TARGET_LENGTH];
 	int target_list[MAXPLAYERS], target_count; bool tn_is_ml;
 	
