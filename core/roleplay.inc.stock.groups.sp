@@ -9,7 +9,7 @@
 	#include "roleplay.sp"
 #endif
 
-int g_iCapture[capture_max];
+int g_iCapture[view_as<int>(capture_max)];
 
 bool GotPvPvPBonus(int client, rp_capture_zone cap) {
 	int group = GetGroupPrimaryID(client);
