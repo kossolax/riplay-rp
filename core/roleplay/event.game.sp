@@ -180,7 +180,7 @@ public void OnEntityDestroyed(int entity) {
 					
 					float vec[3], rnd[3];
 					char name[65];
-					int data[BM_Max];
+					int[] data = new int[view_as<int>(BM_Max)];
 					DataPackPos max = rp_WeaponMenu_GetMax(g_iCustomBank[entity]);
 					DataPackPos position = rp_WeaponMenu_GetPosition(g_iCustomBank[entity]);
 					Entity_GetAbsOrigin(entity, vec);

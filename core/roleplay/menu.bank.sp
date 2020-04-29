@@ -406,7 +406,8 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 					return;
 				
 				char name[65], tmp[32], tmp2[128];
-				int data[BM_Max], count = 0;
+				int[] data = new int[view_as<int>(BM_Max)];
+				int count = 0;
 				bool permValid = false;
 				
 				Handle menu2 = CreateMenu(BankATM_type);
@@ -475,7 +476,7 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 				}
 				
 				char name[65];
-				int data[BM_Max];
+				int[] data = new int[view_as<int>(BM_Max)];
 				rp_WeaponMenu_Get(g_iCustomBank[target], view_as<DataPackPos>(StringToInt(expl[1])), name, data);
 				
 				Format(name, sizeof(name), "weapon_%s", name);			
