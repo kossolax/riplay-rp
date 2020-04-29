@@ -845,9 +845,6 @@ public Action cmd_SetColor(int client, int args) {
 	GetCmdArg(5, arg5, sizeof(arg5));
 
 	if(StrEqual(arg1, "@event")) {
-		int bitzone;
-		char zone[16];
-
 		for(int i = 1; i <= MaxClients; i++) {
 			if(!IsValidClient(i) || !IsPlayerAlive(i)) {
 				continue;
