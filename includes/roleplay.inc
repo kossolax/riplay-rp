@@ -562,7 +562,7 @@ native void rp_GetClientNextMessage(int client, any data, NextMessageCallback cb
 // ----------------------------------------------------------------------------
 
 enum BM_Int {
-	BM_Owner = 0,
+	BM_Owner,
 	BM_Prix,
 	BM_Munition,
 	BM_Chargeur,
@@ -580,7 +580,7 @@ native DataPackPos rp_WeaponMenu_GetPosition(DataPack hBuyMenu);
 native DataPackPos rp_WeaponMenu_GetMax(DataPack hBuyMenu);
 native bool rp_WeaponMenu_Add(DataPack hBuyMenu, int weaponID, int owner);
 native void rp_WeaponMenu_Delete(DataPack& hBuyMenu, DataPackPos pos);
-native void rp_WeaponMenu_Get(DataPack hBuyMenu, DataPackPos pos, char weapon[65], int data[BM_Max]);
+native void rp_WeaponMenu_Get(DataPack hBuyMenu, DataPackPos pos, char weapon[65], int[] data);
 // ----------------------------------------------------------------------------
 #define ACCESS_DENIED(%1)	CPrintToChat(%1, "{lightblue}[TSX-RP]{default} Vous n'avez pas accès à cette commande.");	return Plugin_Handled
 #define ITEM_CANCEL(%1,%2)	rp_ClientGiveItem(%1,%2); rp_SetClientFloat(%1, fl_CoolDown, 0.05)

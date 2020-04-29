@@ -62,14 +62,14 @@ public int Native_rp_WeaponMenu_Add(Handle plugin, int numParams) {
 	}
 	ReplaceString(weapon, sizeof(weapon), "weapon_", "");
 	
-	int data[BM_Max];
+	int[] data = new int[view_as<int>(BM_Max)];
 	
-	data[BM_PvP] = rp_GetWeaponGroupID(weaponID);
-	data[BM_Munition] = Weapon_GetPrimaryClip(weaponID);
-	data[BM_Chargeur] = GetEntProp(weaponID, Prop_Send, "m_iPrimaryReserveAmmoCount");
-	data[BM_Type] = view_as<int>(rp_GetWeaponBallType(weaponID));
-	data[BM_Prix] = 50 + rp_GetWeaponPrice(weaponID) / 4;
-	data[BM_Owner] = owner;
+	data[view_as<int>(BM_PvP)] = rp_GetWeaponGroupID(weaponID);
+	data[view_as<int>(BM_Munition)] = Weapon_GetPrimaryClip(weaponID);
+	data[view_as<int>(BM_Chargeur)] = GetEntProp(weaponID, Prop_Send, "m_iPrimaryReserveAmmoCount");
+	data[view_as<int>(BM_Type)] = view_as<int>(rp_GetWeaponBallType(weaponID));
+	data[view_as<int>(BM_Prix)] = 50 + rp_GetWeaponPrice(weaponID) / 4;
+	data[view_as<int>(BM_Owner)] = owner;
 	
 	hBuyMenu.Reset();
 	DataPackPos pos = hBuyMenu.ReadCell();
@@ -95,7 +95,7 @@ public int Native_rp_WeaponMenu_Delete(Handle plugin, int numParams) {
 	clone.WriteCell(0);
 	
 	char weapon[65];
-	int data[BM_Max];
+	int[] data = new int[view_as<int>(BM_Max)];
 	 
 	while( position < max ) {
 		

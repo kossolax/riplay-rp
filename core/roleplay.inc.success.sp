@@ -24,7 +24,7 @@ enum type_SuccessData {
 	sd_last,
 	sd_max
 };
-char g_szSuccessData[success_list_all][success_type_all][256] = {	
+char g_szSuccessData[view_as<int>(success_list_all)][view_as<int>(success_type_all)][256] = {	
 	{ "police", "Un casier vierge", "Ne pas se faire arrêter après plus d'une semaine.", "7" , "0" },
 	{ "hopital", "L'homme qui vallait 3 milliards", "Se procurer les améliorations de chirurgiens, et les cumuler pendant plus de 48 heures.", "2880" , "0" },
 	{ "mcdo", "Inception", "Gagner un happy-meal… dans un happy-meal.", "1" , "0" },
@@ -93,7 +93,7 @@ char g_szSuccessData[success_list_all][success_type_all][256] = {
 	{ "cpt", "cpt", "cpt", "100" , "2" }
 };
 
-int g_iUserSuccess[MAX_PLAYERS+1][success_list_all][sd_max];
+int g_iUserSuccess[MAX_PLAYERS+1][view_as<int>(success_list_all)][view_as<int>(sd_max)];
 
 int g_iSuccess_last_jail[MAX_PLAYERS+1];
 int g_iSuccess_last_mafia[MAX_PLAYERS+1];

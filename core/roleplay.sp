@@ -333,7 +333,7 @@ public void OnPluginEnd() {
 	OnMapEnd();
 }
 int CS_GetWeaponPrice2(int client, CSWeaponID id, bool defaultprice = false) {
-	static const int priceList[CSWeaponID] = {
+	static const int priceList[] = {
 		0, 500, 200, 1700, 300, 2000, 0, 1050, 3300, 300, 500, 500, 1200, 4200, 2000, 2250, 500, 4750,
 		1500, 5200, 1700, 3100, 1250, 5000, 200, 700, 3500, 2700, 0, 2350, 2200, 650, 1000, 1250, 2000,
 		1400, 1800, 5700, 1200, 500, 400, 200, 1700, 1250, 1200, 300, 5000, 5000, 3000, 2750, 0, 400,
