@@ -851,12 +851,8 @@ public Action cmd_SetColor(int client, int args) {
 			}
 
 			if(rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_EVENT) {
-				PrintToChatAll("%N est en BITZONE_EVENT", i);
 				ReplyToCommand(client, "[TSX-RP] %N a été coloré.", i);
-
 				Colorize(i, StringToInt(arg2), StringToInt(arg3), StringToInt(arg4), StringToInt(arg5));
-			} else {
-				PrintToChatAll("%N n'est pas en BITZONE_EVENT", i);
 			}
 		}
 		
