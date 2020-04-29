@@ -843,6 +843,28 @@ public Action cmd_SetColor(int client, int args) {
 	GetCmdArg(3, arg3, sizeof(arg3));
 	GetCmdArg(4, arg4, sizeof(arg4));
 	GetCmdArg(5, arg5, sizeof(arg5));
+
+	if(StrEqual(arg1, "@event")) {
+		int bitzone;
+		char zone[16];
+
+		for(int i = 1; i <= MaxClients; i++) {
+			if(!IsValidClient(i) || !IsPlayerAlive(i)) {
+				continue;
+			}
+
+			if(rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_EVENT) {
+				PrintToChatAll("%N est en BITZONE_EVENT", i);
+				ReplyToCommand(client, "[TSX-RP] %N a été coloré.", i);
+
+				Colorize(i, StringToInt(arg2), StringToInt(arg3), StringToInt(arg4), StringToInt(arg5));
+			} else {
+				PrintToChatAll("%N n'est pas en BITZONE_EVENT", i);
+			}
+		}
+		
+		return Plugin_Handled;
+	}
 	
 	char target_name[MAX_TARGET_LENGTH];
 	int target_list[MAXPLAYERS], target_count; bool tn_is_ml;

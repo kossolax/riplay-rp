@@ -744,7 +744,7 @@ void OnGameFrame_10(float time) {
 			if( Client_GetArmor(i) != g_iUserData[i][i_Kevlar] )
 				Client_SetArmor(i, g_iUserData[i][i_Kevlar]);
 			
-			//updateClanTag(i);
+			updateClanTag(i);
 			
 			if( GetClientMenu(i) == MenuSource_None || GetClientMenu(i) == MenuSource_RawPanel ) {
 				

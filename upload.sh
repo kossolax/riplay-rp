@@ -10,5 +10,5 @@ DIRECTORY='/Users/mac/Desktop/DEV/Gozer/riplay-rp/compiled/*'
 #echo "Upload on Linux Server ended"
 
 echo "Upload on Windows Server"
-$PATH/ncftpput -R -u $USER -p $PASSWORD $HOST /serveurs/roleplay_windows/csgo/addons/sourcemod/plugins/roleplay $DIRECTORY
+$PATH/ncftpput -R -u $USER -p $PASSWORD $HOST /serveurs/roleplay_windows/csgo/addons/sourcemod/plugins $DIRECTORY
 echo "Upload on Windows Server"

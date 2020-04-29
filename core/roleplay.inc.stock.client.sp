@@ -117,7 +117,7 @@ void KillStack_Timer(int client, int time) {
 }
 
 void updateClanTag(int client) {
-	static char ClanTag[16], ClanTag2[16];
+	static char ClanTag[16];
 	
 	Format(ClanTag, sizeof(ClanTag), "%s", g_szJobList[ g_iUserData[client][i_Job] ][job_type_tag]);
 	if( g_iUserData[client][i_Job] >= 1 && g_iUserData[client][i_Job] <= 10 ) {
@@ -134,9 +134,8 @@ void updateClanTag(int client) {
 	else if( !IsTutorialOver(client) ) {
 		Format(ClanTag, sizeof(ClanTag), "TUTORIAL");
 	}
-	CS_GetClientClanTag(client, ClanTag2, sizeof(ClanTag2));
-	if( !StrEqual(ClanTag, ClanTag2) )
-		CS_SetClientClanTag(client, ClanTag);
+
+	ServerCommand("sm_force_clantag %i \"%s\"", client, ClanTag);
 }
 
 public Action SendToGrave(Handle timer, any client) {
@@ -355,7 +354,7 @@ void showPlayerHintBox(int client, int target) {
 			if( Entity_GetDistance(client, target) < 512.0 ) {
 				Format(clientname2, sizeof(clientname2), "<font color='#%s</font>,", GetEntProp(target, Prop_Data, "m_bLocked") ? "FF0000'>Fermée" : "00FF00'>Ouverte");			
 				if( rp_GetDoorID(target) > 0 )
-					Format(classname, sizeof(classname), "<font color='#%s</font>.", rp_GetClientKeyDoor(client, rp_GetDoorID(target)) ? "00FF00'>vous avez les clés" : "FF0000'>vous n'avez pas les clés" );
+					Format(classname, sizeof(classname), "<font color='#%s</font>.", rp_GetClientKeyDoor(client, rp_GetDoorID(target)) ? "00FF00'> vous avez les clés" : "FF0000'> vous n'avez pas les clés" );
 			}
 				
 			PrintHintText(client, "Porte: %s\n %s%s", clientname, clientname2, classname);
