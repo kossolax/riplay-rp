@@ -26,7 +26,7 @@ $COMP_PATH -i includes -i core -i scripting "./core/roleplay.sp" -o=compiled/rol
 NUMB_SP=0
 NUMB_SMX=0
 
-for file in `/usr/bin/find . -type f -name "*.sp" | /usr/bin/egrep "^\./(jobs|quests|utils|weapons)/"`
+''' for file in `/usr/bin/find . -type f -name "*.sp" | /usr/bin/egrep "^\./(jobs|quests|utils|weapons)/"`
 do
 	NUMB_SP=$(($NUMB_SP + 1))
 
@@ -45,7 +45,7 @@ do
 	else
 		echo "Error on $file"
 	fi
-done
+done '''
 
 /bin/rm $PATH/compiled/quests/groups/rp_quest_pve_duo.smx
 /bin/rm $PATH/compiled/quests/groups/rp_quest_pve_solo.smx

@@ -11,7 +11,6 @@ public Plugin:myinfo =
 	url = "www.uea-clan.com"
 };
 
-
 public OnPluginStart()
 {
 	CreateConVar("sm_retryonrestart", "v2.0", _, FCVAR_PLUGIN|FCVAR_NOTIFY|FCVAR_DONTRECORD);

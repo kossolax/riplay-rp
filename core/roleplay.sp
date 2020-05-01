@@ -81,7 +81,6 @@ public void OnPluginStart() {
 	HookEvent("player_connect", 	EventBlockMessage,	EventHookMode_Pre);
 	HookEvent("player_disconnect", 	EventBlockMessage,	EventHookMode_Pre);
 	HookEvent("teamplay_broadcast_audio", EventBlockMessage, EventHookMode_Pre);
-
 	//
 	//
 	// GameLog: Hook
