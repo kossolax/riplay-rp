@@ -177,7 +177,7 @@ public void OnPluginStart() {
 	HookConVarChange(g_hEVENT_HIDE, OnCvarChange);
 	HookConVarChange(g_hAllowDamage, OnCvarChange);	
 	//
-	RegConsoleCmd("jointeam", 			cmd_Jointeam);
+	//RegConsoleCmd("jointeam", 			cmd_Jointeam);
 	//
 	// Say's
 	RegConsoleCmd("say", 				Command_Say);

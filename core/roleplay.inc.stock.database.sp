@@ -1037,8 +1037,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 	#endif
 	DHookEntity(g_hTeleport, false, Client);	
 	
-	CS_SwitchTeam(Client, CS_TEAM_SPECTATOR);
-	SetEntPropFloat(Client, Prop_Send, "m_fForceTeam", 30.0);
+	//ChangeClientTeam(Client, CS_TEAM_SPECTATOR);
 
 	//char URL[128];
 	//Format(URL, sizeof(URL), "https://www.ts-x.eu/api/user/double/steamid/%s", SteamID);
