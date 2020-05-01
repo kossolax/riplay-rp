@@ -343,6 +343,9 @@ void LoadServerDatabase() {
 	//
 	CloseHandle(hQuery);
 	SQL_UnlockDatabase(g_hBDD);
+	
+	ServerCommand("mp_force_pick_time 0");
+	ServerCommand("mp_force_assign_teams  0");
 }
 void updateGroupLeader() {
 	SQL_TQuery(g_hBDD, SQL_SetGroupLeader, "SELECT `id` FROM `rp_groups` WHERE `id`<>0 ORDER BY  `stats` DESC LIMIT 1;");
@@ -1037,7 +1040,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 	#endif
 	DHookEntity(g_hTeleport, false, Client);	
 	
-	//ChangeClientTeam(Client, CS_TEAM_SPECTATOR);
+	CS_SwitchTeam(Client, CS_TEAM_T);
 
 	//char URL[128];
 	//Format(URL, sizeof(URL), "https://www.ts-x.eu/api/user/double/steamid/%s", SteamID);
