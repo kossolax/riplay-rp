@@ -270,9 +270,12 @@ public Action Command_LAW2(int client, const char[] command, int argc) {
 
 
 public Action EventPlayerTeam(Handle ev, const char[] name, bool broadcast) {
-	SetEventBroadcast(ev, true);
+	int client = GetClientOfUserId(GetEventInt(ev, "userid"));
+	
+	SetEventBool(ev, "silent", true);
+//	SetEventBroadcast(ev, true);
 
-	return Plugin_Continue;
+	return Plugin_Changed;
 }
 public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	int Client = GetClientOfUserId(GetEventInt(ev, "userid"));
