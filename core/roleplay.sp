@@ -151,6 +151,7 @@ public void OnPluginStart() {
 	RegServerCmd("rp_start_quest",		Cmd_StartQuest);
 	RegServerCmd("rp_quest_reload", 	CmdReloadQuest);
 	RegServerCmd("rp_zombie_die",		CmdSpawnCadeau);
+	RegServerCmd("rp_blackfriday", CmdBlackFriday, ADMFLAG_ROOT);
 	//
 	//
 	//

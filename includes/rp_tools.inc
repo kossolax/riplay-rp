@@ -143,6 +143,10 @@ stock void String_ColorsToHTML(char[] text, int length) {
 	ReplaceString(text, length, "{orange}", "<font color='#ffa500'>");
 	ReplaceString(text, length, "{default}", "<font color='#ffffff'>");
 }
+stock void FormatDate(int date, char[] buffer, int maxlen)
+{
+	FormatTime(buffer, maxlen, "%d/%m/%Y - %H:%M:%S", date);
+}
 // ----------------------------------------------------------------------------
 stock void PrintToChatClientArea(int client, const char[] message, any...) {
 	char buffer[250];
