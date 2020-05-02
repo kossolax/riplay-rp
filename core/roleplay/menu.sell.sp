@@ -95,15 +95,23 @@ void DrawVendreMenu(int client) {
 				continue;
 			if( !(Entity_GetDistance(client, i) < MAX_AREA_DIST.0) )
 				continue;
-				
+			if(client == i) 
+				continue;
+			
 			GetClientName2(i, name, 127);
 			char tmp[64];
 			Format(tmp, 64, "%i_1_0_%i_%i", item_id, can, i);
-			AddMenuItem(menu, tmp, name);		
+			AddMenuItem(menu, tmp, name);
+
+			playercount++;	
 		}
 		
-		SetMenuExitButton(menu, true);
-		DisplayMenu(menu, client, MENU_TIME_DURATION);
+		if(playercount > 0) {
+			SetMenuExitButton(menu, true);
+			DisplayMenu(menu, client, MENU_TIME_DURATION);
+		} else {
+			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il n'y a pas de joueurs éligibles à l'achat de cet appartement.");
+		}
 	}
 	else {
 		char tmp[255];
