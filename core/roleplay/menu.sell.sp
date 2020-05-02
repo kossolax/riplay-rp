@@ -85,7 +85,7 @@ void DrawVendreMenu(int client) {
 		
 		int playercount = 0;
 
-		Handle menu = CreateMenu(eventGiveMenu_2);
+		Handle menu = CreateMenu(eventGiveMenu_2Bis); // _2
 		SetMenuTitle(menu, "Sélectionner a qui louer cet appartement\n ");
 		char name[128];
 		for(int i = 1; i <= MaxClients; i++) {
@@ -216,7 +216,15 @@ public int eventGiveMenu_1(Handle p_hItemMenu, MenuAction p_oAction, int client,
 			
 			if( StringToInt(g_szItemList[i][item_type_auto]) == 1 && type == 0) {
 				// Setup menu
-				Handle hGiveMenu = CreateMenu(eventGiveMenu_2);
+				Handle hGiveMenu;
+
+				/* utile ? franchement à voir */
+				if( StrContains(g_szItemList[i][item_type_extra_cmd], "rp_item_contrat") == 0 ) {
+					hGiveMenu = CreateMenu(eventGiveMenu_2Ter);
+				} else {
+					hGiveMenu = CreateMenu(eventGiveMenu_2Bis);
+				}
+				
 				SetMenuTitle(hGiveMenu, "Etes vous sur de vouloir vendre %s?\n ", g_szItemList[i][item_type_name]);
 				
 				char tmp[64];
@@ -230,7 +238,15 @@ public int eventGiveMenu_1(Handle p_hItemMenu, MenuAction p_oAction, int client,
 			}
 			else {
 				// Setup menu
-				Handle hGiveMenu = CreateMenu(eventGiveMenu_2);
+				Handle hGiveMenu;
+				
+				/* utile ? franchement à voir */
+				if( StrContains(g_szItemList[i][item_type_extra_cmd], "rp_item_contrat") == 0 ) {
+					hGiveMenu = CreateMenu(eventGiveMenu_2Ter);
+				} else {
+					hGiveMenu = CreateMenu(eventGiveMenu_2Bis);
+				}
+				
 				SetMenuTitle(hGiveMenu, "Sélectionner combien en vendre\n ");
 				
 				AddItemForVending(hGiveMenu, i, type, 1, client);		// 1
@@ -261,7 +277,7 @@ public void AddItemForVending(Handle hGiveMenu, int item_id, int type, int amoun
 	
 	AddMenuItem(hGiveMenu, tmp, tmp2);
 }
-public int eventGiveMenu_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iParam1, int p_iParam2) {
+/*public int eventGiveMenu_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iParam1, int p_iParam2) {
 	static const reduction[] = { 5, 10, 20, 30, 40, 50 };
 	
 	if (p_oAction == MenuAction_Select) {
@@ -277,7 +293,7 @@ public int eventGiveMenu_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			Handle hGiveMenu;			
 			
 			if( StrContains(g_szItemList[StringToInt(data[0])][item_type_extra_cmd], "rp_item_contrat") == 0 ) {
-				hGiveMenu = CreateMenu(eventGiveMenu_2Ter);
+				hGiveMenu = CreateMenu(eventGiveMenu_2Ter); // CONTRAT
 			}
 			else {
 				hGiveMenu = CreateMenu(eventGiveMenu_2Bis);
@@ -315,7 +331,7 @@ public int eventGiveMenu_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 	else if (p_oAction == MenuAction_End) {
 		CloseHandle(p_hItemMenu);
 	}
-}
+}*/
 public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_iParam2) {
 	if (p_oAction == MenuAction_Select) {
 		char szMenuItem[32];

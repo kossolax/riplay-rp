@@ -929,7 +929,7 @@ public Action Command_Say(int client, int args) {
 		GetClientAbsOrigin(client, vecOrigin);
 		
 		// Setup menu
-		Handle menu = CreateMenu(eventGiveMenu_2);
+		Handle menu = CreateMenu(eventGiveMenu_2Bis); // _2
 		SetMenuTitle(menu, "Liste des joueurs a cet endroit\n ");
 		
 		int amount = 0;
@@ -988,7 +988,7 @@ public Action Command_Say(int client, int args) {
 		GetClientAbsOrigin(client, vecOrigin);
 
 		// Setup menu
-		Handle menu = CreateMenu(eventGiveMenu_2);
+		Handle menu = CreateMenu(eventGiveMenu_2Bis); // _2
 		SetMenuTitle(menu, "Liste des joueurs mort a cet endroit\n ");
 
 		int amount = 0;
