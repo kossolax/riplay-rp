@@ -368,7 +368,6 @@ public Action Cmd_ItemSucette2_task(Handle timer, any client) {
 	return Plugin_Handled;
 }
 
-
 public Action Cmd_ItemFouet(int args) {
 	
 	int client = GetCmdArgInt(1);

@@ -115,7 +115,7 @@ public Action Cmd_ItemCraftBook(int args) {
 		return Plugin_Handled;
 	}
 	else if( StrEqual(arg, "point") ) {
-		rp_SetClientInt(client, i_ArtisanPoints, rp_GetClientInt(client, i_ArtisanPoints) + Math_GetRandomInt(1, 5));
+		rp_SetClientInt(client, i_ArtisanPoints, rp_GetClientInt(client, i_ArtisanPoints) + 1);
 		displayStatsMenu(client);
 		return Plugin_Handled;
 	}
