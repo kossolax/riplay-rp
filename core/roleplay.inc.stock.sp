@@ -1407,6 +1407,3 @@ void DetectionTirDangereux(int client, float B[3]) {
 		}
 	}
 }
-bool IsBlackFriday() {
-	return false;
-}
