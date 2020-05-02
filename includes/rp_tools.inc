@@ -143,9 +143,25 @@ stock void String_ColorsToHTML(char[] text, int length) {
 	ReplaceString(text, length, "{orange}", "<font color='#ffa500'>");
 	ReplaceString(text, length, "{default}", "<font color='#ffffff'>");
 }
-stock void FormatDate(int date, char[] buffer, int maxlen)
-{
+stock void FormatDate(int date, char[] buffer, int maxlen) {
 	FormatTime(buffer, maxlen, "%d/%m/%Y - %H:%M:%S", date);
+}
+
+stock int DateToTimestamp(const char[] szDate) {
+    char szBuffer[64];
+    strcopy( szBuffer, sizeof( szBuffer ), szDate );
+    
+    ReplaceString(szBuffer, sizeof(szBuffer), "/", " ");
+    ReplaceString(szBuffer, sizeof(szBuffer), ".", " ");
+    
+    char szTime[3][6];
+    ExplodeString(szBuffer, " ", szTime, sizeof(szTime), sizeof(szTime[]));
+    
+    int day = StringToInt(szTime[0]);
+    int month  = StringToInt(szTime[1]);
+    int year = StringToInt(szTime[2]);
+    
+    return TimeToUnix(year, month, day, 0, 0, 0, UT_TIMEZONE_SERVER);
 }
 // ----------------------------------------------------------------------------
 stock void PrintToChatClientArea(int client, const char[] message, any...) {
