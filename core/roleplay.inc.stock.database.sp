@@ -113,6 +113,11 @@ void LoadServerDatabase() {
 		if(SQL_FetchRow(hQuery) > 0) {
 			g_iBlackFriday[0] = SQL_FetchInt(hQuery, 0);
 			g_iBlackFriday[1] = SQL_FetchInt(hQuery, 1);
+
+			// 02/01/2020 00h01 > 01/01/2020  00h00  AND 02/01/2020 00h01 < 03/01/2020 00h00
+			if(GetTime() > g_iBlackFriday[0] || GetTime() < g_iBlackFriday[0] + 24*60*60) {
+				g_bIsBlackFriday = true;
+			}
 		} else {
 			g_iBlackFriday[0] = g_iBlackFriday[1] = 0;
 		}
