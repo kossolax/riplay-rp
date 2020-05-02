@@ -1353,7 +1353,4 @@ public Action CmdBlackFriday(int args) {
 
 	CPrintToChatAll("DEBUG: DAY = %i  REDUCTION = %i", day, reduction);
 	CPrintToChatAll("NEW BLACK FRIDAY DATE (%s) REDUCTION (%i)", szDate, g_iBlackFriday[1]);
-
-	PrintToServer("DEBUG: DAY = %i  REDUCTION = %i", day, reduction);
-	PrintToServer("NEW BLACK FRIDAY DATE (%s) REDUCTION (%i)", szDate, g_iBlackFriday[1]);
 }
