@@ -768,17 +768,30 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			
 			float taxe = StringToFloat(g_szItemList[item_id][item_type_taxes]);
 			
-			g_iUserStat[vendeur][i_MoneyEarned_Sales] += RoundFloat(	((prixItem * taxe) - reduc) * 1.0);
+			g_iUserStat[vendeur][i_MoneyEarned_Sales] += RoundFloat(((prixItem * taxe) - reduc) * 1.0);
 			g_iUserData[vendeur][i_Reduction] = reduction;
-			g_iUserStat[client][i_MoneySpent_Shop] += RoundFloat(		prixItem - reduc);
+			g_iUserStat[client][i_MoneySpent_Shop] += RoundFloat(prixItem - reduc);
 			
 			rp_ClientMoney(client, type == 5 ? i_Bank : i_Money, -RoundFloat(prixItem - reduc));
 			rp_ClientMoney(vendeur, i_Money, RoundToFloor(((prixItem * taxe) - reduc) * 0.5));
-			rp_ClientMoney(vendeur, i_AddToPay, RoundToCeil(((prixItem * taxe) - reduc) * 0.5));			
+			rp_ClientMoney(vendeur, i_AddToPay, RoundToCeil(((prixItem * taxe) - reduc) * 0.5));
+
+			// 0.1 = taxe pour les low capitals 
 			
-			SetJobCapital( g_iUserData[vendeur][i_Job], (GetJobCapital( g_iUserData[vendeur][i_Job] ) + RoundFloat(prixItem*(1.0-taxe))));
+			int addcapital = RoundToCeil(prixItem*(1.0 - (taxe + 0.1))); 
+			int rest = RoundToFloor(prixItem*(1.0 - (1.0 - 0.1)));
+			
+			// rest = pour calc les low capitals
+
+			PrintToChatAll("taxe = %f", taxe);
+			PrintToChatAll("vendeur i_Money = %i", RoundToFloor(((prixItem * taxe) - reduc) * 0.5));
+			PrintToChatAll("vendeur i_AddToPay = %i", RoundToCeil(((prixItem * taxe) - reduc) * 0.5));
+
+			PrintToChatAll("capital : %i", addcapital);
+			PrintToChatAll("rest : %i", rest);
+
+			SetJobCapital(g_iUserData[vendeur][i_Job], (GetJobCapital(g_iUserData[vendeur][i_Job]) + addcapital));
 			addToGroup(vendeur, RoundFloat(float(prix)/(2.0)));
-			
 			
 			Call_StartForward( view_as<Handle>(g_hRPNative[vendeur][RP_OnPlayerSell]));
 			Call_PushCell(vendeur);
