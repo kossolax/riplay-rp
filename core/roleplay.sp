@@ -23,6 +23,7 @@
 #include <dhooks>
 #include <advanced_motd>
 #include <rp_version>
+#include <unixtime_sourcemod>
 
 #define USING_VEHICLE
 //#define EVENT_APRIL

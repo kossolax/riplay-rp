@@ -368,9 +368,13 @@ void updateLotery() {
 	SQL_TQuery(g_hBDD, SQL_SetLoteryAmount, "SELECT COUNT( id ) FROM rp_loto");
 }
 void updateBlackFriday(int jour, int reduction) {
-	int date = g_iBlackFriday[0] + (86400 * jour);
+	int date = g_iBlackFriday[0] + (24*60*60 * jour) + (12*60*60);
 
-	g_iBlackFriday[0] = date;
+	char szDate[32];
+	FormatTime(szDate, sizeof(szDate), "%d/%m/%Y", date);
+	int timestamp = DateToTimestamp(szDate);
+
+	g_iBlackFriday[0] = timestamp;
 	g_iBlackFriday[1] = reduction;
 
 	char query[256];
