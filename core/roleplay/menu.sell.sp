@@ -777,18 +777,11 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			rp_ClientMoney(vendeur, i_AddToPay, RoundToCeil(((prixItem * taxe) - reduc) * 0.5));
 
 			// 0.1 = taxe pour les low capitals 
-			
+
 			int addcapital = RoundToCeil(prixItem*(1.0 - (taxe + 0.1))); 
 			int rest = RoundToFloor(prixItem*(1.0 - (1.0 - 0.1)));
 			
 			// rest = pour calc les low capitals
-
-			PrintToChatAll("taxe = %f", taxe);
-			PrintToChatAll("vendeur i_Money = %i", RoundToFloor(((prixItem * taxe) - reduc) * 0.5));
-			PrintToChatAll("vendeur i_AddToPay = %i", RoundToCeil(((prixItem * taxe) - reduc) * 0.5));
-
-			PrintToChatAll("capital : %i", addcapital);
-			PrintToChatAll("rest : %i", rest);
 
 			SetJobCapital(g_iUserData[vendeur][i_Job], (GetJobCapital(g_iUserData[vendeur][i_Job]) + addcapital));
 			addToGroup(vendeur, RoundFloat(float(prix)/(2.0)));
