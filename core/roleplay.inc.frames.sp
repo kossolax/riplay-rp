@@ -641,28 +641,33 @@ void OnGameFrame_10(float time) {
 				}
 				
 				if( g_iUserData[i][i_Sickness] && (g_iMinutes % 5) == 0 ) {
+					
+					int health = GetClientHealth(i);
 
-					Format(sound, sizeof(sound), "hostage/hpain/hpain%i.wav", Math_GetRandomInt(1, 6));
-					EmitSoundToAllAny(sound, i);
-					
-					int heal = GetClientHealth(i) - Math_GetRandomInt(3, 7);
-					if( heal >= 1 )
-						SetEntityHealth(i, heal);
-					else
-						SetEntityHealth(i, 1);
-					
-					float vecAngles[3];
-					vecAngles[0] = vecAngles[1] = vecAngles[2] = 10.0;
-					
-					
-					SetEntPropVector(i, Prop_Send, "m_viewPunchAngle", vecAngles);
-					
-					
-					vecAngles[0] = Math_GetRandomFloat(10.0, 20.0);
-					vecAngles[1] = Math_GetRandomFloat(10.0, 20.0);
-					vecAngles[2] = Math_GetRandomFloat(5.0, 10.0);
-					
-					TeleportEntity(i, NULL_VECTOR, NULL_VECTOR, vecAngles);
+					if(health == 1 || !IsPlayerAlive(i)) {
+						g_iUserData[i][i_Sickness] = 0;
+					} else {
+						Format(sound, sizeof(sound), "hostage/hpain/hpain%i.wav", Math_GetRandomInt(1, 6));
+						EmitSoundToAllAny(sound, i);
+						
+						int heal = health - Math_GetRandomInt(3, 7);
+
+						if( heal >= 1 )
+							SetEntityHealth(i, heal);
+						else
+							SetEntityHealth(i, 1);
+						
+						float vecAngles[3];
+						vecAngles[0] = vecAngles[1] = vecAngles[2] = 10.0;
+						
+						SetEntPropVector(i, Prop_Send, "m_viewPunchAngle", vecAngles);
+						
+						vecAngles[0] = Math_GetRandomFloat(10.0, 20.0);
+						vecAngles[1] = Math_GetRandomFloat(10.0, 20.0);
+						vecAngles[2] = Math_GetRandomFloat(5.0, 10.0);
+						
+						TeleportEntity(i, NULL_VECTOR, NULL_VECTOR, vecAngles);
+					}
 				}
 				
 				if( g_iUserData[i][i_JailTime] > 0 ) {

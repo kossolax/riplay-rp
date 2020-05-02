@@ -483,17 +483,19 @@ void PoisonPlayer(int target, float time, int client) {
 		g_iUserData[target][i_Sickness] = 1;
 		g_flUserData[target][fl_LastPoison] = GetGameTime();
 		
-		if( time >= 0.1 ) {
+		/*if( time >= 0.1 ) {
 			CreateTimer(20.0, StopPoison, target);
-		}
+		}*/
 	}
 }
-public Action StopPoison(Handle time, any  target) {
+
+/*public Action StopPoison(Handle time, any  target) {
 	if( g_iUserData[target][i_Sickness] == 1 && g_flUserData[target][fl_LastPoison]+19 <= GetGameTime() ) {
 		g_iUserData[target][i_Sickness] = 0;
 	}
 	
-}
+}*/
+
 public void CTF_SNIPER_dot(int client) {
 	
 	float train = g_flUserData[client][fl_WeaponTrainAdmin] < 0 ? g_flUserData[client][fl_WeaponTrain] : g_flUserData[client][fl_WeaponTrainAdmin];
