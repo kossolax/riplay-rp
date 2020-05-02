@@ -646,7 +646,7 @@ bool IsAdmin(int client) {
 	char szSteamID[64];
 	GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID), false);
 	
-	for(int i = 0; i <= sizeof(g_szSuperAdmin); i++) {
+	for(int i = 0; i < sizeof(g_szSuperAdmin); i++) {
 		if(!StrEqual(g_szSuperAdmin[i], szSteamID)) {
 			continue;
 		}

@@ -267,6 +267,7 @@ public int MenuSetPay(Handle menu, MenuAction action, int client, int param2) {
 		if( amount > max && !IsAdmin(client) ) {
 			amount = max;
 		}
+		
 		Format( g_szJobList[job_id][job_type_pay], 127, "%i", amount);
 		
 		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le grade \"%s\" a maintenant %i$ de paye.", g_szJobList[job_id][job_type_name], amount);
