@@ -367,11 +367,15 @@ void updateGroupLeader() {
 void updateLotery() {
 	SQL_TQuery(g_hBDD, SQL_SetLoteryAmount, "SELECT COUNT( id ) FROM rp_loto");
 }
-void updateBlackFriday(int date, int reduction) {
-	//date = LAST + (86400 * date);
-	char szQuery[256];
-	Format(szQuery, sizeof(szQuery), "UPDATE `rp_servers` SET `bf_date`= '%i', `bf_reduction`= '%i'", date, reduction);
-	SQL_TQuery(g_hBDD, SQL_QueryCallBack, "SELECT COUNT( id ) FROM rp_loto");
+void updateBlackFriday(int jour, int reduction) {
+	int date = g_iBlackFriday[0] + (86400 * jour);
+
+	g_iBlackFriday[0] = date;
+	g_iBlackFriday[1] = reduction;
+
+	char query[256];
+	Format(query, sizeof(query), "UPDATE `rp_servers` SET `bf_date`= '%i', `bf_reduction`= '%i' WHERE `id` = '%i'", g_iBlackFriday[0], g_iBlackFriday[1], g_iSID);
+	SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
 }
 public Action StoreData(Handle timer, any client) {
 	StoreUserData(client);

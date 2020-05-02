@@ -1341,3 +1341,19 @@ public Action cmd_Jointeam(int client, int args) {
 public Action Cmd_BlockedSilent(int client, int args) {
 	return Plugin_Handled;
 }
+/* Commande qui change le blackfriday */
+public Action CmdBlackFriday(int args) {
+	int day = Math_GetRandomInt(2, 7);
+	int reduction = 5 * Math_GetRandomInt(1, 3);
+
+	updateBlackFriday(day, reduction);
+
+	char szDate[32];
+	FormatDate(g_iBlackFriday[0], szDate, sizeof(szDate));
+
+	CPrintToChatAll("DEBUG: DAY = %i  REDUCTION = %i", day, reduction);
+	CPrintToChatAll("NEW BLACK FRIDAY DATE (%s) REDUCTION (%i)", szDate, g_iBlackFriday[1]);
+
+	PrintToServer("DEBUG: DAY = %i  REDUCTION = %i", day, reduction);
+	PrintToServer("NEW BLACK FRIDAY DATE (%s) REDUCTION (%i)", szDate, g_iBlackFriday[1]);
+}

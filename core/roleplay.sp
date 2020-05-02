@@ -151,7 +151,7 @@ public void OnPluginStart() {
 	RegServerCmd("rp_start_quest",		Cmd_StartQuest);
 	RegServerCmd("rp_quest_reload", 	CmdReloadQuest);
 	RegServerCmd("rp_zombie_die",		CmdSpawnCadeau);
-	RegServerCmd("rp_blackfriday", CmdBlackFriday, ADMFLAG_ROOT);
+	RegServerCmd("rp_blackfriday", 		CmdBlackFriday);
 	//
 	//
 	//
@@ -294,12 +294,15 @@ public void OnPluginStart() {
 	
 	CloseHandle(hGameData);
 
-	RegConsoleCmd("sm_bf", Command_DebugBF);
+	RegConsoleCmd("sm_bf", Command_DebugBF); // debug, a tej après
 }
 
 public Action Command_DebugBF(int client, int args) {
-	PrintToChatAll("BF DATE : %i", g_iBlackFriday[0]);
-	PrintToChatAll("BF DATE : %i", g_iBlackFriday[1]);
+	char szDate[32];
+	FormatDate(g_iBlackFriday[0], szDate, sizeof(szDate));
+
+	PrintToChatAll("BF DATE : %i (%s)", g_iBlackFriday[0], szDate);
+	PrintToChatAll("BF REDUCTION : %i", g_iBlackFriday[1]);
 }
 
 /*public void OnAllPluginsLoaded() {
