@@ -15,6 +15,7 @@
 #include <cstrike>
 #include <colors_csgo>	// https://forums.alliedmods.net/showthread.php?p=2205447#post2205447
 #include <smlib>		// https://github.com/bcserv/smlib
+#include <emitsoundany> // https://forums.alliedmods.net/showthread.php?t=237045
 
 #pragma newdecls required
 #include <roleplay.inc>	// https://www.ts-x.eu
@@ -90,7 +91,6 @@ char g_szSkinsList[][][] = {
 	{"models/player/custom_player/legacy/tm_separatist_variantd.mdl", 	"Séparatist - D", 	"0", "1"}
 };
 
-int g_cBeam;
 int g_iKnifeThrowID = -1;
 int g_iRiotShield[65];
 int g_cBeam, g_cGlow, g_cExplode;
@@ -104,13 +104,6 @@ public Action Cmd_Reload(int args) {
 	GetPluginFilename(INVALID_HANDLE, name, sizeof(name));
 	ServerCommand("sm plugins reload %s", name);
 	return Plugin_Continue;
-}
-public void OnMapStart() {
-	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt", true);
-	g_cGlow = PrecacheModel("materials/sprites/glow01.vmt", true);
-	g_cExplode = PrecacheModel("materials/sprites/muzzleflash4.vmt", true);
-	PrecacheModel(MODEL_KEVLARBOX, true);
-	PrecacheSoundAny("tsx/roleplay/fouet.mp3");
 }
 public void OnPluginStart() {
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
@@ -168,6 +161,11 @@ public void OnConVarChange(Handle cvar, const char[] oldVal, const char[] newVal
 }
 public void OnMapStart() {
 	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt", true);
+	g_cGlow = PrecacheModel("materials/sprites/glow01.vmt", true);
+	g_cExplode = PrecacheModel("materials/sprites/muzzleflash4.vmt", true);
+	PrecacheModel(MODEL_KEVLARBOX, true);
+	PrecacheSoundAny("tsx/roleplay/fouet.mp3");
+
 	PrecacheModel(MODEL_KNIFE, true);
 }
 public void OnClientPostAdminCheck(int client) {
@@ -633,14 +631,14 @@ public Action Cmd_ItemShoes(int args) {
 	
 	rp_SetClientBool(client, b_HasShoes, true);
 	
-	rp_HookEvent(client, RP_OnAssurance,	fwdAssurance);
+	rp_HookEvent(client, RP_OnAssurance,	fwdAssuranceShoes);
 	rp_HookEvent(client, RP_OnFrameSeconde, fwdVitalite);
 	SDKHook(client, SDKHook_OnTakeDamage, fwdNoFallDamage);
 	
 	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez maintenant la classe avec votre nouvelle paire de baskets!");
 	return Plugin_Handled;
 }
-public Action fwdAssurance(int client, int& amount) {
+public Action fwdAssuranceShoes(int client, int& amount) {
 	if( rp_GetClientBool(client, b_HasShoes) )
 		amount += 250;
 }
@@ -1089,10 +1087,6 @@ public Action Cmd_ItemGiveSkin(int args) {
 		}
 	}
 	
-}
-public Action fwdFrozen(int client, float & speed, float & gravity) {
-	speed = 0.0;
-	return Plugin_Stop;
 }
 // ----------------------------------------------------------------------------
 public Action Cmd_ItemPreserv(int args) {
@@ -1673,11 +1667,11 @@ public Action Cmd_ItemLube(int args){
 
 	rp_SetClientBool(client, b_Lube, true);
 	rp_HookEvent(client, RP_PreHUDColorize, fwdLube, 30.0);
-	rp_HookEvent(client, RP_OnAssurance,	fwdAssurance);
+	rp_HookEvent(client, RP_OnAssurance,	fwdAssuranceLube);
 	
 	return Plugin_Handled;
 }
-public Action fwdAssurance(int client, int& amount) {
+public Action fwdAssuranceLube(int client, int& amount) {
 	if( rp_GetClientBool(client, b_Lube) )
 		amount += 1000;
 }
@@ -1749,11 +1743,6 @@ public Action Task_UningiteEntity(Handle timer, any client) {
 public Action ItemStopCig(Handle timer, any client) {
 	
 	rp_SetClientBool(client, b_Smoking, false);
-}
-public Action fwdCigSpeed(int client, float& speed, float& gravity) {
-	speed += 0.15;
-	
-	return Plugin_Changed;
 }
 public Action fwdCigGravity(int client, float& speed, float& gravity) {
 	gravity -= 0.15;
