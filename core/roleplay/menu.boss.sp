@@ -248,11 +248,24 @@ public int MenuSetPay(Handle menu, MenuAction action, int client, int param2) {
 		
 		int amount = ( StringToInt(g_szJobList[job_id][job_type_pay]) + diff );
 		
-		if( amount < 0 ) {
-			amount = 0;
+		int max = 500;
+		int min = 0;
+
+		int jobid = rp_GetClientJobID(client);
+
+		if( jobid == 11 || jobid == 21 || jobid == 31 || jobid == 51 || jobid == 61 || jobid == 71 || jobid == 81 || jobid == 111 || jobid == 131 || jobid == 171 || jobid == 211 || jobid == 221) {
+			max = 650;
 		}
-		if( amount > 500 && !IsAdmin(client) ) {
-			amount = 500;
+		
+		if( jobid == 41 || jobid == 91) {
+			min = 150;
+		}
+
+		if( amount < min ) {
+			amount = min;
+		}
+		if( amount > max && !IsAdmin(client) ) {
+			amount = max;
 		}
 		Format( g_szJobList[job_id][job_type_pay], 127, "%i", amount);
 		
