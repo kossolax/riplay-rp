@@ -164,6 +164,7 @@ float g_flZones[MAX_ZONES][2][3];
 float g_flPoints[MAX_LOCATIONS][3];
 float g_flLastCheck_ZONE[MAX_ZONES+1] = 0.0;
 int g_iLastData_ZONE[MAX_ZONES+1];
+int g_iBlackFriday[2]; // 0 = DATE - 1 = REDUCTION
 char g_szSellingKeys[MAX_ENTITIES][view_as<int>(key_type_max)][256];
 char g_szGroupList[MAX_JOBS][view_as<int>(job_type_max)][64];
 char g_szVillaOwner[view_as<int>(rp_serv_max)][64];

@@ -292,6 +292,13 @@ public void OnPluginStart() {
 	}
 	
 	CloseHandle(hGameData);
+
+	RegConsoleCmd("sm_bf", Command_DebugBF);
+}
+
+public Action Command_DebugBF(int client, int args) {
+	PrintToChatAll("BF DATE : %i", g_iBlackFriday[0]);
+	PrintToChatAll("BF DATE : %i", g_iBlackFriday[1]);
 }
 
 /*public void OnAllPluginsLoaded() {

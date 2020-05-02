@@ -104,6 +104,20 @@ void LoadServerDatabase() {
 		}
 	}
 	
+	Format(query, sizeof(query), "SELECT `bf_date`, `bf_reduction` FROM `rp_servers` WHERE `id` = %i", g_iSID);
+
+	if ((hQuery = SQL_Query(g_hBDD, query)) == INVALID_HANDLE) {
+		g_iBlackFriday[0] = g_iBlackFriday[1] = 0;
+	}
+	else {
+		if(SQL_FetchRow(hQuery) > 0) {
+			g_iBlackFriday[0] = SQL_FetchInt(hQuery, 0);
+			g_iBlackFriday[1] = SQL_FetchInt(hQuery, 1);
+		} else {
+			g_iBlackFriday[0] = g_iBlackFriday[1] = 0;
+		}
+	}
+
 	//
 	// La première chose à s'occuper, est du précache...
 	if ((hQuery = SQL_Query(g_hBDD, "SELECT `path`, `is_precache` FROM `rp_download` ORDER BY `path` ASC;")) == INVALID_HANDLE) {
@@ -352,6 +366,12 @@ void updateGroupLeader() {
 }
 void updateLotery() {
 	SQL_TQuery(g_hBDD, SQL_SetLoteryAmount, "SELECT COUNT( id ) FROM rp_loto");
+}
+void updateBlackFriday(int date, int reduction) {
+	//date = LAST + (86400 * date);
+	char szQuery[256];
+	Format(szQuery, sizeof(szQuery), "UPDATE `rp_servers` SET `bf_date`= '%i', `bf_reduction`= '%i'", date, reduction);
+	SQL_TQuery(g_hBDD, SQL_QueryCallBack, "SELECT COUNT( id ) FROM rp_loto");
 }
 public Action StoreData(Handle timer, any client) {
 	StoreUserData(client);
