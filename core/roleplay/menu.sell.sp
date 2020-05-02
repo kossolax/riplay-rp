@@ -83,6 +83,8 @@ void DrawVendreMenu(int client) {
 			return;
 		}
 		
+		int playercount = 0;
+
 		Handle menu = CreateMenu(eventGiveMenu_2);
 		SetMenuTitle(menu, "Sélectionner a qui louer cet appartement\n ");
 		char name[128];
