@@ -6,11 +6,23 @@
 #include <roleplay.inc>
 #include <smlib>
 
+int g_TEST = 0;
+
 public void OnPluginStart() {
 	RegServerCmd("sm_debugcapitals", Command_DebugCapitals)
 }
 
 public Action Command_DebugCapitals(int args) {
+	char test[32];
+	GetCmdArg(1, test, 32);
+	g_TEST = StringToInt(test);
+
+	if(g_TEST == 0) {
+		g_TEST = 100;
+	}
+
+	PrintToServer("Test avec %i$", g_TEST);
+
 	debugJob();
 }
 
@@ -33,17 +45,33 @@ void debugJob() {
 		numb++;
 		capitalList[numb][0] = rp_GetJobCapital(i);
 		capitalList[numb][1] = i;	
-
-		PrintToServer("[%i] add %s : %i$", i, szTemps, rp_GetJobCapital(i));
 	}
 
-	SortCustom2D(capitalList, 5, SortMachineItemsL2H);
+	SortCustom2D(capitalList, numb, SortMachineItemsL2H);
 
 	PrintToServer("-------- result --------");
 
-	for(int i = 0; i < numb; i++) {
+	int totalcapital = 0;
+
+	for(int i = 0; i < 5; i++) {
+		totalcapital = totalcapital + capitalList[i][0];
+	}
+
+	PrintToServer("• Total Capital: %i$ \n", totalcapital);
+
+	int percent[5];
+
+	for(int i = 0; i < 5; i++) {
+		percent[i] = Math_GetPercentage(capitalList[i][0], totalcapital);
+	}
+
+	int add = 0;
+
+	for(int i = 0; i < 5; i++) {
+		//add = Math_GetPercentage(percent[4-i], g_TEST);
+		add = (g_TEST * percent[4-i]) / 100;
 		rp_GetJobData(capitalList[i][1], job_type_name, szTemps, sizeof(szTemps));
-		PrintToServer("[%i] %s -> %i$", capitalList[i][1], szTemps, capitalList[i][0]);
+		PrintToServer("[%i] %s -> %i$ = %i\% donc auras %i = %i$", capitalList[i][1], szTemps, capitalList[i][0], percent[i], percent[4-i], add);
 	}
 }
 
