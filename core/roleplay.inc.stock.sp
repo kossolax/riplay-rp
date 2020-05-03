@@ -108,7 +108,7 @@ public int SortItemPrixReverse(int[] a, int[] b, const int[][] array, Handle hnd
 	else
 		return -1;
 }
-
+// HIGHT TO LOW
 public int SortMachineItems(int[] a, int[] b, const int[][] array, Handle hndl)  {
 	if( b[0] == a[0] )
 		return 0;
@@ -117,6 +117,16 @@ public int SortMachineItems(int[] a, int[] b, const int[][] array, Handle hndl) 
 	else
 		return -1;
 }
+// LOW TO HIGHT
+public int SortMachineItemsL2H(int[] a, int[] b, const int[][] array, Handle hndl)  {
+	if( b[0] == a[0] )
+		return 0;
+	else if( b[0] > a[0] )
+		return 1;
+	else
+		return -1;
+}
+
 //We could use strlen, but that could be busted too.
 int CountString(const char[] str) {
 	int i = 0;
