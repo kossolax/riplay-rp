@@ -516,7 +516,7 @@ public int eventGiveMenu_2Bis(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 			int item_type = StringToInt(data[2]);
 			int day = StringToInt(data[3]);
 			int client_from_menu = StringToInt(data[4]);
-			int reduction = StringToInt(data[5]); // add blackfriday ici
+			int reduction = StringToInt(data[5]);
 			int target;
 			
 			if( IsValidClient(client_from_menu) ) {
