@@ -780,7 +780,7 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 
 			int addcapital = RoundToCeil(prixItem*(1.0 - (taxe + 0.1))); 
 			int rest = RoundToFloor(prixItem*(1.0 - (1.0 - 0.1)));
-			
+
 			// rest = pour calc les low capitals
 
 			SetJobCapital(g_iUserData[vendeur][i_Job], (GetJobCapital(g_iUserData[vendeur][i_Job]) + addcapital));
