@@ -121,7 +121,7 @@ public int SortMachineItems(int[] a, int[] b, const int[][] array, Handle hndl) 
 public int SortMachineItemsL2H(int[] a, int[] b, const int[][] array, Handle hndl)  {
 	if( b[0] == a[0] )
 		return 0;
-	else if( b[0] > a[0] )
+	else if( b[0] < a[0] )
 		return 1;
 	else
 		return -1;
