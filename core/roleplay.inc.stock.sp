@@ -109,7 +109,7 @@ public int SortItemPrixReverse(int[] a, int[] b, const int[][] array, Handle hnd
 		return -1;
 }
 // HIGHT TO LOW
-public int SortMachineItems(int[] a, int[] b, const int[][] array, Handle hndl)  {
+public int SortMachineItemsH2L(int[] a, int[] b, const int[][] array, Handle hndl)  {
 	if( b[0] == a[0] )
 		return 0;
 	else if( b[0] > a[0] )

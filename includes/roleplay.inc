@@ -484,7 +484,7 @@ native int rp_GetZoneBit(int client, float cache = 300.0);							/* Récupére u
 native int rp_SetZoneBit(int client, int bits);										/* Set une option sur une zone. */
 native int rp_GetZoneFromPoint(float pos[3]);
 // ----------------------------------------------------------------------------
-native int rp_GetRandomCapital(int jobID);									/* Prend un job au hasard. Plus il ya d'argent dans ce capital, plus ses chances d'être choisis est élevé */
+native int rp_GetRandomCapital(int jobID, int order = 0);									/* Prend un job au hasard. Plus il ya d'argent dans ce capital, plus ses chances d'être choisis est élevé [ORDER : 0 = HIGHT TO LOW - 2 LOW TO HIGHT] */
 native int rp_GetJobCapital(int jobID);										/* Valeur d'un capital */
 native int rp_SetJobCapital(int jobID, int amount);								/* Définir un capital */
 // ----------------------------------------------------------------------------

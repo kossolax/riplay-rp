@@ -1053,7 +1053,11 @@ public int Native_GetBuildingData(Handle plugin, int numParams) {
 }
 public int Native_rp_GetRandomCapital(Handle plugin, int numParams) {
 	int capit = GetNativeCell(1);
-	
+	int order = GetNativeCell(2);
+	if(order < 0 || order > 1) {
+		order = 0;
+	}
+
 	int capital_id, capitalList[MAX_JOBS][2], min = 0, rnd;
 	for(int i=1; i<MAX_JOBS; i++) {
 		if( !StrEqual(g_szJobList[i][job_type_isboss], "1" ) )
@@ -1072,7 +1076,13 @@ public int Native_rp_GetRandomCapital(Handle plugin, int numParams) {
 		
 		
 	rnd = Math_GetRandomPow(1, min) - 1;
-	SortCustom2D(capitalList, min, SortMachineItems);
+
+	if(order == 0) {
+		SortCustom2D(capitalList, min, SortMachineItemsH2L);
+	} else {
+		SortCustom2D(capitalList, min, SortMachineItemsL2H);
+	}
+
 	capital_id = capitalList[rnd][1];
 	
 	if( capital_id == 0 || capital_id < 0 || capital_id > 221 ) {
