@@ -259,7 +259,7 @@ void AFK_Check(int client) {
 					g_iUserData[client][i_PlayerXP] -= 180;
 				
 			}
-			else {
+			/*else {
 				g_iUserData[client][i_TimeAFK_total]++;
 				g_iUserData[client][i_TimeAFK_today]++;
 				
@@ -275,7 +275,7 @@ void AFK_Check(int client) {
 						KickClient(client, "Vous êtes resté trop longtemps AFK.");
 					}
 				}
-			}
+			}*/
 		}
 	}
 	else {
