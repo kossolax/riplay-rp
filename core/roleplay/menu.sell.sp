@@ -91,7 +91,7 @@ void DrawVendreMenu(int client) {
 		Format(title, sizeof(title), "Sélectionner a qui louer cet appartement\n ");
 
 		if(g_bIsBlackFriday) {
-			Format(title, sizeof(title), "%sBLACK FRIDAY: %i \n", title, g_iBlackFriday[1]);
+			Format(title, sizeof(title), "%BLACKFRIDAY: %i\% de réduction \n", title, g_iBlackFriday[1]);
 		}
 
 		SetMenuTitle(menu, title);
@@ -133,7 +133,7 @@ void DrawVendreMenu(int client) {
 		Format(title, sizeof(title), "Sélectionner un objet à vendre\n ");
 
 		if(g_bIsBlackFriday) {
-			Format(title, sizeof(title), "%sBLACK FRIDAY: %i\% \n", title, g_iBlackFriday[1]);
+			Format(title, sizeof(title), "%BLACKFRIDAY: %i\% de réduction \n", title, g_iBlackFriday[1]);
 		}
 
 		SetMenuTitle(hGiveMenu, title);
