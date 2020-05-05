@@ -88,10 +88,10 @@ void DrawVendreMenu(int client) {
 
 		Handle menu = CreateMenu(eventGiveMenu_2Bis); // _2
 
-		Format(title, sizeof(title), "Sélectionner a qui louer cet appartement\n ");
+		Format(title, sizeof(title), "Sélectionner a qui louer cet appartement\n");
 
 		if(g_bIsBlackFriday) {
-			Format(title, sizeof(title), "%sBLACKFRIDAY: %iPCT de réduction \n", title, g_iBlackFriday[1]);
+			Format(title, sizeof(title), "%sBLACKFRIDAY: -%iPCT de réduction \n", title, g_iBlackFriday[1]);
 			ReplaceString(title, sizeof(title), "PCT", "%%", true);
 		}
 
@@ -131,10 +131,10 @@ void DrawVendreMenu(int client) {
 		// Setup menu
 		Handle hGiveMenu = CreateMenu(eventGiveMenu_1);
 
-		Format(title, sizeof(title), "Sélectionner un objet à vendre\n ");
+		Format(title, sizeof(title), "Sélectionner un objet à vendre\n");
 
 		if(g_bIsBlackFriday) {
-			Format(title, sizeof(title), "%sBLACKFRIDAY: %iPCT de réduction \n", title, g_iBlackFriday[1]);
+			Format(title, sizeof(title), "%sBLACKFRIDAY: -%iPCT de réduction \n", title, g_iBlackFriday[1]);
 			ReplaceString(title, sizeof(title), "PCT", "%%", true);
 		}
 
@@ -629,7 +629,7 @@ public int eventGiveMenu_2Bis(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 			}
 
 			if(g_bIsBlackFriday) {
-				Format(tmp, sizeof(tmp), "%sBLACKFRIDAY: %iPCT de réduction\n", tmp, g_iBlackFriday[1]);
+				Format(tmp, sizeof(tmp), "%sBLACKFRIDAY: -%iPCT de réduction\n", tmp, g_iBlackFriday[1]);
 				ReplaceString(tmp, sizeof(tmp), "PCT", "%%", true);
 			}
 			
