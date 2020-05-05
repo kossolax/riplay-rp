@@ -302,6 +302,7 @@ public Action Command_DebugBF(int client, int args) {
 	char szDate[32];
 	FormatDate(g_iBlackFriday[0], szDate, sizeof(szDate));
 
+	PrintToChatAll("BF ? %s", g_bIsBlackFriday ? "yes":"no");
 	PrintToChatAll("BF DATE : %i (%s)", g_iBlackFriday[0], szDate);
 	PrintToChatAll("BF REDUCTION : %i", g_iBlackFriday[1]);
 }
