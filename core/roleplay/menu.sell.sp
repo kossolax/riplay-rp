@@ -91,7 +91,8 @@ void DrawVendreMenu(int client) {
 		Format(title, sizeof(title), "Sélectionner a qui louer cet appartement\n ");
 
 		if(g_bIsBlackFriday) {
-			Format(title, sizeof(title), "%BLACKFRIDAY: %i\% de réduction \n", title, g_iBlackFriday[1]);
+			Format(title, sizeof(title), "%sBLACKFRIDAY: %iPCT de réduction \n", title, g_iBlackFriday[1]);
+			ReplaceString(title, sizeof(title), "PCT", "%%", true);
 		}
 
 		SetMenuTitle(menu, title);
@@ -133,7 +134,8 @@ void DrawVendreMenu(int client) {
 		Format(title, sizeof(title), "Sélectionner un objet à vendre\n ");
 
 		if(g_bIsBlackFriday) {
-			Format(title, sizeof(title), "%BLACKFRIDAY: %i\% de réduction \n", title, g_iBlackFriday[1]);
+			Format(title, sizeof(title), "%sBLACKFRIDAY: %iPCT de réduction \n", title, g_iBlackFriday[1]);
+			ReplaceString(title, sizeof(title), "PCT", "%%", true);
 		}
 
 		SetMenuTitle(hGiveMenu, title);
@@ -609,28 +611,34 @@ public int eventGiveMenu_2Bis(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 			char tmp[512];
 			
 			if( StrContains(g_szItemList[id][item_type_extra_cmd], "rp_give_appart_door") == 0 ) {
-				Format(tmp, sizeof(tmp), "%N vous propose d'acheter\n %i %s (n°%s) pour %i$\nConfirmez-vous l'achat?", 
+				Format(tmp, sizeof(tmp), "%N vous propose d'acheter\n%i %s (n°%s) pour %i$\n", 
 				client, amount, g_szItemList[id][item_type_name], g_szSellingKeys[day][key_type_name], prix );
 			}
 			if( StrContains(g_szItemList[id][item_type_extra_cmd], "rp_item_contrat") == 0 ) {
-				Format(tmp, sizeof(tmp), "%N vous propose d'acheter\n %s contre %N pour %d$\nConfirmez-vous l'achat?", 
+				Format(tmp, sizeof(tmp), "%N vous propose d'acheter\n%s contre %N pour %d$\n", 
 				client, g_szItemList[id][item_type_name], day, prix);
 			}
 			else {
-				Format(tmp, sizeof(tmp), "%N vous propose d'acheter\n %i %s pour %i$\nConfirmez-vous l'achat?", 
+				Format(tmp, sizeof(tmp), "%N vous propose d'acheter\n%i %s pour %i$\n", 
 				client, amount, g_szItemList[id][item_type_name], prix);
 			}
 			
 			if( reduction > 0 ) {
-				Format(tmp, sizeof(tmp), "%s Réduction de %dPCT !", tmp, reduction);
+				Format(tmp, sizeof(tmp), "%s Réduction de %dPCT !\n", tmp, reduction);
+				ReplaceString(tmp, sizeof(tmp), "PCT", "%%", true);
+			}
+
+			if(g_bIsBlackFriday) {
+				Format(tmp, sizeof(tmp), "%sBLACKFRIDAY: %iPCT de réduction\n", tmp, g_iBlackFriday[1]);
 				ReplaceString(tmp, sizeof(tmp), "PCT", "%%", true);
 			}
 			
+			Format(tmp, sizeof(tmp), "%s\nConfirmez-vous l'achat?\n ", tmp);
+
 			char szMoney[128], szBank[128];
 			String_NumberFormat(g_iUserData[target][i_Money],	szMoney,sizeof(szMoney));
 			String_NumberFormat(g_iUserData[target][i_Bank],	szBank,	sizeof(szBank));
 			Format(tmp, sizeof(tmp), "%s\nArgent sur vous: %s$, en banque: %s$\n ", tmp, szMoney, szBank);
-			
 			
 			// Setup menu
 			Handle hGiveMenu = CreateMenu(eventGiveMenu_3);
