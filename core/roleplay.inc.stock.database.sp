@@ -372,7 +372,7 @@ void updateGroupLeader() {
 void updateLotery() {
 	SQL_TQuery(g_hBDD, SQL_SetLoteryAmount, "SELECT COUNT( id ) FROM rp_loto");
 }
-void updateBlackFriday(int jour, int reduction) {
+void updateBlackFriday(int day, int reduction) {
 	static char szDaylist[][8] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
 	char szDate[8];
 
@@ -389,12 +389,12 @@ void updateBlackFriday(int jour, int reduction) {
 	}
 
 	// if day is Sun, and the next bf is Mon, we force the bf on Tue
-	if(index == 7 && jour == 1) {
-		jour = 2;
+	if(index == 7 && day == 1) {
+		day = 2;
 	}
 
 	// new date = actual_date + (rest_day_on_this_week * 24 hours in seconds) + (24 hours in seconds * numb_days_for_next_bf) + (22 hours in seconds)
-	int date = g_iBlackFriday[0] + ((7 - index) * (24*60*60)) + ((24*60*60) * jour) + (12*60*60);
+	int date = g_iBlackFriday[0] + ((7 - index) * (24*60*60)) + ((24*60*60) * day) + (12*60*60);
 
 	FormatTime(szDate, sizeof(szDate), "%d/%m/%Y", date);
 	int timestamp = DateToTimestamp(szDate);
