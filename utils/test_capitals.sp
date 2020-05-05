@@ -1,4 +1,4 @@
-#include <sourcemod>
+  #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
 #include <colors_csgo>
@@ -29,7 +29,7 @@ public Action Command_DebugCapitals(int args) {
 void debugJob() {
 	int capitalList[MAX_JOBS][2];
 	int numb = -1;
-	char szTemps[32];
+	int capital = 0;
 
 	for(int i = 1; i < MAX_JOBS; i++) {
 		if(rp_GetJobInt(i, job_type_isboss) == 0) {
@@ -40,21 +40,23 @@ void debugJob() {
 			continue;
 		}
 
-		rp_GetJobData(i, job_type_name, szTemps, sizeof(szTemps));
+		capital = rp_GetJobCapital(i);
 
 		numb++;
-		capitalList[numb][0] = rp_GetJobCapital(i);
+		capitalList[numb][0] = capital;
 		capitalList[numb][1] = i;	
 	}
 
 	SortCustom2D(capitalList, numb, SortMachineItemsL2H);
 
+	float min = FloatAbs(float(capitalList[0][0]));
+
 	PrintToServer("-------- result --------");
 
 	int totalcapital = 0;
-
+	
 	for(int i = 0; i < 5; i++) {
-		totalcapital = totalcapital + capitalList[i][0];
+		totalcapital = totalcapital + capitalList[i][0] + RoundToFloor(min);
 	}
 
 	PrintToServer("• Total Capital: %i$ \n", totalcapital);
@@ -62,13 +64,14 @@ void debugJob() {
 	int percent[5];
 
 	for(int i = 0; i < 5; i++) {
-		percent[i] = Math_GetPercentage(capitalList[i][0], totalcapital);
+		percent[i] = Math_GetPercentage(capitalList[i][0] + RoundToFloor(min), totalcapital);
 	}
 
 	int add = 0;
 
+	char szTemps[32];
+
 	for(int i = 0; i < 5; i++) {
-		//add = Math_GetPercentage(percent[4-i], g_TEST);
 		add = (g_TEST * percent[4-i]) / 100;
 		rp_GetJobData(capitalList[i][1], job_type_name, szTemps, sizeof(szTemps));
 		PrintToServer("[%i] %s -> %i$ = %i\% donc auras %i = %i$", capitalList[i][1], szTemps, capitalList[i][0], percent[i], percent[4-i], add);
