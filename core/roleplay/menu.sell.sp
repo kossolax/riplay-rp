@@ -84,9 +84,18 @@ void DrawVendreMenu(int client) {
 		}
 		
 		int playercount = 0;
+		char title[256];
 
 		Handle menu = CreateMenu(eventGiveMenu_2Bis); // _2
-		SetMenuTitle(menu, "Sélectionner a qui louer cet appartement\n ");
+
+		Format(title, sizeof(title), "Sélectionner a qui louer cet appartement\n ");
+
+		if(g_bIsBlackFriday) {
+			Format(title, sizeof(title), "%sBLACK FRIDAY: %i \n", title, g_iBlackFriday[1]);
+		}
+
+		SetMenuTitle(menu, title);
+
 		char name[128];
 		for(int i = 1; i <= MaxClients; i++) {
 			if( !IsValidClient(i) )
@@ -116,10 +125,18 @@ void DrawVendreMenu(int client) {
 	else {
 		char tmp[255];
 		char tmp2[255];
-		
+		char title[256];
+
 		// Setup menu
 		Handle hGiveMenu = CreateMenu(eventGiveMenu_1);
-		SetMenuTitle(hGiveMenu, "Sélectionner un objet à vendre\n ");
+
+		Format(title, sizeof(title), "Sélectionner un objet à vendre\n ");
+
+		if(g_bIsBlackFriday) {
+			Format(title, sizeof(title), "%sBLACK FRIDAY: %i\% \n", title, g_iBlackFriday[1]);
+		}
+
+		SetMenuTitle(hGiveMenu, title);
 		
 		char szJobID[12];
 		Format(szJobID, sizeof(szJobID), "%d", jobID);
@@ -517,6 +534,7 @@ public int eventGiveMenu_2Bis(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 			int day = StringToInt(data[3]);
 			int client_from_menu = StringToInt(data[4]);
 			int reduction = StringToInt(data[5]);
+			//int reduction = g_bIsBlackFriday ? g_iBlackFriday[1]:0;
 			int target;
 			
 			if( IsValidClient(client_from_menu) ) {
@@ -581,6 +599,11 @@ public int eventGiveMenu_2Bis(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 				if( rp_GetClientJobID(target) == g_iServerRules[rules_reductions][rules_Target] || rp_GetClientGroupID(target) == (g_iServerRules[rules_reductions][rules_Target]-1000) ) {
 					reduction = 0;
 				}
+			}
+
+			/* add blackfriday */
+			if(g_bIsBlackFriday) {
+				prix = prix - ((prix * g_iBlackFriday[1]) / 100);
 			}
 			
 			char tmp[512];
@@ -664,6 +687,7 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			int day = StringToInt(data[5]);
 			int reduction = StringToInt(data[6]);
 			
+			
 			if( type == 3 ) {
 				g_iBlockedTime[client][vendeur] = GetTime();
 				CPrintToChat(vendeur, "{lightblue}[TSX-RP]{default} Le client a refusé l'achat et vous ignorera pour 6 heures.");
@@ -690,7 +714,12 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 						prix = RoundFloat(float(prix) * 0.95);
 				}
 			}
-			
+
+			/* add blackfriday */
+			if(g_bIsBlackFriday) {
+				prix = prix - ((prix * g_iBlackFriday[1]) / 100);
+			}
+
 			if( item_type == 0 && StrContains(g_szItemList[item_id][item_type_extra_cmd], "rp_item_respawn") == 0 && IsPlayerAlive(client) ) {
 				CPrintToChat(vendeur, "{lightblue}[TSX-RP]{default} Le joueur est en vie.");
 				return;
