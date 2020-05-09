@@ -353,8 +353,11 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 				rp_ClientFloodIncrement(i, target, fd_vol, cooldown);
 		}
 		rp_ClientFloodIncrement(client, target, fd_vol, 2.0 * cooldown);
-		rp_Effect_Cashflow(client, Math_Clamp(RoundToNearest(Pow(amount*2.0, 0.85)), 1, 1000)  );
-		
+
+		if(amount >= 25) {
+			rp_Effect_Cashflow(client, Math_Clamp(RoundToNearest(Pow(amount*2.0, 0.85)), 1, 1000)  );
+		}
+
 		int cpt = rp_GetRandomCapital(91);
 		rp_SetJobCapital(91, rp_GetJobCapital(91) + (amount/4));
 		rp_SetJobCapital(cpt, rp_GetJobCapital(cpt) - (amount/4));

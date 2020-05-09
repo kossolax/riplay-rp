@@ -806,7 +806,11 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 				rp_ClientFloodIncrement(i, target, fd_vol, cooldown);
 		}
 		rp_ClientFloodIncrement(client, target, fd_vol, 2.0 * cooldown);
-		rp_Effect_Cashflow(client, amount);
+		
+		if(amount > 25) {
+			rp_Effect_Cashflow(client, amount);
+		}
+
 		rp_SetClientFloat(target, fl_LastStolen, GetGameTime() + (rp_GetClientBool(target, b_IsAFK) ? 300.0 : 0.0));
 		
 		int cpt = rp_GetRandomCapital(81);
