@@ -539,7 +539,7 @@ int GivePlayerPay(int i, bool calculator = false) {
 			SetJobCapital(1, GetJobCapital(1) + RoundFloat((to_pay/10.0)*3.0) );
 			to_pay = 0;
 		}
-				
+
 		if( !calculator ) {
 				
 			if( capital > 0 || g_iUserData[i][i_Job] == 0 ) {
