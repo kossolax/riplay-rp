@@ -83,7 +83,7 @@ public bool fwdCanStart(int client) {
 		return false;
 	if( g_bCanMakeQuest == false )
 		return false;
-	if( GetClientCount() <= 28 && GetConVarInt(FindConVar("hostport")) != 27025 )
+	if( GetClientCount() <= 2 && GetConVarInt(FindConVar("hostport")) != 27025 )
 		return false;
 	if( rp_GetClientJobID(client) == 1 || rp_GetClientJobID(client) == 101 )
 		return false;
