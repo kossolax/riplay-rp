@@ -155,18 +155,18 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 
 	Handle menu = CreateMenu(ModifyWeapon);
 	SetMenuTitle(menu, "Modifier l'arme\n ");
-	AddMenuItem(menu, "reload_50", "Recharger l'arme (50$)");
+	//AddMenuItem(menu, "reload_50", "Recharger l'arme (50$)");
 	AddMenuItem(menu, "sanandreas_150", "Ajouter 1000 balles (150$)");
 
-	if(rp_GetWeaponGroupID(wep_id) != 0)
+	/*if(rp_GetWeaponGroupID(wep_id) != 0)
 		AddMenuItem(menu, "pvp_250", "Transformer en arme PvP (250$)", ITEMDRAW_DISABLED);
 	else
-		AddMenuItem(menu, "pvp_250", "Transformer en arme PvP (250$)");
+		AddMenuItem(menu, "pvp_250", "Transformer en arme PvP (250$)");*/
 
-	if(rp_GetWeaponBallType(wep_id) == ball_type_fire)
+	/*if(rp_GetWeaponBallType(wep_id) == ball_type_fire)
 		AddMenuItem(menu, "fire_250", "Ajouter des cartouches incendiaires (250$)", ITEMDRAW_DISABLED);
 	else
-		AddMenuItem(menu, "fire_250", "Ajouter des cartouches incendiaires (250$)");
+		AddMenuItem(menu, "fire_250", "Ajouter des cartouches incendiaires (250$)");*/
 
 	if(rp_GetWeaponBallType(wep_id) == ball_type_caoutchouc)
 		AddMenuItem(menu, "caoutchouc_200", "Ajouter des cartouches en caoutchouc (200$)", ITEMDRAW_DISABLED);
@@ -188,30 +188,30 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	else
 		AddMenuItem(menu, "reflexive_200", "Ajouter des cartouches rebondissantes (200$)");
 
-	if(rp_GetWeaponBallType(wep_id) == ball_type_explode)
+	/*if(rp_GetWeaponBallType(wep_id) == ball_type_explode)
 		AddMenuItem(menu, "explode_300", "Ajouter des cartouches explosives (300$)", ITEMDRAW_DISABLED);
 	else
-		AddMenuItem(menu, "explode_300", "Ajouter des cartouches explosives (300$)");
+		AddMenuItem(menu, "explode_300", "Ajouter des cartouches explosives (300$)");*/
 
 	if(rp_GetWeaponBallType(wep_id) == ball_type_revitalisante)
 		AddMenuItem(menu, "revitalisante_200", "Ajouter des cartouches revitalisantes (200$)", ITEMDRAW_DISABLED);
 	else
 		AddMenuItem(menu, "revitalisante_200", "Ajouter des cartouches revitalisantes (200$)");
 
-	if(rp_GetWeaponBallType(wep_id) == ball_type_paintball)
+	/*if(rp_GetWeaponBallType(wep_id) == ball_type_paintball)
 		AddMenuItem(menu, "paintball_50", "Ajouter des cartouches de paintball (50$)", ITEMDRAW_DISABLED);
 	else
-		AddMenuItem(menu, "paintball_50", "Ajouter des cartouches de paintball (50$)");
+		AddMenuItem(menu, "paintball_50", "Ajouter des cartouches de paintball (50$)");*/
 
 	if(rp_GetWeaponBallType(wep_id) == ball_type_nosteal)
 		AddMenuItem(menu, "nosteal_75", "Ajouter des cartouches antivol (75$)", ITEMDRAW_DISABLED);
 	else
 		AddMenuItem(menu, "nosteal_75", "Ajouter des cartouches antivol (75$)");
 
-	if(rp_GetWeaponBallType(wep_id) == ball_type_notk)
+	/*if(rp_GetWeaponBallType(wep_id) == ball_type_notk)
 		AddMenuItem(menu, "notk_50", "Ajouter des cartouches anti team-kill (50$)", ITEMDRAW_DISABLED);
 	else
-		AddMenuItem(menu, "notk_50", "Ajouter des cartouches anti team-kill (50$)");
+		AddMenuItem(menu, "notk_50", "Ajouter des cartouches anti team-kill (50$)");*/
 
 	DisplayMenu(menu, client, 60);
 	cooldown = 5.0;
