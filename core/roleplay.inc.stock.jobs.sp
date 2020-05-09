@@ -211,6 +211,11 @@ void SetJobCapital(int job_id, int amount) {
 		job_id = StringToInt( g_szJobList[ job_id ][job_type_ownboss] );
 	}
 	
+	/* a vérif si on est good ici :o */
+	if(amount < 0) {
+		amount = 0;
+	}
+	
 	Format(g_szJobList[ job_id ][job_type_capital], 127, "%i", amount);
 }
 int GetJobCapital(int job_id) {
