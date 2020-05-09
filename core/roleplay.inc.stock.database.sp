@@ -849,7 +849,7 @@ void LoadUserData(int Client) {
 		Format(query, sizeof(query),
 			"%s `artisan_xp`, `artisan_lvl`, `artisan_points`, `artisan_fatigue`, `kill`, `death`, `kill2`, `death2`, `jrouge`, `jbleu`, `xp`, ", query);
 		Format(query, sizeof(query),
-			"%s `level`, `prestige`, `female`, `birthday`, `birthmonth`, `lastname`, `firstname`, `rules`, `jobplaytime`, `adminxp`, `dette`, `time_played` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
+			"%s `level`, `prestige`, `female`, `birthday`, `birthmonth`, `lastname`, `firstname`, `rules`, `jobplaytime`, `adminxp`, `dette`, `time_played`, `permi_lege_start`, `permi_lourd_start` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
 		
 		SQL_TQuery(g_hBDD, LoadUserData_2, query, Client, DBPrio_High);
 		
@@ -982,7 +982,9 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		g_iUserData[Client][i_GiveXP] = SQL_FetchInt(hQuery, 51);
 		g_iUserData[Client][i_Dette] = SQL_FetchInt(hQuery, 52);
 		g_flUserData[Client][fl_MonthTime] = SQL_FetchFloat(hQuery, 53);
-		
+
+		g_iUserData[Client][i_StartLicense1] = SQL_FetchInt(hQuery, 54);
+		g_iUserData[Client][i_StartLicense2] = SQL_FetchInt(hQuery, 55);
 		
 		SQL_FetchString(hQuery, 47, g_szUserData[Client][sz_LastName], sizeof(g_szUserData[][]));
 		SQL_FetchString(hQuery, 48, g_szUserData[Client][sz_FirstName], sizeof(g_szUserData[][]));		

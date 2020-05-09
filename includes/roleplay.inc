@@ -787,6 +787,9 @@ enum int_user_data {
 	i_Dette,
 	i_ContratType,
 	
+	i_StartLicense1,
+	i_StartLicense2,
+
 	i_udata_max
 };
 enum float_user_data {

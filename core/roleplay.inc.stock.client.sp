@@ -967,3 +967,20 @@ void CopSetInvisible(int client) {
 	
 	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes maintenant invisible.");
 }
+void CheckLiscence(int client) {
+	static time = GetTime();
+
+	if(g_bUserData[client][b_License1]) {
+		if(g_iUserData[client][i_StartLicense1] > GetTime() + 60) {
+			PrintToChatAll(client, "blabla perte de permi lege");
+			g_bUserData[client][b_License1] = 0;
+		}
+	}
+
+	if(g_bUserData[client][b_License2]) {
+		if(g_iUserData[client][i_StartLicense2] > GetTime() + 60) {
+			PrintToChatAll(client, "blabla perte de permi lourd");
+			_bUserData[client][b_License2] = 0;
+		}
+	}
+}

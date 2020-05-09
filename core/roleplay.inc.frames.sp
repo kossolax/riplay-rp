@@ -450,6 +450,7 @@ void OnGameFrame_10(float time) {
 			
 			DoBeacon(i);
 			
+			CheckLiscence(i);
 			
 			if( g_iMinutes == 0 ) {
 				if( g_iHours == 23 && g_iUserData[i][i_AppartCount] > 0 ) {

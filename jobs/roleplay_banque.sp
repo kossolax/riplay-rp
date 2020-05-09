@@ -143,10 +143,14 @@ public Action Cmd_ItemPermi(int args) {
 	
 	if( StrEqual(Arg1, "lege") ) {
 		rp_SetClientBool(client, b_License1, true);
+		rp_SetClientInt(client, i_StartLicense1, GetTime());
+
 		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez maintenant un permis de port d'arme légère.");
 	}
 	else if( StrEqual(Arg1, "lourd") ) {
 		rp_SetClientBool(client, b_License2, true);
+		rp_SetClientInt(client, i_StartLicense2, GetTime());
+
 		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez maintenant un permis de port d'arme lourde.");
 	}
 	else if( StrEqual(Arg1, "vente") ) {
