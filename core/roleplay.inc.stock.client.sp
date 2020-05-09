@@ -968,19 +968,19 @@ void CopSetInvisible(int client) {
 	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes maintenant invisible.");
 }
 void CheckLiscence(int client) {
-	static time = GetTime();
-
+	int time = GetTime();
+	
 	if(g_bUserData[client][b_License1]) {
-		if(g_iUserData[client][i_StartLicense1] > GetTime() + 60) {
-			PrintToChatAll(client, "blabla perte de permi lege");
+		if(GetTime() > g_iUserData[client][i_StartLicense1] + (24*60*60)*14) {
+			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Attention, ton permis de port d'arme léger vient d'expirer. Pense à racheter tes permis auprès d'un banquier.");
 			g_bUserData[client][b_License1] = 0;
 		}
 	}
-
+ 
 	if(g_bUserData[client][b_License2]) {
-		if(g_iUserData[client][i_StartLicense2] > GetTime() + 60) {
-			PrintToChatAll(client, "blabla perte de permi lourd");
-			_bUserData[client][b_License2] = 0;
+		if(GetTime() > g_iUserData[client][i_StartLicense2] + (24*60*60)*14) {
+			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Attention, ton permis de port d'arme lourd vient d'expirer. Pense à racheter tes permis auprès d'un banquier..");
+			g_bUserData[client][b_License2] = 0;
 		}
 	}
 }

@@ -525,8 +525,8 @@ void StoreUserData(int client) {
 		nickbuffer, g_iUserData[client][i_Money], g_iUserData[client][i_Bank], g_iUserData[client][i_Job], g_iUserData[client][i_JailTime], g_iUserData[client][i_KnifeTrain]);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
-		"%s `permi_lege`='%i', `permi_lourd`='%i', `permi_vente`='%i', `train_weapon`='%f', `group_id`='%i',",
-		MysqlQuery, g_bUserData[client][b_License1], g_bUserData[client][b_License2], g_bUserData[client][b_LicenseSell], g_flUserData[client][fl_WeaponTrain], g_iUserData[client][i_Group]);
+		"%s `permi_lege`='%i', `permi_lourd`='%i', `permi_vente`='%i', `permi_lege_start`='%i', `permi_lourd_start`='%i', `train_weapon`='%f', `group_id`='%i',",
+		MysqlQuery, g_bUserData[client][b_License1], g_bUserData[client][b_License2], g_bUserData[client][b_LicenseSell], g_iUserData[client][i_StartLicense1], g_iUserData[client][i_StartLicense2], g_flUserData[client][fl_WeaponTrain], g_iUserData[client][i_Group]);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
 		"%s `vitality`='%f', `pay_to_bank`='%i', `have_card`='%i', `have_account`='%i', `in_bank`='%s', `in_item`='%s', `in_save`='%s', `ip`='%s',",
