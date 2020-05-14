@@ -184,9 +184,9 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 	if (StrEqual(command, "cop") || StrEqual(command, "cops")) {
 		return Cmd_Cop(client);
 	}
-	else if (StrEqual(command, "vis") || StrEqual(command, "invis")) {
+	/*else if (StrEqual(command, "vis") || StrEqual(command, "invis")) {
 		return Cmd_Vis(client);
-	}
+	}*/
 	else if (StrEqual(command, "tazer") || StrEqual(command, "tazeur") || StrEqual(command, "taser")) {
 		return Cmd_Tazer(client);
 	}
@@ -206,7 +206,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 public Action Cmd_Cop(int client) {
 	int job = rp_GetClientInt(client, i_Job);
 	
-	if (rp_GetClientJobID(client) != 1 && rp_GetClientJobID(client) != 101) {
+	if (rp_GetClientJobID(client) != 1 && rp_GetClientJobID(client) != 2 && rp_GetClientJobID(client) != 4 && rp_GetClientJobID(client) != 5 && rp_GetClientJobID(client) != 6 && rp_GetClientJobID(client) != 101) {
 		ACCESS_DENIED(client);
 	}
 	int zone = rp_GetPlayerZone(client);
@@ -349,6 +349,8 @@ public Action Cmd_Tazer(int client) {
 		float maxDist = MAX_AREA_DIST * 3.0;
 		if (rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PERQUIZ || rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PERQUIZ) {
 			maxDist = 128.0;
+		} else {
+			maxDist = maxDist - (15 * maxDist) / 100;
 		}
 		
 		if (Entity_GetDistance(client, target) > maxDist) {
@@ -635,8 +637,11 @@ public Action Cmd_Jail(int client) {
 	
 	float maxDist = MAX_AREA_DIST * 2.0;
 	
-	if (Cbit & BITZONE_PERQUIZ || Tbit & BITZONE_PERQUIZ)
+	if (Cbit & BITZONE_PERQUIZ || Tbit & BITZONE_PERQUIZ) {
 		maxDist = 128.0;
+	} else {
+		maxDist = maxDist - (10 * maxDist) / 100;
+	}
 	
 	// too far
 	if (Entity_GetDistance(client, target) > maxDist) {
