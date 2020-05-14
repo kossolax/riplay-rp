@@ -122,7 +122,11 @@ void updateClanTag(int client) {
 	Format(ClanTag, sizeof(ClanTag), "%s", g_szJobList[ g_iUserData[client][i_Job] ][job_type_tag]);
 	if( g_iUserData[client][i_Job] >= 1 && g_iUserData[client][i_Job] <= 10 ) {
 		if( GetClientTeam(client) != CS_TEAM_CT ) {
-			Format(ClanTag, sizeof(ClanTag), "%s", g_szJobList[0][job_type_tag]);
+			if(g_iUserData[client][i_KillJailDuration] > 1) {
+				Format(ClanTag, sizeof(ClanTag), "Criminel");
+			} else {
+				Format(ClanTag, sizeof(ClanTag), "Gendarmerie");
+			}
 		}
 	}	
 	if( g_iUserData[client][i_JailTime] > 0 ) {
