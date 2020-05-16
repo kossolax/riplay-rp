@@ -23,8 +23,6 @@ echo "Compiling core/roleplay.sp"
 
 $COMP_PATH -i includes -i core -i scripting "./core/roleplay.sp" -o=compiled/roleplay.smx >> $PATH/compiled/report.txt
 
-#$COMP_PATH -i includes -i core -i scripting "./utils/test_capitals.sp" -o=compiled/test_capitals.smx
-
 NUMB_SP=0
 NUMB_SMX=0
 
