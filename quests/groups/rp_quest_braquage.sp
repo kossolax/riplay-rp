@@ -27,8 +27,8 @@
 #define		QUEST_TEAMS			5
 
 #define		TEAM_NAME1			"Braqueur"
-#define 	REQUIRED_T			4
-#define 	REQUIRED_CT			5
+#define 	REQUIRED_T			2
+#define 	REQUIRED_CT			1
 #define		SUPPLEMENT_T		12
 
 #define		BRAQUAGE_WEAPON		"weapon_p90"
@@ -97,7 +97,8 @@ public bool fwdCanStart(int client) {
 		return false;
 	if( g_bCanMakeQuest == false )
 		return false;
-	if( GetClientCount() <= 2 && GetConVarInt(FindConVar("hostport")) != 27025 )
+	
+	if( GetClientCount() < REQUIRED_T+REQUIRED_CT && GetConVarInt(FindConVar("hostport")) != 27025 )
 		return false;
 	if( rp_GetClientJobID(client) == 1 || rp_GetClientJobID(client) == 101 )
 		return false;
@@ -876,6 +877,8 @@ public Action fwdSendToJail(int client, int target) {
 		if( isInVehicle(target) )
 			return Plugin_Handled;
 #else
+		if( isInStation(target) )
+			return Plugin_Handled;
 		if( isInMetro(target) )
 			return Plugin_Handled;
 #endif
@@ -1113,6 +1116,18 @@ bool isInMetro(int client) {
 	rp_GetZoneData(zoneID, zone_type_type, tmp, sizeof(tmp));
 	
 	if( StrEqual(tmp, "metro") ) {
+		return true;
+	}
+	
+	return false;
+}
+bool isInStation(int client) {
+	static char tmp[128];
+	int zoneID = rp_GetPlayerZone(client);
+	
+	rp_GetZoneData(zoneID, zone_type_type, tmp, sizeof(tmp));
+	
+	if( StrEqual(tmp, "station") ) {
 		return true;
 	}
 	
