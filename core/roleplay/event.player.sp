@@ -481,7 +481,8 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 		respawn /= 2.0;
 	
 	int killDuration = (g_iKillLegitime[Attacker][Client] >= GetTime() ? 1 : 6);
-	
+	PrintToChatAll("%N -> %i -> %i", Attacker, g_iUserData[Attacker][i_KillJailDuration], killDuration);
+
 	g_iUserStat[Client][i_Deaths]++;
 	showGraveMenu(Client);
 	
