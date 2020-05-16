@@ -29,6 +29,12 @@ public Plugin myinfo =  {
 	version = __LAST_REV__, url = "https://www.ts-x.eu"
 };
 
+enum struct clientWeapon {
+	char name[32];
+	int slot;
+	int time;
+}
+
 enum jail_raison_type {
 	jail_raison = 0, 
 	jail_temps, 
@@ -56,8 +62,9 @@ float g_flLastPos[65][3];
 DataPack g_hBuyMenu;
 char g_szTribunal[65][65];
 
-#define ARMU_POLICE view_as<float>({ 2550.8, 1663.1, -2015.96 })
+//ArrayList g_clientWeapon[MAXPLAEYRS+1] = ArrayList();
 
+#define ARMU_POLICE view_as<float>({ 2550.8, 1663.1, -2015.96 })
 
 bool CanSendToJail(int client, int target) {
 	Action a;
@@ -125,6 +132,8 @@ public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerUse, fwdOnPlayerUse);
 	rp_SetClientBool(client, b_IsSearchByTribunal, false);
 	
+	//SDKHook(client, SDKHook_WeaponEquip, OnWeaponEquip);
+
 	CreateTimer(0.01, AllowStealing, client);
 }
 public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
@@ -199,10 +208,111 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 	else if (StrEqual(command, "push")) {
 		return Cmd_Push(client);
 	}
+	else if (StrEqual(command, "verif")) {
+		Cmd_Verif(client);
+	}
 	
 	return Plugin_Continue;
 }
 // ----------------------------------------------------------------------------
+public Action Cmd_Verif(int client) {
+	if( rp_GetClientJobID(client) != 1 && rp_GetClientJobID(client) != 101 ) { // Police, tribunal
+			ACCESS_DENIED(client);
+		}
+
+		int target = rp_GetClientTarget(client);
+		
+		char name[32];
+		GetClientName(target, name, sizeof(name));
+		
+		PrintToChat(client, "debug %N - %s", target, name);
+		
+		if( !IsValidClient(target) )
+			return Plugin_Handled;
+
+		if( !IsPlayerAlive(target) )
+			return Plugin_Handled;
+
+		char szTitle[2048];
+		Format(szTitle, sizeof(szTitle), "Information sur le joueur %s:\n\n", szTitle, name);
+
+		Menu menu = CreateMenu(MenuHandler_Verif);
+
+		Format(szTitle, sizeof(szTitle), "%s Permis léger: %s\n", szTitle, rp_GetClientBool(target, b_License1) ? "OUI":"NON");
+
+		Format(szTitle, sizeof(szTitle), "%s Permis lourd: %s\n", szTitle, rp_GetClientBool(target, b_License2) ? "OUI":"NON");
+
+		Format(szTitle, sizeof(szTitle), "%s Permis vente: %s\n", szTitle, rp_GetClientBool(target, b_LicenseSell) ? "OUI":"NON");
+
+		int wepIdx;
+		char classname[32], msg[128];
+		bool cashLicense1, cashLicense2 = false;
+
+		bool temp = false; // a tej plus tard, just for try
+
+		if( (wepIdx = GetPlayerWeaponSlot( target, 1 )) != -1 ){
+			GetEdictClassname(wepIdx, classname, 31);
+			ReplaceString(classname, 31, "weapon_", "", false);
+
+			temp = true;
+		}
+
+		Format(szTitle, sizeof(szTitle), "%s Arme Primaire (Permis léger): %s\n", szTitle, temp ? classname:"NON");
+		cashLicense2 = rp_GetClientBool(target, b_License2);
+
+		temp = false;
+
+		if( (wepIdx = GetPlayerWeaponSlot( target, 0 )) != -1 ){
+			GetEdictClassname(wepIdx, classname, 31);
+			ReplaceString(classname, 31, "weapon_", "", false);
+
+			 temp = true;
+		}
+
+		Format(szTitle, sizeof(szTitle), "%s Arme Secondaire (Permis lourd): %s\n", szTitle, temp ? classname:"NON");
+		cashLicense1 = rp_GetClientBool(target, b_License1);
+
+		menu.SetTitle(szTitle);
+
+		char item[256];
+
+		Format(item, 255, "%d_permileger", target);
+		menu.AddItem(item, "Hamendeuh 3500$ - Permi léger", cashLicense2 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
+
+		Format(item, 255, "%d_permilourd", target);
+		menu.AddItem(item, "Hamendeuh 5500$ - Permi lourd", cashLicense1 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
+
+		SetMenuExitButton(menu, true);
+		DisplayMenu(menu, client, MENU_TIME_DURATION);
+}
+
+public int MenuHandler_Verif(Handle menu, MenuAction action, int client, int param2) {
+	char options[64], data[2][32], szQuery[1024];
+	
+	if (action == MenuAction_Select) {
+		GetMenuItem(menu, param2, options, 63);
+		ExplodeString(options, "_", data, sizeof(data), sizeof(data[]));
+
+		int target = StringToInt(data[0]);
+		int job = rp_GetClientJobID(client);
+
+		if(StrEqual(data[1], "permileger")) {
+			PrintToChat(target, "Vous avez été contrôlé en possession d'arme(s) légère sans permis valide, vous devez vous acquitter d'une hamendeuh de 3500 €");
+			PrintToChat(client, "ici une phrase pour le mec");
+			rp_ClientMoney(target, i_Money, -3500);
+
+			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 3500));
+		}
+		if(StrEqual(data[1], "permilourd")) {
+			PrintToChat(target, "Vous avez été contrôlé en possession d'arme(s) lourde sans permis valide, vous devez vous acquitter d'une hamendeuh de 5500 €");
+			PrintToChat(client, "ici une phrase pour le mec");
+			rp_ClientMoney(target, i_Money, -5500);
+
+			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 5500));
+		}
+	}
+}
+
 public Action Cmd_Cop(int client) {
 	int job = rp_GetClientInt(client, i_Job);
 	
@@ -1526,6 +1636,10 @@ public void Event_Weapon_Fire(Event event, const char[] name, bool dontBroadcast
 		rp_SetClientInt(client, i_LastDangerousShot, GetTime());
 	}
 }
+/*public Action OnWeaponEquipAction (int client, int weapon) {
+	clientWeapon = weapon;
+	weapon.name
+}*/
 // ----------------------------------------------------------------------------
 void StripWeapons(int client) {
 	
