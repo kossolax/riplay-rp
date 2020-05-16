@@ -32,8 +32,8 @@
 #define		TEAM_POLICE			4
 #define		TEAM_HOSTAGE		5
 #define		TEAM_NAME1			"Braqueur"
-#define 	REQUIRED_T			4
-#define 	REQUIRED_CT			5
+#define 	REQUIRED_T			1
+#define 	REQUIRED_CT			1
 
 #define		BRAQUAGE_WEAPON		"weapon_p90"
 
@@ -83,7 +83,7 @@ public bool fwdCanStart(int client) {
 		return false;
 	if( g_bCanMakeQuest == false )
 		return false;
-	if( GetClientCount() <= 2 && GetConVarInt(FindConVar("hostport")) != 27025 )
+	if( GetClientCount() <= 2)
 		return false;
 	if( rp_GetClientJobID(client) == 1 || rp_GetClientJobID(client) == 101 )
 		return false;
