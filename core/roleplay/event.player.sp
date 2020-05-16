@@ -481,8 +481,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 		respawn /= 2.0;
 	
 	//int killDuration = (g_iKillLegitime[Attacker][Client] >= GetTime() ? 1 : 6);
-	int killDuration = (g_iKillLegitime[Attacker][Client] >= GetTime() ? 1 : (g_iUserData[Attacker][i_KillJailDuration] * 1.5) + 8);
-	PrintToChatAll("%N -> %i -> %i", Attacker, g_iUserData[Attacker][i_KillJailDuration], killDuration);
+	int killDuration = (g_iKillLegitime[Attacker][Client] >= GetTime() ? 1 : RoundToFloor(float(g_iUserData[Attacker][i_KillJailDuration]) * 1.5) + 8);
 
 	g_iUserStat[Client][i_Deaths]++;
 	showGraveMenu(Client);
@@ -584,12 +583,12 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 			
 			if( g_iHideNextLog[Attacker][Client] == 0 ) {
 				if( !(GetZoneBit( GetPlayerZone(Attacker) ) & BITZONE_EVENT || GetZoneBit( GetPlayerZone(Attacker) ) & BITZONE_PVP) ) {
-					g_iUserData[Attacker][i_KillJailDuration] += killDuration;
+					g_iUserData[Attacker][i_KillJailDuration] = killDuration;
 					g_iUserData[Attacker][i_LastKillTime] = GetTime();
 					g_iUserData[Attacker][i_KillingSpread] += (killDuration > 1 ? 1:0);
 				}				
 				
-				if( g_iUserData[Attacker][i_KillJailDuration] >= (50*6) ) {
+				if( g_iUserData[Attacker][i_KillJailDuration] >= (106) ) {
 					KickClient(Attacker, "Freekill massif");
 				}
 				
