@@ -450,8 +450,6 @@ void OnGameFrame_10(float time) {
 			
 			DoBeacon(i);
 			
-			CheckLiscence(i);
-			
 			if( g_iMinutes == 0 ) {
 				if( g_iHours == 23 && g_iUserData[i][i_AppartCount] > 0 ) {
 					ClientCommand(i, "play common/warning");
@@ -488,6 +486,7 @@ void OnGameFrame_10(float time) {
 			if( IsPlayerAlive(i) ) {
 				KillStack_Timer(i, iTime);
 				
+				CheckLiscence(i);
 				
 				GetClientAbsOrigin(i, fNow);
 				if( GetVectorDistance(fNow, g_fSuccess_last_move[i]) > 50 && Math_GetRandomInt(0, 1) ) {
