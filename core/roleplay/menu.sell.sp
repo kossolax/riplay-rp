@@ -809,20 +809,10 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			g_iUserData[vendeur][i_Reduction] = reduction;
 			g_iUserStat[client][i_MoneySpent_Shop] += RoundFloat(prixItem - reduc);
 			
-			PrintToChatAll("prix de l'item: %f$", prixItem);
-
-			PrintToChatAll("taxe de l'item: %f PCT", taxe);
-			PrintToChatAll("donc le vendeur a %f PCT de la vente", taxe);
-			PrintToChatAll("ATTENTION si par exemple taxe = 0.20 -> 20 PCT");
-
 			rp_ClientMoney(client, type == 5 ? i_Bank : i_Money, -RoundFloat(prixItem - reduc));
 			rp_ClientMoney(vendeur, i_Money, RoundToFloor(((prixItem * taxe) - reduc) * 0.5));
 			rp_ClientMoney(vendeur, i_AddToPay, RoundToCeil(((prixItem * taxe) - reduc) * 0.5));
 
-			PrintToChatAll("vendeur argent: %i", RoundToFloor(((prixItem * taxe) - reduc) * 0.5));
-			PrintToChatAll("vendeur salaire fin mois: %i", RoundToCeil(((prixItem * taxe) - reduc) * 0.5));
-
-			PrintToChatAll("donc vendeur a la moitier de %f PCT du prix de vente dans son salaire, et l'autre moitier en argent", taxe);
 			// 0.1 = taxe pour les low capitals 
 
 			int capital =  RoundToFloor(prixItem - ((prixItem * taxe) - reduc));
@@ -832,11 +822,7 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			/*int addcapital = RoundToCeil(prixItem*(1.0 - (taxe + 0.1))); 
 			int rest = RoundToFloor(prixItem*(1.0 - (1.0 - 0.1)));*/
 
-			PrintToChatAll("prix item - vendeur = %i$", capital);
-			PrintToChatAll("le capital du job a %i$", addcapital);
-			PrintToChatAll("il reste %i$", rest);
-
-			GoToMoveWhenIsWorking(rest);
+			RestToLowCapital(rest);
 			// rest = pour calc les low capitals
 
 			SetJobCapital(g_iUserData[vendeur][i_Job], (GetJobCapital(g_iUserData[vendeur][i_Job]) + addcapital));
@@ -927,7 +913,7 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 	}
 }
 
-void GoToMoveWhenIsWorking(int rest) {
+void RestToLowCapital(int rest) {
 	int capitalList[MAX_JOBS][2];
 	int numb = -1;
 	int capital = 0;
@@ -950,28 +936,19 @@ void GoToMoveWhenIsWorking(int rest) {
 
 	SortCustom2D(capitalList, numb, SortMachineItemsL2H);
 
-	//float min = FloatAbs(float(capitalList[0][0]));
-
-	PrintToChatAll("-------- Result --------");
-
 	int totalcapital = 0;
 	
 	for(int i = 0; i < 5; i++) {
-		//totalcapital = totalcapital + capitalList[i][0] + RoundToFloor(min);
 		totalcapital = totalcapital + capitalList[i][0];
 	}
 
 	if(totalcapital == 0) {
-		PrintToChatAll("TOTAL CAPITAL = 0 :(");
 		return;
 	}
-
-	PrintToChatAll("le total des 5 capitaux les plus nuls: %i$ \n", totalcapital);
 
 	int percent[5];
 
 	for(int i = 0; i < 5; i++) {
-		//percent[i] = Math_GetPercentage(capitalList[i][0] + RoundToFloor(min), totalcapital);
 		percent[i] = Math_GetPercentage(capitalList[i][0], totalcapital);
 	}
 
@@ -982,9 +959,5 @@ void GoToMoveWhenIsWorking(int rest) {
 	for(int i = 0; i < 5; i++) {
 		add = (rest * percent[4-i]) / 100;
 		rp_GetJobData(capitalList[i][1], job_type_name, szTemps, sizeof(szTemps));
-		PrintToChatAll("------");
-		PrintToChatAll("• [%i] %s", capitalList[i][1], szTemps);
-		PrintToChatAll("• capital = %i -> %iPCT de %i", capitalList[i][0], percent[i], totalcapital);
-		PrintToChatAll("• il a donc %iPCT de %i, qui est égal à %i$", percent[4-i], rest, add);
 	}
 }
