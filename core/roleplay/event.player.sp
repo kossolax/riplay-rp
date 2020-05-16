@@ -480,7 +480,8 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 	if( g_iUserData[Client][i_PlayerLVL] >= 650 )
 		respawn /= 2.0;
 	
-	int killDuration = (g_iKillLegitime[Attacker][Client] >= GetTime() ? 1 : 6);
+	//int killDuration = (g_iKillLegitime[Attacker][Client] >= GetTime() ? 1 : 6);
+	int killDuration = (g_iKillLegitime[Attacker][Client] >= GetTime() ? 1 : (g_iUserData[Attacker][i_KillJailDuration] * 1.5) + 8);
 	PrintToChatAll("%N -> %i -> %i", Attacker, g_iUserData[Attacker][i_KillJailDuration], killDuration);
 
 	g_iUserStat[Client][i_Deaths]++;
