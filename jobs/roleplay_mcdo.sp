@@ -386,7 +386,7 @@ public Action Cmd_ItemHamburger(int args) {
 				continue;
 			
 			rp_GetItemData(i, item_type_extra_cmd, cmd, sizeof(cmd));
-			if( strlen(cmd) <= 1 ) // UNKNOWN
+			if( StrEqual(cmd, "UNKNOWN")) // UNKNOWN
 				continue;
 			if( StrContains(cmd, "rp_chirurgie") == 0 )
 				continue;
