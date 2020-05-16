@@ -84,37 +84,12 @@ public Action Cmd_ItemCraftSign(int args) {
 }
 public Action fwdCommand(int client, char[] command, char[] arg) {	
 	if( StrEqual(command, "search") || StrEqual(command, "lookup")) {
-		if( rp_GetClientJobID(client) != 1 &&  rp_GetClientJobID(client) != 41 && rp_GetClientJobID(client) != 211 && rp_GetClientJobID(client) != 101 ) { // Police, mercenaire, banquier, tribunal
+		if(rp_GetClientJobID(client) != 41 && rp_GetClientJobID(client) != 211) { // mercenaire, banquier
 			ACCESS_DENIED(client);
 		}
+
 		int target = rp_GetClientTarget(client);
 		
-		if( !IsValidClient(target) )
-			return Plugin_Handled;
-
-		if( !IsPlayerAlive(target) )
-			return Plugin_Handled;
-
-		/*char szTitle[32];
-		Format("Information sur le joueur %N", szTitle);
-
-		Panel panel = CreatePanel(null);
-	
-		panel.SetTitle(szTitle);
-		panel.DrawText(" ");
-
-		if( rp_GetClientBool(target, b_License1) ) {
-			panel.DrawItem("• Permi léger");
-		}
-		if( rp_GetClientBool(target, b_License2) ) {
-			panel.DrawItem("• Permi lourd");
-		}
-		if(  rp_GetClientBool(target, b_LicenseSell) ) {
-			panel.DrawItem("• Permi vente");
-		}
-
-		panel.Send(client, PanelHandler_Nothing, 20);*/
-
 		int wepIdx;
 		char classname[32], msg[128];
 		Format(msg, 127, "Ce joueur possède: ");
@@ -154,7 +129,6 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 	return Plugin_Continue;
 }
 
-public int PanelHandler_Nothing(Menu menu, MenuAction action, int client, int param2) {}
 // ----------------------------------------------------------------------------
 public Action Cmd_ItemPermi(int args) {
 	
