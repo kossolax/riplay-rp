@@ -682,6 +682,7 @@ enum bool_user_data {
 	b_AssuranceVie,
 	b_ItemRecovered,
 	b_IsFreekiller,
+	b_ExitJailMenu,
 	b_udata_max
 };
 enum int_user_data {

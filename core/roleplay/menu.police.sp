@@ -41,7 +41,10 @@ public int MenuTribunal_report(Handle p_hItemMenu, MenuAction p_oAction, int cli
 	}
 }
 void ReduceJailTime(int client) {
-	
+	if(g_bUserData[client][b_ExitJailMenu]) {
+		return;
+	}
+
 	int amende = 2500, reduction = 12;
 	if (g_iUserData[client][i_JailTime] < (18 * 60)) { amende /= 2; reduction /= 2; }
 				
@@ -59,28 +62,26 @@ void ReduceJailTime(int client) {
 	// Setup menu
 	Handle menu = CreateMenu(eventPayForLeaving_2);
 	char tmp[256];
-	Format(tmp, 255, "Vous êtes en prison pour encore %.1f heures\n", (float(g_iUserData[client][i_JailTime])/60.0));
+	Format(tmp, 255, "Vous êtes en prison pour encore %.1f heures\n\n", (float(g_iUserData[client][i_JailTime])/60.0));
 
 	if(g_bUserData[client][b_IsFreekiller] == false) {
-		Format(tmp, 255, "%s Vous pouvez réduire ce temps de %d heures\nà tout moment pour %i$\n\n ", tmp, reduction, amende);
-	} else {
-		Format(tmp, 255, "%s Votre comportement est inapproprié sur le serveur suite à vos récentes actions.\nVous devez OBLIGATOIREMENT purger votre peine\n\n ", tmp);
+		Format(tmp, 255, "%sVous pouvez réduire ce temps de %d heures\nà tout moment pour %i$\n\n ", tmp, reduction, amende);
 	}
+	
+	/*} else {
+		Format(tmp, 255, "%sVotre comportement est inapproprié sur le serveur suite à vos récentes actions.\nVous devez OBLIGATOIREMENT purger votre peine\n\n ", tmp);
+	}*/
 
 	SetMenuTitle(menu, tmp);
 	
-	if(g_bUserData[client][b_IsFreekiller] == false) {
-		AddMenuItem(menu, "yes", "J'accepte!");
-		AddMenuItem(menu, "cours", "Non, mais envoyez moi dans la cour");
+	//AddMenuItem(menu, "yes", "J'accepte!");
 
-		if( g_iUserData[client][i_Money]+g_iUserData[client][i_Bank] >= 250 )
-			AddMenuItem(menu, "qhs", "Non, mais envoyez moi au QHS (250$)");
-	} else {
-		AddMenuItem(menu, "cours", "Envoyez moi dans la cour");
+	AddMenuItem(menu, "cours", "Envoyez moi dans la cour");
 
-		if( g_iUserData[client][i_Money]+g_iUserData[client][i_Bank] >= 250 )
-			AddMenuItem(menu, "qhs", "Envoyez moi au QHS (250$)");
-	}
+	if( g_iUserData[client][i_Money]+g_iUserData[client][i_Bank] >= 250 )
+		AddMenuItem(menu, "qhs", "Envoyez moi au QHS (250$)");
+
+	AddMenuItem(menu, "exit", "Ne rien faire");
 	
 	SetMenuExitButton(menu, false);
 	
@@ -151,6 +152,9 @@ public int eventPayForLeaving_2(Handle menu, MenuAction action, int iTarget, int
 				
 				g_iUserData[iTarget][i_JailTime] -= (reduction*60);
 			}
+		}
+		if( StrEqual(options, "exit", false) ) {
+			g_bUserData[iTarget][b_ExitJailMenu] = true;
 		}
 		if( StrEqual(options, "cours", false) ) {
 			if( g_iUserData[iTarget][i_JailTime] > (12*60) ) {

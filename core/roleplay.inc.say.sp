@@ -88,6 +88,16 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
+	if(strcmp(szSayTrig, "!peine", false) == 0 || strcmp(szSayTrig, "/peine", false) == 0) {
+
+		if( !IsClientInJail(client) ) {
+			ACCESS_DENIED(client);
+		}
+		
+		g_bUserData[client][b_ExitJailMenu] = false;
+
+		return Plugin_Handled;
+	}
 	else if( strcmp(szSayTrig, "!site", false) == 0 || strcmp(szSayTrig, "/site", false) == 0 ) {		
 			
 		char url[1024], sso[128];
