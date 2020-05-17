@@ -217,75 +217,77 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 // ----------------------------------------------------------------------------
 public Action Cmd_Verif(int client) {
 	if( rp_GetClientJobID(client) != 1 && rp_GetClientJobID(client) != 101 ) { // Police, tribunal
-			ACCESS_DENIED(client);
-		}
+		ACCESS_DENIED(client);
+	}
 
-		int target = rp_GetClientTarget(client);
-		
-		char name[32];
-		GetClientName(target, name, sizeof(name));
-		
-		if( !IsValidClient(target) )
-			return Plugin_Handled;
+	int target = rp_GetClientTarget(client);
+	
+	char name[32];
+	GetClientName(target, name, sizeof(name));
+	
+	if( !IsValidClient(target) )
+		return Plugin_Handled;
 
-		if( !IsPlayerAlive(target) )
-			return Plugin_Handled;
+	if( !IsPlayerAlive(target) )
+		return Plugin_Handled;
 
-		if( rp_GetClientInt(client, i_KillJailDuration) > 1) {
-			ACCESS_DENIED(client);
-		}
+	if( rp_GetClientInt(client, i_KillJailDuration) > 1) {
+		ACCESS_DENIED(client);
+	}
 
-		char szTitle[2048];
-		Format(szTitle, sizeof(szTitle), "Information sur le joueur %s:\n\n", szTitle, name);
+	char szTitle[2048];
+	Format(szTitle, sizeof(szTitle), "Information sur le joueur %s:\n\n", szTitle, name);
 
-		Menu menu = CreateMenu(MenuHandler_Verif);
+	Menu menu = CreateMenu(MenuHandler_Verif);
 
-		Format(szTitle, sizeof(szTitle), "%s Permis léger: %s\n", szTitle, rp_GetClientBool(target, b_License1) ? "OUI":"NON");
+	Format(szTitle, sizeof(szTitle), "%s Permis léger: %s\n", szTitle, rp_GetClientBool(target, b_License1) ? "OUI":"NON");
 
-		Format(szTitle, sizeof(szTitle), "%s Permis lourd: %s\n", szTitle, rp_GetClientBool(target, b_License2) ? "OUI":"NON");
+	Format(szTitle, sizeof(szTitle), "%s Permis lourd: %s\n", szTitle, rp_GetClientBool(target, b_License2) ? "OUI":"NON");
 
-		Format(szTitle, sizeof(szTitle), "%s Permis vente: %s\n", szTitle, rp_GetClientBool(target, b_LicenseSell) ? "OUI":"NON");
+	Format(szTitle, sizeof(szTitle), "%s Permis vente: %s\n", szTitle, rp_GetClientBool(target, b_LicenseSell) ? "OUI":"NON");
 
-		int wepIdx;
-		char classname[32], msg[128];
-		bool cashLicense1, cashLicense2 = false;
+	int wepIdx;
+	char classname[32], msg[128];
+	bool cashLicense1, cashLicense2 = false;
 
-		bool temp = false; // a tej plus tard, just for try
+	bool temp = false; // a tej plus tard, just for try
 
-		if( (wepIdx = GetPlayerWeaponSlot( target, 1 )) != -1 ){
-			GetEdictClassname(wepIdx, classname, 31);
-			ReplaceString(classname, 31, "weapon_", "", false);
+	if( (wepIdx = GetPlayerWeaponSlot( target, 1 )) != -1 ){
+		GetEdictClassname(wepIdx, classname, 31);
+		ReplaceString(classname, 31, "weapon_", "", false);
+
+		temp = true;
+	}
+
+	Format(szTitle, sizeof(szTitle), "%s Arme Primaire (Permis léger): %s\n", szTitle, temp ? classname:"NON");
+	cashLicense2 = rp_GetClientBool(target, b_License2);
+
+	temp = false;
+
+	if( (wepIdx = GetPlayerWeaponSlot( target, 0 )) != -1 ){
+		GetEdictClassname(wepIdx, classname, 31);
+		ReplaceString(classname, 31, "weapon_", "", false);
 
 			temp = true;
-		}
+	}
 
-		Format(szTitle, sizeof(szTitle), "%s Arme Primaire (Permis léger): %s\n", szTitle, temp ? classname:"NON");
-		cashLicense2 = rp_GetClientBool(target, b_License2);
+	Format(szTitle, sizeof(szTitle), "%s Arme Secondaire (Permis lourd): %s\n", szTitle, temp ? classname:"NON");
+	cashLicense1 = rp_GetClientBool(target, b_License1);
 
-		temp = false;
+	menu.SetTitle(szTitle);
 
-		if( (wepIdx = GetPlayerWeaponSlot( target, 0 )) != -1 ){
-			GetEdictClassname(wepIdx, classname, 31);
-			ReplaceString(classname, 31, "weapon_", "", false);
+	char item[256];
 
-			 temp = true;
-		}
+	Format(item, 255, "%d_permileger", target);
+	menu.AddItem(item, "Hamendeuh 3500$ - Permi léger", cashLicense2 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
 
-		Format(szTitle, sizeof(szTitle), "%s Arme Secondaire (Permis lourd): %s\n", szTitle, temp ? classname:"NON");
-		cashLicense1 = rp_GetClientBool(target, b_License1);
+	Format(item, 255, "%d_permilourd", target);
+	menu.AddItem(item, "Hamendeuh 5500$ - Permi lourd", cashLicense1 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
 
-		menu.SetTitle(szTitle);
+	SetMenuExitButton(menu, true);
+	DisplayMenu(menu, client, MENU_TIME_DURATION);
 
-		char item[256];
-
-		Format(item, 255, "%d_permileger", target);
-		menu.AddItem(item, "Hamendeuh 3500$ - Permi léger", cashLicense2 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
-
-		Format(item, 255, "%d_permilourd", target);
-		menu.AddItem(item, "Hamendeuh 5500$ - Permi lourd", cashLicense1 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
-
-		SetMenuExitButton(menu, true);
-		DisplayMenu(menu, client, MENU_TIME_DURATION);
+	return Plugin_Handled;
 }
 
 public int MenuHandler_Verif(Handle menu, MenuAction action, int client, int param2) {
