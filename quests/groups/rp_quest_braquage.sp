@@ -27,8 +27,8 @@
 #define		QUEST_TEAMS			5
 
 #define		TEAM_NAME1			"Braqueur"
-#define 	REQUIRED_T			2
-#define 	REQUIRED_CT			1
+#define 	REQUIRED_T			4
+#define 	REQUIRED_CT			5
 #define		SUPPLEMENT_T		12
 
 #define		BRAQUAGE_WEAPON		"weapon_p90"
@@ -39,14 +39,6 @@
 #define		TEAM_BRAQUEUR_DEAD	3
 #define		TEAM_POLICE			4
 #define		TEAM_HOSTAGE		5
-<<<<<<< HEAD
-#define		TEAM_NAME1			"Braqueur"
-#define 	REQUIRED_T			1
-#define 	REQUIRED_CT			1
-
-#define		BRAQUAGE_WEAPON		"weapon_p90"
-=======
->>>>>>> 8a32feb369d52feeb88a8247e5a715b373e5f719
 
 
 public Plugin myinfo =  {
@@ -105,11 +97,8 @@ public bool fwdCanStart(int client) {
 		return false;
 	if( g_bCanMakeQuest == false )
 		return false;
-<<<<<<< HEAD
-=======
 	
 	if( GetClientCount() < REQUIRED_T+REQUIRED_CT && GetConVarInt(FindConVar("hostport")) != 27025 )
->>>>>>> 8a32feb369d52feeb88a8247e5a715b373e5f719
 		return false;
 	if( rp_GetClientJobID(client) == 1 || rp_GetClientJobID(client) == 101 )
 		return false;
@@ -234,7 +223,7 @@ public void Q1_Frame(int objectiveID, int client) {
 	for (int i = 0; i < g_stkTeamCount[TEAM_INVITATION]; i++) {
 		DrawMenu_Invitation(client, g_stkTeam[TEAM_INVITATION][i]);
 	}
-	PrintHintText(client, "<b>Quête</b>: %s\n<b>Objectif</b>: Inviter des collègues.", QUEST_NAME);
+	PrintHintText(client, "Quête: %s\nObjectif: Inviter des collègues.", QUEST_NAME);
 	
 	if( rp_ClientCanDrawPanel(client) ) {
 		char tmp[64], tmp2[64];		
@@ -296,7 +285,7 @@ public void Q2_Frame(int objectiveID, int client) {
 	for (int i = 0; i < g_stkTeamCount[TEAM_BRAQUEUR]; i++) {
 		if( allIn ) allIn = isInVehicle(g_stkTeam[TEAM_BRAQUEUR][i]);
 		ServerCommand("sm_effect_gps %d %d", g_stkTeam[TEAM_BRAQUEUR][i], g_iVehicle);
-		PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "<b>Quête</b>: %s\n<b>Objectif</b>: Récupérer la voiture blindée.", QUEST_NAME);
+		PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "Quête: %s\nObjectif: Récupérer la voiture blindée.", QUEST_NAME);
 	}
 	
 	if( allIn )
@@ -306,7 +295,7 @@ public void Q2_Frame(int objectiveID, int client) {
 int g_iQ3 = -1;
 public void Q3_Frame(int objectiveID, int client) {
 	
-	PrintHintText(client, "<b>Quête</b>: %s\n<b>Objectif</b>: Choisir le lieu du braquage.", QUEST_NAME);
+	PrintHintText(client, "Quête: %s\nObjectif: Choisir le lieu du braquage.", QUEST_NAME);
 	
 	if( rp_ClientCanDrawPanel(client) ) {
 		char tmp[64], tmp2[2][64];
@@ -377,7 +366,7 @@ public void Q4_Frame(int objectiveID, int client) {
 		if (allIn) allIn = inside;
 		if( !inside ) ServerCommand("sm_effect_gps %d %f %f %f", g_stkTeam[TEAM_BRAQUEUR][i], pos[0], pos[1], pos[2]);
 		
-		PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "<b>Quête</b>: %s\n<b>Objectif</b>: Entrez tous dans: %s.", QUEST_NAME, tmp2[0]);
+		PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "Quête: %s\nObjectif: Entrez tous dans: %s.", QUEST_NAME, tmp2[0]);
 	}
 	
 	if( allIn )
@@ -461,7 +450,7 @@ public void Q5_Frame(int objectiveID, int client) {
 	}
 	else {
 		for (int i = 0; i < g_stkTeamCount[TEAM_BRAQUEUR]; i++) {
-			PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "<b>Quête</b>: %s\n<b>Objectif</b>: Soyez seul dans %s.\n Il reste %d personne%s.", QUEST_NAME, tmp2[0], cpt, (cpt>1?"s":""));
+			PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "Quête: %s\nObjectif: Soyez seul dans %s.\n Il reste %d personne%s.", QUEST_NAME, tmp2[0], cpt, (cpt>1?"s":""));
 		}
 	}
 }
@@ -530,9 +519,9 @@ public void Q6_Frame(int objectiveID, int client) {
 		SetEntityHealth(g_stkTeam[TEAM_BRAQUEUR][i], heal);
 		rp_SetClientInt(g_stkTeam[TEAM_BRAQUEUR][i], i_Kevlar, kevlar);
 #if defined USING_VEHICLE
-		PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "<b>Objectif</b>: Restez vivant. Prenez la fuite avec votre voiture quand vous le souhaitez. <b>Gain</b>: %d$", g_iQuestGain);
+		PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "Objectif: Restez vivant. Prenez la fuite avec votre voiture quand vous le souhaitez. Gain<: %d$", g_iQuestGain);
 #else
-		PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "<b>Objectif</b>: Restez vivant. Prenez la fuite dans un métro quand vous le souhaitez. <b>Gain</b>: %d$", g_iQuestGain);
+		PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "Objectif: Restez vivant. Prenez la fuite dans un métro quand vous le souhaitez. Gain: %d$", g_iQuestGain);
 #endif
 		for (int j = 0; j < g_stkTeamCount[TEAM_HOSTAGE]; j++) {
 			if( Math_GetRandomInt(0, 4)  == 0 ) {
@@ -566,7 +555,7 @@ public void Q6_Frame(int objectiveID, int client) {
 		
 		for (int j = 0; j < g_stkTeamCount[TEAM_POLICE]; j++) {
 			
-			PrintHintText(g_stkTeam[TEAM_POLICE][j], "<b>Alerte</b>: Un braquage est en cours dans %s, tuez les braqueurs. <b>Gain</b>: %d$, <b>Amende</b>: %d$.", tmp2[0], gainPolice, amendePolice);
+			PrintHintText(g_stkTeam[TEAM_POLICE][j], "Alerte: Un braquage est en cours dans %s, tuez les braqueurs. Gain: %d$, Amende: %d$.", tmp2[0], gainPolice, amendePolice);
 			
 			for (int i = 0; i < g_stkTeamCount[TEAM_BRAQUEUR]; i++) {
 				if( Math_GetRandomInt(0, 4)  == 0 )
@@ -605,7 +594,7 @@ public void Q7_Frame(int objectiveID, int client) {
 		ServerCommand("sm_effect_gps %d %f %f %f", g_stkTeam[TEAM_BRAQUEUR][i], dst[0], dst[1], dst[2]);
 #endif
 
-		PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "<b>Quête</b>: %s\n<b>Objectif</b>: Prenez la fuite avec le véhicule.", QUEST_NAME);
+		PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "Quête: %s\nObjectif: Prenez la fuite avec le véhicule.", QUEST_NAME);
 	}
 	
 	if( g_stkTeamCount[TEAM_BRAQUEUR] == 0 ) {
@@ -634,7 +623,7 @@ public void Q7_Frame(int objectiveID, int client) {
 		
 		for (int j = 0; j < g_stkTeamCount[TEAM_POLICE]; j++) {
 			
-			PrintHintText(g_stkTeam[TEAM_POLICE][j], "<b>Alerte</b>: Un braquage est en cours dans %s, tuez les braqueurs. <b>Gain</b>: %d$, <b>Amende</b>: %d$.", tmp2[0], gainPolice, amendePolice);
+			PrintHintText(g_stkTeam[TEAM_POLICE][j], "Alerte: Un braquage est en cours dans %s, tuez les braqueurs. Gain: %d$, Amende: %d$.", tmp2[0], gainPolice, amendePolice);
 			
 			for (int i = 0; i < g_stkTeamCount[TEAM_BRAQUEUR]; i++) {
 				if( Math_GetRandomInt(0, 4)  == 0 )
