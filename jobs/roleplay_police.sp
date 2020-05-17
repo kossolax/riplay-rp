@@ -231,6 +231,10 @@ public Action Cmd_Verif(int client) {
 		if( !IsPlayerAlive(target) )
 			return Plugin_Handled;
 
+		if( rp_GetClientInt(client, i_KillJailDuration) > 1) {
+			ACCESS_DENIED(client);
+		}
+
 		char szTitle[2048];
 		Format(szTitle, sizeof(szTitle), "Information sur le joueur %s:\n\n", szTitle, name);
 
@@ -330,6 +334,10 @@ public Action Cmd_Cop(int client) {
 		ACCESS_DENIED(client);
 	}
 	if (!rp_GetClientBool(client, b_MaySteal) || rp_GetClientBool(client, b_Stealing)) {  // Pendant un vol
+		ACCESS_DENIED(client);
+	}
+
+	if( rp_GetClientInt(client, i_KillJailDuration) > 1) {
 		ACCESS_DENIED(client);
 	}
 	
@@ -432,6 +440,10 @@ public Action Cmd_Tazer(int client) {
 		ACCESS_DENIED(client);
 	}
 	if (rp_GetClientFloat(client, fl_Invincible) > GetGameTime()) {  //le flic utilise une poupée gonflable
+		ACCESS_DENIED(client);
+	}
+
+	if( rp_GetClientInt(client, i_KillJailDuration) > 1) {
 		ACCESS_DENIED(client);
 	}
 
@@ -683,6 +695,10 @@ public Action Cmd_Jail(int client) {
 		ACCESS_DENIED(client);
 	}
 	if (GetClientTeam(client) == CS_TEAM_T && ((job == 8 || job == 9) || (job >= 101 && job <= 109))) {
+		ACCESS_DENIED(client);
+	}
+
+	if( rp_GetClientInt(client, i_KillJailDuration) > 1) {
 		ACCESS_DENIED(client);
 	}
 	
@@ -1384,6 +1400,10 @@ public Action fwdOnPlayerBuild(int client, float & cooldown) {
 	if (rp_GetClientJobID(client) != 1 && rp_GetClientJobID(client) != 101)
 		return Plugin_Continue;
 	
+	if( rp_GetClientInt(client, i_KillJailDuration) > 1) {
+		return Plugin_Continue;
+	}
+
 	if (rp_IsInPVP(client)) {
 		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas poser une barrière en PVP.");
 		return Plugin_Continue;
