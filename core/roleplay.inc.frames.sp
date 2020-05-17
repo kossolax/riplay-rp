@@ -714,6 +714,8 @@ void OnGameFrame_10(float time) {
 						if( g_iUserData[i][i_jailTime_Reason] == 1 ) {
 							g_iUserData[i][i_KillJailDuration] = 0;
 						}
+
+						g_bUserData[i][b_IsFreekiller] = false;
 							
 						rp_ClientResetSkin(i);
 						rp_ClientSendToSpawn(i, true);

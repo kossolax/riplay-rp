@@ -1026,7 +1026,8 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 			rp_SetClientInt(target, i_JailTime, 0);
 			rp_SetClientInt(target, i_jailTime_Last, 0);
 			rp_SetClientInt(target, i_JailledBy, 0);
-			
+			rp_SetClientBool(target, b_IsFreekiller, false);
+
 			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez libéré %N{default}.", target);
 			CPrintToChat(target, "{lightblue}[TSX-RP]{default} %N {default}vous a libéré.", client);
 			
@@ -1066,7 +1067,8 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 				rp_SetClientInt(target, i_JailTime, 0);
 				rp_SetClientInt(target, i_jailTime_Last, 0);
 				rp_SetClientInt(target, i_JailledBy, 0);
-				
+				rp_SetClientBool(target, b_IsFreekiller, false);
+
 				CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N{default} a été libéré car il n'a pas commis d'agression.", target);
 				CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez été libéré car vous n'avez pas commis d'agression.", client);
 				
@@ -1082,7 +1084,8 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 				rp_SetClientInt(target, i_JailTime, 0);
 				rp_SetClientInt(target, i_jailTime_Last, 0);
 				rp_SetClientInt(target, i_JailledBy, 0);
-				
+				rp_SetClientBool(target, b_IsFreekiller, false);
+
 				CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N{default} a été libéré car il n'a pas effectué de tir dangereux.", target);
 				CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez été libéré car vous n'avez pas effectué de tir dangereux.", client);
 				
@@ -1116,6 +1119,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 				rp_SetClientInt(target, i_JailTime, 0);
 				rp_SetClientInt(target, i_jailTime_Last, 0);
 				rp_SetClientInt(target, i_JailledBy, 0);
+				rp_SetClientBool(target, b_IsFreekiller, false);
 				
 				CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N{default} a été libéré car il n'a pas commis de vol.", target);
 				CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez été libéré car vous n'avez pas commis de vol.", client);

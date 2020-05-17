@@ -296,6 +296,11 @@ public void OnPluginStart() {
 	CloseHandle(hGameData);
 
 	RegConsoleCmd("sm_bf", Command_DebugBF); // debug, a tej après
+	RegConsoleCmd("sm_debugfk", Command_DebugFk);
+}
+
+public Action Command_DebugFk(int client, int args) {
+	PrintToChat(client, "freekiller: %s", g_bUserData[client][b_IsFreekiller] ? "yes":"no");
 }
 
 public Action Command_DebugBF(int client, int args) {

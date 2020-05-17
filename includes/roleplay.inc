@@ -681,6 +681,7 @@ enum bool_user_data {
 	b_PassedRulesTest,
 	b_AssuranceVie,
 	b_ItemRecovered,
+	b_IsFreekiller,
 	b_udata_max
 };
 enum int_user_data {

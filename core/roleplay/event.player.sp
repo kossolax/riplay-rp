@@ -480,8 +480,20 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 	if( g_iUserData[Client][i_PlayerLVL] >= 650 )
 		respawn /= 2.0;
 	
+	int add = 8;
+
+	if( GetClientTeam(Client) == CS_TEAM_CT ) {
+		if( !IsInPVP(Client) && g_iHideNextLog[Attacker][Client] == 0 ) {
+			add = add * 2;
+		}
+	}
+
 	//int killDuration = (g_iKillLegitime[Attacker][Client] >= GetTime() ? 1 : 6);
-	int killDuration = (g_iKillLegitime[Attacker][Client] >= GetTime() ? 1 : RoundToFloor(float(g_iUserData[Attacker][i_KillJailDuration]) * 1.5) + 8);
+	int killDuration = (g_iKillLegitime[Attacker][Client] >= GetTime() ? 1 : RoundToFloor(float(g_iUserData[Attacker][i_KillJailDuration]) * 1.5) + add);
+	
+	PrintToChat(Attacker, "(%i * 1.5) + %i", g_iUserData[Attacker][i_KillJailDuration], add);
+	PrintToChat(Attacker, "result = %i", killDuration);
+	PrintToChat(Attacker, "add = %i", add);
 
 	g_iUserStat[Client][i_Deaths]++;
 	showGraveMenu(Client);
@@ -577,21 +589,26 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 
 				IncrementSuccess(Attacker, success_list_in_gang);
 			}
-			
+
 			g_iUserData[Client][i_LastKilled] = Attacker;
 			g_iUserData[Attacker][i_LastKilled_Reverse] = Client;
-			
+
 			if( g_iHideNextLog[Attacker][Client] == 0 ) {
 				if( !(GetZoneBit( GetPlayerZone(Attacker) ) & BITZONE_EVENT || GetZoneBit( GetPlayerZone(Attacker) ) & BITZONE_PVP) ) {
 					g_iUserData[Attacker][i_KillJailDuration] = killDuration;
 					g_iUserData[Attacker][i_LastKillTime] = GetTime();
 					g_iUserData[Attacker][i_KillingSpread] += (killDuration > 1 ? 1:0);
-				}				
-				
-				if( g_iUserData[Attacker][i_KillJailDuration] >= (106) ) {
-					KickClient(Attacker, "Freekill massif");
 				}
-				
+
+				if( g_iUserData[Attacker][i_KillJailDuration] >= 106) {
+					g_bUserData[Attacker][b_IsFreekiller] = true;
+
+					ServerCommand("rp_SendToJail %d 0", Attacker);
+					rp_SetClientInt(Attacker, i_JailTime, (rp_GetClientInt(Attacker, i_JailTime) + g_iUserData[Attacker][i_KillJailDuration] * 60));
+
+					KickClient(Attacker, "Vous avez été kické pour FREEKILL abusif");
+				}
+
 				if( (StrContains(weapon, "knife") == 0 || StrContains(weapon, "bayonet") == 0) ) {
 					g_iUserData[Attacker][i_KnifeTrain]--;
 					if( g_iUserData[Attacker][i_KnifeTrain] < 5 )
@@ -602,8 +619,8 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 					if( g_flUserData[Attacker][fl_WeaponTrain] < 0.0 )
 						g_flUserData[Attacker][fl_WeaponTrain] = 0.0;
 				}
-				
-				
+
+
 				if( rp_GetClientJobID(Attacker) == 51 && StrEqual(weapon, "prop_vehicle_driveable") && !g_bUserData[Attacker][b_GameModePassive] ) {
 					g_iHideNextLog[Attacker][Client] = 1;
 					carkill = true;
@@ -613,12 +630,6 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 					DeathDrop(Client);
 				else
 					SetEntProp(Attacker, Prop_Send, "m_iNumRoundKills",  0);
-			}
-			
-			if( GetClientTeam(Client) == CS_TEAM_CT ) {
-				if( !IsInPVP(Client) && g_iHideNextLog[Attacker][Client] == 0 ) {
-					g_iUserData[Attacker][i_KillJailDuration] += killDuration;
-				}
 			}
 			
 			displayDeathOverlay(Client, Attacker, carkill);

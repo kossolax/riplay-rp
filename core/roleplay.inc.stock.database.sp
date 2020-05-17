@@ -533,8 +533,8 @@ void StoreUserData(int client) {
 		MysqlQuery, g_flUserData[client][fl_Vitality], g_bUserData[client][b_PayToBank], g_bUserData[client][b_HaveCard], g_bUserData[client][b_HaveAccount], in_bank, in_item, in_save, IP);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
-		"%s `malus`='%i', `freekill`='%i', `assurance`='%i', `train_esquive`='%i', `skin`='%s', ",
-		MysqlQuery, g_iUserData[client][i_Malus], g_iUserData[client][i_KillJailDuration], GetAssurence(client), g_iUserData[client][i_Esquive], g_szUserData[client][sz_Skin]);
+		"%s `malus`='%i', `freekill`='%i', `freekiller`='%i', `assurance`='%i', `train_esquive`='%i', `skin`='%s', ",
+		MysqlQuery, g_iUserData[client][i_Malus], g_iUserData[client][i_KillJailDuration], g_bUserData[client][b_IsFreekiller], GetAssurence(client), g_iUserData[client][i_Esquive], g_szUserData[client][sz_Skin]);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
 		"%s `sick`='%i', `tuto`='%i', `TimePlayedJob`='%d', `artisan_xp`='%d', `artisan_lvl`='%d', `artisan_points`='%d',  `artisan_fatigue`='%f', ",
@@ -849,8 +849,10 @@ void LoadUserData(int Client) {
 		Format(query, sizeof(query),
 			"%s `artisan_xp`, `artisan_lvl`, `artisan_points`, `artisan_fatigue`, `kill`, `death`, `kill2`, `death2`, `jrouge`, `jbleu`, `xp`, ", query);
 		Format(query, sizeof(query),
-			"%s `level`, `prestige`, `female`, `birthday`, `birthmonth`, `lastname`, `firstname`, `rules`, `jobplaytime`, `adminxp`, `dette`, `time_played`, `permi_lege_start`, `permi_lourd_start` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
-		
+			"%s `level`, `prestige`, `female`, `birthday`, `birthmonth`, `lastname`, `firstname`, `rules`, `jobplaytime`, `adminxp`, `dette`, `time_played`, ", query, SteamID); 
+		Format(query, sizeof(query),
+			"%s `permi_lege_start`, `permi_lourd_start`, `freekiller` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
+
 		SQL_TQuery(g_hBDD, LoadUserData_2, query, Client, DBPrio_High);
 		
 		Format(query, sizeof(query), "SELECT");
@@ -985,6 +987,8 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 
 		g_iUserData[Client][i_StartLicense1] = SQL_FetchInt(hQuery, 54);
 		g_iUserData[Client][i_StartLicense2] = SQL_FetchInt(hQuery, 55);
+
+		g_bUserData[Client][b_IsFreekiller] = SQL_FetchInt(hQuery, 56);
 		
 		SQL_FetchString(hQuery, 47, g_szUserData[Client][sz_LastName], sizeof(g_szUserData[][]));
 		SQL_FetchString(hQuery, 48, g_szUserData[Client][sz_FirstName], sizeof(g_szUserData[][]));		
