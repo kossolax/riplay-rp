@@ -390,6 +390,8 @@ void OnGameFrame_10(float time) {
 
 	int jobID;
 	int iTime = GetTime();
+	int tmpKillDuration;
+
 	bool changed = false;
 	float fNow[3];
 	PrintHours(szDates, sizeof(szDates));
@@ -503,6 +505,16 @@ void OnGameFrame_10(float time) {
 				
 				CheckLiscence(i);
 				
+				if(rp_GetClientJobID(i) == 1) {
+					if( GetClientTeam(i) != CS_TEAM_T && g_iUserData[i][i_KillJailDuration] > 1) {
+						tmpKillDuration = g_iUserData[i][i_KillJailDuration];
+						g_iUserData[i][i_KillJailDuration] = 0;
+
+						FakeClientCommand(i, "say /cop");
+						g_iUserData[i][i_KillJailDuration] = tmpKillDuration;
+					}
+				}	
+
 				GetClientAbsOrigin(i, fNow);
 				if( GetVectorDistance(fNow, g_fSuccess_last_move[i]) > 50 && Math_GetRandomInt(0, 1) ) {
 					g_iUserStat[i][i_RunDistance]++;
@@ -715,7 +727,7 @@ void OnGameFrame_10(float time) {
 					}
 				}
 				
-				if( g_iUserData[i][i_JailTime] >= 730 ) {
+				if( g_iUserData[i][i_JailTime] >= 730 && IsClientInJail(i)) {
 					ReduceJailTime(i);
 				}
 				if( g_iUserData[i][i_JailTime] <= 0 && IsClientInJail(i) ) {
@@ -768,6 +780,7 @@ void OnGameFrame_10(float time) {
 				CS_SetClientAssists(i, 0);
 			if( CS_GetMVPCount(i) != 0 )
 				CS_SetMVPCount(i, 0);
+
 			if( GetEntProp(i, Prop_Data, "m_iFrags") != 0 ) 
 				SetEntProp(i, Prop_Data, "m_iFrags", 0);
 			if( GetEntProp(i, Prop_Data, "m_iDeaths") != 0 ) 
@@ -778,7 +791,7 @@ void OnGameFrame_10(float time) {
 				Client_SetArmor(i, g_iUserData[i][i_Kevlar]);
 			
 			updateClanTag(i);
-			
+
 			if( GetClientMenu(i) == MenuSource_None || GetClientMenu(i) == MenuSource_RawPanel ) {
 				
 				if( ! IsTutorialOver(i) ) {
