@@ -314,6 +314,8 @@ void OnGameFrame_01(float time) {
 }
 void OnGameFrame_10(float time) {
 	static int last_minutes = -1;
+	static int infoPeineTime = -1;
+
 	static char model[255], szHUD[1024], sound[128], szDates[64];
 	
 	if( last_minutes == g_iMinutes ) 
@@ -379,7 +381,13 @@ void OnGameFrame_10(float time) {
 		SpawnRandomBonbon();
 	}
 	#endif
-	
+
+	infoPeineTime++;
+
+	if(infoPeineTime > 180) {
+		infoPeineTime = 0;
+	}
+
 	int jobID;
 	int iTime = GetTime();
 	bool changed = false;
@@ -484,6 +492,13 @@ void OnGameFrame_10(float time) {
 				g_flUserData[i][fl_Vitality] = 0.0;
 			
 			if( IsPlayerAlive(i) ) {
+
+				if(infoPeineTime == 180) {
+					if(g_bUserData[i][b_ExitJailMenu]) {
+						CPrintToChat(i, "{lightblue}[TSX-RP] {default}Tu peux modifier la durée/zone de ton emprisonnement en tapant /peine");
+					}
+				}
+
 				KillStack_Timer(i, iTime);
 				
 				CheckLiscence(i);
