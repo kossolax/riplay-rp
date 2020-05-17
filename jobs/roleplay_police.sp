@@ -225,8 +225,6 @@ public Action Cmd_Verif(int client) {
 		char name[32];
 		GetClientName(target, name, sizeof(name));
 		
-		PrintToChat(client, "debug %N - %s", target, name);
-		
 		if( !IsValidClient(target) )
 			return Plugin_Handled;
 
@@ -902,7 +900,7 @@ void SendPlayerToJail(int target, int client = 0) {
 		if (!IsValidClient(rp_GetClientInt(target, i_JailledBy)))
 			rp_SetClientInt(target, i_JailledBy, client);
 		
-		
+		rp_SetClientBool(target, b_ExitJailMenu, false);
 		CPrintToChat(target, "{lightblue}[TSX-RP]{default} %N {default}vous a mis en prison.", client);
 		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez mis %N {default}en prison.", target);
 		
@@ -1030,7 +1028,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 
 			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez libéré %N{default}.", target);
 			CPrintToChat(target, "{lightblue}[TSX-RP]{default} %N {default}vous a libéré.", client);
-			
+
 			LogToGame("[TSX-RP] [JAIL] [LIBERATION] %L a liberé %L", client, target);
 			
 			int zonec = rp_GetZoneFromPoint(g_flLastPos[target]);
