@@ -62,15 +62,13 @@ void ReduceJailTime(int client) {
 	// Setup menu
 	Handle menu = CreateMenu(eventPayForLeaving_2);
 	char tmp[256];
-	Format(tmp, 255, "Vous êtes en prison pour encore %.1f heures\n\n", (float(g_iUserData[client][i_JailTime])/60.0));
 
-	if(g_bUserData[client][b_IsFreekiller] == false) {
-		Format(tmp, 255, "%sVous pouvez réduire ce temps de %d heures\nà tout moment pour %i$\n\n ", tmp, reduction, amende);
-	}
-	
-	/*} else {
+	if(g_bUserData[client][b_IsFreekiller] == true) {
 		Format(tmp, 255, "%sVotre comportement est inapproprié sur le serveur suite à vos récentes actions.\nVous devez OBLIGATOIREMENT purger votre peine\n\n ", tmp);
-	}*/
+	}
+
+	Format(tmp, 255, "%sVous êtes en prison pour encore %.1f heures\n\n ", tmp, (float(g_iUserData[client][i_JailTime])/60.0));
+	// Format(tmp, 255, "%sVous pouvez réduire ce temps de %d heures\nà tout moment pour %i$\n\n ", tmp, reduction, amende);
 
 	SetMenuTitle(menu, tmp);
 	
