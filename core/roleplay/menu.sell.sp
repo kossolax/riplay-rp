@@ -954,10 +954,8 @@ void RestToLowCapital(int rest) {
 
 	int add = 0;
 
-	char szTemps[32];
-
 	for(int i = 0; i < 5; i++) {
 		add = (rest * percent[4-i]) / 100;
-		rp_GetJobData(capitalList[i][1], job_type_name, szTemps, sizeof(szTemps));
+		SetJobCapital(capitalList[i][1], (GetJobCapital(capitalList[i][1]) + add));
 	}
 }
