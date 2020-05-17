@@ -1307,9 +1307,14 @@ bool policeMatch(int client) {
 	if( jobID == 101 && GetClientTeam(client) == CS_TEAM_CT && (rp_GetPlayerZone(client) == TRIBUNAL_1 || rp_GetPlayerZone(client) == TRIBUNAL_2) )
 		return false;
 	
-	if( jobID == 1 || jobID == 101 )
+	if( jobID == 1 || jobID == 101 ) {
+		if(rp_GetClientInt(client, i_KillJailDuration) > 1) {
+			return false;
+		}
+		
 		return true;
-	
+	}
+
 	return false;
 }
 void EmitSoundToAllRangedAny(const char[] sound, float origin[3]) {
