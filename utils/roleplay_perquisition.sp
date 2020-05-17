@@ -75,6 +75,10 @@ public Action Cmd_Perquiz(int client) {
 		ACCESS_DENIED(client);
 	}
 	
+	if( rp_GetClientInt(client, i_KillJailDuration) > 1) {
+		ACCESS_DENIED(client);
+	}
+
 	int array[PQ_Max];
 	float dst[3];
 	char tmp[64], tmp2[64];
