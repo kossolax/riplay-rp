@@ -76,8 +76,12 @@ void ReduceJailTime(int client) {
 
 	AddMenuItem(menu, "cours", "Envoyez moi dans la cour");
 
-	if( g_iUserData[client][i_Money]+g_iUserData[client][i_Bank] >= 250 )
-		AddMenuItem(menu, "qhs", "Envoyez moi au QHS (250$)");
+	int qhsPrice = 100 * rp_GetClientInt(client, i_KillJailDuration);
+
+	if( g_iUserData[client][i_Money]+g_iUserData[client][i_Bank] >= qhsPrice ) {
+		Format(tmp, 255, "Envoyer moi au QHS (%i$)", qhsPrice);
+		AddMenuItem(menu, "qhs", tmp);
+	}
 
 	AddMenuItem(menu, "exit", "Ne rien faire");
 	
@@ -174,7 +178,9 @@ public int eventPayForLeaving_2(Handle menu, MenuAction action, int iTarget, int
 			}
 		}
 		if( StrEqual(options, "qhs", false) ) {
-			if( g_iUserData[iTarget][i_JailTime] > (12*60) && (g_iUserData[iTarget][i_Money]+g_iUserData[iTarget][i_Bank] >= 100) ) {
+			int qhsPrice = 100 * rp_GetClientInt(iTarget, i_KillJailDuration);
+
+			if( g_iUserData[iTarget][i_JailTime] > (12*60) && (g_iUserData[iTarget][i_Money]+g_iUserData[iTarget][i_Bank] >= qhsPrice) ) {
 				
 				bool bLocation[MAX_ZONES+1];
 				
@@ -223,7 +229,8 @@ public int eventPayForLeaving_2(Handle menu, MenuAction action, int iTarget, int
 							
 						}
 						
-						rp_ClientMoney(iTarget, i_Money, -250);
+						rp_ClientMoney(iTarget, i_Money, -qhsPrice);
+						SetJobCapital(1, (GetJobCapital(1) + qhsPrice));
 						return;
 					}
 				}
