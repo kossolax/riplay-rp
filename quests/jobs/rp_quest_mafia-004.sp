@@ -24,7 +24,7 @@
 
 
 #define QUEST_UNIQID	"mafia-004"
-#define	QUEST_NAME		"Trafic d'arme"
+#define	QUEST_NAME		"Trafic d\'arme"
 #define	QUEST_TYPE		quest_daily
 #define	QUEST_JOBID		91
 #define	QUEST_RESUME	"Récupérer les armes"
