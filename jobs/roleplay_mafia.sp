@@ -30,8 +30,8 @@ public Plugin myinfo = {
 int g_iLastDoor[65][3];
 int g_iDoorDefine_LOCKER[2049];
 int g_iAppartPickLockCount[200];
+int g_iAppartNewPickLock[200];
 float g_flAppartProtection[200];
-float g_flAppartNewPickLock[200];
 Handle g_vCapture;
 int g_cBeam;
 DataPack g_hBuyMenu;
@@ -667,7 +667,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				int owner = rp_GetBuildingData(target, BD_owner);
 
 				if( IsValidClient(owner) ) {
-					stealAMount = GetrandomInt(1, 150);
+					stealAMount = Math_GetRandomInt(1, 150);
 
 					rp_ClientMoney(owner, i_Bank, -stealAMount);
 					rp_ClientMoney(client, i_AddToPay, stealAMount);
@@ -784,12 +784,15 @@ public Action Cmd_ItemPickLock(int args) {
 		static int newPickTime = 60 * 3;
 
 		if(g_flAppartProtection[appartID] > GetGameTime()) {
+			ITEM_CANCEL(client, item_id);
 			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible de crocheter cette porte pour encore %d minutes.", RoundFloat((g_flAppartProtection[appartID] - GetGameTime()) / 60.0));
 			return Plugin_Handled;
 		}
 
-		if(g_flAppartNewPickLock[appartID] > GetTime()) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible de crocheter cette porte pour encore %d minutes.", (newPickTime - (GetTime() - g_flAppartNewPickLock[appartID])));
+		if (g_iAppartNewPickLock[appartID] > GetTime()) {
+			ITEM_CANCEL(client, item_id);
+			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible de crocheter cette porte pour encore %d secondes.", (g_iAppartNewPickLock[appartID] - GetTime()));
+			
 			return Plugin_Handled;
 		}
 		
@@ -801,7 +804,7 @@ public Action Cmd_ItemPickLock(int args) {
 		}
 
 		if(g_iAppartPickLockCount[appartID] == 3) {
-			g_flAppartNewPickLock[appartID] = GetTime() + newPickTime;
+			g_iAppartNewPickLock[appartID] = GetTime() + newPickTime;
 			g_iAppartPickLockCount[appartID] = 0;
 		}
 	}
