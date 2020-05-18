@@ -96,8 +96,8 @@ public Action Cmd_ItemChirurgie(int args) {
 	int client = GetCmdArgInt(2);
 	int vendeur = GetCmdArgInt(3);
 	float time = rp_GetClientInt(vendeur, i_Job) == 13 ? 30.0 : 5.0;
-	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N{default} Vous fait une opération chirurgicale.", vendeur);
+
+	CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N vous fait une opération chirurgicale.", vendeur);
 	CPrintToChat(vendeur, "{lightblue}[TSX-RP]{default} Vous commencez à opérer %N.", client);
 	
 	rp_HookEvent(client, RP_PrePlayerPhysic, fwdFrozen, time);
@@ -117,6 +117,7 @@ public Action Cmd_ItemChirurgie(int args) {
 	
 	vecOrigin[2] -= 20.0; vecOrigin2[2] -= 20.0;
 	
+	time += 4.0;
 	TE_SetupBeamPoints(vecOrigin, vecOrigin2, g_cBeam, 0, 0, 0, time, 20.0, 20.0, 0, 0.0, {250, 50, 20, 250}, 20);
 	TE_SendToAll(0.1);
 	
