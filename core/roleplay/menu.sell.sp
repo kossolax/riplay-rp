@@ -154,11 +154,11 @@ void DrawVendreMenu(int client) {
 				continue;
 			
 			// Chirurgie
-			if( g_iUserData[client][i_Job] == 14 ) {
-				if( StrContains(g_szItemListOrdered[i][item_type_extra_cmd], "rp_chirurgie", false) != 0 )
+			if( g_iUserData[client][i_Job] == 13) {
+				if( StrContains(g_szItemListOrdered[i][item_type_extra_cmd], "rp_chirurgie full", false) == 0 )
 					continue;
 			}
-			if( g_iUserData[client][i_Job] == 13 || g_iUserData[client][i_Job] == 15 || g_iUserData[client][i_Job] == 16 ) {
+			if( g_iUserData[client][i_Job] == 15 || g_iUserData[client][i_Job] == 16 ) {
 				if( StrContains(g_szItemListOrdered[i][item_type_extra_cmd], "rp_chirurgie", false) == 0 )
 					continue;
 			}
