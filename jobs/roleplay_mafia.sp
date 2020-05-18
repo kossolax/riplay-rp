@@ -61,9 +61,10 @@ public Action Cmd_Reload(int args) {
 }
 public void OnPluginStart() {
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
-	RegServerCmd("rp_item_piedbiche", 	Cmd_ItemPiedBiche,		"RP-ITEM",	FCVAR_UNREGISTERED);	
+	RegServerCmd("rp_item_piedbiche", 	Cmd_ItemPiedBiche,		"RP-ITEM",	FCVAR_UNREGISTERED);
+	RegServerCmd("rp_item_hack",		Cmd_ItemHack,		"RP-ITEM", 	FCVAR_UNREGISTERED);	
 	RegServerCmd("rp_item_picklock", 	Cmd_ItemPickLock,		"RP-ITEM",	FCVAR_UNREGISTERED); 
-	RegServerCmd("rp_item_picklock2", 	Cmd_ItemPickLock,		"RP-ITEM",	FCVAR_UNREGISTERED);	
+	RegServerCmd("rp_item_picklock2", 	Cmd_ItemPickLock,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	// Epicier
 	RegServerCmd("rp_item_doorDefine",	Cmd_ItemDoorDefine,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_doorprotect", Cmd_ItemDoorProtect,	"RP-ITEM",	FCVAR_UNREGISTERED);
@@ -393,18 +394,19 @@ public Action fwdOnPlayerUse(int client) {
 	if( rp_GetClientJobID(client) == 91 && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 91 ) {
 		bool changed = false;
 		
-		for(int itemID=1; itemID<=3; itemID++) {
-		
-			int mnt = rp_GetClientItem(client, itemID);
-			int max = GetMaxKit(client, itemID);
-			if( mnt <  max ) {
-				rp_ClientGiveItem(client, itemID, max - mnt);
-				rp_GetItemData(itemID, item_type_name, tmp, sizeof(tmp));
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez récupéré %i %s.", max - mnt, tmp);
-				
-				changed = true;
-			}
+		for(int itemID=1; itemID<=310; itemID++) {
 			
+			if(itemID == 1 || itemID == 2 || itemID == 3 || itemID == 310) {
+				int mnt = rp_GetClientItem(client, itemID);
+				int max = GetMaxKit(client, itemID);
+				if( mnt <  max ) {
+					rp_ClientGiveItem(client, itemID, max - mnt);
+					rp_GetItemData(itemID, item_type_name, tmp, sizeof(tmp));
+					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez récupéré %i %s.", max - mnt, tmp);
+					
+					changed = true;
+				}
+			}
 		}
 		
 		if(changed == true) {
@@ -443,11 +445,11 @@ public Action Cmd_ItemDoorDefine(int args) {
 	
 	return Plugin_Handled;
 }
-public Action Cmd_ItemPiedBiche(int args) {
+public Action Cmd_ItemHack(int args) {
 	
 	int client = GetCmdArgInt(1);
 	int item_id = GetCmdArgInt(args);
-	
+
 	if( rp_GetClientJobID(client) != 91 ) {
 		return Plugin_Continue;
 	}
@@ -460,12 +462,69 @@ public Action Cmd_ItemPiedBiche(int args) {
 	
 	int type;
 	int target = getDistrib(client, type);
+
+	if( target <= 0 || type != 8) {
+		ITEM_CANCEL(client, item_id);
+		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez viser un distributeur clandestin.");
+		return Plugin_Handled;
+	}
+
+	float start = 0.0;
+	
+	rp_SetClientStat(client, i_JobFails, rp_GetClientStat(client, i_JobFails) + 1);
+
+	rp_ClientGiveItem(client, item_id, -rp_GetClientItem(client, item_id));
+	rp_SetClientBool(client, b_MaySteal, false);
+	rp_SetClientInt(client, i_LastVolTime, GetTime());
+	rp_SetClientInt(client, i_LastVolAmount, 100);
+	rp_SetClientInt(client, i_LastVolTarget, -1);	
+	rp_ClientReveal(client);
+	
+	char classname[64];
+	GetEdictClassname(target, classname, sizeof(classname));
+	
+	ServerCommand("sm_effect_particles %d weapon_sensorgren_detonate 1 facemask", client);
+	ServerCommand("sm_effect_particles %d Trail2 2 legacy_weapon_bone", client);
+	
+	Handle dp;
+	CreateDataTimer(0.1, ItemPiedBiche_frame, dp, TIMER_DATA_HNDL_CLOSE|TIMER_REPEAT);
+	WritePackCell(dp, client);
+	WritePackCell(dp, target);
+	WritePackCell(dp, start);
+	WritePackCell(dp, type);
+	
+	return Plugin_Handled;
+}
+public Action Cmd_ItemPiedBiche(int args) {
+	
+	int client = GetCmdArgInt(1);
+	int item_id = GetCmdArgInt(args);
+
+	if( rp_GetClientJobID(client) != 91 ) {
+		return Plugin_Continue;
+	}
+	
+	if( rp_GetClientBool(client, b_MaySteal) == false ) {
+		ITEM_CANCEL(client, item_id);
+		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas voler pour le moment.");
+		return Plugin_Handled;
+	}
+	
+	int type;
+	int target = getDistrib(client, type);
+
 	if( target <= 0 ) {
 		ITEM_CANCEL(client, item_id);
 		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez viser un distributeur, un téléphone, ou une imprimante.");
 		return Plugin_Handled;
 	}
 	
+	if(type == 8) {
+		ITEM_CANCEL(client, item_id);
+		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez utiliser une CB magnétique pour hack un distributeur clandestin.");
+		return Plugin_Handled;
+	}
+
 	float start = 0.0;
 	
 	if( type == 3 || type == 4  )
@@ -608,15 +667,13 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				int owner = rp_GetBuildingData(target, BD_owner);
 
 				if( IsValidClient(owner) ) {
-					int rand = GetRandomInt(1, 6);
+					stealAMount = GetrandomInt(1, 150);
 
-					for (int i = 0; i < rand; i++)
-						CreateTimer(i / 5.0, SpawnMoney, EntIndexToEntRef(target));
-
-					stealAMount = 25*rand;
 					rp_ClientMoney(owner, i_Bank, -stealAMount);
+					rp_ClientMoney(client, i_AddToPay, stealAMount);
 
 					CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Attention, quelqu'un à piraté votre distributeur et vous à voler %i$.", stealAMount);
+					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez piraté %i$ !", stealAMount);
 				} else {
 					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le vol a été annulé.");
 				}
@@ -669,8 +726,7 @@ public Action SpawnMoney(Handle timer, any target) {
 	Entity_GetAbsOrigin(target, vecOrigin);
 	Entity_GetAbsAngles(target, vecAngle);
 	
-	if( StrContains(classname, "rp_bank") == 0 ) {
-		
+	if( StrContains(classname, "rp_bank") == 0 && rp_GetBuildingData(target, BD_owner) <= 0) {
 		Math_RotateVector( view_as<float>({ 7.0, 0.0, 40.0 }), vecAngle, vecPos);
 		vecOrigin[0] += vecPos[0];
 		vecOrigin[1] += vecPos[1];
@@ -706,15 +762,16 @@ public Action Cmd_ItemPickLock(int args) {
 	int client = GetCmdArgInt(1);
 	int item_id = GetCmdArgInt(args);
 	bool fast = false;
+
 	char arg[64];
 	GetCmdArg(0, arg, sizeof(arg));
-	if( StrEqual(arg, "rp_item_picklock2") )
+	if( StrEqual(arg, "rp_item_picklock2") ) 
 		fast = true;
 		
 	if( rp_GetClientJobID(client) != 91 ) {
 		return Plugin_Continue;
 	}
-	
+
 	int door = getDoor(client);
 	if( door == 0 ) {
 		ITEM_CANCEL(client, item_id);
@@ -880,7 +937,7 @@ int GetMaxKit(int client, int itemID) {
 		default:	max = 0;
 	}
 	
-	if( itemID == ITEM_PIEDBICHE )
+	if( itemID == ITEM_PIEDBICHE || itemID == ITEM_MAGNETCB)
 		max = 1;
 	if( itemID == ITEM_KITEXPLOSIF )
 		max = RoundToCeil(max / 3.0);
@@ -976,6 +1033,7 @@ void MENU_ShowPickLock(int client, float percent, int difficulte, int type) {
 		case 5: SetMenuTitle(menu, "== Mafia: Crochetage d'une photocopieuse\n ");
 		case 6: SetMenuTitle(menu, "== Mafia: Crochetage d'un téléphone\n ");
 		case 7: SetMenuTitle(menu, "== Mafia: Crochetage d'un plant de drogue\n ");
+		case 8: SetMenuTitle(menu, "== Mafia: Hack d'un distributeur clandestin\n ");
 	}
 	
 	char tmp[64];

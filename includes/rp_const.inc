@@ -84,6 +84,7 @@
 #define	ITEM_JETONROUGE		276
 #define ITEM_JETONBLEU		286
 #define ITEM_CHEQUE			304
+#define ITEM_MAGNETCB 310
 
 // Zone:
 #define	METRO_PAIX		60
