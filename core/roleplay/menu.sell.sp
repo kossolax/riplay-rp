@@ -215,7 +215,7 @@ public int eventGiveMenu_1(Handle p_hItemMenu, MenuAction p_oAction, int client,
 			int type = StringToInt(data[1]);
 			
 			if( StrContains(g_szItemList[i][item_type_extra_cmd], "rp_chirurgie", false) == 0 ) {
-				if( g_iUserData[client][i_Job] == 11 || g_iUserData[client][i_Job] == 12  || g_iUserData[client][i_Job] == 14 ) {
+				if( g_iUserData[client][i_Job] == 11 || g_iUserData[client][i_Job] == 12  || g_iUserData[client][i_Job] == 13 || g_iUserData[client][i_Job] == 14 ) {
 					int target = rp_GetClientTarget(client);
 					
 					if( !IsValidClient(target) || StringToInt(g_szZoneList[GetPlayerZone(target)][zone_type_type]) != 14 ) {
