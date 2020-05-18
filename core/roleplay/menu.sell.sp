@@ -226,6 +226,13 @@ public int eventGiveMenu_1(Handle p_hItemMenu, MenuAction p_oAction, int client,
 						CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez être sur la table d'operation.");
 						return;
 					}
+
+					if(g_iUserData[client][i_Job] == 13 && g_flUserData[target][fl_TazerTime] > GetGameTime()) {
+						CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas bénéficier de plusieurs chirurgies en même temps, merci de patienter.");
+						CPrintToChat(target, "{lightblue}[TSX-RP]{default} %N ne peux pas bénéficier de plusieurs chirurgies en même temps, merci de patienter.", target);
+						
+						return;
+					}
 				}
 				else {
 					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'êtes pas chirurgien..");
