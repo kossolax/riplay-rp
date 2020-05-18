@@ -29,7 +29,9 @@ public Plugin myinfo = {
 
 int g_iLastDoor[65][3];
 int g_iDoorDefine_LOCKER[2049];
+int g_iAppartPickLockCount[200];
 float g_flAppartProtection[200];
+float g_flAppartNewPickLock[200];
 Handle g_vCapture;
 int g_cBeam;
 DataPack g_hBuyMenu;
@@ -358,6 +360,9 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 			rp_Effect_Cashflow(client, Math_Clamp(RoundToNearest(Pow(amount*2.0, 0.85)), 1, 1000)  );
 		}
 
+		PrintToChat(client, "debug cashflow float time: %f", Math_Clamp(RoundToNearest(Pow(amount*2.0, 0.85)), 1, 1000));
+		PrintToChat(client, "debug cashflow int time: %i", Math_Clamp(RoundToNearest(Pow(amount*2.0, 0.85)), 1, 1000));
+
 		int cpt = rp_GetRandomCapital(91);
 		rp_SetJobCapital(91, rp_GetJobCapital(91) + (amount/4));
 		rp_SetJobCapital(cpt, rp_GetJobCapital(cpt) - (amount/4));
@@ -598,6 +603,24 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez ramassé %d %s.", count, classname);
 				}
 			}
+			case 8: { // Distrib Perso
+				time *= 2.0;
+				int owner = rp_GetBuildingData(target, BD_owner);
+
+				if( IsValidClient(owner) ) {
+					int rand = GetRandomInt(1, 6);
+
+					for (int i = 0; i < rand; i++)
+						CreateTimer(i / 5.0, SpawnMoney, EntIndexToEntRef(target));
+
+					stealAMount = 25*rand;
+					rp_ClientMoney(owner, i_Bank, -stealAMount);
+
+					CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Attention, quelqu'un à piraté votre distributeur et vous à voler %i$.", stealAMount);
+				} else {
+					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le vol a été annulé.");
+				}
+			}
 		}
 		
 		rp_SetClientInt(client, i_LastVolTime, GetTime());
@@ -700,11 +723,31 @@ public Action Cmd_ItemPickLock(int args) {
 	}
 	
 	int appartID = zoneToAppartID(rp_GetPlayerZone(door));
-	if( appartID > 0 && g_flAppartProtection[appartID] > GetGameTime() ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible de crocheter cette porte pour encore %d minutes.", RoundFloat((g_flAppartProtection[appartID] - GetGameTime()) / 60.0));
-		return Plugin_Handled;
+	if( appartID > 0 ) {
+		static int newPickTime = 60 * 3;
+
+		if(g_flAppartProtection[appartID] > GetGameTime()) {
+			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible de crocheter cette porte pour encore %d minutes.", RoundFloat((g_flAppartProtection[appartID] - GetGameTime()) / 60.0));
+			return Plugin_Handled;
+		}
+
+		if(g_flAppartNewPickLock[appartID] > GetTime()) {
+			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible de crocheter cette porte pour encore %d minutes.", (newPickTime - (GetTime() - g_flAppartNewPickLock[appartID])));
+			return Plugin_Handled;
+		}
+		
+		g_iAppartPickLockCount[appartID]++;
+
+		// never be sure ^^ 
+		if(g_iAppartPickLockCount[appartID] > 3 || g_iAppartPickLockCount[appartID] <= 0) {
+			return Plugin_Handled;
+		}
+
+		if(g_iAppartPickLockCount[appartID] == 3) {
+			g_flAppartNewPickLock[appartID] = GetTime() + newPickTime;
+			g_iAppartPickLockCount[appartID] = 0;
+		}
 	}
-	
 	
 	// Anti-cheat:
 	if( rp_GetClientItem(client, item_id) >= GetMaxKit(client, item_id)-1 ) {
@@ -886,6 +929,8 @@ int getDistrib(int client, int& type) {
 	if( (StrEqual(classname, "rp_plant") ) && rp_GetClientJobID(owner) != 91 && Entity_GetHealth(target) >= 2500 && 
 		!rp_IsClientNew(owner) && !rp_GetClientBool(owner, b_IsAFK) && rp_GetBuildingData(target, BD_count) > 0 )
 		type = 7;
+	if( StrEqual(classname, "rp_bank") && owner > 0 && IsValidClient(owner))
+		type = 8;
 		
 	return (type > 0 ? target : 0);
 }
