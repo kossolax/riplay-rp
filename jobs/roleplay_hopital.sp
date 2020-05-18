@@ -95,20 +95,24 @@ public Action Cmd_ItemChirurgie(int args) {
 	
 	int client = GetCmdArgInt(2);
 	int vendeur = GetCmdArgInt(3);
+	float time = rp_GetClientInt(vendeur, i_Job) == 13 ? 30.0 : 5.0;
+	
+	PrintToChat(client, "debug time: %f", time);
+	PrintToChat(vendeur, "debug timer: %f", time);
 	
 	CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N{default} Vous fait une opération chirurgicale.", vendeur);
 	CPrintToChat(vendeur, "{lightblue}[TSX-RP]{default} Vous commencez à opérer %N.", client);
 	
-	rp_HookEvent(client, RP_PrePlayerPhysic, fwdFrozen, 5.0);
-	rp_HookEvent(vendeur, RP_PrePlayerPhysic, fwdFrozen, 5.0);
+	rp_HookEvent(client, RP_PrePlayerPhysic, fwdFrozen, time);
+	rp_HookEvent(vendeur, RP_PrePlayerPhysic, fwdFrozen, time);
 	
-	rp_SetClientFloat(client, fl_TazerTime, GetGameTime() + 5.0);
-	rp_SetClientFloat(vendeur, fl_TazerTime, GetGameTime() + 5.0);
+	rp_SetClientFloat(client, fl_TazerTime, GetGameTime() + time);
+	rp_SetClientFloat(vendeur, fl_TazerTime, GetGameTime() + time);
 	
 	g_iSuccess_last_faster_dead[client] = GetTime() - 5;
 	
-	ServerCommand("sm_effect_panel %d 5.0 \"Chirurgie en cours...\"", client);
-	ServerCommand("sm_effect_panel %d 5.0 \"Chirurgie en cours...\"", vendeur);
+	ServerCommand("sm_effect_panel %d %f \"Chirurgie en cours...\"", client, time);
+	ServerCommand("sm_effect_panel %d %f \"Chirurgie en cours...\"", vendeur, time);
 	
 	float vecOrigin[3], vecOrigin2[3];
 	GetClientEyePosition(client, vecOrigin);
