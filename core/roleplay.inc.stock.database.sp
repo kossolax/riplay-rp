@@ -373,11 +373,11 @@ void updateLotery() {
 	SQL_TQuery(g_hBDD, SQL_SetLoteryAmount, "SELECT COUNT( id ) FROM rp_loto");
 }
 void updateBlackFriday(int day, int reduction) {
-	static char szDaylist[][8] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
-	char szDate[8];
+	static char szDaylist[][32] = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+	char szDate[32];
 
 	// get the actual day
-	FormatTime(szDate, sizeof(szDate), "%a", g_iBlackFriday[0]);
+	FormatTime(szDate, sizeof(szDate), "%A", g_iBlackFriday[0]);
 
 	int index = 0;
 
@@ -393,11 +393,11 @@ void updateBlackFriday(int day, int reduction) {
 		day = 2;
 	}
 
-	// new date = actual_date + (rest_day_on_this_week * 24 hours in seconds) + (24 hours in seconds * numb_days_for_next_bf) + (22 hours in seconds)
+	// new date = actual_date + (rest_day_on_this_week * 24 hours in seconds) + (24 hours in seconds * numb_days_for_next_bf) + (12 hours in seconds)
 	int date = g_iBlackFriday[0] + ((7 - index) * (24*60*60)) + ((24*60*60) * day) + (12*60*60);
 
-	FormatTime(szDate, sizeof(szDate), "%d/%m/%Y", date);
-	int timestamp = DateToTimestamp(szDate);
+	FormatTime(szDate, sizeof(szDate), "%e/%m/%Y/00/00/01", date);
+	int timestamp = DateToTimestamp(szDate) - (13*60*60); // delete 13 hours
 
 	g_iBlackFriday[0] = timestamp;
 	g_iBlackFriday[1] = reduction;

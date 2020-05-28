@@ -41,16 +41,13 @@ void OnGameFrame_01(float time) {
 	g_iEntityCount = MaxClients;
 	
 	/* calc Black Friday */
-	/*if(g_bIsBlackFriday == true) {
+	if(g_bIsBlackFriday == true) {
 		// 03/01/2020 00h01 > 03/01/2020
 		if(GetTime() >= g_iBlackFriday[0] + 24*60*60) {
 			g_bIsBlackFriday = false;
 			ServerCommand("rp_blackfriday"); // new black friday
 		}
 	} 
-	if(g_bIsBlackFriday == false) {
-		g_bIsBlackFriday = true;
-	}*/
 
 	for(int i=MaxClients; i<2048; i++) {
 		if( !IsValidEdict(i) || !IsValidEntity(i) )
