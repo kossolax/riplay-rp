@@ -86,7 +86,7 @@ int g_iTribunalData[3][td_Max];
 char g_szJugementDATA[65][3][32];
 bool g_bClientDisconnected[65];
 
-
+int g_iXpAudience[] = { 10, 20, 30, 40, 50, 60, 80, 100, 120, 150, 180, 220, 250, 300 };
 
 #define isTribunalDisponible(%1) (g_iTribunalData[%1][td_Owner]<=0?true:false)
 #define GetTribunalZone(%1) (%1==1?TRIBUNAL_1:TRIBUNAL_2)
@@ -106,7 +106,28 @@ public void OnPluginStart() {
 	for (int i = 1; i <= MaxClients; i++)
 		if( IsValidClient(i) )
 			OnClientPostAdminCheck(i);
+
+	/*RegConsoleCmd("sm_debugavocat", Cmd_DebugAvocat);
+	RegConsoleCmd("sm_debugaudience", Cmd_DebugAudience);*/
 }
+
+/*public Action Cmd_DebugAvocat(int client, int args) {
+	int xp = 0;
+
+	PrintToChat(client, "take a look on your console :)");
+
+	for(int i = 0; i <= 500; i++) {
+		xp = calculAudienceXp(i);
+
+		PrintToConsole(client, "debug audience %i -> add %i xp", i, xp);
+	}
+}
+
+public Action Cmd_DebugAudience(int client, int args) {
+	PrintToChat(client, "Nbr d'audience: %i", rp_GetClientInt(client, i_LawyerAudience));
+	PrintToChat(client, "Il faut add %i xp (il y a le +1 avec)", calculAudienceXp(rp_GetClientInt(client, i_LawyerAudience) + 1));
+}*/
+
 public void OnMapStart() {
 	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt");
 }
@@ -1152,11 +1173,28 @@ void SQL_Insert(int type, int condamne, int condamnation, int heure, int amende)
 	
 	if( IsValidClient(g_iTribunalData[type][td_AvocatPlaignant]) ) {
 		GetClientAuthId(g_iTribunalData[type][td_AvocatPlaignant], AuthId_Engine, szSteamID[3], sizeof(szSteamID[]));
-		rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatPlaignant], rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_Avocat));
+		//rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatPlaignant], rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_Avocat));
+		PrintToChat(g_iTribunalData[type][td_AvocatPlaignant], "Nbr: %i ", rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_Avocat));
+		PrintToChat(g_iTribunalData[type][td_AvocatPlaignant], "Nbr +1 : %i ", rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_Avocat) + 1);
+
+		rp_SetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_LawyerAudience, rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_LawyerAudience) + 1);
+
+		int xp = calculAudienceXp(rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_LawyerAudience));
+
+		PrintToChat(g_iTribunalData[type][td_AvocatPlaignant], "Need to add %i XP", xp);
 	}
 	if( IsValidClient(g_iTribunalData[type][td_AvocatSuspect]) ) {
 		GetClientAuthId(g_iTribunalData[type][td_AvocatSuspect], AuthId_Engine, szSteamID[4], sizeof(szSteamID[]));
-		rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatSuspect], rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_Avocat));
+		//rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatSuspect], rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_Avocat));
+
+		PrintToChat(g_iTribunalData[type][td_AvocatSuspect], "Nbr: %i ", rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_Avocat));
+		PrintToChat(g_iTribunalData[type][td_AvocatSuspect], "Nbr +1 : %i ", rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_Avocat) + 1);
+
+		rp_SetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_LawyerAudience, rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_LawyerAudience) + 1);
+
+		int xp = calculAudienceXp(rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_LawyerAudience));
+
+		PrintToChat(g_iTribunalData[type][td_AvocatSuspect], "Need to add %i XP", xp);
 	}
 	
 	Format(query, sizeof(query), "INSERT INTO `rp_audiences` (`id`, `juge`, `plaignant`, `suspect`, `avocat-plaignant`, `avocat-suspect`, `temps`, `condamne`, `charges`, `condamnation`, `heure`, `amende`, `dedommage`) VALUES(NULL,");
@@ -1234,6 +1272,29 @@ float getAvocatRatio(int client) {
 	if (pay < 300)	return 0.75;
 	return 1.0;
 	
+}
+int calculAudienceXp(int numb) {
+	int value = 0;
+
+	PrintToChatAll("numb g_iXpAudience = %i", sizeof(g_iXpAudience));
+
+	for(int i = 0; i < sizeof(g_iXpAudience); i++) {
+		PrintToChatAll("debug %i -> %i", i, g_iXpAudience[i]);
+
+		if(g_iXpAudience[i] <= numb) {
+			PrintToChatAll("colision with %i -> %i", i, g_iXpAudience[i]);
+			value = i;
+		}
+	}
+
+	PrintToChatAll("found %i -> %i ", value, g_iXpAudience[value]);
+
+	if(value > 0) {
+		value = g_iXpAudience[value] / 2;
+		PrintToChatAll("value > 0 so value = %i", value);
+	}
+
+	return value;
 }
 // ----------------------------------------------------------------------------
 public Action Cmd_ItemEnquete(int args) {

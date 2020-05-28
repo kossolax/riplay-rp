@@ -792,6 +792,9 @@ enum int_user_data {
 	i_StartLicense1,
 	i_StartLicense2,
 
+	i_LawyerAudience,
+	i_LastVolCashFlowTime,
+	
 	i_udata_max
 };
 enum float_user_data {

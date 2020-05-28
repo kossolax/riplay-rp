@@ -873,6 +873,11 @@ void LoadUserData(int Client) {
 		//ReplaceString(SteamID, sizeof(SteamID), "STEAM_1", "STEAM_0");
 		Format(query, sizeof(query), "SELECT `steamid` FROM `rp_users` WHERE `no_pyj`='1' AND `steamid`='%s' LIMIT 1;", SteamID);
 		SQL_TQuery(g_hBDD, Check_3, query, Client);
+
+		//
+		// Chargement du nbr d'audience
+		Format(query, sizeof(query), "SELECT * FROM `rp_audiences` WHERE `avocat-plaignant` = '%s' OR `avocat-suspect` = '%s'", SteamID, SteamID);
+		SQL_TQuery(g_hBDD, Check_Audience, query, Client);
 	}
 }
 public void Check_2(Handle owner, Handle handle, const char[] error, any data) {
@@ -900,6 +905,17 @@ public void Check_3(Handle owner, Handle handle, const char[] error, any data) {
 	if( !SQL_FetchRow(handle) ) {
 		g_bUserData[data][b_IsNoPyj] = false;
 	}
+	
+	if(  handle != INVALID_HANDLE )
+		CloseHandle(handle);
+}
+public void Check_Audience(Handle owner, Handle handle, const char[] error, any data) {
+	
+	if( handle == INVALID_HANDLE ) {
+		LogError("[SQL] [ERROR] %s", error);
+	}
+
+	g_iUserData[data][i_LawyerAudience] = SQL_GetRowCount(handle);
 	
 	if(  handle != INVALID_HANDLE )
 		CloseHandle(handle);

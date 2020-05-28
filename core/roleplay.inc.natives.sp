@@ -377,7 +377,7 @@ public int Native_rp_Effect_Cashflow(Handle plugin, int numParams) {
 	}
 }
 public Action CashFlow_TASK(Handle timer, any client) {
-	if( timer && IsValidHandle(timer) ) 
+	if( timer && IsValidHandle(timer) )
 		ServerCommand("sm_effect_particles %d trail_money 10 knife", client);
 }
 public Action fwdPlayerDead(int client, int attacker) {
