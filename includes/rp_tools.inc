@@ -151,17 +151,21 @@ stock int DateToTimestamp(const char[] szDate) {
     char szBuffer[64];
     strcopy( szBuffer, sizeof( szBuffer ), szDate );
     
-    ReplaceString(szBuffer, sizeof(szBuffer), "/", " ");
-    ReplaceString(szBuffer, sizeof(szBuffer), ".", " ");
+	LogToFile("bf.txt", "date: (%s)", szDate);
+
+    ReplaceString(szBuffer, sizeof(szBuffer), " ", "");
     
-    char szTime[3][6];
-    ExplodeString(szBuffer, " ", szTime, sizeof(szTime), sizeof(szTime[]));
-    
+    char szTime[6][32];
+    ExplodeString(szBuffer, "/", szTime, sizeof(szTime), sizeof(szTime[]));
+
     int day = StringToInt(szTime[0]);
     int month  = StringToInt(szTime[1]);
     int year = StringToInt(szTime[2]);
-    
-    return TimeToUnix(year, month, day, 0, 0, 0, UT_TIMEZONE_SERVER);
+	int min = StringToInt(szTime[3]);
+	int hour =  StringToInt(szTime[4]);
+	int sec =  StringToInt(szTime[5]);
+
+    return TimeToUnix(year, month, day, hour, min, sec, UT_TIMEZONE_SERVER);
 }
 // ----------------------------------------------------------------------------
 stock void PrintToChatClientArea(int client, const char[] message, any...) {
