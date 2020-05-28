@@ -345,6 +345,9 @@ public Action:Hook(const String:te_name[], const Players[], numClients, Float:de
 	new num = TE_ReadNum("m_nHitBox");
 	new ent = TE_ReadNum("entindex");
 	
+	//if(data != 5)
+		//PrintToChatAll("data = %i, and data must be 31, good ? :o", data);
+
 	if( data == 31 && (IsValidClient(ent) || delay < 0.0) )
 		return Plugin_Continue;
 	
