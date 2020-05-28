@@ -268,7 +268,7 @@ public Action Cmd_Verif(int client) {
 		GetEdictClassname(wepIdx, classname, 31);
 		ReplaceString(classname, 31, "weapon_", "", false);
 
-			temp = true;
+		temp = true;
 	}
 
 	Format(szTitle, sizeof(szTitle), "%s Arme Secondaire (Permis lourd): %s\n", szTitle, temp ? classname:"NON");
@@ -1147,12 +1147,18 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 				return;
 			}
 			if (IsValidClient(rp_GetClientInt(target, i_LastVolTarget))) {
-				int tg = rp_GetClientInt(target, i_LastVolTarget);
-				rp_ClientMoney(tg, i_Money, rp_GetClientInt(target, i_LastVolAmount));
-				rp_ClientMoney(target, i_AddToPay, -rp_GetClientInt(target, i_LastVolAmount));
-				
-				CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez remboursé votre victime de %d$.", rp_GetClientInt(target, i_LastVolAmount));
-				CPrintToChat(tg, "{lightblue}[TSX-RP]{default} Le voleur a été mis en prison. Vous avez été remboursé de %d$.", rp_GetClientInt(target, i_LastVolAmount));
+				// i_LostVolCashFlowTime;
+
+				if(rp_GetClientInt(target, i_LastVolTime) + rp_GetClientInt(target, i_LastVolCashFlowTime) < GetTime()) {
+					CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez réussi à cacher votre butin, vous ne remboursez pas votre victime");
+				} else {
+					int tg = rp_GetClientInt(target, i_LastVolTarget);
+					rp_ClientMoney(tg, i_Money, rp_GetClientInt(target, i_LastVolAmount));
+					rp_ClientMoney(target, i_AddToPay, -rp_GetClientInt(target, i_LastVolAmount));
+					
+					CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez remboursé votre victime de %d$.", rp_GetClientInt(target, i_LastVolAmount));
+					CPrintToChat(tg, "{lightblue}[TSX-RP]{default} Le voleur a été mis en prison. Vous avez été remboursé de %d$.", rp_GetClientInt(target, i_LastVolAmount));
+				}
 			}
 			else {
 				amende += rp_GetClientInt(target, i_LastVolAmount); // Cas tentative de vol ou distrib...

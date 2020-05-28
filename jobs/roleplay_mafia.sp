@@ -356,13 +356,25 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 				rp_ClientFloodIncrement(i, target, fd_vol, cooldown);
 		}
 		rp_ClientFloodIncrement(client, target, fd_vol, 2.0 * cooldown);
+		
+		int flowtime = 0;
+
+		for (int i = 0; i <= amount; i+=100) {
+			flowtime = (i / 100);
+		}
+
+		flowtime *= 2;
+
+		if(flowtime > 20) {
+			flowtime = 20;
+		}
+
+		PrintToChat(client, "flowtime : %i", flowtime);
+		rp_SetClientInt(client, i_LastVolCashFlowTime, flowtime);
 
 		if(amount >= 25) {
 			rp_Effect_Cashflow(client, Math_Clamp(RoundToNearest(Pow(amount*2.0, 0.85)), 1, 1000)  );
 		}
-
-		PrintToChat(client, "debug cashflow float time: %f", Math_Clamp(RoundToNearest(Pow(amount*2.0, 0.85)), 1, 1000));
-		PrintToChat(client, "debug cashflow int time: %i", Math_Clamp(RoundToNearest(Pow(amount*2.0, 0.85)), 1, 1000));
 
 		int cpt = rp_GetRandomCapital(91);
 		rp_SetJobCapital(91, rp_GetJobCapital(91) + (amount/4));
