@@ -773,6 +773,8 @@ void SetPersonalSkin(int client) {
 		}
 	}
 	else if( GetClientTeam(client) == CS_TEAM_CT ) {
+		SetEntPropString(client, Prop_Send, "m_szArmsModel", "models/weapons/ct_arms.mdl");
+
 		int job = g_iUserData[client][i_Job];
 		switch( job ) {
 			case 9:		Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_gsg9_variantc.mdl");
@@ -797,18 +799,31 @@ void SetPersonalSkin(int client) {
 		}
 	}
 	
+	bool success = false;
+
 	if( !IsModelPrecached(model) ) {
 		if( PrecacheModel(model) == 0 ) {
 			PrintToChatAll("[ERREUR] [SKIN] %L :: %s", g_szUserData[client][sz_Skin]);
 			LogToGame("[ERREUR] [SKIN] %L :: %s", g_szUserData[client][sz_Skin]);
 			Entity_SetModel(client, "models/player/custom_player/legacy/tm_phoenix.mdl");
-			return;
+
+			success = true;
+		}
+	} 
+
+	if(!success) {
+		if( GetEntPropFloat(client, Prop_Send, "m_flModelScale") != g_flUserData[client][fl_Size] ) {
+			SetEntPropFloat(client, Prop_Send, "m_flModelScale", g_flUserData[client][fl_Size]);
+		}
+		if( !StrEqual(model, prev) ) {
+			SetEntityModel(client, model);
 		}
 	}
-	if( GetEntPropFloat(client, Prop_Send, "m_flModelScale") != g_flUserData[client][fl_Size] )
-		SetEntPropFloat(client, Prop_Send, "m_flModelScale", g_flUserData[client][fl_Size]);
-	if( !StrEqual(model, prev) )
-		SetEntityModel(client, model);
+
+	switch(GetClientTeam(client)) {
+		case CS_TEAM_T: SetEntPropString(client, Prop_Send, "m_szArmsModel", "models/weapons/t_arms.mdl");
+		case CS_TEAM_CT: SetEntPropString(client, Prop_Send, "m_szArmsModel", "models/weapons/ct_arms.mdl");
+	}
 }
 int GetAssurence(int client, bool forced = false) {
 	char tmp[64];
