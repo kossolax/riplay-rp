@@ -799,7 +799,7 @@ void SetPersonalSkin(int client) {
 		}
 	}
 	
-	bool success = false;
+	bool success = true;
 
 	if( !IsModelPrecached(model) ) {
 		if( PrecacheModel(model) == 0 ) {
@@ -807,11 +807,11 @@ void SetPersonalSkin(int client) {
 			LogToGame("[ERREUR] [SKIN] %L :: %s", g_szUserData[client][sz_Skin]);
 			Entity_SetModel(client, "models/player/custom_player/legacy/tm_phoenix.mdl");
 
-			success = true;
+			success = false;
 		}
 	} 
 
-	if(!success) {
+	if(success == false) {
 		if( GetEntPropFloat(client, Prop_Send, "m_flModelScale") != g_flUserData[client][fl_Size] ) {
 			SetEntPropFloat(client, Prop_Send, "m_flModelScale", g_flUserData[client][fl_Size]);
 		}
