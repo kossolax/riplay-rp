@@ -106,27 +106,7 @@ public void OnPluginStart() {
 	for (int i = 1; i <= MaxClients; i++)
 		if( IsValidClient(i) )
 			OnClientPostAdminCheck(i);
-
-	/*RegConsoleCmd("sm_debugavocat", Cmd_DebugAvocat);
-	RegConsoleCmd("sm_debugaudience", Cmd_DebugAudience);*/
 }
-
-/*public Action Cmd_DebugAvocat(int client, int args) {
-	int xp = 0;
-
-	PrintToChat(client, "take a look on your console :)");
-
-	for(int i = 0; i <= 500; i++) {
-		xp = calculAudienceXp(i);
-
-		PrintToConsole(client, "debug audience %i -> add %i xp", i, xp);
-	}
-}
-
-public Action Cmd_DebugAudience(int client, int args) {
-	PrintToChat(client, "Nbr d'audience: %i", rp_GetClientInt(client, i_LawyerAudience));
-	PrintToChat(client, "Il faut add %i xp (il y a le +1 avec)", calculAudienceXp(rp_GetClientInt(client, i_LawyerAudience) + 1));
-}*/
 
 public void OnMapStart() {
 	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt");
@@ -1174,27 +1154,27 @@ void SQL_Insert(int type, int condamne, int condamnation, int heure, int amende)
 	if( IsValidClient(g_iTribunalData[type][td_AvocatPlaignant]) ) {
 		GetClientAuthId(g_iTribunalData[type][td_AvocatPlaignant], AuthId_Engine, szSteamID[3], sizeof(szSteamID[]));
 		//rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatPlaignant], rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_Avocat));
-		PrintToChat(g_iTribunalData[type][td_AvocatPlaignant], "Nbr: %i ", rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_Avocat));
-		PrintToChat(g_iTribunalData[type][td_AvocatPlaignant], "Nbr +1 : %i ", rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_Avocat) + 1);
+		PrintToChat(g_iTribunalData[type][td_AvocatPlaignant], "Nbr: %i ", rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_LawyerAudience));
+		PrintToChat(g_iTribunalData[type][td_AvocatPlaignant], "Nbr +1 : %i ", rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_LawyerAudience) + 1);
 
 		rp_SetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_LawyerAudience, rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_LawyerAudience) + 1);
 
 		int xp = calculAudienceXp(rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_LawyerAudience));
 
-		PrintToChat(g_iTribunalData[type][td_AvocatPlaignant], "Need to add %i XP", xp);
+		rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatPlaignant], xp);
 	}
 	if( IsValidClient(g_iTribunalData[type][td_AvocatSuspect]) ) {
 		GetClientAuthId(g_iTribunalData[type][td_AvocatSuspect], AuthId_Engine, szSteamID[4], sizeof(szSteamID[]));
 		//rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatSuspect], rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_Avocat));
 
-		PrintToChat(g_iTribunalData[type][td_AvocatSuspect], "Nbr: %i ", rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_Avocat));
-		PrintToChat(g_iTribunalData[type][td_AvocatSuspect], "Nbr +1 : %i ", rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_Avocat) + 1);
+		PrintToChat(g_iTribunalData[type][td_AvocatSuspect], "Nbr: %i ", rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_LawyerAudience));
+		PrintToChat(g_iTribunalData[type][td_AvocatSuspect], "Nbr +1 : %i ", rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_LawyerAudience) + 1);
 
 		rp_SetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_LawyerAudience, rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_LawyerAudience) + 1);
 
 		int xp = calculAudienceXp(rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_LawyerAudience));
 
-		PrintToChat(g_iTribunalData[type][td_AvocatSuspect], "Need to add %i XP", xp);
+		rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatSuspect], xp);
 	}
 	
 	Format(query, sizeof(query), "INSERT INTO `rp_audiences` (`id`, `juge`, `plaignant`, `suspect`, `avocat-plaignant`, `avocat-suspect`, `temps`, `condamne`, `charges`, `condamnation`, `heure`, `amende`, `dedommage`) VALUES(NULL,");
