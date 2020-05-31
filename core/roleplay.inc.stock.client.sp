@@ -811,7 +811,7 @@ void SetPersonalSkin(int client) {
 		}
 	} 
 
-	if(success == false) {
+	if(success == true) {
 		if( GetEntPropFloat(client, Prop_Send, "m_flModelScale") != g_flUserData[client][fl_Size] ) {
 			SetEntPropFloat(client, Prop_Send, "m_flModelScale", g_flUserData[client][fl_Size]);
 		}
