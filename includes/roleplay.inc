@@ -794,6 +794,9 @@ enum int_user_data {
 
 	i_LawyerAudience,
 	i_LastVolCashFlowTime,
+
+	i_AmendeLiscence1,
+	i_AmendeLiscence2,
 	
 	i_udata_max
 };

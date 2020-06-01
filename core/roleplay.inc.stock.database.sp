@@ -549,10 +549,13 @@ void StoreUserData(int client) {
 		MysqlQuery, g_iUserData[client][i_JetonRouge], g_iUserData[client][i_JetonBleu], g_bUserData[client][b_isFemale], g_iUserData[client][i_BirthDay], g_iUserData[client][i_BirthMonth]);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
-		"%s `firstname`='%s', `lastname`='%s', `rules`='%i', `jobplaytime`='%s', `adminxp`='%d', `dette`='%d', `last_connected`=CURRENT_TIMESTAMP WHERE `steamid`='%s';",
-		MysqlQuery, fname, lname, g_bUserData[client][b_PassedRulesTest], jobplaytime, g_iUserData[client][i_GiveXP], g_iUserData[client][i_Dette], SteamID);
+		"%s `firstname`='%s', `lastname`='%s', `rules`='%i', `jobplaytime`='%s', `adminxp`='%d', `dette`='%d', `last_connected`=CURRENT_TIMESTAMP, ",
+		MysqlQuery, fname, lname, g_bUserData[client][b_PassedRulesTest], jobplaytime, g_iUserData[client][i_GiveXP], g_iUserData[client][i_Dette]);
 	
-	
+	Format(MysqlQuery, sizeof(MysqlQuery), 
+		"%s `amende_permi_lege`='%i',`amende_permi_lourd`='%i' WHERE `steamid`='%s';",
+		MysqlQuery, g_iUserData[client][i_AmendeLiscence2], g_iUserData[client][i_AmendeLiscence1], SteamID);
+
 	SQL_TQuery(g_hBDD, SQL_QueryCallBack, MysqlQuery);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), "UPDATE `rp_success` SET ");
@@ -833,7 +836,7 @@ void ResetUserData(int client) {
 }
 void LoadUserData(int Client) {
 	
-	static char SteamID[64], query[2048];
+	static char SteamID[64], query[4096];
 	
 	if(!IsFakeClient(Client)) {
 		
@@ -851,7 +854,7 @@ void LoadUserData(int Client) {
 		Format(query, sizeof(query),
 			"%s `level`, `prestige`, `female`, `birthday`, `birthmonth`, `lastname`, `firstname`, `rules`, `jobplaytime`, `adminxp`, `dette`, `time_played`, ", query, SteamID); 
 		Format(query, sizeof(query),
-			"%s `permi_lege_start`, `permi_lourd_start`, `freekiller` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
+			"%s `permi_lege_start`, `permi_lourd_start`, `freekiller`, `amende_permi_lege`, `amende_permi_lourd` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
 
 		SQL_TQuery(g_hBDD, LoadUserData_2, query, Client, DBPrio_High);
 		
@@ -1006,6 +1009,9 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 
 		g_bUserData[Client][b_IsFreekiller] = SQL_FetchInt(hQuery, 56);
 		
+		g_iUserData[Client][i_AmendeLiscence2] = SQL_FetchInt(hQuery, 57);
+		g_iUserData[Client][i_AmendeLiscence1] = SQL_FetchInt(hQuery, 58);
+
 		SQL_FetchString(hQuery, 47, g_szUserData[Client][sz_LastName], sizeof(g_szUserData[][]));
 		SQL_FetchString(hQuery, 48, g_szUserData[Client][sz_FirstName], sizeof(g_szUserData[][]));		
 		
