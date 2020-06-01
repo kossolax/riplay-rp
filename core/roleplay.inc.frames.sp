@@ -372,7 +372,13 @@ void OnGameFrame_10(float time) {
 			MakePhoneRing();
 		}
 	}
-	
+
+	if( g_iHours == 1 && g_iMinutes == 1 ) {
+		if(g_bIsBlackFriday) {
+			CPrintToChatAll("{lightblue}[TSX-RP]{default} Journée exceptionnelle du Black Friday ! Profitez d'une réduction de {lightblue}%i {default}sur tous vos achats !", -g_iBlackFriday[1]);
+		}
+	}
+
 	#if defined EVENT_NOEL
 	if( Math_GetRandomInt(0, GetConVarInt(g_hEVENT_NOEL_SPEED) ) == 0 ) {
 		SpawnRandomBonbon();
@@ -391,7 +397,6 @@ void OnGameFrame_10(float time) {
 
 	bool changed = false;
 	float fNow[3];
-	static bool bBlackFridayAnnouce = false;
 	PrintHours(szDates, sizeof(szDates));
 	
 	for (int i = 1; i <= MaxClients; i++) {
@@ -770,19 +775,6 @@ void OnGameFrame_10(float time) {
 			
 			if( g_iHours == 0 && g_iMinutes == 0 ) {
 				GivePlayerPay(i);
-			}
-
-			if( g_iHours == 1 && g_iMinutes == 1 ) {
-				if(g_bIsBlackFriday) {
-					if(bBlackFridayAnnouce) {
-						bBlackFridayAnnouce = false;
-					}
-
-					if(!bBlackFridayAnnouce) {
-						CPrintToChatAll("{lightblue}[TSX-RP]{default} Journée exceptionnelle du Black Friday ! Profitez d'une réduction de {lightblue}%i {default}sur tous vos achats !", -g_iBlackFriday[1]);
-						bBlackFridayAnnouce = true;
-					}
-				}
 			}
 			
 			if( CS_GetClientContributionScore(i) != 0 )
