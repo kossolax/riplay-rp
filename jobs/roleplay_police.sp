@@ -245,11 +245,8 @@ public Action Cmd_Verif(int client) {
 		return Plugin_Handled;
 	}
 
-	char name[32]; 
-	GetClientName(target, name, sizeof(name));
-
 	char szTitle[2048];
-	Format(szTitle, sizeof(szTitle), "Informations sur le joueur %s:\n\n", szTitle, name);
+	Format(szTitle, sizeof(szTitle), "Informations sur le joueur %N:\n\n", target);
 
 	Menu menu = CreateMenu(MenuHandler_Verif);
 
@@ -309,7 +306,7 @@ public Action Cmd_Verif(int client) {
 
 	for(int i = 0; i <= MaxClients; i++) {
 		if(IsValidClient(i)) {
-			if(rp_GetClientJobID(i) == 211) { // && rp_GetClientBool(i, b_IsAFK) == false
+			if(rp_GetClientJobID(i) == 211 && rp_GetClientBool(i, b_IsAFK) == false) { // && rp_GetClientBool(i, b_IsAFK) == false
 				numb++;
 			}
 		}
