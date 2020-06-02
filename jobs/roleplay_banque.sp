@@ -90,7 +90,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 
 		int target = rp_GetClientTarget(client);
 		
-		int wepIdx;
+		/*int wepIdx;
 		char classname[32], msg[128];
 		Format(msg, 127, "Ce joueur possède: ");
 
@@ -105,8 +105,9 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 			ReplaceString(classname, 31, "weapon_", "", false);
 
 			Format(msg, 127, "%s %s", msg, classname);
-		}
+		}*/
 			
+		char msg[128];
 		
 		if( rp_GetClientBool(target, b_License1) || rp_GetClientBool(target, b_License2) || rp_GetClientBool(target, b_LicenseSell) ) {
 			Format(msg, 127, "%s permis", msg);
@@ -120,6 +121,8 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 			if(  rp_GetClientBool(target, b_LicenseSell) ) {
 				Format(msg, 127, "%s vente", msg);
 			}
+		} else {
+			Format(msg, 127, "%s RIEN", msg);
 		}
 
 		CPrintToChat(client, "{lightblue}[TSX-RP]{default} %s.", msg);
