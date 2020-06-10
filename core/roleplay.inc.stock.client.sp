@@ -270,9 +270,19 @@ void showPlayerHintBox(int client, int target) {
 			}
 		}
 		
-		if( IsJuge(target) || IsPolice(target) ) {
+		if( IsJuge(target)) {
 			if( GetClientTeam(target) != CS_TEAM_CT ) {
 				PrintHintText(client, "%s%s</font>[HP: %i]%s\nJob: %s", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail, g_szJobList[0][job_type_name]);
+			}
+		}
+
+		if(IsPolice(target)) {
+			if( GetClientTeam(client) != CS_TEAM_CT ) {
+				if(g_iUserData[client][i_KillJailDuration] > 1) {
+					PrintHintText(client, "%s%s</font>[HP: %i]%s\nJob: Criminel", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail);
+				} else {
+					PrintHintText(client, "%s%s</font>[HP: %i]%s\nJob: Gendarmerie", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail);
+				}
 			}
 		}
 	}
@@ -765,11 +775,11 @@ void SetPersonalSkin(int client) {
 			Format(model, sizeof(model), "models/player/custom_player/legacy/tm_phoenix.mdl");
 		}
 		if( g_iUserData[client][i_Donateur] >= 1 && !g_bUserData[client][b_NoDonateurSkin] ) {
-#if defined EVENT_NOEL
+		#if defined EVENT_NOEL
 			Format(model, sizeof(model), "models/player/custom_player/legacy/santa/santa.mdl");
-#else
+		#else
 			Format(model, sizeof(model), "models/player/custom_player/legacy/aiden_pearce/aiden_pearce.mdl");
-#endif
+		#endif
 		}
 	}
 	else if( GetClientTeam(client) == CS_TEAM_CT ) {

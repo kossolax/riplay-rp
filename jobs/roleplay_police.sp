@@ -321,13 +321,13 @@ public Action Cmd_Verif(int client) {
 
 	if(amendeLicense1 && amendeLicense2 && applyLiscence1 && applyLiscence2) {
 		Format(item, 255, "%d_permilegerlourd", target);
-		menu.AddItem(item, "Amende 9000$ - Permi lourd & léger", forcehidden ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
+		menu.AddItem(item, "Amende 1600$ - Permi lourd & léger", forcehidden ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
 	} else {
 		Format(item, 255, "%d_permileger", target);
-		menu.AddItem(item, "Amende 3500$ - Permi léger", !amendeLicense2 || forcehidden || !applyLiscence2 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
+		menu.AddItem(item, "Amende 2400$ - Permi léger", !amendeLicense2 || forcehidden || !applyLiscence2 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
 
 		Format(item, 255, "%d_permilourd", target);
-		menu.AddItem(item, "Amende 5500$ - Permi lourd", !amendeLicense1 || forcehidden || !applyLiscence1 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
+		menu.AddItem(item, "Amende 4000$ - Permi lourd", !amendeLicense1 || forcehidden || !applyLiscence1 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
 	}
 	
 	SetMenuExitButton(menu, true);
@@ -347,27 +347,29 @@ public int MenuHandler_Verif(Handle menu, MenuAction action, int client, int par
 		int job = rp_GetClientJobID(client);
 
 		if(StrEqual(data[1], "permileger")) {
-			PrintToChat(target, "Vous avez été contrôlé en possession d'arme(s) légère sans permis valide, vous devez vous acquitter d'une amande de 3500 €");
-			PrintToChat(client, "ici une phrase pour le mec");
-			rp_ClientMoney(target, i_Money, -3500);
+			CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez été contrôlé en possession d'arme(s) légère(s) sans permis valide, vous devez vous acquitter d'une amande de 1600€");
+			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Une amende de 1600€ vient d'être prélevée auprès de %N pour défaut de permis de port d'arme légère", target);
+	
+			rp_ClientMoney(target, i_Money, -1600);
 
-			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 3500));
+			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 1600));
 			rp_SetClientInt(target, i_AmendeLiscence2, GetTime());
 		}
 		if(StrEqual(data[1], "permilourd")) {
-			PrintToChat(target, "Vous avez été contrôlé en possession d'arme(s) lourde sans permis valide, vous devez vous acquitter d'une amande de 5500 €");
-			PrintToChat(client, "ici une phrase pour le mec");
-			rp_ClientMoney(target, i_Money, -5500);
+			CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez été contrôlé en possession d'arme(s) lourde(s) sans permis valide, vous devez vous acquitter d'une amande de 2400€");
+			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Une amende de 2400€ vient d'être prélevée auprès de %N pour défaut de permis de port d'arme lourde", target);
 
-			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 5500));
+			rp_ClientMoney(target, i_Money, -2400);
+
+			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 2400));
 			rp_SetClientInt(target, i_AmendeLiscence1, GetTime());
 		}
 		if(StrEqual(data[1], "permilegerlourd")) {
-			PrintToChat(target, "Vous avez été contrôlé en possession d'arme(s) lourde et légère sans permis valide, vous devez vous acquitter d'une amende de 9000 €");
-			PrintToChat(client, "ici une phrase pour le mec");
-			rp_ClientMoney(target, i_Money, -9000);
+			CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez été contrôlé en possession d'arme(s) lourde(s) et légère(s) sans permis valide, vous devez vous acquitter d'une amende de 4000€");
+			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Une amende de 4000€ vient d'être prélevée auprès de %N pour défaut de permis de port d'arme légere et lourde", target);
+			rp_ClientMoney(target, i_Money, -4000);
 
-			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 9000));
+			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 4000));
 			rp_SetClientInt(target, i_AmendeLiscence2, GetTime());
 			rp_SetClientInt(target, i_AmendeLiscence1, GetTime());
 		}
@@ -527,7 +529,7 @@ public Action Cmd_Tazer(int client) {
 		
 		float maxDist = MAX_AREA_DIST * 3.0;
 		if (rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PERQUIZ || rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PERQUIZ) {
-			maxDist = 128.0;
+			maxDist = 64.0;
 		} else {
 			maxDist = maxDist - (15 * maxDist) / 100;
 		}
@@ -821,7 +823,7 @@ public Action Cmd_Jail(int client) {
 	float maxDist = MAX_AREA_DIST * 2.0;
 	
 	if (Cbit & BITZONE_PERQUIZ || Tbit & BITZONE_PERQUIZ) {
-		maxDist = 128.0;
+		maxDist = 64.0;
 	} else {
 		maxDist = maxDist - (10 * maxDist) / 100;
 	}

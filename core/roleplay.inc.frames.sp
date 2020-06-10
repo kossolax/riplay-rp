@@ -375,7 +375,7 @@ void OnGameFrame_10(float time) {
 
 	if( g_iHours == 1 && g_iMinutes == 1 ) {
 		if(g_bIsBlackFriday) {
-			CPrintToChatAll("{lightblue}[TSX-RP]{default} Journée exceptionnelle du Black Friday ! Profitez d'une réduction de {lightblue}%i {default}sur tous vos achats !", -g_iBlackFriday[1]);
+			CPrintToChatAll("{lightblue}[TSX-RP]{default} Journée exceptionnelle du Black Friday ! Profitez d'une réduction de {lightblue}%i% {default}sur tous vos achats !", -g_iBlackFriday[1]);
 		}
 	}
 

@@ -488,13 +488,9 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 		}
 	}
 
-	//int killDuration = (g_iKillLegitime[Attacker][Client] >= GetTime() ? 1 : 6);
-	int killDuration = (g_iKillLegitime[Attacker][Client] >= GetTime() ? 1 : RoundToFloor(float(g_iUserData[Attacker][i_KillJailDuration]) * 1.5) + add);
+	int killDuration = (g_iKillLegitime[Attacker][Client] >= GetTime() ? 1 : 6);
+	//int killDuration = (g_iKillLegitime[Attacker][Client] >= GetTime() ? 1 : RoundToFloor(float(g_iUserData[Attacker][i_KillJailDuration]) * 1.5) + add);
 	
-	PrintToChat(Attacker, "(%i * 1.5) + %i", g_iUserData[Attacker][i_KillJailDuration], add);
-	PrintToChat(Attacker, "result = %i", killDuration);
-	PrintToChat(Attacker, "add = %i", add);
-
 	g_iUserStat[Client][i_Deaths]++;
 	showGraveMenu(Client);
 	

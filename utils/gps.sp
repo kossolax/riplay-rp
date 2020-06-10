@@ -288,7 +288,7 @@ public Action CmdGps2(int client) {
 	menu.AddItem("226", "La planque des mercenaires");
 	menu.AddItem("95", "La planque des dealers");
 	menu.AddItem("222", "La planque des artificiers");
-	menu.AddItem("236", "Le sexshop");
+	//menu.AddItem("236", "Le sexshop");
 	
 	menu.AddItem("69", "Le mcdonald");
 	menu.AddItem("299", "Le casino");
