@@ -277,8 +277,8 @@ void showPlayerHintBox(int client, int target) {
 		}
 
 		if(IsPolice(target)) {
-			if( GetClientTeam(client) != CS_TEAM_CT ) {
-				if(g_iUserData[client][i_KillJailDuration] > 1) {
+			if( GetClientTeam(target) != CS_TEAM_CT ) {
+				if(g_iUserData[target][i_KillJailDuration] > 1) {
 					PrintHintText(client, "%s%s</font>[HP: %i]%s\nJob: Criminel", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail);
 				} else {
 					PrintHintText(client, "%s%s</font>[HP: %i]%s\nJob: Gendarmerie", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail);
