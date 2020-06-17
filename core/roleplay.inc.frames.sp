@@ -313,7 +313,7 @@ void OnGameFrame_10(float time) {
 	static int last_minutes = -1;
 	static int infoPeineTime = -1;
 
-	static char model[255], szHUD[1024], sound[128], szDates[64];
+	static char model[255], szHUD[1024], sound[128], szDates[64], bfAnnoucement[256];
 	
 	if( last_minutes == g_iMinutes ) 
 		return;
@@ -375,7 +375,9 @@ void OnGameFrame_10(float time) {
 
 	if( g_iHours == 1 && g_iMinutes == 1 ) {
 		if(g_bIsBlackFriday) {
-			CPrintToChatAll("{lightblue}[TSX-RP]{default} Journée exceptionnelle du Black Friday ! Profitez d'une réduction de {lightblue}%i% {default}sur tous vos achats !", -g_iBlackFriday[1]);
+			Format(bfAnnoucement, sizeof(bfAnnoucement), "{lightblue}[TSX-RP]{default} Journée exceptionnelle du Black Friday ! Profitez d'une réduction de {lightblue}-%iPCT {default}sur tous vos achats !", g_iBlackFriday[1]);
+			ReplaceString(bfAnnoucement, sizeof(bfAnnoucement), "PCT", "%%", true);
+			CPrintToChatAll(bfAnnoucement);
 		}
 	}
 
