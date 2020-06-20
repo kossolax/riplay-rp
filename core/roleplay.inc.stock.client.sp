@@ -766,20 +766,23 @@ void SetPersonalSkin(int client) {
 	if( Client_GetVehicle(client) > 0 )
 		return;
 	
-	char model[128], prev[128];
+	char model[128], prev[128], hands[128], prevhands[128];
 	Format(model, sizeof(model), "%s", g_szUserData[client][sz_Skin]);
+	Format(hands, sizeof(hands), "%s", g_szUserData[client][sz_HandsSkin]);
+
 	Entity_GetModel(client, prev, sizeof(prev));
-	
+	GetEntPropString(client, Prop_Send, "m_szArmsModel", prevhands, sizeof(prevhands));
+
 	if( GetClientTeam(client) == CS_TEAM_T ) {
 		if( strlen(g_szUserData[client][sz_Skin]) <= 5  ) {
 			Format(model, sizeof(model), "models/player/custom_player/legacy/tm_phoenix.mdl");
 		}
 		if( g_iUserData[client][i_Donateur] >= 1 && !g_bUserData[client][b_NoDonateurSkin] ) {
-		#if defined EVENT_NOEL
+			#if defined EVENT_NOEL
 			Format(model, sizeof(model), "models/player/custom_player/legacy/santa/santa.mdl");
-		#else
+			#else
 			Format(model, sizeof(model), "models/player/custom_player/legacy/aiden_pearce/aiden_pearce.mdl");
-		#endif
+			#endif
 		}
 	}
 	else if( GetClientTeam(client) == CS_TEAM_CT ) {
@@ -787,7 +790,10 @@ void SetPersonalSkin(int client) {
 
 		int job = g_iUserData[client][i_Job];
 		switch( job ) {
-			case 9:		Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_gsg9_variantc.mdl");
+			case 9:	{
+				Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_gsg9_variantc.mdl");
+				//Format(hands, sizeof(hands), "path/to/hands.mdl);
+			}
 			case 8: 	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_swat_varianta.mdl");
 			case 7: 	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_fbi_variantd.mdl");
 			case 6: 	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_sas_variantc.mdl");
@@ -830,9 +836,25 @@ void SetPersonalSkin(int client) {
 		}
 	}
 
-	switch(GetClientTeam(client)) {
-		case CS_TEAM_T: SetEntPropString(client, Prop_Send, "m_szArmsModel", "models/weapons/t_arms.mdl");
-		case CS_TEAM_CT: SetEntPropString(client, Prop_Send, "m_szArmsModel", "models/weapons/ct_arms.mdl");
+	success = true; // reset :) 
+
+	if(FileExists(hands)) {
+		if(!IsModelPrecached(hands)) {
+			if(PrecacheModel(hands) == 0) {
+				switch(GetClientTeam(client)) {
+					case CS_TEAM_T: SetEntPropString(client, Prop_Send, "m_szArmsModel", "models/weapons/t_arms.mdl");
+					case CS_TEAM_CT: SetEntPropString(client, Prop_Send, "m_szArmsModel", "models/weapons/ct_arms.mdl");
+				}
+
+				success = false;
+			}
+		}
+	}
+	
+	if(success) {
+		if(!StrEqual(hands, prevhands)) {
+			SetEntPropString(client, Prop_Send, "m_szArmsModel", hands);
+		}
 	}
 }
 int GetAssurence(int client, bool forced = false) {

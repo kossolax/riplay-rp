@@ -836,7 +836,8 @@ enum sz_user_data {
 	String:sz_Skin,
 	String:sz_FirstName,
 	String:sz_LastName,
-
+	String:sz_HandsSkin,
+	
 	sz_udata_max
 };
 enum fd_user_data {
