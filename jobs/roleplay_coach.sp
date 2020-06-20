@@ -28,7 +28,7 @@ public Plugin myinfo = {
 
 char g_szSkinsList[][][] = {
 	{"models/player/custom_player/legacy/lara/lara.mdl", 				"Lara", 			"1", "6"},
-	{"models/player/custom_player/legacy/eva/eva.mdl", 					"Eva", 				"1", "5"},
+	//{"models/player/custom_player/legacy/eva/eva.mdl", 					"Eva", 				"1", "5"},
 	{"models/player/custom_player/legacy/misty/misty.mdl", 				"Misty", 			"1", "5"},
 	{"models/player/custom_player/legacy/swagirl/swagirl.mdl", 			"Désirée",			"1", "4"},
 	{"models/player/custom_player/legacy/zoey/zoey.mdl", 				"Zoey", 			"1", "3"},
@@ -36,16 +36,16 @@ char g_szSkinsList[][][] = {
 	
 	{"models/player/custom_player/legacy/don_vito/don_vito.mdl", 		"Don Vito", 		"0", "7"},
 	{"models/player/custom_player/legacy/redfield/redfield.mdl",		"Redfield",			"0", "6"},
-	{"models/player/custom_player/legacy/hitman/hitman.mdl", 			"Hitman", 			"0", "6"},
+	//{"models/player/custom_player/legacy/hitman/hitman.mdl", 			"Hitman", 			"0", "6"},
 	{"models/player/custom_player/legacy/50cent/50cent.mdl", 			"50cent", 			"0", "6"},
-	{"models/player/custom_player/legacy/wuzimu/wuzimu.mdl", 			"Pong", 			"0", "5"},
-	{"models/player/custom_player/legacy/lloyd/lloyd.mdl", 				"Loyd", 			"0", "5"},
+	//{"models/player/custom_player/legacy/wuzimu/wuzimu.mdl", 			"Pong", 			"0", "5"},
+	//{"models/player/custom_player/legacy/lloyd/lloyd.mdl", 				"Loyd", 			"0", "5"},
 	{"models/player/custom_player/legacy/bzsoap/bzsoap.mdl", 			"BZ-Soap", 			"0", "5"},
-	{"models/player/custom_player/legacy/leon/leon.mdl", 				"Leon", 			"0", "5"},
+	//{"models/player/custom_player/legacy/leon/leon.mdl", 				"Leon", 			"0", "5"},
 
 	{"models/player/custom_player/legacy/nick/nick.mdl", 				"Nick", 			"0", "5"},
-	{"models/player/custom_player/legacy/vmaff/vmaff.mdl", 				"Marco", 			"0", "4"},
-	{"models/player/custom_player/legacy/duke2/duke2.mdl", 				"Duke Nukem", 		"0", "3"},
+	//{"models/player/custom_player/legacy/vmaff/vmaff.mdl", 				"Marco", 			"0", "4"},
+	//{"models/player/custom_player/legacy/duke2/duke2.mdl", 				"Duke Nukem", 		"0", "3"},
 	
 	
 	{"models/player/custom_player/legacy/tm_anarchist.mdl", 			"Anarchist", 		"0", "1"},
