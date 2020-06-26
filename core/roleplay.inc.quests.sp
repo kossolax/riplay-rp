@@ -105,7 +105,7 @@ public void SQL_StartQuest_CB(Handle owner, Handle hQuery, const char[] error, a
 		g_iClientQuests[client][questID] = -1;
 		
 		char query[1024], szSteamID[32];
-		GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID), false);
+		GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 		
 		Format(query, sizeof(query), "UPDATE `rp_quest_book` SET `completed`='1' WHERE `uniqID`=(SELECT `uniqID` FROM `rp_quest_objectives` WHERE `id`='%d') AND `completed`='0' AND `steamid`='%s' ORDER BY `id` DESC LIMIT 1;", g_iClientQuests[client][objectiveID], szSteamID);
 		SQL_TQuery(g_hBDD, SQL_QueryCallBack, query, client, DBPrio_High);
@@ -224,7 +224,7 @@ public int Native_rp_QuestComplete(Handle plugin, int numParams) {
 	
 	int client = GetNativeCell(1);
 	int status = GetNativeCell(3);
-	GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID));
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	GetNativeString(2, uniqID, sizeof(uniqID));
 	
 	Format(query, sizeof(query), "INSERT INTO `rp_quest_book` (`steamID`, `uniqID`, `step`, `completed`, `time`) VALUES ('%s', '%s', (SELECT MAX(`StepID`) FROM `rp_quest_objectives` WHERE `uniqID`='%s'), '%d', UNIX_TIMESTAMP());", szSteamID, uniqID, uniqID, status);
@@ -248,7 +248,7 @@ public int Native_rp_QuestStepComplete(Handle plugin, int numParams) {
 		g_iClientQuests[client][questID] = -1;
 	
 		char query[1024], szSteamID[32];
-		GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID), false);
+		GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 		
 		Format(query, sizeof(query), "SELECT `pluginID`, `fctID`, `fctStartID`, `fctFrameID`, `fctAbortID`, `fctDoneID`, QO.`id`, `stepID` FROM `rp_quest` Q INNER JOIN `rp_quest_objectives` QO ON Q.`uniqID`=QO.`uniqID` WHERE QO.`id`>%d AND QO.`uniqID`=(SELECT QOB.`uniqID` FROM `rp_quest_objectives` QOB WHERE `id`='%d') LIMIT 1;", objective, objective );
 		SQL_TQuery(g_hBDD, SQL_StartQuest_CB, query, client, DBPrio_High);
@@ -281,7 +281,7 @@ public int Native_rp_QuestStepFail(Handle plugin, int numParams) {
 		g_iClientQuests[client][questID] = -1;
 	
 		char query[1024], szSteamID[32];
-		GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID), false);
+		GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 		
 		if( g_iClientQuests[client][stepID] == 0 ) {
 			Format(query, sizeof(query), "INSERT INTO `rp_quest_book` (`steamID`, `uniqID`, `step`, `completed`, `time`) VALUES ('%s', (SELECT `uniqID` FROM `rp_quest_objectives` WHERE `id`='%d'), '0', '2', UNIX_TIMESTAMP())", szSteamID, objective);
@@ -316,7 +316,7 @@ public void Cmd_QuestMenu(int client) {
 	}
 	
 	char query[1024], szSteamID[64];
-	GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID));
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	
 	Format(query, sizeof(query), "SELECT `pluginID`, `fctID`, `uniqID`, `name` FROM `rp_quest` Q WHERE (`type`='1' OR `type`='2') AND `uniqID` NOT IN");
 	Format(query, sizeof(query), "%s (SELECT Q.`uniqID`FROM`rp_quest`Q INNER JOIN`rp_quest_book`QB ON Q.`uniqID` = QB.`uniqID` WHERE `steamID`='%s' AND `isFinish`=0);", query, szSteamID); 

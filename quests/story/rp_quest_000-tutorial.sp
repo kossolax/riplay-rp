@@ -605,7 +605,7 @@ public void Q13_Frame(int objectiveID, int client) {
 			if( rp_IsClientNew(i) )
 				continue;
 						
-			GetClientAuthId(i, AuthId_Engine, szSteamID, sizeof(szSteamID), false);
+			GetClientAuthId(i, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 			Format(szName, sizeof(szName), "%N", i);
 						
 			AddMenuItem(menu, szSteamID, szName);
@@ -623,7 +623,7 @@ public int MenuSelectParrain(Handle menu, MenuAction action, int client, int par
 		
 		if( !StrEqual(options, "none") ) {
 			char szQuery[1024], szSteamID[64];
-			GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID), false);
+			GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 			
 			Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_parrain` (`steamid`, `parent`, `timestamp`) VALUES ('%s', '%s', UNIX_TIMESTAMP());", szSteamID, options);
 			SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery);

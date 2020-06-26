@@ -769,7 +769,7 @@ public void OnClientDisconnect(int client) {
 	if( g_iPlayerTeam[client] == TEAM_POLICE && g_iQuestGain > 0 ) {
 		
 		char szQuery[512], szSteamID[64];
-		GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID));
+		GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 		
 		Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_users2` (`id`, `steamid`, `bank` ) VALUES (NULL, '%s', '%i' );", szQuery, szSteamID, -1000);
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery);	

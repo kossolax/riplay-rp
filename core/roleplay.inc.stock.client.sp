@@ -565,7 +565,7 @@ int GivePlayerPay(int i, bool calculator = false) {
 			else {
 				CPrintToChat(i, "{lightblue}[TSX-RP]{default} L'entreprise pour laquel vous travaillez est en faillite. Vous n'avez pas de paye.");
 				
-				GetClientAuthId(i, AuthId_Engine, szSteamID, sizeof(szSteamID), false);
+				GetClientAuthId(i, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 				Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`) VALUES (NULL, '%s', '%i', '%i', '1', '%i', '%s', '%i');",
 				szSteamID, rp_GetClientJobID(i), GetTime(), -1, "PAY", to_pay);			
 				SQL_TQuery(g_hBDD, SQL_QueryCallBack, szQuery);
@@ -740,7 +740,7 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 	if( IsValidClient(invoker) && type != SynType_item ) {		
 		
 		char szSteamID2[64];
-		GetClientAuthId(invoker, AuthId_Engine, szSteamID2, sizeof(szSteamID2), false);
+		GetClientAuthId(invoker, AUTH_TYPE, szSteamID2, sizeof(szSteamID2), false);
 		
 		Format(szPseudo, sizeof(szPseudo), "%N", invoker);
 		Format(szSource, sizeof(szSource), "%s", szSteamID2);

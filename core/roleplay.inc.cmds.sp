@@ -456,7 +456,7 @@ public Action Cmd_CheckAFK(int client, int args) {
 	
 	int amount = GetAssurence(client, true) + 250;
 	char SteamID[32];
-	GetClientAuthId(client, AuthId_Engine, SteamID, sizeof(SteamID), false);
+	GetClientAuthId(client, AUTH_TYPE, SteamID, sizeof(SteamID), false);
 	
 	char query[1024];
 	Format(query, sizeof(query), "INSERT INTO `rp_users2` (`id`, `steamid`, `bank`, `pseudo` ) VALUES (NULL, '%s', '%i', 'slot admin');", SteamID, amount);

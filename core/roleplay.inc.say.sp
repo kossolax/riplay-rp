@@ -77,7 +77,7 @@ public Action Command_Say(int client, int args) {
 			if( !IsPolice(i) && !IsJuge(i) )
 				continue;
 
-			GetClientAuthId(i, AuthId_Engine, steamID, sizeof(steamID), false);
+			GetClientAuthId(i, AUTH_TYPE, steamID, sizeof(steamID), false);
 			GetClientName(i, nickname, sizeof(nickname));
 			
 			AddMenuItem(menu, steamID, nickname);
@@ -525,7 +525,7 @@ public Action Command_Say(int client, int args) {
 			if( i == client )
 				continue;
 
-			GetClientAuthId(i, AuthId_Engine, steamID, sizeof(steamID), false);
+			GetClientAuthId(i, AUTH_TYPE, steamID, sizeof(steamID), false);
 			GetClientName(i, nickname, sizeof(nickname));
 			
 			AddMenuItem(menu, steamID, nickname);
@@ -1122,11 +1122,11 @@ public Action Command_Say(int client, int args) {
 			return Plugin_Handled;
 		}
 		char targetSteamID[64];
-		GetClientAuthId(target, AuthId_Engine, targetSteamID, sizeof(targetSteamID), false);
+		GetClientAuthId(target, AUTH_TYPE, targetSteamID, sizeof(targetSteamID), false);
 		
 		if( g_iDoubleCompte[client].FindString(targetSteamID) >= 0 ) {
 			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas donner d'argnet à l'un de vos double compte. S'il ne s'agit pas d'un double compte, vous pouvez contester cette déicision sur ce lien:");
-			GetClientAuthId(client, AuthId_Engine, targetSteamID, sizeof(targetSteamID), false);
+			GetClientAuthId(client, AUTH_TYPE, targetSteamID, sizeof(targetSteamID), false);
 			CPrintToChat(client, "{lightblue}[TSX-RP]{default} https://www.ts-x.eu/index.php?page=roleplay2#/pilori/double/%s", targetSteamID);
 			return Plugin_Handled;
 		}
@@ -1354,7 +1354,7 @@ public Action Command_Say(int client, int args) {
 	else if(	strcmp(szSayTrig, "!cagnotte", false) == 0		|| strcmp(szSayTrig, "/cagnotte", false) == 0	) {
 
 		char szSteamID[64];
-		GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID), false);
+		GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 		
 		char query[1024];
 		Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_loto` WHERE `steamid`='%s';", szSteamID);

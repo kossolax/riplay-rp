@@ -715,7 +715,7 @@ public Action Cmd_Tazer(int client) {
 			rp_ClientMoney(client, i_AddToPay, reward);
 			rp_SetJobCapital(1, rp_GetJobCapital(1) + reward * 2);
 			
-			GetClientAuthId(client, AuthId_Engine, tmp, sizeof(tmp), false);
+			GetClientAuthId(client, AUTH_TYPE, tmp, sizeof(tmp), false);
 			Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`) VALUES (NULL, '%s', '%i', '%i', '3', '%i', '%s', '%i');", 
 				tmp, rp_GetClientJobID(client), GetTime(), 1, "TAZER", reward);
 			
@@ -1015,7 +1015,7 @@ public Action CS_OnCSWeaponDrop(int client, int weapon) {
 void AskJailTime(int client, int target) {
 	char tmp[256], tmp2[12];
 	
-	GetClientAuthId(target, AuthId_Engine, g_szTribunal[client], sizeof(g_szTribunal[]), false);
+	GetClientAuthId(target, AUTH_TYPE, g_szTribunal[client], sizeof(g_szTribunal[]), false);
 	
 	Handle menu = CreateMenu(eventSetJailTime);
 	Format(tmp, 255, "Combien de temps doit rester %N?\n ", target);
@@ -1253,7 +1253,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 				rp_SetJobCapital(jobID, rp_GetJobCapital(jobID) + (amende / 2));
 			}
 			
-			GetClientAuthId(client, AuthId_Engine, options, sizeof(options), false);
+			GetClientAuthId(client, AUTH_TYPE, options, sizeof(options), false);
 			
 			Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`) VALUES (NULL, '%s', '%i', '%i', '4', '%i', '%s', '%i');", 
 				options, jobID, GetTime(), 0, "Caution", amende / 4);
@@ -1393,7 +1393,7 @@ public int eventPayForLeaving(Handle menu, MenuAction action, int client, int pa
 		rp_ClientMoney(target, i_AddToPay, (amende / 4));
 		rp_SetJobCapital(jobID, rp_GetJobCapital(jobID) + (amende / 4 * 3));
 		
-		GetClientAuthId(client, AuthId_Engine, options, sizeof(options), false);
+		GetClientAuthId(client, AUTH_TYPE, options, sizeof(options), false);
 		
 		Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`) VALUES (NULL, '%s', '%i', '%i', '4', '%i', '%s', '%i');", 
 			options, jobID, GetTime(), 0, "Caution", amende / 4);
@@ -1616,7 +1616,7 @@ public Action Cmd_ItemRatio(int args) {
 	
 	if (StrEqual(arg1, "own")) {
 		char steamid[64];
-		GetClientAuthId(client, AuthId_Engine, steamid, sizeof(steamid), false);
+		GetClientAuthId(client, AUTH_TYPE, steamid, sizeof(steamid), false);
 		displayTribunal(client, steamid);
 	}
 	else if (StrEqual(arg1, "gps")) {
@@ -1701,7 +1701,7 @@ public Action GPS_LOOP(Handle timer, any client) {
 // ----------------------------------------------------------------------------
 void displayTribunal(int client, const char szSteamID[64]) {
 	char szURL[1024], szQuery[1024], steamid[64], sso[256];
-	GetClientAuthId(client, AuthId_Engine, steamid, sizeof(steamid), false);
+	GetClientAuthId(client, AUTH_TYPE, steamid, sizeof(steamid), false);
 	
 	Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_tribunal` (`uniqID`, `timestamp`, `steamid`) VALUES ('%s', '%i', '%s');", steamid, GetTime(), szSteamID);
 	

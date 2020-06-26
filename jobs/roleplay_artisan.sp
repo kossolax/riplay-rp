@@ -179,7 +179,7 @@ public void OnClientPostAdminCheck(int client) {
 	g_bInCraft[client] = false;
 	
 	char szSteamID[65], query[1024];
-	GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID));
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	Format(query, sizeof(query), "SELECT `itemid` FROM `rp_craft_book` WHERE `steamid`='%s' AND `itemid`>0 AND `itemid`<%d;", szSteamID, MAX_ITEMS);
 	SQL_TQuery(rp_GetDatabase(), SQL_LoadCraftbook, query, client);
 	
@@ -529,7 +529,7 @@ public int eventArtisanMenu(Handle menu, MenuAction action, int client, int para
 				g_bCanCraft[client][itemID] = true;
 				rp_SetClientInt(client, i_ArtisanPoints, count - RoundToCeil(float(rp_GetItemInt(itemID, item_type_prix)) / 250.0));
 				char query[1024], szSteamID[32];
-				GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID));
+				GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 				Format(query, sizeof(query), "INSERT INTO `rp_craft_book` (`steamid`, `itemid`) VALUES ('%s', '%d');", szSteamID, itemID);
 				SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 			}

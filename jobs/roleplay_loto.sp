@@ -342,7 +342,7 @@ public void SQL_GetLotoCount(Handle owner, Handle hQuery, const char[] error, an
 		
 		if( cpt == 0 ) {
 			char query[1024], szSteamID[32];
-			GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID), false);
+			GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 			
 			Format(query, sizeof(query), "INSERT INTO `rp_loto` (`id`, `steamid`) VALUES (NULL, '%s');", szSteamID);
 			SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query, 0, DBPrio_High);
@@ -475,7 +475,7 @@ public int MenuLoto(Handle menu, MenuAction action, int client, int param2) {
 }
 bool gratterTicket(int client, int amount, int itemID) {
 	char szSteamID[32];
-	GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID), false);
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 	
 	if( amount == -1 ) {
 		char query[1024];
@@ -585,7 +585,7 @@ public void SQL_GetLoteryWiner(Handle owner, Handle hQuery, const char[] error, 
 			for (int client = 1; client <= MaxClients; client++) {
 				if( !IsValidClient(client) )
 					continue;
-				GetClientAuthId(client, AuthId_Engine, szName, sizeof(szName));
+				GetClientAuthId(client, AUTH_TYPE, szName, sizeof(szName));
 				
 				if( StrEqual(szSteamID, szName) ) {
 					rp_IncrementSuccess(client, success_list_lotto);

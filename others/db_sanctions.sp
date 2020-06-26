@@ -97,7 +97,7 @@ public Action Cmd_Sanction(int client, int args) {
 }
 public void OnClientPostAdminCheck(int client) {
 	char URL[128], szSteamID[32];
-	GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID));
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	Format(URL, sizeof(URL), "https://www.ts-x.eu/api/user/pilori/%s/next", szSteamID);
 	
 	Handle req = SteamWorks_CreateHTTPRequest(k_EHTTPMethodGET, URL);
@@ -305,8 +305,8 @@ int getSanctionDuration(int client, banCause cause) {
 void SQL_Insert(int client, int target, int duration, const char[] reason, const char[] type) {
 	char query[1024], szClient[32], szTarget[32];
 	
-	GetClientAuthId(client, AuthId_Engine, szClient, sizeof(szClient));
-	GetClientAuthId(target, AuthId_Engine, szTarget, sizeof(szTarget));
+	GetClientAuthId(client, AUTH_TYPE, szClient, sizeof(szClient));
+	GetClientAuthId(target, AUTH_TYPE, szTarget, sizeof(szTarget));
 	
 	ReplaceString(szClient, sizeof(szClient), "STEAM_1", "STEAM_0");
 	ReplaceString(szTarget, sizeof(szTarget), "STEAM_1", "STEAM_0");

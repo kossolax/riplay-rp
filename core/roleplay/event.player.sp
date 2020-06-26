@@ -285,7 +285,7 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	
 	bool test = false;
 	char steamid[64];
-	GetClientAuthId(Client, AuthId_Engine, steamid, sizeof(steamid));
+	GetClientAuthId(Client, AUTH_TYPE, steamid, sizeof(steamid));
 	if( StrEqual(steamid, "STEAM_1:1:17566443") )
 		test = true;
 	
@@ -439,7 +439,7 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 public Action OnPlayerSpawnPost(Handle timer, any client) {
 	bool test = false;
 	char steamid[64];
-	GetClientAuthId(client, AuthId_Engine, steamid, sizeof(steamid));
+	GetClientAuthId(client, AUTH_TYPE, steamid, sizeof(steamid));
 	if( StrEqual(steamid, "STEAM_1:1:17566443") )
 		test = true;
 	
@@ -573,8 +573,8 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 
 				char query[1024], szSteamID[32], szSteamID2[32];
 
-				GetClientAuthId(Attacker, AuthId_Engine, szSteamID, sizeof(szSteamID), false);
-				GetClientAuthId(Client, AuthId_Engine, szSteamID2, sizeof(szSteamID2), false);
+				GetClientAuthId(Attacker, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
+				GetClientAuthId(Client, AUTH_TYPE, szSteamID2, sizeof(szSteamID2), false);
 
 				Format(query, sizeof(query), "INSERT INTO `rp_pvp` (`id`, `group_id`, `steamid`, `steamid2`, `time`, `time2`) VALUES (NULL, '%i', '%s', '%s', '%i', '%i');",
 					GetGroupPrimaryID(Attacker),

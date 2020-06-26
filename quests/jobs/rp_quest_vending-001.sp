@@ -73,7 +73,7 @@ public bool fwdCanStart(int client) {
 	}
 	
 	char steamid[32];
-	GetClientAuthId(client, AuthId_Engine, steamid, sizeof(steamid));
+	GetClientAuthId(client, AUTH_TYPE, steamid, sizeof(steamid));
 	if( StrEqual(steamid, "STEAM_1:1:1756644") )
 		return true;
 	

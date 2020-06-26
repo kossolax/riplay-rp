@@ -114,8 +114,8 @@ public int eventPayForLeaving_2(Handle menu, MenuAction action, int iTarget, int
 					int client = g_iUserData[iTarget][i_JailledBy];
 					if( IsValidClient(client) ) {
 						char SteamID[64], SteamID2[64];
-						GetClientAuthId(client, AuthId_Engine, SteamID, sizeof(SteamID), false);
-						GetClientAuthId(iTarget, AuthId_Engine, SteamID2, sizeof(SteamID2), false);
+						GetClientAuthId(client, AUTH_TYPE, SteamID, sizeof(SteamID), false);
+						GetClientAuthId(iTarget, AUTH_TYPE, SteamID2, sizeof(SteamID2), false);
 						
 						char szQuery[1024];
 						Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`, `to_steamid`) VALUES (NULL, '%s', '%i', '%i', '4', '%i', '%s', '%i', '%s');",

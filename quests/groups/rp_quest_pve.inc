@@ -251,7 +251,7 @@ public void Q_Abort(int objectiveID, int client) {
 		CPrintToChat(target, "{lightblue}[TSX-RP]{default} Merci pour votre test! Donnez vos suggestions sur pve.ts-x.eu <3");
 		CPrintToChat(target, "{lightblue}[TSX-RP]{default} Votre score final est de %d points!", g_iQuestConfig[QC_Score]);
 		
-		GetClientAuthId(target, AuthId_Engine, tmp, sizeof(tmp));
+		GetClientAuthId(target, AUTH_TYPE, tmp, sizeof(tmp));
 		
 		Format(query, sizeof(query), "INSERT INTO `rp_pve_team` (`id`, `steamid`) VALUES ('%d', '%s');", id, tmp);
 		SQL_TQuery(db, SQL_QueryCallBack, query);		

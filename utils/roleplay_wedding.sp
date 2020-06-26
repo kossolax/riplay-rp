@@ -38,7 +38,7 @@ public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 	
 	char steamid[32], query[512];
-	GetClientAuthId(client, AuthId_Engine, steamid, sizeof(steamid));
+	GetClientAuthId(client, AUTH_TYPE, steamid, sizeof(steamid));
 	Format(query, sizeof(query), "SELECT `steamid` FROM `rp_wedding` WHERE `steamid2`='%s' AND `time`>=UNIX_TIMESTAMP() UNION SELECT `steamid2` FROM `rp_wedding` WHERE `steamid`='%s' AND `time`>=UNIX_TIMESTAMP();", steamid, steamid);
 	
 	SQL_TQuery(rp_GetDatabase(), SQL_CheckWedding, query, client);
@@ -52,7 +52,7 @@ public void SQL_CheckWedding(Handle owner, Handle handle, const char[] error, an
 			if( !IsValidClient(i) || i == client )
 				continue;
 			
-			GetClientAuthId(i, AuthId_Engine, target, sizeof(target));
+			GetClientAuthId(i, AUTH_TYPE, target, sizeof(target));
 			
 			if( StrEqual(steamid, target) && rp_GetClientInt(i, i_MarriedTo) == 0 ) {
 				CPrintToChat(i, "{lightblue}[TSX-RP]{default} Votre conjoint %N a rejoint la ville.", client);
@@ -138,8 +138,8 @@ void Marier(int juge, int epoux, int epouse) {
 	rp_HookEvent(epouse, RP_OnFrameSeconde, fwdFrame);
 	
 	char query[512], szClient[32], szTarget[32];
-	GetClientAuthId(epoux, AuthId_Engine, szClient, sizeof(szClient));
-	GetClientAuthId(epouse, AuthId_Engine, szTarget, sizeof(szTarget));
+	GetClientAuthId(epoux, AUTH_TYPE, szClient, sizeof(szClient));
+	GetClientAuthId(epouse, AUTH_TYPE, szTarget, sizeof(szTarget));
 	Format(query, sizeof(query), "INSERT INTO `rp_wedding` (`steamid`, `steamid2`, `time`) VALUES ('%s', '%s', '%d');", szClient, szTarget, GetTime()+(7*24*60*60));
 	SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 	
@@ -238,8 +238,8 @@ Menu Menu_Mariage(int& client, int a, int b, int c, int d, int e, int f) {
 	}
 	else if( d == 0 ) {
 		
-		GetClientAuthId(b, AuthId_Engine, tmp, sizeof(tmp));
-		GetClientAuthId(c, AuthId_Engine, tmp2, sizeof(tmp2));
+		GetClientAuthId(b, AUTH_TYPE, tmp, sizeof(tmp));
+		GetClientAuthId(c, AUTH_TYPE, tmp2, sizeof(tmp2));
 		
 		DataPack dp = new DataPack();
 		dp.WriteCell(a);
@@ -421,8 +421,8 @@ Menu Menu_Prolonge(int& client, int a, int b, int c, int d, int e) {
 			rp_ClientMoney(a, i_AddToPay, prix / 2);
 			rp_SetJobCapital(101, rp_GetJobCapital(101) + (prix/2) );
 			
-			GetClientAuthId(b, AuthId_Engine, tmp, sizeof(tmp));
-			GetClientAuthId(c, AuthId_Engine, tmp2, sizeof(tmp2));			
+			GetClientAuthId(b, AUTH_TYPE, tmp, sizeof(tmp));
+			GetClientAuthId(c, AUTH_TYPE, tmp2, sizeof(tmp2));			
 			Format(query, sizeof(query), "UPDATE `rp_wedding` SET `time`=`time`+(7*24*60*60) WHERE (`steamid`='%s' AND `steamid2`='%s') OR (`steamid`='%s' AND `steamid2`='%s')", tmp, tmp2, tmp2, tmp);
 			SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 		}
@@ -447,7 +447,7 @@ Menu Menu_Divorce(int& client, int a, int b, int c) {
 			if( !IsValidClient(i) )
 				continue;
 			if( rp_GetPlayerZone(i) == zone ) {
-				GetClientAuthId(i, AuthId_Engine, tmp, sizeof(tmp));
+				GetClientAuthId(i, AUTH_TYPE, tmp, sizeof(tmp));
 				Format(szSteamIDs, sizeof(szSteamIDs), "%s'%s',", szSteamIDs, tmp);
 			}
 		}
@@ -491,7 +491,7 @@ Menu Menu_Divorce(int& client, int a, int b, int c) {
 				rp_SetClientInt(rp_GetClientInt(b, i_MarriedTo), i_MarriedTo, 0);
 				rp_SetClientInt(b, i_MarriedTo, 0);
 			}
-			GetClientAuthId(b, AuthId_Engine, tmp, sizeof(tmp));	
+			GetClientAuthId(b, AUTH_TYPE, tmp, sizeof(tmp));	
 			Format(query, sizeof(query), "UPDATE `rp_wedding` SET `time`=UNIX_TIMESTAMP() WHERE (`steamid`='%s' OR `steamid2`='%s') AND `time`>=UNIX_TIMESTAMP()", tmp, tmp);
 			SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 		}
@@ -517,7 +517,7 @@ public void SQL_CheckDivorce(Handle owner, Handle handle, const char[] error, an
 				if( !IsValidClient(j) )
 					continue;
 				
-				GetClientAuthId(j, AuthId_Engine, tmp, sizeof(tmp));
+				GetClientAuthId(j, AUTH_TYPE, tmp, sizeof(tmp));
 				if( StrEqual(steamid, tmp) ) {
 					Format(tmp, sizeof(tmp), "2 %d %d", client, j);
 					Format(name, sizeof(name), "%N et %s", j, name);
@@ -542,7 +542,7 @@ Menu Menu_Duration(int client, int a, int b) {
 			if( !IsValidClient(i) || i == client )
 				continue;
 			if( rp_GetPlayerZone(i) == zone ) {
-				GetClientAuthId(i, AuthId_Engine, tmp, sizeof(tmp));
+				GetClientAuthId(i, AUTH_TYPE, tmp, sizeof(tmp));
 				Format(szSteamIDs, sizeof(szSteamIDs), "%s'%s',", szSteamIDs, tmp);
 			}
 		}
@@ -577,7 +577,7 @@ public void SQL_CheckStatus(Handle owner, Handle handle, const char[] error, any
 				if( !IsValidClient(j) )
 					continue;
 				
-				GetClientAuthId(j, AuthId_Engine, tmp, sizeof(tmp));
+				GetClientAuthId(j, AUTH_TYPE, tmp, sizeof(tmp));
 				if( StrEqual(steamid, tmp) ) {
 					Format(tmp, sizeof(tmp), "3 %d %d", j, time);
 					Format(name, sizeof(name), "%N et %s - %.1f jour%s", j, name, k, k >= 2.0 ? "s" : "");

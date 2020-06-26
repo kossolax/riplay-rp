@@ -434,7 +434,7 @@ public void SQL_SetGroupLeader(Handle owner, Handle hQuery, const char[] error, 
 void CheckMP(int client) {
 	
 	char query[1024], szSteamID[64];
-	GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID), false);
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 	
 	Format(query, sizeof(query), "SELECT id FROM `rp_messages_seen` WHERE seen='0' AND `steamid`='%s' LIMIT 1;", szSteamID);
 	SQL_TQuery(g_hBDD, CheckMP_2, query, client, DBPrio_Low);
@@ -473,7 +473,7 @@ void StoreUserData(int client) {
 	if( g_bUserData[client][b_isConnected2] == 0 )
 		return;
 	
-	GetClientAuthId(client, AuthId_Engine, SteamID, sizeof(SteamID), false);
+	GetClientAuthId(client, AUTH_TYPE, SteamID, sizeof(SteamID), false);
 	GetClientName(client,UserName,63);
 	GetClientIP(client, IP, sizeof(IP), true);
 	
@@ -620,7 +620,7 @@ void SynFromWeb() {
 					if( g_bUserData[i][b_IsFirstSpawn] )
 						continue;
 					
-					GetClientAuthId(i, AuthId_Engine, SteamID, sizeof(SteamID), false);
+					GetClientAuthId(i, AUTH_TYPE, SteamID, sizeof(SteamID), false);
 					
 					if( StrEqual(szSteamID, SteamID, true) ) {
 						Client = i;
@@ -841,7 +841,7 @@ void LoadUserData(int Client) {
 	if(!IsFakeClient(Client)) {
 		
 		ResetUserData(Client);
-		GetClientAuthId(Client, AuthId_Engine, SteamID, sizeof(SteamID), false);
+		GetClientAuthId(Client, AUTH_TYPE, SteamID, sizeof(SteamID), false);
 		
 		Format(query, sizeof(query), 
 			"SELECT `money`, `bank`, `job_id`, `jailled`, `skin`, `train`, `permi_lege`, `permi_lourd`, `permi_vente`, `passive`, `train_weapon`,");
@@ -929,7 +929,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 	if( !IsValidClient(Client) )
 		return;
 		
-	GetClientAuthId(Client, AuthId_Engine, SteamID, sizeof(SteamID), false);
+	GetClientAuthId(Client, AUTH_TYPE, SteamID, sizeof(SteamID), false);
 	
 	if( hQuery == INVALID_HANDLE ) {
 		LogError("[SQL] [ERROR] %s", error);
@@ -1298,7 +1298,7 @@ public void LoadUserData_3(Handle owner, Handle hQuery, const char[] error, any 
 	if( hQuery == INVALID_HANDLE ) {
 		LogError("[SQL] [ERROR] %s", error);
 		
-		GetClientAuthId(client, AuthId_Engine, SteamID, sizeof(SteamID), false);
+		GetClientAuthId(client, AUTH_TYPE, SteamID, sizeof(SteamID), false);
 		
 		Format(MysqlQuery, sizeof(MysqlQuery), "INSERT IGNORE INTO `rp_success` (`steamid`) VALUES ('%s');", SteamID);
 		SQL_TQuery(g_hBDD, SQL_QueryCallBack, MysqlQuery);
@@ -1318,7 +1318,7 @@ public void LoadUserData_3(Handle owner, Handle hQuery, const char[] error, any 
 	}
 	else {
 		
-		GetClientAuthId(client, AuthId_Engine, SteamID, sizeof(SteamID), false);
+		GetClientAuthId(client, AUTH_TYPE, SteamID, sizeof(SteamID), false);
 		
 		Format(MysqlQuery, sizeof(MysqlQuery), "INSERT IGNORE INTO `rp_success` (`steamid`) VALUES ('%s');", SteamID);
 		SQL_TQuery(g_hBDD, SQL_QueryCallBack, MysqlQuery);
@@ -1334,7 +1334,7 @@ void CheckMute(int Client) {
 	if( !IsFakeClient(Client) ) {
 		
 		char SteamID[64], szQuery[1024];
-		GetClientAuthId(Client, AuthId_Engine, SteamID, sizeof(SteamID), false);
+		GetClientAuthId(Client, AUTH_TYPE, SteamID, sizeof(SteamID), false);
 		//ReplaceString(SteamID, sizeof(SteamID), "STEAM_1", "STEAM_0");
 		Format(szQuery, sizeof(szQuery), "SELECT `game` FROM `srv_bans` WHERE `SteamID`='%s' AND (`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0' AND (`game` LIKE 'rp-%%');", SteamID);
 		

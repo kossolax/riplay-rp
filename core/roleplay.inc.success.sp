@@ -376,7 +376,7 @@ void WonSuccess(int client, int success) {
 	if( IsValidClient(client) && CanMadeSuccess(client, success) && g_bUserData[client][b_isConnected] && g_bUserData[client][b_isConnected2] && IsTutorialOver(client) ) {
 		
 		char szSteamID[64], query[1024];
-		GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID), false);
+		GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 		
 		g_iUserSuccess[client][success][sd_last] = GetTime();
 		g_iUserSuccess[client][success][sd_count] = 0;

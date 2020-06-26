@@ -167,7 +167,7 @@ bool RemoveString(char[] Buffer, const char[] SubString, bool onlyCmd = true) {
 void SSO_Forum(int client, char[] str, int size) {
 	char szCrypted[256], szSteamID[64];
 	
-	GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID), false);
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 	Crypt_RC4Encode(szSteamID, "Cm3VjQ8fpTaMNTYdrMK3Gw4M", szCrypted, sizeof(szCrypted));
 	Format(str, size, "&SSOid=%s", szCrypted);
 	
@@ -654,7 +654,7 @@ float degrees_to_radians(float degreesGiven) {
 }
 bool IsAdmin(int client) {
 	char szSteamID[64];
-	GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID), false);
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 	
 	for(int i = 0; i < sizeof(g_szSuperAdmin); i++) {
 		if(!StrEqual(g_szSuperAdmin[i], szSteamID)) {

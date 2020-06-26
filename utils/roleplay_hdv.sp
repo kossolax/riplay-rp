@@ -172,7 +172,7 @@ void HDV_Sell(int client, int itemID, int quantity, int sellPrice, int confirm) 
 		WritePackCell(pack, itemID);
 		WritePackCell(pack, quantity);
 		WritePackCell(pack, tax);
-		GetClientAuthId(client, AuthId_Engine, steamid, sizeof(steamid));
+		GetClientAuthId(client, AUTH_TYPE, steamid, sizeof(steamid));
 		Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_trade`(`steamid`, `itemID`, `amount`, `price`, `time`) VALUES ('%s', '%d', '%d', '%d', '%d')", steamid, itemID, quantity, sellPrice/quantity, GetTime());
 		SQL_TQuery(rp_GetDatabase(), SQL_DepositCB, szQuery, pack);
 		delete menu;
@@ -239,7 +239,7 @@ void HDV_Buy(int client, int jobID, int itemID, int transactID, int confirm, int
 		WritePackCell(pack, transactID);
 		WritePackCell(pack, dataQte);
 		WritePackCell(pack, dataPrix);
-		GetClientAuthId(client, AuthId_Engine, steamid, sizeof(steamid));
+		GetClientAuthId(client, AUTH_TYPE, steamid, sizeof(steamid));
 		Format(szQuery, sizeof(szQuery), "UPDATE `rp_trade` SET `time`=UNIX_TIMESTAMP(), `done`=1, `boughtBy`='%s' WHERE `id`=%d AND `done`=0", steamid, transactID);
 		SQL_TQuery(rp_GetDatabase(), SQL_AchatCB, szQuery, pack);
 		delete menu;
@@ -261,7 +261,7 @@ void HDV_History(int client, int action, int cancelID, int confirm, int dataAmou
 	}
 	else if(cancelID == 0){
 		char szQuery[256];
-		GetClientAuthId(client, AuthId_Engine, tmp, sizeof(tmp));
+		GetClientAuthId(client, AUTH_TYPE, tmp, sizeof(tmp));
 		if(action == 1)
 			Format(szQuery, sizeof(szQuery), "SELECT `id`, `itemID`, `amount`, `price`, `time` FROM `rp_trade` WHERE `done`=0 AND `steamid`='%s' ORDER BY `time`", tmp);
 		else if(action == 2)

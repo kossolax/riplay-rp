@@ -781,7 +781,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		//g_iSuccess_last_pas_vu_pas_pris[target] = GetTime();
 		LogToGame("[TSX-RP] [VOL] %L a vole %L %i$", client, target, amount);
 		
-		GetClientAuthId(client, AuthId_Engine, tmp, sizeof(tmp), false);
+		GetClientAuthId(client, AUTH_TYPE, tmp, sizeof(tmp), false);
 		Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`) VALUES (NULL, '%s', '%i', '%i', '4', '%i', '%s', '%i');",
 			tmp, rp_GetClientJobID(client), GetTime(), 0, "Vol: Argent", amount);
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery);
@@ -1365,7 +1365,7 @@ public Action ItemPickLockOver_18th(Handle timer, Handle dp) {
 	
 	char SteamID[64], szQuery[1024];
 	
-	GetClientAuthId(client, AuthId_Engine, SteamID, sizeof(SteamID), false);
+	GetClientAuthId(client, AUTH_TYPE, SteamID, sizeof(SteamID), false);
 	Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`) VALUES (NULL, '%s', '%i', '%i', '4', '%i', '%s', '%i');",
 	SteamID, rp_GetClientJobID(client), GetTime(), 0, "Vol: Arme", price/2);
 	

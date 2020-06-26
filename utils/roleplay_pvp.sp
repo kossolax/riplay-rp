@@ -584,7 +584,7 @@ void CAPTURE_Reward(int totalPoints) {
 		int gID = rp_GetClientGroupID(client);
 		int bonus = RoundToCeil(g_iCapture_POINT[gID] / 200.0);
 		
-		GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID));
+		GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 		int array[gdm_max];
 		g_hGlobalDamage.GetArray(szSteamID, array, sizeof(array));
 		
@@ -1202,7 +1202,7 @@ public Action CTF_SpawnFlag_Delay(Handle timer, any ent2) {
 // -----------------------------------------------------------------------------------------------------------------
 void GDM_Init(int client) {
 	char szSteamID[32], tmp[65];
-	GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID));
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	GetClientName(client, tmp, sizeof(tmp));
 	
 	int array[gdm_max];
@@ -1216,7 +1216,7 @@ void GDM_Init(int client) {
 }
 void GDM_RegisterHit(int client, int damage=0, int hitbox=0) {
 	char szSteamID[32];
-	GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID));
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	
 	int array[gdm_max];
 	g_hGlobalDamage.GetArray(szSteamID, array, sizeof(array));
@@ -1228,7 +1228,7 @@ void GDM_RegisterHit(int client, int damage=0, int hitbox=0) {
 }
 void GDM_RegisterFlag(int client) {
 	char szSteamID[32];
-	GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID));
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	
 	int array[gdm_max];
 	g_hGlobalDamage.GetArray(szSteamID, array, sizeof(array));
@@ -1237,7 +1237,7 @@ void GDM_RegisterFlag(int client) {
 }
 void GDM_RegisterKill(int client) {
 	char szSteamID[32];
-	GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID));
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	
 	int array[gdm_max];
 	g_hGlobalDamage.GetArray(szSteamID, array, sizeof(array));
@@ -1246,7 +1246,7 @@ void GDM_RegisterKill(int client) {
 }
 int GDM_GetFlagCount(int client) {
 	char szSteamID[32];
-	GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID));
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	
 	int array[gdm_max];
 	g_hGlobalDamage.GetArray(szSteamID, array, sizeof(array));
@@ -1254,7 +1254,7 @@ int GDM_GetFlagCount(int client) {
 }
 void GDM_RegisterShoot(int client) {
 	char szSteamID[32];
-	GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID));
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	
 	int array[gdm_max];
 	g_hGlobalDamage.GetArray(szSteamID, array, sizeof(array));
@@ -1267,8 +1267,8 @@ int GDM_ELOKill(int client, int target, bool flag = false) {
 	int attacker[gdm_max], victim[gdm_max], cgID, tgID, cElo, tElo;
 	float cDelta, tDelta;
 	
-	GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID));
-	GetClientAuthId(target, AuthId_Engine, szSteamID2, sizeof(szSteamID2));
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
+	GetClientAuthId(target, AUTH_TYPE, szSteamID2, sizeof(szSteamID2));
 	
 	g_hGlobalDamage.GetArray(szSteamID, attacker, sizeof(attacker));
 	g_hGlobalDamage.GetArray(szSteamID2, victim, sizeof(victim));
@@ -1306,7 +1306,7 @@ int GDM_ELOSuicide(int client) {
 	int attacker[gdm_max], cgID, cElo;
 	float cDelta;
 	
-	GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID));
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	g_hGlobalDamage.GetArray(szSteamID, attacker, sizeof(attacker));
 	
 	cDelta = 1.0/((Pow(10.0, - (1500 - attacker[gdm_elo]) / 400.0)) + 1.0);

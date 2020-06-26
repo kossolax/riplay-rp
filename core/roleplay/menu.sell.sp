@@ -841,8 +841,8 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			Call_Finish();
 			
 			char SteamID[64], targetSteamID[64];
-			GetClientAuthId(vendeur, AuthId_Engine, SteamID, sizeof(SteamID), false);
-			GetClientAuthId(client, AuthId_Engine, targetSteamID, sizeof(targetSteamID), false);
+			GetClientAuthId(vendeur, AUTH_TYPE, SteamID, sizeof(SteamID), false);
+			GetClientAuthId(client, AUTH_TYPE, targetSteamID, sizeof(targetSteamID), false);
 			
 			if( g_iUserData[client][i_LastForcedSave] < GetTime() ) {
 				StoreUserData(client);

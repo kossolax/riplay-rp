@@ -69,7 +69,7 @@ public int MenuSelectFire(Handle p_hHireMenu, MenuAction p_oAction, int p_iParam
 					continue;
 				
 				char SteamID[64];
-				GetClientAuthId(i, AuthId_Engine, SteamID, sizeof(SteamID), false);
+				GetClientAuthId(i, AUTH_TYPE, SteamID, sizeof(SteamID), false);
 				
 				if( StrEqual(SteamID, szMenuItem) ) {
 					were_in_game = i;
@@ -152,7 +152,7 @@ public int eventSetJobMenu(Handle p_hHireMenu, MenuAction p_oAction, int p_iPara
 					continue;
 				
 				char SteamID[64];
-				GetClientAuthId(i, AuthId_Engine, SteamID, sizeof(SteamID), false);
+				GetClientAuthId(i, AUTH_TYPE, SteamID, sizeof(SteamID), false);
 				
 				if( StrEqual(SteamID, data[0]) ) {
 					CPrintToChat(i, "{lightblue}[TSX-RP]{default} %N a modifié votre job. Vous êtes maintenant: %s.", p_iParam1, g_szJobList[iJobID][job_type_name]);

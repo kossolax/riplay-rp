@@ -175,7 +175,7 @@ public int MenuGps(Handle menu, MenuAction action, int client, int param2) {
 		char szMenu[64];
 		
 		char steamID[64];
-		GetClientAuthId(client, AuthId_Engine, steamID, sizeof(steamID));
+		GetClientAuthId(client, AUTH_TYPE, steamID, sizeof(steamID));
 			
 		if( GetMenuItem(menu, param2, szMenu, sizeof(szMenu)) ) {
 			

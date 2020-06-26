@@ -141,7 +141,7 @@ public void QUERY_SetMaire(Handle owner, Handle handle, const char[] error, any 
 				rp_SetClientKeyAppartement(i, 51, false );
 				rp_SetClientInt(i, i_AppartCount, rp_GetClientInt(i, i_AppartCount) - 1);
 			}
-			GetClientAuthId(i, AuthId_Engine, tmp, sizeof(tmp));
+			GetClientAuthId(i, AUTH_TYPE, tmp, sizeof(tmp));
 			if( StrEqual(tmp, tmp2) ) {
 				rp_SetClientKeyAppartement(i, 51, true );
 				rp_SetClientInt(i, i_AppartCount, rp_GetClientInt(i, i_AppartCount) + 1);
@@ -338,7 +338,7 @@ void Draw_Mairie_Candidate(int client, int target, int arg) {
 			if( (rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 250000 ) {
 				rp_ClientMoney(client, i_Money, -250000);
 				
-				GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID));
+				GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 				
 				Format(tmp, sizeof(tmp), "INSERT INTO `rp_maire` (`id`, `steamid`) VALUES (NULL, '%s');", szSteamID);
 				SQL_TQuery(rp_GetDatabase(), QUERY_PostCandidate, tmp, client);
@@ -347,7 +347,7 @@ void Draw_Mairie_Candidate(int client, int target, int arg) {
 	}
 	else {
 		
-		GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID));
+		GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 		Format(tmp, sizeof(tmp), "INSERT INTO `rp_maire_vote` (`steamid`, `target`) VALUES ('%s', '%d') ON DUPLICATE KEY UPDATE `target`=VALUES(`target`);", szSteamID, target);
 		SQL_TQuery(rp_GetDatabase(), QUERY_VoteCandidate, tmp, client);
 		
@@ -369,7 +369,7 @@ public void QUERY_VoteCandidate(Handle owner, Handle handle, const char[] error,
 public void QUERY_MairieCandidate(Handle owner, Handle handle, const char[] error, any client) {
 	char tmp[64], tmp2[64], szSteamID[64];
 	
-	GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID));
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	bool myself = false;
 	
 	Menu menu = new Menu(Handle_Mairie);
@@ -423,7 +423,7 @@ void Draw_Mairie_Rules(int client) {
 	}
 	
 	rp_GetServerString(mairieID, tmp2, sizeof(tmp2));
-	GetClientAuthId(client, AuthId_Engine, tmp, sizeof(tmp));
+	GetClientAuthId(client, AUTH_TYPE, tmp, sizeof(tmp));
 	
 	if( cpt < 5 && StrEqual(tmp, tmp2) )
 		menu.AddItem("4 -1 -1 -1", "Ajouter une nouvelle règle");

@@ -215,7 +215,7 @@ public Action Cmd_Jugement(int client, char[] arg) {
 	
 	char query[1024], szSteamID[32];
 	char[] escape = new char[length * 2 + 1];
-	GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID));
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	SQL_EscapeString(rp_GetDatabase(), arg, escape, length*2 + 1);
 	
 	Format(query, sizeof(query), "UPDATE `ts-x`.`site_report` SET `jail`='%d', `amende`='%d', `juge`='%s', `reason`='%s' WHERE `id`='%d' LIMIT 1;", heure, amende, szSteamID, escape, id);
@@ -626,7 +626,7 @@ Menu AUDIENCE_Enquete(int type, int a, int b) {
 			
 			char szURL[1024];
 			rp_GetClientSSO(g_iTribunalData[type][td_Owner], tmp, sizeof(tmp));
-			GetClientAuthId(b, AuthId_Engine, tmp2, sizeof(tmp2));
+			GetClientAuthId(b, AUTH_TYPE, tmp2, sizeof(tmp2));
 			
 			Format(szURL, sizeof(szURL), "https://www.ts-x.eu/index.php?page=roleplay2%s#/tribunal/case/%s", tmp, tmp2);
 			PrintToConsole(g_iTribunalData[type][td_Owner], "https://www.ts-x.eu/index.php?page=roleplay2#/tribunal/case/%s", tmp2);
@@ -707,7 +707,7 @@ Menu AUDIENCE_Forum(int client, int a, int b) {
 	Menu subMenu;
 	
 	if( a == 0 ) {
-		GetClientAuthId(client, AuthId_Engine, tmp, sizeof(tmp));
+		GetClientAuthId(client, AUTH_TYPE, tmp, sizeof(tmp));
 		
 		Format(query, sizeof(query), "SELECT R.`id`, `report_steamid`, COUNT(`vote`) cpt, `name`, SUM(IF(`vote`=1,1,0)) as cpt2 FROM `ts-x`.`site_report` R INNER JOIN `ts-x`.`site_report_votes` V ON V.`reportid`=R.`id` INNER JOIN `rp_csgo`.`rp_users` U ON U.`steamid`=R.`report_steamid` WHERE V.`vote`<>'2' AND R.`jail`=-1 AND R.`own_steamid`<>'%s' AND R.`report_steamid`<>'%s' GROUP BY R.`id` HAVING cpt>=5 ORDER BY cpt DESC;", tmp, tmp);
 		SQL_TQuery(rp_GetDatabase(), SQL_AUDIENCE_Forum, query, client);
@@ -1147,12 +1147,12 @@ void SQL_Insert(int type, int condamne, int condamnation, int heure, int amende)
 	
 	rp_ClientXPIncrement(g_iTribunalData[type][td_Owner], 250);
 	
-	GetClientAuthId(g_iTribunalData[type][td_Owner], AuthId_Engine, szSteamID[0], sizeof(szSteamID[]));
-	GetClientAuthId(g_iTribunalData[type][td_Plaignant], AuthId_Engine, szSteamID[1], sizeof(szSteamID[]));
-	GetClientAuthId(g_iTribunalData[type][td_Suspect], AuthId_Engine, szSteamID[2], sizeof(szSteamID[]));
+	GetClientAuthId(g_iTribunalData[type][td_Owner], AUTH_TYPE, szSteamID[0], sizeof(szSteamID[]));
+	GetClientAuthId(g_iTribunalData[type][td_Plaignant], AUTH_TYPE, szSteamID[1], sizeof(szSteamID[]));
+	GetClientAuthId(g_iTribunalData[type][td_Suspect], AUTH_TYPE, szSteamID[2], sizeof(szSteamID[]));
 	
 	if( IsValidClient(g_iTribunalData[type][td_AvocatPlaignant]) ) {
-		GetClientAuthId(g_iTribunalData[type][td_AvocatPlaignant], AuthId_Engine, szSteamID[3], sizeof(szSteamID[]));
+		GetClientAuthId(g_iTribunalData[type][td_AvocatPlaignant], AUTH_TYPE, szSteamID[3], sizeof(szSteamID[]));
 		//rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatPlaignant], rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_Avocat));
 
 		if(rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_LawyerAudience) < 300) {
@@ -1162,7 +1162,7 @@ void SQL_Insert(int type, int condamne, int condamnation, int heure, int amende)
 		}
 	}
 	if( IsValidClient(g_iTribunalData[type][td_AvocatSuspect]) ) {
-		GetClientAuthId(g_iTribunalData[type][td_AvocatSuspect], AuthId_Engine, szSteamID[4], sizeof(szSteamID[]));
+		GetClientAuthId(g_iTribunalData[type][td_AvocatSuspect], AUTH_TYPE, szSteamID[4], sizeof(szSteamID[]));
 		//rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatSuspect], rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_Avocat));
 
 		if(rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_LawyerAudience) < 300) {

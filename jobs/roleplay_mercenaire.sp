@@ -270,8 +270,8 @@ public Action fwdTueurKill(int client, int attacker, float& respawn) {
 				if( gFrom != 0 && gVictim != 0 && gVictim != gFrom ) {
 					char query[1024], szSteamID[32], szSteamID2[32];
 
-					GetClientAuthId(from, AuthId_Engine, szSteamID, sizeof(szSteamID), false);
-					GetClientAuthId(client, AuthId_Engine, szSteamID2, sizeof(szSteamID2), false);
+					GetClientAuthId(from, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
+					GetClientAuthId(client, AUTH_TYPE, szSteamID2, sizeof(szSteamID2), false);
 
 					Format(query, sizeof(query), "INSERT INTO `rp_pvp` (`id`, `group_id`, `steamid`, `steamid2`, `time`, `time2`) VALUES (NULL, '%i', '%s', '%s', '%i', '%i');",
 						gFrom, szSteamID, szSteamID2, 1, 1 );

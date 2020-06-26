@@ -489,7 +489,7 @@ public Action Command_remove(int client,int args ) {
 	GetEntPropString(Ent, Prop_Data, "m_iName", i_targetname, sizeof(i_targetname));
 	
 	char szSteamID[64];
-	GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID));
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	
 	LogToGame("[REMOVED] %L [SKIN] %s [CLASS] %s [ID] %d [PERM-ID] %d [NAME] %s", client, modelname, name, Ent, (Ent-GetMaxClients()), i_targetname);
 	return Plugin_Handled;
@@ -1560,7 +1560,7 @@ public Action Command_saveEvent(int client,int args) {
 		Format(savename, sizeof(savename), "%s %s", savename, tmp);
 	}
 	SQL_EscapeString(db, savename, savename, sizeof(savename));
-	GetClientAuthId(client, AuthId_Engine, steamId, sizeof(steamId));
+	GetClientAuthId(client, AUTH_TYPE, steamId, sizeof(steamId));
 	Format(prequery, sizeof(prequery), "INSERT INTO `rp_shared`.`rp_propsaves`(`name`, `steamid`, `date`) VALUES (\"%s\",\"%s\",NOW())", savename, steamId);
 	SQL_TQuery(db, SQL_SaveEventPre, prequery, client, DBPrio_High);
 	return Plugin_Handled;

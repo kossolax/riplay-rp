@@ -128,7 +128,7 @@ public Action fwdLoaded(int client) {
 		rp_SetClientInt(client, i_AppartCount, rp_GetClientInt(client, i_AppartCount) + 1);
 	
 	char tmp[32], tmp2[32];
-	GetClientAuthId(client, AuthId_Engine, tmp, sizeof(tmp));
+	GetClientAuthId(client, AUTH_TYPE, tmp, sizeof(tmp));
 	rp_GetServerString(mairieID, tmp2, sizeof(tmp2));
 	if( StrEqual(tmp, tmp2) ) {
 		rp_SetClientKeyAppartement(client, 51, true );
@@ -818,7 +818,7 @@ public Action Cmd_BedVilla(int client){
 	rp_SetClientBool(client, b_MaySteal, false);
 	
 	char sql[256];
-	GetClientAuthId(client, AuthId_Engine, sql, sizeof(sql));
+	GetClientAuthId(client, AUTH_TYPE, sql, sizeof(sql));
 	
 	Format(sql, sizeof(sql), "(SELECT `name`, `amount` FROM `rp_bid`B INNER JOIN`rp_users`U ON U.`steamid`=B.`steamid` ORDER BY `amount` DESC LIMIT 3) UNION (SELECT 'Vous', `amount` FROM `rp_bid` C WHERE `steamid` = '%s')", sql);
 	SQL_TQuery(rp_GetDatabase(), SQL_BedVillaMenu, sql, client);
@@ -832,7 +832,7 @@ public void SQL_BedVillaMenu(Handle owner, Handle hQuery, const char[] error, an
 	SetMenuTitle(menu, "Enchère de la Villa:\n jusqu'à dimanche 21 heures\n ");	
 	char nick[65], steamid[65], steamid2[65];
 	rp_GetServerString(villaOwnerID, steamid, sizeof(steamid));
-	GetClientAuthId(client, AuthId_Engine, steamid2, sizeof(steamid2));
+	GetClientAuthId(client, AUTH_TYPE, steamid2, sizeof(steamid2));
 	
 	int max = 0, last = 0;
 	
@@ -888,7 +888,7 @@ public int bedVillaMenu(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 public void SQL_BedVillaMenuKey(Handle owner, Handle hQuery, const char[] error, any client) {
 	char steamid[65], steamid2[65];
 	rp_GetServerString(villaOwnerID, steamid, sizeof(steamid));
-	GetClientAuthId(client, AuthId_Engine, steamid2, sizeof(steamid2));
+	GetClientAuthId(client, AUTH_TYPE, steamid2, sizeof(steamid2));
 	if( !StrEqual(steamid, steamid2) )
 		return;
 	
@@ -931,7 +931,7 @@ public int bedVillaMenu_KEY(Handle p_hItemMenu, MenuAction p_oAction, int client
 			rp_SetClientBool(target, b_HasVilla, true);
 			rp_SetClientKeyAppartement(target, 50, true);
 			rp_SetClientInt(target, i_AppartCount, rp_GetClientInt(target, i_AppartCount) + 1);
-			GetClientAuthId(target, AuthId_Engine, szMenuItem, sizeof(szMenuItem));
+			GetClientAuthId(target, AUTH_TYPE, szMenuItem, sizeof(szMenuItem));
 			
 			Format(szQuery, sizeof(szQuery), "UPDATE `rp_users` SET `hasVilla`='1' WHERE `steamid`='%s'", szMenuItem);
 			SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery, DBPrio_High);
@@ -981,7 +981,7 @@ public int bedVillaMenu_BED(Handle p_hItemMenu, MenuAction p_oAction, int client
 			
 			if( StringToInt(szDayOfWeek) == 0 && StringToInt(szHours) < 21 ) {	// Dimanche avant 21h
 			
-				GetClientAuthId(client, AuthId_Engine, sql, sizeof(sql));
+				GetClientAuthId(client, AUTH_TYPE, sql, sizeof(sql));
 				Format(sql, sizeof(sql), "INSERT INTO `rp_bid` (`steamid`, `amount`) VALUES ('%s', '%d') ON DUPLICATE KEY UPDATE `amount`=`amount`+%d;", sql, amount, amount);
 				SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, sql);
 				rp_ClientMoney(client, i_Money, -amount);
@@ -1030,7 +1030,7 @@ public void SQL_GetAppartWiner(Handle owner, Handle hQuery, const char[] error, 
 				rp_SetClientBool(i, b_HasVilla, false);
 				rp_SetClientKeyAppartement(i, 50, false);
 				
-				GetClientAuthId(i, AuthId_Engine, szSteamID2, sizeof(szSteamID2));
+				GetClientAuthId(i, AUTH_TYPE, szSteamID2, sizeof(szSteamID2));
 				
 				if( StrEqual(szSteamID, szSteamID2) ) {
 					rp_SetClientBool(i, b_HasVilla, true);

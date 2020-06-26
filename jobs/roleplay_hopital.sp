@@ -97,6 +97,15 @@ public Action Cmd_ItemChirurgie(int args) {
 	int vendeur = GetCmdArgInt(3);
 	float time = rp_GetClientInt(vendeur, i_Job) == 13 ? 30.0 : 5.0;
 
+	float vecOrigin[3], vecOrigin2[3];
+	GetClientEyePosition(client, vecOrigin);
+	GetClientEyePosition(vendeur, vecOrigin2);
+	
+	vecOrigin[2] -= 20.0; vecOrigin2[2] -= 20.0;
+
+	TE_SetupBeamPoints(vecOrigin, vecOrigin2, g_cBeam, 0, 0, 0, time, 20.0, 20.0, 0, 0.0, {250, 50, 20, 250}, 20);
+	TE_SendToAll(0.1);
+
 	CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N vous fait une opération chirurgicale.", vendeur);
 	CPrintToChat(vendeur, "{lightblue}[TSX-RP]{default} Vous commencez à opérer %N.", client);
 	
@@ -110,16 +119,6 @@ public Action Cmd_ItemChirurgie(int args) {
 	
 	ServerCommand("sm_effect_panel %d %f \"Chirurgie en cours...\"", client, time);
 	ServerCommand("sm_effect_panel %d %f \"Chirurgie en cours...\"", vendeur, time);
-	
-	float vecOrigin[3], vecOrigin2[3];
-	GetClientEyePosition(client, vecOrigin);
-	GetClientEyePosition(vendeur, vecOrigin2);
-	
-	vecOrigin[2] -= 20.0; vecOrigin2[2] -= 20.0;
-	
-	time += 4.0;
-	TE_SetupBeamPoints(vecOrigin, vecOrigin2, g_cBeam, 0, 0, 0, time, 20.0, 20.0, 0, 0.0, {250, 50, 20, 250}, 20);
-	TE_SendToAll(0.1);
 	
 	rp_Effect_Particle(client, "blood_pool");
 	

@@ -12,7 +12,7 @@ stock void RP_ShowMOTD(int client, char url[1024]) {
 	QueryClientConVar(client, "cl_disablehtmlmotd", view_as<ConVarQueryFinished>(MOTD_ClientConVar), client);
 	
 	char tmp[128], szSteamID[32];
-	GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID));
+	GetClientAuthId(client, AuthId_SteamID64, szSteamID, sizeof(szSteamID));
 	Format(tmp, sizeof(tmp), URL_PATH, szSteamID);
 	
 	Handle req = SteamWorks_CreateHTTPRequest(k_EHTTPMethodPOST, tmp);
@@ -25,7 +25,7 @@ stock void RP_ShowMOTD(int client, char url[1024]) {
 public int MOTD_OnSteamWorksHTTPComplete(Handle HTTPRequest, bool fail, bool success, EHTTPStatusCode statusCode, any client) {
 	if (success && statusCode == k_EHTTPStatusCode200OK )  { 
 		char tmp[128], szSteamID[32];
-		GetClientAuthId(client, AuthId_Engine, szSteamID, sizeof(szSteamID));
+		GetClientAuthId(client, AuthId_SteamID64, szSteamID, sizeof(szSteamID));
 		Format(tmp, sizeof(tmp), URL_PATH, szSteamID);
 		
 		ShowMOTDPanel(client, "MOTD", tmp, MOTDPANEL_TYPE_URL);
