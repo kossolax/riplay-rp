@@ -693,6 +693,7 @@ public int MenuSelectJob(Handle menu, MenuAction action, int client, int param2)
 			
 			rp_SetClientInt(client, i_Job, job);
 			rp_SetClientInt(client, i_JetonRouge, (job - (job % 10))+1);
+			ServerCommand("sm_force_discord_group %N", client);
 			
 			rp_GetJobData(job, job_type_name, options, sizeof(options));
 			LogToGame("[TSX-RP] [TUTORIAL] %L a terminé son tutoriel. Il a choisi %s comme job.", client, options);

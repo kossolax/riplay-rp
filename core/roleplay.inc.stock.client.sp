@@ -636,9 +636,11 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 			if( client == invoker ) {
 				Format(szMessage, sizeof(szMessage), "%s démissioné de votre job", szMessage);
 				g_bUserData[client][b_LicenseSell] = false;
+				ServerCommand("sm_force_discord_group %N", client);
 			}
 			else {
 				Format(szMessage, sizeof(szMessage), "%s été viré de votre job", szMessage);
+				ServerCommand("sm_force_discord_group %N", client);
 			}			
 			
 			if( origin[client] > 0 && IsBoss(origin[client]) ) {
