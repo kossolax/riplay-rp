@@ -78,7 +78,7 @@ public bool OnWebRequest(WebConnection connection, const char[] method, const ch
 			if( !IsClientInGame(i) )
 				continue;
 			
-			GetClientAuthId(i, AuthId_Engine, steamID, sizeof(steamID));
+			GetClientAuthId(i, AUTH_TYPE, steamID, sizeof(steamID));
 			if( StrEqual(steamID, arg) ) {
 				found = true;
 				break;
@@ -104,7 +104,7 @@ public bool OnWebRequest(WebConnection connection, const char[] method, const ch
 			if( !IsClientInGame(i) )
 				continue;
 			
-			GetClientAuthId(i, AuthId_Engine, arg, sizeof(arg));
+			GetClientAuthId(i, AUTH_TYPE, arg, sizeof(arg));
 			if( StrEqual(options[2], arg) ) {
 				CPrintToChatAll("{lightblue}[TSX-RP]{default} Un joueur vient de report %N pour %s.", i, options[3]);
 				found = true;
@@ -131,7 +131,7 @@ public bool OnWebRequest(WebConnection connection, const char[] method, const ch
 			if( !IsClientInGame(i) )
 				continue;
 			
-			GetClientAuthId(i, AuthId_Engine, arg, sizeof(arg));
+			GetClientAuthId(i, AUTH_TYPE, arg, sizeof(arg));
 			if( StrEqual(options[2], arg) ) {
 				CPrintToChat(i, "{lightblue}[TSX-RP]{default} %s.", i, options[3]);
 				found = true;
