@@ -102,10 +102,12 @@ public Action Cmd_ItemChirurgie(int args) {
 	GetClientEyePosition(vendeur, vecOrigin2);
 	
 	vecOrigin[2] -= 20.0; vecOrigin2[2] -= 20.0;
-
-	TE_SetupBeamPoints(vecOrigin, vecOrigin2, g_cBeam, 0, 0, 0, time, 20.0, 20.0, 0, 0.0, {250, 50, 20, 250}, 20);
-	TE_SendToAll(0.1);
-
+	
+	for (float i = 0.0; i < time; i+= 5.0) {
+		TE_SetupBeamPoints(vecOrigin, vecOrigin2, g_cBeam, 0, 0, 0, 5.1, 20.0, 20.0, 0, 0.0, {250, 50, 20, 250}, 20);
+		TE_SendToAll(i);
+	}
+	
 	CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N vous fait une opération chirurgicale.", vendeur);
 	CPrintToChat(vendeur, "{lightblue}[TSX-RP]{default} Vous commencez à opérer %N.", client);
 	
@@ -115,7 +117,7 @@ public Action Cmd_ItemChirurgie(int args) {
 	rp_SetClientFloat(client, fl_TazerTime, GetGameTime() + time);
 	rp_SetClientFloat(vendeur, fl_TazerTime, GetGameTime() + time);
 	
-	g_iSuccess_last_faster_dead[client] = GetTime() - 5;
+	g_iSuccess_last_faster_dead[client] = GetTime() - RoundToCeil(time);
 	
 	ServerCommand("sm_effect_panel %d %f \"Chirurgie en cours...\"", client, time);
 	ServerCommand("sm_effect_panel %d %f \"Chirurgie en cours...\"", vendeur, time);
