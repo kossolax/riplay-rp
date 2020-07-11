@@ -152,8 +152,7 @@ public Action Command_Say(int client, int args) {
 		int hud = GetEntProp(client, Prop_Send, "m_iHideHUD");
 
 		if( val == 1 ) {
-			FakeClientCommand(client, "use weapon_knife");
-			FakeClientCommand(client, "use weapon_knifegg");
+			FakeClientCommand(client, "use weapon_fists");
 			
 			SetEntProp(client, Prop_Send, "m_bDrawViewmodel", 0);
 			SendConVarValue(client, FindConVar("sv_max_allowed_net_graph"), "0");

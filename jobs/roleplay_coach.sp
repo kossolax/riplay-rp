@@ -521,7 +521,7 @@ public Action Cmd_ItemRiotShield(int args) {
 	SetVariantString("!activator");
 	AcceptEntityInput(ent, "SetParent", client, client);
 	
-	FakeClientCommand(client, "use weapon_knife");
+	FakeClientCommand(client, "use weapon_fists");
 	FakeClientCommand(client, "use weapon_bayonet");
 	
 	SetVariantString("weapon_hand_L");

@@ -10,14 +10,12 @@
 #endif
 
 public Action Strip_Weapon(Handle timer, any client) {
-	StripWeaponsButKnife(client);
+	StripWeapons(client);
 }
-void StripWeaponsButKnife(int client ){
+void StripWeapons(int client ){
 	int wepIdx;
 	
 	for( int i = 0; i < 5; i++ ){
-		if( i == CS_SLOT_KNIFE ) continue; 
-		if( i == CS_SLOT_C4 ) continue;
 		
 		while( ( wepIdx = GetPlayerWeaponSlot( client, i ) ) != -1 ) {
 			RemovePlayerItem( client, wepIdx );
@@ -25,9 +23,11 @@ void StripWeaponsButKnife(int client ){
 		}
 	}
 	
-	Client_RemoveWeapon(client, "weapon_taser");	
-	FakeClientCommand(client, "use weapon_knife");
-	FakeClientCommand(client, "use weapon_knifegg");	
+	Client_RemoveWeapon(client, "weapon_taser");
+	
+	int tmp = GivePlayerItem(client, "weapon_fists");
+	EquipPlayerWeapon(client, tmp);
+	FakeClientCommand(client, "use weapon_fists");
 }
 void RedrawWeapon(int target) {
 	char weapon[64];

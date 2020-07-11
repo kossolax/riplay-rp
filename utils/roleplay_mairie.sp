@@ -548,12 +548,12 @@ void Draw_Mairie_Questionnaire(int client, int step, int qid) {
 		Format(query, sizeof(query), "SELECT R.`idQuestion`, CONVERT(CONVERT(CONVERT(`question` USING latin1) USING binary) USING UTF8), CONVERT(CONVERT(CONVERT(`reponse` USING latin1) USING binary) USING UTF8), `estVraie` FROM ");
 		
 		if( qid == 0 ) {
-			Format(query, sizeof(query), "%s ( SELECT R.`idQuestion` FROM `ts-x`.`site_nopyj_reponses` R INNER JOIN `ts-x`.`site_nopyj_question` Q ON Q.`id`=R.`idQuestion` WHERE `categorie`=1 GROUP BY `idQuestion` ORDER BY RAND() LIMIT 1) AS A", query);
+			Format(query, sizeof(query), "%s ( SELECT R.`idQuestion` FROM `rp_shared`.`site_nopyj_reponses` R INNER JOIN `rp_shared`.`site_nopyj_question` Q ON Q.`id`=R.`idQuestion` WHERE `categorie`=1 GROUP BY `idQuestion` ORDER BY RAND() LIMIT 1) AS A", query);
 		}
 		else {
 			Format(query, sizeof(query), "%s ( SELECT '%d' as `idQuestion` ) AS A", query, g_iMairieQuestionID[client]);
 		}
-		Format(query, sizeof(query), "%s INNER JOIN `ts-x`.`site_nopyj_reponses` R ON A.`idQuestion`=R.`idQuestion` INNER JOIN `ts-x`.`site_nopyj_question` Q ON Q.`id`=R.`idQuestion`", query);
+		Format(query, sizeof(query), "%s INNER JOIN `rp_shared`.`site_nopyj_reponses` R ON A.`idQuestion`=R.`idQuestion` INNER JOIN `rp_shared`.`site_nopyj_question` Q ON Q.`id`=R.`idQuestion`", query);
 		Format(query, sizeof(query), "%s WHERE LENGTH(`reponse`)>1 ORDER BY RAND()", query);
 		
 		SQL_TQuery(rp_GetDatabase(), QUERY_MairieQuestionnaire, query, client + step*1000);

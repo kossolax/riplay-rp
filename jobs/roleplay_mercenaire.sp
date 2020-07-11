@@ -570,7 +570,7 @@ void RestoreAssassinNormal(int client) {
 			}
 		}
 		
-		FakeClientCommand(client, "use weapon_knife");
+		FakeClientCommand(client, "use weapon_fists");
 	}
 	if( g_iKillerPoint[client][competance_vitesse] ) {
 		rp_UnhookEvent(client, RP_PrePlayerPhysic, fwdSpeed);

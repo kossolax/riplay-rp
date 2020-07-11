@@ -88,8 +88,16 @@ public void OnPostThink(int client) {
 }
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon) {
 	static int lastButtons[MAXPLAYERS + 1];
+	bool changed = false;
 	
-
+	if (buttons & IN_ATTACK2) {
+		
+		if( g_bUserData[client][b_WeaponIsHands] ) {
+			buttons &= ~IN_ATTACK2;
+			changed = true;
+		}	
+	}
+	
 	if( g_bUserData[client][b_KeyReverse] ) {
 
 		if( Math_GetRandomInt(0, 200) == 17 ) {
@@ -113,6 +121,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	if( g_bUserData[client][b_ForceExit] ) {
 		buttons |= IN_USE;
 		g_bUserData[client][b_ForceExit] = false;
+		changed = true;
 	}
 
 	if( g_bUserData[client][b_Invisible] ) {
@@ -139,6 +148,6 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			return Plugin_Handled;
 		}
 	}
-	return Plugin_Continue;
+	return changed ? Plugin_Changed : Plugin_Continue;
 }
 

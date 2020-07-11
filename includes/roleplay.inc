@@ -472,7 +472,7 @@ native void rp_ClientDamage(int client, int damage, int attacker, char[] weapon 
 native void rp_ClientColorize(int client, int color[4]={-1,-1,-1,-1});					/* Colorie un joueur. Si 2ème param pas défini la couleur sera soit normal, soit couleur de PvP */
 native void rp_ClientSendToSpawn(int client, bool nearest = false);					/* Téléporte un joueur à un spawn aléatoire. Si "nearest" est vrai. Il s'agit du spawn le plus prêt d'ou le joueur se trouve */
 native void rp_ClientResetSkin(int client);									/* Remet le skin classique d'un joueur */
-native void rp_ClientGiveKnife(int client);									/* Retire, et remet le couteau d'un joueur. Utile pour rafraichir son écran, ou quand il sort d'une voiture... */
+native void rp_ClientGiveHands(int client);									/* Retire, et remet le couteau d'un joueur. Utile pour rafraichir son écran, ou quand il sort d'une voiture... */
 native void rp_ClientReveal(int client);										/* Si le joueur est invisible, le rend visible */
 native void rp_ClientDrawWeaponMenu(int client, int ent, bool steal);					/* Affiche le menu de selection d'arme. Pour police, justice, ou crochetage mafia */
 native void rp_ClientGetName(int client, char[] name, int length);
@@ -672,6 +672,7 @@ enum bool_user_data {
 	ch_Heal,
 	ch_Kevlar,
 	ch_Yeux,
+	b_WeaponIsHands,
 	b_WeaponIsKnife,
 	b_GameModePassive,
 	b_IsFirstSpawn,

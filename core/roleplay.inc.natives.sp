@@ -126,7 +126,7 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 	CreateNative("rp_ClientVehicleExit", Native_rp_ClientVehicleExit);
 	CreateNative("rp_ClientVehiclePassagerExit", Native_rp_ClientVehiclePassagerExit);
 	
-	CreateNative("rp_ClientGiveKnife", Native_rp_ClientGiveKnife);
+	CreateNative("rp_ClientGiveHands", Native_rp_ClientGiveHands);
 	CreateNative("rp_SetClientVehicle", Native_rp_SetClientVehicle);
 	
 	CreateNative("rp_GetWeaponStorage", Native_rp_GetWeaponStorage);
@@ -535,14 +535,14 @@ public int Native_rp_ClientAgroIncrement(Handle plugin, int numParams) {
 		
 		KillStack_Add(target, client);		
 		
-		g_iKillLegitime[target][client] = time + 10;
-		g_iAggroTimer[client][target] = time + 20;
+		g_iKillLegitime[target][client] = time + LEGIT_KILL_TIME;
+		g_iAggroTimer[client][target] = time + LEGIT_KILL_TIME*2;
 	}
 	
 		
 	// Retirer les dégâts envoyés après 10 sec.
 	Handle dp;
-	CreateDataTimer(10.0, ClientAgroDecrement, dp, TIMER_DATA_HNDL_CLOSE);
+	CreateDataTimer(float(LEGIT_KILL_TIME), ClientAgroDecrement, dp, TIMER_DATA_HNDL_CLOSE);
 	WritePackCell(dp, client);
 	WritePackCell(dp, target);
 	WritePackCell(dp, damage);
@@ -876,17 +876,16 @@ public int Native_rp_ClientVehiclePassagerExit(Handle plugin, int numParams) {
 public int Native_rp_SetClientVehicle(Handle plugin, int numParams) {
 	rp__SetClientVehicle(GetNativeCell(1), GetNativeCell(2), GetNativeCell(3));
 }
-public int Native_rp_ClientGiveKnife(Handle plugin, int numParams) {
+public int Native_rp_ClientGiveHands(Handle plugin, int numParams) {
 	int client = GetNativeCell(1);
 	bool zeus = view_as<bool>(Client_HasWeapon(client, "weapon_taser"));
 	
-	Client_RemoveWeapon(client, "weapon_knife");
-	Client_RemoveWeapon(client, "weapon_knifegg");
+	Client_RemoveWeapon(client, "weapon_fists");
 	Client_RemoveWeapon(client, "weapon_taser");
 	
-	GivePlayerItem(client, "weapon_knife");
-	FakeClientCommand(client, "use weapon_knife");
-	FakeClientCommand(client, "use weapon_knifegg");
+	int tmp = GivePlayerItem(client, "weapon_fists");
+	EquipPlayerWeapon(client, tmp);
+	FakeClientCommand(client, "use weapon_fists");
 	
 	if( zeus )
 		GivePlayerItem(client, "weapon_taser");
@@ -947,7 +946,7 @@ public int Native_rp_SetClientVehiclePassager(Handle plugin, int numParams ) {
 		Entity_SetModel(client, "models/player/custom_player/legacy/tm_phoenix.mdl");
 	}
 	
-	rp_ClientGiveKnife(client);
+	rp_ClientGiveHands(client);
 	
 	SetVariantString("!activator");
 	AcceptEntityInput(ent, "SetParent", car, car);

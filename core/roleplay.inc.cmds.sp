@@ -326,7 +326,10 @@ public Action cmd_GiveWeaponEvent(int client, int args) {
 		if( GetZoneBit( GetPlayerZone(target) ) & BITZONE_EVENT) {
 			int analyse = 3;
 			int wepId = GivePlayerItem(target, Arg2);
-			EquipPlayerWeapon(target, wepId);
+			
+			if( !StrEqual(Arg2, "weapon_hegrenade") )
+				EquipPlayerWeapon(target, wepId);
+			
 			CPrintToChat(target, "{lightblue}[TSX-RP]{default}Vous avez reçu une arme pour l'event.");
 			CreateTimer(0.1, Timer_CheckWeapon, wepId, TIMER_REPEAT);
 			

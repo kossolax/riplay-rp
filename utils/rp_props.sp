@@ -1362,7 +1362,7 @@ public Action Block_STRIP(int index, int client) {
 			}
 		}
 		
-		rp_ClientGiveKnife(client);
+		rp_ClientGiveHands(client);
 	}
 }
 public Action Block_IGNITE(int index, int client) {
@@ -2021,5 +2021,5 @@ void StripWeapons(int client ) {
 		}
 	}
 	
-	FakeClientCommand(client, "use weapon_knife");
+	FakeClientCommand(client, "use weapon_fists");
 }

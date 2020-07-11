@@ -79,13 +79,12 @@ public Action OnWeaponSwitch(int Client, int weapon) {
 	GetEdictClassname(weapon, szWeapon, sizeof(szWeapon));
 	
 	g_bUserData[Client][b_WeaponIsKnife] = (StrContains(szWeapon, "weapon_knife") == 0 || StrContains(szWeapon, "weapon_bayonet") == 0);
+	g_bUserData[Client][b_WeaponIsHands] = (StrContains(szWeapon, "weapon_fists") == 0);
 	
 	if( g_flUserData[Client][fl_TazerTime] > GetTickedTime() || Client_GetVehicle(Client) > 0 ) {
 		
-		
-		if( !g_bUserData[Client][b_WeaponIsKnife]  ) {
-			FakeClientCommand(Client, "use weapon_knife");
-			FakeClientCommand(Client, "use weapon_knifegg");
+		if( !g_bUserData[Client][b_WeaponIsHands]  ) {
+			FakeClientCommand(Client, "use weapon_fists");
 			return Plugin_Handled;
 		}
 	}
@@ -303,7 +302,7 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	if( test )	LogToGame("[CRASH-TEST] 4");
 	GetClientEyeAngles(Client, g_Position[Client]);
 	Client_SetMoney(Client, 0);
-	FakeClientCommand(Client, "use weapon_knife");
+	FakeClientCommand(Client, "use weapon_fists");
 	g_bUserData[Client][b_WeaponIsKnife] = true;
 	if( test )	LogToGame("[CRASH-TEST] 5");
 	if( g_iUserData[Client][i_ThirdPerson] == 1 )
@@ -354,7 +353,7 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 		FakeClientCommand(Client, "say /shownotes");
 	}
 	if( test )	LogToGame("[CRASH-TEST] 11");
-	StripWeaponsButKnife(Client);
+	StripWeapons(Client);
 	
 	if( IsInPVP(Client) )
 		GroupColor(Client);

@@ -473,7 +473,7 @@ public Action EMPExplode_Task(Handle timer, any ent) {
 						kev = 0;
 					
 					rp_SetClientInt(i, i_Kevlar, kev);
-					FakeClientCommand(i, "use weapon_knife; use weapon_knifegg"); 
+					FakeClientCommand(i, "use weapon_fists"); 
 					rp_SetClientFloat(i, fl_TazerTime, GetGameTime() + 0.5);
 				}
 				else {

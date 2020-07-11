@@ -366,7 +366,7 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 				if( wep <= 0 ) 
 					return;
 				GetEdictClassname(wep, classname, sizeof(classname));
-				if( StrContains(classname, "weapon_knife") == 0 || StrContains(classname, "weapon_bayonet") == 0 )
+				if( StrContains(classname, "weapon_fists") == 0 )
 					return;
 				
 				if( !g_iCustomBank[target] )
@@ -388,8 +388,8 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 				if( success ) {
 					RemovePlayerItem(client, wep);
 					RemoveEdict(wep);
-					FakeClientCommand(client, "use weapon_knife");
-					FakeClientCommand(client, "use weapon_knifegg");
+					FakeClientCommand(client, "use weapon_fists");
+					FakeClientCommand(client, "use weapon_fistsgg");
 				}
 			}
 			else if( StrEqual( options, "weaponGet") ) {
@@ -630,7 +630,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 						RemovePlayerItem(client, id );
 						RemoveEdict( id );
 						
-						FakeClientCommand(client, "use weapon_knife");
+						FakeClientCommand(client, "use weapon_fists");
 						
 						g_iUserData[client][i_Disposed]--;
 						

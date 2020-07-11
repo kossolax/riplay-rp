@@ -65,7 +65,7 @@ void rp__SetClientVehicle(int client, int vehicleID, bool force=false) {
 	
 	if( force ) { }
 	
-	rp_ClientGiveKnife(client);
+	rp_ClientGiveHands(client);
 	
 	SetEntProp(vehicleID, Prop_Data, "m_bLocked", 0);
 	AcceptEntityInput(vehicleID, "Use", client);
@@ -131,7 +131,7 @@ void ExitVehicle(int client, int vehicleID, bool forced=false) {
 	SetEntPropFloat(client, Prop_Send, "m_flModelScale", g_flUserData[client][fl_Size] );
 	CreateTimer(0.001, BashFirstPerson, client);
 	
-	rp_ClientGiveKnife(client);
+	rp_ClientGiveHands(client);
 	AcceptEntityInput(vehicleID, "Lock");
 	AcceptEntityInput(vehicleID, "TurnOff");
 	

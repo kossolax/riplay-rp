@@ -33,6 +33,7 @@
 #define MAIRIE_ZONE				259
 #define MAIRIE_BUR_ZONE			308
 #define MAIRIE_POS				{522.0, 2002.0, -2135.0}
+#define	LEGIT_KILL_TIME			15
 
 // DO NOT EDIT BELLOW.
 #define WORLDINDEX				0				

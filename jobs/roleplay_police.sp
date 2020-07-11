@@ -558,8 +558,7 @@ public Action Cmd_Tazer(int client) {
 		rp_SetClientFloat(target, fl_TazerTime, GetTickedTime() + 9.0);
 		rp_SetClientFloat(target, fl_FrozenTime, GetGameTime() + 7.5);
 		
-		FakeClientCommand(target, "use weapon_knife");
-		FakeClientCommand(target, "use weapon_knifegg");
+		FakeClientCommand(target, "use weapon_fists");
 		
 		
 		CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez été tazé par %N", client);
@@ -1755,7 +1754,7 @@ void StripWeapons(int client) {
 		}
 	}
 	
-	FakeClientCommand(client, "use weapon_knife");
+	FakeClientCommand(client, "use weapon_fists");
 }
 
 public Action fwdOnPlayerUse(int client) {

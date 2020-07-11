@@ -136,6 +136,11 @@ void OnGameFrame_01(float time) {
 				speed += 0.1;
 		}
 		
+		if( g_bUserData[Client][b_GameModePassive] == true && g_iUserData[Client][i_Job] >= 1 && g_iUserData[Client][i_Job] <= 8 ) {
+			g_bUserData[Client][b_GameModePassive] = false;
+			CPrintToChat(Client, "{lightblue}[TSX-RP]{default} Le mode de jeu passif a été désactivé.");
+		}
+		
 		if( !(rp_GetZoneBit( rp_GetPlayerZone(Client) ) & BITZONE_PVP) && !(rp_GetZoneBit( rp_GetPlayerZone(Client) ) & BITZONE_EVENT)	) {
 			if( !g_bUserData[Client][b_GameModePassive] && rp_GetClientJobID(Client) == 41 && g_iUserData[Client][i_ToKill] > 0 )
 				speed += 0.25;
@@ -630,12 +635,13 @@ void OnGameFrame_10(float time) {
 				
 				int wepid = GetPlayerWeaponSlot( i, 2 );
 				if( !IsValidEdict(wepid) && !IsValidEntity(wepid) ) {
-					GivePlayerItem(i, "weapon_knife");
+					int tmp = GivePlayerItem(i, "weapon_fists");
+					EquipPlayerWeapon(i, tmp);
 				}
 				
 				wepid = GetEntPropEnt(i, Prop_Send, "m_hActiveWeapon");
 				if( !IsValidEdict(wepid) && !IsValidEntity(wepid) ) {
-					FakeClientCommand(i, "use weapon_knife");
+					FakeClientCommand(i, "use weapon_fists");
 				}
 				#if defined EVENT_HALLOWEEN
 				if( g_iZombified[Client] == 1 ) {

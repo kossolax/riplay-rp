@@ -87,10 +87,14 @@ void LoadServerDatabase() {
 			SQL_FetchString(hQuery, 10, g_szVillaOwner[annonceID], sizeof(g_szVillaOwner[]));
 			
 			char path[256];
-			Format(path, sizeof(path), "materials/deadlydesire/annonces/%s.vmt", g_szVillaOwner[annonceID]);
-			AddFileToDownloadsTable(path);
-			Format(path, sizeof(path), "materials/deadlydesire/annonces/%s.vtf", g_szVillaOwner[annonceID]);
-			AddFileToDownloadsTable(path);
+			Format(path, sizeof(path), "materials/DeadlyDesire/annonces/%s.vmt", g_szVillaOwner[annonceID]);
+			
+			if( FileExists(path) )
+				AddFileToDownloadsTable(path);
+			Format(path, sizeof(path), "materials/DeadlyDesire/annonces/%s.vtf", g_szVillaOwner[annonceID]);
+			
+			if( FileExists(path) )
+				AddFileToDownloadsTable(path);
 			
 			
 			if( !SQL_IsFieldNull(hQuery, 11) )
@@ -333,12 +337,19 @@ void LoadServerDatabase() {
 		
 		if( strlen(g_szGroupList[id][group_type_tag]) > 4 ) {
 			char path[256];
-			Format(path, sizeof(path), "materials/deadlydesire/groups/princeton/%s_small.vmt", g_szGroupList[id][group_type_tag]);
-			AddFileToDownloadsTable(path);
-			Format(path, sizeof(path), "materials/deadlydesire/groups/princeton/%s.vmt", g_szGroupList[id][group_type_tag]);
-			AddFileToDownloadsTable(path);
-			Format(path, sizeof(path), "materials/deadlydesire/groups/princeton/%s.vtf", g_szGroupList[id][group_type_tag]);
-			AddFileToDownloadsTable(path);
+			
+			Format(path, sizeof(path), "materials/DeadlyDesire/groups/princeton/%s_small.vmt", g_szGroupList[id][group_type_tag]);
+			if( FileExists(path) )
+				AddFileToDownloadsTable(path);
+			
+			Format(path, sizeof(path), "materials/DeadlyDesire/groups/princeton/%s.vmt", g_szGroupList[id][group_type_tag]);
+			if( FileExists(path) )
+				AddFileToDownloadsTable(path);
+			
+			
+			Format(path, sizeof(path), "materials/DeadlyDesire/groups/princeton/%s.vtf", g_szGroupList[id][group_type_tag]);
+			if( FileExists(path) )
+				AddFileToDownloadsTable(path);
 		}
 	}
 	i = 0;

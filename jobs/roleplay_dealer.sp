@@ -1381,7 +1381,7 @@ public Action ItemPickLockOver_18th(Handle timer, Handle dp) {
 	g_iWeaponStolen[wepid] = GetTime();
 	//g_iSuccess_last_pas_vu_pas_pris[target] = GetTime();
 	
-	FakeClientCommand(target, "use weapon_knife");
+	FakeClientCommand(target, "use weapon_fists");
 	
 	return Plugin_Handled;
 }
