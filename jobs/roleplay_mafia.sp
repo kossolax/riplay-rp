@@ -369,7 +369,6 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 			flowtime = 20;
 		}
 
-		PrintToChat(client, "flowtime : %i", flowtime);
 		rp_SetClientInt(client, i_LastVolCashFlowTime, flowtime);
 
 		if(amount >= 25) {
