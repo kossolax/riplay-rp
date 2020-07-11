@@ -97,15 +97,12 @@ public Action Cmd_ItemChirurgie(int args) {
 	int vendeur = GetCmdArgInt(3);
 	float time = rp_GetClientInt(vendeur, i_Job) == 13 ? 30.0 : 5.0;
 
-	float vecOrigin[3], vecOrigin2[3];
-	GetClientEyePosition(client, vecOrigin);
-	GetClientEyePosition(vendeur, vecOrigin2);
-	
-	vecOrigin[2] -= 20.0; vecOrigin2[2] -= 20.0;
-	
+
 	for (float i = 0.0; i < time; i+= 5.0) {
-		TE_SetupBeamPoints(vecOrigin, vecOrigin2, g_cBeam, 0, 0, 0, 5.1, 20.0, 20.0, 0, 0.0, {250, 50, 20, 250}, 20);
-		TE_SendToAll(i);
+		Handle dp = CreateDataPack();
+		CreateDataTimer(i, ChiruEffect, dp);
+		WritePackCell(dp, client);
+		WritePackCell(dp, vendeur);
 	}
 	
 	CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N vous fait une opération chirurgicale.", vendeur);
@@ -152,6 +149,23 @@ public Action Cmd_ItemChirurgie(int args) {
 		
 		rp_SetClientBool(client, ch_Heal, true);
 	}
+	
+	return Plugin_Handled;
+}
+public Action ChiruEffect(Handle timer, Handle dp) {
+	ResetPack(dp);
+	int client = ReadPackCell(dp);
+	int vendeur = ReadPackCell(dp);
+	
+	float vecOrigin[3], vecOrigin2[3];
+	GetClientEyePosition(client, vecOrigin);
+	GetClientEyePosition(vendeur, vecOrigin2);
+	
+	vecOrigin[2] -= 20.0; vecOrigin2[2] -= 20.0;
+	
+	
+	TE_SetupBeamPoints(vecOrigin, vecOrigin2, g_cBeam, 0, 0, 0, 5.001, 20.0, 20.0, 0, 0.0, {250, 50, 20, 250}, 20);
+	TE_SendToAll();
 	
 	return Plugin_Handled;
 }
