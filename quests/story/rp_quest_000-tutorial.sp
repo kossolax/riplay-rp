@@ -758,7 +758,7 @@ public void SQL_OpenHelpMenu(Handle owner, Handle hQuery, const char[] error, an
 		
 		
 		if( id == parent )
-			menu.SetTitle("%s\n--------------------\n <", txt);
+			menu.SetTitle("%s\n--------------------\n", txt);
 		else {
 			Format(tmp, sizeof(tmp), "%d %d", id, go);
 			
