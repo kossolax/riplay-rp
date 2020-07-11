@@ -60,6 +60,8 @@ public void OnClientPostAdminCheck(int Client) {
 		else {
 			g_iSuccess_last_1st[Client] = 0;
 		}
+
+		ServerCommand("sm_force_discord_group %N", Client);
 	}
 }
 public void OnClientDisconnect(int Client) {
