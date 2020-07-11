@@ -103,7 +103,7 @@ void TE_SetupParticle(const char[] name, int entity, char[] attachment) {
 	TE_WriteNum("entindex", entity);
 	TE_WriteNum("m_fFlags", (1<<0));
 	TE_WriteNum("m_nDamageType", 4);
-	TE_WriteNum("m_iEffectName", 31);
+	TE_WriteNum("m_iEffectName", 5);
 }
 void EffectPissing(int Client) {
 	static float ang[3], pos[3], ppos[3], aang[3], end[3];

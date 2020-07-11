@@ -340,19 +340,14 @@ public Action:Cmd_SetMask(client, args) {
 	return Plugin_Handled;
 }
 
-public Action:Hook(const String:te_name[], const Players[], numClients, Float:delay) {
+public Action Hook(const char[] te_name, const int[] Players, int numClients, float delay) {
 	new data = TE_ReadNum("m_iEffectName");
 	new num = TE_ReadNum("m_nHitBox");
 	new ent = TE_ReadNum("entindex");
-	
-	//if(data != 5)
-		//PrintToChatAll("data = %i, and data must be 31, good ? :o", data);
 
-	if( data == 31 && (IsValidClient(ent) || delay < 0.0) )
+	if( data == 5 && (IsValidClient(ent) || delay < 0.0) ) {
 		return Plugin_Continue;
-	
-	if (data == 31 || (data >= 38 && data <= 43) )
-		return Plugin_Handled;
+	}
 	
 	return Plugin_Continue;
 }
