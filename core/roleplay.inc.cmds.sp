@@ -327,7 +327,7 @@ public Action cmd_GiveWeaponEvent(int client, int args) {
 			int analyse = 3;
 			int wepId = GivePlayerItem(target, Arg2);
 			
-			if( !StrEqual(Arg2, "weapon_hegrenade") )
+			if( Weapon_ShouldBeEquip(Arg2) )
 				EquipPlayerWeapon(target, wepId);
 			
 			CPrintToChat(target, "{lightblue}[TSX-RP]{default}Vous avez reçu une arme pour l'event.");

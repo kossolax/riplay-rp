@@ -1086,7 +1086,6 @@ stock GetClientFrontLocationData( client, float position[3], float angles[3], fl
 	angles[1] = _angles[1];
 	angles[2] = 0.0;
 }
-
 //---------------------------------------------------------
 // calculate the angle between 2 vectors
 // the direction will be used to determine the sign of angle (right hand rule)

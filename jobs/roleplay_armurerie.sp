@@ -63,7 +63,11 @@ public Action Cmd_GiveItem(int args) {
 	
 	
 	int client = GetCmdArgInt(2);
-	GivePlayerItem(client, Arg1);
+	int ent = GivePlayerItem(client, Arg1);
+	
+	if( Weapon_ShouldBeEquip(Arg1) )
+		EquipPlayerWeapon(client, ent);
+	
 	return Plugin_Handled;
 }
 public Action Cmd_GiveItemPvP(int args) {
