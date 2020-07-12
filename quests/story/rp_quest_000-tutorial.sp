@@ -432,7 +432,7 @@ public void Q9_Start(int objectiveID, int client) {
 	
 	g_iDefaultJob[client] = -1;
 	Format(szQuery, sizeof(szQuery), "SELECT `job_id` FROM `rp_users3` WHERE `steamid`='%s';", szSteamID);
-	SQL_TQuery(rp_GetDatabase(), SQL_FindDefaultJob, szQuery);
+	SQL_TQuery(rp_GetDatabase(), SQL_FindDefaultJob, szQuery, client);
 }
 public void SQL_FindDefaultJob(Handle owner, Handle handle, const char[] error, any client) {
 
