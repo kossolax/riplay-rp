@@ -142,7 +142,7 @@ public void Q1_Frame(int objectiveID, int client) {
 	}
 
 	
-	if( GetVectorDistance(target, origin) < 64.0 ) {
+	if( GetVectorDistance(target, origin) < 128.0 ) {
 		rp_QuestStepComplete(client, objectiveID);
 	}
 	else {
@@ -282,7 +282,7 @@ public void Q5_Frame(int objectiveID, int client) {
 	}
 
 
-	if( GetVectorDistance(target, origin) < 64.0 ) {
+	if( GetVectorDistance(target, origin) < 128.0 ) {
 		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu en récompense 1 Desert Eagle.");
 		rp_ClientGiveItem(client, 150);
 		rp_QuestStepComplete(client, objectiveID);
@@ -553,7 +553,7 @@ public void Q10_Frame(int objectiveID, int client) {
 		CreateTimer(1.1, PostKillHandle, panel);
 	}
 	
-	if( GetVectorDistance(target, origin) < 64.0 ) {
+	if( GetVectorDistance(target, origin) < 128.0 ) {
 		rp_QuestStepComplete(client, objectiveID);
 	}
 	else {
@@ -592,7 +592,7 @@ public void Q12_Frame(int objectiveID, int client) {
 		CreateTimer(1.1, PostKillHandle, panel);
 	}
 	
-	if( GetVectorDistance(target, origin) < 64.0 ) {
+	if( GetVectorDistance(target, origin) < 128.0 ) {
 		rp_QuestStepComplete(client, objectiveID);
 	}
 	else {
