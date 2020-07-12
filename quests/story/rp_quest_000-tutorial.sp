@@ -751,6 +751,12 @@ public void Q14_Done(int objectiveID, int client) {
 	rp_SetClientBool(client, b_GameModePassive, true);
 	
 	rp_ClientXPIncrement(client, 5000);
+	
+	char szQuery[1024], szSteamID[64];
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
+
+	Format(szQuery, sizeof(szQuery), "DELETE FROM `rp_users3` WHERE `steamid`='%s';", szSteamID);
+	SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery);
 }
 
 
