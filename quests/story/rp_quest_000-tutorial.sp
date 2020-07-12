@@ -37,6 +37,7 @@ int g_iQuest;
 char qualif[][] =  	{ "Recommandé", "Amusant", "Difficile", "Métier de vente", "Non recommandé"};
 int g_iJob[] =  			{ 16,25, 35, 46, 65, 76, 87, 96, 116, 135, 176, 216, 226 };
 int g_iRecom[MAX_JOBS];
+int g_iDefaultJob[MAXPLAYERS];
 	
 // TODO: Déplacer les récompenses dans les fonctions appropriées
 // TODO: Trié les jobs par sous quota, ou quota "non respecté"
@@ -82,7 +83,7 @@ public void OnAllPluginsLoaded() {
 	rp_QuestAddStep(g_iQuest, i++, QUEST_NULL,	Q10_Frame,	QUEST_NULL,	QUEST_NULL);
 	rp_QuestAddStep(g_iQuest, i++, QUEST_NULL,	Q12_Frame,	QUEST_NULL,	QUEST_NULL);
 	rp_QuestAddStep(g_iQuest, i++, QUEST_NULL,	Q13_Frame,	QUEST_NULL,	QUEST_NULL);
-	rp_QuestAddStep(g_iQuest, i++, QUEST_NULL,	Q14_Frame,	QUEST_NULL,	QUEST_NULL);
+	rp_QuestAddStep(g_iQuest, i++, QUEST_NULL,	Q14_Frame,	QUEST_NULL,	Q14_Done);
 }
 // ----------------------------------------------------------------------------
 public void OnClientPostAdminCheck(int client) {
@@ -425,7 +426,23 @@ public void Q9_Frame(int objectiveID, int client) {
 public void Q9_Start(int objectiveID, int client) {
 	g_iQ9 = objectiveID;
 	rp_HookEvent(client, RP_PrePlayerTalk, OnPlayerTalk);
+	
+	char szQuery[1024], szSteamID[64];
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
+	
+	g_iDefaultJob[client] = -1;
+	Format(szQuery, sizeof(szQuery), "SELECT `job_id` FROM `rp_users3` WHERE `steamid`='%s';", szSteamID);
+	SQL_TQuery(rp_GetDatabase(), SQL_FindDefaultJob, szQuery);
 }
+public void SQL_FindDefaultJob(Handle owner, Handle handle, const char[] error, any client) {
+
+	if( SQL_FetchRow(handle) )
+		g_iDefaultJob[client] = SQL_FetchInt(handle, 0);
+	
+	if(  handle != INVALID_HANDLE )
+		CloseHandle(handle);
+}
+
 public void Q9_Abort(int objectiveID, int client) {
 	rp_UnhookEvent(client, RP_PrePlayerTalk, OnPlayerTalk);
 }
@@ -641,8 +658,12 @@ public int MenuSelectParrain(Handle menu, MenuAction action, int client, int par
 
 public void Q14_Frame(int objectiveID, int client) {
 
-	
-	if( rp_ClientCanDrawPanel(client) ) {
+	if( g_iDefaultJob[client] > 0 ) {
+		int job = g_iDefaultJob[client];
+		rp_SetClientInt(client, i_Job, job);
+		rp_QuestStepComplete(client, g_iQ14);
+	}
+	else if( rp_ClientCanDrawPanel(client) ) {
 		g_iQ14 = objectiveID;
 		
 		Handle menu = CreateMenu(MenuSelectJob);
@@ -691,23 +712,8 @@ public int MenuSelectJob(Handle menu, MenuAction action, int client, int param2)
 		}
 		else if( job > 0 ) {
 			
-			rp_SetClientInt(client, i_Job, job);
-			rp_SetClientInt(client, i_JetonRouge, (job - (job % 10))+1);
-			ServerCommand("sm_force_discord_group %N", client);
-			
-			rp_GetJobData(job, job_type_name, options, sizeof(options));
-			LogToGame("[TSX-RP] [TUTORIAL] %L a terminé son tutoriel. Il a choisi %s comme job.", client, options);
-			FakeClientCommand(client, "say /shownotes");
-			
-			rp_SetClientInt(client, i_Tutorial, 20);
-			rp_ClientGiveItem(client, 223);
+			rp_SetClientInt(client, i_Job, job);			
 			rp_QuestStepComplete(client, g_iQ14);
-			rp_ClientMoney(client, i_Bank, 15000);
-			rp_SetClientBool(client, b_GameModePassive, true);
-			
-			rp_ClientXPIncrement(client, 5000);
-			
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez terminé le tutoriel, une voiture vous a été offerte. (Faites /item !)");
 			
 			for (int i = 1; i <= MaxClients; i++) {
 				if( !IsValidClient(i) )
@@ -726,7 +732,26 @@ public Action PostKillHandle(Handle timer, any data) {
 	if( data != INVALID_HANDLE )
 		CloseHandle(data);
 }
-
+public void Q14_Done(int objectiveID, int client) {
+	
+	char options[128];
+	
+	int job = rp_GetClientInt(client, i_Job);
+	
+	rp_SetClientInt(client, i_JetonRouge, (job - (job % 10))+1);
+	ServerCommand("sm_force_discord_group %N", client);
+	
+	rp_GetJobData(job, job_type_name, options, sizeof(options));
+	LogToGame("[TSX-RP] [TUTORIAL] %L a terminé son tutoriel. Il a choisi %s comme job.", client, options);
+	FakeClientCommand(client, "say /shownotes");
+	
+	rp_SetClientInt(client, i_Tutorial, 20);
+	rp_ClientGiveItem(client, 223);
+	rp_ClientMoney(client, i_Bank, 15000);
+	rp_SetClientBool(client, b_GameModePassive, true);
+	
+	rp_ClientXPIncrement(client, 5000);
+}
 
 
 // ------------------------------------------------------------
