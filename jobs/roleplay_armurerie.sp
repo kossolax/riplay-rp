@@ -55,6 +55,7 @@ public Action Cmd_GiveItem(int args) {
 	
 	char Arg1[64];
 	GetCmdArg(1, Arg1, sizeof(Arg1));
+	int client = GetCmdArgInt(2);
 	int item_id = GetCmdArgInt(args);
 	
 	if( StrEqual(Arg1, "weapon_usp") || StrEqual(Arg1, "weapon_p228") || StrEqual(Arg1, "weapon_m3") || StrEqual(Arg1, "weapon_galil") || StrEqual(Arg1, "weapon_scout") ) {
@@ -72,7 +73,7 @@ public Action Cmd_GiveItem(int args) {
 	}
 	
 	
-	int client = GetCmdArgInt(2);
+	
 	int ent = GivePlayerItem(client, Arg1);
 	
 	if( Weapon_ShouldBeEquip(Arg1) )
