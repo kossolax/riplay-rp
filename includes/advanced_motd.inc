@@ -5,12 +5,10 @@
 
 #include <SteamWorks>
 
-#define URL_PATH "https://www.ts-x.eu/api/redirect/%s"
+#define URL_PATH "https://riplay.fr/api/redirect/%s"
 
 
 stock void RP_ShowMOTD(int client, char url[1024]) {	
-	QueryClientConVar(client, "cl_disablehtmlmotd", view_as<ConVarQueryFinished>(MOTD_ClientConVar), client);
-	
 	char tmp[128], szSteamID[32];
 	GetClientAuthId(client, AuthId_SteamID64, szSteamID, sizeof(szSteamID));
 	Format(tmp, sizeof(tmp), URL_PATH, szSteamID);
@@ -28,13 +26,8 @@ public int MOTD_OnSteamWorksHTTPComplete(Handle HTTPRequest, bool fail, bool suc
 		GetClientAuthId(client, AuthId_SteamID64, szSteamID, sizeof(szSteamID));
 		Format(tmp, sizeof(tmp), URL_PATH, szSteamID);
 		
-		ShowMOTDPanel(client, "MOTD", tmp, MOTDPANEL_TYPE_URL);
+		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Pour afficher cette page, appuyez sur [TAB] puis sur le bouton [SITE-WEB] en bas à gauche du tableau des scores.");
 	}
 	
 	delete HTTPRequest;
-}
-public void MOTD_ClientConVar(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue) {
-	if (StrEqual(cvarValue, "0") == false) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Des problèmes d'affichage ? Entrez cl_disablehtmlmotd 0 dans votre console puis relancez CS:GO.");
-	}
 }
