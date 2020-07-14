@@ -575,13 +575,13 @@ public void Q12_Frame(int objectiveID, int client) {
 		DrawPanelText(panel, "partir sur de bonnes bases.");
 		DrawPanelText(panel, " ");
 		DrawPanelText(panel, "- Nous sommes sur CSGO, pas sur ARMA ni GMOD.");
-		DrawPanelText(panel, "Il y a donc BEAUCOUP de meurtre en ville, armez vous.");
+		DrawPanelText(panel, "Il y a des meurtres en ville, armez vous.");
 		DrawPanelText(panel, "- Seul les policiers et les juges sont là pour");
 		DrawPanelText(panel, "sanctionner les meurtres. CACHEZ-VOUS.");
 		DrawPanelText(panel, " ");
 		DrawPanelText(panel, "- Trouvez vous un job");
 		DrawPanelText(panel, "- Décrochez le rang no-pyj");
-		DrawPanelText(panel, "- Faites un tour sur notre TeamSpeak");
+		DrawPanelText(panel, "- Faites un tour sur notre Discord");
 		DrawPanelText(panel, " ");
 		DrawPanelText(panel, " Bon jeu!");
 		DrawPanelText(panel, " ");
