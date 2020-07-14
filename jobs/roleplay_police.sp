@@ -1699,7 +1699,7 @@ public Action GPS_LOOP(Handle timer, any client) {
 }
 // ----------------------------------------------------------------------------
 void displayTribunal(int client, const char szSteamID[64]) {
-	char szURL[1024], szQuery[1024], steamid[64], sso[256];
+	char szURL[1024], szQuery[1024], steamid[64];
 	GetClientAuthId(client, AUTH_TYPE, steamid, sizeof(steamid), false);
 	
 	Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_tribunal` (`uniqID`, `timestamp`, `steamid`) VALUES ('%s', '%i', '%s');", steamid, GetTime(), szSteamID);
@@ -1710,10 +1710,8 @@ void displayTribunal(int client, const char szSteamID[64]) {
 	SQL_Query(DB, szQuery);
 	SQL_UnlockDatabase(DB);
 	
-	rp_GetClientSSO(client, sso, sizeof(sso));
-	
-	Format(szURL, sizeof(szURL), "https://www.ts-x.eu/index.php?page=roleplay2%s#/tribunal/case/%s", sso, szSteamID);
-	PrintToConsole(client, "https://www.ts-x.eu/index.php?page=roleplay2#/tribunal/case/%s", szSteamID);
+	Format(szURL, sizeof(szURL), "https://rpweb.riplay.fr/index.php#/tribunal/case/%s", szSteamID);
+	PrintToConsole(client, "https://rpweb.riplay.fr/index.php#/tribunal/case/%s", szSteamID);
 	
 	RP_ShowMOTD(client, szURL);
 }

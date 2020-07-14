@@ -99,22 +99,13 @@ public Action Command_Say(int client, int args) {
 		return Plugin_Handled;
 	}
 	else if( strcmp(szSayTrig, "!site", false) == 0 || strcmp(szSayTrig, "/site", false) == 0 ) {		
-			
-		char url[1024], sso[128];
-		SSO_Forum(client, sso, sizeof(sso));
-			
-		Format(url, sizeof(url), "https://www.ts-x.eu/index.php?%s", sso);
-		RP_ShowMOTD(client, url);
+		RP_ShowMOTD(client, "https://www.riplay.fr/");
 
 		return Plugin_Handled;
 	}
 	else if( strcmp(szSayTrig, "!craft", false) == 0 || strcmp(szSayTrig, "/craft", false) == 0 ) {
 			
-		char url[1024], sso[128];
-		SSO_Forum(client, sso, sizeof(sso));
-			
-		Format(url, sizeof(url), "https://www.ts-x.eu/craft.php?%s", sso);
-		RP_ShowMOTD(client, url);
+		RP_ShowMOTD(client, "https://rpweb.riplay.fr/craft.php");
 
 		return Plugin_Handled;
 	}
@@ -1126,7 +1117,7 @@ public Action Command_Say(int client, int args) {
 		if( g_iDoubleCompte[client].FindString(targetSteamID) >= 0 ) {
 			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas donner d'argnet à l'un de vos double compte. S'il ne s'agit pas d'un double compte, vous pouvez contester cette déicision sur ce lien:");
 			GetClientAuthId(client, AUTH_TYPE, targetSteamID, sizeof(targetSteamID), false);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} https://www.ts-x.eu/index.php?page=roleplay2#/pilori/double/%s", targetSteamID);
+			CPrintToChat(client, "{lightblue}[TSX-RP]{default} https://rpweb.riplay.fr/index.php#/pilori/double/%s", targetSteamID);
 			return Plugin_Handled;
 		}
 		

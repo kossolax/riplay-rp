@@ -8,7 +8,7 @@
 #define URL_PATH "https://riplay.fr/api/redirect/%s"
 
 
-stock void RP_ShowMOTD(int client, char url[1024]) {	
+stock void RP_ShowMOTD(int client, char[] url) {	
 	char tmp[128], szSteamID[32];
 	GetClientAuthId(client, AuthId_SteamID64, szSteamID, sizeof(szSteamID));
 	Format(tmp, sizeof(tmp), URL_PATH, szSteamID);

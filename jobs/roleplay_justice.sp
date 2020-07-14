@@ -627,9 +627,9 @@ Menu AUDIENCE_Enquete(int type, int a, int b) {
 			char szURL[1024];
 			rp_GetClientSSO(g_iTribunalData[type][td_Owner], tmp, sizeof(tmp));
 			GetClientAuthId(b, AUTH_TYPE, tmp2, sizeof(tmp2));
-			
-			Format(szURL, sizeof(szURL), "https://www.ts-x.eu/index.php?page=roleplay2%s#/tribunal/case/%s", tmp, tmp2);
-			PrintToConsole(g_iTribunalData[type][td_Owner], "https://www.ts-x.eu/index.php?page=roleplay2#/tribunal/case/%s", tmp2);
+
+			Format(szURL, sizeof(szURL), "https://rpweb.riplay.fr/index.php#/tribunal/case/%s", tmp, tmp2);
+			PrintToConsole(g_iTribunalData[type][td_Owner], "https://rpweb.riplay.fr/index.php#/tribunal/case/%s", tmp2);
 			
 			RP_ShowMOTD(g_iTribunalData[type][td_Owner], szURL);
 		}
@@ -713,11 +713,9 @@ Menu AUDIENCE_Forum(int client, int a, int b) {
 		SQL_TQuery(rp_GetDatabase(), SQL_AUDIENCE_Forum, query, client);
 	}
 	else if( b == 0 ) {
-		
-		rp_GetClientSSO(client, tmp, sizeof(tmp));
 			
-		Format(query, sizeof(query), "https://www.ts-x.eu/index.php?page=roleplay2%s#/tribunal/case/%d", tmp, a);
-		PrintToConsole(client, "https://www.ts-x.eu/index.php?page=roleplay2#/tribunal/case/%d", a);
+		Format(query, sizeof(query), "https://rpweb.riplay.fr/index.php#/tribunal/case/%d", a);
+		PrintToConsole(client, "https://rpweb.riplay.fr/index.php#/tribunal/case/%d", a);
 		RP_ShowMOTD(client, query);
 		
 	 	subMenu = new Menu(MenuTribunal);

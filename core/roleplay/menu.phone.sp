@@ -46,14 +46,8 @@ public int Menu_DisplayPhone_Handler(Handle p_hItemMenu, MenuAction p_oAction, i
 		if( StrEqual(szMenuItem, "quest") ) {
 			Cmd_QuestMenu(Client);
 		}
-		if( StrEqual(szMenuItem, "mail") ) {
-			QueryClientConVar(Client, "cl_disablehtmlmotd", view_as<ConVarQueryFinished>(ClientConVar), Client);
-			
-			char url[1024], sso[128];
-			SSO_Forum(Client, sso, sizeof(sso));
-			
-			Format(url, sizeof(url), "https://www.ts-x.eu/index.php?page=phone%s", sso);
-			RP_ShowMOTD(Client, url);
+		if( StrEqual(szMenuItem, "mail") ) {			
+			RP_ShowMOTD(Client, "https://rpweb.riplay.fr/index.php#/tribunal/mine");
 		}
 		if( StrEqual(szMenuItem, "call") ) {
 			FakeClientCommand(Client, "say /job");

@@ -12,13 +12,10 @@
 
 public int MenuTribunal_plainte(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_iParam2) {
 	if( p_oAction == MenuAction_Select && client != 0) {
-		char targetSteamID[64];
+		char targetSteamID[64], url[256];
 		GetMenuItem(p_hItemMenu, p_iParam2, targetSteamID, 64);
 			
-		char url[1024], sso[128];
-		SSO_Forum(client, sso, sizeof(sso));
-			
-		Format(url, sizeof(url), "https://www.ts-x.eu/index.php?page=phone&type=new&steamid=%s%s", targetSteamID, sso);
+		Format(url, sizeof(url), "https://rpweb.riplay.fr/index.php#/tribunal/report?%s", targetSteamID);
 		RP_ShowMOTD(client, url);
 	}
 	else if( p_oAction == MenuAction_End ) {		
@@ -27,13 +24,10 @@ public int MenuTribunal_plainte(Handle p_hItemMenu, MenuAction p_oAction, int cl
 }
 public int MenuTribunal_report(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_iParam2) {
 	if( p_oAction == MenuAction_Select && client != 0) {
-		char targetSteamID[64];
+		char targetSteamID[64], url[256];
 		GetMenuItem(p_hItemMenu, p_iParam2, targetSteamID, 64);
 			
-		char url[1024], sso[128];
-		SSO_Forum(client, sso, sizeof(sso));
-			
-		Format(url, sizeof(url), "https://www.ts-x.eu/index.php?page=tribunal&action=report&steamid=%s%s", targetSteamID, sso);
+		Format(url, sizeof(url), "https://rpweb.riplay.fr/index.php#/tribunal/report?%s", targetSteamID);
 		RP_ShowMOTD(client, url);
 	}
 	else if( p_oAction == MenuAction_End ) {		
