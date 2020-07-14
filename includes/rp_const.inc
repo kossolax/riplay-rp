@@ -13,7 +13,7 @@
 #endif
 #define _rp_const_included_
 
-#define __LAST_REV__			"7.1 - FORK PVE"
+#define __LAST_REV__			"8.1 - REBORN"
 
 //#define DEBUG
 #define MAX_LOCATIONS			150
