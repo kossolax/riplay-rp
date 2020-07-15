@@ -19,7 +19,7 @@ int getKillContext(int attack, int victim) {
 	
 	// ---- dans le comico	
 	zoneID = rp_GetZoneInt(rp_GetPlayerZone(victim), zone_type_type);
-	if( zoneID > 0 ) {
+	if( zoneID == 1 ) {
 		attackID = rp_GetClientJobID(attack);
 		victimID = rp_GetClientJobID(victim);
 	
