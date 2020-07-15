@@ -288,17 +288,17 @@ public Action GameLogHook(const char[] message) {
 	if( amount > 0 ) {
 		strcopy(log, sizeof(log), message);
 		
-		GetRegexSubString(regex, 0, arg, sizeof(arg));
+		GetRegexSubString(regex, 1, arg, sizeof(arg));
 		int client = GetClientOfUserId(StringToInt(arg));
 				
-		GetRegexSubString(regex, 2, arg, sizeof(arg));
+		GetRegexSubString(regex, 3, arg, sizeof(arg));
 		int target = GetClientOfUserId(StringToInt(arg));
 		
 		if( IsValidClient(client) && IsValidClient(target) ) {
-			GetRegexSubString(regex, 1, arg, sizeof(arg));
+			GetRegexSubString(regex, 2, arg, sizeof(arg));
 			ReplaceStringEx(log, sizeof(log), arg, g_szZoneList[GetPlayerZone(client)][zone_type_name]);
 			
-			GetRegexSubString(regex, 3, arg, sizeof(arg));
+			GetRegexSubString(regex, 4, arg, sizeof(arg));
 			ReplaceStringEx(log, sizeof(log), arg, g_szZoneList[GetPlayerZone(target)][zone_type_name]);
 
 			if( IsInPVP(client) || IsInPVP(target) || g_iHideNextLog[client][target] == 1 ) {
