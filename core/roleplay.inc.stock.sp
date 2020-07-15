@@ -13,6 +13,66 @@
 //
 //	Stocks
 //
+
+int getKillContext(int attack, int victim) {
+	int zoneID, attackID, victimID;
+	
+	// ---- dans le comico	
+	zoneID = rp_GetZoneInt(rp_GetPlayerZone(victim), zone_type_type);
+	if( zoneID > 0 ) {
+		attackID = rp_GetClientJobID(attack);
+		victimID = rp_GetClientJobID(victim);
+	
+		if( attackID == zoneID && victimID == zoneID ) // Cas 1
+			return 8;
+		if( attackID == zoneID || victimID == zoneID ) // Cas 2
+			return 2;
+		return 5;
+	}
+	
+	// ---- dans les autres planques
+	zoneID = rp_GetZoneInt(rp_GetPlayerZone(victim), zone_type_type);
+	if( zoneID > 1 ) {
+		attackID = rp_GetClientJobID(attack);
+		victimID = rp_GetClientJobID(victim);
+	
+		if( attackID == zoneID && victimID == zoneID ) // Cas 1
+			return 9;
+		if( attackID == zoneID || victimID == zoneID ) // Cas 2
+			return 3;
+		return 6;
+	}
+	
+	// ---- dans les appart
+	zoneID = rp_GetPlayerZoneAppart(victim);
+	if( zoneID > 0 ) {
+		attackID = rp_GetClientKeyAppartement(attack, zoneID);
+		victimID = rp_GetClientKeyAppartement(victim, zoneID);
+		
+		if( attackID == zoneID && victimID == zoneID ) // Cas 1
+			return 11;
+		if( attackID == zoneID || victimID == zoneID ) // Cas 2
+			return 3;
+		return 7;
+	}
+	
+	// --- ailleurs, du même job:
+	attackID = rp_GetClientJobID(attack);
+	victimID = rp_GetClientJobID(victim);
+	if( attackID == victimID )
+		return 14;
+	
+	// --- ailleurs, du même group:
+	attackID = rp_GetClientGroupID(attack);
+	victimID = rp_GetClientGroupID(victim);
+	if( attackID == victimID )
+		return 14;
+		
+	return 9;
+	
+}
+
+
 bool Client_CanUseItem(int client, int itemID) {
 	
 	Action a; // Quête, merco, ...
