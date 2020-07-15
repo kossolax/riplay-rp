@@ -479,16 +479,9 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 	if( g_iUserData[Client][i_PlayerLVL] >= 650 )
 		respawn /= 2.0;
 	
-	int add = 8;
-
-	if( GetClientTeam(Client) == CS_TEAM_CT ) {
-		if( !IsInPVP(Client) && g_iHideNextLog[Attacker][Client] == 0 ) {
-			add = add * 2;
-		}
-	}
-
-	int killDuration = (g_iKillLegitime[Attacker][Client] >= GetTime() ? 1 : 6);
-	//int killDuration = (g_iKillLegitime[Attacker][Client] >= GetTime() ? 1 : RoundToFloor(float(g_iUserData[Attacker][i_KillJailDuration]) * 1.5) + add);
+	int context = getKillContext(Attacker, Client);
+	
+	int killDuration = (g_iKillLegitime[Attacker][Client] >= GetTime() ? 1 : context);
 	
 	g_iUserStat[Client][i_Deaths]++;
 	showGraveMenu(Client);
@@ -590,12 +583,12 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 
 			if( g_iHideNextLog[Attacker][Client] == 0 ) {
 				if( !(GetZoneBit( GetPlayerZone(Attacker) ) & BITZONE_EVENT || GetZoneBit( GetPlayerZone(Attacker) ) & BITZONE_PVP) ) {
-					g_iUserData[Attacker][i_KillJailDuration] = killDuration;
+					g_iUserData[Attacker][i_KillJailDuration] += killDuration;
 					g_iUserData[Attacker][i_LastKillTime] = GetTime();
 					g_iUserData[Attacker][i_KillingSpread] += (killDuration > 1 ? 1:0);
 				}
 
-				if( g_iUserData[Attacker][i_KillJailDuration] >= 106) {
+				if( g_iUserData[Attacker][i_KillJailDuration] >= 106 ) {
 					g_bUserData[Attacker][b_IsFreekiller] = true;
 
 					ServerCommand("rp_SendToJail %d 0", Attacker);
@@ -625,6 +618,12 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 					DeathDrop(Client);
 				else
 					SetEntProp(Attacker, Prop_Send, "m_iNumRoundKills",  0);
+			}
+			
+			if( GetClientTeam(Client) == CS_TEAM_CT ) {
+				if( !IsInPVP(Client) && g_iHideNextLog[Attacker][Client] == 0 ) {
+					g_iUserData[Attacker][i_KillJailDuration] += killDuration;
+				}
 			}
 			
 			displayDeathOverlay(Client, Attacker, carkill);
