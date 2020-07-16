@@ -258,6 +258,15 @@ public Action Cmd_ItemDrugs(int args) {
 public Action fwdGHB(int attacker, int victim, float& respawn, int& tdm) {
 	if( attacker == victim )
 		return Plugin_Continue;
+	
+	
+	int jobZone = rp_GetZoneInt(rp_GetPlayerZone(victim), zone_type_type);
+	int appart = rp_GetPlayerZoneAppart(victim);
+	if( jobZone == 0 && appart == 0 ) {
+		tdm /= 2;
+		return Plugin_Changed;
+	}
+	
 	return Plugin_Handled;
 }
 public Action Cmd_ItemEngrais(int args) {

@@ -1032,6 +1032,15 @@ public Action fwdKill(int client, int victim, char weapon[64], int& tdm) {
 		
 		rp_UnhookEvent(client, RP_OnAssurance, fwdAssuranceMask);
 		rp_UnhookEvent(client, RP_OnPlayerKill, fwdKill);
+		
+		
+		int jobZone = rp_GetZoneInt(rp_GetPlayerZone(victim), zone_type_type);
+		int appart = rp_GetPlayerZoneAppart(victim);
+		if( jobZone == 0 && appart == 0 ) {
+			tdm /= 2;
+			return Plugin_Changed;
+		}
+			
 		return Plugin_Handled;
 	}
 	
