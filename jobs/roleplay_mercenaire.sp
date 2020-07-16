@@ -237,7 +237,7 @@ public Action TaskResetVictim(Handle timer, any client) {
 	if( IsValidClient(client) )
 		rp_SetClientInt(client, i_LastKilled, 0);
 }
-public Action fwdTueurKill(int client, int attacker, float& respawn) {
+public Action fwdTueurKill(int client, int attacker, float& respawn, int& tdm) {
 	if( rp_GetClientInt(attacker, i_ToKill) == client && rp_GetClientInt(client, i_KidnappedBy) != attacker ) {
 		rp_SetClientStat(attacker, i_JobSucess, rp_GetClientStat(client, i_JobSucess) + 1);
 		rp_SetClientStat(attacker, i_JobFails, rp_GetClientStat(client, i_JobFails) - 1);
@@ -338,7 +338,7 @@ public Action fwdOnRespawn(int client) {
 		CreateTimer(0.01, SendToTribunal, client);
 	}
 }
-public Action fwdTueurDead(int client, int attacker, float& respawn) {
+public Action fwdTueurDead(int client, int attacker, float& respawn, int& tdm) {
 	int target = rp_GetClientInt(client, i_ToKill);
 	if( target > 0  && attacker == target) { // Double check.
 		SetContratFail(client);
@@ -746,7 +746,7 @@ public Action fwdZoneChange(int client, int newZone, int oldZone) {
 		}
 	}
 }
-public Action fwdDead(int client, int attacker, float& respawn) {
+public Action fwdDead(int client, int attacker, float& respawn, int& tdm) {
 	int target = rp_GetClientInt(client, i_KidnappedBy);
 	clearKidnapping(client);
 	

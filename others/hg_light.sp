@@ -165,7 +165,7 @@ public Action fwdCanKill(int attacker, int victim) {
 	
 	return IsKillAllowed(attacker, victim) ? Plugin_Stop : Plugin_Continue;
 }
-public Action fwdOnDead(int victim, int attacker, float& respawn) {
+public Action fwdOnDead(int victim, int attacker, float& respawn, int& tdm) {
 	if( g_iPlayerTeam[attacker] == TEAM_NONE && g_iPlayerTeam[victim] == TEAM_NONE )
 		return Plugin_Continue;
 	

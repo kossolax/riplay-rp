@@ -582,7 +582,7 @@ public Action fwdTakeDamage(int victim, int attacker, float& damage, int wepID, 
 	
 	return Plugin_Continue;
 }
-public Action fwdPlayerDead(int victim, int attacker, float& respawn) {
+public Action fwdPlayerDead(int victim, int attacker, float& respawn, int& tdm) {
 	
 	removeShield(victim);
 }
@@ -1018,7 +1018,7 @@ public Action CmdItemMask(int args) {
 	
 	return Plugin_Handled;
 }
-public Action fwdKill(int client, int victim, char weapon[64]) {
+public Action fwdKill(int client, int victim, char weapon[64], int& tdm) {
 	int maskID = rp_GetClientInt(client, i_Mask);
 	
 	if( client != victim && maskID > 0 ) {

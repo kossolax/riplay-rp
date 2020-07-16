@@ -784,7 +784,7 @@ bool CanTP(float pos[3], int client) {
 	CloseHandle(tr);
 	return ret;
 }
-public Action fwdDead(int victim, int attacker, float& respawn) {
+public Action fwdDead(int victim, int attacker, float& respawn, int& tdm) {
 	bool dropped = false;
 	if( g_iClientFlag[victim] > 0 ) {
 		CTF_DropFlag(victim, false);
@@ -1435,7 +1435,7 @@ public Action fwdGodHideMe(int client, int target) {
 		return Plugin_Handled;
 	return Plugin_Continue;
 }
-public Action fwdGodPlayerDead(int client, int attacker, float& respawn) {
+public Action fwdGodPlayerDead(int client, int attacker, float& respawn, int& tdm) {
 	Client_SetSpawnProtect(client, false);
 }
 public Action fwdGod_PlayerHurt(Handle event, char[] name, bool dontBroadcast) {

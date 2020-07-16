@@ -1189,8 +1189,9 @@ public Action fwdZoneChange(int client, int newZone, int oldZone) {
 		CreateTimer(0.1, appear, client);
 	}
 }
-public Action fwdDead(int client, int attacker) {
+public Action fwdDead(int client, int attacker, float& respawn, int& tdm) {
 	CreateTimer(0.1, appear, client);
+	return Plugin_Continue;
 }
 
 void deleteBuyMenu(DataPackPos pos) {

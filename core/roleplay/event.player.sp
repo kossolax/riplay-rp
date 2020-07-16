@@ -537,12 +537,15 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 	Call_PushCell(Client);
 	Call_PushCell(Attacker);
 	Call_PushCellRef(respawn);
+	Call_PushCellRef(killDuration);
 	Call_Finish(a);
+	
 	if( IsValidClient(Attacker) ) {
 		Call_StartForward( view_as<Handle>(g_hRPNative[Attacker][RP_OnPlayerKill]));
 		Call_PushCell(Attacker);
 		Call_PushCell(Client);
 		Call_PushString(weapon);
+		Call_PushCellRef(killDuration);
 		Call_Finish(b);
 	}
 	
