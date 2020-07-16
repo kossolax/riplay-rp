@@ -342,13 +342,13 @@ public Action fwdHookDead(int victim, int attacker, float& respawn, int& tdm) {
 	else
 		END_PERQUIZ(zone, true);
 	
-	CreateTimer(0.1, respawn, victim);
+	CreateTimer(0.1, task_respawn, victim);
 	
 	
 	
 	return Plugin_Continue;
 }
-public Action respawn(Handle timer, any client) {
+public Action task_respawn(Handle timer, any client) {
 	rp_ClientRespawn(client);
 }
 public Action TIMER_PERQUIZ(Handle timer, any zone) {
