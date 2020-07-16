@@ -324,7 +324,7 @@ public Action fwdHookJail(int attacker, int victim) {
 	
 	return Plugin_Continue;
 }
-public Action fwdHookDead(int victim, int attacker) {
+public Action fwdHookDead(int victim, int attacker, float& respawn, int& tdm) {
 	char tmp[64];
 	int zone = rp_GetZoneFromPoint(g_flLastPos[victim]);
 	int array[PQ_Max];
@@ -342,13 +342,13 @@ public Action fwdHookDead(int victim, int attacker) {
 	else
 		END_PERQUIZ(zone, true);
 	
-	CreateTimer(0.1, respawn, victim);
+	CreateTimer(0.1, task_respawn, victim);
 	
 	
 	
 	return Plugin_Continue;
 }
-public Action respawn(Handle timer, any client) {
+public Action task_respawn(Handle timer, any client) {
 	rp_ClientRespawn(client);
 }
 public Action TIMER_PERQUIZ(Handle timer, any zone) {

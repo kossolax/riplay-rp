@@ -380,7 +380,7 @@ public Action CashFlow_TASK(Handle timer, any client) {
 	if( timer && IsValidHandle(timer) )
 		ServerCommand("sm_effect_particles %d trail_money 10 knife", client);
 }
-public Action fwdPlayerDead(int client, int attacker) {
+public Action fwdPlayerDead(int client, int attacker, float& respawn, int& tdm) {
 	Handle timer;
 	for (int i = 0; i < g_iParentedParticle[client].Length; i++) {
 		timer = view_as<Handle>(g_iParentedParticle[client].Get(i));

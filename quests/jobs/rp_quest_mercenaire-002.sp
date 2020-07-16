@@ -102,13 +102,13 @@ public Action timerStartQuest(Handle timer, any client) {
 	if(!IsValidClient(g_iToKill[client]))
 		rp_QuestStepFail(client, g_ObjectiveID);
 }
-public Action fwdTueurDead(int client, int attacker, float& respawn) {
+public Action fwdTueurDead(int client, int attacker, float& respawn, int& tdm) {
     int target = rp_GetClientInt(client, i_ToKill);
     if( target > 0  && attacker == target) {
         rp_QuestStepFail(client, g_ObjectiveID);
     }
 }
-public Action fwdTueurKill(int client, int attacker, float& respawn) {
+public Action fwdTueurKill(int client, int attacker, float& respawn, int& tdm) {
 	
 	if(g_iToKill[attacker] == client){
 		rp_QuestStepComplete(attacker, g_ObjectiveID);

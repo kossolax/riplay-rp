@@ -255,9 +255,18 @@ public Action Cmd_ItemDrugs(int args) {
 	
 	return Plugin_Handled;
 }
-public Action fwdGHB(int attacker, int victim, char weapon[64]) {
+public Action fwdGHB(int attacker, int victim, float& respawn, int& tdm) {
 	if( attacker == victim )
 		return Plugin_Continue;
+	
+	
+	int jobZone = rp_GetZoneInt(rp_GetPlayerZone(victim), zone_type_type);
+	int appart = rp_GetPlayerZoneAppart(victim);
+	if( jobZone == 0 && appart == 0 ) {
+		tdm /= 2;
+		return Plugin_Changed;
+	}
+	
 	return Plugin_Handled;
 }
 public Action Cmd_ItemEngrais(int args) {
@@ -830,7 +839,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 	
 	return Plugin_Stop;
 }
-public Action fwdOnDeadSuccess(int client, int attacker) {
+public Action fwdOnDeadSuccess(int client, int attacker, float& respawn, int& tdm) {
 	rp_IncrementSuccess(attacker, success_list_no_18th);
 }
 // ----------------------------------------------------------------------------

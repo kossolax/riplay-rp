@@ -262,7 +262,7 @@ public Action Cmd_ItemAssuVie(int args){
 	
 	return Plugin_Handled;
 }
-public Action OnPlayerDeathFastRespawn(int victim, int attacker, float& respawn) {
+public Action OnPlayerDeathFastRespawn(int victim, int attacker, float& respawn, int& tdm) {
 	respawn /= 2.0;
 	return Plugin_Continue;
 }

@@ -92,8 +92,8 @@ typeset rp_event_enum {
 	function Action(int client);								                            /* RP_OnFrameSeconde */
 	function Action(int client, int& amount);						                        /* RP_OnAssurance */
 	function Action(int client);							        	                    /* RP_OnPlayerSpawn */
-	function Action(int victim, int attacker, float& respawn);	                       		/* RP_OnPlayerDead == return Plugin_Handled = cacher des logs */
-	function Action(int attacker, int victim, char weapon[64]);	                       		/* RP_OnPlayerKill == return Plugin_Handled = cacher des logs */
+	function Action(int victim, int attacker, float& respawn, int& tdm);	                /* RP_OnPlayerDead == return Plugin_Handled = cacher des logs */
+	function Action(int attacker, int victim, char weapon[64], int& tdm);              		/* RP_OnPlayerKill == return Plugin_Handled = cacher des logs */
 	
 	function Action(int client, float& cooldown);					                        /* RP_OnPlayerBuild */
 	function Action(int client);								                            /* RP_OnPlayerUse */

@@ -277,20 +277,29 @@ public Action EventRoundStart(Handle ev, const char[] name, bool  bd) {
 }
 
 public Action GameLogHook(const char[] message) {
+	static char log[2048], arg[64];
+	
 	static Handle regex;
 	if( regex == INVALID_HANDLE )
-		regex = CompileRegex("\".*<([0-9]{1,5})><(STEAM_1:[0-1]:[0-9]{1,14})><(TERRORIST|CT|)>.* killed .*<([0-9]{1,5})><(STEAM_1:[0-1]:[0-9]{1,14})><(TERRORIST|CT|)>.* with .*\"");
+ 		regex = CompileRegex("\".*<([0-9]{1,5})><(?:STEAM_1:[0-1]:[0-9]{1,14})><(?:TERRORIST|CT)>\" \\[(-?[0-9]* -?[0-9]* -?[0-9]*)\\] killed \".*<([0-9]{1,5})><(?:STEAM_1:[0-1]:[0-9]{1,14})><(?:TERRORIST|CT)>\" \\[(-?[0-9]* -?[0-9]* -?[0-9]*)\\] with .*\"");
 	
 	int amount = MatchRegex(regex, message);
-	char arg[64];
 		
 	if( amount > 0 ) {
+		strcopy(log, sizeof(log), message);
+		
 		GetRegexSubString(regex, 1, arg, sizeof(arg));
 		int client = GetClientOfUserId(StringToInt(arg));
-		GetRegexSubString(regex, 4, arg, sizeof(arg));
+				
+		GetRegexSubString(regex, 3, arg, sizeof(arg));
 		int target = GetClientOfUserId(StringToInt(arg));
 		
 		if( IsValidClient(client) && IsValidClient(target) ) {
+			GetRegexSubString(regex, 2, arg, sizeof(arg));
+			ReplaceStringEx(log, sizeof(log), arg, g_szZoneList[GetPlayerZone(client)][zone_type_name]);
+			
+			GetRegexSubString(regex, 4, arg, sizeof(arg));
+			ReplaceStringEx(log, sizeof(log), arg, g_szZoneList[GetPlayerZone(target)][zone_type_name]);
 
 			if( IsInPVP(client) || IsInPVP(target) || g_iHideNextLog[client][target] == 1 ) {
 				g_iHideNextLog[client][target] = 0;
@@ -300,14 +309,12 @@ public Action GameLogHook(const char[] message) {
 			}
 			
 			if( g_iKillLegitime[client][target] >= GetTime() ) {
-				char msg[255];
-				strcopy(msg, sizeof(msg), message);
-				msg[strlen(message) - 1] = ' ';
-				
-				LogToGame("%s(légitime)", msg);
-				
-				return Plugin_Handled;
+				Format(log, sizeof(log), "%s (légitime)", message);
 			}
+			
+			LogToGame(log);
+			return Plugin_Handled;
+
 		}
 	}
 	else if( StrContains(message, ">\" triggered \"clantag\" (value \"") > 0 ) {

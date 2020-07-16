@@ -232,8 +232,8 @@ public void OnPluginStart() {
 		view_as<Handle>(g_hRPNative[i][RP_OnFrameSeconde]) = CreateForward(ET_Hook, Param_Cell);
 		view_as<Handle>(g_hRPNative[i][RP_OnAssurance]) = CreateForward(ET_Hook, Param_Cell, Param_CellByRef);
 		view_as<Handle>(g_hRPNative[i][RP_OnPlayerSpawn]) = CreateForward(ET_Hook, Param_Cell);
-		view_as<Handle>(g_hRPNative[i][RP_OnPlayerDead]) = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_CellByRef);
-		view_as<Handle>(g_hRPNative[i][RP_OnPlayerKill]) = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_String);
+		view_as<Handle>(g_hRPNative[i][RP_OnPlayerDead]) = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_CellByRef, Param_CellByRef);
+		view_as<Handle>(g_hRPNative[i][RP_OnPlayerKill]) = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_String, Param_CellByRef);
 		view_as<Handle>(g_hRPNative[i][RP_OnPlayerBuild]) = CreateForward(ET_Hook, Param_Cell, Param_CellByRef);
 		view_as<Handle>(g_hRPNative[i][RP_OnPlayerUse]) = CreateForward(ET_Hook, Param_Cell);
 		view_as<Handle>(g_hRPNative[i][RP_OnPlayerCommand]) = CreateForward(ET_Hook, Param_Cell, Param_String, Param_String);

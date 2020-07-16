@@ -715,7 +715,7 @@ public Action fwdPhysics(int client, float& speed, float& gravity) {
 	}
 	return Plugin_Continue;
 }
-public Action fwdDead(int client, int target, float& respawn) {
+public Action fwdDead(int client, int target, float& respawn, int& tdm) {
 
 	if( rp_GetPlayerZone(client) == QUEST_ARENA ) {
 		g_iQuestConfig[QC_Health]--;
