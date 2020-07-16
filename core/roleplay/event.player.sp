@@ -479,9 +479,13 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 	if( g_iUserData[Client][i_PlayerLVL] >= 650 )
 		respawn /= 2.0;
 	
-	int context = getKillContext(Attacker, Client);
-	
-	int killDuration = (g_iKillLegitime[Attacker][Client] >= GetTime() ? 1 : context);
+
+	int killDuration = getKillContext(Attacker, Client);
+	if( g_iKillLegitime[Attacker][Client] >= GetTime() ) {
+		killDuration = 1;
+		if( GetClientTeam(Attacker) == CS_TEAM_CT )
+			killDuration = 0;
+	}
 	
 	g_iUserStat[Client][i_Deaths]++;
 	showGraveMenu(Client);

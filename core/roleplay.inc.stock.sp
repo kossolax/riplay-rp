@@ -60,15 +60,15 @@ int getKillContext(int attack, int victim) {
 	attackID = rp_GetClientJobID(attack);
 	victimID = rp_GetClientJobID(victim);
 	if( attackID == victimID )
-		return 14;
+		return 40;
 	
 	// --- ailleurs, du même group:
 	attackID = rp_GetClientGroupID(attack);
 	victimID = rp_GetClientGroupID(victim);
 	if( attackID == victimID )
-		return 14;
+		return 40;
 		
-	return 9;
+	return 20;
 	
 }
 
