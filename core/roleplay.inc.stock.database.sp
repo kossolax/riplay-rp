@@ -112,6 +112,7 @@ void LoadServerDatabase() {
 
 	if ((hQuery = SQL_Query(g_hBDD, query)) == INVALID_HANDLE) {
 		g_iBlackFriday[0] = g_iBlackFriday[1] = 0;
+		g_bIsBlackFriday = false;
 	}
 	else {
 		if(SQL_FetchRow(hQuery) > 0) {
@@ -124,6 +125,7 @@ void LoadServerDatabase() {
 			}
 		} else {
 			g_iBlackFriday[0] = g_iBlackFriday[1] = 0;
+			g_bIsBlackFriday = false;
 		}
 	}
 
