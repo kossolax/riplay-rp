@@ -229,6 +229,11 @@ void showPlayerHintBox(int client, int target) {
 	if( a == Plugin_Handled || a == Plugin_Stop )
 		return;
 	
+	if( !IsValidEdict(target) )
+		return;
+	if( !IsValidEntity(target) )
+		return;
+	
 	GetEdictClassname(target, classname, sizeof(classname));
 	
 	
