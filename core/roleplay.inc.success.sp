@@ -382,7 +382,7 @@ void WonSuccess(int client, int success) {
 		g_iUserSuccess[client][success][sd_count] = 0;
 		g_iUserSuccess[client][success][sd_achieved]++;
 		
-		CPrintToChatAllEx(client, "{lightblue}[TSX-RP] {teamcolor}%N{default} a remporté le succès {lightblue}%s{default}", client, g_szSuccessData[success][success_type_name]); 
+		CPrintToChatAllEx(client, "" ...MOD_TAG... " %N{default} a remporté le succès {lightblue}%s{default}", client, g_szSuccessData[success][success_type_name]); 
 		rp_ClientXPIncrement(client, 500);
 		
 		LogToGame("[TSX-RP] [SUCCES] %N (%s) a remporté le succès: %s", client, szSteamID, g_szSuccessData[success][success_type_name]);
