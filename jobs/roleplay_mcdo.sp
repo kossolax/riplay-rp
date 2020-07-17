@@ -630,14 +630,15 @@ float GetVitaFromLevel(int lvl) {
 	return Pow(2.0, (float(lvl)+3.0)*2.0);
 }
 float GetVitaFactor(int level) {
-	float vit_factor = 1.0;
-	float prev = 0.2;
-	float factor = 0.1;
-		
-	while( level > 0 ) {
-		vit_factor += prev;
-		prev += factor;
-		level--;
+	if( level == 0 )
+		return 1.0;
+	
+	float vit_factor = 1.1;
+	float acc = 0.0;
+	
+	for (int i = 0; i < level; i++) {
+		vit_factor += acc;
+		acc += 0.1;
 	}
 	
 	return vit_factor;
