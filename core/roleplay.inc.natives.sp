@@ -1064,7 +1064,7 @@ public int Native_rp_GetRandomCapital(Handle plugin, int numParams) {
 			continue;
 		if( StrEqual(g_szJobList[i][job_type_current], "0" ) )
 			continue;
-		if( GetJobCapital(i) < 500000 )
+		if( GetJobCapital(i) < 5000 )
 			continue;
 		if( capit == i )
 			continue;
