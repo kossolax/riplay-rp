@@ -311,7 +311,7 @@ public void Cmd_QuestMenu(int client) {
 	}
 	
 	if( g_bUserData[client][b_IsMuteEvent] ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} En raison de votre mauvais comportement, il vous est temporairement interdit de participer aux quêtes.");
+		CPrintToChat(client, "" ...MOD_TAG... " En raison de votre mauvais comportement, il vous est temporairement interdit de participer aux quêtes.");
 		return;
 	}
 	
@@ -385,7 +385,7 @@ public void Cmd_QuestMenu_CB(Handle owner, Handle hQuery, const char[] error, an
 	CheckMP(client);
 	
 	if( i == 0 ) {	
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez aucune quête disponible pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez aucune quête disponible pour le moment.");
 		delete menu;
 		return;
 	}

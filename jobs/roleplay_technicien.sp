@@ -115,7 +115,7 @@ public Action Cmd_ItemBioKev(int args) {
 	int item_id = GetCmdArgInt(args);
 	
 	if( rp_GetClientBool(client, ch_Kevlar) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez déjà une régénération bionique.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà une régénération bionique.");
 		ITEM_CANCEL(client, item_id);
 		
 		LogToGame("[CHEATING] %L a tenté de cumuler les regens bioniques.", client);
@@ -133,7 +133,7 @@ public Action Cmd_ItemBioYeux(int args) {
 	int item_id = GetCmdArgInt(args);
 	
 	if( rp_GetClientBool(client, ch_Yeux) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez déjà des yeux bioniques.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà des yeux bioniques.");
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
@@ -207,7 +207,7 @@ public Action Cmd_ItemNano(int args) {
 	
 	if( rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PEACEFULL ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cet objet est interdit où vous êtes.");
+		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
 		return Plugin_Handled;
 	}
 	rp_SetClientInt(client, i_LastAgression, GetTime());
@@ -308,7 +308,7 @@ public Action Cmd_ItemMoreCash(int args) {
 	if( amount >= 15 ) {
 		int item_id = GetCmdArgInt(args);
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas avoir de machine supplémentaire.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas avoir de machine supplémentaire.");
 	}
 	else {
 		rp_SetClientInt(client, i_Machine, amount + 1);
@@ -321,7 +321,7 @@ public Action Cmd_ItemCash(int args) {
 	int client = GetCmdArgInt(1);
 	
 	if( rp_GetClientJobID(client) == 1 || rp_GetClientJobID(client) == 101 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cet objet est interdit aux forces de l'ordre.");
+		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit aux forces de l'ordre.");
 		return Plugin_Handled;
 	}
 	
@@ -429,11 +429,11 @@ int BuildingCashMachine(int client, bool force=false) {
 		max += 3;
 	
 	if( count > (max-1) && !force) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez trop de machines actives.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez trop de machines actives.");
 		return 0;
 	}
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Construction en cours...");
+	CPrintToChat(client, "" ...MOD_TAG... " Construction en cours...");
 	
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client, _, _, _, 0.66);
 	
@@ -578,9 +578,9 @@ void CashMachine_Destroy(int entity) {
 	int owner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
 	if( IsValidClient(owner) ) {
 		if( StrContains(name, "big") >= 0 )
-			CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Votre photocopieuse à faux-billets a été détruite.");
+			CPrintToChat(owner, "" ...MOD_TAG... " Votre photocopieuse à faux-billets a été détruite.");
 		else
-			CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Une de vos machines à faux-billets a été détruite.");
+			CPrintToChat(owner, "" ...MOD_TAG... " Une de vos machines à faux-billets a été détruite.");
 		rp_ClientOverlays(owner, o_Action_DestroyMachine, 10.0);
 		
 		if( rp_GetBuildingData(entity, BD_started)+120 < GetTime() ) {
@@ -628,7 +628,7 @@ public Action Cmd_ItemCashBig(int args) {
 	int client = GetCmdArgInt(1);
 	
 	if( rp_GetClientJobID(client) == 1 || rp_GetClientJobID(client) == 101 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cet objet est interdit aux forces de l'ordre.");
+		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit aux forces de l'ordre.");
 		return Plugin_Handled;
 	}
 	
@@ -678,11 +678,11 @@ int BuildingBigCashMachine(int client) {
 	}
 	
 	if( count > (max-15) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez trop de machines actives.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez trop de machines actives.");
 		return 0;
 	}
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Construction en cours...");
+	CPrintToChat(client, "" ...MOD_TAG... " Construction en cours...");
 	
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client, _, _, _, 0.66);
 	
@@ -801,7 +801,7 @@ int CountMachine(int client) {
 			count += 15;
 			Entity_GetAbsOrigin(i, vecOrigin2);
 			if( GetVectorDistance(vecOrigin, vecOrigin2) <= 50 ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas construire aussi proche d'une autre machine vous appartenant.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas construire aussi proche d'une autre machine vous appartenant.");
 				return -1;
 			}
 		}
@@ -809,7 +809,7 @@ int CountMachine(int client) {
 			count++;
 			Entity_GetAbsOrigin(i, vecOrigin2);
 			if( GetVectorDistance(vecOrigin, vecOrigin2) <= 24 ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas construire aussi proche d'une autre machine vous appartenant.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas construire aussi proche d'une autre machine vous appartenant.");
 				return -1;
 			}
 		}

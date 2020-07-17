@@ -221,7 +221,7 @@ public int Native_rp_ClientMoney(Handle plugin, int numParams) {
 	if( dette > 0 && amount > 0 ) {
 		
 		if( amount > 10 )
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas reçu %d$ afin de rembourser votre dette de %d$.", (amount < dette ? amount : dette), dette);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas reçu %d$ afin de rembourser votre dette de %d$.", (amount < dette ? amount : dette), dette);
 		
 		dette -= amount;
 		if (dette < 0) {
@@ -454,10 +454,10 @@ public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
 
 	if( xp >= 100 )
 #if defined EVENT_BIRTHDAY
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez gagné {red}2x{green}%d{default} points d'expérience.", xp);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez gagné {red}2x{green}%d{default} points d'expérience.", xp);
 	xp = xp * 2;
 #else
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez gagné {green}%d{default} points d'expérience.", xp);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez gagné {green}%d{default} points d'expérience.", xp);
 #endif
 	
 	while( g_iUserData[client][i_PlayerXP] >= (g_iUserData[client][i_PlayerLVL] * 3600) ) {
@@ -476,14 +476,14 @@ public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
 			g_iUserData[client][i_PlayerRank] = a + 1;
 			
 			if( b == 702 ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu 50 cadeaux dans votre banque.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 50 cadeaux dans votre banque.");
 				rp_ClientGiveItem(client, ITEM_CADEAU, 50, true);
 			}
 			
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez atteint le niveau {green}%d{default}. Vous êtes maintenant {green}%s{default}!", g_iUserData[client][i_PlayerLVL], g_szLevelList[ g_iUserData[client][i_PlayerRank] ][rank_type_name]);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez atteint le niveau {green}%d{default}. Vous êtes maintenant {green}%s{default}!", g_iUserData[client][i_PlayerLVL], g_szLevelList[ g_iUserData[client][i_PlayerRank] ][rank_type_name]);
 		}
 		else {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez atteint le niveau {green}%d{default}.", g_iUserData[client][i_PlayerLVL]);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez atteint le niveau {green}%d{default}.", g_iUserData[client][i_PlayerLVL]);
 		}
 	}
 	return 1;

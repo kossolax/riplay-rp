@@ -115,7 +115,7 @@ public void Q_Abort(int objectiveID, int client) {
 public void Q_Done(int objectiveID, int client) {
 	Q_Abort(objectiveID, client);
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Merci pour votre aide, voici 2500$ !");
+	CPrintToChat(client, "" ...MOD_TAG... " Merci pour votre aide, voici 2500$ !");
 	rp_ClientMoney(client, i_AddToPay, 2500);
 	rp_ClientXPIncrement(client, 1000);
 	
@@ -123,7 +123,7 @@ public void Q_Done(int objectiveID, int client) {
 	int rnd = Math_GetRandomInt(0, sizeof(MP) - 1);
 	char tmp[128];
 	rp_GetItemData(MP[rnd], item_type_name, tmp, sizeof(tmp));
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez trouvé 25x%s", tmp);
+	CPrintToChat(client, "" ...MOD_TAG... " Vous avez trouvé 25x%s", tmp);
 	rp_ClientGiveItem(client, MP[rnd], 25);
 }
 public Action fwdPreClientCraft(int client, int itemID, int& free) {

@@ -53,7 +53,7 @@ public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
 		if( GetClientTeam(client) == CS_TEAM_CT && rp_GetZoneInt(newZone, zone_type_type) == rp_GetClientJobID(client) ) {
 			g_bCanPerquiz[client] = true;
 			if( rp_GetClientInt(client, i_Job) != 9 && rp_GetClientInt(client, i_Job) != 8 )
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous pouvez maintenant effectuer une perquisition");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez maintenant effectuer une perquisition");
 		}
 	}
 }
@@ -88,7 +88,7 @@ public Action Cmd_Perquiz(int client) {
 		return Plugin_Handled;
 	
 	if( !g_bCanPerquiz[client] && !g_hPerquisition.GetArray(tmp, array, sizeof(array))) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez retourner à votre lieu de travail, avant de pouvoir faire une autre perquisition.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez retourner à votre lieu de travail, avant de pouvoir faire une autre perquisition.");
 		return Plugin_Handled;
 	}
 	
@@ -150,7 +150,7 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 				}
 				if(nbRecherche <= 0) {
 					delete subMenu;
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il n'y a pas de personne recherchée dans cette planque.");
+					CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas de personne recherchée dans cette planque.");
 				} else {
 					subMenu.Display(client, MENU_TIME_FOREVER);
 				}
@@ -170,7 +170,7 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 			if( weapon > 3 || machine > 2 || plant > 2 )
 				INIT_PERQUIZ(client, zone, 0, 0);
 			else
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il n'y a pas de trafic illégal dans cette planque.");
+				CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas de trafic illégal dans cette planque.");
 				
 		}
 		else if( StrEqual(expl[0], "cancel") ) {
@@ -215,7 +215,7 @@ public void VERIF_PERQUIZ(Handle owner, Handle row, const char[] error, any zone
 		if( SQL_FetchInt(row, 0) + cd > GetTime() ) {
 			g_bCanPerquiz[array[PQ_client]] = true;
 			
-			CPrintToChat(array[PQ_client], "{lightblue}[TSX-RP]{default} Impossible de perquisitionner ici avant %d minutes.", ((SQL_FetchInt(row, 0) + cd - GetTime())/60) + 1);
+			CPrintToChat(array[PQ_client], "" ...MOD_TAG... " Impossible de perquisitionner ici avant %d minutes.", ((SQL_FetchInt(row, 0) + cd - GetTime())/60) + 1);
 			g_hPerquisition.Remove(tmp);
 			return;
 		}

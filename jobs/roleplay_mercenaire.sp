@@ -107,11 +107,11 @@ public void OnClientDisconnect(int client) {
 			
 		if( rp_GetClientInt(i, i_ToKill) == client  ) {
 			if( rp_GetClientInt(client, i_KidnappedBy) == i ) {
-				CPrintToChat(i, "{lightblue}[TSX-RP]{default} Votre cible s'est déconnectée.");
+				CPrintToChat(i, "" ...MOD_TAG... " Votre cible s'est déconnectée.");
 				RestoreAssassinNormal(i);
 			}
 			else {
-				CPrintToChat(i, "{lightblue}[TSX-RP]{default} Votre cible s'est déconnectée.");
+				CPrintToChat(i, "" ...MOD_TAG... " Votre cible s'est déconnectée.");
 				SetContratFail(i, true);
 			}
 		}
@@ -202,7 +202,7 @@ public Action Cmd_ItemContrat(int args) {
 	OpenSelectSkill(vendeur);
 	
 	if( !IsValidClient(target) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre cible s'est déconnectée.");
+		CPrintToChat(client, "" ...MOD_TAG... " Votre cible s'est déconnectée.");
 		SetContratFail(client);
 	}
 	return Plugin_Handled;
@@ -242,7 +242,7 @@ public Action fwdTueurKill(int client, int attacker, float& respawn, int& tdm) {
 		rp_SetClientStat(attacker, i_JobSucess, rp_GetClientStat(client, i_JobSucess) + 1);
 		rp_SetClientStat(attacker, i_JobFails, rp_GetClientStat(client, i_JobFails) - 1);
 
-		CPrintToChat(attacker, "{lightblue}[TSX-RP]{default} Vous avez rempli votre contrat pour avoir tué %N.", client);
+		CPrintToChat(attacker, "" ...MOD_TAG... " Vous avez rempli votre contrat pour avoir tué %N.", client);
 		
 		int from = rp_GetClientInt(attacker, i_ContratFor);
 		bool kidnapping = false;
@@ -260,7 +260,7 @@ public Action fwdTueurKill(int client, int attacker, float& respawn, int& tdm) {
 				rp_SetJobCapital(41, rp_GetJobCapital(41) + 200);
 			}
 			
-			CPrintToChat(from, "{lightblue}[TSX-RP]{default} %N a rempli son contrat en tuant %N.", attacker, client);
+			CPrintToChat(from, "" ...MOD_TAG... " %N a rempli son contrat en tuant %N.", attacker, client);
 			rp_IncrementSuccess(from, success_list_tueur);
 			
 			if( g_iKillerPoint[attacker][competance_type] == 1003 ) {
@@ -301,7 +301,7 @@ public Action fwdTueurKill(int client, int attacker, float& respawn, int& tdm) {
 			else if( g_iKillerPoint[attacker][competance_type] == 1006 ) {
 				if( rp_GetClientBool(client, b_HaveCard) == true ){
 					rp_SetClientBool(client, b_HaveCard, false);
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Un mercenaire vous a pris votre portefeuille, et vous a volé votre carte bancaire...");
+					CPrintToChat(client, "" ...MOD_TAG... " Un mercenaire vous a pris votre portefeuille, et vous a volé votre carte bancaire...");
 				}
 				respawn *= 1.25;			
 			}
@@ -349,7 +349,7 @@ public Action fwdTueurDead(int client, int attacker, float& respawn, int& tdm) {
 public Action OnWeaponDrop(int client, int weapon) {
 	
 	if( rp_GetClientJobID(client) == 41 && (g_iKillerPoint[client][competance_usp] || g_iKillerPoint[client][competance_awp] || g_iKillerPoint[client][competance_pompe]) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas lâcher vos armes pendant un contrat.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas lâcher vos armes pendant un contrat.");
 		return Plugin_Handled;
 	}
 
@@ -396,8 +396,8 @@ public Action TimerEndProtect(Handle timer, any client) {
 	
 	int vendeur = rp_GetClientInt(client, i_Protect_From);
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le contrat de protection est terminé."); // Félicitations si réussi ? Votre client est mort,dommage. si raté ?
-	CPrintToChat(vendeur, "{lightblue}[TSX-RP]{default} Le contrat de protection est terminé.");
+	CPrintToChat(client, "" ...MOD_TAG... " Le contrat de protection est terminé."); // Félicitations si réussi ? Votre client est mort,dommage. si raté ?
+	CPrintToChat(vendeur, "" ...MOD_TAG... " Le contrat de protection est terminé.");
 	
 	rp_SetClientInt(client, i_Protect_From, 0);
 	rp_SetClientInt(vendeur, i_Protect_Him, 0);
@@ -607,26 +607,26 @@ void SetContratFail(int client, bool time = false, bool annule = false) { // tim
 	int jobClient = rp_GetClientJobID(client);
 	
 	if( time )
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas rempli votre contrat à temps.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas rempli votre contrat à temps.");
 	else if( jobClient != 41 ) // si le tueur a démissionné entre temps
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'êtes plus mercenaire, vous ne pouvez plus remplir votre contrat.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes plus mercenaire, vous ne pouvez plus remplir votre contrat.");
 	else if(annule)
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous venez d'annuler votre contrat.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous venez d'annuler votre contrat.");
 	else
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes mort et n'avez pas rempli votre contrat.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes mort et n'avez pas rempli votre contrat.");
 	
 	int target = rp_GetClientInt(client, i_ContratFor);
 	if(target != client){
 		if( IsValidClient(target) ) {		
 			
 			if( time )
-				CPrintToChat(target, "{lightblue}[TSX-RP]{default} %N n'a pas rempli son contrat à temps.", client);
+				CPrintToChat(target, "" ...MOD_TAG... " %N n'a pas rempli son contrat à temps.", client);
 			else if( jobClient != 41 ) // si le tueur a démissionné entre temps
-				CPrintToChat(target, "{lightblue}[TSX-RP]{default} %N n'est plus mercenaire et ne peut plus remplir votre contrat.", client);
+				CPrintToChat(target, "" ...MOD_TAG... " %N n'est plus mercenaire et ne peut plus remplir votre contrat.", client);
 			else if(annule)
-				CPrintToChat(target, "{lightblue}[TSX-RP]{default} %N a annulé son contrat.", client);
+				CPrintToChat(target, "" ...MOD_TAG... " %N a annulé son contrat.", client);
 			else
-				CPrintToChat(target, "{lightblue}[TSX-RP]{default} %N a été tué et n'a pas pu remplir son contrat.", client);
+				CPrintToChat(target, "" ...MOD_TAG... " %N a été tué et n'a pas pu remplir son contrat.", client);
 			
 			
 			int prix = rp_GetClientInt(client, i_ContratPay);
@@ -642,7 +642,7 @@ void SetContratFail(int client, bool time = false, bool annule = false) { // tim
 			Call_Finish();
 		}
 		else {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre employeur s'est déconnecté, vous ne le remboursez pas.");
+			CPrintToChat(client, "" ...MOD_TAG... " Votre employeur s'est déconnecté, vous ne le remboursez pas.");
 		}
 	}
 	
@@ -697,7 +697,7 @@ public Action SendToTueur(Handle timer, any client) {
 		}
 	}
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez entendu dire que vos ravisseurs comptent vous libérer dans 6h. Vous pouvez tenter autre chose...");
+	CPrintToChat(client, "" ...MOD_TAG... " Vous avez entendu dire que vos ravisseurs comptent vous libérer dans 6h. Vous pouvez tenter autre chose...");
 	
 	g_hTimer[client] = CreateTimer(6*60.0, FreeKidnapping, client);
 	rp_HookEvent(client, RP_OnPlayerZoneChange, fwdZoneChange);
@@ -735,14 +735,14 @@ public Action fwdZoneChange(int client, int newZone, int oldZone) {
 			rp_SetClientInt( target, i_ContratFor, rp_GetClientInt(client, i_ToPay) );
 			SetContratFail( target , true);
 			
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez pris la fuite, vous êtes libre !");
-			CPrintToChat(target, "{lightblue}[TSX-RP]{default} %N s'est échappé.", client);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez pris la fuite, vous êtes libre !");
+			CPrintToChat(target, "" ...MOD_TAG... " %N s'est échappé.", client);
 		}
 		else {
 			rp_ClientTeleport(client,  view_as<float>({-5553.9, -2838.9, -1959.9}));
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Une tentative de triche a été détectée.");
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Êtes-vous sorti correctement, sans triche, sans téléportation ?");
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Si c'est le cas, contactez KoSSoLaX --> @Kossolax@ts-x.eu ");			
+			CPrintToChat(client, "" ...MOD_TAG... " Une tentative de triche a été détectée.");
+			CPrintToChat(client, "" ...MOD_TAG... " Êtes-vous sorti correctement, sans triche, sans téléportation ?");
+			CPrintToChat(client, "" ...MOD_TAG... " Si c'est le cas, contactez KoSSoLaX --> @Kossolax@ts-x.eu ");			
 		}
 	}
 }
@@ -753,8 +753,8 @@ public Action fwdDead(int client, int attacker, float& respawn, int& tdm) {
 	rp_SetClientInt(target, i_ContratFor, rp_GetClientInt(client, i_ToPay) );
 	SetContratFail( target , true);
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vos ravisseurs vous ont tué.");
-	CPrintToChat(target, "{lightblue}[TSX-RP]{default} %N s'est échappé.", client);
+	CPrintToChat(client, "" ...MOD_TAG... " Vos ravisseurs vous ont tué.");
+	CPrintToChat(target, "" ...MOD_TAG... " %N s'est échappé.", client);
 	
 	
 	return Plugin_Continue;
@@ -768,8 +768,8 @@ public Action FreeKidnapping(Handle timer, any client) {
 	RestoreAssassinNormal(target);
 	rp_ClientTeleport(client,  view_as<float>({2911.0, 868.0, -1853.0}));
 	rp_ClientSendToSpawn(client, true); // C'est proche du comico. 
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vos ravisseurs vous ont finalement libéré.");
-	CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez libéré %N.", client);
+	CPrintToChat(client, "" ...MOD_TAG... " Vos ravisseurs vous ont finalement libéré.");
+	CPrintToChat(target, "" ...MOD_TAG... " Vous avez libéré %N.", client);
 	
 	return Plugin_Continue;
 }
@@ -781,7 +781,7 @@ public int eventKidnapping(Handle p_hItemMenu, MenuAction p_oAction, int client,
 		
 		if( StrEqual( options, "pay", false) ) {
 			
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez payé la rançon de 2500$.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez payé la rançon de 2500$.");
 			
 			int from = rp_GetClientInt(client, i_ToPay);
 			int target = rp_GetClientInt(client, i_KidnappedBy);
@@ -789,8 +789,8 @@ public int eventKidnapping(Handle p_hItemMenu, MenuAction p_oAction, int client,
 			rp_ClientMoney(client, i_Bank, -2500);
 			rp_ClientMoney(from, i_Bank, 2500);		
 			
-			CPrintToChat(from, "{lightblue}[TSX-RP]{default} %N a payé la rançon de 2500$.", client);
-			CPrintToChat(target, "{lightblue}[TSX-RP]{default} %N a payé la rançon de 2500$.", client);
+			CPrintToChat(from, "" ...MOD_TAG... " %N a payé la rançon de 2500$.", client);
+			CPrintToChat(target, "" ...MOD_TAG... " %N a payé la rançon de 2500$.", client);
 			
 			rp_IncrementSuccess(from, success_list_kidnapping);
 			
@@ -801,7 +801,7 @@ public int eventKidnapping(Handle p_hItemMenu, MenuAction p_oAction, int client,
 			rp_ClientSendToSpawn(client, true);
 		}
 		else if( StrEqual( options, "free", false) ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Les portes s'ouvriront toute les 20 secondes, vous n'avez qu'une seule chance de vous en sortir. Pas le droit à l'erreur, foncez !");
+			CPrintToChat(client, "" ...MOD_TAG... " Les portes s'ouvriront toute les 20 secondes, vous n'avez qu'une seule chance de vous en sortir. Pas le droit à l'erreur, foncez !");
 			float delay = 20.0;
 			float time = 0.0;
 			
@@ -846,7 +846,7 @@ public int eventKidnapping(Handle p_hItemMenu, MenuAction p_oAction, int client,
 				if( rp_GetClientJobID(i) != 1 && rp_GetClientJobID(i) != 101 )
 					continue;
 				
-				CPrintToChat(i, "{lightblue}[TSX-RP]{default} Un enlèvement a eut lieu. Vous devez libérer %N dans %s.", client, dest);
+				CPrintToChat(i, "" ...MOD_TAG... " Un enlèvement a eut lieu. Vous devez libérer %N dans %s.", client, dest);
 				rp_Effect_BeamBox(i, client);
 				ClientCommand(i, "play buttons/blip1.wav");
 			}
@@ -863,7 +863,7 @@ public int eventKidnapping(Handle p_hItemMenu, MenuAction p_oAction, int client,
 				if( rp_GetClientJobID(i) != 91 )
 					continue;
 				
-				CPrintToChat(i, "{lightblue}[TSX-RP]{default} Un enlèvement a eu lieu. Vous devez libérer %N dans %s.", client, dest);
+				CPrintToChat(i, "" ...MOD_TAG... " Un enlèvement a eu lieu. Vous devez libérer %N dans %s.", client, dest);
 				rp_Effect_BeamBox(i, client);
 				ClientCommand(i, "play buttons/blip1.wav");
 			}
@@ -906,13 +906,13 @@ public Action Cmd_ItemCryptage(int args) {
 	int item_id = GetCmdArgInt(args);
 	
 	if( rp_GetClientInt(client, i_SearchLVL) >= 3 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le Tribunal de princeton a gelé vos achats de pot de vin car vous êtes recherché depuis trop longtemps.");
+		CPrintToChat(client, "" ...MOD_TAG... " Le Tribunal de princeton a gelé vos achats de pot de vin car vous êtes recherché depuis trop longtemps.");
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	
 	if(rp_GetClientJobID(client) == 1 || rp_GetClientJobID(client) == 101){
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cet objet est interdit aux forces de l'ordre.");
+		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit aux forces de l'ordre.");
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
@@ -923,7 +923,7 @@ public Action Cmd_ItemCryptage(int args) {
 		level = 5;
 		
 	rp_SetClientInt(client, i_Cryptage, level);
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Les mercenaires vous couvrent, vous avez désormais %i/100 de chance d'être caché.", level*20);
+	CPrintToChat(client, "" ...MOD_TAG... " Les mercenaires vous couvrent, vous avez désormais %i/100 de chance d'être caché.", level*20);
 	return Plugin_Handled;
 }
 // ----------------------------------------------------------------------------

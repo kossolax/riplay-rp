@@ -218,29 +218,29 @@ public Action Cmd_ItemFlag(int args) {
 	
 	if( gID == 0 ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas de groupe.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas de groupe.");
 		return;
 	}
 	if( rp_GetCaptureInt(cap_bunker) == gID ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le gang défenseur ne peut pas utiliser de drapeau.");
+		CPrintToChat(client, "" ...MOD_TAG... " Le gang défenseur ne peut pas utiliser de drapeau.");
 		return;
 	}
 	if( rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PVP ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez être en dehors du bunker.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez être en dehors du bunker.");
 		return;
 	}
 	
 	if( g_iClientFlag[client] > 0 && IsValidEdict(g_iClientFlag[client]) && IsValidEntity(g_iClientFlag[client]) ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez déjà un drapeau.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà un drapeau.");
 		return;
 	}
 	
 	if( GDM_GetFlagCount(client) >= FLAG_MAX ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez déjà planté %d drapeaux.", FLAG_MAX);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà planté %d drapeaux.", FLAG_MAX);
 		return;
 	}
 	
@@ -272,7 +272,7 @@ public Action Cmd_ItemFlag(int args) {
 		}
 		
 		if( !can ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il y a déjà 2 drapeaux pour votre équipe sur le terrain.");
+			CPrintToChat(client, "" ...MOD_TAG... " Il y a déjà 2 drapeaux pour votre équipe sur le terrain.");
 			ITEM_CANCEL(client, item_id);
 			return;
 		}
@@ -617,7 +617,7 @@ void CAPTURE_Reward(int totalPoints) {
 		if( array[gdm_flag] >= 1 || array[gdm_kill] >= 1 ) {
 			rp_ClientGiveItem(client, 215, amount + 3 + bonus, true);
 			rp_GetItemData(215, item_type_name, tmp, sizeof(tmp));
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu %d %s, en récompense de la capture.", amount+3+bonus, tmp);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu %d %s, en récompense de la capture.", amount+3+bonus, tmp);
 		}
 	}	
 }
@@ -907,7 +907,7 @@ public Action fwdFrame(int client) {
 		
 		if( rp_GetZoneBit(rp_GetPlayerZone(vehicle)) & BITZONE_PVP ) {
 			teleportVehicle(vehicle);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Les voitures ne sont pas autorisées en zone PvP lors d'une capture.");
+			CPrintToChat(client, "" ...MOD_TAG... " Les voitures ne sont pas autorisées en zone PvP lors d'une capture.");
 		}
 	}
 		
@@ -1403,7 +1403,7 @@ void Client_SetSpawnProtect(int client, bool status) {
 			delete g_hGodTimer[client];
 		g_hGodTimer[client] = CreateTimer(duration, GOD_Expire, client);
 		SetEntProp(client, Prop_Data, "m_takedamage", 0);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez %d secondes de spawn-protection.", RoundFloat(duration));
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez %d secondes de spawn-protection.", RoundFloat(duration));
 	}
 	else {
 		rp_UnhookEvent(client, RP_OnPlayerDead, fwdGodPlayerDead);
@@ -1413,7 +1413,7 @@ void Client_SetSpawnProtect(int client, bool status) {
 			delete g_hGodTimer[client];
 		g_hGodTimer[client] = INVALID_HANDLE; 
 		SetEntProp(client, Prop_Data, "m_takedamage", 2);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre spawn-protection a expirée.");
+		CPrintToChat(client, "" ...MOD_TAG... " Votre spawn-protection a expirée.");
 		
 		if( rp_GetCaptureInt(cap_bunker) == rp_GetClientGroupID(client) )
 			rp_ClientColorize(client, { 64, 64, 255, 255 } );

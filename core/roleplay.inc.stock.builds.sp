@@ -164,32 +164,32 @@ void showGraveMenu(int client) {
 bool CheckBuild(int client, bool showMsg = true) {
 	if( IsInVehicle(client) ) {
 		if( showMsg )
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible de construire en voiture.");
+			CPrintToChat(client, "" ...MOD_TAG... " Impossible de construire en voiture.");
 		return false;
 	}
 	if(! (GetEntityFlags(client) & FL_ONGROUND) ) {
 		if( showMsg )
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible de construire dans les airs");
+			CPrintToChat(client, "" ...MOD_TAG... " Impossible de construire dans les airs");
 		return false;
 	}
 	if( g_iGrabbing[client] > 0 ) {
 		if( showMsg )
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible de construire lorsque vous utilisez la force.");
+			CPrintToChat(client, "" ...MOD_TAG... " Impossible de construire lorsque vous utilisez la force.");
 		return false;
 	}
 	if( g_iGroundEntity[client] > 0 ) {
 		if( showMsg )
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible de construire sur quelque chose");
+			CPrintToChat(client, "" ...MOD_TAG... " Impossible de construire sur quelque chose");
 		return false;
 	}
 	if( GetZoneBit(GetPlayerZone(client) ) & BITZONE_BLOCKBUILD ) {
 		if( showMsg )
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cet objet est interdit où vous êtes.");
+			CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
 		return false;
 	}
 	if( GetZoneBit(GetPlayerZone(client) ) & BITZONE_EVENT ) {
 		if( showMsg )
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cet objet est interdit où vous êtes.");
+			CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
 		return false;
 	}
 	return true;

@@ -95,7 +95,7 @@ public Action Cmd_ItemNade(int args) {
 	}
 	else if( StrEqual(arg1, "c4") ) {
 		int ent = rp_CreateGrenade(client, "ctf_nade_c4", "models/weapons/w_c4_planted.mdl", throwCaltrop, C4Explode, 30.0);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre C4 explosera automatiquement dans 30 secondes. Entrez /C4 pour le faire exploser avant.");
+		CPrintToChat(client, "" ...MOD_TAG... " Votre C4 explosera automatiquement dans 30 secondes. Entrez /C4 pour le faire exploser avant.");
 		g_bC4Expl[ent] = true;
 		
 	}
@@ -523,7 +523,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 	if( StrEqual(command, "c4") ) { // C'est pour nous !
 	
 		if( rp_GetClientFloat(client, fl_CoolDown) > GetGameTime() ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez rien utiliser pour encore %.2f seconde(s).", (rp_GetClientFloat(client, fl_CoolDown)-GetGameTime()) );
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez rien utiliser pour encore %.2f seconde(s).", (rp_GetClientFloat(client, fl_CoolDown)-GetGameTime()) );
 			return Plugin_Handled;
 		}
 		
@@ -616,7 +616,7 @@ public Action Cmd_ItemBomb(int args) {
 	
 	if( rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PEACEFULL ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cet objet est interdit où vous êtes.");
+		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
 		return Plugin_Handled;
 	}
 	
@@ -638,7 +638,7 @@ public Action Cmd_ItemBomb(int args) {
 	WritePackCell(dp, EntIndexToEntRef(target) );
 	WritePackCell(dp, client);
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} La bombe a été placée et explosera dans 15 secondes.");
+	CPrintToChat(client, "" ...MOD_TAG... " La bombe a été placée et explosera dans 15 secondes.");
 	rp_Effect_BeamBox(client, target);
 	
 	float vecTarget[3];

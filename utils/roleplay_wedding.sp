@@ -55,8 +55,8 @@ public void SQL_CheckWedding(Handle owner, Handle handle, const char[] error, an
 			GetClientAuthId(i, AUTH_TYPE, target, sizeof(target));
 			
 			if( StrEqual(steamid, target) && rp_GetClientInt(i, i_MarriedTo) == 0 ) {
-				CPrintToChat(i, "{lightblue}[TSX-RP]{default} Votre conjoint %N a rejoint la ville.", client);
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre conjoint %N a rejoint la ville.", i);
+				CPrintToChat(i, "" ...MOD_TAG... " Votre conjoint %N a rejoint la ville.", client);
+				CPrintToChat(client, "" ...MOD_TAG... " Votre conjoint %N a rejoint la ville.", i);
 				
 				rp_SetClientInt(i, i_MarriedTo, client);
 				rp_SetClientInt(client, i_MarriedTo, i);
@@ -73,7 +73,7 @@ public void OnClientDisconnect(int client) {
 	// Un mariage est terminé si un des deux mariés déco
 	int mari = rp_GetClientInt(client, i_MarriedTo);
 	if( mari > 0 ) {
-		CPrintToChat(mari, "{lightblue}[TSX-RP]{default} Votre conjoint a quitté la ville précipitamment.");
+		CPrintToChat(mari, "" ...MOD_TAG... " Votre conjoint a quitté la ville précipitamment.");
 		rp_UnhookEvent(mari, RP_OnFrameSeconde, fwdFrame);
 		rp_SetClientInt(mari, i_MarriedTo, 0);
 		rp_SetClientInt(client, i_MarriedTo, 0);
@@ -96,7 +96,7 @@ public Action Cmd_Mariage(int client) {
 	int zoneJuge = rp_GetPlayerZone(client);
 	
 	if( rp_GetZoneInt( zoneJuge, zone_type_type) != 101 ) { // N'ouvre pas le menu en dehors du tribu
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cette commande ne peut être utilisée qu'au tribunal.");
+		CPrintToChat(client, "" ...MOD_TAG... " Cette commande ne peut être utilisée qu'au tribunal.");
 		ACCESS_DENIED(client);
 	}
 	
@@ -112,15 +112,15 @@ void Marier(int juge, int epoux, int epouse) {
 	int prix = 10000;
 
 	if( (rp_GetClientInt(epoux, i_Bank)+rp_GetClientInt(epoux, i_Money)) < (prix/2) || (rp_GetClientInt(epouse, i_Bank)+rp_GetClientInt(epouse, i_Money)) < (prix/2) ) {
-		PrintToChatZone(pos_1, "{lightblue}[TSX-RP]{default} L'un des mariés est en fait un SDF refoulé et n'a pas assez d'argent pour s'acquitter des frais du mariage, vous pouvez huer les pauvres !");
+		PrintToChatZone(pos_1, "" ...MOD_TAG... " L'un des mariés est en fait un SDF refoulé et n'a pas assez d'argent pour s'acquitter des frais du mariage, vous pouvez huer les pauvres !");
 		return;
 	}
 	
-	PrintToChatZone(pos_1, "{lightblue}[TSX-RP]{default} %N répond: OUI !", epouse);
-	PrintToChatZone(pos_1, "{lightblue}[TSX-RP]{default} %N et %N sont maintenant unis par les liens du mariage, vous pouvez féliciter les mariés !", epoux, epouse);
+	PrintToChatZone(pos_1, "" ...MOD_TAG... " %N répond: OUI !", epouse);
+	PrintToChatZone(pos_1, "" ...MOD_TAG... " %N et %N sont maintenant unis par les liens du mariage, vous pouvez féliciter les mariés !", epoux, epouse);
 	
-	CPrintToChat(epoux, "{lightblue}[TSX-RP]{default} Vous et %N êtes unis par les liens du mariage, vous pouvez embrasser la mariée félicitation !", epouse);
-	CPrintToChat(epouse, "{lightblue}[TSX-RP]{default} Vous et %N êtes unis par les liens du mariage, félicitations !", epoux);
+	CPrintToChat(epoux, "" ...MOD_TAG... " Vous et %N êtes unis par les liens du mariage, vous pouvez embrasser la mariée félicitation !", epouse);
+	CPrintToChat(epouse, "" ...MOD_TAG... " Vous et %N êtes unis par les liens du mariage, félicitations !", epoux);
 	
 	// On paye le gentil juge et on preleve aux heureux élus
 	rp_ClientMoney(epoux, i_Money, -(prix / 2));
@@ -251,7 +251,7 @@ Menu Menu_Mariage(int& client, int a, int b, int c, int d, int e, int f) {
 	}
 	else if( d > 0 ) {
 		if( d >= 2 ) {
-			CPrintToChat(a, "{lightblue}[TSX-RP]{default} Vous essayez d'unir quelqu'un déjà marié, le mariage ne peut pas se dérouler.");
+			CPrintToChat(a, "" ...MOD_TAG... " Vous essayez d'unir quelqu'un déjà marié, le mariage ne peut pas se dérouler.");
 		}
 		else {
 			int pos_1 = rp_GetPlayerZone(a);
@@ -261,20 +261,20 @@ Menu Menu_Mariage(int& client, int a, int b, int c, int d, int e, int f) {
 			
 			// Messages d'erreurs double check
 			if( rp_GetZoneInt(pos_1, zone_type_type) != 101 ) {
-				CPrintToChat(a, "{lightblue}[TSX-RP]{default} Vous n'êtes pas au tribunal, le mariage ne peut pas se dérouler.");
+				CPrintToChat(a, "" ...MOD_TAG... " Vous n'êtes pas au tribunal, le mariage ne peut pas se dérouler.");
 				err++;
 			}
 			if( pos_1 != pos_3 || pos_2 != pos_3 ) {
-				CPrintToChat(a, "{lightblue}[TSX-RP]{default} Tous les prétendants ne sont pas dans la même salle du tribunal, le mariage ne peut pas se dérouler.");
+				CPrintToChat(a, "" ...MOD_TAG... " Tous les prétendants ne sont pas dans la même salle du tribunal, le mariage ne peut pas se dérouler.");
 				err++;
 			}
 			if( rp_GetClientInt(b, i_MarriedTo) > 0 || rp_GetClientInt(c, i_MarriedTo) > 0 ) {
-				CPrintToChat(a, "{lightblue}[TSX-RP]{default} Vous essayez d'unir quelqu'un déjà marié, le mariage ne peut pas se dérouler.");
+				CPrintToChat(a, "" ...MOD_TAG... " Vous essayez d'unir quelqu'un déjà marié, le mariage ne peut pas se dérouler.");
 				err++;
 			}
 			
 			if( err == 0 ) {
-				PrintToChatZone(pos_1, "{lightblue}[TSX-RP]{default} Le juge %N s'exclame: %N, voulez-vous prendre pour époux %N et l'aimer jusqu'à ce que la mort vous sépare?", a, b, c);
+				PrintToChatZone(pos_1, "" ...MOD_TAG... " Le juge %N s'exclame: %N, voulez-vous prendre pour époux %N et l'aimer jusqu'à ce que la mort vous sépare?", a, b, c);
 				
 				subMenu = new Menu(eventMariage);
 				
@@ -292,12 +292,12 @@ Menu Menu_Mariage(int& client, int a, int b, int c, int d, int e, int f) {
 		int pos_1 = rp_GetPlayerZone(a);
 		
 		if( e == 2 ) {
-			PrintToChatZone(pos_1, "{lightblue}[TSX-RP]{default} %N répond: NON, %N fond en larmes... Stupéfaction dans la salle .", b, c);
+			PrintToChatZone(pos_1, "" ...MOD_TAG... " %N répond: NON, %N fond en larmes... Stupéfaction dans la salle .", b, c);
 		}
 		else {			
 			// Messages à toute la salle
-			PrintToChatZone(pos_1, "{lightblue}[TSX-RP]{default} %N répond: OUI, les invités et %N sourient .", b, c);
-			PrintToChatZone(pos_1, "{lightblue}[TSX-RP]{default} Le juge %N s'exclame: %N, voulez-vous prendre pour épouse %N et l'aimer jusqu'à que la mort vous sépare?", a, c, b);
+			PrintToChatZone(pos_1, "" ...MOD_TAG... " %N répond: OUI, les invités et %N sourient .", b, c);
+			PrintToChatZone(pos_1, "" ...MOD_TAG... " Le juge %N s'exclame: %N, voulez-vous prendre pour épouse %N et l'aimer jusqu'à que la mort vous sépare?", a, c, b);
 			
 			subMenu = new Menu(eventMariage);
 			
@@ -315,7 +315,7 @@ Menu Menu_Mariage(int& client, int a, int b, int c, int d, int e, int f) {
 		int pos_1 = rp_GetPlayerZone(a);
 		
 		if( e == 2 ) {
-			PrintToChatZone(pos_1, "{lightblue}[TSX-RP]{default} %N répond: NON, %N fond en larmes... Stupéfaction dans la salle .", c, b);
+			PrintToChatZone(pos_1, "" ...MOD_TAG... " %N répond: NON, %N fond en larmes... Stupéfaction dans la salle .", c, b);
 		}
 		else {
 			
@@ -325,11 +325,11 @@ Menu Menu_Mariage(int& client, int a, int b, int c, int d, int e, int f) {
 			
 			// Messages d'erreurs double check
 			if( rp_GetZoneInt(pos_1, zone_type_type) != 101 ) {
-				CPrintToChat(a, "{lightblue}[TSX-RP]{default} Vous n'êtes pas au tribunal, le mariage ne peut pas se dérouler.");
+				CPrintToChat(a, "" ...MOD_TAG... " Vous n'êtes pas au tribunal, le mariage ne peut pas se dérouler.");
 				err++;
 			}
 			if( pos_1 != pos_3 || pos_2 != pos_3 ) {
-				CPrintToChat(a, "{lightblue}[TSX-RP]{default} Tous les prétendant ne sont pas dans la même salle du tribunal, le mariage ne peut pas se dérouler.");
+				CPrintToChat(a, "" ...MOD_TAG... " Tous les prétendant ne sont pas dans la même salle du tribunal, le mariage ne peut pas se dérouler.");
 				err++;
 			}
 			if( err == 0 )
@@ -400,7 +400,7 @@ Menu Menu_Prolonge(int& client, int a, int b, int c, int d, int e) {
 			client = c;
 		}
 		else {
-			PrintToChatZone(zone, "{lightblue}[TSX-RP]{default} %N ne souhaite pas prolonger son marriage.", b);
+			PrintToChatZone(zone, "" ...MOD_TAG... " %N ne souhaite pas prolonger son marriage.", b);
 		}
 	}
 	else if( e > 0 ) {
@@ -409,11 +409,11 @@ Menu Menu_Prolonge(int& client, int a, int b, int c, int d, int e) {
 			int prix = 3000;
 
 			if( (rp_GetClientInt(b, i_Bank)+rp_GetClientInt(b, i_Money)) < (prix/2) || (rp_GetClientInt(c, i_Bank)+rp_GetClientInt(c, i_Money)) < (prix/2) ) {
-				PrintToChatZone(zone, "{lightblue}[TSX-RP]{default} L'un des mariés n'a pas assez d'argent pour prolonger son contrat de mariage.");
+				PrintToChatZone(zone, "" ...MOD_TAG... " L'un des mariés n'a pas assez d'argent pour prolonger son contrat de mariage.");
 				return null;
 			}
 			
-			PrintToChatZone(zone, "{lightblue}[TSX-RP]{default} Le contrat de mariage de %N et %N est prolongé de 7 jours!", b, c);
+			PrintToChatZone(zone, "" ...MOD_TAG... " Le contrat de mariage de %N et %N est prolongé de 7 jours!", b, c);
 			
 			// On paye le gentil juge et on preleve aux heureux élus
 			rp_ClientMoney(b, i_Money, -(prix / 2));
@@ -427,7 +427,7 @@ Menu Menu_Prolonge(int& client, int a, int b, int c, int d, int e) {
 			SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 		}
 		else {
-			PrintToChatZone(zone, "{lightblue}[TSX-RP]{default} %N ne souhaite pas prolonger son mariage.", c);
+			PrintToChatZone(zone, "" ...MOD_TAG... " %N ne souhaite pas prolonger son mariage.", c);
 		}
 	}
 	return subMenu;
@@ -471,11 +471,11 @@ Menu Menu_Divorce(int& client, int a, int b, int c) {
 			int prix = 10000;
 
 			if( (rp_GetClientInt(b, i_Bank)+rp_GetClientInt(b, i_Money)) < (prix/2) ) {
-				PrintToChatZone(zone, "{lightblue}[TSX-RP]{default} %N n'a pas assez d'argent pour prolonger son contrat de mariage.", b);
+				PrintToChatZone(zone, "" ...MOD_TAG... " %N n'a pas assez d'argent pour prolonger son contrat de mariage.", b);
 				return null;
 			}
 			
-			PrintToChatZone(zone, "{lightblue}[TSX-RP]{default} %N a rompu son contrat de mariage!", b);
+			PrintToChatZone(zone, "" ...MOD_TAG... " %N a rompu son contrat de mariage!", b);
 			
 			
 			rp_ClientMoney(b, i_Money, -(prix));
@@ -483,7 +483,7 @@ Menu Menu_Divorce(int& client, int a, int b, int c) {
 			rp_SetJobCapital(101, rp_GetJobCapital(101) + (prix/2) );
 			
 			if( rp_GetClientInt(b, i_MarriedTo) > 0 ) {
-				CPrintToChat(rp_GetClientInt(b, i_MarriedTo), "{lightblue}[TSX-RP]{default} Votre conjoint a rompu votre contrat de mariage.");
+				CPrintToChat(rp_GetClientInt(b, i_MarriedTo), "" ...MOD_TAG... " Votre conjoint a rompu votre contrat de mariage.");
 				
 				rp_UnhookEvent(rp_GetClientInt(b, i_MarriedTo), RP_OnFrameSeconde, fwdFrame);
 				rp_UnhookEvent(b, RP_OnFrameSeconde, fwdFrame);
@@ -496,7 +496,7 @@ Menu Menu_Divorce(int& client, int a, int b, int c) {
 			SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 		}
 		else {
-			PrintToChatZone(zone, "{lightblue}[TSX-RP]{default} %N ne veut pas rompre son contrat de mariage.", b);
+			PrintToChatZone(zone, "" ...MOD_TAG... " %N ne veut pas rompre son contrat de mariage.", b);
 		}
 	}
 	return subMenu;
@@ -553,7 +553,7 @@ Menu Menu_Duration(int client, int a, int b) {
 	}
 	else {
 		float j = b / (24.0 * 60.0 * 60.0);
-		PrintToChatZone(zone, "{lightblue}[TSX-RP]{default} %N est toujours marié pour une durée de %.1f jour%s.", a, j, j >= 2.0 ? "s" : "");
+		PrintToChatZone(zone, "" ...MOD_TAG... " %N est toujours marié pour une durée de %.1f jour%s.", a, j, j >= 2.0 ? "s" : "");
 	}
 	
 	return null;

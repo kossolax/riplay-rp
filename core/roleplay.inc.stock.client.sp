@@ -39,7 +39,7 @@ void DeathDrop(int Client) {
 		if( rand >= 1 && rand < 70 ) {
 			
 			SpawnMoney(vecOrigin, true);
-			CPrintToChat(Client, "{lightblue}[TSX-RP]{default} Vous avez fait tomber votre porte-feuille.");
+			CPrintToChat(Client, "" ...MOD_TAG... " Vous avez fait tomber votre porte-feuille.");
 			rp_ClientMoney(Client, i_Money, -Math_GetRandomInt(20, 50));
 		}
 		else if( rand >= 71 && rand < 86 ) {
@@ -49,28 +49,28 @@ void DeathDrop(int Client) {
 
 			if( g_bUserData[Client][b_HaveCard] == 1 ) {
 				g_bUserData[Client][b_HaveCard] = 0;
-				CPrintToChat(Client, "{lightblue}[TSX-RP]{default} Vous avez fait tomber votre porte-feuille, et vous avez perdu votre carte bancaire...");
+				CPrintToChat(Client, "" ...MOD_TAG... " Vous avez fait tomber votre porte-feuille, et vous avez perdu votre carte bancaire...");
 			}
 			else {
-				CPrintToChat(Client, "{lightblue}[TSX-RP]{default} Vous avez fait tomber votre porte-feuille.");
+				CPrintToChat(Client, "" ...MOD_TAG... " Vous avez fait tomber votre porte-feuille.");
 			}
 		}
 		else if( rand >= 86 && rand < 101 ) {
 			if( strlen(g_szUserData[Client][sz_Skin]) > 2 ) {
 				Format(g_szUserData[Client][sz_Skin], sizeof(g_szUserData[][]), "");
-				CPrintToChat(Client, "{lightblue}[TSX-RP]{default} Vos vêtements sont devenus inutilisable...");
+				CPrintToChat(Client, "" ...MOD_TAG... " Vos vêtements sont devenus inutilisable...");
 			}
 			else {
 				
 				SpawnMoney(vecOrigin, true);
-				CPrintToChat(Client, "{lightblue}[TSX-RP]{default} Vous avez fait tomber votre porte-feuille.");
+				CPrintToChat(Client, "" ...MOD_TAG... " Vous avez fait tomber votre porte-feuille.");
 				rp_ClientMoney(Client, i_Money, -Math_GetRandomInt(20, 50));
 			}
 		}
 		else {
 			
 			SpawnMoney(vecOrigin, true);
-			CPrintToChat(Client, "{lightblue}[TSX-RP]{default} Vous avez fait tomber votre porte-feuille.");
+			CPrintToChat(Client, "" ...MOD_TAG... " Vous avez fait tomber votre porte-feuille.");
 			rp_ClientMoney(Client, i_Money, -Math_GetRandomInt(20, 50));
 		}
 	}
@@ -518,7 +518,7 @@ int GivePlayerPay(int i, bool calculator = false) {
 	
 	if( g_iUserData[i][i_ItemBankPrice] > getClientBankLimit(i) ) {
 		if( !calculator ) {
-			CPrintToChat(i, "{lightblue}[TSX-RP]{default} Votre coffre en banque est plein, impossible de vous payer.");
+			CPrintToChat(i, "" ...MOD_TAG... " Votre coffre en banque est plein, impossible de vous payer.");
 			float pc = float(g_iUserData[i][i_ItemBankPrice]) / float(getClientBankLimit(i)) * 100.0;
 			LogToGame("[CHEATING] [BANK] %L Coffre de la banque plein: %f%%", i, pc);
 			if( pc > 200.0 )
@@ -527,18 +527,18 @@ int GivePlayerPay(int i, bool calculator = false) {
 	}
 	else if( g_bUserData[i][b_IsAFK] ) {
 		if( !calculator )
-			CPrintToChat(i, "{lightblue}[TSX-RP]{default} Etant AFK, vous n'avez pas le droit de toucher votre paye.");
+			CPrintToChat(i, "" ...MOD_TAG... " Etant AFK, vous n'avez pas le droit de toucher votre paye.");
 	}
 	else if( g_iUserData[i][i_TimeAFK_today] >= (18*60) ) {
 		if( !calculator )
-			CPrintToChat(i, "{lightblue}[TSX-RP]{default} Vous avez passé plus de 18 heures AFK sur cette journée. Vous ne serez donc pas payé.");
+			CPrintToChat(i, "" ...MOD_TAG... " Vous avez passé plus de 18 heures AFK sur cette journée. Vous ne serez donc pas payé.");
 	}
 	else {
 							
 		if( IsClientInJail(i) && g_iUserData[i][i_JailTime] > 0 ) {
 			
 			if( !calculator )
-				CPrintToChat(i, "{lightblue}[TSX-RP]{default} Étant en prison, vous n'avez reçu que 10%% de votre paye.");
+				CPrintToChat(i, "" ...MOD_TAG... " Étant en prison, vous n'avez reçu que 10%% de votre paye.");
 
 			SetJobCapital(1, GetJobCapital(1) + RoundFloat((to_pay/10.0)*6.0) );
 			SetJobCapital(101, GetJobCapital(101) + RoundFloat((to_pay/10.0)*3.0) );
@@ -547,7 +547,7 @@ int GivePlayerPay(int i, bool calculator = false) {
 		}
 		if( g_iUserData[i][i_SearchLVL] >= 4 ) {
 			if( !calculator )
-				CPrintToChat(i, "{lightblue}[TSX-RP]{default} Etant recherché par le Tribunal, vous n'avez pas le droit de toucher votre paye.");
+				CPrintToChat(i, "" ...MOD_TAG... " Etant recherché par le Tribunal, vous n'avez pas le droit de toucher votre paye.");
 
 			SetJobCapital(101, GetJobCapital(101) + RoundFloat((to_pay/10.0)*7.0) );
 			SetJobCapital(1, GetJobCapital(1) + RoundFloat((to_pay/10.0)*3.0) );
@@ -557,13 +557,13 @@ int GivePlayerPay(int i, bool calculator = false) {
 		if( !calculator ) {
 				
 			if( capital > 0 || g_iUserData[i][i_Job] == 0 ) {
-				CPrintToChat(i, "{lightblue}[TSX-RP]{default} Vous avez reçu votre paye de %i$.", to_pay);
+				CPrintToChat(i, "" ...MOD_TAG... " Vous avez reçu votre paye de %i$.", to_pay);
 				SetJobCapital( g_iUserData[i][i_Job], (capital-to_pay));
 				g_iUserStat[i][i_MoneyEarned_Pay] += to_pay;
 				rp_ClientMoney(i, g_bUserData[i][b_PayToBank] ? i_Bank : i_Money, to_pay);
 			}
 			else {
-				CPrintToChat(i, "{lightblue}[TSX-RP]{default} L'entreprise pour laquel vous travaillez est en faillite. Vous n'avez pas de paye.");
+				CPrintToChat(i, "" ...MOD_TAG... " L'entreprise pour laquel vous travaillez est en faillite. Vous n'avez pas de paye.");
 				
 				GetClientAuthId(i, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 				Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`) VALUES (NULL, '%s', '%i', '%i', '1', '%i', '%s', '%i');",
@@ -577,7 +577,7 @@ int GivePlayerPay(int i, bool calculator = false) {
 		to_pay += g_iUserData[i][i_AddToPay];
 				
 		if( !calculator ) {
-			CPrintToChat(i, "{lightblue}[TSX-RP]{default} Vous avez reçu: %d$ pour votre travail d'aujourd'hui.", g_iUserData[i][i_AddToPay]);
+			CPrintToChat(i, "" ...MOD_TAG... " Vous avez reçu: %d$ pour votre travail d'aujourd'hui.", g_iUserData[i][i_AddToPay]);
 			g_iUserStat[i][i_MoneyEarned_Pay] += g_iUserData[i][i_AddToPay];
 				
 			int tmp = g_iUserData[i][i_AddToPay];
@@ -602,7 +602,7 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 	char szLog[1024];
 	static origin[65];
 	
-	Format(szMessage, sizeof(szMessage), "{lightblue}[TSX-RP]{default} Vous avez");
+	Format(szMessage, sizeof(szMessage), "" ...MOD_TAG... " Vous avez");
 	Format(szLog, sizeof(szLog), "[TSX-RP] [SYN]");
 	
 	if( type == SynType_job ) {
@@ -687,8 +687,8 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 		else
 			g_iUserData[client][i_JailTime] += to_id;
 		
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez été condamné à faire %i heure de prison par le juge %s", to_id/60, szPseudo);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} La raison de cette condamnation est %s", szRaison);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez été condamné à faire %i heure de prison par le juge %s", to_id/60, szPseudo);
+		CPrintToChat(client, "" ...MOD_TAG... " La raison de cette condamnation est %s", szRaison);
 		
 		rp_ClientOverlays(client, o_Jail_Juge, 10.0);
 		
@@ -714,9 +714,9 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 		rp_ClientGiveItem(client, to_id, invoker, true);
 		
 		if( invoker > 0 )
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu: %d %s par %s.", invoker, g_szItemList[to_id][item_type_name], szPseudo);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu: %d %s par %s.", invoker, g_szItemList[to_id][item_type_name], szPseudo);
 		else
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez donné: %d %s pour %s.", -invoker, g_szItemList[to_id][item_type_name], szPseudo);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez donné: %d %s pour %s.", -invoker, g_szItemList[to_id][item_type_name], szPseudo);
 		
 		LogToGame("[TSX-RP] [SYN] [ITEM-TRANSFERT] %L %d %s pour %s", client, invoker, g_szItemList[to_id][item_type_name], szPseudo);
 	}
@@ -725,9 +725,9 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 		rp_ClientGiveItem(client, to_id, invoker);
 		
 		if( invoker > 0 )
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu: %d %s par %s.", invoker, g_szItemList[to_id][item_type_name], szPseudo);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu: %d %s par %s.", invoker, g_szItemList[to_id][item_type_name], szPseudo);
 		else
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez donné: %d %s pour %s.", -invoker, g_szItemList[to_id][item_type_name], szPseudo);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez donné: %d %s pour %s.", -invoker, g_szItemList[to_id][item_type_name], szPseudo);
 		
 		LogToGame("[TSX-RP] [SYN] [ITEM-TRANSFERT] %L %d %s pour %s", client, invoker, g_szItemList[to_id][item_type_name], szPseudo);
 	}
@@ -985,7 +985,7 @@ void CopSetVisible(int client) {
 		g_bUserData[client][b_MaySteal] = false;
 		CreateTimer(10.0, AllowStealing, client);
 	}		
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes maintenant visible.");
+	CPrintToChat(client, "" ...MOD_TAG... " Vous êtes maintenant visible.");
 	g_flUserData[client][fl_invisibleTimeLeft] = GetGameTime() + 5.0;
 }
 void CopSetInvisible(int client) {
@@ -994,21 +994,21 @@ void CopSetInvisible(int client) {
 	g_bUserData[client][b_Invisible] = true;
 	ClientCommand(client, "r_screenoverlay effects/hsv.vmt");
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes maintenant invisible.");
+	CPrintToChat(client, "" ...MOD_TAG... " Vous êtes maintenant invisible.");
 }
 void CheckLiscence(int client) {
 	int time = GetTime();
 	
 	if(g_bUserData[client][b_License1]) {
 		if(GetTime() > g_iUserData[client][i_StartLicense1] + (24*60*60)*14) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Attention, ton permis de port d'arme léger vient d'expirer. Pense à racheter tes permis auprès d'un banquier.");
+			CPrintToChat(client, "" ...MOD_TAG... " Attention, ton permis de port d'arme léger vient d'expirer. Pense à racheter tes permis auprès d'un banquier.");
 			g_bUserData[client][b_License1] = 0;
 		}
 	}
  
 	if(g_bUserData[client][b_License2]) {
 		if(GetTime() > g_iUserData[client][i_StartLicense2] + (24*60*60)*14) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Attention, ton permis de port d'arme lourd vient d'expirer. Pense à racheter tes permis auprès d'un banquier..");
+			CPrintToChat(client, "" ...MOD_TAG... " Attention, ton permis de port d'arme lourd vient d'expirer. Pense à racheter tes permis auprès d'un banquier..");
 			g_bUserData[client][b_License2] = 0;
 		}
 	}

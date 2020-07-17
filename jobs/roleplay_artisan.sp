@@ -342,7 +342,7 @@ void displayBuildMenu(int client, int jobID, int itemID) {
 void displayRecyclingMenu(int client, int itemID) {
 	
 	if( rp_GetClientInt(client, i_ItemCount) == 0 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez aucun item à recycler.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez aucun item à recycler.");
 		return;
 	}
 	
@@ -395,7 +395,7 @@ void displayLearngMenu(char[] type, int client, int jobID, int itemID) {
 	int data[craft_type_max];
 	bool can, skip = StrEqual(type, "learn") ? false : true;
 	if( !skip && count == 0 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez aucun point d'apprentissage. Pour en avoir vous pouvez gagner un niveau d'artisanat ou acheter et lire un livre de sagesse.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez aucun point d'apprentissage. Pour en avoir vous pouvez gagner un niveau d'artisanat ou acheter et lire un livre de sagesse.");
 		return;
 	}
 	
@@ -581,7 +581,7 @@ public Action stopBuilding(Handle timer, Handle dp) {
 		return Plugin_Stop;
 	}
 	if( !isNearTable(client) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'êtes plus à coté d'une table de craft.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes plus à coté d'une table de craft.");
 		g_bInCraft[client] = false;
 		return Plugin_Stop;
 	}
@@ -820,13 +820,13 @@ int BuidlingTABLE(int client) {
 		if( StrEqual(classname, tmp) && rp_GetBuildingData(i, BD_owner) == client ) {
 			count++;
 			if( count >= 1 ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez déjà une table de placée.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà une table de placée.");
 				return 0;
 			}
 		}
 	}
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Construction en cours...");
+	CPrintToChat(client, "" ...MOD_TAG... " Construction en cours...");
 
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client);
 	
@@ -875,6 +875,6 @@ public void BuildingTABLE_break(const char[] output, int caller, int activator, 
 	
 	int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
 	if( IsValidClient(owner) ) {
-		CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Votre table de craft a été détruite.");
+		CPrintToChat(owner, "" ...MOD_TAG... " Votre table de craft a été détruite.");
 	}
 }

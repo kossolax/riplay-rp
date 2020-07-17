@@ -20,7 +20,7 @@ public Action Command_Say(int client, int args) {
 		return Plugin_Handled;
 	}
 	if( !IsPlayerAlive(client) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez être en vie pour parler.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez être en vie pour parler.");
 		return Plugin_Handled;
 	}
 
@@ -174,7 +174,7 @@ public Action Command_Say(int client, int args) {
 		char szHours[64];
 		PrintHours(szHours, 63);
 		int i = client;
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Argent: %d$ - En Banque: %d$ - Job: %s", g_iUserData[i][i_Money], g_iUserData[i][i_Bank], g_szJobList[g_iUserData[i][i_Job]][0]);
+		CPrintToChat(client, "" ...MOD_TAG... " Argent: %d$ - En Banque: %d$ - Job: %s", g_iUserData[i][i_Money], g_iUserData[i][i_Bank], g_szJobList[g_iUserData[i][i_Job]][0]);
 
 		return Plugin_Handled;
 	}
@@ -184,7 +184,7 @@ public Action Command_Say(int client, int args) {
 				strcmp(szSayTrig, "!actif", false) == 0 || strcmp(szSayTrig, "/actif", false) == 0) {
 		
 		if( g_iUserData[client][i_PlayerLVL] < 2 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez être au moins de niveau 2, afin d'utiliser cette commande.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous devez être au moins de niveau 2, afin d'utiliser cette commande.");
 			return Plugin_Handled;
 		}
 		
@@ -193,7 +193,7 @@ public Action Command_Say(int client, int args) {
 	}
 	else if(	strcmp(szSayTrig, "!vita", false) == 0 || strcmp(szSayTrig, "/vita", false) == 0 ) {
 
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} %.2f points de vitalité, niveau: %d", g_flUserData[client][fl_Vitality], GetVitaLevel(client));
+		CPrintToChat(client, "" ...MOD_TAG... " %.2f points de vitalité, niveau: %d", g_flUserData[client][fl_Vitality], GetVitaLevel(client));
 		return Plugin_Handled;
 	}
 	else if(
@@ -211,7 +211,7 @@ public Action Command_Say(int client, int args) {
 	}
 	else if(strcmp(szSayTrig, "!rev", false) == 0 || strcmp(szSayTrig, "/rev", false) == 0) {
 
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Derniere revision: %s %s TAG: %s", __TIME__, __DATE__, __LAST_REV__);
+		CPrintToChat(client, "" ...MOD_TAG... " Derniere revision: %s %s TAG: %s", __TIME__, __DATE__, __LAST_REV__);
 
 		return Plugin_Handled;
 	}
@@ -315,7 +315,7 @@ public Action Command_Say(int client, int args) {
 		int door_bdd = (door-MaxClients);
 
 		if( !IsValidDoor(door) || !g_iDoorKnowed[door_bdd] ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez viser une porte.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser une porte.");
 			return Plugin_Handled;
 		}
 		int can = -1;
@@ -336,11 +336,11 @@ public Action Command_Say(int client, int args) {
 			}
 		}
 		if( can == -1 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez viser un appartement.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser un appartement.");
 			return Plugin_Handled;
 		}
 		if( !g_iDoorOwner_v2[client][can] ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'êtes pas propriétaire de cet appartement.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas propriétaire de cet appartement.");
 			return Plugin_Handled;
 		}
 		
@@ -360,7 +360,7 @@ public Action Command_Say(int client, int args) {
 			}
 			g_iAppartBonus[can][appart_proprio] = mnt > 0 ? rand[GetRandomInt(0, mnt - 1)] : 0;
 		}
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez quitté votre appartement.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez quitté votre appartement.");
 		return Plugin_Handled;
 	}
 	else if( strcmp(szSayTrig, "!appart", false) == 0 || strcmp(szSayTrig, "/appart", false) == 0 ||
@@ -389,7 +389,7 @@ public Action Command_Say(int client, int args) {
 			AddMenuItem(menu, tmp, tmp,		ITEMDRAW_DISABLED);
 		}
 		
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il y a %d appartement(s) disponible", count);
+		CPrintToChat(client, "" ...MOD_TAG... " Il y a %d appartement(s) disponible", count);
 		
 		SetMenuExitButton(menu, true);
 		DisplayMenu(menu, client, MENU_TIME_DURATION);
@@ -437,7 +437,7 @@ public Action Command_Say(int client, int args) {
 			
 		}
 		
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il y a %d nouveau(x) joueur(s)", count);
+		CPrintToChat(client, "" ...MOD_TAG... " Il y a %d nouveau(x) joueur(s)", count);
 		
 		SetMenuExitButton(menu, true);
 		DisplayMenu(menu, client, MENU_TIME_DURATION);
@@ -450,11 +450,11 @@ public Action Command_Say(int client, int args) {
 			ACCESS_DENIED(client);
 		}
 		if( g_bUserData[client][b_MaySteal] == 0) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas voler pour le moment.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas voler pour le moment.");
 			return Plugin_Handled;
 		}
 		if( GetConVarInt(g_hAllowSteal) == 0 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas voler pour le moment.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas voler pour le moment.");
 			return Plugin_Handled;
 		}
 		
@@ -465,20 +465,20 @@ public Action Command_Say(int client, int args) {
 			return Plugin_Handled;
 			
 		if( g_flUserData[target][fl_Invincible] >= GetGameTime() ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas voler cette personne.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas voler cette personne.");
 			return Plugin_Handled;
 		}
 		if( (g_flUserData[target][fl_LastVente]+8.0) >= GetGameTime() ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas voler cette personne.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas voler cette personne.");
 			return Plugin_Handled;
 		}
 		if( !IsTutorialOver(target) ) {
-			CPrintToChat(target, "{lightblue}[TSX-RP]{default} %N n'a pas terminé le tutorial.", target);
+			CPrintToChat(target, "" ...MOD_TAG... " %N n'a pas terminé le tutorial.", target);
 			return Plugin_Handled;
 		}
 		
 		if( !IsEntitiesNear(client, target) ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ce joueur est trop éloigné.");
+			CPrintToChat(client, "" ...MOD_TAG... " Ce joueur est trop éloigné.");
 			return Plugin_Handled;
 		}
 		
@@ -555,7 +555,7 @@ public Action Command_Say(int client, int args) {
 			ACCESS_DENIED(client);
 		}
 		if( g_bUserData[client][b_MayBuild] == 0 || g_iUserData[client][i_KidnappedBy] > 0 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas construire pour le moment.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas construire pour le moment.");
 			return Plugin_Handled;
 		}
 		
@@ -584,21 +584,21 @@ public Action Command_Say(int client, int args) {
 		//ACCESS_DENIED(client);
 
 		if( g_flUserData[client][fl_CoolDown] > GetGameTime() ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez rien utiliser pour encore %.2f seconde(s).", (g_flUserData[client][fl_CoolDown]-GetGameTime()) );
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez rien utiliser pour encore %.2f seconde(s).", (g_flUserData[client][fl_CoolDown]-GetGameTime()) );
 			return Plugin_Handled;
 		}
 		
 		if( g_iUserData[client][i_Mask] > 0 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez un masque.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez un masque.");
 			return Plugin_Handled;
 		}
 		
 		if( rp_IsInPVP(client) ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Inutilisable en PvP.");
+			CPrintToChat(client, "" ...MOD_TAG... " Inutilisable en PvP.");
 			return Plugin_Handled;
 		}
 		if( rp_GetClientVehicle(client) > 0 || rp_GetClientVehiclePassager(client) > 0 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Inutilisable en voiture.");
+			CPrintToChat(client, "" ...MOD_TAG... " Inutilisable en voiture.");
 			return Plugin_Handled;
 		}
 
@@ -659,7 +659,7 @@ public Action Command_Say(int client, int args) {
 					if( IsValidClient(driver) ) {
 						if( g_iVehicleData[target][car_owner] == client && driver != client ) {
 							ExitVehicle(driver, target, true);
-							CPrintToChat(driver, "{lightblue}[TSX-RP]{default} %N vous a sorti de votre voiture.", client);
+							CPrintToChat(driver, "" ...MOD_TAG... " %N vous a sorti de votre voiture.", client);
 						}
 					}
 				}
@@ -690,12 +690,12 @@ public Action Command_Say(int client, int args) {
 		}
 
 		if( g_bUserData[client][b_MaySteal] == 0) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas /out pour le moment.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas /out pour le moment.");
 			return Plugin_Handled;
 		}
 		
 		if( g_iUserData[target][i_KidnappedBy] > 0 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas /out un joueur kidnappé.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas /out un joueur kidnappé.");
 			return Plugin_Handled;
 		}
 
@@ -721,27 +721,27 @@ public Action Command_Say(int client, int args) {
 		
 		if( ClientZone == 0 || ClientZoneJob <= 0 || ClientZoneJob != job_tree ) {
 			if( !in_appart ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas utiliser le /out ici.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser le /out ici.");
 				return Plugin_Handled;
 			}
 		}
 
 		if( ClientZoneJob != TargetZoneJob ) {
 			if( !in_appart ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N n'est pas dans votre zone.", target);
+				CPrintToChat(client, "" ...MOD_TAG... " %N n'est pas dans votre zone.", target);
 				return Plugin_Handled;
 			}
 		}
 		if( ClientZone != TargetZone ) {
 			if( in_appart ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N n'est pas dans votre zone.", target);
+				CPrintToChat(client, "" ...MOD_TAG... " %N n'est pas dans votre zone.", target);
 				return Plugin_Handled;
 			}
 		}
 		
 		if( in_appart ) {
 			if( g_iDoorOwner_v2[target][appart] ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N est un de vos collocataires.", target);
+				CPrintToChat(client, "" ...MOD_TAG... " %N est un de vos collocataires.", target);
 				return Plugin_Handled;
 			}
 			
@@ -749,13 +749,13 @@ public Action Command_Say(int client, int args) {
 
 		if( StringToInt( g_szZoneList[ClientZone][zone_type_bit] ) & BITZONE_PERQUIZ ) {
 			if( !IsPolice(client) && !IsJuge(client) ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas utiliser le /out ici pour le moment.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser le /out ici pour le moment.");
 				return Plugin_Handled;
 			}
 		}
 		
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N a été mis dehors.", target);
-		CPrintToChat(target, "{lightblue}[TSX-RP]{default} %N vous a mis dehors.", client);
+		CPrintToChat(client, "" ...MOD_TAG... " %N a été mis dehors.", target);
+		CPrintToChat(target, "" ...MOD_TAG... " %N vous a mis dehors.", client);
 		LogToGame("[OUT] %L a sorti %L", client, target);
 		
 		SendPlayerToSpawn(target, true);
@@ -778,7 +778,7 @@ public Action Command_Say(int client, int args) {
 		}
 
 		if( !IsValidClient(target) ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez viser un joueur n'ayant pas d'emploi.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser un joueur n'ayant pas d'emploi.");
 			return Plugin_Handled;
 		}
 
@@ -787,7 +787,7 @@ public Action Command_Say(int client, int args) {
 
 		if( g_iUserData[target][i_Job] != 0 || GetJobPrimaryID(client) != GetJobPrimaryID(target) || IsBoss(target) ) {
 			if( g_iUserData[target][i_Job] != 0 ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ce joueur a déjà un emploi.");
+				CPrintToChat(client, "" ...MOD_TAG... " Ce joueur a déjà un emploi.");
 				return Plugin_Handled;
 			}
 		}
@@ -838,11 +838,11 @@ public Action Command_Say(int client, int args) {
 	) {
 
 		if( StringToInt(  g_szJobList[ g_iUserData[client][i_Job] ][job_type_isboss] ) == 1) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Pour demissionner, vous devez envoyer un message ici: https://www.ts-x.eu/forum/viewtopic.php?p=430883");
+			CPrintToChat(client, "" ...MOD_TAG... " Pour demissionner, vous devez envoyer un message ici: https://www.ts-x.eu/forum/viewtopic.php?p=430883");
 			return Plugin_Handled;
 		}
 		if( g_iClientQuests[client][questID] != -1 ) {		
-  			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Pour demissionner, il faut d'abord finir sa quête !");		
+  			CPrintToChat(client, "" ...MOD_TAG... " Pour demissionner, il faut d'abord finir sa quête !");		
  			return Plugin_Handled;		
  		}
 		if( strlen(g_szPlainte[client][1]) <= 1 ) {
@@ -858,7 +858,7 @@ public Action Command_Say(int client, int args) {
 				CPrintToChat(client, "Sans quoi, vous resterez sans emploi pour un long moment...");
 			}
 			
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Confirmez en tapant: /demission %s", g_szPlainte[client][1]);
+			CPrintToChat(client, "" ...MOD_TAG... " Confirmez en tapant: /demission %s", g_szPlainte[client][1]);
 			
 
 		}
@@ -870,7 +870,7 @@ public Action Command_Say(int client, int args) {
 				ChangePersonnal(client, SynType_job, 0, client);
 			}
 			else {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le mot de passe est érroné, votre demission n'a pas été confirmée.");
+				CPrintToChat(client, "" ...MOD_TAG... " Le mot de passe est érroné, votre demission n'a pas été confirmée.");
 			}
 
 			Format(g_szPlainte[client][0], 128, "");
@@ -892,7 +892,7 @@ public Action Command_Say(int client, int args) {
 		}
 		
 		if( g_bUserData[client][b_Stealing] ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez temporairement pas utiliser le /afk.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez temporairement pas utiliser le /afk.");
 			return Plugin_Handled;
 		}
 		GetClientEyeAngles(client, g_Position[client]);
@@ -904,7 +904,7 @@ public Action Command_Say(int client, int args) {
 	strcmp(szSayTrig, "!assurance", false) == 0	|| strcmp(szSayTrig, "/assurance", false) == 0
 	) {
 
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre assurance vous couvre pour %i$.", GetAssurence(client));
+		CPrintToChat(client, "" ...MOD_TAG... " Votre assurance vous couvre pour %i$.", GetAssurence(client));
 		return Plugin_Handled;
 	}
 	else if(	strcmp(szSayTrig, "!heal", false) == 0		|| strcmp(szSayTrig, "/heal", false) == 0	) {
@@ -968,7 +968,7 @@ public Action Command_Say(int client, int args) {
 			DisplayMenu(menu, client, MENU_TIME_DURATION);
 		}
 		else {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il n'y a personne dans les environs.");
+			CPrintToChat(client, "" ...MOD_TAG... " Il n'y a personne dans les environs.");
 			CloseHandle(menu);
 		}
 		
@@ -1025,7 +1025,7 @@ public Action Command_Say(int client, int args) {
 			DisplayMenu(menu, client, MENU_TIME_DURATION);
 		}
 		else {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il n'y a personne a faire revivre dans les environs.");
+			CPrintToChat(client, "" ...MOD_TAG... " Il n'y a personne a faire revivre dans les environs.");
 			CloseHandle(menu);
 		}
 		return Plugin_Handled;
@@ -1062,22 +1062,22 @@ public Action Command_Say(int client, int args) {
 	) {
 
 		if( !IsTutorialOver(client) ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas terminé le tutorial.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas terminé le tutorial.");
 			return Plugin_Handled;
 		}
 		
 		if( g_iUserData[client][i_SearchLVL] >= 1 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas donner de l'argnet quand vous êtes recherché par le Tribunal.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas donner de l'argnet quand vous êtes recherché par le Tribunal.");
 			return Plugin_Handled;
 		}		
 		
 		if( g_iUserData[client][i_PlayerLVL] < 12 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez être au moins de niveau 12 \"Simple Citoyen\", afin d'utiliser cette commande.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous devez être au moins de niveau 12 \"Simple Citoyen\", afin d'utiliser cette commande.");
 			return Plugin_Handled;
 		}
 		
 		if( g_bUserData[client][b_IsSearchByTribunal] ) {
-			PrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas donner de l'argnet quand vous êtes recherché par le Tribunal.");
+			PrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas donner de l'argnet quand vous êtes recherché par le Tribunal.");
 			return Plugin_Handled;
 		}
 		
@@ -1095,29 +1095,29 @@ public Action Command_Say(int client, int args) {
 		int amount = StringToInt(szSayText);
 
 		if( g_iUserData[client][i_Money] < amount ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas assez d'argent.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent.");
 			return Plugin_Handled;
 		}
 		if( amount <= 0 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez donner plus de 0$.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous devez donner plus de 0$.");
 			return Plugin_Handled;
 		}
 		if( amount > 100000 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez donner moins de 100 000$.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous devez donner moins de 100 000$.");
 			return Plugin_Handled;
 		}
 		
 		if( g_iUserData[client][i_GiveAmountTime]+amount > 100000 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas donner autant d'argent en aussi peu de temps.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas donner autant d'argent en aussi peu de temps.");
 			return Plugin_Handled;
 		}
 		char targetSteamID[64];
 		GetClientAuthId(target, AUTH_TYPE, targetSteamID, sizeof(targetSteamID), false);
 		
 		if( g_iDoubleCompte[client].FindString(targetSteamID) >= 0 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas donner d'argnet à l'un de vos double compte. S'il ne s'agit pas d'un double compte, vous pouvez contester cette déicision sur ce lien:");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas donner d'argnet à l'un de vos double compte. S'il ne s'agit pas d'un double compte, vous pouvez contester cette déicision sur ce lien:");
 			GetClientAuthId(client, AUTH_TYPE, targetSteamID, sizeof(targetSteamID), false);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} https://rpweb.riplay.fr/index.php#/pilori/double/%s", targetSteamID);
+			CPrintToChat(client, "" ...MOD_TAG... " https://rpweb.riplay.fr/index.php#/pilori/double/%s", targetSteamID);
 			return Plugin_Handled;
 		}
 		
@@ -1135,8 +1135,8 @@ public Action Command_Say(int client, int args) {
 		
 		
 
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez donné %i$ à %N.", amount, target);
-		CPrintToChat(target, "{lightblue}[TSX-RP]{default} %N vous a donné %i$.", client, amount);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez donné %i$ à %N.", amount, target);
+		CPrintToChat(target, "" ...MOD_TAG... " %N vous a donné %i$.", client, amount);
 		
 		LogToGame("[TSX-RP] [GIVE-MONEY] %L a donné %i$ à %L.", client, amount, target);
 		
@@ -1160,7 +1160,7 @@ public Action Command_Say(int client, int args) {
 	else if(	strcmp(szSayTrig, "!givexp", false) == 0		|| strcmp(szSayTrig, "/givexp", false) == 0 ) {
 
 		if( !IsTutorialOver(client) ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas terminé le tutorial.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas terminé le tutorial.");
 			return Plugin_Handled;
 		}
 		
@@ -1173,19 +1173,19 @@ public Action Command_Say(int client, int args) {
 		int amount = StringToInt(szSayText);
 
 		if( g_iUserData[client][i_GiveXP] < amount ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas assez d'XP à donner.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'XP à donner.");
 			return Plugin_Handled;
 		}
 		if( amount < 100 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez donner plus de 100XP.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous devez donner plus de 100XP.");
 			return Plugin_Handled;
 		}
 		
 		g_iUserData[client][i_GiveXP] -= amount;
 		rp_ClientXPIncrement(target, amount);
 
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez donné %iXP à %N.", amount, target);
-		CPrintToChat(target, "{lightblue}[TSX-RP]{default} %N vous a donné %iXP.", client, amount);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez donné %iXP à %N.", amount, target);
+		CPrintToChat(target, "" ...MOD_TAG... " %N vous a donné %iXP.", client, amount);
 		
 		LogToGame("[TSX-RP] [GIVE-XP] %L a donné %iXP à %L.", client, amount, target);
 		
@@ -1209,19 +1209,19 @@ public Action Command_Say(int client, int args) {
 		int amount = StringToInt(szSayText);
 
 		if( g_iUserData[client][i_Bank] < amount ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas assez d'argent en banque.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent en banque.");
 			return Plugin_Handled;
 		}
 		if( amount <= 0 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez donner plus de 0$.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous devez donner plus de 0$.");
 			return Plugin_Handled;
 		}
 		
 		rp_ClientMoney(client, i_Bank, -amount);
 		rp_ClientMoney(target, i_Money, amount);
 
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez donné %i$ a %N.", amount, target);
-		CPrintToChat(target, "{lightblue}[TSX-RP]{default} %N vous a donné %i$.", client, amount);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez donné %i$ a %N.", amount, target);
+		CPrintToChat(target, "" ...MOD_TAG... " %N vous a donné %i$.", client, amount);
 		
 		LogToGame("[TSX-RP] [GIVE-MONEY] %L a donné %i$ à %L.", client, amount, target);
 
@@ -1258,7 +1258,7 @@ public Action Command_Say(int client, int args) {
 		}
 
 		if( g_bUserData[client][b_MaySteal] == 0 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas utiliser cette commande pour le moment.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cette commande pour le moment.");
 			return Plugin_Handled;
 		}
 
@@ -1281,8 +1281,8 @@ public Action Command_Say(int client, int args) {
 				if( IsInPVP(i) )
 					continue;
 				
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Au moins un tueur est connecté (%N), impossible d'utiliser le /enquete.", i);
-				CPrintToChat(i, "{lightblue}[TSX-RP]{default} %N veut faire une enquête sur %N (%s).", client, target, g_szZoneList[GetPlayerZone(client)][zone_type_name]);
+				CPrintToChat(client, "" ...MOD_TAG... " Au moins un tueur est connecté (%N), impossible d'utiliser le /enquete.", i);
+				CPrintToChat(i, "" ...MOD_TAG... " %N veut faire une enquête sur %N (%s).", client, target, g_szZoneList[GetPlayerZone(client)][zone_type_name]);
 				TargetBeamBox(i, target);
 				ClientCommand(i, "play buttons/blip1.wav");
 				return Plugin_Handled;
@@ -1305,7 +1305,7 @@ public Action Command_Say(int client, int args) {
 		SetJobCapital(1,	(GetJobCapital(1)+50) );
 
 
-		CPrintToChat(target, "{lightblue}[TSX-RP]{default} %N vient de vérifier vos informations", client);
+		CPrintToChat(target, "" ...MOD_TAG... " %N vient de vérifier vos informations", client);
 
 		LogToGame("[TSX-RP] [ENQUETE] %L a regardé %L", client, target);
 
@@ -1376,7 +1376,7 @@ public Action Command_Say(int client, int args) {
 				continue;
 			
 			if( GetJobPrimaryID(i) == job_id ) {
-				CPrintToChat(i, "{lightblue}[TSX-RP]{default} %s a ajouté la note: %s", name, szSayText);
+				CPrintToChat(i, "" ...MOD_TAG... " %s a ajouté la note: %s", name, szSayText);
 			}
 		}
 		return Plugin_Handled;
@@ -1439,7 +1439,7 @@ public Action Command_Say(int client, int args) {
 		int time = GetClientCount() / 6;
 		
 		if( g_iSuccess_last_chat[client]+time > GetTime() ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez attendre encore %i seconde(s), avant d'utiliser à nouveau le chat général.", g_iSuccess_last_chat[client]+time-GetTime());
+			CPrintToChat(client, "" ...MOD_TAG... " Vous devez attendre encore %i seconde(s), avant d'utiliser à nouveau le chat général.", g_iSuccess_last_chat[client]+time-GetTime());
 			return Plugin_Handled;
 		}
 	}
@@ -1451,7 +1451,7 @@ public Action Command_Say(int client, int args) {
 		StrEqual(g_szLastMessage[client][3], szSayText, false) ||
 		StrEqual(g_szLastMessage[client][4], szSayText, false)
 		) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre message a été bloqué afin d'éviter d'éventuel spam.");
+			CPrintToChat(client, "" ...MOD_TAG... " Votre message a été bloqué afin d'éviter d'éventuel spam.");
 			return Plugin_Handled;
 		}
 
@@ -1505,7 +1505,7 @@ public Action Command_SayTeam(int client, int args) {
 
 
 	if( !IsPlayerAlive(client) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez être en vie pour parler.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez être en vie pour parler.");
 		return Plugin_Handled;
 	}
 

@@ -199,7 +199,7 @@ public Action fwdUse(int client) {
 		if( driver > 0 ) {
 			
 			if( rp_GetVehicleInt(target, car_owner) == client && driver != client ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous pouvez éjecter le conducteur avec la commande /out.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez éjecter le conducteur avec la commande /out.");
 			}
 			AskToJoinCar(client, target);			
 		}
@@ -237,13 +237,13 @@ public Action Cmd_ItemVehicle(int args) {
 	
 	if( rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PEACEFULL ) {
 		CAR_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cet objet est interdit où vous êtes.");
+		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
 		return;
 	}
 	
 	if( countVehicle(client) >= GetConVarInt(g_hMAX_CAR) ) {
 		CAR_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il y a trop de voitures en circulation pour l'instant.");
+		CPrintToChat(client, "" ...MOD_TAG... " Il y a trop de voitures en circulation pour l'instant.");
 		return;			
 	}
 	
@@ -258,7 +258,7 @@ public Action Cmd_ItemVehicle(int args) {
 	int car = rp_CreateVehicle(vecOrigin, vecAngles, arg1, skinid, client);
 	if( !car ) {
 		CAR_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il n'y a pas assez de place ici.");
+		CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas assez de place ici.");
 	}
 	
 	rp_SetVehicleInt(car, car_owner, client);
@@ -339,13 +339,13 @@ public Action Cmd_ItemVehicleStuff(int args) {
 	if( StrEqual(arg1, "key") ) {
 		
 		if( Vehicle_GetDriver(target) != client) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez utiliser cet objet dans votre voiture.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous devez utiliser cet objet dans votre voiture.");
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
 		
 		if( rp_GetVehicleInt(target, car_owner) != client ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'êtes pas le propriétaire de cette voiture.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas le propriétaire de cette voiture.");
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
@@ -363,11 +363,11 @@ public Action Cmd_ItemVehicleStuff(int args) {
 			
 			amount++;
 			rp_SetClientKeyVehicle(i, target, true);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N{default} a maintenant la clé de votre voiture.", i);
+			CPrintToChat(client, "" ...MOD_TAG... " %N{default} a maintenant la clé de votre voiture.", i);
 		}
 		
 		if( amount == 0 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il n'y a personne dans votre voiture à qui donner la clé.");
+			CPrintToChat(client, "" ...MOD_TAG... " Il n'y a personne dans votre voiture à qui donner la clé.");
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
@@ -379,18 +379,18 @@ public Action Cmd_ItemVehicleStuff(int args) {
 		int gID = rp_GetClientGroupID(client);
 		
 		if( gID == 0 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas de gang.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas de gang.");
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
 		if( Vehicle_GetDriver(target) != client) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez utiliser cet objet dans votre voiture.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous devez utiliser cet objet dans votre voiture.");
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
 		
 		if( rp_GetVehicleInt(target, car_owner) != client ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'êtes pas le propriétaire de cette voiture.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas le propriétaire de cette voiture.");
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
@@ -408,26 +408,26 @@ public Action Cmd_ItemVehicleStuff(int args) {
 			
 			amount++;
 			rp_SetClientKeyVehicle(i, target, true);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N{default} a maintenant la clé de votre voiture.", i);
+			CPrintToChat(client, "" ...MOD_TAG... " %N{default} a maintenant la clé de votre voiture.", i);
 		}
 		if( amount == 0 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez personne à qui donner la clé.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez personne à qui donner la clé.");
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
 	}
 	else if( StrEqual(arg1, "battery") ){
 		if(rp_GetVehicleInt(target, car_battery)!= -1){
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre voiture est déjà équipée d'une batterie secondaire.");
+			CPrintToChat(client, "" ...MOD_TAG... " Votre voiture est déjà équipée d'une batterie secondaire.");
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
 		rp_SetVehicleInt(target, car_battery, 0);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre voiture est maintenant équipée d'une batterie secondaire.");
+		CPrintToChat(client, "" ...MOD_TAG... " Votre voiture est maintenant équipée d'une batterie secondaire.");
 	}
 	else if( StrEqual(arg1, "boost") ){
 		if( rp_GetVehicleInt(target, car_boost) != -1){
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre voiture est déjà équipée d'un boost.");
+			CPrintToChat(client, "" ...MOD_TAG... " Votre voiture est déjà équipée d'un boost.");
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
@@ -442,10 +442,10 @@ public Action Cmd_ItemVehicleStuff(int args) {
 			if( FileExists(ScriptPath) ) {
 				DispatchKeyValue(target, "vehiclescript", 		ScriptPath);
 				ServerCommand("vehicle_flushscript");
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre voiture est maintenant équipée d'un boost.");
+				CPrintToChat(client, "" ...MOD_TAG... " Votre voiture est maintenant équipée d'un boost.");
 			}
 			else {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible d'installer un boost sur votre voiture.");
+				CPrintToChat(client, "" ...MOD_TAG... " Impossible d'installer un boost sur votre voiture.");
 				ITEM_CANCEL(client, item_id);
 			}
 		}
@@ -784,9 +784,9 @@ public Action Timer_VehicleRemoveCheck(Handle timer, any ent) {
 					rp_SetVehicleInt(ent, car_battery, rp_GetVehicleInt(ent, car_battery)+1);
 					
 					if( rp_GetVehicleInt(ent, car_battery) == 420 )
-						CPrintToChat(driver, "{lightblue}[TSX-RP]{default} Votre batterie est pleine vous pouvez maintenant aller au garage pour la revendre.");
+						CPrintToChat(driver, "" ...MOD_TAG... " Votre batterie est pleine vous pouvez maintenant aller au garage pour la revendre.");
 					else if( rp_GetVehicleInt(ent, car_battery)%42 == 0 )
-						CPrintToChat(driver, "{lightblue}[TSX-RP]{default} Votre batterie est chargée à %i%%.", rp_GetVehicleInt(ent, car_battery)*100/420);
+						CPrintToChat(driver, "" ...MOD_TAG... " Votre batterie est chargée à %i%%.", rp_GetVehicleInt(ent, car_battery)*100/420);
 				}
 			}
 			g_lastpos[ent] = vecOrigin;
@@ -867,14 +867,14 @@ public Action Timer_VehicleRemoveCheck(Handle timer, any ent) {
 void AskToJoinCar(int client, int vehicle) {
 	
 	if( rp_GetVehicleInt(vehicle, car_maxPassager) <= CountPassagerInVehicle(vehicle) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il n'y a plus de place dans cette voiture.");
+		CPrintToChat(client, "" ...MOD_TAG... " Il n'y a plus de place dans cette voiture.");
 		return;
 	}
 	
 	int driver = GetEntPropEnt(vehicle, Prop_Send, "m_hPlayer");
 	if( g_iBlockedTime[driver][client] != 0 ) {
 		if( (g_iBlockedTime[driver][client]+(6*60)) >= GetTime() ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ce conducteur ne vous repondra pas.");
+			CPrintToChat(client, "" ...MOD_TAG... " Ce conducteur ne vous repondra pas.");
 			return;
 		}
 	}
@@ -907,22 +907,22 @@ public int AskToJoinCar_Menu(Handle p_hItemMenu, MenuAction p_oAction, int clien
 			
 			if( type == 1 ) {
 				if( rp_GetVehicleInt(vehicle, car_maxPassager) <= CountPassagerInVehicle(vehicle) ) {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il n'y a plus de place dans cette voiture.");
-					CPrintToChat(request, "{lightblue}[TSX-RP]{default} Il n'y a plus de place dans cette voiture.");
+					CPrintToChat(client, "" ...MOD_TAG... " Il n'y a plus de place dans cette voiture.");
+					CPrintToChat(request, "" ...MOD_TAG... " Il n'y a plus de place dans cette voiture.");
 					
 					return;
 				}
 				if( !IsPlayerAlive(request) ) {
-					CPrintToChat(request, "{lightblue}[TSX-RP]{default} Vous êtes mort.");
+					CPrintToChat(request, "" ...MOD_TAG... " Vous êtes mort.");
 					return;
 				}
 				if( Vehicle_GetDriver(vehicle) != client  ) {
-					CPrintToChat(request, "{lightblue}[TSX-RP]{default} Le conducteur n'est plus dans sa voiture.");
+					CPrintToChat(request, "" ...MOD_TAG... " Le conducteur n'est plus dans sa voiture.");
 					return;
 				}
 				
 				if( Entity_GetDistance(request, vehicle) >= (CONTACT_DIST) ) {
-					CPrintToChat(request, "{lightblue}[TSX-RP]{default} La voiture est trop éloignée.");
+					CPrintToChat(request, "" ...MOD_TAG... " La voiture est trop éloignée.");
 					return;
 				}
 				
@@ -930,13 +930,13 @@ public int AskToJoinCar_Menu(Handle p_hItemMenu, MenuAction p_oAction, int clien
 					ClientCommand(request, "thirdperson");
 			}
 			else if( type == 2 ) {
-				CPrintToChat(request, "{lightblue}[TSX-RP]{default} Le conducteur a refusé votre demande.");
+				CPrintToChat(request, "" ...MOD_TAG... " Le conducteur a refusé votre demande.");
 				return;
 			}
 			else if( type == 3 ) {
 				g_iBlockedTime[client][request] = GetTime();
-				CPrintToChat(request, "{lightblue}[TSX-RP]{default} Le conducteur a refusé, et vous ignorera.");
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ignorerez les demandes de %N pour 6 heures", request);
+				CPrintToChat(request, "" ...MOD_TAG... " Le conducteur a refusé, et vous ignorera.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous ignorerez les demandes de %N pour 6 heures", request);
 				return;
 			}
 		}
@@ -1162,7 +1162,7 @@ public int eventGarageMenu(Handle menu, MenuAction action, int client, int param
 					
 					if( rp_GetVehicleInt(target, car_light_r) == -1 ) {
 						if( rp_GetClientItem(client, ITEM_NEONS, true) <= 0 ) {
-							CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas de kit de néons en banque.");
+							CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas de kit de néons en banque.");
 							DisplayGarageMenu(client);
 							return;
 						}
@@ -1183,7 +1183,7 @@ public int eventGarageMenu(Handle menu, MenuAction action, int client, int param
 					
 					if( rp_GetVehicleInt(target, car_particle) == -1 ) {
 						if( rp_GetClientItem(client, ITEM_PARTICULES, true) <= 0 ) {
-							CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas de kit de particules en banque.");
+							CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas de kit de particules en banque.");
 							DisplayGarageMenu(client);
 							return;
 						}
@@ -1212,18 +1212,18 @@ public int eventGarageMenu(Handle menu, MenuAction action, int client, int param
 						continue;
 						
 					if( rp_GetVehicleInt(target, car_health) < 1000 ) {
-						CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre véhicule est endommagé.");
+						CPrintToChat(client, "" ...MOD_TAG... " Votre véhicule est endommagé.");
 						continue;
 					}
 					
 					if( rp_GetVehicleInt(target, car_donateur) == 1 && rp_GetVehicleInt(target, car_battery) == -1 ) {
 						LogToGame("[CHEATING] %L a tenté de ranger sa voiture donateur, sans batterie.", client);
-						CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre mustang sportive n'a plus sa batterie.");
+						CPrintToChat(client, "" ...MOD_TAG... " Votre mustang sportive n'a plus sa batterie.");
 						continue;
 					}		
 					
 					if( Vehicle_GetDriver(target) > 0 ) {
-						CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il y a quelqu'un dans votre véhicule.");
+						CPrintToChat(client, "" ...MOD_TAG... " Il y a quelqu'un dans votre véhicule.");
 						continue;
 					}
 					
@@ -1236,7 +1236,7 @@ public int eventGarageMenu(Handle menu, MenuAction action, int client, int param
 				else if( StrEqual(arg1, "repair") ) {
 					
 					if( rp_GetClientItem(client, ITEM_REPAIR, true) <= 0 ) {
-						CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas de kit de carrosserie en banque.");
+						CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas de kit de carrosserie en banque.");
 						DisplayGarageMenu(client);
 						return;
 					}
@@ -1259,7 +1259,7 @@ public int eventGarageMenu(Handle menu, MenuAction action, int client, int param
 						
 						int capital_id = rp_GetRandomCapital( rp_GetClientJobID(client)  );
 						rp_SetJobCapital( capital_id, rp_GetJobCapital(capital_id)-2000 );
-						CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez vendu votre batterie. Le virement des 2000$ sera effectué en fin de journée.");
+						CPrintToChat(client, "" ...MOD_TAG... " Vous avez vendu votre batterie. Le virement des 2000$ sera effectué en fin de journée.");
 						rp_SetVehicleInt(target, car_battery, -1);
 					}
 					
@@ -1311,12 +1311,12 @@ public int SpawnVehicle(Handle menu, MenuAction action, int client, int param) {
 			int skinid = 1;
 			
 			if( rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PEACEFULL ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cet objet est interdit où vous êtes.");
+				CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
 				return;
 			}
 			
 			if( countVehicle(client) >= GetConVarInt(g_hMAX_CAR) ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il y a trop de voitures en circulation pour l'instant.");
+				CPrintToChat(client, "" ...MOD_TAG... " Il y a trop de voitures en circulation pour l'instant.");
 				return;			
 			}
 			
@@ -1330,7 +1330,7 @@ public int SpawnVehicle(Handle menu, MenuAction action, int client, int param) {
 			
 			int car = rp_CreateVehicle(vecOrigin, vecAngles, model, skinid, client);
 			if( !car ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il n'y a pas assez de place ici.");
+				CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas assez de place ici.");
 				return;
 			}
 			

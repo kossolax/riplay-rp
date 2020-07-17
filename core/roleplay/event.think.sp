@@ -144,7 +144,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	
 	if( impulse == 100 ) {
 		if( g_bUserData[client][b_LampePoche] == 0 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas de Lampe de poche utilisable.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas de Lampe de poche utilisable.");
 			return Plugin_Handled;
 		}
 	}

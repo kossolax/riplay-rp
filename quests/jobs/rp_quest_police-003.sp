@@ -97,7 +97,7 @@ public Action fwdTazedItem(int client, int reward) {
 	if( g_iDoing[client] ) {
 		rp_ClientMoney(client, i_AddToPay, reward);
 		rp_ClientXPIncrement(client, reward / 10);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez gagnez %d$ supplémentaires grace à la quête %s.", reward, QUEST_NAME);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez gagnez %d$ supplémentaires grace à la quête %s.", reward, QUEST_NAME);
 	}
 }	
 // ----------------------------------------------------------------------------

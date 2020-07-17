@@ -163,7 +163,7 @@ public void Q0_Start(int objectiveID, int client) {
 	g_bCanMakeQuest = false;
 }
 public void Q0_Abort(int objectiveID, int client) {
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Désolé, vous ne pouvez pas essayer la PVE pour le moment.");
+	CPrintToChat(client, "" ...MOD_TAG... " Désolé, vous ne pouvez pas essayer la PVE pour le moment.");
 	CreateTimer(10.0, newAttempt);
 }
 public void Q01_Frame(int objectiveID, int client) {
@@ -203,7 +203,7 @@ public int Q0_MenuComplete(Handle menu, MenuAction action, int client, int param
 		char options[64];
 		GetMenuItem(menu, param2, options, sizeof(options));
 		
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ne donnez pas les réponses aux autres ;-)");
+		CPrintToChat(client, "" ...MOD_TAG... " Ne donnez pas les réponses aux autres ;-)");
 		
 		if( StringToInt(options) == 1 )
 			rp_QuestStepComplete(client, g_iPlayerObjective[client]);
@@ -248,8 +248,8 @@ public void Q_Abort(int objectiveID, int client) {
 		rp_UnhookEvent(target, RP_OnPlayerCommand, fwdCommand);
 		rp_UnhookEvent(target, RP_OnPlayerHear, fwdHear);
 		
-		CPrintToChat(target, "{lightblue}[TSX-RP]{default} Merci pour votre test! Donnez vos suggestions sur pve.ts-x.eu <3");
-		CPrintToChat(target, "{lightblue}[TSX-RP]{default} Votre score final est de %d points!", g_iQuestConfig[QC_Score]);
+		CPrintToChat(target, "" ...MOD_TAG... " Merci pour votre test! Donnez vos suggestions sur pve.ts-x.eu <3");
+		CPrintToChat(target, "" ...MOD_TAG... " Votre score final est de %d points!", g_iQuestConfig[QC_Score]);
 		
 		GetClientAuthId(target, AUTH_TYPE, tmp, sizeof(tmp));
 		
@@ -328,7 +328,7 @@ public void Q1_Frame(int objectiveID, int client) {
 // ----------------------------------------------------------------------------
 public void Q2_Start(int objectiveID, int client) {
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Bonne chance pour ce test!");
+	CPrintToChat(client, "" ...MOD_TAG... " Bonne chance pour ce test!");
 	
 	addClientToTeam(client, TEAM_PLAYERS);
 	
@@ -734,7 +734,7 @@ public Action fwdZone(int client, int newZone, int oldZone) {
 				FakeClientCommand(client, "sm_stuck");
 			}
 			else {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez être civil pour participer à la quête.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous devez être civil pour participer à la quête.");
 			}
 		}
 }

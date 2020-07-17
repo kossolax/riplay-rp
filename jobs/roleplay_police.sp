@@ -166,7 +166,7 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 	if ((jobID == 1 || jobID == 101) && rp_GetClientInt(client, i_KillJailDuration) > 0) {
 		
 		if (verbose)
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} La police ne paye pas ses membres tuant la population.");
+			CPrintToChat(client, "" ...MOD_TAG... " La police ne paye pas ses membres tuant la population.");
 		
 		topay = 0;
 		return Plugin_Stop;
@@ -177,7 +177,7 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 	if (zone & (BITZONE_JAIL | BITZONE_LACOURS | BITZONE_HAUTESECU) && rp_GetClientInt(client, i_JailTime) > 0) {
 		
 		if (verbose)
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Etant en prison, votre employeur vous verse seulement 10% de votre salaire.");
+			CPrintToChat(client, "" ...MOD_TAG... " Etant en prison, votre employeur vous verse seulement 10% de votre salaire.");
 		
 		topay = 0;
 		return Plugin_Stop;
@@ -241,7 +241,7 @@ public Action Cmd_Verif(int client) {
 
 	// too far
 	if (Entity_GetDistance(client, target) > 128.0) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le joueur est trop éloigné, commande inaccessible");
+		CPrintToChat(client, "" ...MOD_TAG... " Le joueur est trop éloigné, commande inaccessible");
 		return Plugin_Handled;
 	}
 
@@ -347,8 +347,8 @@ public int MenuHandler_Verif(Handle menu, MenuAction action, int client, int par
 		int job = rp_GetClientJobID(client);
 
 		if(StrEqual(data[1], "permileger")) {
-			CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez été contrôlé en possession d'arme(s) légère(s) sans permis valide, vous devez vous acquitter d'une amande de 1600€");
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Une amende de 1600€ vient d'être prélevée auprès de %N pour défaut de permis de port d'arme légère", target);
+			CPrintToChat(target, "" ...MOD_TAG... " Vous avez été contrôlé en possession d'arme(s) légère(s) sans permis valide, vous devez vous acquitter d'une amande de 1600€");
+			CPrintToChat(client, "" ...MOD_TAG... " Une amende de 1600€ vient d'être prélevée auprès de %N pour défaut de permis de port d'arme légère", target);
 	
 			rp_ClientMoney(target, i_Money, -1600);
 
@@ -356,8 +356,8 @@ public int MenuHandler_Verif(Handle menu, MenuAction action, int client, int par
 			rp_SetClientInt(target, i_AmendeLiscence2, GetTime());
 		}
 		if(StrEqual(data[1], "permilourd")) {
-			CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez été contrôlé en possession d'arme(s) lourde(s) sans permis valide, vous devez vous acquitter d'une amande de 2400€");
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Une amende de 2400€ vient d'être prélevée auprès de %N pour défaut de permis de port d'arme lourde", target);
+			CPrintToChat(target, "" ...MOD_TAG... " Vous avez été contrôlé en possession d'arme(s) lourde(s) sans permis valide, vous devez vous acquitter d'une amande de 2400€");
+			CPrintToChat(client, "" ...MOD_TAG... " Une amende de 2400€ vient d'être prélevée auprès de %N pour défaut de permis de port d'arme lourde", target);
 
 			rp_ClientMoney(target, i_Money, -2400);
 
@@ -365,8 +365,8 @@ public int MenuHandler_Verif(Handle menu, MenuAction action, int client, int par
 			rp_SetClientInt(target, i_AmendeLiscence1, GetTime());
 		}
 		if(StrEqual(data[1], "permilegerlourd")) {
-			CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez été contrôlé en possession d'arme(s) lourde(s) et légère(s) sans permis valide, vous devez vous acquitter d'une amende de 4000€");
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Une amende de 4000€ vient d'être prélevée auprès de %N pour défaut de permis de port d'arme légere et lourde", target);
+			CPrintToChat(target, "" ...MOD_TAG... " Vous avez été contrôlé en possession d'arme(s) lourde(s) et légère(s) sans permis valide, vous devez vous acquitter d'une amende de 4000€");
+			CPrintToChat(client, "" ...MOD_TAG... " Une amende de 4000€ vient d'être prélevée auprès de %N pour défaut de permis de port d'arme légere et lourde", target);
 			rp_ClientMoney(target, i_Money, -4000);
 
 			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 4000));
@@ -476,7 +476,7 @@ public Action Cmd_Vis(int client) {
 			rp_SetClientBool(client, b_MaySteal, true);
 		}
 		
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes maintenant invisible.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes maintenant invisible.");
 	}
 	else {
 		rp_ClientReveal(client);
@@ -536,17 +536,17 @@ public Action Cmd_Tazer(int client) {
 		
 		if (Entity_GetDistance(client, target) > maxDist) {
 			//ACCESS_DENIED(client);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le joueur est trop éloigné, commande inaccessible");
+			CPrintToChat(client, "" ...MOD_TAG... " Le joueur est trop éloigné, commande inaccessible");
 			return Plugin_Handled;
 		}
 		
 		if (!(rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PERQUIZ || rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PERQUIZ) && rp_GetClientBool(target, b_Lube) && Math_GetRandomInt(1, 5) != 5) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N vous glisse entre les mains.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " %N vous glisse entre les mains.", target);
 			return Plugin_Handled;
 		}
 		
 		if (!(rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PERQUIZ || rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PERQUIZ) && !CanSendToJail(client, target)) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N vous glisse entre les mains.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " %N vous glisse entre les mains.", target);
 			return Plugin_Handled;
 		}
 		
@@ -561,8 +561,8 @@ public Action Cmd_Tazer(int client) {
 		FakeClientCommand(target, "use weapon_fists");
 		
 		
-		CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez été tazé par %N", client);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez tazé %N", target);
+		CPrintToChat(target, "" ...MOD_TAG... " Vous avez été tazé par %N", client);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez tazé %N", target);
 		LogToGame("[TSX-RP] [TAZER] %L a tazé %N dans %d.", client, target, rp_GetPlayerZone(target));
 		
 		rp_SetClientBool(client, b_MaySteal, false);
@@ -598,7 +598,7 @@ public Action Cmd_Tazer(int client) {
 			rp_GetZoneData(Tzone, zone_type_name, tmp, sizeof(tmp));
 			
 			if (IsValidClient(owner)) {
-				CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Un de vos props vient d'être détruit.");
+				CPrintToChat(owner, "" ...MOD_TAG... " Un de vos props vient d'être détruit.");
 				LogToGame("[TSX-RP] [TAZER] %L a supprimé un props de %L dans %s", client, owner, tmp);
 			}
 			else {
@@ -642,8 +642,8 @@ public Action Cmd_Tazer(int client) {
 			}
 			
 			if (owner > 0) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez détruit la machine de %N", owner);
-				CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Une de vos machines à faux-billets a été détruite par un agent de police.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez détruit la machine de %N", owner);
+				CPrintToChat(owner, "" ...MOD_TAG... " Une de vos machines à faux-billets a été détruite par un agent de police.");
 			}
 			SDKHooks_TakeDamage(target, client, client, 1000.0);
 		}
@@ -660,8 +660,8 @@ public Action Cmd_Tazer(int client) {
 			}
 			
 			if (owner > 0) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez détruit la photocopieuse de %N", owner);
-				CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Votre photocopieuse a été détruite par un agent de police.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez détruit la photocopieuse de %N", owner);
+				CPrintToChat(owner, "" ...MOD_TAG... " Votre photocopieuse a été détruite par un agent de police.");
 			}
 		}
 		else if (StrEqual(tmp2, "rp_plant")) {
@@ -683,8 +683,8 @@ public Action Cmd_Tazer(int client) {
 			}
 			
 			if (owner > 0) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez détruit le plant de drogue de %N", owner);
-				CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Un de vos plants de drogue a été détruit par un agent de police.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez détruit le plant de drogue de %N", owner);
+				CPrintToChat(owner, "" ...MOD_TAG... " Un de vos plants de drogue a été détruit par un agent de police.");
 			}
 			
 			if (owner == client)
@@ -698,10 +698,10 @@ public Action Cmd_Tazer(int client) {
 			
 			if (owner > 0) {
 				if (client == owner)
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez retiré votre propre barrière.");
+					CPrintToChat(client, "" ...MOD_TAG... " Vous avez retiré votre propre barrière.");
 				else {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez retiré la barrière de %N.", owner);
-					CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Une de vos barrières a été retirée par un agent de police.");
+					CPrintToChat(client, "" ...MOD_TAG... " Vous avez retiré la barrière de %N.", owner);
+					CPrintToChat(owner, "" ...MOD_TAG... " Une de vos barrières a été retirée par un agent de police.");
 				}
 			}
 		}
@@ -829,7 +829,7 @@ public Action Cmd_Jail(int client) {
 	
 	// too far
 	if (Entity_GetDistance(client, target) > maxDist) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le joueur est trop éloigné, commande inaccessible");
+		CPrintToChat(client, "" ...MOD_TAG... " Le joueur est trop éloigné, commande inaccessible");
 		return Plugin_Handled;
 		//ACCESS_DENIED(client);
 	}
@@ -845,12 +845,12 @@ public Action Cmd_Jail(int client) {
 			return Plugin_Handled;
 		
 		if (!CanSendToJail(client, client2)) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N ne peut être mis en prison pour le moment à cause d'une quête.", client2);
+			CPrintToChat(client, "" ...MOD_TAG... " %N ne peut être mis en prison pour le moment à cause d'une quête.", client2);
 			return Plugin_Handled;
 		}
 		if (IsValidClient(client2)) {
 			rp_ClientVehicleExit(client2, target, true);
-			CPrintToChat(client2, "{lightblue}[TSX-RP]{default} %N vous a sorti de votre voiture.", client);
+			CPrintToChat(client2, "" ...MOD_TAG... " %N vous a sorti de votre voiture.", client);
 		}
 		return Plugin_Handled;
 	}
@@ -861,11 +861,11 @@ public Action Cmd_Jail(int client) {
 	if (Client_GetVehicle(target) > 0) {
 		if (IsValidClient(target)) {
 			if (!CanSendToJail(client, target)) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N ne peut être mis en prison pour le moment à cause d'une quête.", target);
+				CPrintToChat(client, "" ...MOD_TAG... " %N ne peut être mis en prison pour le moment à cause d'une quête.", target);
 				return Plugin_Handled;
 			}
 			rp_ClientVehicleExit(target, Client_GetVehicle(target), true);
-			CPrintToChat(target, "{lightblue}[TSX-RP]{default} %N vous a sorti de votre voiture.", client);
+			CPrintToChat(target, "" ...MOD_TAG... " %N vous a sorti de votre voiture.", client);
 		}
 		return Plugin_Handled;
 	}
@@ -875,7 +875,7 @@ public Action Cmd_Jail(int client) {
 	}
 	
 	if (!CanSendToJail(client, target)) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N ne peut être mis en prison pour le moment à cause d'une quête.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " %N ne peut être mis en prison pour le moment à cause d'une quête.", target);
 		return Plugin_Handled;
 	}
 	
@@ -977,8 +977,8 @@ void SendPlayerToJail(int target, int client = 0) {
 			rp_SetClientInt(target, i_JailledBy, client);
 		
 		rp_SetClientBool(target, b_ExitJailMenu, false);
-		CPrintToChat(target, "{lightblue}[TSX-RP]{default} %N {default}vous a mis en prison.", client);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez mis %N {default}en prison.", target);
+		CPrintToChat(target, "" ...MOD_TAG... " %N {default}vous a mis en prison.", client);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez mis %N {default}en prison.", target);
 		
 		AskJailTime(client, target);
 		LogToGame("[TSX-RP] [JAIL-0] %L (%d) a mis %L (%d) en prison.", client, rp_GetPlayerZone(client, 1.0), target, rp_GetPlayerZone(target, 1.0));
@@ -1078,7 +1078,7 @@ public int eventAskJail2Time(Handle menu, MenuAction action, int client, int par
 			rp_SetClientInt(iTarget, i_JailledBy, client);
 			rp_ClientOverlays(iTarget, o_Jail_Juge, 20.0);
 			
-			CPrintToChatAll("{lightblue}[TSX-RP]{default} %N {default}a été condamné à faire %i heures de prison par le juge %N{default}.", iTarget, iTime, client);
+			CPrintToChatAll("" ...MOD_TAG... " %N {default}a été condamné à faire %i heures de prison par le juge %N{default}.", iTarget, iTime, client);
 			LogToGame("[TSX-RP] [JUGE] %L a été condamné à faire %i heures de prison par le juge %L.", iTarget, iTime, client);
 		}
 	}
@@ -1108,8 +1108,8 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 			rp_SetClientInt(target, i_JailledBy, 0);
 			rp_SetClientBool(target, b_IsFreekiller, false);
 
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez libéré %N{default}.", target);
-			CPrintToChat(target, "{lightblue}[TSX-RP]{default} %N {default}vous a libéré.", client);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez libéré %N{default}.", target);
+			CPrintToChat(target, "" ...MOD_TAG... " %N {default}vous a libéré.", client);
 
 			LogToGame("[TSX-RP] [JAIL] [LIBERATION] %L a liberé %L", client, target);
 			
@@ -1133,8 +1133,8 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 			else
 				rp_ClientTeleport(target, view_as<float>( { 473.7, -1979.5, -2007.9 } ));
 			
-			CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez été mis en prison, en attente de jugement par: %N", client);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez mis: %N {default}dans la prison du Tribunal.", target);
+			CPrintToChat(target, "" ...MOD_TAG... " Vous avez été mis en prison, en attente de jugement par: %N", client);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez mis: %N {default}dans la prison du Tribunal.", target);
 			
 			LogToGame("[TSX-RP] [TRIBUNAL] %L a mis %L dans la prison du Tribunal.", client, target);
 			return;
@@ -1149,8 +1149,8 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 				rp_SetClientInt(target, i_JailledBy, 0);
 				rp_SetClientBool(target, b_IsFreekiller, false);
 
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N{default} a été libéré car il n'a pas commis d'agression.", target);
-				CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez été libéré car vous n'avez pas commis d'agression.", client);
+				CPrintToChat(client, "" ...MOD_TAG... " %N{default} a été libéré car il n'a pas commis d'agression.", target);
+				CPrintToChat(target, "" ...MOD_TAG... " Vous avez été libéré car vous n'avez pas commis d'agression.", client);
 				
 				LogToGame("[TSX-RP] [JAIL] %L a été libéré car il n'avait pas commis d'agression", target);
 				
@@ -1166,8 +1166,8 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 				rp_SetClientInt(target, i_JailledBy, 0);
 				rp_SetClientBool(target, b_IsFreekiller, false);
 
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N{default} a été libéré car il n'a pas effectué de tir dangereux.", target);
-				CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez été libéré car vous n'avez pas effectué de tir dangereux.", client);
+				CPrintToChat(client, "" ...MOD_TAG... " %N{default} a été libéré car il n'a pas effectué de tir dangereux.", target);
+				CPrintToChat(target, "" ...MOD_TAG... " Vous avez été libéré car vous n'avez pas effectué de tir dangereux.", client);
 				
 				LogToGame("[TSX-RP] [JAIL] %L a été libéré car il n'avait pas effectué de tir dangereux", target);
 				
@@ -1196,8 +1196,8 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 			if (rp_GetClientInt(target, i_LastVolVehicleTime) + 300 > GetTime()) {
 				if (rp_IsValidVehicle(rp_GetClientInt(target, i_LastVolVehicle))) {
 					rp_SetClientKeyVehicle(target, rp_GetClientInt(target, i_LastVolVehicle), false);
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N{default} a perdu les clés de la voiture qu'il a volé.", target);
-					CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez perdu les clés de la voiture que vous avez volé.", client);
+					CPrintToChat(client, "" ...MOD_TAG... " %N{default} a perdu les clés de la voiture qu'il a volé.", target);
+					CPrintToChat(target, "" ...MOD_TAG... " Vous avez perdu les clés de la voiture que vous avez volé.", client);
 				}
 			}
 			else if (rp_GetClientInt(target, i_LastVolTime) + 30 < GetTime()) {
@@ -1206,8 +1206,8 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 				rp_SetClientInt(target, i_JailledBy, 0);
 				rp_SetClientBool(target, b_IsFreekiller, false);
 				
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N{default} a été libéré car il n'a pas commis de vol.", target);
-				CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez été libéré car vous n'avez pas commis de vol.", client);
+				CPrintToChat(client, "" ...MOD_TAG... " %N{default} a été libéré car il n'a pas commis de vol.", target);
+				CPrintToChat(target, "" ...MOD_TAG... " Vous avez été libéré car vous n'avez pas commis de vol.", client);
 				
 				LogToGame("[TSX-RP] [JAIL] %L a été libéré car il n'avait pas commis de vol", target);
 				
@@ -1219,14 +1219,14 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 				// i_LostVolCashFlowTime;
 
 				if(rp_GetClientInt(target, i_LastVolTime) + rp_GetClientInt(target, i_LastVolCashFlowTime) < GetTime()) {
-					CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez réussi à cacher votre butin, vous ne remboursez pas votre victime");
+					CPrintToChat(target, "" ...MOD_TAG... " Vous avez réussi à cacher votre butin, vous ne remboursez pas votre victime");
 				} else {
 					int tg = rp_GetClientInt(target, i_LastVolTarget);
 					rp_ClientMoney(tg, i_Money, rp_GetClientInt(target, i_LastVolAmount));
 					rp_ClientMoney(target, i_AddToPay, -rp_GetClientInt(target, i_LastVolAmount));
 					
-					CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez remboursé votre victime de %d$.", rp_GetClientInt(target, i_LastVolAmount));
-					CPrintToChat(tg, "{lightblue}[TSX-RP]{default} Le voleur a été mis en prison. Vous avez été remboursé de %d$.", rp_GetClientInt(target, i_LastVolAmount));
+					CPrintToChat(target, "" ...MOD_TAG... " Vous avez remboursé votre victime de %d$.", rp_GetClientInt(target, i_LastVolAmount));
+					CPrintToChat(tg, "" ...MOD_TAG... " Le voleur a été mis en prison. Vous avez été remboursé de %d$.", rp_GetClientInt(target, i_LastVolAmount));
 				}
 			}
 			else {
@@ -1270,7 +1270,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 						continue;
 					if (rp_GetClientInt(i, i_LastKilled_Reverse) != target)
 						continue;
-					CPrintToChat(i, "{lightblue}[TSX-RP]{default} Votre assassin a été mis en prison.");
+					CPrintToChat(i, "" ...MOD_TAG... " Votre assassin a été mis en prison.");
 				}
 
 				if(amende <= 1800 ) {
@@ -1282,8 +1282,8 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 			if (amende > 0) {
 				
 				if (IsValidClient(target)) {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Une amende de %i$ a été prélevée à %N{default}.", amende, target);
-					CPrintToChat(target, "{lightblue}[TSX-RP]{default} Une caution de %i$ vous a été prelevée.", amende);
+					CPrintToChat(client, "" ...MOD_TAG... " Une amende de %i$ a été prélevée à %N{default}.", amende, target);
+					CPrintToChat(target, "" ...MOD_TAG... " Une caution de %i$ vous a été prelevée.", amende);
 				}
 			}
 		}
@@ -1299,7 +1299,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 						continue;
 					if (rp_GetClientInt(i, i_LastKilled_Reverse) != target)
 						continue;
-					CPrintToChat(i, "{lightblue}[TSX-RP]{default} Votre assassin a été mis en prison.");
+					CPrintToChat(i, "" ...MOD_TAG... " Votre assassin a été mis en prison.");
 				}
 			}
 			
@@ -1325,12 +1325,12 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 		rp_SetClientInt(target, i_jailTime_Last, time_to_spend);
 		
 		if (IsValidClient(client) && IsValidClient(target)) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N {default}restera en prison %.1f heures pour \"%s\"", target, time_to_spend / 60.0, g_szJailRaison[type][jail_raison]);
-			CPrintToChat(target, "{lightblue}[TSX-RP]{default} %N {default}vous a mis %.1f heures de prison pour \"%s\"", client, time_to_spend / 60.0, g_szJailRaison[type][jail_raison]);
+			CPrintToChat(client, "" ...MOD_TAG... " %N {default}restera en prison %.1f heures pour \"%s\"", target, time_to_spend / 60.0, g_szJailRaison[type][jail_raison]);
+			CPrintToChat(target, "" ...MOD_TAG... " %N {default}vous a mis %.1f heures de prison pour \"%s\"", client, time_to_spend / 60.0, g_szJailRaison[type][jail_raison]);
 			explainJail(target, type);
 		}
 		else {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le joueur s'est déconnecté mais il fera %.1f heures de prison", time_to_spend / 60.0);
+			CPrintToChat(client, "" ...MOD_TAG... " Le joueur s'est déconnecté mais il fera %.1f heures de prison", time_to_spend / 60.0);
 			
 			Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_users2` (`id`, `steamid`, `jail` ) VALUES", szQuery);
 			Format(szQuery, sizeof(szQuery), "%s (NULL, '%s', '%i' );", szQuery, g_szTribunal[client], time_to_spend);
@@ -1408,8 +1408,8 @@ public int eventPayForLeaving(Handle menu, MenuAction action, int client, int pa
 		
 		
 		if (IsValidClient(target)) {
-			CPrintToChat(target, "{lightblue}[TSX-RP]{default} Une amende de %i$ a été prélevée à %N.", amende, client);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Une caution de %i$ vous a été prelevée.", amende);
+			CPrintToChat(target, "" ...MOD_TAG... " Une amende de %i$ a été prélevée à %N.", amende, client);
+			CPrintToChat(client, "" ...MOD_TAG... " Une caution de %i$ vous a été prelevée.", amende);
 		}
 		
 		time_to_spend *= 60;
@@ -1483,13 +1483,13 @@ public Action fwdOnPlayerBuild(int client, float & cooldown) {
 	}
 
 	if (rp_IsInPVP(client)) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas poser une barrière en PVP.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas poser une barrière en PVP.");
 		return Plugin_Continue;
 	}
 	
 	int Tzone = rp_GetPlayerZone(client);
 	if (Tzone == 24 || Tzone == 25) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas poser une barrière dans les conduits.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas poser une barrière dans les conduits.");
 		return Plugin_Continue;
 	}
 	
@@ -1554,13 +1554,13 @@ int BuildingBarriere(int client) {
 		if (StrEqual(classname, tmp) && rp_GetBuildingData(i, BD_owner) == client) {
 			count++;
 			if (count >= max) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez posé trop de barrières.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez posé trop de barrières.");
 				return 0;
 			}
 		}
 	}
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous posez une barrière...");
+	CPrintToChat(client, "" ...MOD_TAG... " Vous posez une barrière...");
 	
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client);
 	
@@ -1604,7 +1604,7 @@ public void BuildingBarriere_break(const char[] output, int caller, int activato
 	
 	int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
 	if (IsValidClient(owner)) {
-		CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Votre barrière a été détruite.");
+		CPrintToChat(owner, "" ...MOD_TAG... " Votre barrière a été détruite.");
 	}
 }
 // ----------------------------------------------------------------------------
@@ -1650,7 +1650,7 @@ public int MenuTribunal_GPS(Handle p_hItemMenu, MenuAction p_oAction, int client
 		
 		
 		if (rp_GetClientItem(client, ITEM_GPS) <= 0) {
-			CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous n'avez plus de GPS.");
+			CPrintToChat(target, "" ...MOD_TAG... " Vous n'avez plus de GPS.");
 			return;
 		}
 		
@@ -1658,8 +1658,8 @@ public int MenuTribunal_GPS(Handle p_hItemMenu, MenuAction p_oAction, int client
 		
 		if (Math_GetRandomInt(1, 100) < rp_GetClientInt(target, i_Cryptage) * 20) {
 			
-			CPrintToChat(target, "{lightblue}[TSX-RP]{default} Votre pot de vin envers un mercenaire vient de vous sauver.");
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Un pot de vin envers un mercenaire vient de le sauver...");
+			CPrintToChat(target, "" ...MOD_TAG... " Votre pot de vin envers un mercenaire vient de vous sauver.");
+			CPrintToChat(client, "" ...MOD_TAG... " Un pot de vin envers un mercenaire vient de le sauver...");
 			
 		}
 		else {
@@ -1772,7 +1772,7 @@ void Cmd_BuyWeapon(int client, bool free) {
 	int data[BM_Max];
 	
 	if (position >= max) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Désolé, aucune arme n'est disponible pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " Désolé, aucune arme n'est disponible pour le moment.");
 		return;
 	}
 	

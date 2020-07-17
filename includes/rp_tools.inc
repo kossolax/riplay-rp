@@ -188,7 +188,7 @@ stock void PrintToChatClientArea(int client, const char[] message, any...) {
 			continue;
 		
 		if (rp_IsTargetHear(i, client)) {
-			CPrintToChat(i, "{lightblue}[TSX-RP]{default} %s", buffer);
+			CPrintToChat(i, "" ...MOD_TAG... " %s", buffer);
 		}
 	}
 }
@@ -203,7 +203,7 @@ stock void PrintToChatZone(int zoneID, const char[] message, any...) {
 			continue;
 		
 		if (rp_GetPlayerZone(i) == zoneID) {
-			CPrintToChat(i, "{lightblue}[TSX-RP]{default} %s", buffer);
+			CPrintToChat(i, "" ...MOD_TAG... " %s", buffer);
 		}
 	}
 }
@@ -444,8 +444,8 @@ public Action rp_ClientRemoveProp(int client, int target, int item_id) {
 				
 				int owner = GetEntPropEnt(target, Prop_Send, "m_hOwnerEntity");
 				if (IsValidClient(owner)) {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez detruit la machine de %N", owner);
-					CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Une de vos machines a faux billet a été detruite.");
+					CPrintToChat(client, "" ...MOD_TAG... " Vous avez detruit la machine de %N", owner);
+					CPrintToChat(owner, "" ...MOD_TAG... " Une de vos machines a faux billet a été detruite.");
 				}
 				
 			}
@@ -453,15 +453,15 @@ public Action rp_ClientRemoveProp(int client, int target, int item_id) {
 				
 				int owner = GetEntPropEnt(target, Prop_Send, "m_hOwnerEntity");
 				if (IsValidClient(owner)) {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez detruit la grosse machine de %N", owner);
-					CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Votre grosse machine a faux billet a été detruite.");
+					CPrintToChat(client, "" ...MOD_TAG... " Vous avez detruit la grosse machine de %N", owner);
+					CPrintToChat(owner, "" ...MOD_TAG... " Votre grosse machine a faux billet a été detruite.");
 				}
 			}
 			else if (StrEqual(name, "rp_plant")) {
 				int owner = GetEntPropEnt(target, Prop_Send, "m_hOwnerEntity");
 				if (IsValidClient(owner) && owner != client) {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez detruit un plant de drogue de %N", owner);
-					CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Une de vos plantations a été detruite.");
+					CPrintToChat(client, "" ...MOD_TAG... " Vous avez detruit un plant de drogue de %N", owner);
+					CPrintToChat(owner, "" ...MOD_TAG... " Une de vos plantations a été detruite.");
 				}
 				else if (owner == client && rp_GetBuildingData(target, BD_FromBuild) == 0) {
 					int sub = rp_GetBuildingData(target, BD_item_id);
@@ -491,12 +491,12 @@ public Action rp_ClientRemoveProp(int client, int target, int item_id) {
 				}
 				else {
 					AcceptEntityInput(target, "Kill");
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le props a été supprime.");
+					CPrintToChat(client, "" ...MOD_TAG... " Le props a été supprime.");
 				}
 			}
 			else {
 				AcceptEntityInput(target, "Kill");
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le props a été supprime.");
+				CPrintToChat(client, "" ...MOD_TAG... " Le props a été supprime.");
 			}
 		}
 		else if (rp_IsValidVehicle(target) && rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PVP) {
@@ -505,13 +505,13 @@ public Action rp_ClientRemoveProp(int client, int target, int item_id) {
 			rp_SetVehicleInt(target, car_health, heal);
 			
 			if (heal <= 0 && IsValidClient(owner)) {
-				CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Votre voiture a été détruite en PvP.");
+				CPrintToChat(owner, "" ...MOD_TAG... " Votre voiture a été détruite en PvP.");
 			}
 			rp_Effect_Tazer(client, target);
 		}
 		else {
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il n'y a rien à supprimer.");
+			CPrintToChat(client, "" ...MOD_TAG... " Il n'y a rien à supprimer.");
 		}
 	}
 	else {

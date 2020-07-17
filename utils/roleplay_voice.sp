@@ -72,7 +72,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 		}
 		if( rp_GetClientJobID(client) != 1 && rp_GetClientJobID(client) != 101 ) {
 			if( !g_bMayTalk[client] ) {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez attendre encore quelques secondes, avant d'utiliser à nouveau le chat annonce.");
+					CPrintToChat(client, "" ...MOD_TAG... " Vous devez attendre encore quelques secondes, avant d'utiliser à nouveau le chat annonce.");
 					return Plugin_Handled;
 			}
 			
@@ -230,7 +230,7 @@ public Action OnClientSayCommand(int client, const char[] command, const char[] 
 			return Plugin_Stop;
 		}
 		if( !g_bMayTalk[client] ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez attendre encore quelques secondes.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous devez attendre encore quelques secondes.");
 			return Plugin_Stop;
 		}
 		g_bMayTalk[client] = false;
@@ -431,7 +431,7 @@ public int MenuJobs3(Handle p_hItemMenu, MenuAction p_oAction, int client, int p
 			int item_id = StringToInt(data[1]);
 			
 			if( rp_ClientFloodTriggered(client, target, fd_job) ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez appeler %N, pour le moment.", target);
+				CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez appeler %N, pour le moment.", target);
 				return;
 			}
 			rp_ClientFloodIncrement(client, target, fd_job, 10.0);
@@ -439,22 +439,22 @@ public int MenuJobs3(Handle p_hItemMenu, MenuAction p_oAction, int client, int p
 			char zoneName[64];
 			rp_GetZoneData(rp_GetPlayerZone(client), zone_type_name, zoneName, sizeof(zoneName));
 			switch(item_id){
-				case -1: CPrintToChat(target, "{lightblue}[TSX-RP]{default} Le joueur %N aimerait être recruté, il est actuellement: %s", client, zoneName);
-				case -2: CPrintToChat(target, "{lightblue}[TSX-RP]{default} Le joueur %N a besoin d'un crochetage de porte, il est actuellement: %s", client, zoneName);
-				case -3: CPrintToChat(target, "{lightblue}[TSX-RP]{default} Le joueur %N aimerait acheter ou vendre une arme, il est actuellement: %s", client, zoneName);
+				case -1: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N aimerait être recruté, il est actuellement: %s", client, zoneName);
+				case -2: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N a besoin d'un crochetage de porte, il est actuellement: %s", client, zoneName);
+				case -3: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N aimerait acheter ou vendre une arme, il est actuellement: %s", client, zoneName);
 				case -4: {
-					CPrintToChat(target, "{lightblue}[TSX-RP]{default} Le joueur %N a besoin d'un juge, il est actuellement: %s", client, zoneName);
+					CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N a besoin d'un juge, il est actuellement: %s", client, zoneName);
 					LogToGame("[TSX-RP] [CALL] %L a demandé les services de juge de %L", client, target);
 				}
-				case -5: CPrintToChat(target, "{lightblue}[TSX-RP]{default} Le joueur %N a besoin d'un avocat, il est actuellement: %s", client, zoneName);
-				case -6: CPrintToChat(target, "{lightblue}[TSX-RP]{default} Le joueur %N souhaiterait acheter un appartement, merci de le contacter pour plus de renseignement. Il est actuellement: %s", client, zoneName);
+				case -5: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N a besoin d'un avocat, il est actuellement: %s", client, zoneName);
+				case -6: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N souhaiterait acheter un appartement, merci de le contacter pour plus de renseignement. Il est actuellement: %s", client, zoneName);
 				default: {
 					rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
-					CPrintToChat(target, "{lightblue}[TSX-RP]{default} Le joueur %N a besoin de {lime}%s{default}, il est actuellement: %s", client, tmp, zoneName);
+					CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N a besoin de {lime}%s{default}, il est actuellement: %s", client, tmp, zoneName);
 					LogToGame("[TSX-RP] [CALL] %L a demandé %s à %L", client, tmp, target);
 				}
 			}
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} La demande à été envoyée à la personne.");
+			CPrintToChat(client, "" ...MOD_TAG... " La demande à été envoyée à la personne.");
 			ClientCommand(target, "play buttons/blip1.wav");
 			rp_Effect_BeamBox(target, client, NULL_VECTOR, 122, 122, 0);
 			Handle dp;

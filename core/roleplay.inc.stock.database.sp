@@ -425,7 +425,7 @@ public Action StoreData(Handle timer, any client) {
 public void showCagnotteInfo(Handle owner, Handle hQuery, const char[] error, any client) {
 	if( SQL_FetchRow(hQuery) ) {
 		// g_iLOTO;
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N vous avez gratté %d tickets, la cagnotte totale est de: %d$", client, SQL_FetchInt(hQuery, 0), rp_GetServerInt(lotoCagnotte));
+		CPrintToChat(client, "" ...MOD_TAG... " %N vous avez gratté %d tickets, la cagnotte totale est de: %d$", client, SQL_FetchInt(hQuery, 0), rp_GetServerInt(lotoCagnotte));
 	}
 }
 public void SQL_SetLoteryAmount(Handle owner, Handle hQuery, const char[] error, any none) {

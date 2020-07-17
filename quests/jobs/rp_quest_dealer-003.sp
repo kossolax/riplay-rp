@@ -181,7 +181,7 @@ public void Q3_End(int objectiveID, int client) {
 	menu.Display(client, 30);
 	
 	char item[64]; rp_GetItemData(236, item_type_name, item, sizeof(item)); rp_ClientGiveItem(client, 236); // [PvP] AK-47
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu: %s", item);
+	CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu: %s", item);
 }
 public void Q1_Abort(int objectiveID, int client) {
 	PrintHintText(client, "<b>Quête</b>: %s\nLa quête est terminée", QUEST_NAME);

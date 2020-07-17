@@ -54,7 +54,7 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 		int sum = RoundToCeil(float(salary) * multi) - salary;
 		
 		if( verbose )
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre vitalité de niveau %d vous fait remporté %d$ supplémentaire.", vit_level, sum);
+			CPrintToChat(client, "" ...MOD_TAG... " Votre vitalité de niveau %d vous fait remporté %d$ supplémentaire.", vit_level, sum);
 		
 		topay += sum;
 		return Plugin_Changed;
@@ -114,7 +114,7 @@ int BuildingMicrowave(int client) {
 		GetEdictClassname(i, tmp, 63);
 		
 		if( StrEqual(classname, tmp) && rp_GetBuildingData(i, BD_owner) == client ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez déjà un micro-ondes de branché.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà un micro-ondes de branché.");
 			return 0;
 		}
 	}
@@ -122,7 +122,7 @@ int BuildingMicrowave(int client) {
 	float vecOrigin[3];
 	GetClientAbsOrigin(client, vecOrigin);
 
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Construction en cours...");
+	CPrintToChat(client, "" ...MOD_TAG... " Construction en cours...");
 	
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client, _, _, _, 0.66);
 	
@@ -191,7 +191,7 @@ public Action BuildingMicrowave_post(Handle timer, any entity) {
 public void BuildingMicrowave_break(const char[] output, int caller, int activator, float delay) {
 	
 	int client = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
-	CPrintToChat(client,"{lightblue}[TSX-RP]{default} Votre micro-ondes vient d'être détruit");
+	CPrintToChat(client,"" ...MOD_TAG... " Votre micro-ondes vient d'être détruit");
 	
 	float vecOrigin[3];
 	Entity_GetAbsOrigin(caller,vecOrigin);
@@ -299,13 +299,13 @@ public Action Cmd_ItemHamburger(int args) {
 		
 			rp_SetClientFloat(client, fl_Vitality, vita + 256.0);
 			ServerCommand("sm_effect_particles %d Trail12 5 facemask", client);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ressentez votre vitalité s'augmenter (%.1f -> %.1f).", vita, vita+256.0);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ressentez votre vitalité s'augmenter (%.1f -> %.1f).", vita, vita+256.0);
 		}
 	}
 	if( StrEqual(arg1, "energy") ) {
 		rp_SetClientFloat(client, fl_Energy, 100.0);
 		
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ressentez votre énergie s'augmenter.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ressentez votre énergie s'augmenter.");
 	}
 	
 	if( StrEqual(arg1, "fat") ) {
@@ -322,7 +322,7 @@ public Action Cmd_ItemHamburger(int args) {
 		
 		if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas utiliser cet item pour le moment.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
 			return Plugin_Handled;
 		}
 		rp_SetClientBool(client, b_MayUseUltimate, false);
@@ -408,7 +408,7 @@ public Action Cmd_ItemHamburger(int args) {
 		rp_ClientGiveItem(client, rand, 1, StrEqual(arg1, "happy"));
 		
 		rp_GetItemData(rand, item_type_name, cmd, sizeof(cmd));
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu comme cadeau: %s", cmd);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu comme cadeau: %s", cmd);
 		
 		if( rand == GetCmdArgInt(args) )
 			rp_IncrementSuccess(client, success_list_mcdo);
@@ -436,7 +436,7 @@ public Action Cmd_ItemHamburger(int args) {
 		int rand = iItemRand[ Math_GetRandomInt(0, amount-1) ];
 		rp_ClientGiveItem(client, rand, 1, true);
 		rp_GetItemData(rand, item_type_name, cmd, sizeof(cmd));
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu comme cadeau: %s", cmd);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu comme cadeau: %s", cmd);
 	}
 	else if( StrEqual(arg1, "drugs") ) { // TODO: Move to roleplay_dealer
 		
@@ -459,7 +459,7 @@ public Action Cmd_ItemHamburger(int args) {
 		rp_ClientGiveItem(client, rand, rnd, true);
 		
 		rp_GetItemData(rand, item_type_name, cmd, sizeof(cmd));
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu comme cadeau: %dx %s", rnd, cmd);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu comme cadeau: %dx %s", rnd, cmd);
 	}
 	else if( StrEqual(arg1, "spacy") ) {
 		rp_SetClientKnifeType(client, ball_type_fire);
@@ -515,7 +515,7 @@ public int MenuVital(Handle menu, MenuAction action, int client, int param2) {
 		int amount = StringToInt(tmp[1]);
 		
 		if( rp_GetClientItem(client, itemID) < amount && amount > 0 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas autant d'hamburger.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas autant d'hamburger.");
 			return;
 		}
 		
@@ -526,7 +526,7 @@ public int MenuVital(Handle menu, MenuAction action, int client, int param2) {
 		
 		rp_SetClientFloat(client, fl_Vitality, n_vita);
 		ServerCommand("sm_effect_particles %d Trail12 5 facemask", client);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ressentez votre vitalité s'augmenter (%.1f -> %.1f).", vita, n_vita);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ressentez votre vitalité s'augmenter (%.1f -> %.1f).", vita, n_vita);
 	}
 	else if( action == MenuAction_End ) {
 		if( menu != INVALID_HANDLE )
@@ -553,7 +553,7 @@ public Action Cmd_ItemBanane(int args) {
 		if( StrEqual(classname, classname2) ) {
 			count++;
 			if( count >= 10 ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez posé trop de bananes.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez posé trop de bananes.");
 				ITEM_CANCEL(client, itemID);
 				return Plugin_Handled;
 			}

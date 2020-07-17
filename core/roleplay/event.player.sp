@@ -369,7 +369,7 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	ServerCommand("sm_effect_fading %i 1.0", Client);
 	if( test )	LogToGame("[CRASH-TEST] 15");
 	if( g_iUserData[Client][i_Malus] > GetTime() ) {
-		CPrintToChat(Client, "{lightblue}[TSX-RP]{default} Vous avez un malus pour encore: %.1f minute(s).", (float(g_iUserData[Client][i_Malus]-GetTime())/60.0) );
+		CPrintToChat(Client, "" ...MOD_TAG... " Vous avez un malus pour encore: %.1f minute(s).", (float(g_iUserData[Client][i_Malus]-GetTime())/60.0) );
 	}
 	else {
 		g_iUserData[Client][i_Malus] = 0;
@@ -449,17 +449,17 @@ public Action OnPlayerSpawnPost(Handle timer, any client) {
 public void ClientConVar(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue) {
 	if( StrEqual(cvarName, "cl_downloadfilter", false) ) {
 		if( StrEqual(cvarValue, "all") == false ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Des problemes d'affichage? Entrez cl_downloadfilter all dans votre console puis relancer CS:GO.");
+			CPrintToChat(client, "" ...MOD_TAG... " Des problemes d'affichage? Entrez cl_downloadfilter all dans votre console puis relancer CS:GO.");
 		}
 	}
 	if( StrEqual(cvarName, "cl_disablehtmlmotd", false) ) {
 		if( StrEqual(cvarValue, "0") == false ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Des problemes d'affichage? Entrez cl_disablehtmlmotd 0 dans votre console puis relancer CS:GO.");
+			CPrintToChat(client, "" ...MOD_TAG... " Des problemes d'affichage? Entrez cl_disablehtmlmotd 0 dans votre console puis relancer CS:GO.");
 		}
 	}
 	if( StrEqual(cvarName, "cl_join_advertise", false) ) {
 		if( StrEqual(cvarValue, "2") == false && Math_GetRandomInt(0, 4) ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Entrez cl_join_advertise 2 pour que vos amis puissent vous rejoindre facilement.");
+			CPrintToChat(client, "" ...MOD_TAG... " Entrez cl_join_advertise 2 pour que vos amis puissent vous rejoindre facilement.");
 		}
 	}
 	
@@ -503,7 +503,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 		if( IsValidClient(Attacker) )
 			g_iHideNextLog[Attacker][Client] = 1;
 
-		CPrintToChat(Client, "{lightblue}[TSX-RP]{default} Vous êtes mort dans %s, vous allez revivre dans 1 seconde.", g_szZoneList[GetPlayerZone(Client)][zone_type_name]);
+		CPrintToChat(Client, "" ...MOD_TAG... " Vous êtes mort dans %s, vous allez revivre dans 1 seconde.", g_szZoneList[GetPlayerZone(Client)][zone_type_name]);
 		g_flUserData[Client][fl_RespawnTime] = time + 1.0 + Math_GetRandomFloat(-0.33, 0.33);
 		
 		for(int i=1; i<=MaxClients; i++) {
@@ -513,9 +513,9 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 				continue;
 
 			if( Attacker <= 0 || Attacker == Client )
-				CPrintToChat(i, "{lightblue}[TSX-RP]{default} %N s'est tué.", Client);
+				CPrintToChat(i, "" ...MOD_TAG... " %N s'est tué.", Client);
 			else
-				CPrintToChat(i, "{lightblue}[TSX-RP]{default} %N a tué %N.", Attacker, Client);
+				CPrintToChat(i, "" ...MOD_TAG... " %N a tué %N.", Attacker, Client);
 		}
 		return Plugin_Continue;
 	}
@@ -523,7 +523,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 	if( GetZoneBit( zone_victim ) & BITZONE_EVENT && GetConVarInt(g_hEVENT) == 3 ) {
 		g_flUserData[Client][fl_RespawnTime] = time + 1.0 + Math_GetRandomFloat(-0.33, 0.33);
 		rp_ClientTeleport(Client, view_as<float>({4682.0, 11182.0, -2311.0}));
-		CPrintToChat(Client, "{lightblue}[TSX-RP]{default} Vous êtes mort en event, vous allez revivre dans 1 seconde.");
+		CPrintToChat(Client, "" ...MOD_TAG... " Vous êtes mort en event, vous allez revivre dans 1 seconde.");
 	}
 
 	if( IsValidClient(g_iUserData[Client][i_BurnedBy]) && g_flUserData[Client][fl_Burning] > GetGameTime() && !IsValidClient(Attacker) ) {
@@ -640,7 +640,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 	if( Client ) {
 
 		if( g_bUserData[Client][b_Beacon] == 1 ) {
-			CPrintToChatAll("{lightblue}[TSX-RP]{default} %N a été tué.", Client);
+			CPrintToChatAll("" ...MOD_TAG... " %N a été tué.", Client);
 			g_bUserData[Client][b_Beacon] = 0;
 		}
 		
@@ -660,9 +660,9 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 			int flags = GetUserFlagBits(i);
 			if (flags & ADMFLAG_GENERIC || flags & ADMFLAG_ROOT) {
 				if( Attacker <= 0 || Attacker == Client )
-					CPrintToChat(i, "{lightblue}[TSX-RP]{default} %N s'est tué.", Client);
+					CPrintToChat(i, "" ...MOD_TAG... " %N s'est tué.", Client);
 				else
-					CPrintToChat(i, "{lightblue}[TSX-RP]{default} %N a tué %N.", Attacker, Client);
+					CPrintToChat(i, "" ...MOD_TAG... " %N a tué %N.", Attacker, Client);
 			}
 		}
 	}
@@ -684,7 +684,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 		}
 		
 		if( g_flUserData[Client][fl_RespawnTime] < time && respawn > 0.25 ) {
-			CPrintToChat(Client, "{lightblue}[TSX-RP]{default} Vous êtes mort en zone pvp.");
+			CPrintToChat(Client, "" ...MOD_TAG... " Vous êtes mort en zone pvp.");
 			respawn = 1.0;
 			
 			if( g_bIsInCaptureMode ) {
@@ -693,7 +693,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 		}
 	}
 	else if( g_bIsInCaptureMode && GetGroupPrimaryID(Client) > 0 ) {
-		CPrintToChat(Client, "{lightblue}[TSX-RP]{default} Vous êtes mort pendant une capture pvp.");
+		CPrintToChat(Client, "" ...MOD_TAG... " Vous êtes mort pendant une capture pvp.");
 		respawn = 1.0;
 	}
 	

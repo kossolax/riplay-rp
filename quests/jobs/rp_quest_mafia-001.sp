@@ -112,7 +112,7 @@ public void Q1_Frame(int objectiveID, int client) {
 			char item[64];
 			rp_GetItemData(3, item_type_name, item, sizeof(item));
 			rp_ClientGiveItem(client, 3);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu: %s", item);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu: %s", item);
 		}
 	}
 }
@@ -160,9 +160,9 @@ public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
 						
 						rp_ClientSendToSpawn(client, false);
 						
-						CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N vous a libéré.", target);
+						CPrintToChat(client, "" ...MOD_TAG... " %N vous a libéré.", target);
 						PrintHintText(client,"{lightblue}[TSX-RP]{red} Vous avez été libéré de prison par %N . Vous avez donc été teleporté sur la map ! Ne vous faites pas prendre par les forces de l'ordre. ", target);
-						CPrintToChat(target, "{lightblue}[TSX-RP]{default} vous avez libéré %N et reçu une récompense de 500$.", client);
+						CPrintToChat(target, "" ...MOD_TAG... " vous avez libéré %N et reçu une récompense de 500$.", client);
 						LogToGame("[QUETE] [MAFIA] %L a libéré %L", target, client);
 						
 						lastFree[client] = GetGameTime() + 180.0;

@@ -109,18 +109,18 @@ public Action Cmd_ItemDrugs(int args) {
 	
 	bool drugged = rp_GetClientBool(client, b_Drugged);
 	if (drugged && !rp_IsTutorialOver(client) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Attention vous allez tomber malade, terminer votre tutoriel avant de tenter le diable.");
+		CPrintToChat(client, "" ...MOD_TAG... " Attention vous allez tomber malade, terminer votre tutoriel avant de tenter le diable.");
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	if( StrEqual(arg0, "ghb") ) {
 		if( rp_GetClientInt(client, i_MaskCount) <= 0 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas utiliser de GHB pour le moment.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser de GHB pour le moment.");
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
 		if (rp_GetClientJobID(client) == 1 || rp_GetClientJobID(client) == 101) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cet objet est interdit aux forces de l'ordre.");
+			CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit aux forces de l'ordre.");
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
@@ -131,7 +131,7 @@ public Action Cmd_ItemDrugs(int args) {
 	
 		if( rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PEACEFULL ) {
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cet objet est interdit où vous êtes.");
+			CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
 			return Plugin_Handled;
 		}
 		
@@ -144,17 +144,17 @@ public Action Cmd_ItemDrugs(int args) {
 			return Plugin_Handled;
 		}
 		if( !rp_IsTutorialOver(target) ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N n'a pas terminé le tutoriel.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " %N n'a pas terminé le tutoriel.", target);
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
 		if( rp_IsClientNew(target) ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N est un nouveau joueur.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " %N est un nouveau joueur.", target);
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
 		if( rp_GetClientBool(target, b_Lube) ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N vous glisse entre les mains.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " %N vous glisse entre les mains.", target);
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
@@ -178,8 +178,8 @@ public Action Cmd_ItemDrugs(int args) {
 		ServerCommand("sm_effect_particles %d Trail9 10", client);
 		
 		//Envoie de messages d'information
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez drogué %N.", target);
-		CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez été drogué.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez drogué %N.", target);
+		CPrintToChat(target, "" ...MOD_TAG... " Vous avez été drogué.");
 		
 		rp_ClientOverlays(target, o_Action_Poison, 10.0);
 		rp_ClientAggroIncrement(client, target, 1000);
@@ -188,7 +188,7 @@ public Action Cmd_ItemDrugs(int args) {
 	else if( StrEqual(arg0, "crack2") ) {
 		if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas utiliser cet item pour le moment.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
 			return Plugin_Handled;
 		}
 		dur = 60.0;
@@ -232,7 +232,7 @@ public Action Cmd_ItemDrugs(int args) {
 	
 	
 	if( drugged ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Attention, vous étiez déjà drogué.");
+		CPrintToChat(client, "" ...MOD_TAG... " Attention, vous étiez déjà drogué.");
 		
 		if( g_hDrugTimer[client] ) {
 			delete g_hDrugTimer[client];
@@ -243,7 +243,7 @@ public Action Cmd_ItemDrugs(int args) {
 					rp_IncrementSuccess(client, success_list_dealer);
 					rp_ClientOverlays(client, o_Action_Overdose, 10.0);
 					
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes en état d'overdose.");			
+					CPrintToChat(client, "" ...MOD_TAG... " Vous êtes en état d'overdose.");			
 					rp_SetClientInt(client, i_Sick, Math_GetRandomInt((view_as<int>(sick_type_none))+1, (view_as<int>(sick_type_max))-1));
 				}
 			}
@@ -296,7 +296,7 @@ public Action Cmd_ItemEngrais(int args) {
 	cpt++;
 	rp_SetBuildingData(target, BD_max, cpt);
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ce plant peut maintenant contenir %d drogues", cpt );
+	CPrintToChat(client, "" ...MOD_TAG... " Ce plant peut maintenant contenir %d drogues", cpt );
 	
 	return Plugin_Handled;
 }
@@ -308,7 +308,7 @@ public Action Cmd_ItemMorePlant(int args) {
 	if( amount >= 5 ) {
 		int item_id = GetCmdArgInt(args);
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas avoir de plant supplémentaire.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas avoir de plant supplémentaire.");
 	}
 	else
 		rp_SetClientInt(client, i_Plant, amount + 1);
@@ -336,12 +336,12 @@ public Action Cmd_ItemPiedBiche(int args) {
 	
 	if( rp_GetClientBool(client, b_MaySteal) == false ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas voler pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas voler pour le moment.");
 		return Plugin_Handled;
 	}
 	
 	if( rp_GetClientVehiclePassager(client) > 0 || Client_GetVehicle(client) > 0 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible d'utiliser cet objet dans une voiture.");
+		CPrintToChat(client, "" ...MOD_TAG... " Impossible d'utiliser cet objet dans une voiture.");
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
@@ -350,7 +350,7 @@ public Action Cmd_ItemPiedBiche(int args) {
 	int target = getDistrib(client, type);
 	if( target <= 0 ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez être sur la place, ou viser une voiture.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez être sur la place, ou viser une voiture.");
 		return Plugin_Handled;
 	}
 	
@@ -389,7 +389,7 @@ public Action Cmd_ItemPilule(int args){
 
 	if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas utiliser cet item pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
 		return Plugin_Handled;
 	}
 	
@@ -400,7 +400,7 @@ public Action Cmd_ItemPilule(int args){
 	Call_Finish(a);
 	if( a == Plugin_Handled || a == Plugin_Stop ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas utiliser cet item pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
 		return Plugin_Handled;
 	}
 	
@@ -409,7 +409,7 @@ public Action Cmd_ItemPilule(int args){
 		int appartcount = rp_GetClientInt(client, i_AppartCount);
 		if(appartcount == 0){
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas vous téléporter à votre appartement si vous n'en avez pas.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas vous téléporter à votre appartement si vous n'en avez pas.");
 			return Plugin_Handled;
 		}
 		else{
@@ -425,7 +425,7 @@ public Action Cmd_ItemPilule(int args){
 		
 		if(rp_GetClientJobID(client)==0){
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas vous teleporter à votre planque puisque vous êtes sans-emploi.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas vous teleporter à votre planque puisque vous êtes sans-emploi.");
 			return Plugin_Handled;
 		}
 		switch(rp_GetClientJobID(client)){
@@ -451,7 +451,7 @@ public Action Cmd_ItemPilule(int args){
 
 	if(tptozone == -1){
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Nous n'avons pas trouvé d'endroit où vous téléporter.");
+		CPrintToChat(client, "" ...MOD_TAG... " Nous n'avons pas trouvé d'endroit où vous téléporter.");
 		return Plugin_Handled;
 	}
 
@@ -531,7 +531,7 @@ public Action ItemPiluleOver(Handle timer, Handle dp) {
 		return Plugin_Handled;
 	}
 	ITEM_CANCEL(client, item_id);
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Nous n'avons pas trouvé d'endroit où vous téléporter.");
+	CPrintToChat(client, "" ...MOD_TAG... " Nous n'avons pas trouvé d'endroit où vous téléporter.");
 	rp_ClientColorize(client, { 255, 255, 255, 255} );
 	rp_SetClientBool(client, b_MayUseUltimate, true);
 	return Plugin_Handled;
@@ -544,7 +544,7 @@ public Action timerAlarm(Handle timer, any door) {
 public Action AllowStealing(Handle timer, any client) {
 	
 	rp_SetClientBool(client, b_MaySteal, true);
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous pouvez à nouveau voler.");
+	CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez à nouveau voler.");
 }
 public Action RemoveStealAmount(Handle time, any client) {
 	g_iStolenAmountTime[client]--;
@@ -595,7 +595,7 @@ public Action fwdOnPlayerUse(int client) {
 		if( mnt <  max ) {
 			rp_ClientGiveItem(client, itemID, max - mnt);
 			rp_GetItemData(itemID, item_type_name, tmp, sizeof(tmp));
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez récupéré %i %s.", max - mnt, tmp);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez récupéré %i %s.", max - mnt, tmp);
 			rp_SetClientStat(client, i_DrugPickedUp, rp_GetClientStat(client, i_DrugPickedUp) + (max - mnt));
 			FakeClientCommand(client, "say /item");
 		}
@@ -694,12 +694,12 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		rp_GetClientFloat(target, fl_LastStolen)+60.0 > GetGameTime() ||
 		rp_ClientFloodTriggered(client, target, fd_vol) ||
 		( rp_IsClientNew(target) && rp_GetClientFloat(target, fl_LastStolen)+300.0 > GetGameTime() ) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N n'a pas d'argent sur lui.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " %N n'a pas d'argent sur lui.", target);
 		cooldown = 1.0;
 		return Plugin_Stop;
 	}
 	if( rp_GetZoneInt(rp_GetPlayerZone(target), zone_type_type) == 81 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas voler %N ici.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas voler %N ici.", target);
 		return Plugin_Handled;
 	}
 	
@@ -717,12 +717,12 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		int wepid = findPlayerWeapon(client, target);
 		
 		if( wepid == -1 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N n'a pas d'argent, ni d'arme sur lui.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " %N n'a pas d'argent, ni d'arme sur lui.", target);
 			cooldown = 1.0;
 			return Plugin_Stop;
 		}
 				
-		CPrintToChat(target, "{lightblue}[TSX-RP]{default} Quelqu'un essaye de vous voler.");
+		CPrintToChat(target, "" ...MOD_TAG... " Quelqu'un essaye de vous voler.");
 		LogToGame("[TSX-RP] [VOL] %L a commencé un vol d'arme sur %L.", client, target);
 		
 		char wepname[64];
@@ -783,8 +783,8 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		rp_SetClientInt(client, i_LastVolTarget, target);
 		rp_SetClientInt(target, i_LastVol, client);
 		
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez volé %d$ à %N.", amount, target);
-		CPrintToChat(target, "{lightblue}[TSX-RP]{default} Quelqu'un vous a volé %d$.", amount);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez volé %d$ à %N.", amount, target);
+		CPrintToChat(target, "" ...MOD_TAG... " Quelqu'un vous a volé %d$.", amount);
 
 		//g_iSuccess_last_mafia[client][1] = GetTime();
 		//g_iSuccess_last_pas_vu_pas_pris[target] = GetTime();
@@ -833,7 +833,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		rp_ClientOverlays(target, o_Action_StealMoney, 10.0);
 	}
 	else {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N n'a pas d'argent sur lui.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " %N n'a pas d'argent sur lui.", target);
 		cooldown = 1.0;
 	}
 	
@@ -853,7 +853,7 @@ public Action fwdDamage(int client, int attacker, float& damage, int damagetype)
 }
 public Action OnWeaponDrop(int client, int weapon) {
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas lâcher votre arme pendant qu'un dealer vous vol, tirez lui dessus ou fuyez !");
+	CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas lâcher votre arme pendant qu'un dealer vous vol, tirez lui dessus ou fuyez !");
 	return Plugin_Handled;
 }
 public Action fwdZoneChange(int client, int newZone, int oldZone) {
@@ -909,7 +909,7 @@ int BuildingPlant(int client, int type) {
 			Entity_GetAbsOrigin(i, vecOrigin2);
 			
 			if( GetVectorDistance(vecOrigin, vecOrigin2) <= 24 ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas construire aussi proche d'une autre plante vous appartenant.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas construire aussi proche d'une autre plante vous appartenant.");
 				return 0;
 			}
 		}
@@ -931,11 +931,11 @@ int BuildingPlant(int client, int type) {
 		max = 2;
 	
 	if( count >= max ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez trop de plants actifs.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez trop de plants actifs.");
 		return 0;
 	}
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Construction en cours...");
+	CPrintToChat(client, "" ...MOD_TAG... " Construction en cours...");
 	
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client, _, _, _, 0.66);
 	
@@ -1062,7 +1062,7 @@ void Plant_Destroy(int entity) {
 	
 	int owner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
 	if( IsValidClient(owner) ) {
-		CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Une de vos plantations a été detruite.");
+		CPrintToChat(owner, "" ...MOD_TAG... " Une de vos plantations a été detruite.");
 		rp_ClientOverlays(owner, o_Action_DestroyPlant, 10.0);
 		if( rp_GetBuildingData(entity, BD_started)+120 < GetTime() ) {
 			rp_ClientMoney(owner, i_Bank, -125);
@@ -1102,7 +1102,7 @@ public Action Frame_BuildingPlant(Handle timer, any ent) {
 			rp_GetItemData(sub, item_type_name, tmp, sizeof(tmp));
 			
 			if( rp_GetBuildingData(ent, BD_FromBuild) == 0 || cpt % 5 == 0 )
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le plant %s est prêt pour %d utilisation%s.", tmp, cpt, (cpt>=2?"s":"") );
+				CPrintToChat(client, "" ...MOD_TAG... " Le plant %s est prêt pour %d utilisation%s.", tmp, cpt, (cpt>=2?"s":"") );
 		}
 	}
 	
@@ -1184,15 +1184,15 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				
 				stealAMount = 25*rand + 500;
 				
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} %d billets ont été sorti de la boite à gant.", rand);
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez maintenant les clés de cette voiture.");
+				CPrintToChat(client, "" ...MOD_TAG... " %d billets ont été sorti de la boite à gant.", rand);
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez maintenant les clés de cette voiture.");
 				
 				rp_SetClientKeyVehicle(client, target, true);
 				rp_SetClientInt(client, i_LastVolVehicle, target);
 				rp_SetClientInt(client, i_LastVolVehicleTime, GetTime());
 				if( IsValidClient(rp_GetVehicleInt(target, car_owner)) ) {
 					rp_ClientOverlays(rp_GetVehicleInt(target, car_owner), o_Action_StealVehicle, 10.0);
-					CPrintToChat(rp_GetVehicleInt(target, car_owner), "{lightblue}[TSX-RP]{default} Quelqu'un vous a volé votre voiture. Pensez à la garer sur un parking.");
+					CPrintToChat(rp_GetVehicleInt(target, car_owner), "" ...MOD_TAG... " Quelqu'un vous a volé votre voiture. Pensez à la garer sur un parking.");
 				}
 			}
 			case 2: {
@@ -1223,7 +1223,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				char tmp[64];
 				rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
 			
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez trouvé %d %s", amount, tmp);
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez trouvé %d %s", amount, tmp);
 				rp_ClientGiveItem(client, item_id, amount);
 				
 				stealAMount = rp_GetItemInt(item_id, item_type_prix) * amount;
@@ -1287,12 +1287,12 @@ public Action ItemPickLockOver_18th(Handle timer, Handle dp) {
 	rp_SetClientBool(target, b_Stealing, false);
 	
 	if( couldSteal == false || !IsPlayerAlive(client) || !IsPlayerAlive(target) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N s'est débattu, le vol a échoué.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " %N s'est débattu, le vol a échoué.", target);
 		CreateTimer(10.0, AllowStealing, client);
 		return Plugin_Handled;
 	}
 	if( (rp_IsClientNew(target) || (rp_GetClientJobID(target)==41 && rp_GetClientInt(target, i_ToKill) > 0) || (rp_GetWeaponBallType(wepid) == ball_type_nosteal)) && Math_GetRandomInt(0,3) != 0 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N est plus difficile à voler qu'un autre...", target);
+		CPrintToChat(client, "" ...MOD_TAG... " %N est plus difficile à voler qu'un autre...", target);
 		CreateTimer(5.0, AllowStealing, client);
 		return Plugin_Handled;
 	}
@@ -1333,7 +1333,7 @@ public Action ItemPickLockOver_18th(Handle timer, Handle dp) {
 				if( button & IN_FORWARD || button & IN_BACK || button & IN_LEFT || button & IN_RIGHT ||
 					button & IN_MOVELEFT || button & IN_MOVERIGHT || button & IN_ATTACK || button & IN_JUMP || button & IN_DUCK	) {
 					price *= 2;
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vol en action, argent doublé.");
+					CPrintToChat(client, "" ...MOD_TAG... " Vol en action, argent doublé.");
 				}
 			
 				int amount = RoundFloat( (float(price)/100.0) * (25.0) );
@@ -1357,11 +1357,11 @@ public Action ItemPickLockOver_18th(Handle timer, Handle dp) {
 			Call_Finish();
 		}
 		else {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} L'arme %s de %N s'est déjà faite volée il y a quelques instants.", wepname, target);
+			CPrintToChat(client, "" ...MOD_TAG... " L'arme %s de %N s'est déjà faite volée il y a quelques instants.", wepname, target);
 		}
 	}
 	else {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le joueur n'avait plus son arme sur lui.");
+		CPrintToChat(client, "" ...MOD_TAG... " Le joueur n'avait plus son arme sur lui.");
 		return Plugin_Handled;
 	}
 	
@@ -1441,7 +1441,7 @@ public int Menu_Market(Handle menu, MenuAction action, int client, int param2) {
 			rp_ClientGiveItem(client, itemID, amount);
 			
 			rp_GetItemData(itemID, item_type_name, options, sizeof(options));
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez acheté %d %s pour %d$.", amount, options, prix);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez acheté %d %s pour %d$.", amount, options, prix);
 			
 			FakeClientCommand(client, "say /item");
 		}
@@ -1538,24 +1538,24 @@ void openMarketMenu(int client, int itemID = 0) {
 int findPlayerWeapon(int client, int target) {
 	
 	if( !rp_IsTutorialOver(target) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ce joueur n'a pas terminé le tutoriel.");
+		CPrintToChat(client, "" ...MOD_TAG... " Ce joueur n'a pas terminé le tutoriel.");
 		return -1;
 	}
 	if( rp_GetClientBool(target, b_Stealing) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Quelqu'un d'autre est déjà en train de voler ce joueur.");
+		CPrintToChat(client, "" ...MOD_TAG... " Quelqu'un d'autre est déjà en train de voler ce joueur.");
 		return -1;
 	}
 	
 	if( (g_iStolenAmountTime[target] >= 3 && rp_GetClientFloat(target, fl_LastStolen)+(STEAL_TIME) > GetGameTime()) || (g_iStolenAmountTime[target] >= 5) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ce joueur s'est déjà fait volé récemment.");
+		CPrintToChat(client, "" ...MOD_TAG... " Ce joueur s'est déjà fait volé récemment.");
 		return -1;
 	}
 	if( rp_GetClientFloat(target, fl_Invincible) >= GetGameTime() ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ce joueur est invincible.");
+		CPrintToChat(client, "" ...MOD_TAG... " Ce joueur est invincible.");
 		return -1;
 	}
 	if( rp_GetClientJobID(target) == 81 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas voler un autre dealer.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas voler un autre dealer.");
 		return -1;
 	}
 	
@@ -1574,7 +1574,7 @@ int findPlayerWeapon(int client, int target) {
 		
 		return wepid;
 	}
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ce joueur n'a pas d'arme.");
+	CPrintToChat(client, "" ...MOD_TAG... " Ce joueur n'a pas d'arme.");
 	return -1;
 }
 int appartToZoneID(int appartid){

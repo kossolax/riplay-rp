@@ -83,7 +83,7 @@ public Action Cmd_GetSanctions(int client, int args) {
 	}
 	
 	if( j == 0 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre casier judiciaire est vierge, bravo!");
+		CPrintToChat(client, "" ...MOD_TAG... " Votre casier judiciaire est vierge, bravo!");
 		delete menu;
 		return Plugin_Handled;
 	}

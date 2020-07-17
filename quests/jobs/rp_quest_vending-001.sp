@@ -126,7 +126,7 @@ public void Q1_Frame(int objectiveID, int client) {
 		int rnd = Math_GetRandomInt(0, sizeof(MP) - 1);
 		char tmp[128];
 		rp_GetItemData(MP[rnd], item_type_name, tmp, sizeof(tmp));
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez trouvé 10x%s", tmp);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez trouvé 10x%s", tmp);
 		rp_ClientGiveItem(client, MP[rnd], 10);
 		
 	}
@@ -196,7 +196,7 @@ public void Q3_End(int objectiveID, int client) {
 	menu.Display(client, 30);
 	
 	char item[64]; rp_GetItemData(QUEST_ITEM, item_type_name, item, sizeof(item)); rp_ClientGiveItem(client, QUEST_ITEM); // [PvP] AK-47
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu: %s", item);
+	CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu: %s", item);
 }
 // ----------------------------------------------------------------------------
 public int MenuNothing(Handle menu, MenuAction action, int client, int param2) {

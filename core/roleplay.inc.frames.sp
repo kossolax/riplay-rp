@@ -138,7 +138,7 @@ void OnGameFrame_01(float time) {
 		
 		if( g_bUserData[Client][b_GameModePassive] == true && g_iUserData[Client][i_Job] >= 1 && g_iUserData[Client][i_Job] <= 8 ) {
 			g_bUserData[Client][b_GameModePassive] = false;
-			CPrintToChat(Client, "{lightblue}[TSX-RP]{default} Le mode de jeu passif a été désactivé.");
+			CPrintToChat(Client, "" ...MOD_TAG... " Le mode de jeu passif a été désactivé.");
 		}
 		
 		if( !(rp_GetZoneBit( rp_GetPlayerZone(Client) ) & BITZONE_PVP) && !(rp_GetZoneBit( rp_GetPlayerZone(Client) ) & BITZONE_EVENT)	) {
@@ -380,7 +380,7 @@ void OnGameFrame_10(float time) {
 
 	if( g_iHours == 1 && g_iMinutes == 1 ) {
 		if(g_bIsBlackFriday) {
-			Format(bfAnnoucement, sizeof(bfAnnoucement), "{lightblue}[TSX-RP]{default} Journée exceptionnelle du Black Friday ! Profitez d'une réduction de {lightblue}-%iPCT {default}sur tous vos achats !", g_iBlackFriday[1]);
+			Format(bfAnnoucement, sizeof(bfAnnoucement), "" ...MOD_TAG... " Journée exceptionnelle du Black Friday ! Profitez d'une réduction de {lightblue}-%iPCT {default}sur tous vos achats !", g_iBlackFriday[1]);
 			ReplaceString(bfAnnoucement, sizeof(bfAnnoucement), "PCT", "%%", true);
 			CPrintToChatAll(bfAnnoucement);
 		}
@@ -535,11 +535,11 @@ void OnGameFrame_10(float time) {
 						int MP[] =  { 128, 129, 234, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257 };
 						int rnd = Math_GetRandomInt(0, sizeof(MP) - 1);
 						int qt = (200/rp_GetItemInt(MP[rnd], item_type_prix));
-						CPrintToChat(i, "{lightblue}[TSX-RP]{default} Vous avez trouvé %d %s", qt, g_szItemList[MP[rnd]][item_type_name]);
+						CPrintToChat(i, "" ...MOD_TAG... " Vous avez trouvé %d %s", qt, g_szItemList[MP[rnd]][item_type_name]);
 						rp_ClientGiveItem(i, MP[rnd], qt);
 					}
 					if( !g_bUserData[i][b_GameModePassive] && jobID == 171 && Math_GetRandomInt(0, 250) == 42 ) {
-						CPrintToChat(i, "{lightblue}[TSX-RP]{default} Vous avez trouvé %s", g_szItemList[276][item_type_name]);
+						CPrintToChat(i, "" ...MOD_TAG... " Vous avez trouvé %s", g_szItemList[276][item_type_name]);
 						rp_ClientGiveItem(i, 276);
 					}
 					
@@ -757,7 +757,7 @@ void OnGameFrame_10(float time) {
 							
 						rp_ClientResetSkin(i);
 						rp_ClientSendToSpawn(i, true);
-						CPrintToChat(i, "{lightblue}[TSX-RP]{default} Vous avez été liberé de prison.");
+						CPrintToChat(i, "" ...MOD_TAG... " Vous avez été liberé de prison.");
 					}
 				}
 				
@@ -899,11 +899,11 @@ public void CRON_TIMER() {
 	
 	if( StringToInt(szHours) == 5 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 30 ) {	// 05h59m30s
 		ServerCommand("rp_give_assu");
-		CPrintToChatAll("{lightblue}[TSX-RP]{default} Le serveur vas {red}redémarrer{default} dans 30 secondes.");
+		CPrintToChatAll("" ...MOD_TAG... " Le serveur vas {red}redémarrer{default} dans 30 secondes.");
 	}
 	
 	if( StringToInt(szHours) == 6 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 06h00m00s
-		CPrintToChatAll("{lightblue}[TSX-RP]{default} Le serveur vas {red}redémarrer{default} MAINTENANT.");
+		CPrintToChatAll("" ...MOD_TAG... " Le serveur vas {red}redémarrer{default} MAINTENANT.");
 		if( GetConVarInt(FindConVar("hostport")) != 27025 )
 			ServerCommand("crash");
 		else

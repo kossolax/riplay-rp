@@ -271,7 +271,7 @@ public Action cmd_NoclipVip(int client, int args) {
 			
 		} 
 		else {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas mettre le NOCLIP VIP.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas mettre le NOCLIP VIP.");
 		}
 	}
 	return Plugin_Handled;
@@ -330,7 +330,7 @@ public Action cmd_GiveWeaponEvent(int client, int args) {
 			if( Weapon_ShouldBeEquip(Arg2) )
 				EquipPlayerWeapon(target, wepId);
 			
-			CPrintToChat(target, "{lightblue}[TSX-RP]{default}Vous avez reçu une arme pour l'event.");
+			CPrintToChat(target, "" ...MOD_TAG... "Vous avez reçu une arme pour l'event.");
 			CreateTimer(0.1, Timer_CheckWeapon, wepId, TIMER_REPEAT);
 			
 			while(analyse <= args) {
@@ -415,7 +415,7 @@ public Action cmd_GiveAssurance(int client, int args) {
 			continue;
 		g_bUserData[i][b_Assurance] = 1;
 		
-		CPrintToChat(i, "{lightblue}[TSX-RP]{default} Votre assurance vous couvre pour %i$.", GetAssurence(i));
+		CPrintToChat(i, "" ...MOD_TAG... " Votre assurance vous couvre pour %i$.", GetAssurence(i));
 		CreateTimer(GetRandomFloat(0.1, 3.0), StoreData, i);
 	}
 	
@@ -526,7 +526,7 @@ public Action CmdGenMapConfig(int client, int args) {
 		ACCESS_DENIED(client);
 	}
 	
-	CPrintToChatAll("{lightblue}[TSX-RP]{default} Génération de la config en cours,");
+	CPrintToChatAll("" ...MOD_TAG... " Génération de la config en cours,");
 	CPrintToChatAll("----------------------------------------------------------------------------");
 	
 	SQL_LockDatabase(g_hBDD);
@@ -550,7 +550,7 @@ public Action CmdGenMapConfig(int client, int args) {
 		GetCurrentMap(arg1, sizeof(arg1));
 	}
 	
-	CPrintToChatAll("{lightblue}[TSX-RP]{default}  Ajout des portes a la base de donnee:");
+	CPrintToChatAll("" ...MOD_TAG... "  Ajout des portes a la base de donnee:");
 	
 	Format(query, 1023, "DELETE FROM `rp_door_locked` WHERE `map`='%s'", arg1);
 	SQL_Query(g_hBDD, query);
@@ -637,10 +637,10 @@ public Action CmdGenMapConfig(int client, int args) {
 	}
 	
 	SQL_UnlockDatabase(g_hBDD);
-	CPrintToChatAll("{lightblue}[TSX-RP]{default} %i portes ont ete ajoutee, avec %i cle.", totals, sub_totals);	
+	CPrintToChatAll("" ...MOD_TAG... " %i portes ont ete ajoutee, avec %i cle.", totals, sub_totals);	
 	
 	CPrintToChatAll("----------------------------------------------------------------------------");
-	CPrintToChatAll("{lightblue}[TSX-RP]{default} Redemarage de la config... ");
+	CPrintToChatAll("" ...MOD_TAG... " Redemarage de la config... ");
 	ServerCommand("rp_reloadSQL");
 	CPrintToChatAll("----------------------------------------------------------------------------");
 	
@@ -823,7 +823,7 @@ public Action cmd_SetBlind(int client, int args) {
 		int target = target_list[i];
 		g_bUserData[target][b_Blind] = 1;
 		ReplyToCommand(client, "[TSX-RP] %N a été aveuglé.", target);
-		CPrintToChat(target, "{lightblue}[TSX-RP]{default} L'admin: %N vous a aveuglé.", client);
+		CPrintToChat(target, "" ...MOD_TAG... " L'admin: %N vous a aveuglé.", client);
 	}
 	
 	return Plugin_Handled;
@@ -995,7 +995,7 @@ public Action cmd_UnBlind(int client, int args) {
 		int target = target_list[i];
 		g_bUserData[target][b_Blind] = 0;
 		ReplyToCommand(client, "[TSX-RP] %N a récupéré la vue.", target);
-		CPrintToChat(target, "{lightblue}[TSX-RP]{default} L'admin: %N vous a rendu la vue.", client);
+		CPrintToChat(target, "" ...MOD_TAG... " L'admin: %N vous a rendu la vue.", client);
 	}
 	
 	return Plugin_Handled;

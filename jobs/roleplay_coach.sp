@@ -202,7 +202,7 @@ public Action Cmd_CutInfo(int client) {
 	if( !IsPlayerAlive(target) )
 		return Plugin_Handled;
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N a %i%% d'entrainnement au couteau,  %i%% d'esquive et %i%% de précision de tir.", target,
+	CPrintToChat(client, "" ...MOD_TAG... " %N a %i%% d'entrainnement au couteau,  %i%% d'esquive et %i%% de précision de tir.", target,
 	rp_GetClientInt(target, i_KnifeTrain), rp_GetClientInt(target, i_Esquive), RoundToFloor(rp_GetClientFloat(target, fl_WeaponTrain)/5.0*100.0));
 	
 	return Plugin_Handled;
@@ -263,15 +263,15 @@ public Action Cmd_ItemCut(int args) {
 		rp_IncrementSuccess(client, success_list_coach, amount-add);
 		rp_SetClientInt(client, i_KnifeTrain, 100);
 		if(add10 == 0 && add1 == 1)
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre entraînement est de 100/100, un niveau d'entrainement vous a été remboursé.");
+			CPrintToChat(client, "" ...MOD_TAG... " Votre entraînement est de 100/100, un niveau d'entrainement vous a été remboursé.");
 		else
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre entraînement est de 100/100, %i niveaux d'entrainement vous ont été remboursés.", add10 * 10 + add1);
+			CPrintToChat(client, "" ...MOD_TAG... " Votre entraînement est de 100/100, %i niveaux d'entrainement vous ont été remboursés.", add10 * 10 + add1);
 		
 		return Plugin_Handled;
 	}
 
 	rp_IncrementSuccess(client, success_list_coach, amount);
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre entraînement est maintenent de %i/100.", rp_GetClientInt(client, i_KnifeTrain));
+	CPrintToChat(client, "" ...MOD_TAG... " Votre entraînement est maintenent de %i/100.", rp_GetClientInt(client, i_KnifeTrain));
 	return Plugin_Handled;
 }
 // ----------------------------------------------------------------------------
@@ -292,18 +292,18 @@ public Action Cmd_ItemCut_Esquive(int args) {
 			
 		rp_SetClientInt(client, i_Esquive, 100);
 		
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre entraînement est déjà maximal.");
+		CPrintToChat(client, "" ...MOD_TAG... " Votre entraînement est déjà maximal.");
 		return Plugin_Handled;
 	}
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre entraînement est maintenent de %i/100.", rp_GetClientInt(client, i_Esquive));
+	CPrintToChat(client, "" ...MOD_TAG... " Votre entraînement est maintenent de %i/100.", rp_GetClientInt(client, i_Esquive));
 	return Plugin_Handled;
 }
 public Action Cmd_ItemCutRemove(int args) {
 
 	int client = GetCmdArgInt(1);
 	rp_SetClientInt(client, i_KnifeTrain, 5);
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre entraînement est maintenant à 5.");
+	CPrintToChat(client, "" ...MOD_TAG... " Votre entraînement est maintenant à 5.");
 }
 
 public Action Cmd_ItemCutThrow(int args) {	
@@ -363,7 +363,7 @@ public void Cmd_ItemCutThrow_TOUCH(int rocket, int entity) {
 	if( !touched) {
 		rp_GetItemData(g_iKnifeThrowID, item_type_name, classname, sizeof(classname));
 		rp_ClientGiveItem(attacker, g_iKnifeThrowID);
-		CPrintToChat(attacker, "{lightblue}[TSX-RP]{default} Vous avez récupéré votre couteau.");
+		CPrintToChat(attacker, "" ...MOD_TAG... " Vous avez récupéré votre couteau.");
 	}
 	
 	SDKUnhook(rocket, SDKHook_Touch, Cmd_ItemCutThrow_TOUCH);	// Prevent TWICE touch.
@@ -397,7 +397,7 @@ public Action Cmd_ItemKnifeType(int args) {
 	}
 	if( rp_GetClientKnifeType(client) == ball_type_type ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez déjà un couteau de ce type.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà un couteau de ce type.");
 		return Plugin_Handled;
 	}
 	
@@ -492,7 +492,7 @@ public Action Cmd_ItemPermiTir(int args) {
 	rp_SetClientFloat(client, fl_WeaponTrain, train < 8.0 ? train : 8.0);
 	
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre entraînement est maintenant de %.2f%%", (train/5.0*100.0));
+	CPrintToChat(client, "" ...MOD_TAG... " Votre entraînement est maintenant de %.2f%%", (train/5.0*100.0));
 }
 // ----------------------------------------------------------------------------
 public Action Cmd_ItemRiotShield(int args) {
@@ -501,7 +501,7 @@ public Action Cmd_ItemRiotShield(int args) {
 	int item_id = GetCmdArgInt(args);
 	
 	if( g_iRiotShield[client] > 0 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez déjà un bouclier anti-émeute.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà un bouclier anti-émeute.");
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
@@ -613,7 +613,7 @@ void removeShield(int client) {
 		AcceptEntityInput( g_iRiotShield[client], "Kill");
 		g_iRiotShield[client] = 0;
 		
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez perdu votre bouclier anti-émeute.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez perdu votre bouclier anti-émeute.");
 	}
 }
 // ----------------------------------------------------------------------------
@@ -624,7 +624,7 @@ public Action Cmd_ItemShoes(int args) {
 
 
 	if(	rp_GetClientBool(client, b_HasShoes) ){
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez déjà des chaussures voyons!");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà des chaussures voyons!");
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
@@ -635,7 +635,7 @@ public Action Cmd_ItemShoes(int args) {
 	rp_HookEvent(client, RP_OnFrameSeconde, fwdVitalite);
 	SDKHook(client, SDKHook_OnTakeDamage, fwdNoFallDamage);
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez maintenant la classe avec votre nouvelle paire de baskets!");
+	CPrintToChat(client, "" ...MOD_TAG... " Vous avez maintenant la classe avec votre nouvelle paire de baskets!");
 	return Plugin_Handled;
 }
 public Action fwdAssuranceShoes(int client, int& amount) {
@@ -658,7 +658,7 @@ public Action fwdVitalite(int client) {
 			float vita = rp_GetClientFloat(client, fl_Vitality);
 			rp_SetClientFloat(client, fl_Vitality, vita + 5.0);
 			
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ressentez votre vitalité s'augmenter grâce à vos baskets (%.1f -> %.1f).", vita, vita + 5.0);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ressentez votre vitalité s'augmenter grâce à vos baskets (%.1f -> %.1f).", vita, vita + 5.0);
 		}
 	}
 	
@@ -696,7 +696,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	char wep_name[32];
 	GetEdictClassname(wep_id, wep_name, 31);
 	if( StrContains(wep_name, "weapon_bayonet") != 0 && StrContains(wep_name, "weapon_knife") != 0 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez prendre votre couteau en main pour le modifier.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez prendre votre couteau en main pour le modifier.");
 		return Plugin_Handled;
 	}
 
@@ -765,7 +765,7 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 			GetEdictClassname(wep_id, wep_name, 31);
 
 			if( StrContains(wep_name, "weapon_bayonet") != 0 && StrContains(wep_name, "weapon_knife") != 0 ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez prendre une arme en main pour la modifier.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous devez prendre une arme en main pour la modifier.");
 				return;
 			}
 
@@ -773,11 +773,11 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 				price = (100 - rp_GetClientInt(client, i_KnifeTrain))*10;
 				if((rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money)) >= price){
 					rp_ClientMoney(client, i_Money, -price);
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre entrainement au couteau est maintenant maximal.");
+					CPrintToChat(client, "" ...MOD_TAG... " Votre entrainement au couteau est maintenant maximal.");
 					rp_SetClientInt(client, i_KnifeTrain, 100);
 				}
 				else{
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas assez d'argent.");
+					CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent.");
 					return;
 				}
 			}			
@@ -785,17 +785,17 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 				price = (100 - rp_GetClientInt(client, i_Esquive))*10;
 				if((rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money)) >= price){
 					rp_ClientMoney(client, i_Money, -price);
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre esquive est maintenant maximale.");
+					CPrintToChat(client, "" ...MOD_TAG... " Votre esquive est maintenant maximale.");
 					rp_SetClientInt(client, i_Esquive, 100);
 				}
 				else{
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas assez d'argent.");
+					CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent.");
 					return;
 				}
 			}
 			else if((rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money)) >= price){
 				rp_ClientMoney(client, i_Money, -price);
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} La modification à été appliquée à votre couteau.");
+				CPrintToChat(client, "" ...MOD_TAG... " La modification à été appliquée à votre couteau.");
 				if(StrEqual(szMenuItem, "fire")){
 					rp_SetClientKnifeType(client, ball_type_fire);
 				}
@@ -816,11 +816,11 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 					float train = rp_GetClientFloat(client, fl_WeaponTrain) + 4.0;
 					rp_SetClientFloat(client, fl_WeaponTrain, train < 8.0 ? train : 8.0);
 					
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre entraînement est maintenant de %.2f%%", (train/5.0*100.0));
+					CPrintToChat(client, "" ...MOD_TAG... " Votre entraînement est maintenant de %.2f%%", (train/5.0*100.0));
 				}
 			}
 			else{
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas assez d'argent.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent.");
 				return;
 			}
 			rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
@@ -854,12 +854,12 @@ public Action Cmd_ItemLessive(int args) {
 	
 	if( rp_IsInPVP(client) ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cet objet est interdit en PvP.");
+		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit en PvP.");
 		return Plugin_Handled;
 	}
 	
 	if( rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PERQUIZ ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Une perquisition est en cours, impossible d'utiliser cet objet pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " Une perquisition est en cours, impossible d'utiliser cet objet pour le moment.");
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
@@ -968,18 +968,18 @@ public Action CmdItemMask(int args) {
 	
 	
 	if( rp_GetClientInt(client, i_MaskCount) <= 0 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas utiliser de masque pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser de masque pour le moment.");
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	
 	if (rp_GetClientInt(client, i_Mask) != 0) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous portez déjà un masque.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous portez déjà un masque.");
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	if (rp_GetClientJobID(client) == 1 || rp_GetClientJobID(client) == 101) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cet objet est interdit aux forces de l'ordre.");
+		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit aux forces de l'ordre.");
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
@@ -1014,7 +1014,7 @@ public Action CmdItemMask(int args) {
 	rp_HookEvent(client, RP_OnAssurance, fwdAssuranceMask);
 	rp_HookEvent(client, RP_OnPlayerKill, fwdKill);
 	rp_SetClientInt(client, i_Mask, ent);
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous portez maintenant un masque.");
+	CPrintToChat(client, "" ...MOD_TAG... " Vous portez maintenant un masque.");
 	
 	return Plugin_Handled;
 }
@@ -1026,7 +1026,7 @@ public Action fwdKill(int client, int victim, char weapon[64], int& tdm) {
 			AcceptEntityInput(maskID, "Kill");
 		
 		rp_SetClientInt(client, i_Mask, 0); 
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez perdu votre masque");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez perdu votre masque");
 		
 		rp_ClientResetSkin(client);
 		
@@ -1127,7 +1127,7 @@ public Action Cmd_ItemDisco(int args) {
 	int item_id = GetCmdArgInt(args);
 	
 	if( !rp_IsBuildingAllowed(client) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas construire ici.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas construire ici.");
 		ITEM_CANCEL(client, item_id);
 		return;
 	}
@@ -1145,12 +1145,12 @@ public Action Cmd_ItemDisco(int args) {
 			cpt++;
 			Entity_GetAbsOrigin(i, dst);
 			if( GetVectorDistance(src, dst) < 256.0 ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il existe déjà un objet de ce type à proximité.");
+				CPrintToChat(client, "" ...MOD_TAG... " Il existe déjà un objet de ce type à proximité.");
 				ITEM_CANCEL(client, item_id);
 				return;
 			}
 			if( rp_GetBuildingData(i, BD_owner) == client) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous possédé déjà un objet de ce type.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous possédé déjà un objet de ce type.");
 				ITEM_CANCEL(client, item_id);
 				return;
 			}
@@ -1158,7 +1158,7 @@ public Action Cmd_ItemDisco(int args) {
 	}
 	
 	if( cpt >= 5 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il existe déjà trop d'objet de ce type.");
+		CPrintToChat(client, "" ...MOD_TAG... " Il existe déjà trop d'objet de ce type.");
 		ITEM_CANCEL(client, item_id);
 		return;
 	}
@@ -1185,7 +1185,7 @@ public Action Cmd_ItemPoupee(int args) {
 	
 	if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas utiliser cet item pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
 		return Plugin_Handled;
 	}
 	
@@ -1233,7 +1233,7 @@ public Action Cmd_ItemMenottes(int args){
 	int client = GetCmdArgInt(1);
 	int item_id = GetCmdArgInt(args);
 	if( GetClientTeam(client) == CS_TEAM_CT ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cet objet est interdit aux forces de l'ordre.");
+		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit aux forces de l'ordre.");
 		ITEM_CANCEL(client, item_id);
 		return;
 	}
@@ -1244,7 +1244,7 @@ public Action Cmd_ItemMenottes(int args){
 		return;
 	}
 	if( rp_GetZoneBit( rp_GetPlayerZone(target) ) & BITZONE_PEACEFULL || rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PEACEFULL) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cet objet est interdit où vous êtes.");
+		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
 		ITEM_CANCEL(client, item_id);
 		return;
 	}
@@ -1253,14 +1253,14 @@ public Action Cmd_ItemMenottes(int args){
 		return;
 	}
 	if( rp_GetClientBool(target, b_Lube) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N vous glisse entre les mains.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " %N vous glisse entre les mains.", target);
 		ITEM_CANCEL(client, item_id);
 		return;
 	}
 	
 	if( rp_ClientFloodTriggered(client, target, fd_menotte) ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N vous glisse entre les mains.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " %N vous glisse entre les mains.", target);
 		return;
 	}
 	rp_ClientFloodIncrement(client, target, fd_menotte, 11.0);
@@ -1286,14 +1286,14 @@ public Action Cmd_ItemSucette(int args) {
 	int client = GetCmdArgInt(1);
 		
 	if( Client_IsInVehicle(client) || rp_GetClientVehiclePassager(client) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible d'utiliser cet objet dans une voiture.");
+		CPrintToChat(client, "" ...MOD_TAG... " Impossible d'utiliser cet objet dans une voiture.");
 		int item_id = GetCmdArgInt(args);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	
 	if( rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PERQUIZ ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Une perquisition est en cours, impossible d'utiliser cet objet pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " Une perquisition est en cours, impossible d'utiliser cet objet pour le moment.");
 		int item_id = GetCmdArgInt(args);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
@@ -1315,12 +1315,12 @@ public Action Cmd_ItemSucette2(int args) {
 	
 	if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas utiliser cet item pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
 		return Plugin_Handled;
 	}
 	
 	if( Client_IsInVehicle(client) || rp_GetClientVehiclePassager(client) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible d'utiliser cet objet dans une voiture.");
+		CPrintToChat(client, "" ...MOD_TAG... " Impossible d'utiliser cet objet dans une voiture.");
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
@@ -1340,7 +1340,7 @@ public Action Cmd_ItemSucette2(int args) {
 		
 		if( GetConVarInt(FindConVar("rp_braquage")) == 2 ) {
 			CreateTimer(0.1, AllowUltimate, client);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Les sucettes sont désactivées pour ce braquage.");
+			CPrintToChat(client, "" ...MOD_TAG... " Les sucettes sont désactivées pour ce braquage.");
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
@@ -1427,7 +1427,7 @@ public Action Cmd_ItemFouet(int args) {
 	
 	if( rp_ClientFloodTriggered(client, target, fd_fouet) ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N vous glisse entre les mains.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " %N vous glisse entre les mains.", target);
 		return Plugin_Handled;
 	}
 	rp_ClientFloodIncrement(client, target, fd_fouet, 5.0);
@@ -1463,12 +1463,12 @@ public Action Cmd_ItemAlcool(int args) {
 		}
 		if( rp_GetZoneBit( rp_GetPlayerZone(target) ) & BITZONE_PEACEFULL ) {
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cet objet est interdit où vous êtes.");
+			CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
 			return Plugin_Handled;
 		}
 		if( rp_GetClientFloat(target, fl_Alcool) > 0.0 ) {
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N a trop bu, il n'est pas raisonable de lui donner à boire.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " %N a trop bu, il n'est pas raisonable de lui donner à boire.", target);
 			return Plugin_Handled;
 		}
 		float vecTarget[3];
@@ -1500,7 +1500,7 @@ public Action Cmd_ItemKevlarBox(int args) {
 int BuildingKevlarBox(int client) {
 	
 	if( !rp_IsBuildingAllowed(client) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas construire ici.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas construire ici.");
 		return 0;
 	}
 	
@@ -1519,19 +1519,19 @@ int BuildingKevlarBox(int client) {
 		GetEdictClassname(i, tmp, 63);
 		
 		if( StrEqual(classname, tmp) && rp_GetBuildingData(i, BD_owner) == client ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez déjà une valise remplie de préservatifs.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà une valise remplie de préservatifs.");
 			return 0;
 		}
 		if( StrEqual(tmp, "rp_kevlarbox") ) {
 			Entity_GetAbsOrigin(i, vecOrigin2);
 			if( GetVectorDistance(vecOrigin, vecOrigin2) < 600 ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il existe une autre valise remplie de préservatifs à proximité.");
+				CPrintToChat(client, "" ...MOD_TAG... " Il existe une autre valise remplie de préservatifs à proximité.");
 				return 0;
 			}
 		}
 	}
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Construction en cours...");
+	CPrintToChat(client, "" ...MOD_TAG... " Construction en cours...");
 	
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client, _, _, _, 0.66);
 	
@@ -1583,7 +1583,7 @@ public Action BuildingKevlarBox_post(Handle timer, any entity) {
 public void BuildingKevlarBox_break(const char[] output, int caller, int activator, float delay) {
 	
 	int client = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
-	CPrintToChat(client,"{lightblue}[TSX-RP]{default} Votre valise remplie de préservatifs a été détruite.");
+	CPrintToChat(client,"" ...MOD_TAG... " Votre valise remplie de préservatifs a été détruite.");
 	
 	float vecOrigin[3];
 	Entity_GetAbsOrigin(caller,vecOrigin);
@@ -1708,7 +1708,7 @@ public Action Cmd_ItemCigarette(int args) {
 	if( StrEqual(Arg1, "deg") ) {
 		if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas utiliser cet item pour le moment.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
 			return Plugin_Handled;
 		}
 		rp_SetClientBool(client, b_MayUseUltimate, false);
@@ -1805,19 +1805,19 @@ public int MenuRubanWho(Handle menu, MenuAction action, int client, int param2) 
 		else{
 			target = GetClientAimTarget(client, false);
 			if( target == 0 || !IsValidEdict(target) || !IsValidEntity(target) ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre cible n'est pas valide.");
+				CPrintToChat(client, "" ...MOD_TAG... " Votre cible n'est pas valide.");
 				return;
 			}
 			char classname[64];
 			GetEdictClassname(target, classname, sizeof(classname));
 
 			if( StrContains("chicken|player|weapon|prop_physics|", classname) == -1 ){
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre cible n'est pas valide.");
+				CPrintToChat(client, "" ...MOD_TAG... " Votre cible n'est pas valide.");
 				return;
 			}
 
 			if( !rp_IsEntitiesNear(client, target) ){
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre cible est trop loin.");
+				CPrintToChat(client, "" ...MOD_TAG... " Votre cible est trop loin.");
 				return;
 			}
 		}
@@ -1855,18 +1855,18 @@ public int MenuRubanColor(Handle menu, MenuAction action, int client, int param2
 		color[2] = StringToInt(data[4]);
 		color[3] = StringToInt(data[5]);
 		if( target == 0 || !IsValidEdict(target) || !IsValidEntity(target) ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre cible a disparue.");
+			CPrintToChat(client, "" ...MOD_TAG... " Votre cible a disparue.");
 			return;
 		}
 		
 		if( rp_ClientFloodTriggered(client, target, fd_ruban) ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N vous glisse entre les mains.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " %N vous glisse entre les mains.", target);
 			return;
 		}
 		rp_ClientFloodIncrement(client, target, fd_ruban, 31.0);
 		
 		if(rp_GetClientItem(client, item_id)==0){
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez plus l'item ruban.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez plus l'item ruban.");
 			return;
 		}
 		else{
@@ -1902,16 +1902,16 @@ void Draw_SkinList(int client, int test, int skinID) {
 	char tmp[128], tmp2[128];
 	
 	if (rp_GetPlayerZone(client) != ZONE_CABINE) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes sorti des cabines d'essayage.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes sorti des cabines d'essayage.");
 		return;
 	}
 	if (GetClientTeam(client) == CS_TEAM_CT) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas essayer cela en CT.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas essayer cela en CT.");
 		return;
 	}
 	GetClientModel(client, tmp, sizeof(tmp));
 	if( StrEqual(tmp, "models/player/custom_player/legacy/sprisioner/sprisioner.mdl") ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas essayer cela en tant qu'évadé.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas essayer cela en tant qu'évadé.");
 		return;
 	}
 	
@@ -1960,7 +1960,7 @@ void Draw_SkinList(int client, int test, int skinID) {
 			rp_HookEvent(client, RP_OnPlayerZoneChange, fwdOnZoneChange);
 			
 			if( rp_GetPlayerZone(client) != ZONE_CABINE) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez quitté les cabines d'essayage.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez quitté les cabines d'essayage.");
 				return;
 			}
 		}
@@ -1968,7 +1968,7 @@ void Draw_SkinList(int client, int test, int skinID) {
 			prix = StringToInt(g_szSkinsList[skinID][3]);
 			
 			if( rp_GetClientItem(client, ITEM_FITNESS ) < prix ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas assez de point de fitness pour ce skin.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez de point de fitness pour ce skin.");
 				return;
 			}
 			

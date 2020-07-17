@@ -16,7 +16,7 @@ Action OpenBossGestionCle(int client, bool typess = false) {
 	
 	int Ent = GetClientAimTarget(client, false);
 	if( !IsValidDoor(Ent) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez viser une porte.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser une porte.");
 		return Plugin_Handled;
 	}
 	
@@ -24,7 +24,7 @@ Action OpenBossGestionCle(int client, bool typess = false) {
 	
 	if( !g_iDoorJob[g_iUserData[client][i_Job]][door_bdd] ) {
 		if( !IsAdmin(client) ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas donner les clés de cette porte.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas donner les clés de cette porte.");
 			return Plugin_Handled;
 		}
 	}
@@ -266,26 +266,26 @@ void ToggleDoorLock(int client, int door, int lock_type) {
 		// Lock
 		if( lock_type == 1) {
 			if( GetEntProp(door, Prop_Data, "m_bLocked") ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cette porte était déjà fermée à clé.");
+				CPrintToChat(client, "" ...MOD_TAG... " Cette porte était déjà fermée à clé.");
 			}
 			else {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cette porte a été fermée à clé.");
+				CPrintToChat(client, "" ...MOD_TAG... " Cette porte a été fermée à clé.");
 			}
 			LockSomeDoor(door_bdd, 1);
 		}
 		// UnLock
 		if( lock_type == 2) {
 			if( !GetEntProp(door, Prop_Data, "m_bLocked") ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cette porte n'était pas fermée à clé.");
+				CPrintToChat(client, "" ...MOD_TAG... " Cette porte n'était pas fermée à clé.");
 			}
 			else {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cette porte a été déverouillée.");
+				CPrintToChat(client, "" ...MOD_TAG... " Cette porte a été déverouillée.");
 			}
 			LockSomeDoor(door_bdd, 0);
 		}
 	}
 	else if( IsValidDoor(door) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas la clé de cette porte.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas la clé de cette porte.");
 	}
 }
 int GetLockType(int door) {
@@ -304,7 +304,7 @@ void ToggleDoor(int client, int door) {
 		
 		if( GetEntProp(door, Prop_Data, "m_bLocked") ) {
 			LockSomeDoor(door_bdd, 1);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cette porte est fermée à clé, tapez /unlock pour l'ouvrir.");
+			CPrintToChat(client, "" ...MOD_TAG... " Cette porte est fermée à clé, tapez /unlock pour l'ouvrir.");
 			
 			return;
 		}
@@ -315,7 +315,7 @@ void ToggleDoor(int client, int door) {
 	else {
 		if( GetEntProp(door, Prop_Data, "m_bLocked") ) {
 			LockSomeDoor(door_bdd, 1);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cette porte est fermée à clé et vous n'avez pas la clé.");
+			CPrintToChat(client, "" ...MOD_TAG... " Cette porte est fermée à clé et vous n'avez pas la clé.");
 		}
 	}
 }

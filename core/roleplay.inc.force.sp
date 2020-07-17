@@ -31,8 +31,8 @@ public Action Cmd_Force_Rebind(int client, int args) {
 	StripQuotes(arg);
 	
 	if( StrEqual(arg, "/+force", false) || StrEqual(arg, "/-force", false) ||  StrEqual(arg, "!+force", false) || StrEqual(arg, "!-force", false) || StrEqual(arg, "+force", false) || StrEqual(arg, "-force", false)  ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre bind est incorrecte. Si vous souhaitez utiliser la force...");
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Modifier le comme ceci: bind \"X\" \"+force\".");
+		CPrintToChat(client, "" ...MOD_TAG... " Votre bind est incorrecte. Si vous souhaitez utiliser la force...");
+		CPrintToChat(client, "" ...MOD_TAG... " Modifier le comme ceci: bind \"X\" \"+force\".");
 		
 		FORCE_STOP(client);
 		CreateTimer(0.01, FixForce, client);
@@ -136,7 +136,7 @@ public void FORCE_FRAME(int client) {
 		vecVelocity[2] = (vecMoveto[2] - EntityOrigin[2]) * dist / VELOCITY_MULTIPLIER;
 		
 		if( g_bGrabNear[client] && GetVectorLength(vecVelocity) >= 4096.0 ) {
- 			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez lâché prise.");
+ 			CPrintToChat(client, "" ...MOD_TAG... " Vous avez lâché prise.");
  			FORCE_STOP(client);
  			return;
  		}
@@ -209,7 +209,7 @@ public Action Cmd_grab(int client, int args) {
 			continue;
 			
 		if( g_iGrabbing[i] == client ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il est impossible d'utiliser la force quand quelqu'un vous tiens.");
+			CPrintToChat(client, "" ...MOD_TAG... " Il est impossible d'utiliser la force quand quelqu'un vous tiens.");
 			FORCE_STOP(client);
 			return Plugin_Handled;
 		}
@@ -219,7 +219,7 @@ public Action Cmd_grab(int client, int args) {
 		StringToInt(g_szZoneList[ GetPlayerZone(client) ][zone_type_type]) == 101
 	) {
 		if( !IsPolice(client) && !IsJuge(client) ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le +force est interdit dans cette zone.");
+			CPrintToChat(client, "" ...MOD_TAG... " Le +force est interdit dans cette zone.");
 			FORCE_STOP(client);
 			return Plugin_Handled;
 		}
@@ -369,18 +369,18 @@ bool CheckValidGrab(int client, int result) {
 		}
 		if( result <= MaxClients ) {
 			if( !IsAllowed_client(client) ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'êtes pas autorisé à deplacer des joueurs.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas autorisé à deplacer des joueurs.");
 				return false;
 			}
 			if( !rp_IsEntityGrabable(client, result) ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'êtes pas autorisé à deplacer ce joueur.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas autorisé à deplacer ce joueur.");
 				return false;
 			}
 
 			LogToGame("[TSX-RP] [FORCE] %L tien %L", client, result);
 		}
 		if( IsValidVehicle(result) && !IsAllowed_car(client, result) ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'êtes pas autorisé à deplacer des voitures.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas autorisé à deplacer des voitures.");
 			return false;
 		}
 		
@@ -389,13 +389,13 @@ bool CheckValidGrab(int client, int result) {
 		
 		if( StrContains(classname, "prop_physic", false) != -1 ) {
 			if( !IsAllowed_prop(client, result) ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'êtes pas autorisé à deplacer ce prop.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas autorisé à deplacer ce prop.");
 				
 				int job = g_iUserData[client][i_Job];
 				
 				int flags = GetUserFlagBits(client);
 				if( (job >= 1 && job <= 10) || (flags & ADMFLAG_GENERIC || flags & ADMFLAG_ROOT) ) {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Proprietaire: %N", rp_GetBuildingData(result, BD_owner));
+					CPrintToChat(client, "" ...MOD_TAG... " Proprietaire: %N", rp_GetBuildingData(result, BD_owner));
 				}
 				return false;
 			}
@@ -509,7 +509,7 @@ bool MayMoveThisEntity(int client, int ent) {
 	}
 	if( IsValidClient(ent) ) {
 		if( g_flLubrifian[ent] > GetGameTime() ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible d'attraper ce joueur!");
+			CPrintToChat(client, "" ...MOD_TAG... " Impossible d'attraper ce joueur!");
 			return false;
 		}
 	}

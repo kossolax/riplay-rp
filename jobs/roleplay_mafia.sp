@@ -91,7 +91,7 @@ public Action CmdBreakCadenas(int args) {
 	
 	int appartID = zoneToAppartID(rp_GetPlayerZone(door));
 	if( appartID > 0 && g_flAppartProtection[appartID] > GetGameTime() ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible de crocheter cette porte pour encore %d minutes.", RoundFloat((g_flAppartProtection[appartID] - GetGameTime()) / 60.0));
+		CPrintToChat(client, "" ...MOD_TAG... " Impossible de crocheter cette porte pour encore %d minutes.", RoundFloat((g_flAppartProtection[appartID] - GetGameTime()) / 60.0));
 		return Plugin_Handled;
 	}
 	
@@ -105,8 +105,8 @@ public Action CmdBreakCadenas(int args) {
 	if( GetRandomFloat() > difficulte ) {
 		
 		if( IsValidClient(g_iDoorDefine_LOCKER[doorID]) ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Un cadenas est déja présent sur cette porte.");		
-			CPrintToChat(g_iDoorDefine_LOCKER[doorID], "{lightblue}[TSX-RP]{default} Votre cadenas a été détruit.");
+			CPrintToChat(client, "" ...MOD_TAG... " Un cadenas est déja présent sur cette porte.");		
+			CPrintToChat(g_iDoorDefine_LOCKER[doorID], "" ...MOD_TAG... " Votre cadenas a été détruit.");
 			g_iDoorDefine_LOCKER[doorID] = 0;
 		}
 		
@@ -134,7 +134,7 @@ public Action Cmd_ItemDoorProtect(int args) {
 			g_flAppartProtection[appartID] += (time * 60.0);
 		}
 		
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} La protection est activée pour %d minutes", RoundFloat((g_flAppartProtection[appartID] - GetGameTime()) / 60.0));
+		CPrintToChat(client, "" ...MOD_TAG... " La protection est activée pour %d minutes", RoundFloat((g_flAppartProtection[appartID] - GetGameTime()) / 60.0));
 	}
 	else {
 		float prix = float(rp_GetItemInt(item_id, item_type_prix));
@@ -146,7 +146,7 @@ public Action Cmd_ItemDoorProtect(int args) {
 		rp_SetJobCapital(91, rp_GetJobCapital(91) - RoundFloat(prix * (1.0 - taxe)));
 		
 		rp_SetClientStat(vendeur, i_MoneyEarned_Sales, rp_GetClientStat(vendeur, i_MoneyEarned_Sales) - RoundFloat((prix * taxe) - reduc));
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez être dans votre appartement pour acheter cet objet.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez être dans votre appartement pour acheter cet objet.");
 	}
 }
 public void OnMapStart() {
@@ -184,7 +184,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 		}
 	}
 	else {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible de se déguiser pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " Impossible de se déguiser pour le moment.");
 		cooldown = 0.1;
 	}
 	return Plugin_Stop;
@@ -202,7 +202,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		rp_GetClientFloat(target, fl_LastStolen)+60.0 > GetGameTime() ||
 		rp_ClientFloodTriggered(client, target, fd_vol) ||
 		( rp_IsClientNew(target) && rp_GetClientFloat(target, fl_LastStolen)+300.0 > GetGameTime() ) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N n'a pas d'argent sur lui.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " %N n'a pas d'argent sur lui.", target);
 		cooldown = 1.0;
 		return Plugin_Stop;
 	}
@@ -211,7 +211,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 	}
 	
 	if( rp_GetZoneInt(rp_GetPlayerZone(target), zone_type_type) == 91 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas voler %N ici.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas voler %N ici.", target);
 		return Plugin_Handled;
 	}
 	
@@ -242,7 +242,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		}
 		
 		if( amount == 0  ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N n'a pas d'argent, ni d'item sur lui.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " %N n'a pas d'argent, ni d'item sur lui.", target);
 			cooldown = 1.0;
 			return Plugin_Stop;
 		}
@@ -264,8 +264,8 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		addBuyMenu(client, target, it);
 		amount = rp_GetItemInt(it, item_type_prix);
 		
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez volé %s à %N, il a été envoyé au marché noir.", tmp, target);
-		CPrintToChat(target, "{lightblue}[TSX-RP]{default} Quelqu'un vous a volé: %s.", tmp);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez volé %s à %N, il a été envoyé au marché noir.", tmp, target);
+		CPrintToChat(target, "" ...MOD_TAG... " Quelqu'un vous a volé: %s.", tmp);
 					
 		LogToGame("[TSX-RP] [VOL] %L a vole %L 1 %s", client, target, tmp);
 		
@@ -324,8 +324,8 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		rp_SetClientInt(target, i_LastVol, client);
 		rp_SetClientFloat(target, fl_LastStolen, GetGameTime() + (rp_GetClientBool(target, b_IsAFK) ? 300.0 : 0.0));
 		
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez volé %d$ à %N.", amount, target);
-		CPrintToChat(target, "{lightblue}[TSX-RP]{default} Quelqu'un vous a volé %d$.", amount);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez volé %d$ à %N.", amount, target);
+		CPrintToChat(target, "" ...MOD_TAG... " Quelqu'un vous a volé %d$.", amount);
 
 		//g_iSuccess_last_mafia[client][1] = GetTime();
 		//g_iSuccess_last_pas_vu_pas_pris[target] = GetTime();
@@ -388,7 +388,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		rp_ClientOverlays(target, o_Action_StealMoney, 10.0);
 	}
 	else {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N n'a pas d'argent sur lui.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " %N n'a pas d'argent sur lui.", target);
 		cooldown = 1.0;
 	}
 	
@@ -413,7 +413,7 @@ public Action fwdOnPlayerUse(int client) {
 				if( mnt <  max ) {
 					rp_ClientGiveItem(client, itemID, max - mnt);
 					rp_GetItemData(itemID, item_type_name, tmp, sizeof(tmp));
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez récupéré %i %s.", max - mnt, tmp);
+					CPrintToChat(client, "" ...MOD_TAG... " Vous avez récupéré %i %s.", max - mnt, tmp);
 					
 					changed = true;
 				}
@@ -440,19 +440,19 @@ public Action Cmd_ItemDoorDefine(int args) {
 	int door = getDoor(client);
 	
 	if( door == 0 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez viser une porte.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser une porte.");
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	
 	int doorID = rp_GetDoorID(door);
 	if(g_iDoorDefine_LOCKER[doorID] != 0 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Un cadenas est déja présent sur cette porte.");
+		CPrintToChat(client, "" ...MOD_TAG... " Un cadenas est déja présent sur cette porte.");
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	g_iDoorDefine_LOCKER[doorID] = client;
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le cadenas a été placé avec succès.");
+	CPrintToChat(client, "" ...MOD_TAG... " Le cadenas a été placé avec succès.");
 	
 	return Plugin_Handled;
 }
@@ -467,7 +467,7 @@ public Action Cmd_ItemHack(int args) {
 	
 	if( rp_GetClientBool(client, b_MaySteal) == false ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas voler pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas voler pour le moment.");
 		return Plugin_Handled;
 	}
 	
@@ -476,7 +476,7 @@ public Action Cmd_ItemHack(int args) {
 
 	if( target <= 0 || type != 8) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez viser un distributeur clandestin.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser un distributeur clandestin.");
 		return Plugin_Handled;
 	}
 
@@ -517,7 +517,7 @@ public Action Cmd_ItemPiedBiche(int args) {
 	
 	if( rp_GetClientBool(client, b_MaySteal) == false ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas voler pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas voler pour le moment.");
 		return Plugin_Handled;
 	}
 	
@@ -526,13 +526,13 @@ public Action Cmd_ItemPiedBiche(int args) {
 
 	if( target <= 0 ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez viser un distributeur, un téléphone, ou une imprimante.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser un distributeur, un téléphone, ou une imprimante.");
 		return Plugin_Handled;
 	}
 	
 	if(type == 8) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez utiliser une CB magnétique pour hack un distributeur clandestin.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez utiliser une CB magnétique pour hack un distributeur clandestin.");
 		return Plugin_Handled;
 	}
 
@@ -609,7 +609,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				for (i = 0; i < rand; i++)
 					CreateTimer(i / 5.0, SpawnMoney, EntIndexToEntRef(target));
 				
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} %d billets ont été sorti du distributeur.", rand);
+				CPrintToChat(client, "" ...MOD_TAG... " %d billets ont été sorti du distributeur.", rand);
 				stealAMount = 25*rand;
 			}
 			case 3: { // Armu
@@ -627,7 +627,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				int owner = rp_GetBuildingData(target, BD_owner);
 				if( IsValidClient(owner) ) {
 					rp_ClientMoney(owner, i_Bank, -25);
-					CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Quelqu'un vol vos faux billets.");
+					CPrintToChat(owner, "" ...MOD_TAG... " Quelqu'un vol vos faux billets.");
 				}
 			}
 			case 5: { // Photocopieuse
@@ -639,7 +639,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				int owner = rp_GetBuildingData(target, BD_owner);
 				if( IsValidClient(owner) ) {
 					rp_ClientMoney(owner, i_Bank, -25 * 15);
-					CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Quelqu'un vol vos faux billets.");
+					CPrintToChat(owner, "" ...MOD_TAG... " Quelqu'un vol vos faux billets.");
 				}
 				
 				
@@ -668,9 +668,9 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 					
 					int owner = rp_GetBuildingData(target, BD_owner);
 					if( IsValidClient(owner) ) {
-						CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Quelqu'un vol votre drogue.");
+						CPrintToChat(owner, "" ...MOD_TAG... " Quelqu'un vol votre drogue.");
 					}
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez ramassé %d %s.", count, classname);
+					CPrintToChat(client, "" ...MOD_TAG... " Vous avez ramassé %d %s.", count, classname);
 				}
 			}
 			case 8: { // Distrib Perso
@@ -683,10 +683,10 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 					rp_ClientMoney(owner, i_Bank, -stealAMount);
 					rp_ClientMoney(client, i_AddToPay, stealAMount);
 
-					CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Attention, quelqu'un à piraté votre distributeur et vous à voler %i$.", stealAMount);
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez piraté %i$ !", stealAMount);
+					CPrintToChat(owner, "" ...MOD_TAG... " Attention, quelqu'un à piraté votre distributeur et vous à voler %i$.", stealAMount);
+					CPrintToChat(client, "" ...MOD_TAG... " Vous avez piraté %i$ !", stealAMount);
 				} else {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le vol a été annulé.");
+					CPrintToChat(client, "" ...MOD_TAG... " Le vol a été annulé.");
 				}
 			}
 		}
@@ -786,7 +786,7 @@ public Action Cmd_ItemPickLock(int args) {
 	int door = getDoor(client);
 	if( door == 0 ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez viser une porte.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser une porte.");
 		return Plugin_Handled;
 	}
 	
@@ -796,13 +796,13 @@ public Action Cmd_ItemPickLock(int args) {
 
 		if(g_flAppartProtection[appartID] > GetGameTime()) {
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible de crocheter cette porte pour encore %d minutes.", RoundFloat((g_flAppartProtection[appartID] - GetGameTime()) / 60.0));
+			CPrintToChat(client, "" ...MOD_TAG... " Impossible de crocheter cette porte pour encore %d minutes.", RoundFloat((g_flAppartProtection[appartID] - GetGameTime()) / 60.0));
 			return Plugin_Handled;
 		}
 
 		if (g_iAppartNewPickLock[appartID] > GetTime()) {
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible de crocheter cette porte pour encore %d secondes.", (g_iAppartNewPickLock[appartID] - GetTime()));
+			CPrintToChat(client, "" ...MOD_TAG... " Impossible de crocheter cette porte pour encore %d secondes.", (g_iAppartNewPickLock[appartID] - GetTime()));
 			
 			return Plugin_Handled;
 		}
@@ -878,10 +878,10 @@ public Action ItemPickLockOver_frame(Handle timer, Handle dp) {
 			char zone[128];
  			rp_GetZoneData(rp_GetPlayerZone(door), zone_type_name, zone, sizeof(zone));
  			
-			CPrintToChat(g_iDoorDefine_LOCKER[doorID], "{lightblue}[TSX-RP]{default} Quelqu'un a ouvert votre porte cadnacée (%s).", zone);
+			CPrintToChat(g_iDoorDefine_LOCKER[doorID], "" ...MOD_TAG... " Quelqu'un a ouvert votre porte cadnacée (%s).", zone);
 			
 			if( Math_GetRandomInt(1, 10) == 5 ) {
-				CPrintToChat(g_iDoorDefine_LOCKER[doorID], "{lightblue}[TSX-RP]{default} Votre cadenas a été détruit.");
+				CPrintToChat(g_iDoorDefine_LOCKER[doorID], "" ...MOD_TAG... " Votre cadenas a été détruit.");
 				g_iDoorDefine_LOCKER[doorID] = 0;
 			}
 		}
@@ -907,7 +907,7 @@ public Action ItemPickLockOver_frame(Handle timer, Handle dp) {
 		
 		rp_SetDoorLock(doorID, false); 
 		rp_ClientOpenDoor(client, doorID, true);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} La porte a été ouverte.");
+		CPrintToChat(client, "" ...MOD_TAG... " La porte a été ouverte.");
 		
 		return Plugin_Stop;
 	}
@@ -936,7 +936,7 @@ public Action timerAlarm(Handle timer, any door) {
 public Action AllowStealing(Handle timer, any client) {
 	
 	rp_SetClientBool(client, b_MaySteal, true);
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous pouvez à nouveau voler.");
+	CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez à nouveau voler.");
 }
 int GetMaxKit(int client, int itemID) {
 	int max, job = rp_GetClientInt(client, i_Job);
@@ -1014,7 +1014,7 @@ void runAlarm(int client, int door) {
 			char zone[128];
 			rp_GetZoneData(rp_GetPlayerZone(door), zone_type_name, zone, sizeof(zone));
 			
-			CPrintToChat(alarm, "{lightblue}[TSX-RP]{default} Quelqu'un crochette votre porte (%s).", zone );
+			CPrintToChat(alarm, "" ...MOD_TAG... " Quelqu'un crochette votre porte (%s).", zone );
 			rp_Effect_BeamBox(alarm, client);
 		}
 		
@@ -1162,7 +1162,7 @@ bool disapear(int client) {
 	Entity_GetAbsOrigin(client, vecCenter);
 	TE_SetupBeamRingPoint(vecCenter, 1.0, 200.0, g_cBeam, g_cBeam, 0, 10, 0.25, 80.0, 0.0, {100, 100, 255, 10}, 1, 0);
 	TE_SendToAll();
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous vous êtes déguisé en tant que %N.", rndClient[rnd]);
+	CPrintToChat(client, "" ...MOD_TAG... " Vous vous êtes déguisé en tant que %N.", rndClient[rnd]);
 	LogToGame("[BUILD] [MAFIA] %L est maintenant invisible", client);
 	return true;
 }
@@ -1179,7 +1179,7 @@ public Action appear(Handle timer, any client) {
 		Entity_GetAbsOrigin(client, vecCenter);
 		TE_SetupBeamRingPoint(vecCenter, 1.0, 200.0, g_cBeam, g_cBeam, 0, 10, 0.25, 80.0, 0.0, {100, 100, 255, 10}, 1, 0);
 		TE_SendToAll();
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'êtes plus déguisé.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes plus déguisé.");
 		
 		LogToGame("[BUILD] [MAFIA] %L est maintenant visible", client);
 	}
@@ -1258,7 +1258,7 @@ void Cmd_BuyItemMenu(int client, bool free) {
 	int data[IM_Max];
 	
 	if( position >= max ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Désolé il n'y a pas d'objet disponible pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " Désolé il n'y a pas d'objet disponible pour le moment.");
 		return;
 	}
 	
@@ -1334,7 +1334,7 @@ public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int 
 			if( IsValidClient(data[IM_Owner]) && rp_GetClientJobID(data[IM_Owner]) == 91 )
 				LogToGame("[TSX-RP] [ITEM-VENDRE] %L a vendu 1 %s a %L", data[IM_Owner], tmp, client);
 			
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez acheté 1 %s à au marché noir pour %d$", tmp, data[IM_Prix]);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez acheté 1 %s à au marché noir pour %d$", tmp, data[IM_Prix]);
 			
 			if( data[IM_Owner] == client ) {
 				rp_SetJobCapital(91, rp_GetJobCapital(91) + RoundToCeil(float(data[IM_Prix]*10) * 0.5));
@@ -1343,13 +1343,13 @@ public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int 
 				rp_SetJobCapital(91, rp_GetJobCapital(91) + RoundToCeil(float(data[IM_Prix]) * 0.5));
 				rp_ClientMoney(data[IM_Owner], i_AddToPay, RoundToFloor(float(data[IM_Prix]) * 0.5));
 				
-				CPrintToChat(data[IM_Owner], "{lightblue}[TSX-RP]{default} Vous avez vendu 1 %s à %N au marché noir pour %d$", tmp, client, data[IM_Prix]);
+				CPrintToChat(data[IM_Owner], "" ...MOD_TAG... " Vous avez vendu 1 %s à %N au marché noir pour %d$", tmp, client, data[IM_Prix]);
 			}
 			else {
 				rp_SetJobCapital(91, rp_GetJobCapital(91) + data[IM_Prix]);
 				
 				if( IsValidClient(data[IM_Owner]) && rp_GetClientJobID(data[IM_Owner]) == 91 )
-					CPrintToChat(data[IM_Owner], "{lightblue}[TSX-RP]{default} Quelqu'un vous a volé 1 %s au marché noir.", tmp);
+					CPrintToChat(data[IM_Owner], "" ...MOD_TAG... " Quelqu'un vous a volé 1 %s au marché noir.", tmp);
 			}
 			
 			

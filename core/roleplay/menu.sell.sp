@@ -15,12 +15,12 @@ void DrawVendreMenu(int client) {
 	int jobID = rp_GetClientJobID(client);
 	
 	if( jobID == 0 || jobID == 1 || jobID == 101 || jobID == 181 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez rien vendre.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez rien vendre.");
 		return;
 	}
 	
 	if( g_iUserData[client][i_SearchLVL] >= 4 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le Tribunal de princeton a gelé vos ventes car vous êtes recherché depuis trop longtemps.");
+		CPrintToChat(client, "" ...MOD_TAG... " Le Tribunal de princeton a gelé vos ventes car vous êtes recherché depuis trop longtemps.");
 		return;
 	}
 	
@@ -53,7 +53,7 @@ void DrawVendreMenu(int client) {
 		}
 		
 		if( can == -1 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cette porte n'est pas une porte d'un appartement.");
+			CPrintToChat(client, "" ...MOD_TAG... " Cette porte n'est pas une porte d'un appartement.");
 			return;
 		}
 		
@@ -62,7 +62,7 @@ void DrawVendreMenu(int client) {
 				continue;
 			
 			if( g_iDoorOwner_v2[i][can] ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N est déjà proprietaire de cet appartement.", i);
+				CPrintToChat(client, "" ...MOD_TAG... " %N est déjà proprietaire de cet appartement.", i);
 				return;
 			}
 		}
@@ -79,7 +79,7 @@ void DrawVendreMenu(int client) {
 		}
 		
 		if( item_id == -1 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas louer cet appartement.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas louer cet appartement.");
 			return;
 		}
 		
@@ -120,7 +120,7 @@ void DrawVendreMenu(int client) {
 			SetMenuExitButton(menu, true);
 			DisplayMenu(menu, client, MENU_TIME_DURATION);
 		} else {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il n'y a pas de joueurs éligibles à l'achat de cet appartement.");
+			CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas de joueurs éligibles à l'achat de cet appartement.");
 		}
 	}
 	else {
@@ -219,23 +219,23 @@ public int eventGiveMenu_1(Handle p_hItemMenu, MenuAction p_oAction, int client,
 					int target = rp_GetClientTarget(client);
 					
 					if( !IsValidClient(target) || StringToInt(g_szZoneList[GetPlayerZone(target)][zone_type_type]) != 14 ) {
-						CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez viser un joueur sur la table d'operation.");
+						CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser un joueur sur la table d'operation.");
 						return;
 					}
 					if( StringToInt(g_szZoneList[GetPlayerZone(client)][zone_type_type]) != 14 ) {
-						CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez être sur la table d'operation.");
+						CPrintToChat(client, "" ...MOD_TAG... " Vous devez être sur la table d'operation.");
 						return;
 					}
 
 					if(g_iUserData[client][i_Job] == 13 && g_flUserData[target][fl_TazerTime] > GetGameTime()) {
-						CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas bénéficier de plusieurs chirurgies en même temps, merci de patienter.");
-						CPrintToChat(target, "{lightblue}[TSX-RP]{default} %N ne peux pas bénéficier de plusieurs chirurgies en même temps, merci de patienter.", target);
+						CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas bénéficier de plusieurs chirurgies en même temps, merci de patienter.");
+						CPrintToChat(target, "" ...MOD_TAG... " %N ne peux pas bénéficier de plusieurs chirurgies en même temps, merci de patienter.", target);
 						
 						return;
 					}
 				}
 				else {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'êtes pas chirurgien..");
+					CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas chirurgien..");
 					return;
 				}
 			}
@@ -365,38 +365,38 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 		if (GetMenuItem(p_hItemMenu, p_iParam2, szMenuItem, sizeof(szMenuItem))) {
 			int target = rp_GetClientTarget(client);
 			if( !IsValidClient(target) ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez viser un joueur.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser un joueur.");
 				return;
 			}
 			if( g_iBlockedTime[target][client] != 0 ) {
 				if( (g_iBlockedTime[target][client]+(6*60)) >= GetTime() ) {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ce client ne vous répondra pas.");
+					CPrintToChat(client, "" ...MOD_TAG... " Ce client ne vous répondra pas.");
 					return;
 				}
 			}
 			if( client != target && (IsAtBankPoint(client) || IsAtBankPoint(target)) ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ce joueur est trop proche d'un distributeur pour effectuer une transaction.");
+				CPrintToChat(client, "" ...MOD_TAG... " Ce joueur est trop proche d'un distributeur pour effectuer une transaction.");
 				return;
 			}
 			
 			if( g_iUserData[target][i_SearchLVL] >= 4 ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le Tribunal de princeton a gelé vos achats car vous êtes recherché depuis trop longtemps.");
+				CPrintToChat(client, "" ...MOD_TAG... " Le Tribunal de princeton a gelé vos achats car vous êtes recherché depuis trop longtemps.");
 				return;
 			}
 			
 			if( (GetZoneBit(GetPlayerZone(client))  & BITZONE_BLOCKSELL) ||
 				(StringToInt(g_szZoneList[ GetPlayerZone(target) ][zone_type_bit]) & BITZONE_BLOCKSELL)
 				) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il n'est pas possible de vendre dans cette zone.");
+				CPrintToChat(client, "" ...MOD_TAG... " Il n'est pas possible de vendre dans cette zone.");
 				return;
 			}
 			
 			if( GetClientMenu(target) != MenuSource_None && GetClientMenu(target) != MenuSource_RawPanel ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ce joueur semble occupé.");
+				CPrintToChat(client, "" ...MOD_TAG... " Ce joueur semble occupé.");
 				return;
 			}
 			if( !IsTutorialOver(target) ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N n'a pas terminé le tutorial.", target);
+				CPrintToChat(client, "" ...MOD_TAG... " %N n'a pas terminé le tutorial.", target);
 				return;
 			}
 			
@@ -422,11 +422,11 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 			}
 			else if( StrContains(buffer, "kidnapping") == 0 ) {
 				if( g_bEvent_Kidnapping == true ) {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible d'effectuer un autre kidnapping avant 6h, midi, 18h ou minuit.");
+					CPrintToChat(client, "" ...MOD_TAG... " Impossible d'effectuer un autre kidnapping avant 6h, midi, 18h ou minuit.");
 					return;
 				}
 				if( g_iUserData[target][i_PlayerLVL] < 306 ) {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N doit être au moins de niveau 306 \"Haut conseillé\", afin d'effectuer un contrat kidnapping.");
+					CPrintToChat(client, "" ...MOD_TAG... " %N doit être au moins de niveau 306 \"Haut conseillé\", afin d'effectuer un contrat kidnapping.");
 					return;
 				}
 				type = 1005;
@@ -438,7 +438,7 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 				type = 1007;
 			}
 			else {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} ERR. Type de contrat inconnu.");
+				CPrintToChat(client, "" ...MOD_TAG... " ERR. Type de contrat inconnu.");
 				return;
 			}
 			
@@ -559,35 +559,35 @@ public int eventGiveMenu_2Bis(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 			
 			if( !IsValidClient(target) ) {
 				DrawVendreMenu(client);
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez viser un joueur.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser un joueur.");
 				return;
 			}
 			
 			
 			if( g_iBlockedTime[target][client] != 0 ) {
 				if( (g_iBlockedTime[target][client]+(6*60)) >= GetTime() ) {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ce client ne vous répondra pas.");
+					CPrintToChat(client, "" ...MOD_TAG... " Ce client ne vous répondra pas.");
 					return;
 				}
 			}
 			if( client != target && (IsAtBankPoint(client) || IsAtBankPoint(target)) ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ce joueur est trop proche d'un distributeur pour effectuer une transaction.");
+				CPrintToChat(client, "" ...MOD_TAG... " Ce joueur est trop proche d'un distributeur pour effectuer une transaction.");
 				return;
 			}
 			
 			if( (GetZoneBit(GetPlayerZone(client))  & BITZONE_BLOCKSELL) ||
 				(StringToInt(g_szZoneList[ GetPlayerZone(target) ][zone_type_bit]) & BITZONE_BLOCKSELL)
 				) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il n'est pas possible de vendre dans cette zone.");
+				CPrintToChat(client, "" ...MOD_TAG... " Il n'est pas possible de vendre dans cette zone.");
 				return;
 			}
 			
 			if( GetClientMenu(target) != MenuSource_None && GetClientMenu(target) != MenuSource_RawPanel ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ce joueur semble occupé.");
+				CPrintToChat(client, "" ...MOD_TAG... " Ce joueur semble occupé.");
 				return;
 			}
 			if( !IsTutorialOver(target) ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N n'a pas terminé le tutorial.", target);
+				CPrintToChat(client, "" ...MOD_TAG... " %N n'a pas terminé le tutorial.", target);
 				return;
 			}
 			
@@ -705,16 +705,16 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			
 			if( type == 3 ) {
 				g_iBlockedTime[client][vendeur] = GetTime();
-				CPrintToChat(vendeur, "{lightblue}[TSX-RP]{default} Le client a refusé l'achat et vous ignorera pour 6 heures.");
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ignorerez les demandes d'achat de %N pour 6 heures.", vendeur);
+				CPrintToChat(vendeur, "" ...MOD_TAG... " Le client a refusé l'achat et vous ignorera pour 6 heures.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous ignorerez les demandes d'achat de %N pour 6 heures.", vendeur);
 				return;
 			}
 			if( type == 2 ) {
-				CPrintToChat(vendeur, "{lightblue}[TSX-RP]{default} Le client a refusé l'achat.");
+				CPrintToChat(vendeur, "" ...MOD_TAG... " Le client a refusé l'achat.");
 				return;
 			}
 			if( IsTueur(vendeur) && g_iUserData[vendeur][i_ToKill] != 0 && IsValidClient(g_iUserData[vendeur][i_ToKill]) && StrContains(g_szItemList[ item_id ][item_type_extra_cmd], "rp_item_contrat") == 0) {
-				CPrintToChat(vendeur, "{lightblue}[TSX-RP]{default} Vous êtes déjà en contrat.");
+				CPrintToChat(vendeur, "" ...MOD_TAG... " Vous êtes déjà en contrat.");
 				return;
 			}
 			
@@ -736,7 +736,7 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			}
 
 			if( item_type == 0 && StrContains(g_szItemList[item_id][item_type_extra_cmd], "rp_item_respawn") == 0 && IsPlayerAlive(client) ) {
-				CPrintToChat(vendeur, "{lightblue}[TSX-RP]{default} Le joueur est en vie.");
+				CPrintToChat(vendeur, "" ...MOD_TAG... " Le joueur est en vie.");
 				return;
 			}
 			bool hidden = false;
@@ -766,7 +766,7 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 					hidden = true;
 					
 					if( rp_GetClientItem(client, ITEM_CHEQUE) <= 0 ) {
-						CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez plus de chèque.");
+						CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez plus de chèque.");
 						return;
 					}
 					
@@ -775,7 +775,7 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			}
 			
 			if( !IsValidClient(vendeur) ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre vendeur s'est déconnecté.");
+				CPrintToChat(client, "" ...MOD_TAG... " Votre vendeur s'est déconnecté.");
 				return;
 			}
 			
@@ -785,8 +785,8 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			
 			if( type == 5 ) {
 				if( g_iUserData[client][i_Bank] < RoundFloat(prixItem - reduc) ) {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas assez d'argent.");
-					CPrintToChat(vendeur, "{lightblue}[TSX-RP]{default} Le client n'a pas assez d'argent.");
+					CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent.");
+					CPrintToChat(vendeur, "" ...MOD_TAG... " Le client n'a pas assez d'argent.");
 					
 					if( hidden ) {
 						rp_GetClientItem(client, ITEM_CHEQUE);
@@ -797,8 +797,8 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			}
 			else {
 				if( g_iUserData[client][i_Money] < RoundFloat(prixItem - reduc) ) {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas assez d'argent.");
-					CPrintToChat(vendeur, "{lightblue}[TSX-RP]{default} Le client n'a pas assez d'argent.");
+					CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent.");
+					CPrintToChat(vendeur, "" ...MOD_TAG... " Le client n'a pas assez d'argent.");
 					
 					if( hidden ) {
 						rp_ClientGiveItem(client, ITEM_CHEQUE);
@@ -854,8 +854,8 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			}
 			
 			if( item_type == 0 ) {
-				CPrintToChat(vendeur, "{lightblue}[TSX-RP]{default} Vous avez vendu %i %s à %N.", amount, g_szItemList[ item_id ][item_type_name], client);
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez acheté %i %s de %N.", amount, g_szItemList[ item_id ][item_type_name], vendeur);
+				CPrintToChat(vendeur, "" ...MOD_TAG... " Vous avez vendu %i %s à %N.", amount, g_szItemList[ item_id ][item_type_name], client);
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez acheté %i %s de %N.", amount, g_szItemList[ item_id ][item_type_name], vendeur);
 				
 				if( g_iClient_OLD[vendeur] && !g_bUserData[vendeur][b_LicenseSell] ) {
 					int z = StringToInt(g_szZoneList[GetPlayerZone(vendeur)][zone_type_type]);

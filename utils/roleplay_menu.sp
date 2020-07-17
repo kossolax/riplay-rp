@@ -218,7 +218,7 @@ public int menuOpenMenu(Handle hItem, MenuAction oAction, int client, int param)
 				return;
 			}
 			if( StrEqual(options, "exit") ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous pouvez réouvrir ce menu avec /menu.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez réouvrir ce menu avec /menu.");
 				g_bClosed[client] = true;
 				return;
 			}

@@ -43,13 +43,13 @@ void HDV_Main(int client) {
 	
 	if( rp_GetServerRules(rules_HDV, rules_Enabled) == 1 ) {
 		if( rp_GetClientJobID(client) == rp_GetServerRules(rules_HDV, rules_Target) || rp_GetClientGroupID(client) == (rp_GetServerRules(rules_HDV, rules_Target)-1000) ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le maire vous a interdit l'HDV.");
+			CPrintToChat(client, "" ...MOD_TAG... " Le maire vous a interdit l'HDV.");
 			return;
 		}
 	}
 	
 	if(!(rp_GetClientBool(client, b_HaveAccount))) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez posséder une clé de coffre pour accéder à l'HDV.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez posséder une clé de coffre pour accéder à l'HDV.");
 		return;
 	}
 	
@@ -152,13 +152,13 @@ void HDV_Sell(int client, int itemID, int quantity, int sellPrice, int confirm) 
 		}
 		
 		if( rp_GetClientItem(client, itemID) < quantity ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas la quantité que vous avez spécifiée.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas la quantité que vous avez spécifiée.");
 			delete menu;
 			return;
 		}
 		
 		if( rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank) < tax ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas payer la taxe de mise en vente.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas payer la taxe de mise en vente.");
 			delete menu;
 			return;
 		}
@@ -228,7 +228,7 @@ void HDV_Buy(int client, int jobID, int itemID, int transactID, int confirm, int
 	else{
 		
 		if(rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank) < dataPrix ){
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas assez d'argent'.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent'.");
 			delete menu;
 			return;
 		}
@@ -325,7 +325,7 @@ public void SQL_DepositCB(Handle owner, Handle handle, const char[] error, any d
 		rp_ClientMoney(client, i_Bank, tax);
 		rp_ClientGiveItem(client, itemID, quantity);
 		
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Une erreur s'est produite lors de la mise en vente, vos objets ainsi que la taxe de mise en vente vous ont été restitués.");
+		CPrintToChat(client, "" ...MOD_TAG... " Une erreur s'est produite lors de la mise en vente, vos objets ainsi que la taxe de mise en vente vous ont été restitués.");
 		LogError("[SQL] [ERROR] %s - HDVDeposit", error);
 		return;
 	}
@@ -356,7 +356,7 @@ public void SQL_ListJobCB(Handle owner, Handle row, const char[] error, any clie
 		menu.Display(client, MENU_TIME_FOREVER);
 	}
 	else{
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Aucun objet ne peut être acheté pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " Aucun objet ne peut être acheté pour le moment.");
 		return;
 	}
 }
@@ -380,7 +380,7 @@ public void SQL_ListJobItemsCB(Handle owner, Handle row, const char[] error, any
 		menu.Display(client, MENU_TIME_FOREVER);
 	}
 	else{
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Aucun objet n'est en vente pour ce job.");
+		CPrintToChat(client, "" ...MOD_TAG... " Aucun objet n'est en vente pour ce job.");
 		return;
 	}
 }
@@ -409,7 +409,7 @@ public void SQL_ListItemsCB(Handle owner, Handle row, const char[] error, any cl
 		menu.Display(client, MENU_TIME_FOREVER);
 	}
 	else{
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Tous les objets ont déjà été achetés.");
+		CPrintToChat(client, "" ...MOD_TAG... " Tous les objets ont déjà été achetés.");
 		return;
 	}
 }
@@ -422,12 +422,12 @@ public void SQL_AchatCB(Handle owner, Handle handle, const char[] error, any dat
 	int dataQte = ReadPackCell(data);
 	int dataPrix = ReadPackCell(data);
 	if( strlen(error) >= 1  ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Une erreur s'est produite lors de l'achat, l'argent ne vous a pas été retiré.");
+		CPrintToChat(client, "" ...MOD_TAG... " Une erreur s'est produite lors de l'achat, l'argent ne vous a pas été retiré.");
 		LogError("[SQL] [ERROR] %s - HDVAchat", error);
 		return;
 	}
 	if(SQL_GetAffectedRows(handle) == 0){
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ce lot n'est plus en vente, l'argent ne vous a pas été retiré.");
+		CPrintToChat(client, "" ...MOD_TAG... " Ce lot n'est plus en vente, l'argent ne vous a pas été retiré.");
 		return;
 	}
 	char szQuery[256], tmp[64];
@@ -436,7 +436,7 @@ public void SQL_AchatCB(Handle owner, Handle handle, const char[] error, any dat
 	Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_users2`(`steamid`, `bank`, `pseudo`) VALUES ((SELECT `steamid` FROM `rp_trade` WHERE `id`=%d), %d, 'vente HDV')", transactID, dataPrix);
 	SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery);
 	rp_GetItemData(itemID, item_type_name, tmp, sizeof(tmp));
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez acheté %d %s à %d$.", dataQte, tmp, dataPrix);
+	CPrintToChat(client, "" ...MOD_TAG... " Vous avez acheté %d %s à %d$.", dataQte, tmp, dataPrix);
 }
 
 public void SQL_HistoryCB(Handle owner, Handle row, const char[] error, any data) {
@@ -473,7 +473,7 @@ public void SQL_HistoryCB(Handle owner, Handle row, const char[] error, any data
 		menu.Display(client, MENU_TIME_FOREVER);
 	}
 	else{
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Pas de transactions récentes.");
+		CPrintToChat(client, "" ...MOD_TAG... " Pas de transactions récentes.");
 		return;
 	}
 }
@@ -484,16 +484,16 @@ public void SQL_CancelCB(Handle owner, Handle handle, const char[] error, any da
 	int itemID = ReadPackCell(data);
 	int dataQte = ReadPackCell(data);
 	if( strlen(error) >= 1  ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Une erreur s'est produite lors de l'annulation.");
+		CPrintToChat(client, "" ...MOD_TAG... " Une erreur s'est produite lors de l'annulation.");
 		LogError("[SQL] [ERROR] %s - HDVAchat", error);
 		return;
 	}
 	if(SQL_GetAffectedRows(handle) == 0){
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ce lot à déjà été acheté, il est impossible d'annuler la vente.");
+		CPrintToChat(client, "" ...MOD_TAG... " Ce lot à déjà été acheté, il est impossible d'annuler la vente.");
 		return;
 	}
 	char tmp[64];
 	rp_ClientGiveItem(client, itemID, dataQte);
 	rp_GetItemData(itemID, item_type_name, tmp, sizeof(tmp));
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez récupéré vos %d %s.", dataQte, tmp);
+	CPrintToChat(client, "" ...MOD_TAG... " Vous avez récupéré vos %d %s.", dataQte, tmp);
 }

@@ -62,7 +62,7 @@ public int MenuSelectNote(Handle p_hHireMenu, MenuAction p_oAction, int p_iParam
 			char query[1024];
 			Format(query, 1023, "DELETE FROM `rp_notes` WHERE `id`='%s';", szMenuItem);
 			SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-			CPrintToChat(p_iParam1, "{lightblue}[TSX-RP]{default} La note a été supprimée.");
+			CPrintToChat(p_iParam1, "" ...MOD_TAG... " La note a été supprimée.");
 		}
 	}
 	else if (p_oAction == MenuAction_End) {

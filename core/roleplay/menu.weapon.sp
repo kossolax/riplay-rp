@@ -28,7 +28,7 @@ void SelectingAmmunition(int client, int ent, bool crochettage = false) {
 		}
 		
 		if( count <= 0 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il n'y a pas de policier connecté.");
+			CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas de policier connecté.");
 			return;
 		}
 	}
@@ -189,7 +189,7 @@ public int eventAmmunitionPickup(Handle p_hBuyMenu, MenuAction p_oAction, int cl
 			else {
 				
 				if( GetPlayerWeaponSlot( client, iWeaponSlot) != -1 && (IsPolice(client) || IsJuge(client)) ) {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez déjà une arme de ce type");
+					CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà une arme de ce type");
 					return;
 				}
 				

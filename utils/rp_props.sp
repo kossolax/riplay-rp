@@ -1653,7 +1653,7 @@ public void SQL_SaveEventPre(Handle owner, Handle row, const char[] error, any c
 		}
 	}
 	SQL_TQuery(db, SQL_QueryCallBack, query, _, DBPrio_Low);
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} %i props ont été sauvegardé.", countProps);
+	CPrintToChat(client, "" ...MOD_TAG... " %i props ont été sauvegardé.", countProps);
 }
 void GetPropInfo(int gpEnt, float pPos[3], float pAng[3], int pCol[4], char pClass[64], char pModel[128], float& pScale, int& pSkin, int& pBlockType){
 	Entity_GetAbsOrigin(gpEnt, pPos);
@@ -1747,7 +1747,7 @@ public int MenuLoadEvent(Handle menu, MenuAction action, int client, int param2)
 		if( GetMenuItem(menu, param2, szMenuItem, sizeof(szMenuItem)) ) {
 			sdata = StringToInt(szMenuItem) + client*10000;
 			if(processing){
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Un event est déjà entrain d'être respawn.");
+				CPrintToChat(client, "" ...MOD_TAG... " Un event est déjà entrain d'être respawn.");
 				return;
 			}
 			for(int i=0;i<310;i++){

@@ -106,7 +106,7 @@ public bool OnWebRequest(WebConnection connection, const char[] method, const ch
 			
 			GetClientAuthId(i, AUTH_TYPE, arg, sizeof(arg));
 			if( StrEqual(options[2], arg) ) {
-				CPrintToChatAll("{lightblue}[TSX-RP]{default} Un joueur vient de report %N pour %s.", i, options[3]);
+				CPrintToChatAll("" ...MOD_TAG... " Un joueur vient de report %N pour %s.", i, options[3]);
 				found = true;
 				break;
 			}
@@ -133,7 +133,7 @@ public bool OnWebRequest(WebConnection connection, const char[] method, const ch
 			
 			GetClientAuthId(i, AUTH_TYPE, arg, sizeof(arg));
 			if( StrEqual(options[2], arg) ) {
-				CPrintToChat(i, "{lightblue}[TSX-RP]{default} %s.", i, options[3]);
+				CPrintToChat(i, "" ...MOD_TAG... " %s.", i, options[3]);
 				found = true;
 				break;
 			}
@@ -153,7 +153,7 @@ public bool OnWebRequest(WebConnection connection, const char[] method, const ch
 		char options[3][256];
 		ExplodeString(url, "/", options, sizeof(options), sizeof(options[]));
 		
-		CPrintToChatAll("{lightblue}[TSX-RP]{default} %s.", options[2]);
+		CPrintToChatAll("" ...MOD_TAG... " %s.", options[2]);
 		
 		WebResponse response = new WebStringResponse("1");
 		bool success = connection.QueueResponse(WebStatus_OK, response);

@@ -126,7 +126,7 @@ public Action RP_OnPlayerGotPay(int client, int salary, int& topay, bool verbose
 	if( jobID == 101 && rp_GetClientInt(client, i_KillJailDuration) > 0 ) {
 		
 		if( verbose )
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} La Justice ne paye pas ses membres tuant la population.");
+			CPrintToChat(client, "" ...MOD_TAG... " La Justice ne paye pas ses membres tuant la population.");
 		
 		topay = 0;
 		return Plugin_Stop;
@@ -193,7 +193,7 @@ public Action Cmd_Jugement(int client, char[] arg) {
 		size = 2;
 	
 	if( size == 0 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Veuillez selectionner une plainte du Tribunal forum en premier.");
+		CPrintToChat(client, "" ...MOD_TAG... " Veuillez selectionner une plainte du Tribunal forum en premier.");
 		return Plugin_Handled;
 	}
 	
@@ -209,7 +209,7 @@ public Action Cmd_Jugement(int client, char[] arg) {
 	amende = StringToInt(buffers[3]);
 	
 	if( !StrEqual(buffers[1], g_szJugementDATA[client][0]) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le code de confirmation est incorrect.");
+		CPrintToChat(client, "" ...MOD_TAG... " Le code de confirmation est incorrect.");
 		return Plugin_Handled;
 	}
 	
@@ -235,9 +235,9 @@ public Action Cmd_Jugement(int client, char[] arg) {
 	}
 	
 	switch(type) {
-		case 1: CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le joueur a été condamné.");
-		case 2: CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le joueur a été acquitté.");
-		case 3: CPrintToChat(client, "{lightblue}[TSX-RP]{default} La plainte troll a été supprimée.");
+		case 1: CPrintToChat(client, "" ...MOD_TAG... " Le joueur a été condamné.");
+		case 2: CPrintToChat(client, "" ...MOD_TAG... " Le joueur a été acquitté.");
+		case 3: CPrintToChat(client, "" ...MOD_TAG... " La plainte troll a été supprimée.");
 		
 	}
 	
@@ -463,7 +463,7 @@ Menu AUDIENCE_Condamner(int type, int articles) {
 	char tmp[64], tmp2[64];
 	
 	if( IsVolAndRecidive(type) ) {
-		CPrintToChatSearch(type, "{lightblue}[TSX-RP]{default} Le juge %N a tenté de faire un abus. Cet incident a été reporté.", g_iTribunalData[type][td_Owner]);
+		CPrintToChatSearch(type, "" ...MOD_TAG... " Le juge %N a tenté de faire un abus. Cet incident a été reporté.", g_iTribunalData[type][td_Owner]);
 		LogToGame("[CHEATING] [JUGE] [CONDAMNER] %L a tenté de faire une condamnation pour récidive de vol.", g_iTribunalData[type][td_Owner]);
 		return null;
 	}
@@ -493,7 +493,7 @@ Menu AUDIENCE_Condamner(int type, int articles) {
 		amende = RoundFloat(float(amende) * g_flCondamnation[articles]);
 		
 		SQL_Insert(type, 1, articles, heure, amende);
-		CPrintToChatSearch(type, "{lightblue}[TSX-RP]{default} %N a été condamné à %d heure%s et %d$ d'amende. Le juge a été %s.", g_iTribunalData[type][td_Suspect], heure, heure >= 2 ? "s" :"",amende, g_szCondamnation[articles]);
+		CPrintToChatSearch(type, "" ...MOD_TAG... " %N a été condamné à %d heure%s et %d$ d'amende. Le juge a été %s.", g_iTribunalData[type][td_Suspect], heure, heure >= 2 ? "s" :"",amende, g_szCondamnation[articles]);
 		
 		AUDIENCE_Stop(type);
 	}
@@ -516,7 +516,7 @@ Menu AUDIENCE_Acquitter(int type, int articles) {
 		
 		SQL_Insert(type, 0, articles, 0, 0);
 		
-		CPrintToChatSearch(type, "{lightblue}[TSX-RP]{default} %N a été acquitté: %s.", g_iTribunalData[type][td_Suspect], g_szAcquittement[articles]);
+		CPrintToChatSearch(type, "" ...MOD_TAG... " %N a été acquitté: %s.", g_iTribunalData[type][td_Suspect], g_szAcquittement[articles]);
 		AUDIENCE_Stop(type);
 	}
 	
@@ -568,7 +568,7 @@ Menu AUDIENCE_Dedommagement(int type) {
 	if( g_iTribunalData[type][td_DoneDedommagement] == 0 ) {
 		
 		if( IsVolAndRecidive(type) ) {
-			CPrintToChatSearch(type, "{lightblue}[TSX-RP]{default} Le juge %N a tenté de faire un abus. Cet incident a été reporté.", g_iTribunalData[type][td_Owner]);
+			CPrintToChatSearch(type, "" ...MOD_TAG... " Le juge %N a tenté de faire un abus. Cet incident a été reporté.", g_iTribunalData[type][td_Owner]);
 			LogToGame("[CHEATING] [JUGE] [DEDO] %L a tenté de faire une dédo pour récidive de vol.", g_iTribunalData[type][td_Owner]);
 			return null;
 		}
@@ -582,7 +582,7 @@ Menu AUDIENCE_Dedommagement(int type) {
 		rp_ClientMoney(target, i_Money, -money);
 		rp_ClientMoney(client, i_Money, money);
 		
-		CPrintToChatSearch(type, "{lightblue}[TSX-RP]{default} %N a dédommagé %N de %d$.", target, client, money);
+		CPrintToChatSearch(type, "" ...MOD_TAG... " %N a dédommagé %N de %d$.", target, client, money);
 	}
 	
 	return null;
@@ -609,7 +609,7 @@ Menu AUDIENCE_Enquete(int type, int a, int b) {
 			CreateTimer(1.0, Timer_MERCENAIRE, type, TIMER_REPEAT);
 		}
 		
-		CPrintToChatSearch(type, "{lightblue}[TSX-RP]{default} Les mercenaires ont été convoqués au Tribunal %d.", type);
+		CPrintToChatSearch(type, "" ...MOD_TAG... " Les mercenaires ont été convoqués au Tribunal %d.", type);
 	}
 	else if( a == 2 || a == 3 ) {
 		if( a == 2 &&  b > 0 ) {
@@ -697,7 +697,7 @@ Menu AUDIENCE_Forward(int type, int a) {
 		}
 	}
 	else {
-		CPrintToChatSearch(type, "{lightblue}[TSX-RP]{default} %N cède sa place de juge à %N.", g_iTribunalData[type][td_Owner], a);
+		CPrintToChatSearch(type, "" ...MOD_TAG... " %N cède sa place de juge à %N.", g_iTribunalData[type][td_Owner], a);
 		g_iTribunalData[type][td_Owner] = a;
 	}
 	return subMenu;
@@ -733,9 +733,9 @@ Menu AUDIENCE_Forum(int client, int a, int b) {
 		Format(g_szJugementDATA[client][2], sizeof(g_szJugementDATA[][]), "%d", b);
 		
 		if( b == 1 )
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Afin de confirmer votre jugement, tappez maintenant /jgmt %s heure amende raison", g_szJugementDATA[client][0]);
+			CPrintToChat(client, "" ...MOD_TAG... " Afin de confirmer votre jugement, tappez maintenant /jgmt %s heure amende raison", g_szJugementDATA[client][0]);
 		else if( b == 2 || b == 3 )
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Afin de confirmer votre jugement, tappez maintenant /jgmt %s raison", g_szJugementDATA[client][0]);
+			CPrintToChat(client, "" ...MOD_TAG... " Afin de confirmer votre jugement, tappez maintenant /jgmt %s raison", g_szJugementDATA[client][0]);
 	}
 	
 	return subMenu;
@@ -782,8 +782,8 @@ Menu AUDIENCE_Identity(int& client, int a, int b, int c) {
 			PrintToChatZone( rp_GetPlayerZone(client) , "%N est maintenant ... %s.", client, rp_GetClientBool(client, b_isFemale) ? "une femme" : "un homme");
 		}
 		else {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez refusé de changer de sexe.");
-			CPrintToChat(a, "{lightblue}[TSX-RP]{default} %N a refusé de changer de sexe.", client);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez refusé de changer de sexe.");
+			CPrintToChat(a, "" ...MOD_TAG... " %N a refusé de changer de sexe.", client);
 			
 		}
 	}
@@ -794,7 +794,7 @@ public void SQL_AUDIENCE_Forum(Handle owner, Handle handle, const char[] error, 
 	
 	
 	if( SQL_GetRowCount(handle) == 0 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il n'y a aucun cas à traiter pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " Il n'y a aucun cas à traiter pour le moment.");
 		return;
 	}
 	
@@ -910,11 +910,11 @@ public Action Timer_AUDIENCE(Handle timer, any type) {
 	}
 		
 	if( time < 60 && time % 20 == 0 ) {
-		CPrintToChatSearch(type, "{lightblue}[TSX-RP]{default} %N est convoqué par le {green}Tribunal n°%d{default} de Princeton [%d/3].", target, type, time/20 + 1);
+		CPrintToChatSearch(type, "" ...MOD_TAG... " %N est convoqué par le {green}Tribunal n°%d{default} de Princeton [%d/3].", target, type, time/20 + 1);
 		LogToGame("[TRIBUNAL] [AUDIENCE] Le juge %L a convoque %L [%d/3].", g_iTribunalData[type][td_Owner], target, time/20 + 1);
 	}
 	else if( time % 60 == 0 ) {
-		CPrintToChatSearch(type, "{lightblue}[TSX-RP]{default} %N est recherché par le {green}Tribunal n°%d{default} de Princeton depuis %d minutes.", target, type, time/60);
+		CPrintToChatSearch(type, "" ...MOD_TAG... " %N est recherché par le {green}Tribunal n°%d{default} de Princeton depuis %d minutes.", target, type, time/60);
 		LogToGame("[TRIBUNAL] [AUDIENCE] Le juge %L recherche %L depuis %d minutes.", g_iTribunalData[type][td_Owner], target, time/60);
 		
 		if( time >= 24*60 )
@@ -928,11 +928,11 @@ public Action Timer_AUDIENCE(Handle timer, any type) {
 	if( zone == jail ) {
 	
 		if( time < 60 )
-			CPrintToChatSearch(type, "{lightblue}[TSX-RP]{default} %N est arrivé sans retard.", target);
+			CPrintToChatSearch(type, "" ...MOD_TAG... " %N est arrivé sans retard.", target);
 		else if ( time > 300 )
-			CPrintToChatSearch(type, "{lightblue}[TSX-RP]{default} %N est arrivé après %d minutes, il y a un {red}manquement{default} à la convocation!", target, time/60);
+			CPrintToChatSearch(type, "" ...MOD_TAG... " %N est arrivé après %d minutes, il y a un {red}manquement{default} à la convocation!", target, time/60);
 		else
-			CPrintToChatSearch(type, "{lightblue}[TSX-RP]{default} %N est arrivé après %d minutes.", target, time/60);
+			CPrintToChatSearch(type, "" ...MOD_TAG... " %N est arrivé après %d minutes.", target, time/60);
 		
 		LogToGame("[TRIBUNAL] [AUDIENCE] Le juge %L termine la convocation de %L après %d minute%s.", g_iTribunalData[type][td_Owner], target, time/60, time/60 >= 2 ? "s":"");
 		g_iTribunalData[type][td_SuspectArrive] = 1;
@@ -1310,7 +1310,7 @@ public Action Cmd_ItemEnquete(int args) {
 			String_GetRandom(tmp, sizeof(tmp), 24);
 			
 			AddMenu_Blank(client, menu, "Il a tué: %s", tmp);
-			CPrintToChat(target, "{lightblue}[TSX-RP]{default} Votre pot de vin envers un mercenaire vient de vous sauver.");
+			CPrintToChat(target, "" ...MOD_TAG... " Votre pot de vin envers un mercenaire vient de vous sauver.");
 			LogToGame("[TSX-RP] [ENQUETE] Une enquête effectuée sur %L n'a pas montré qui l'a tué pour cause de pot de vin.", target);
 		}
 		else {	
@@ -1337,7 +1337,7 @@ public Action Cmd_ItemEnquete(int args) {
 			String_GetRandom(tmp, sizeof(tmp), 24);
 			
 			AddMenu_Blank(client, menu, "%s, l'a tué", tmp);
-			CPrintToChat(killed, "{lightblue}[TSX-RP]{default} Votre pot de vin envers un mercenaire vient de vous sauver.");
+			CPrintToChat(killed, "" ...MOD_TAG... " Votre pot de vin envers un mercenaire vient de vous sauver.");
 			LogToGame("[TSX-RP] [ENQUETE] Une enquête effectuée sur %L n'a pas montré qui l'a tué pour cause de pot de vin.", target);
 		}
 		else {
@@ -1389,7 +1389,7 @@ public Action Cmd_ItemEnquete(int args) {
 	
 	AddMenu_Blank(client, menu, "Taux d'alcoolémie: %.3f", rp_GetClientFloat(client, fl_Alcool));
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ces informations ont été envoyées dans votre console.");
+	CPrintToChat(client, "" ...MOD_TAG... " Ces informations ont été envoyées dans votre console.");
 	
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, MENU_TIME_DURATION);

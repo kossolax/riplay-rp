@@ -110,7 +110,7 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 		int sum = RoundToCeil(float(salary) * multi);
 		
 		if( verbose )
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre appartement a fait remporté %d$ supplémentaire.", sum);
+			CPrintToChat(client, "" ...MOD_TAG... " Votre appartement a fait remporté %d$ supplémentaire.", sum);
 		
 		topay += sum;
 		return Plugin_Changed;
@@ -164,9 +164,9 @@ public Action Cmd_ItemGiveAppart(int args) {
 		rp_SetAppartementInt(appart, appart_proprio, client);
 		
 		if( appart < 10 )
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes maintenant le propriétaire du garage n°%d", appart);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous êtes maintenant le propriétaire du garage n°%d", appart);
 		else
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes maintenant le propriétaire de l'appartement n°%d", appart);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous êtes maintenant le propriétaire de l'appartement n°%d", appart);
 	}
 }
 public Action Cmd_ItemAppartSerrure(int args) {
@@ -188,12 +188,12 @@ public Action Task_ItemAppartSerrure(Handle timer, Handle dp) {
 	int appartID = ReadPackCell(dp);
 
 	if( appartID == -1 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez être dans votre appartement.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez être dans votre appartement.");
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	if( rp_GetAppartementInt(appartID, appart_proprio) != client ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'êtes pas le propriétaire de cet appartement.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas le propriétaire de cet appartement.");
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
@@ -227,10 +227,10 @@ public int MenuSerrureVirer(Handle menu, MenuAction action, int client, int para
 			rp_SetClientInt(target, i_AppartCount, rp_GetClientInt(target, i_AppartCount) - 1);
 			rp_SetClientKeyAppartement(target, appartID, false);
 			rp_ClientGiveItem(client, item_id, -1); // On prend l'item au gars comme il l'a utilisé
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Les clefs de l'appartement ont été retirées à %N.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " Les clefs de l'appartement ont été retirées à %N.", target);
 		}
 		else{
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le joueur n'a pas les clefs de l'appartement.");
+			CPrintToChat(client, "" ...MOD_TAG... " Le joueur n'a pas les clefs de l'appartement.");
 			rp_SetClientFloat(client, fl_CoolDown, 0.05); // On remet le cooldown du gars à 0 mais on lui redonne pas l'item vu qu'il l'a deja
 		}
 	}
@@ -245,31 +245,31 @@ public Action Cmd_ItemGiveAppartDouble(int args) {
 	int target = GetClientAimTarget(client);
 	
 	if( !IsValidClient(target) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez viser un joueur.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser un joueur.");
 		ITEM_CANCEL(client, itemID);
 		return Plugin_Handled;
 	}
 	
 	int appartID = rp_GetPlayerZoneAppart(client);
 	if( appartID == -1 || appartID == 50 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez être dans votre appartement.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez être dans votre appartement.");
 		ITEM_CANCEL(client, itemID);
 		return Plugin_Handled;
 	}
 	if( rp_GetAppartementInt(appartID, appart_proprio) != client ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'êtes pas propriétaire de cet appartement.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas propriétaire de cet appartement.");
 		ITEM_CANCEL(client, itemID);
 		return Plugin_Handled;
 	}
 	if( rp_GetClientKeyAppartement(target, appartID ) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N{default} a déjà les clés de cet appartement.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " %N{default} a déjà les clés de cet appartement.", target);
 		ITEM_CANCEL(client, itemID);
 		return Plugin_Handled;
 	}
 	
 	rp_SetClientInt(target, i_AppartCount, rp_GetClientInt(target, i_AppartCount) + 1);
 	rp_SetClientKeyAppartement(target, appartID, true);
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N{default} a maintenant les clés de l'appartement %d.", target, appartID);
+	CPrintToChat(client, "" ...MOD_TAG... " %N{default} a maintenant les clés de l'appartement %d.", target, appartID);
 	
 	return Plugin_Handled;
 }
@@ -282,12 +282,12 @@ public Action Cmd_ItemGiveBonus(int args) {
 	
 	int appartID = rp_GetPlayerZoneAppart(client);
 	if( appartID == -1 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez être dans votre appartement.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez être dans votre appartement.");
 		ITEM_CANCEL(client, itemID);
 		return Plugin_Handled;
 	}
 	if( !rp_GetClientKeyAppartement(client, appartID) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'êtes pas propriétaire de cet appartement.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas propriétaire de cet appartement.");
 		ITEM_CANCEL(client, itemID);
 		return Plugin_Handled;
 	}
@@ -353,7 +353,7 @@ public Action Cmd_ItemPropAppart(int args){
 	int appart = rp_GetPlayerZoneAppart(client);
 	if(appart == -1){
 		if(rp_GetZoneInt(zone, zone_type_type) != rp_GetClientJobID(client)){
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez être dans votre planque ou dans votre appartement.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous devez être dans votre planque ou dans votre appartement.");
 			return Plugin_Handled;
 		}
 	}
@@ -378,7 +378,7 @@ public int MenuPropAppart(Handle menu, MenuAction action, int client, int param2
 		int appart = rp_GetPlayerZoneAppart(client);
 		if(appart == -1){
 			if(rp_GetZoneInt(zone, zone_type_type) != rp_GetClientJobID(client)){
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez être dans votre planque ou dans votre appartement.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous devez être dans votre planque ou dans votre appartement.");
 				return;
 			}
 		}
@@ -415,7 +415,7 @@ public int MenuPropAppart(Handle menu, MenuAction action, int client, int param2
 		if( TR_DidHit(trace) ) {
 			delete trace;
 			
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il n'y a pas assez de place.");
+			CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas assez de place.");
 			AcceptEntityInput(ent, "Kill");
 			return;
 		}
@@ -451,7 +451,7 @@ public Action Cmd_ItemPropOutdoor(int args){
 	int zoneBIT = rp_GetZoneBit(zone);
 
 	if( rp_GetZoneInt(zone, zone_type_type) == 1 || zoneBIT & BITZONE_PEACEFULL || zoneBIT & BITZONE_BLOCKBUILD ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cet objet est interdit où vous êtes.");
+		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
 		return Plugin_Handled;
 	}
 	CreateTimer(0.25, task_ItemPropOutdoor, client);
@@ -480,7 +480,7 @@ public int MenuPropOutdoor(Handle menu, MenuAction action, int client, int param
 			PrecacheModel(model);
 		}
 		if( rp_GetZoneInt(zone, zone_type_type) == 1 || zoneBIT & BITZONE_PEACEFULL || zoneBIT & BITZONE_BLOCKBUILD ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cet objet est interdit où vous êtes.");
+			CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
 			return;
 		}
 		DispatchKeyValue(ent, "physdamagescale", "0.0");
@@ -511,7 +511,7 @@ public int MenuPropOutdoor(Handle menu, MenuAction action, int client, int param
 		if( TR_DidHit(trace) ) {
 			delete trace;
 			
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il n'y a pas assez de place.");
+			CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas assez de place.");
 			AcceptEntityInput(ent, "Kill");
 			return;
 		}
@@ -559,13 +559,13 @@ public Action Cmd_ItemPropTrap(int args) {
 	}
 	
 	if( rp_GetBuildingData(target, BD_owner) != client ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ce props ne vous appartient pas.");
+		CPrintToChat(client, "" ...MOD_TAG... " Ce props ne vous appartient pas.");
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	
 	if( rp_GetBuildingData(target, BD_Trapped) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ce props est déjà piégé.");
+		CPrintToChat(client, "" ...MOD_TAG... " Ce props est déjà piégé.");
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
@@ -633,12 +633,12 @@ int BuildingTomb(int client) {
 		GetEdictClassname(i, tmp, sizeof(tmp));
 		
 		if( StrEqual(classname, tmp) && rp_GetBuildingData(i, BD_owner) == client ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez déjà une tombe de placée.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà une tombe de placée.");
 			return 0;
 		}
 	}
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Construction en cours...");
+	CPrintToChat(client, "" ...MOD_TAG... " Construction en cours...");
 	
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client, _, _, _, 0.66);
 	
@@ -687,7 +687,7 @@ public void BuildingTomb_break(const char[] output, int caller, int activator, f
 	
 	int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
 	if( IsValidClient(owner) ) {
-		CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Votre tombe a été détruite.");
+		CPrintToChat(owner, "" ...MOD_TAG... " Votre tombe a été détruite.");
 		rp_SetClientBool(owner, b_HasGrave, false);
 	}
 }
@@ -699,12 +699,12 @@ public Action Cmd_ItemLampe(int args) {
 	
 	if( StrContains(arg1, "jumelle") != -1 ) {
 		rp_SetClientBool(client, b_Jumelle, true);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous pouvez maintenant utiliser vos jumelles (touche H).");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez maintenant utiliser vos jumelles (touche H).");
 		rp_HookEvent(client, RP_OnAssurance,	fwdAssurance2);
 	}
 	else if( StrContains(arg1, "lampe") != -1 ) {
 		rp_SetClientBool(client, b_LampePoche, true);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous pouvez maintenant utiliser votre visions nocturne (touche H).");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez maintenant utiliser votre visions nocturne (touche H).");
 		rp_HookEvent(client, RP_OnAssurance,	fwdAssurance);
 	}
 	return Plugin_Handled;
@@ -738,7 +738,7 @@ void GetClientFrontLocationData( int client, float position[3], float angles[3],
 
 public Action Cmd_InfoColoc(int client){
 	if(rp_GetClientInt(client, i_AppartCount) == 0){
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas d'appartement.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas d'appartement.");
 		return Plugin_Handled;
 	}
 	char tmp[128];
@@ -808,7 +808,7 @@ public int MenuNothing(Handle menu, MenuAction action, int client, int param2) {
 public Action Cmd_BedVilla(int client){
 	
 	if( rp_GetClientInt(client, i_PlayerLVL) < 42 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous devez être au moins de niveau 42 \"Propriétaire\", afin d'utiliser cette commande.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez être au moins de niveau 42 \"Propriétaire\", afin d'utiliser cette commande.");
 		return Plugin_Handled;
 	}
 	
@@ -971,7 +971,7 @@ public int bedVillaMenu_BED(Handle p_hItemMenu, MenuAction p_oAction, int client
 			}
 			int amount = StringToInt(szMenuItem);
 			if( amount > (rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas assez d'argent.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent.");
 				OpenBedMenu(client);
 				return;
 			}
@@ -1015,7 +1015,7 @@ public void SQL_GetAppartWiner(Handle owner, Handle hQuery, const char[] error, 
 		if( place == 0 ) {
 			SQL_FetchString(hQuery, 1, szName, sizeof(szName));	
 			
-			CPrintToChatAll("{lightblue}[TSX-RP]{default} Le gagnant de la villa est... %s(%s) pour %d$!", szName, szSteamID, gain);
+			CPrintToChatAll("" ...MOD_TAG... " Le gagnant de la villa est... %s(%s) pour %d$!", szName, szSteamID, gain);
 			LogToGame("[TSX-RP] [VILLA] %s %s gagne la villa pour %d$", szName, szSteamID, gain);
 			
 			dispatchToJob(gain);

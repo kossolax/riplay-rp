@@ -228,7 +228,7 @@ public int eventPayForLeaving_2(Handle menu, MenuAction action, int iTarget, int
 						return;
 					}
 				}
-				CPrintToChat(iTarget, "{lightblue}[TSX-RP]{default} Il n'y a plus de place disponible en QHS.");
+				CPrintToChat(iTarget, "" ...MOD_TAG... " Il n'y a plus de place disponible en QHS.");
 			}
 		}
 	}

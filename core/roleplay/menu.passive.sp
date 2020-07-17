@@ -71,19 +71,19 @@ public int Menu_Passive(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 			
 			if( StrEqual(szMenuItem, "3") ) {
 				if( g_iUserData[client][i_KillJailDuration] >= 6 ) {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ayant commis un meurtre récement, vous ne pouvez passer en mode passif tant que vous avez des meurtres à votre actif.");
+					CPrintToChat(client, "" ...MOD_TAG... " Ayant commis un meurtre récement, vous ne pouvez passer en mode passif tant que vous avez des meurtres à votre actif.");
 					delete g_hTIMER[client];
 					Draw_PassiveMenu(client);
 					return;
 				}
 				if( g_iUserData[client][i_LastAgression]+30 >= GetTime() ) {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ayant commis une agression physique récement, vous ne pourrez activer ce mode que dans %d seconde(s).", g_iUserData[client][i_LastAgression]+30-GetTime() );
+					CPrintToChat(client, "" ...MOD_TAG... " Ayant commis une agression physique récement, vous ne pourrez activer ce mode que dans %d seconde(s).", g_iUserData[client][i_LastAgression]+30-GetTime() );
 					delete g_hTIMER[client];
 					Draw_PassiveMenu(client);
 					return;
 				}
 				if( g_iUserData[client][i_LastDangerousShot]+30 >= GetTime() ) {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ayant commis un tir dangereux récement, vous ne pourrez activer ce mode que dans %d seconde(s).", g_iUserData[client][i_LastDangerousShot]+30-GetTime() );
+					CPrintToChat(client, "" ...MOD_TAG... " Ayant commis un tir dangereux récement, vous ne pourrez activer ce mode que dans %d seconde(s).", g_iUserData[client][i_LastDangerousShot]+30-GetTime() );
 					delete g_hTIMER[client];
 					Draw_PassiveMenu(client);
 					return;
@@ -98,7 +98,7 @@ public int Menu_Passive(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 			dp.WriteCell(client);
 			dp.WriteCell(StrEqual(szMenuItem, "3"));
 			
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le mode de jeu %s va être activé dans une minute.", StrEqual(szMenuItem, "3") ? "passif" : "actif");
+			CPrintToChat(client, "" ...MOD_TAG... " Le mode de jeu %s va être activé dans une minute.", StrEqual(szMenuItem, "3") ? "passif" : "actif");
 		}
 		else {
 			Draw_PassiveMenu(client);
@@ -115,18 +115,18 @@ public Action switchToPassive(Handle timer, Handle dp) {
 	
 	if( value ) {
 		if( g_iUserData[client][i_KillJailDuration] >= 6 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ayant commis un meurtre récement, vous ne pouvez passer en mode passif tant que vous avez des meurtres à votre actif.");
+			CPrintToChat(client, "" ...MOD_TAG... " Ayant commis un meurtre récement, vous ne pouvez passer en mode passif tant que vous avez des meurtres à votre actif.");
 			delete g_hTIMER[client];
 			Draw_PassiveMenu(client);
 			return Plugin_Handled;
 		}
 		if( g_iUserData[client][i_LastAgression]+60 >= GetTime() ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ayant commis une agression physique récement, vous ne pourrez activer ce mode que dans %d seconde(s).", g_iUserData[client][i_LastAgression]+60-GetTime() );
+			CPrintToChat(client, "" ...MOD_TAG... " Ayant commis une agression physique récement, vous ne pourrez activer ce mode que dans %d seconde(s).", g_iUserData[client][i_LastAgression]+60-GetTime() );
 			delete g_hTIMER[client];
 			return Plugin_Handled;
 		}
 		if( g_iUserData[client][i_LastDangerousShot]+60 >= GetTime() ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ayant commis un tir dangereux récement, vous ne pourrez activer ce mode que dans %d seconde(s).", g_iUserData[client][i_LastDangerousShot]+60-GetTime() );
+			CPrintToChat(client, "" ...MOD_TAG... " Ayant commis un tir dangereux récement, vous ne pourrez activer ce mode que dans %d seconde(s).", g_iUserData[client][i_LastDangerousShot]+60-GetTime() );
 			delete g_hTIMER[client];
 			Draw_PassiveMenu(client);
 			return Plugin_Handled;
@@ -134,7 +134,7 @@ public Action switchToPassive(Handle timer, Handle dp) {
 	}
 	
 	g_bUserData[client][b_GameModePassive] = value;
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le mode de jeu %s a été activé.", value ? "passif" : "actif");
+	CPrintToChat(client, "" ...MOD_TAG... " Le mode de jeu %s a été activé.", value ? "passif" : "actif");
 	
 	delete g_hTIMER[client];
 	return Plugin_Handled;

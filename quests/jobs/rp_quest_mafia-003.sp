@@ -94,7 +94,7 @@ public void Q1_Frame(int objectiveID, int client) {
 				char item[64];
 				rp_GetItemData(3, item_type_name, item, sizeof(item));
 				rp_ClientGiveItem(client, 3);
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu: %s", item);
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu: %s", item);
 			}
 		}
 	}
@@ -133,7 +133,7 @@ public void Q2_Frame(int objectiveID, int client) {
 				char item[64];
 				rp_GetItemData(3, item_type_name, item, sizeof(item));
 				rp_ClientGiveItem(client, 3);
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu: %s", item);
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu: %s", item);
 			}
 		}
 	}

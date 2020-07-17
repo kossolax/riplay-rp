@@ -83,7 +83,7 @@ public void Q1_Start(int objectiveID, int client) {
 	g_iDuration[client] = 6 * 60;
 	g_iGoing[client] = getRandomLocation();
 	char item[64]; rp_GetItemData(2, item_type_name, item, sizeof(item)); rp_ClientGiveItem(client, 2, 5);
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu: 5x%s", item);
+	CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu: 5x%s", item);
 }
 public void Q2_Start(int objectiveID, int client) {	
 	Menu menu = new Menu(MenuNothing);
@@ -101,7 +101,7 @@ public void Q2_Start(int objectiveID, int client) {
 	g_iGoing[client] = getRandomLocation();
 	
 	char item[64]; rp_GetItemData(2, item_type_name, item, sizeof(item)); rp_ClientGiveItem(client, 2, 5);
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu: 5x%s", item);
+	CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu: 5x%s", item);
 }
 public void Q1_Frame(int objectiveID, int client) {
 	
@@ -160,7 +160,7 @@ public void Q5_Done(int objectiveID, int client) {
 	menu.Display(client, 30);
 	
 	char item[64]; rp_GetItemData(64, item_type_name, item, sizeof(item)); rp_ClientGiveItem(client, 64); // [PvP] M4A1-S.
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu: %s", item);
+	CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu: %s", item);
 	
 	PrintHintText(client, "<b>Quête</b>: %s\nLa quête est terminée.", QUEST_NAME);
 }

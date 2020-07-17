@@ -14,6 +14,7 @@
 #define _rp_const_included_
 
 #define __LAST_REV__			"8.1 - REBORN"
+#define	MOD_TAG					"{lightblue}[RIPLAY.FR]{default}"
 
 //#define DEBUG
 #define MAX_LOCATIONS			150

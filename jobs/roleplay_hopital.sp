@@ -105,8 +105,8 @@ public Action Cmd_ItemChirurgie(int args) {
 		WritePackCell(dp, vendeur);
 	}
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} %N vous fait une opération chirurgicale.", vendeur);
-	CPrintToChat(vendeur, "{lightblue}[TSX-RP]{default} Vous commencez à opérer %N.", client);
+	CPrintToChat(client, "" ...MOD_TAG... " %N vous fait une opération chirurgicale.", vendeur);
+	CPrintToChat(vendeur, "" ...MOD_TAG... " Vous commencez à opérer %N.", client);
 	
 	rp_HookEvent(client, RP_PrePlayerPhysic, fwdFrozen, time);
 	rp_HookEvent(vendeur, RP_PrePlayerPhysic, fwdFrozen, time);
@@ -237,18 +237,18 @@ public Action Cmd_ItemSick(int args) {
 		
 		switch(rp_GetClientInt(client, i_Sick)) {
 			case sick_type_fievre:
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes atteint d'une forte fièvre. Prenez des Cachets d'aspirine.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous êtes atteint d'une forte fièvre. Prenez des Cachets d'aspirine.");
 			case sick_type_grippe:
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes atteint de la Grippe. Prenez des Cachets d'amantadine.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous êtes atteint de la Grippe. Prenez des Cachets d'amantadine.");
 			case sick_type_tourista:
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes atteint de la Tourista. Prenez des Cachets de norfloxacine.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous êtes atteint de la Tourista. Prenez des Cachets de norfloxacine.");
 			case sick_type_hemoragie:
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes atteint d'hémorragie. Prenez une Poche de sang et priez.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous êtes atteint d'hémorragie. Prenez une Poche de sang et priez.");
 			default: {
 				if( rp_GetClientInt(client, i_Sickness) )
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes empoisonné, prenez donc un antipoison...");
+					CPrintToChat(client, "" ...MOD_TAG... " Vous êtes empoisonné, prenez donc un antipoison...");
 				else
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Paix à votre âme. Je ne connais pas cette maladie.");
+					CPrintToChat(client, "" ...MOD_TAG... " Paix à votre âme. Je ne connais pas cette maladie.");
 			}
 				
 		}
@@ -257,11 +257,11 @@ public Action Cmd_ItemSick(int args) {
 	else if( bDiag[client] && rp_GetClientInt(client, i_Sick) == type ) {
 		rp_SetClientInt(client, i_Sick, view_as<int>(sick_type_none));
 		bDiag[client] = false;
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous vous sentez mieux.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous vous sentez mieux.");
 		g_iSuccess_last_faster_dead[client] = GetTime();
 	}
 	else {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ça n'a eut aucun effet.");
+		CPrintToChat(client, "" ...MOD_TAG... " Ça n'a eut aucun effet.");
 	}
 }
 public Action Cmd_ItemPoison(int args) {
@@ -272,7 +272,7 @@ public Action Cmd_ItemPoison(int args) {
 	
 	if( rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PEACEFULL ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Cet objet est interdit où vous êtes.");
+		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
 		return Plugin_Handled;
 	}
 	
@@ -287,8 +287,8 @@ public Action Cmd_ItemPoison(int args) {
 	
 	rp_SetClientInt(client, i_LastAgression, GetTime());
 	ServerCommand("sm_effect_particles %d Trail7 11 weapon_bone", client);
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez empoisonné %N.", target);
-	CPrintToChat(target, "{lightblue}[TSX-RP]{default} Vous avez été empoisonné.");
+	CPrintToChat(client, "" ...MOD_TAG... " Vous avez empoisonné %N.", target);
+	CPrintToChat(target, "" ...MOD_TAG... " Vous avez été empoisonné.");
 	rp_ClientPoison(target, 120.0, client);
 	rp_ClientAggroIncrement(client, target, 1000);
 	rp_ClientOverlays(target, o_Action_Poison, 10.0);
@@ -300,7 +300,7 @@ public Action Cmd_ItemAntiPoison(int args) {
 	int client = GetCmdArgInt(1);
 	
 	if( rp_GetClientInt(client, i_Sickness) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes maintenant guéri.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes maintenant guéri.");
 		
 		if( rp_GetClientFloat(client, fl_LastPoison) > 0 && rp_GetClientFloat(client, fl_LastPoison)+1.0 >= GetGameTime() ) {
 			rp_IncrementSuccess(client, success_list_immune);
@@ -318,7 +318,7 @@ public Action Cmd_ItemFullHeal(int args) {
 	int diff = (max_heal-heal);
 	if( diff > 0 ) {
 		SetEntityHealth(client, Entity_GetMaxHealth(client));
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez récupéré %i HP.", diff);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez récupéré %i HP.", diff);
 	}
 	
 	g_iSuccess_last_faster_dead[client] = GetTime();
@@ -329,7 +329,7 @@ public Action Cmd_ItemProtImmu(int args) {
 	int client = GetCmdArgInt(1);
 	
 	rp_SetClientBool(client, b_HasProtImmu, true);
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous bénéficiez maintenant d'une protection immunitaire.");
+	CPrintToChat(client, "" ...MOD_TAG... " Vous bénéficiez maintenant d'une protection immunitaire.");
 	rp_HookEvent(client, RP_OnAssurance,	fwdAssurance2);
 	return Plugin_Handled;
 }
@@ -362,7 +362,7 @@ public Action Cmd_ItemRespawn(int args) {
 		
 		rp_SetClientStat(vendeur, i_MoneyEarned_Sales, rp_GetClientStat(vendeur, i_MoneyEarned_Sales) - RoundFloat((prix * taxe) - reduc));
 		
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas utiliser cet objet pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet objet pour le moment.");
 		return Plugin_Handled;
 	}
 	
@@ -395,11 +395,11 @@ public Action Cmd_ItemCureDesintox(int args) { //Permet de devenir sobre si on e
 	int client = GetCmdArgInt(1);
 
 	if( rp_GetClientFloat(client, fl_Alcool) ) { //Si le taux d'alcool n'est pas nul
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes maintenant sobre.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes maintenant sobre.");
 		rp_SetClientFloat(client, fl_Alcool, 0.0001);
 	}
 	else {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'êtes pas saoul.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas saoul.");
 		ITEM_CANCEL(client, GetCmdArgInt(args));
 	}
 }
@@ -411,12 +411,12 @@ public Action Cmd_ItemAdrenaline(int args) {
 	
 	if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous ne pouvez pas utiliser cet objet pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet objet pour le moment.");
 		return Plugin_Handled;
 	}
 	
 	if( rp_GetClientBool(client, b_Drugged) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes déjà drogué.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes déjà drogué.");
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
@@ -527,19 +527,19 @@ int BuildingHealBox(int client) {
 		GetEdictClassname(i, tmp, 63);
 		
 		if( StrEqual(classname, tmp) && rp_GetBuildingData(i, BD_owner) == client ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez déjà une healbox.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà une healbox.");
 			return 0;
 		}
 		if( StrEqual(tmp, "rp_healbox") ) {
 			Entity_GetAbsOrigin(i, vecOrigin2);
 			if( GetVectorDistance(vecOrigin, vecOrigin2) < 600 ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Il existe une autre healbox à proximité.");
+				CPrintToChat(client, "" ...MOD_TAG... " Il existe une autre healbox à proximité.");
 				return 0;
 			}
 		}
 	}
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Construction en cours...");
+	CPrintToChat(client, "" ...MOD_TAG... " Construction en cours...");
 	
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client, _, _, _, 0.66);
 	
@@ -592,7 +592,7 @@ public Action BuildingHealBox_post(Handle timer, any entity) {
 public void BuildingHealBox_break(const char[] output, int caller, int activator, float delay) {
 		
 	int client = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
-	CPrintToChat(client,"{lightblue}[TSX-RP]{default} Votre HealBox a été détruite");
+	CPrintToChat(client,"" ...MOD_TAG... " Votre HealBox a été détruite");
 	
 	float vecOrigin[3];
 	Entity_GetAbsOrigin(caller,vecOrigin);

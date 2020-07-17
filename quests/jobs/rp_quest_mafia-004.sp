@@ -109,7 +109,7 @@ public void Q2_Start(int objectiveID, int client) {
 	g_iStep[client]++;
 }
 public void Q3_Start(int objectiveID, int client) {
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Interlocuteur anonyme : Tu as les armes, rapporte les nous au plus vite à la planque !");
+	CPrintToChat(client, "" ...MOD_TAG... " Interlocuteur anonyme : Tu as les armes, rapporte les nous au plus vite à la planque !");
 
 	g_iDuration[client] = 6 * 60;
 	g_iStep[client] = 0;

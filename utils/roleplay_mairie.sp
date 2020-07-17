@@ -48,7 +48,7 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 	if( prestige >= 1 ) {
 		int sum = RoundFloat(float(salary) * (float(prestige) / 10.0) );
 		if( verbose )
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre prestige a fait remporté %d$ supplémentaire.", sum);
+			CPrintToChat(client, "" ...MOD_TAG... " Votre prestige a fait remporté %d$ supplémentaire.", sum);
 		
 		changed = true;
 		topay += sum;
@@ -62,9 +62,9 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 			int sum = RoundFloat(float(salary) * (rp_GetServerRules(rules_Payes, rules_Arg) == 1 ? 0.05 : -0.1));
 			if( verbose ) {
 				if( rp_GetServerRules(rules_Payes, rules_Arg) == 1 )
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} La mairie vous a fait gagné %d$ supplémentaire.", sum);
+					CPrintToChat(client, "" ...MOD_TAG... " La mairie vous a fait gagné %d$ supplémentaire.", sum);
 				else
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} La mairie vous a taxé %d$.", sum);
+					CPrintToChat(client, "" ...MOD_TAG... " La mairie vous a taxé %d$.", sum);
 			}
 			
 			changed = true;
@@ -118,7 +118,7 @@ public void QUERY_SetMaire(Handle owner, Handle handle, const char[] error, any 
 		SQL_FetchString(handle, 1, tmp2, sizeof(tmp2));
 		
 		CPrintToChatAll("{lightblue} ================================== {default}");
-		CPrintToChatAll("{lightblue}[TSX-RP]{default} Félicitation à %s, qui devient notre nouveau maire!", tmp);
+		CPrintToChatAll("" ...MOD_TAG... " Félicitation à %s, qui devient notre nouveau maire!", tmp);
 		CPrintToChatAll("{lightblue} ================================== {default}");
 		
 		rp_SetServerString(maireName, tmp, sizeof(tmp));
@@ -194,7 +194,7 @@ public void fwdCompleteFirstname(int client, any data, char[] message) {
 		Draw_Mairie_Register(client, data + 1);
 	}
 	else {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre prénom est trop court, veuillez en entrer un autre.");
+		CPrintToChat(client, "" ...MOD_TAG... " Votre prénom est trop court, veuillez en entrer un autre.");
 		Draw_Mairie_Register(client, data);
 	}
 }
@@ -221,7 +221,7 @@ public void fwdCompleteLastname(int client, any data, char[] message) {
 		SQL_TQuery(rp_GetDatabase(), fwdCompleteLastname_Query, query, client, DBPrio_High);
 	}
 	else {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre nom est trop cours, veuillez en entrer un autre.");
+		CPrintToChat(client, "" ...MOD_TAG... " Votre nom est trop cours, veuillez en entrer un autre.");
 		Draw_Mairie_Register(client, data);
 	}
 }
@@ -229,7 +229,7 @@ public void fwdCompleteLastname_Query(Handle owner, Handle handle, const char[] 
 	if( handle && SQL_FetchRow(handle) ) {
 		int res = SQL_FetchInt(handle, 0);
 		if (res > 0) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre nom/prénom correspond à un autre citoyen, veuillez en entrer un autre.");
+			CPrintToChat(client, "" ...MOD_TAG... " Votre nom/prénom correspond à un autre citoyen, veuillez en entrer un autre.");
 			
 			rp_SetClientString(client, sz_FirstName, "", 1);
 			rp_SetClientString(client, sz_LastName, "", 1);
@@ -292,14 +292,14 @@ void Draw_Mairie_Prestige(int client, int target) {
 	}
 	else if( target == 1 ) {
 		if( rp_GetClientInt(client, i_PlayerLVL) >= 600 && rp_GetClientInt(client, i_PlayerLVL) < 1000 ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu 50 cadeaux dans votre banque.");
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu 1 000 000$.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 50 cadeaux dans votre banque.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 1 000 000$.");
 			rp_ClientGiveItem(client, ITEM_CADEAU, 50, true);
 			rp_ClientMoney(client, i_Bank, 1000000);
 		}
 		else {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu 100 cadeaux dans votre banque.");
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu 2 500 000$.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 100 cadeaux dans votre banque.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 2 500 000$.");
 			rp_ClientGiveItem(client, ITEM_CADEAU, 100, true);
 			rp_ClientMoney(client, i_Bank, 2500000);
 		}
@@ -309,7 +309,7 @@ void Draw_Mairie_Prestige(int client, int target) {
 		rp_SetClientInt(client, i_PlayerRank, 10);
 		
 		rp_SetClientInt(client, i_PlayerPrestige, rp_GetClientInt(client, i_PlayerPrestige) + 1);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes maintenant prestige %d. Votre paye est augmentée de %d%%.", rp_GetClientInt(client, i_PlayerPrestige), rp_GetClientInt(client, i_PlayerPrestige)*10);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes maintenant prestige %d. Votre paye est augmentée de %d%%.", rp_GetClientInt(client, i_PlayerPrestige), rp_GetClientInt(client, i_PlayerPrestige)*10);
 		rp_ClientXPIncrement(client, 10);
 	}
 }
@@ -356,11 +356,11 @@ void Draw_Mairie_Candidate(int client, int target, int arg) {
 public void QUERY_PostCandidate(Handle owner, Handle handle, const char[] error, any client) {
 	if( strlen(error) >= 1  ) {
 		rp_ClientMoney(client, i_Bank, 50000);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez déjà posté une candidature, vous avez donc été remboursé.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà posté une candidature, vous avez donc été remboursé.");
 	}
 	else {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre candidature a été validée.");
-		CPrintToChatAll("{lightblue}[TSX-RP]{default} %N s'est présenté comme candidat à la mairie.", client);
+		CPrintToChat(client, "" ...MOD_TAG... " Votre candidature a été validée.");
+		CPrintToChatAll("" ...MOD_TAG... " %N s'est présenté comme candidat à la mairie.", client);
 	}
 }
 public void QUERY_VoteCandidate(Handle owner, Handle handle, const char[] error, any client) {
@@ -517,7 +517,7 @@ void Draw_Mairie_AddRules(int client, int rulesID=-1, int arg=-1, int target=-1)
 		getRulesName(view_as<serverRules>(rulesID-1000), target, arg, tmp, sizeof(tmp));
 		
 		CPrintToChatAll("{lightblue} ================================== {default}");
-		CPrintToChatAll("{lightblue}[TSX-RP]{default} Le maire vient de décréter une nouvelle règle: %s.", tmp);
+		CPrintToChatAll("" ...MOD_TAG... " Le maire vient de décréter une nouvelle règle: %s.", tmp);
 		CPrintToChatAll("{lightblue} ================================== {default}");
 		
 		delete menu;
@@ -736,7 +736,7 @@ public int Handle_Mairie(Handle menu, MenuAction action, int client, int param2)
 					}
 					rp_SetClientInt(client, i_BirthDay, -rp_GetClientInt(client, i_BirthDay));
 					PrintHintText(client, "Vous êtes enregistré à la mairie, merci !");
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu 10 cadeaux dans votre banque.");
+					CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 10 cadeaux dans votre banque.");
 					rp_ClientGiveItem(client, ITEM_CADEAU, 10, true);
 				}
 				
@@ -748,7 +748,7 @@ public int Handle_Mairie(Handle menu, MenuAction action, int client, int param2)
 			if( c == 1 && b == 5 ) {
 				PrintHintText(client, " \n Bravo !");
 				rp_SetClientBool(client, b_PassedRulesTest, true);
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu 10 cadeaux dans votre banque.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 10 cadeaux dans votre banque.");
 				rp_ClientGiveItem(client, ITEM_CADEAU, 10, true);
 			}
 			else if( c == 1 ) {

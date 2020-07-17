@@ -582,7 +582,7 @@ native bool rp_WeaponMenu_Add(DataPack hBuyMenu, int weaponID, int owner);
 native void rp_WeaponMenu_Delete(DataPack& hBuyMenu, DataPackPos pos);
 native void rp_WeaponMenu_Get(DataPack hBuyMenu, DataPackPos pos, char weapon[65], int[] data);
 // ----------------------------------------------------------------------------
-#define ACCESS_DENIED(%1)	CPrintToChat(%1, "{lightblue}[TSX-RP]{default} Vous n'avez pas accès à cette commande.");	return Plugin_Handled
+#define ACCESS_DENIED(%1)	CPrintToChat(%1, "" ...MOD_TAG... " Vous n'avez pas accès à cette commande.");	return Plugin_Handled
 #define ITEM_CANCEL(%1,%2)	rp_ClientGiveItem(%1,%2); rp_SetClientFloat(%1, fl_CoolDown, 0.05)
 
 #define BITZONE_DEFAULT		(0)		// https://www.ts-x.eu/shared_public/bit.html

@@ -307,7 +307,7 @@ void AFK_Check(int client) {
 		if( g_iUserData[client][i_TimeAFK] > 180 ) {
 			if( !g_bUserData[client][b_IsAFK] ) {
 				g_bUserData[client][b_IsAFK] = true;
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes maintenant considéré comme AFK.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous êtes maintenant considéré comme AFK.");
 				LogToGame("[TSX-RP] [AFK] %L est maintenant AFK.", client);
 				
 				g_iUserData[client][i_TimeAFK_total] += 60;
@@ -341,7 +341,7 @@ void AFK_Check(int client) {
 	else {
 		if( g_bUserData[client][b_IsAFK] ) {
 			g_bUserData[client][b_IsAFK] = false;
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'êtes plus considéré comme AFK (%d minute%s).", g_iUserData[client][i_TimeAFK]/60, ((g_iUserData[client][i_TimeAFK]/60)>=2?"s" : ""));
+			CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes plus considéré comme AFK (%d minute%s).", g_iUserData[client][i_TimeAFK]/60, ((g_iUserData[client][i_TimeAFK]/60)>=2?"s" : ""));
 			LogToGame("[TSX-RP] [AFK] %L n'est plus AFK.", client);
 		}
 		g_iUserData[client][i_TimeAFK] = 0;
@@ -664,7 +664,7 @@ public void MoneyEntityGotTouch(int touched, int toucher) {
 	
 	rp_ClientMoney(toucher, i_AddToPay, amount);
 	
-	CPrintToChat(toucher, "{lightblue}[TSX-RP]{default} Vous avez récupéré %i$.", amount);
+	CPrintToChat(toucher, "" ...MOD_TAG... " Vous avez récupéré %i$.", amount);
 	
 	SDKUnhook(touched, SDKHook_Touch, MoneyEntityGotTouch);
 	AcceptEntityInput(touched, "Kill");
@@ -1238,9 +1238,9 @@ public Action AllowStealing(Handle timer, any client) {
 	
 	if( IsValidClient(client) ) {
 		if (IsGangMaffia(client) || IsDealer(client) )
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous pouvez à nouveau voler.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez à nouveau voler.");
 		else if( IsTech(client) )
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous pouvez à nouveau poser une machine.");		
+			CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez à nouveau poser une machine.");		
 	}
 }
 int _GetTime(float time) {

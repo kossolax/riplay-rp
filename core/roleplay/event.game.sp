@@ -15,7 +15,7 @@
 // On map started
 public void OnMapStart() {
 
-	CPrintToChatAll("{lightblue}[TSX-RP]{default} Chargement de la config RP.");
+	CPrintToChatAll("" ...MOD_TAG... " Chargement de la config RP.");
 	PrintToServer("[TSX-RP] Chargement...");
 
 	char mapname[64];
@@ -71,7 +71,7 @@ public void OnMapStart() {
 	ServerCommand("mp_teamname_1 \"Police\"");
 	ServerCommand("mp_teamname_2 \"Civil\"");
 
-	CPrintToChatAll("{lightblue}[TSX-RP]{default} Config chargée avec succès.");
+	CPrintToChatAll("" ...MOD_TAG... " Config chargée avec succès.");
 	PrintToServer("--------------------------------------------------------------");
 	PrintToServer("");
 	PrintToServer("			Counter-Strike Source: RolePlay");

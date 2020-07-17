@@ -84,7 +84,7 @@ public int MenuSelectFire(Handle p_hHireMenu, MenuAction p_oAction, int p_iParam
 			
 			if( were_in_game == 0 ) {
 				
-				CPrintToChat(p_iParam1, "{lightblue}[TSX-RP]{default} Vous avez viré un joueur non-connecté (%s).", szMenuItem);
+				CPrintToChat(p_iParam1, "" ...MOD_TAG... " Vous avez viré un joueur non-connecté (%s).", szMenuItem);
 				
 				
 				char szLog[1024];
@@ -155,7 +155,7 @@ public int eventSetJobMenu(Handle p_hHireMenu, MenuAction p_oAction, int p_iPara
 				GetClientAuthId(i, AUTH_TYPE, SteamID, sizeof(SteamID), false);
 				
 				if( StrEqual(SteamID, data[0]) ) {
-					CPrintToChat(i, "{lightblue}[TSX-RP]{default} %N a modifié votre job. Vous êtes maintenant: %s.", p_iParam1, g_szJobList[iJobID][job_type_name]);
+					CPrintToChat(i, "" ...MOD_TAG... " %N a modifié votre job. Vous êtes maintenant: %s.", p_iParam1, g_szJobList[iJobID][job_type_name]);
 					g_iUserData[i][i_Job] = iJobID;
 					break;
 				}
@@ -165,7 +165,7 @@ public int eventSetJobMenu(Handle p_hHireMenu, MenuAction p_oAction, int p_iPara
 			Format(tmp, 1023, "UPDATE `rp_users` SET `job_id`='%i' WHERE `steamid`='%s'", iJobID, data[0]);
 			SQL_TQuery(g_hBDD, SQL_QueryCallBack, tmp);
 			
-			CPrintToChat(p_iParam1, "{lightblue}[TSX-RP]{default} Sa place a été modifiée.");
+			CPrintToChat(p_iParam1, "" ...MOD_TAG... " Sa place a été modifiée.");
 			
 			LogToGame("[TSX-RP] %N a modifier le job de %s pour %s", p_iParam1, szMenuItem, g_szJobList[iJobID][job_type_name]);
 		}
@@ -270,7 +270,7 @@ public int MenuSetPay(Handle menu, MenuAction action, int client, int param2) {
 		
 		Format( g_szJobList[job_id][job_type_pay], 127, "%i", amount);
 		
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le grade \"%s\" a maintenant %i$ de paye.", g_szJobList[job_id][job_type_name], amount);
+		CPrintToChat(client, "" ...MOD_TAG... " Le grade \"%s\" a maintenant %i$ de paye.", g_szJobList[job_id][job_type_name], amount);
 		
 		OpenBossPayMenu(client);
 	}
@@ -421,14 +421,14 @@ public int GestionKeyBoss(Handle menu, MenuAction action, int param1, int param2
 			Format(query, 1023, "DELETE FROM `rp_jobs_doors` WHERE `job_id`='%i' AND `map`='%s' AND `door_id`='%i';", job, mapname, door_bdd);
 			g_iDoorJob[job][door_bdd] = 0;
 			
-			CPrintToChat(param1, "{lightblue}[TSX-RP]{default} Cette clé a été retirée pour les %s.", g_szJobList[job][0]);
+			CPrintToChat(param1, "" ...MOD_TAG... " Cette clé a été retirée pour les %s.", g_szJobList[job][0]);
 		}
 		else {
 			
 			Format(query, 1023, "INSERT INTO `rp_jobs_doors` (`map`, `job_id`, `door_id`) VALUES ('%s', '%i','%i');", mapname, job, door_bdd);
 			g_iDoorJob[job][door_bdd] = 1;
 			
-			CPrintToChat(param1, "{lightblue}[TSX-RP]{default} Cette clé a été ajoutée pour les %s.", g_szJobList[job][0]);
+			CPrintToChat(param1, "" ...MOD_TAG... " Cette clé a été ajoutée pour les %s.", g_szJobList[job][0]);
 		}
 		
 		SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
@@ -465,7 +465,7 @@ public int GestionKeyBoss_2(Handle menu, MenuAction action, int param1, int para
 					Format(query, 1023, "DELETE FROM `rp_jobs_doors` WHERE `job_id`='%i' AND `map`='%s' AND `door_id`='%i';", job, mapname, door_bdd);
 					g_iDoorJob[job][door_bdd] = 0;
 					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-					CPrintToChat(param1, "{lightblue}[TSX-RP]{default} Cette clé a été retirée pour les %s.", g_szJobList[job][0]);
+					CPrintToChat(param1, "" ...MOD_TAG... " Cette clé a été retirée pour les %s.", g_szJobList[job][0]);
 				}
 				else {
 					
@@ -473,7 +473,7 @@ public int GestionKeyBoss_2(Handle menu, MenuAction action, int param1, int para
 					g_iDoorJob[job][door_bdd] = 1;
 					
 					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-					CPrintToChat(param1, "{lightblue}[TSX-RP]{default} Cette clé a été ajoutée pour les %s.", g_szJobList[job][0]);
+					CPrintToChat(param1, "" ...MOD_TAG... " Cette clé a été ajoutée pour les %s.", g_szJobList[job][0]);
 				}
 			}
 		}

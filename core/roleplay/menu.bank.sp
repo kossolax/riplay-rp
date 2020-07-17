@@ -101,7 +101,7 @@ void DrawBankTransfer(int client) {
 void DisplayBankMenu(int client, int target) {
 	
 	if( g_iUserData[client][i_SearchLVL] >= 2 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le Tribunal de princeton a gelé votre compte en banque car vous êtes recherché depuis trop longtemps.");
+		CPrintToChat(client, "" ...MOD_TAG... " Le Tribunal de princeton a gelé votre compte en banque car vous êtes recherché depuis trop longtemps.");
 		return;
 	}
 		
@@ -189,13 +189,13 @@ public int BankATM_retrait(Handle menu, MenuAction action, int client, int param
 				amount = g_iUserData[client][i_Bank];
 			}
 			if( amount > g_iUserData[client][i_Bank] ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas assez d'argent en banque.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent en banque.");
 				BankATM_transfer(client, 1);
 			}
 			else {
 				g_iUserData[client][i_Bank] -= amount;
 				g_iUserData[client][i_Money] += amount;
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez fait un retrait de %i$.", amount);
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez fait un retrait de %i$.", amount);
 				LogToGame("[TSX-RP] [BANK-MONEY] %L a retiré: %d$", client, amount);
 				StoreUserData(client);
 				BankATM_transfer(client, 1);
@@ -218,13 +218,13 @@ public int BankATM_depot(Handle menu, MenuAction action, int client, int param2)
 				amount = g_iUserData[client][i_Money];
 			}
 			if( amount > g_iUserData[client][i_Money] ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas assez d'argent sur vous.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent sur vous.");
 				BankATM_transfer(client, 2);
 			}
 			else {
 				g_iUserData[client][i_Bank] += amount;
 				g_iUserData[client][i_Money] -= amount;
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez fait un dépot de %i$.", amount);
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez fait un dépot de %i$.", amount);
 				LogToGame("[TSX-RP] [BANK-MONEY] %L a déposé: %d$", client, amount);
 				StoreUserData(client);
 				BankATM_transfer(client, 2);
@@ -247,7 +247,7 @@ public int BankATM_depot_capital(Handle menu, MenuAction action, int client, int
 				amount = g_iUserData[client][i_Money];
 			}
 			if( amount > g_iUserData[client][i_Money] || g_iUserData[client][i_Money] <= 0 ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas assez d'argent sur vous.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent sur vous.");
 				BankATM_transfer(client, 3);
 			}
 			else {
@@ -255,7 +255,7 @@ public int BankATM_depot_capital(Handle menu, MenuAction action, int client, int
 				SetJobCapital(g_iUserData[client][i_Job], (capital+amount));
 				
 				rp_ClientMoney(client, i_Money, -amount);
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez fait un dépot de %i$ dans votre capital.", amount);
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez fait un dépot de %i$ dans votre capital.", amount);
 				BankATM_transfer(client, 3);
 			}
 		}
@@ -276,7 +276,7 @@ public int BankATM_depot_group(Handle menu, MenuAction action, int client, int p
 				amount = g_iUserData[client][i_Money];
 			}
 			if( amount > g_iUserData[client][i_Money] || g_iUserData[client][i_Money] <= 0 ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas assez d'argent sur vous.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent sur vous.");
 				BankATM_transfer(client, 5);
 			}
 			else {
@@ -284,7 +284,7 @@ public int BankATM_depot_group(Handle menu, MenuAction action, int client, int p
 				SetGroupCapital(g_iUserData[client][i_Group], (capital+amount));
 				rp_ClientMoney(client, i_Money, -amount);
 				
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez fait un dépot de %i$ dans votre capital de groupe .", amount);
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez fait un dépot de %i$ dans votre capital de groupe .", amount);
 				BankATM_transfer(client, 5);
 			}
 		}
@@ -305,7 +305,7 @@ public int BankATM_don_capital(Handle menu, MenuAction action, int client, int p
 				amount = g_iUserData[client][i_Bank];
 			}
 			if( amount > g_iUserData[client][i_Bank] || g_iUserData[client][i_Bank] <= 0 ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas assez d'argent sur vous.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent sur vous.");
 				BankATM_transfer(client, 4);
 			}
 			else {
@@ -313,7 +313,7 @@ public int BankATM_don_capital(Handle menu, MenuAction action, int client, int p
 				SetJobCapital(211, (capital+amount));
 				rp_ClientMoney(client, i_Bank, -amount);
 				
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez fait un don de %i$ pour l'Etat.", amount);
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez fait un don de %i$ pour l'Etat.", amount);
 				BankATM_transfer(client, 4);
 			}
 		}
@@ -526,7 +526,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 				
 				amount = g_iUserData[client][i_ItemCount];
 				if( amount == 0 ) {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas d'objet à déposer en banque.");
+					CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas d'objet à déposer en banque.");
 					DrawBankTransfer(client);
 					return;
 				}
@@ -540,7 +540,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 				
 				amount = g_iUserData[client][i_ItemBankCount];
 				if( amount == 0 ) {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas d'objet à récuperer en banque.");
+					CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas d'objet à récuperer en banque.");
 					DrawBankTransfer(client);
 					return;
 				}
@@ -552,7 +552,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 				
 				amount = g_iUserData[client][i_ItemCount];
 				if( amount == 0 ) {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas d'objet à sauvegarder.");
+					CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas d'objet à sauvegarder.");
 					DrawBankTransfer(client);
 					return;
 				}
@@ -560,18 +560,18 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 				for (int pos=0; pos < amount ; pos++) {
 					g_iItems_SAVE[client][pos][STACK_item_amount] = g_iItems[client][pos][STACK_item_amount];
 					g_iItems_SAVE[client][pos][STACK_item_id] = g_iItems[client][pos][STACK_item_id];
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} %i %s ont été sauvegardé.", g_iItems[client][pos][STACK_item_amount], g_szItemList[g_iItems[client][pos][STACK_item_id]][item_type_name]);
+					CPrintToChat(client, "" ...MOD_TAG... " %i %s ont été sauvegardé.", g_iItems[client][pos][STACK_item_amount], g_szItemList[g_iItems[client][pos][STACK_item_id]][item_type_name]);
 				}
 				
 				g_iUserData[client][i_ItemCountSaved] = amount;
 				
 				DrawBankTransfer(client);
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vos items préféré ont été sauvegardé.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vos items préféré ont été sauvegardé.");
 				return;
 			}
 			else if( StrEqual(szMenuItem, "load", false) ) {
 				if( g_iUserData[client][i_ItemCountSaved] == 0 ) {
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous n'avez pas d'objet sauvegardé.");
+					CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas d'objet sauvegardé.");
 					DrawBankTransfer(client);
 					return;
 				}
@@ -579,7 +579,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 				amount = g_iUserData[client][i_ItemCount];
 				for (int pos=0; pos < amount ; pos++) {
 					rp_ClientGiveItem(client, g_iItems[client][pos][STACK_item_id], g_iItems[client][pos][STACK_item_amount], true);
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} %i %s ont été déposé.", g_iItems[client][pos][STACK_item_amount], g_szItemList[g_iItems[client][pos][STACK_item_id]][item_type_name]);
+					CPrintToChat(client, "" ...MOD_TAG... " %i %s ont été déposé.", g_iItems[client][pos][STACK_item_amount], g_szItemList[g_iItems[client][pos][STACK_item_id]][item_type_name]);
 					LogToGame("[TSX-RP] [BANK-ITEM] %L a déposé: %d %s", client, g_iItems[client][pos][STACK_item_amount], g_szItemList[g_iItems[client][pos][STACK_item_id]][item_type_name]);
 					g_iItems[client][pos][STACK_item_id] = g_iItems[client][pos][STACK_item_amount] = 0;
 				}
@@ -595,12 +595,12 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 					
 					rp_ClientGiveItem(client, g_iItems_SAVE[client][pos][STACK_item_id], -inBank, true);
 					rp_ClientGiveItem(client, g_iItems_SAVE[client][pos][STACK_item_id], inBank, false);
-					CPrintToChat(client, "{lightblue}[TSX-RP]{default} %i %s ont été retiré.", inBank, g_szItemList[g_iItems_SAVE[client][pos][STACK_item_id]][item_type_name]);
+					CPrintToChat(client, "" ...MOD_TAG... " %i %s ont été retiré.", inBank, g_szItemList[g_iItems_SAVE[client][pos][STACK_item_id]][item_type_name]);
 					
 					LogToGame("[TSX-RP] [BANK-ITEM] %L a retiré: %d %s", client,inBank, g_szItemList[g_iItems_SAVE[client][pos][STACK_item_id]][item_type_name]);
 				}
 				FakeClientCommand(client, "say /item");
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vos items préféré ont été retirés de la banque.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vos items préféré ont été retirés de la banque.");
 				
 				if( g_iUserData[client][i_LastForcedSave] < GetTime() ) {
 					StoreUserData(client);
@@ -641,7 +641,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 						
 						LogToGame("[TSX-RP] [RESELL-ARMES] %L a déposé: %s", client, szWeapon);
 						ReplaceString(szWeapon, sizeof(szWeapon), "weapon_", "");
-						CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez revendu %s pour %d$.", szWeapon, price);
+						CPrintToChat(client, "" ...MOD_TAG... " Vous avez revendu %s pour %d$.", szWeapon, price);
 						
 						
 						
@@ -649,7 +649,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 						return;
 					}
 					else {
-						CPrintToChat(client, "{lightblue}[TSX-RP]{default} Impossible de stocker cette arme.");
+						CPrintToChat(client, "" ...MOD_TAG... " Impossible de stocker cette arme.");
 						DrawBankTransfer(client);
 						return;
 					}
@@ -831,9 +831,9 @@ public int DrawBankTransfer_4(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 
 		
 		if( amount == 1 )
-			CPrintToChat(p_iParam1, "{lightblue}[TSX-RP]{default} %i %s a été transféré.", amount, g_szItemList[id][item_type_name]);
+			CPrintToChat(p_iParam1, "" ...MOD_TAG... " %i %s a été transféré.", amount, g_szItemList[id][item_type_name]);
 		else
-			CPrintToChat(p_iParam1, "{lightblue}[TSX-RP]{default} %i %s ont été transférés.", amount, g_szItemList[id][item_type_name]);
+			CPrintToChat(p_iParam1, "" ...MOD_TAG... " %i %s ont été transférés.", amount, g_szItemList[id][item_type_name]);
 		
 		if( transfer_type == 1 )
 			LogToGame("[TSX-RP] [BANK-ITEM] %L a déposé: %d %s", p_iParam1, amount, g_szItemList[id][item_type_name]);

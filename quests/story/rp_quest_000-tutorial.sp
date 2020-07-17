@@ -211,7 +211,7 @@ public void Q3_Frame(int objectiveID, int client) {
 	}
 	
 	if( GetVectorDistance(target, origin) < 64.0 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu 2500$.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 2500$.");
 		rp_ClientMoney(client, i_Money, 2500);
 		rp_QuestStepComplete(client, objectiveID);
 	}
@@ -283,7 +283,7 @@ public void Q5_Frame(int objectiveID, int client) {
 
 
 	if( GetVectorDistance(target, origin) < 128.0 ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu en récompense 1 Desert Eagle.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu en récompense 1 Desert Eagle.");
 		rp_ClientGiveItem(client, 150);
 		rp_QuestStepComplete(client, objectiveID);
 	}
@@ -355,7 +355,7 @@ public void Q7_Frame(int objectiveID, int client) {
 		rp_ClientGiveItem(client, 81);
 		rp_ClientGiveItem(client, 103);
 		
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez reçu en récompense 1 Plant de drogue et 1 Machine à faux-billets.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu en récompense 1 Plant de drogue et 1 Machine à faux-billets.");
 		
 		rp_QuestStepComplete(client, objectiveID);
 	}
@@ -720,7 +720,7 @@ public int MenuSelectJob(Handle menu, MenuAction action, int client, int param2)
 					continue;
 				if( i == client )
 					continue;
-				CPrintToChat(i, "{lightblue}[TSX-RP]{default} %N vient de terminé son tutorial, il est %s. Aidez le !", client, options);
+				CPrintToChat(i, "" ...MOD_TAG... " %N vient de terminé son tutorial, il est %s. Aidez le !", client, options);
 			}
 		}
 	}

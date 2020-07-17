@@ -125,7 +125,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 			Format(msg, 127, "%s RIEN", msg);
 		}
 
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} %s.", msg);
+		CPrintToChat(client, "" ...MOD_TAG... " %s.", msg);
 
 		return Plugin_Handled;
 	}
@@ -144,17 +144,17 @@ public Action Cmd_ItemPermi(int args) {
 		rp_SetClientBool(client, b_License1, true);
 		rp_SetClientInt(client, i_StartLicense1, GetTime());
 
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez maintenant un permis de port d'arme légère.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez maintenant un permis de port d'arme légère.");
 	}
 	else if( StrEqual(Arg1, "lourd") ) {
 		rp_SetClientBool(client, b_License2, true);
 		rp_SetClientInt(client, i_StartLicense2, GetTime());
 
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez maintenant un permis de port d'arme lourde.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez maintenant un permis de port d'arme lourde.");
 	}
 	else if( StrEqual(Arg1, "vente") ) {
 		rp_SetClientBool(client, b_LicenseSell, true);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez maintenant un permis de vente.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez maintenant un permis de vente.");
 	}
 	
 	rp_ClientSave(client);
@@ -166,12 +166,12 @@ public Action Cmd_ItemBankCard(int args) {
 
 	if(rp_GetClientBool(client, b_HaveCard)){
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous disposez déjà d'une carte bancaire.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous disposez déjà d'une carte bancaire.");
 		return Plugin_Handled;
 	}
 	rp_SetClientBool(client, b_HaveCard, true);
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre carte bancaire est maintenant activée.");
+	CPrintToChat(client, "" ...MOD_TAG... " Votre carte bancaire est maintenant activée.");
 	rp_ClientSave(client);
 }
 public Action Cmd_ItemBankSort(int args) {
@@ -181,12 +181,12 @@ public Action Cmd_ItemBankSort(int args) {
 
 	if(rp_GetClientBool(client, b_CanSort)){
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous pouvez déjà trier votre inventaire.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez déjà trier votre inventaire.");
 		return Plugin_Handled;
 	}
 
 	rp_SetClientBool(client, b_CanSort, true);
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous pouvez maintenant trier votre inventaire jusqu'à votre déconnexion.");
+	CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez maintenant trier votre inventaire jusqu'à votre déconnexion.");
 }
 public Action Cmd_ItemBankKey(int args) {
 	
@@ -195,12 +195,12 @@ public Action Cmd_ItemBankKey(int args) {
 
 	if(rp_GetClientBool(client, b_HaveAccount)){
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre compte bancaire est déjà actif.");
+		CPrintToChat(client, "" ...MOD_TAG... " Votre compte bancaire est déjà actif.");
 		return Plugin_Handled;
 	}
 
 	rp_SetClientBool(client, b_HaveAccount, true);
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre compte bancaire est maintenant actif.");
+	CPrintToChat(client, "" ...MOD_TAG... " Votre compte bancaire est maintenant actif.");
 	rp_ClientSave(client);
 }
 public Action Cmd_ItemBankSwap(int args) {
@@ -210,12 +210,12 @@ public Action Cmd_ItemBankSwap(int args) {
 
 	if(rp_GetClientBool(client, b_PayToBank)){
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre paye va déjà en banque.");
+		CPrintToChat(client, "" ...MOD_TAG... " Votre paye va déjà en banque.");
 		return Plugin_Handled;
 	}
 
 	rp_SetClientBool(client, b_PayToBank, true);
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous recevrez maintenant votre paye en banque.");
+	CPrintToChat(client, "" ...MOD_TAG... " Vous recevrez maintenant votre paye en banque.");
 	rp_ClientSave(client);
 }
 // ----------------------------------------------------------------------------
@@ -229,7 +229,7 @@ public Action Cmd_ItemAssurance(int args) {
 	}
 	else{
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes déjà assuré.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes déjà assuré.");
 		return Plugin_Handled;
 	}
 	
@@ -247,12 +247,12 @@ public Action Cmd_ItemAssuVie(int args){
 	int client = GetCmdArgInt(1);
 	
 	if( !rp_GetClientBool(client, b_AssuranceVie) ) {
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous etes maintenant couvert par l'assurance vie.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous etes maintenant couvert par l'assurance vie.");
 		rp_IncrementSuccess(client, success_list_assurance);
 	}
 	else{
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes déjà assuré.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes déjà assuré.");
 		return Plugin_Handled;
 	}
 	
@@ -280,7 +280,7 @@ public Action Cmd_ItemNoAction(int args) {
 	ITEM_CANCEL(client, item_id);
 	rp_GetItemData(item_id, item_type_name, name, sizeof(name));
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Ceci est un %s, vous en avez %d sur vous et %d en banque.", name, rp_GetClientItem(client, item_id), rp_GetClientItem(client, item_id, true));
+	CPrintToChat(client, "" ...MOD_TAG... " Ceci est un %s, vous en avez %d sur vous et %d en banque.", name, rp_GetClientItem(client, item_id), rp_GetClientItem(client, item_id, true));
 	return;
 }
 // ----------------------------------------------------------------------------
@@ -451,9 +451,9 @@ public Action Cmd_ItemForward(int args) {
 	rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
 	
 	if( mnt+1 == 1 )
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} %d %s a été transféré en banque.", mnt+1, tmp);
+		CPrintToChat(client, "" ...MOD_TAG... " %d %s a été transféré en banque.", mnt+1, tmp);
 	else
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} %d %s ont été transférés en banque.", mnt+1, tmp);
+		CPrintToChat(client, "" ...MOD_TAG... " %d %s ont été transférés en banque.", mnt+1, tmp);
 	
 	return;
 }
@@ -467,7 +467,7 @@ public Action Cmd_ItemPackDebutant(int args) { //Permet d'avoir la CB, le compte
  	rp_SetClientBool(client, b_License2, true);
  	rp_SetClientBool(client, b_LicenseSell, true);
  	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Votre carte bancaire, votre coffre, votre RIB et vos permis sont maintenant actifs.");
+	CPrintToChat(client, "" ...MOD_TAG... " Votre carte bancaire, votre coffre, votre RIB et vos permis sont maintenant actifs.");
 
 	rp_ClientSave(client);
 }
@@ -523,13 +523,13 @@ int BuidlingATM(int client) {
 		if( StrEqual(classname, tmp) && rp_GetBuildingData(i, BD_owner) == client ) {
 			count++;
 			if( count >= 2 ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez déjà deux distributeurs portables de placés.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà deux distributeurs portables de placés.");
 				return 0;
 			}
 		}
 	}
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Construction en cours...");
+	CPrintToChat(client, "" ...MOD_TAG... " Construction en cours...");
 
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client);
 	
@@ -576,7 +576,7 @@ public void BuildingATM_break(const char[] output, int caller, int activator, fl
 	
 	int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
 	if( IsValidClient(owner) ) {
-		CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Votre distributeur portable a été détruit.");
+		CPrintToChat(owner, "" ...MOD_TAG... " Votre distributeur portable a été détruit.");
 	}
 }
 public Action DamageATM(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
@@ -659,7 +659,7 @@ public int eventMetroMenu(Handle menu, MenuAction action, int client, int param2
 		min = 5 - (min % 5);
 		
 		rp_GetZoneData(rp_GetZoneFromPoint(pos), zone_type_name, tmp, sizeof(tmp));
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Restez assis à l'intérieur du métro, le prochain départ pour %s est dans %d seconde%s.", tmp, min, min >= 2 ? "s" : "");
+		CPrintToChat(client, "" ...MOD_TAG... " Restez assis à l'intérieur du métro, le prochain départ pour %s est dans %d seconde%s.", tmp, min, min >= 2 ? "s" : "");
 		rp_SetClientInt(client, i_TeleportTo, i);
 		CreateTimer(float(min) + Math_GetRandomFloat(0.01, 0.8), metroTeleport, client);
 	}
@@ -685,11 +685,11 @@ public Action metroTeleport(Handle timer, any client) {
 	
 	if( StrEqual(tmp, "metro_event") ) {
 		if( rp_GetClientBool(client, b_IsMuteEvent) == true ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} En raison de votre mauvais comportement, il vous est temporairement interdit de participer à un event.");
+			CPrintToChat(client, "" ...MOD_TAG... " En raison de votre mauvais comportement, il vous est temporairement interdit de participer à un event.");
 			return Plugin_Handled;
 		}
 		if( rp_GetClientBool(client, b_IsSearchByTribunal) == true ) {
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous êtes recherché par le Tribunal, impossible de participer à un event.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous êtes recherché par le Tribunal, impossible de participer à un event.");
 			return Plugin_Handled;
 		}
 		paid = true;
@@ -708,7 +708,7 @@ public Action metroTeleport(Handle timer, any client) {
 	if( !paid && (rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 100 ) {
 		rp_ClientMoney(client, i_Money, -100);
 		rp_SetJobCapital(31, rp_GetJobCapital(31) + 100);
-		CPrintToChat(client, "{lightblue}[TSX-RP]{default} Le métro vous a couté 100$. Pensez à acheter des tickets à un banquier pour que le trajet vous coûte moins chère.");
+		CPrintToChat(client, "" ...MOD_TAG... " Le métro vous a couté 100$. Pensez à acheter des tickets à un banquier pour que le trajet vous coûte moins chère.");
 		paid = true;
 	}
 	
@@ -777,13 +777,13 @@ int BuidlingSIGN(int client) {
 			count++;
 			
 			if( count >= 1 && !isAdmin ) {
-				CPrintToChat(client, "{lightblue}[TSX-RP]{default} Vous avez placé un panneau indicateur.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez placé un panneau indicateur.");
 				return 0;
 			}
 		}
 	}
 	
-	CPrintToChat(client, "{lightblue}[TSX-RP]{default} Construction en cours...");
+	CPrintToChat(client, "" ...MOD_TAG... " Construction en cours...");
 
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client);
 	
@@ -841,7 +841,7 @@ public void BuildingSIGN_break(const char[] output, int caller, int activator, f
 	
 	int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
 	if( IsValidClient(owner) ) {
-		CPrintToChat(owner, "{lightblue}[TSX-RP]{default} Votre panneau a été détruit.");
+		CPrintToChat(owner, "" ...MOD_TAG... " Votre panneau a été détruit.");
 	}
 }
 public Action fwdPlayerHINT(int client, int entity) {
@@ -936,7 +936,7 @@ public int Menu_displayMenu(Handle menu, MenuAction action, int client, int para
 			dp.WriteCell(entity);
 			rp_GetClientNextMessage(client, dp, cbTest);
 			
-			CPrintToChat(client, "{lightblue}[TSX-RP]{default} Entrez une phrase dans le chat pour remplacer cette ligne. Entrez \".\" pour la supprimer. ");
+			CPrintToChat(client, "" ...MOD_TAG... " Entrez une phrase dans le chat pour remplacer cette ligne. Entrez \".\" pour la supprimer. ");
 		}
 	}
 	else if( action == MenuAction_End ) {
