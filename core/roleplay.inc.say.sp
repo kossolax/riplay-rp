@@ -1405,7 +1405,7 @@ public Action Command_Say(int client, int args) {
 	}
 	
 	// -----------------------------------------------------------------------------------
-	if( g_iUserData[client][i_PlayerLVL] < 72 ) {
+	if( g_iUserData[client][i_PlayerLVL] < 72 && !IsAdmin(client) ) {
 		
 		int time = GetClientCount() / 6;
 		
