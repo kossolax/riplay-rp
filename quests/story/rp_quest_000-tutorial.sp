@@ -125,7 +125,7 @@ public void Q1_Frame(int objectiveID, int client) {
 		DrawPanelText(panel, "vous devez donc faire notre tutoriel ");
 		DrawPanelText(panel, "afin de vous familiariser avec ce mode");
 		DrawPanelText(panel, "de jeu. A la fin de celui-ci vous");
-		DrawPanelText(panel, "gagnerez 25.000$: la monnaie du jeu");
+		DrawPanelText(panel, "gagnerez 20.000$: la monnaie du jeu");
 		DrawPanelText(panel, " ");
 		DrawPanelText(panel, " Ce mode Roleplay est une sorte de simulation");
 		DrawPanelText(panel, "de vie: vous pouvez avoir de l'argent,");
@@ -747,7 +747,7 @@ public void Q14_Done(int objectiveID, int client) {
 	
 	rp_SetClientInt(client, i_Tutorial, 20);
 	rp_ClientGiveItem(client, 223);
-	rp_ClientMoney(client, i_Bank, 15000);
+	rp_ClientMoney(client, i_Bank, 10000);
 	rp_SetClientBool(client, b_GameModePassive, true);
 	
 	rp_ClientXPIncrement(client, 5000);
