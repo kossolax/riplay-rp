@@ -713,6 +713,7 @@ public int MenuSelectJob(Handle menu, MenuAction action, int client, int param2)
 			
 			rp_SetClientInt(client, i_Job, job);			
 			rp_QuestStepComplete(client, g_iQ14);
+			rp_GetJobData(options, job_type_name, options, sizeof(options));
 			
 			for (int i = 1; i <= MaxClients; i++) {
 				if( !IsValidClient(i) )
