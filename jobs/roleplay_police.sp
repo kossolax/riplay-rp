@@ -350,8 +350,9 @@ public int MenuHandler_Verif(Handle menu, MenuAction action, int client, int par
 			CPrintToChat(client, "" ...MOD_TAG... " Une amende de 1600$ vient d'être prélevée auprès de %N pour défaut de permis de port d'arme légère", target);
 	
 			rp_ClientMoney(target, i_Money, -1600);
-
-			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 1600));
+			
+			rp_ClientMoney(client, i_ToPay, 200);
+			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 1400));
 			rp_SetClientInt(target, i_AmendeLiscence2, GetTime());
 		}
 		if(StrEqual(data[1], "permilourd")) {
@@ -359,16 +360,18 @@ public int MenuHandler_Verif(Handle menu, MenuAction action, int client, int par
 			CPrintToChat(client, "" ...MOD_TAG... " Une amende de 2400$ vient d'être prélevée auprès de %N pour défaut de permis de port d'arme lourde", target);
 
 			rp_ClientMoney(target, i_Money, -2400);
-
-			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 2400));
+			
+			rp_ClientMoney(client, i_ToPay, 400);
+			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 2000));
 			rp_SetClientInt(target, i_AmendeLiscence1, GetTime());
 		}
 		if(StrEqual(data[1], "permilegerlourd")) {
 			CPrintToChat(target, "" ...MOD_TAG... " Vous avez été contrôlé en possession d'arme(s) lourde(s) et légère(s) sans permis valide, vous devez vous acquitter d'une amende de 4000$");
 			CPrintToChat(client, "" ...MOD_TAG... " Une amende de 4000$ vient d'être prélevée auprès de %N pour défaut de permis de port d'arme légere et lourde", target);
 			rp_ClientMoney(target, i_Money, -4000);
-
-			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 4000));
+			
+			rp_ClientMoney(client, i_ToPay, 600);
+			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 3200));
 			rp_SetClientInt(target, i_AmendeLiscence2, GetTime());
 			rp_SetClientInt(target, i_AmendeLiscence1, GetTime());
 		}
