@@ -628,10 +628,9 @@ Menu AUDIENCE_Enquete(int type, int a, int b) {
 		else if( a == 3 &&  b > 0 ) {
 			
 			char szURL[1024];
-			rp_GetClientSSO(g_iTribunalData[type][td_Owner], tmp, sizeof(tmp));
 			GetClientAuthId(b, AUTH_TYPE, tmp2, sizeof(tmp2));
 
-			Format(szURL, sizeof(szURL), "https://rpweb.riplay.fr/index.php#/tribunal/case/%s", tmp, tmp2);
+			Format(szURL, sizeof(szURL), "https://rpweb.riplay.fr/index.php#/tribunal/case/%s", tmp2);
 			PrintToConsole(g_iTribunalData[type][td_Owner], "https://rpweb.riplay.fr/index.php#/tribunal/case/%s", tmp2);
 			
 			RP_ShowMOTD(g_iTribunalData[type][td_Owner], szURL);
