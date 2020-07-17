@@ -1945,7 +1945,7 @@ void Draw_SkinList(int client, int test, int skinID) {
 			else if( StringToInt(g_szSkinsList[i][3]) == 0 )
 				Format(tmp2, sizeof(tmp2), "%s - Gratuit", g_szSkinsList[i][1]);
 			else
-				Format(tmp2, sizeof(tmp2), "%s - %d points de fitness", g_szSkinsList[i][1], StringToInt(g_szSkinsList[i][3]));
+				Format(tmp2, sizeof(tmp2), "%s - %d pass de fitness", g_szSkinsList[i][1], StringToInt(g_szSkinsList[i][3]));
 			
 			if( (female==2) && rp_GetClientInt(client, i_Donateur) >= 1 ) 
 				menu.AddItem(tmp, tmp2);			
@@ -1975,7 +1975,7 @@ void Draw_SkinList(int client, int test, int skinID) {
 			prix = StringToInt(g_szSkinsList[skinID][3]);
 			
 			if( rp_GetClientItem(client, ITEM_FITNESS ) < prix ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez de point de fitness pour ce skin.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez de pass de fitness pour ce skin.");
 				return;
 			}
 			
