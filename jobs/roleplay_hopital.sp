@@ -284,6 +284,11 @@ public Action Cmd_ItemPoison(int args) {
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
+	if( rp_GetClientFloat(client, fl_LastPoison) > GetGameTime() ) {
+		ITEM_CANCEL(client, item_id);
+		CPrintToChat(client, "" ...MOD_TAG... " Cette personne semble être temporairement immunisé.");
+		return Plugin_Handled;
+	}
 	
 	rp_SetClientInt(client, i_LastAgression, GetTime());
 	ServerCommand("sm_effect_particles %d Trail7 11 weapon_bone", client);
@@ -300,11 +305,13 @@ public Action Cmd_ItemAntiPoison(int args) {
 	int client = GetCmdArgInt(1);
 	
 	if( rp_GetClientInt(client, i_Sickness) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes maintenant guéri.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes maintenant guéri et immunisé pour 24 minutes.");
 		
 		if( rp_GetClientFloat(client, fl_LastPoison) > 0 && rp_GetClientFloat(client, fl_LastPoison)+1.0 >= GetGameTime() ) {
 			rp_IncrementSuccess(client, success_list_immune);
 		}
+		
+		rp_SetClientFloat(client, fl_LastPoison, GetGameTime() + 24.0 * 60.0);
 	}
 	else {
 		ITEM_CANCEL(client, GetCmdArgInt(args));
