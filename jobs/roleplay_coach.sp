@@ -30,6 +30,7 @@ char g_szSkinsList[][][] = {
 	{"models/player/custom_player/riplay/momiji/momiji.mdl", 			"(Donateur) Momijo", 	"2", "0", "1"},
 	{"models/player/custom_player/riplay/nathandrake/nathandrake.mdl", 	"(Donateur) Nathan",	"2", "0", "2"},
 	{"models/player/custom_player/riplay/wick/wick.mdl", 				"(Donateur) Wick",		"2", "0", "3"},
+	{"models/player/custom_player/legacy/aiden_pearce/aiden_pearce.mdl","(Donateur) Aiden",		"2", "0", "4"},
 	
 	{"models/player/custom_player/legacy/lara/lara.mdl", 				"Lara", 			"1", "6", "0"},
 	//{"models/player/custom_player/legacy/eva/eva.mdl", 					"Eva", 				"1", "5", "0"},
