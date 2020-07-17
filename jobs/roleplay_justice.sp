@@ -14,10 +14,9 @@
 #include <sdkhooks>
 #include <smlib>		// https://github.com/bcserv/smlib
 #include <colors_csgo>	// https://forums.alliedmods.net/showthread.php?p=2205447#post2205447
-#include <advanced_motd>// https://forums.alliedmods.net/showthread.php?t=232476
 
-#pragma newdecls required
 #include <roleplay.inc>	// https://www.ts-x.eu
+#include <advanced_motd>// https://forums.alliedmods.net/showthread.php?t=232476
 
 public Plugin myinfo = {
 	

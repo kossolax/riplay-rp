@@ -18,10 +18,9 @@
 #include <smlib>		// https://github.com/bcserv/smlib
 #include <emitsoundany> // https://forums.alliedmods.net/showthread.php?t=237045
 #include <csgo_items>   // https://forums.alliedmods.net/showthread.php?t=243009
-#include <advanced_motd>// https://forums.alliedmods.net/showthread.php?t=232476
 
-#pragma newdecls required
 #include <roleplay.inc>	// https://www.ts-x.eu
+#include <advanced_motd>// https://forums.alliedmods.net/showthread.php?t=232476
 
 public Plugin myinfo =  {
 	name = "Jobs: Police", author = "KoSSoLaX", 

@@ -16,11 +16,10 @@
 #include <smlib>		// https://github.com/bcserv/smlib
 #include <emitsoundany> // https://forums.alliedmods.net/showthread.php?t=237045
 #include <emitsoundany> // https://forums.alliedmods.net/showthread.php?t=237045
-#include <advanced_motd>
 
-#pragma newdecls required
+
 #include <roleplay.inc>	// https://www.ts-x.eu
-
+#include <advanced_motd>
 
 #define QUEST_UNIQID	"000-tutorial"
 #define	QUEST_NAME		"Tutorial"
