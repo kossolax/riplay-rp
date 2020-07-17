@@ -1959,9 +1959,12 @@ void Draw_SkinList(int client, int test, int skinID) {
 	}
 	else {
 		
-		if( StringToInt(g_szSkinsList[skinID][2]) != 2 && !IsModelPrecached(g_szSkinsList[skinID][0]) ) 
-			if( !PrecacheModel(g_szSkinsList[skinID][0]) )
+		if( !IsModelPrecached(g_szSkinsList[skinID][0]) )  {
+			if( !PrecacheModel(g_szSkinsList[skinID][0]) ) {
+				PrintToChat(client, "le précache de %s a échoué.", g_szSkinsList[skinID][0]);
 				return;
+			}
+		}
 		
 		if( test ) {
 			rp_HookEvent(client, RP_OnPlayerZoneChange, fwdOnZoneChange);
