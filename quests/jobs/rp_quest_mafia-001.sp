@@ -104,7 +104,7 @@ public void Q1_Frame(int objectiveID, int client) {
 		rp_QuestStepComplete(client, objectiveID);
 	}
 	else {
-		PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME);
+		PrintHintText(client, "Quête: %s\nTemps restant: %dsec\nObjectif: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME);
 	}
 	
 	if( rp_GetZoneInt( rp_GetPlayerZone(client), zone_type_type ) == 1 ) {
@@ -125,7 +125,7 @@ public void Q1_Abort(int objectiveID, int client) {
 		rp_UnhookEvent(i, RP_OnPlayerZoneChange, fwdOnZoneChange);
 	}
 	
-	PrintHintText(client, "<b>Quête</b>: %s\nLa quête est terminée.", QUEST_NAME);
+	PrintHintText(client, "Quête: %s\nLa quête est terminée.", QUEST_NAME);
 }
 public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
 	static int zoneID[3] =  { 13, 198, 221 };

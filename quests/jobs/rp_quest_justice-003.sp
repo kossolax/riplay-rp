@@ -78,10 +78,10 @@ public Action fwdJugementOver(int client, int data[6], int charges[28]) {
 	}
 }
 public void Q_Frame(int objectiveID, int client) {
-	PrintHintText(client, "<b>Quête</b>: %s\n<b>Objectif</b>: %s", QUEST_NAME, QUEST_RESUME);
+	PrintHintText(client, "Quête: %s\nObjectif: %s", QUEST_NAME, QUEST_RESUME);
 }
 public void Q_Abort(int objectiveID, int client) {
-	PrintHintText(client, "<b>Quête</b>: %s\nLa quête est terminée.", QUEST_NAME);
+	PrintHintText(client, "Quête: %s\nLa quête est terminée.", QUEST_NAME);
 	rp_UnhookEvent(client, RP_OnJugementOver, fwdJugementOver);
 }
 public void Q_End(int objectiveID, int client) {

@@ -304,7 +304,7 @@ void OnGameFrame_01(float time) {
 			continue;
 		
 		if( car > 0 ) {
-			PrintHintText(Client, "<b>Voiture:</b> %dHP\n<b>Vitesse:</b> %.1fkm/h", rp_GetVehicleInt(car, car_health), float(GetEntProp(car, Prop_Data, "m_nSpeed"))* 1.609);
+			PrintHintText(Client, "Voiture: %dHP\nVitesse: %.1fkm/h", rp_GetVehicleInt(car, car_health), float(GetEntProp(car, Prop_Data, "m_nSpeed"))* 1.609);
 		}
 		else {
 			showPlayerHintBox(Client, rp_GetClientTarget(Client));

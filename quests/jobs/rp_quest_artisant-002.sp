@@ -59,7 +59,7 @@ public void Q1_Frame(int objectiveID, int client) {
 		rp_Effect_BeamBox(client, table1);
 	}
 	else {
-		PrintHintText(client, "<b>Quête</b>: %s\nPlacer une table de craft", QUEST_NAME);
+		PrintHintText(client, "Quête: %s\nPlacer une table de craft", QUEST_NAME);
 	}
 	if( table2 > 0 && maxDist < 128.0 ) {
 		rp_QuestStepComplete(client, objectiveID);
@@ -102,7 +102,7 @@ public void Q2_Frame(int objectiveID, int client) {
 	else {
 		char tmp[64];
 		rp_GetItemData(g_iCraftItem[client], item_type_name, tmp, sizeof(tmp));
-		PrintHintText(client, "<b>Quête</b>: %s\nIl reste à construire\n %d %s", QUEST_NAME, g_iCraftLeft[client], tmp);
+		PrintHintText(client, "Quête: %s\nIl reste à construire\n %d %s", QUEST_NAME, g_iCraftLeft[client], tmp);
 	}
 }
 public void Q_Abort(int objectiveID, int client) {

@@ -97,11 +97,11 @@ public void Q1_Frame(int objectiveID, int client) {
 		rp_QuestStepFail(client, objectiveID);
 	}
 	else {
-		PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: %s %d/5", QUEST_NAME, g_iDuration[client], QUEST_RESUME, g_iCount[client]);
+		PrintHintText(client, "Quête: %s\nTemps restant: %dsec\nObjectif: %s %d/5", QUEST_NAME, g_iDuration[client], QUEST_RESUME, g_iCount[client]);
 	}
 }
 public void Q1_Abort(int objectiveID, int client) {
-	PrintHintText(client, "<b>Quête</b>: %s\nLa quête est terminée.", QUEST_NAME);
+	PrintHintText(client, "Quête: %s\nLa quête est terminée.", QUEST_NAME);
 	g_iDoing[client] = false;
 	rp_UnhookEvent(client, RP_PostPiedBiche, fwdPiedDeBiche);
 }
@@ -111,7 +111,7 @@ public Action fwdPiedDeBiche(int client, int type) {
 	}
 }
 public void Q1_Done(int objectiveID, int client) {
-	PrintHintText(client, "<b>Quête</b>: %s\nLa quête est terminée.", QUEST_NAME);
+	PrintHintText(client, "Quête: %s\nLa quête est terminée.", QUEST_NAME);
 	
 	int cap = rp_GetRandomCapital(QUEST_JOBID);
 	

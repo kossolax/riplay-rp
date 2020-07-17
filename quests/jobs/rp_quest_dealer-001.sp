@@ -86,11 +86,11 @@ public void Q1_Frame(int objectiveID, int client) {
 		rp_QuestStepFail(client, objectiveID);
 	}
 	else {
-		PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: %s %d/10", QUEST_NAME, g_iDuration[client], QUEST_RESUME1, count);
+		PrintHintText(client, "Quête: %s\nTemps restant: %dsec\nObjectif: %s %d/10", QUEST_NAME, g_iDuration[client], QUEST_RESUME1, count);
 	}
 }
 public void Q1_Abort(int objectiveID, int client) {
-	PrintHintText(client, "<b>Quête</b>: %s\nLa quête est terminée", QUEST_NAME);
+	PrintHintText(client, "Quête: %s\nLa quête est terminée", QUEST_NAME);
 	g_iDoing[client] = false;
 	rp_UnhookEvent(client, RP_PreBuildingCount, fwdBuildCount);
 }
@@ -134,15 +134,15 @@ public void Q2_Frame(int objectiveID, int client) {
 		rp_QuestStepComplete(client, objectiveID);
 	}
 	else {
-		PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME2);
+		PrintHintText(client, "Quête: %s\nTemps restant: %dsec\nObjectif: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME2);
 	}
 }
 public void Q2_Abort(int objectiveID, int client) {
-	PrintHintText(client, "<b>Quête</b>: %s\nLa quête est terminée", QUEST_NAME);
+	PrintHintText(client, "Quête: %s\nLa quête est terminée", QUEST_NAME);
 	g_iDoing[client] = false;
 }
 public void Q2_Done(int objectiveID, int client) {
-	PrintHintText(client, "<b>Quête</b>: %s\nLa quête est terminée.", QUEST_NAME);
+	PrintHintText(client, "Quête: %s\nLa quête est terminée.", QUEST_NAME);
 	
 	int cap = rp_GetRandomCapital(QUEST_JOBID);
 	int cpt = countPlant(client);

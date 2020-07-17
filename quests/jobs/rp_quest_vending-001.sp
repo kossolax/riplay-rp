@@ -134,7 +134,7 @@ public void Q1_Frame(int objectiveID, int client) {
 		rp_QuestStepFail(client, objectiveID);
 	}
 	else {
-		PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME1);
+		PrintHintText(client, "Quête: %s\nTemps restant: %dsec\nObjectif: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME1);
 		rp_Effect_BeamBox(client, g_iGoing[client], NULL_VECTOR, 255, 0, 0);
 	}
 }
@@ -178,7 +178,7 @@ public void Q3_Frame(int objectiveID, int client) {
 		rp_QuestStepFail(client, objectiveID);
 	}
 	else {
-		PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME2);
+		PrintHintText(client, "Quête: %s\nTemps restant: %dsec\nObjectif: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME2);
 	}
 }
 public void Q3_End(int objectiveID, int client) {

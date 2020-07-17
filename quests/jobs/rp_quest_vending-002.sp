@@ -81,7 +81,7 @@ public Action fwdSell(int client, int amount) {
 	return Plugin_Continue;
 }
 public void Q1_Abort(int objectiveID, int client) {
-	PrintHintText(client, "<b>Quête</b>: %s\nLa mission est terminée.", QUEST_NAME);
+	PrintHintText(client, "Quête: %s\nLa mission est terminée.", QUEST_NAME);
 	rp_UnhookEvent(client, RP_OnPlayerSell, fwdSell);
 }
 public void Q1_Frame(int objectiveID, int client) {
@@ -95,7 +95,7 @@ public void Q1_Frame(int objectiveID, int client) {
 		rp_QuestStepFail(client, objectiveID);
 	}
 	else {
-		PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: %s (%d%%)", QUEST_NAME, g_iDuration[client], QUEST_RESUME, RoundToFloor(g_iCurrent[client]/10000.0*100.0));
+		PrintHintText(client, "Quête: %s\nTemps restant: %dsec\nObjectif: %s (%d%%)", QUEST_NAME, g_iDuration[client], QUEST_RESUME, RoundToFloor(g_iCurrent[client]/10000.0*100.0));
 	}
 }
 public void Q1_End(int objectiveID, int client) {

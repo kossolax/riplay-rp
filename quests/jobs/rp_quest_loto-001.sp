@@ -91,7 +91,7 @@ public void Q1_Frame(int objectiveID, int client) {
 			g_iDone[client][n] = 1;
 		}
 		
-		PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: Vider les machines à sous: %d/10", QUEST_NAME, g_iDuration[client], g_iStep[client]);
+		PrintHintText(client, "Quête: %s\nTemps restant: %dsec\nObjectif: Vider les machines à sous: %d/10", QUEST_NAME, g_iDuration[client], g_iStep[client]);
 	}
 }
 public void Q2_Start(int objectiveID, int client) {
@@ -107,7 +107,7 @@ public void Q2_Frame(int objectiveID, int client) {
 		rp_QuestStepComplete(client, objectiveID);
 	}
 	else {		
-		PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: Déposer l'argent à la banque", QUEST_NAME, g_iDuration[client]);
+		PrintHintText(client, "Quête: %s\nTemps restant: %dsec\nObjectif: Déposer l'argent à la banque", QUEST_NAME, g_iDuration[client]);
 	}
 }
 public void Q2_End(int objectiveID, int client) {
@@ -119,7 +119,7 @@ public void Q2_End(int objectiveID, int client) {
 	rp_ClientXPIncrement(client, 1000);
 }
 public void Q1_Abort(int objectiveID, int client) {
-	PrintHintText(client, "<b>Quête</b>: %s\nLa quête est terminée.", QUEST_NAME);
+	PrintHintText(client, "Quête: %s\nLa quête est terminée.", QUEST_NAME);
 }
 // ----------------------------------------------------------------------------
 public int MenuNothing(Handle menu, MenuAction action, int client, int param2) {

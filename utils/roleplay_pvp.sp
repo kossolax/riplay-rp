@@ -330,7 +330,7 @@ public Action FlagThink(Handle timer, any data) {
 				GDM_RegisterFlag(g_iFlagData[entity][data_lastOwner]);
 				rp_ClientXPIncrement(g_iFlagData[entity][data_lastOwner], point);
 				
-				PrintHintText(g_iFlagData[entity][data_lastOwner], "<b>Drapeau posé !</b>\n <font color='#33ff33'>+%d</span> points !", point);
+				PrintHintText(g_iFlagData[entity][data_lastOwner], "Drapeau posé !\n <font color='#33ff33'>+%d</span> points !", point);
 				g_flClientLastScore[g_iFlagData[entity][data_lastOwner]] = GetGameTime();
 			}
 			
@@ -805,10 +805,10 @@ public Action fwdDead(int victim, int attacker, float& respawn, int& tdm) {
 			
 		if( rp_GetCaptureInt(cap_bunker) == rp_GetClientGroupID(attacker) ) {
 			g_iCapture_POINT[rp_GetClientGroupID(attacker)] += RoundFloat(float(points)*0.4);
-			PrintHintText(attacker, "<b>Kill !</b>\n <font color='#33ff33'>+%d</span> points !", points+(points/2));
+			PrintHintText(attacker, "Kill !\n <font color='#33ff33'>+%d</span> points !", points+(points/2));
 		}
 		else {
-			PrintHintText(attacker, "<b>Kill !</b>\n <font color='#33ff33'>+%d</span> points !", points);
+			PrintHintText(attacker, "Kill !\n <font color='#33ff33'>+%d</span> points !", points);
 		}
 		g_flClientLastScore[attacker] = GetGameTime();
 		rp_IncrementSuccess(attacker, success_list_killpvp2);
@@ -891,11 +891,11 @@ public Action fwdFrame(int client) {
 		}
 		else if( rp_GetCaptureInt(cap_bunker) == rp_GetClientGroupID(client) ) {
 			rp_ClientColorize(client, { 64, 64, 255, 255 } );
-			PrintHintText(client, "Vous êtes en défense.\n     <font color='#ff3333'>Tuez les <b>ROUGES</b></font>");
+			PrintHintText(client, "Vous êtes en défense.\n     <font color='#ff3333'>Tuez les ROUGES</font>");
 		}
 		else {
 			rp_ClientColorize(client, { 255, 64, 64, 255 } );
-			PrintHintText(client, "Vous êtes en attaque.\n     <font color='#3333ff'>Tuez les <b>BLEUS</b></font>");
+			PrintHintText(client, "Vous êtes en attaque.\n     <font color='#3333ff'>Tuez les BLEUS</font>");
 		}
 	}
 	else {
@@ -1486,16 +1486,16 @@ void announceSound(int client, int sound) {
 	char msg[128];
 	
 	switch( sound ) {
-		case snd_FirstBlood: Format(msg, sizeof(msg), 	"%N\n<font color='#33ff33'><b>a versé le premier sang !</b></font>", client);
-		case snd_DoubleKill: Format(msg, sizeof(msg), 	"%N\n<font color='#33ff33'><b>   Double kill</b></font>", client);
-		case snd_MultiKill: Format(msg, sizeof(msg), 	"%N\n<font color='#33ff33'><b>   MULTI kill</b></font>", client);
-		case snd_MegaKill: Format(msg, sizeof(msg), 	"%N\n<font color='#33ff33'><b>   MEGA KILL</b></font>", client);
-		case snd_UltraKill: Format(msg, sizeof(msg), 	"%N\n<font color='#33ff33'><b>   ULTRAAA-KILL !</b></font>", client);
-		case snd_MonsterKill: Format(msg, sizeof(msg), 	"%N\n<font color='#33ff33'><b>MOOOONSTER KILL !</b></font>", client);
-		case snd_KillingSpree: Format(msg, sizeof(msg),	"%N\n<font color='#33ff33'><b>fait une série meurtrière</b></font>", client);
-		case snd_Unstopppable: Format(msg, sizeof(msg),	"%N\n<font color='#33ff33'><b> est inarrêtable!</b></font>", client);
-		case snd_Dominating: Format(msg, sizeof(msg),	"%N\n<font color='#33ff33'><b>   DOMINE !</b></font>", client);
-		case snd_Godlike: Format(msg, sizeof(msg),		"%N\n<font color='#33ff33'><b> EST DIVIN !</b></font>", client);
+		case snd_FirstBlood: Format(msg, sizeof(msg), 	"%N\n<font color='#33ff33'>a versé le premier sang !</font>", client);
+		case snd_DoubleKill: Format(msg, sizeof(msg), 	"%N\n<font color='#33ff33'>   Double kill</font>", client);
+		case snd_MultiKill: Format(msg, sizeof(msg), 	"%N\n<font color='#33ff33'>   MULTI kill</font>", client);
+		case snd_MegaKill: Format(msg, sizeof(msg), 	"%N\n<font color='#33ff33'>   MEGA KILL</font>", client);
+		case snd_UltraKill: Format(msg, sizeof(msg), 	"%N\n<font color='#33ff33'>   ULTRAAA-KILL !</font>", client);
+		case snd_MonsterKill: Format(msg, sizeof(msg), 	"%N\n<font color='#33ff33'>MOOOONSTER KILL !</font>", client);
+		case snd_KillingSpree: Format(msg, sizeof(msg),	"%N\n<font color='#33ff33'>fait une série meurtrière</font>", client);
+		case snd_Unstopppable: Format(msg, sizeof(msg),	"%N\n<font color='#33ff33'> est inarrêtable!</font>", client);
+		case snd_Dominating: Format(msg, sizeof(msg),	"%N\n<font color='#33ff33'>   DOMINE !</font>", client);
+		case snd_Godlike: Format(msg, sizeof(msg),		"%N\n<font color='#33ff33'> EST DIVIN !</font>", client);
 	}
 	for (int i = 1; i <= MaxClients; i++) {
 		if( !IsValidClient(i) )

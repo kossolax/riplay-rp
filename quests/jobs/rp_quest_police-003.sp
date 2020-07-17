@@ -85,13 +85,13 @@ public void Q1_Frame(int objectiveID, int client) {
 		if( v > 0 )
 			rp_Effect_BeamBox(client, v, NULL_VECTOR, 255, 255, 255);
 		
-		PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME1);
+		PrintHintText(client, "Quête: %s\nTemps restant: %dsec\nObjectif: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME1);
 	}
 }
 public void Q1_Abort(int objectiveID, int client) {
 	rp_UnhookEvent(client, RP_OnClientTazedItem, fwdTazedItem);
 	g_iDoing[client] = false;
-	PrintHintText(client, "<b>Quête</b>: %s\nLa quête est terminée.", QUEST_NAME);
+	PrintHintText(client, "Quête: %s\nLa quête est terminée.", QUEST_NAME);
 }
 public Action fwdTazedItem(int client, int reward) {
 	if( g_iDoing[client] ) {

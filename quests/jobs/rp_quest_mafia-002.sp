@@ -137,12 +137,12 @@ public void Q1_Frame(int objectiveID, int client) {
 		rp_QuestStepFail(client, objectiveID);
 	}
 	else {
-		PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: %s %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME, buffer);
+		PrintHintText(client, "Quête: %s\nTemps restant: %dsec\nObjectif: %s %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME, buffer);
 		ServerCommand("sm_effect_gps %d %f %f %f", client, dst[0], dst[1], dst[2]);
 	}
 }
 public void Q1_Abort(int objectiveID, int client) {
-	PrintHintText(client, "<b>Quête</b>: %s\nLa quête est terminée.", QUEST_NAME);
+	PrintHintText(client, "Quête: %s\nLa quête est terminée.", QUEST_NAME);
 }
 public void Q5_Done(int objectiveID, int client) {
 	Q1_Abort(objectiveID, client);
@@ -162,7 +162,7 @@ public void Q5_Done(int objectiveID, int client) {
 	char item[64]; rp_GetItemData(64, item_type_name, item, sizeof(item)); rp_ClientGiveItem(client, 64); // [PvP] M4A1-S.
 	CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu: %s", item);
 	
-	PrintHintText(client, "<b>Quête</b>: %s\nLa quête est terminée.", QUEST_NAME);
+	PrintHintText(client, "Quête: %s\nLa quête est terminée.", QUEST_NAME);
 }
 int getRandomLocation() {
 	int stack[MAX_ZONES], cpt, tmp, bit;

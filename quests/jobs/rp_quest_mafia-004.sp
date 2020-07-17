@@ -100,7 +100,7 @@ public void Q1_Frame(int objectiveID, int client) {
 		rp_QuestStepFail(client, objectiveID);
 	}
 	else {
-		PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: %s %d/3", QUEST_NAME, g_iDuration[client], QUEST_RESUME, g_iStep[client]);
+		PrintHintText(client, "Quête: %s\nTemps restant: %dsec\nObjectif: %s %d/3", QUEST_NAME, g_iDuration[client], QUEST_RESUME, g_iStep[client]);
 	}
 }
 public void Q2_Start(int objectiveID, int client) {
@@ -127,7 +127,7 @@ public void Q3_Frame(int objectiveID, int client) {
 		rp_QuestStepFail(client, objectiveID);
 	}
 	else {
-		PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: Retourner à la planque", QUEST_NAME, g_iDuration[client]);
+		PrintHintText(client, "Quête: %s\nTemps restant: %dsec\nObjectif: Retourner à la planque", QUEST_NAME, g_iDuration[client]);
 		ServerCommand("sm_effect_gps %d %f %f %f", client, dst[0], dst[1], dst[2]);
 	}
 }
@@ -143,7 +143,7 @@ public void Q3_End(int objectiveID, int client) {
 public void Q1_Abort(int objectiveID, int client) {
 	g_iDoing[client] = 0;
 	rp_UnhookEvent(client, RP_PostPiedBiche, fwdPiedDeBiche);
-	PrintHintText(client, "<b>Quête</b>: %s\nLa quête est terminée.", QUEST_NAME);
+	PrintHintText(client, "Quête: %s\nLa quête est terminée.", QUEST_NAME);
 }
 // ----------------------------------------------------------------------------
 public int MenuNothing(Handle menu, MenuAction action, int client, int param2) {

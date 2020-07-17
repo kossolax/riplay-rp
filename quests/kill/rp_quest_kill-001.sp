@@ -116,7 +116,7 @@ public void Q1_Abort(int objectiveID, int client) {
 	rp_UnhookEvent(client, RP_OnPlayerKill, fwdOnPlayerKill);
 	rp_UnhookEvent(client, RP_PlayerCanKill, fwdOnPlayerCanKill);
 	
-	PrintHintText(client, "<b>Quête</b>: %s\nLa quête est terminée.", QUEST_NAME);
+	PrintHintText(client, "Quête: %s\nLa quête est terminée.", QUEST_NAME);
 	for (int i = 1; i <= MaxClients; i++)
 		g_iKilled[client][i] = 0;
 }
@@ -133,7 +133,7 @@ public void Q1_Frame(int objectiveID, int client) {
 			rp_QuestStepFail(client, objectiveID);
 	}
 	else {
-		PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Tué</b>: %d", QUEST_NAME, g_iDuration[client], g_iCurrent[client]);
+		PrintHintText(client, "Quête: %s\nTemps restant: %dsec\nTué: %d", QUEST_NAME, g_iDuration[client], g_iCurrent[client]);
 		
 		int target = getNearestEligible(client);
 		if( IsValidClient(target) ) {

@@ -90,12 +90,12 @@ public void Q_Frame(int objectiveID, int client) {
 		rp_QuestStepFail(client, objectiveID);
 	}
 	else {			
-		PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME);
+		PrintHintText(client, "Quête: %s\nTemps restant: %dsec\nObjectif: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME);
 	}
 }
 public void Q_Abort(int objectiveID, int client) {
 	rp_UnhookEvent(client, RP_OnJugementOver, fwdJugementOver);
-	PrintHintText(client, "<b>Quête</b>: %s\nLa quête est terminée", QUEST_NAME);
+	PrintHintText(client, "Quête: %s\nLa quête est terminée", QUEST_NAME);
 }
 public void Q_Done(int objectiveID, int client) {
 	Q_Abort(objectiveID, client);
