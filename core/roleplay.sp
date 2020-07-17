@@ -295,7 +295,7 @@ public void OnPluginStart() {
 	
 	CloseHandle(hGameData);
 
-	RegConsoleCmd("sm_bf", Command_DebugBF); // debug, a tej après
+	RegAdminCmd("sm_bf",			Command_DebugBF,			ADMFLAG_ROOT);	
 }
 
 public Action Command_DebugBF(int client, int args) {
