@@ -27,72 +27,72 @@ public Plugin myinfo = {
 };
 
 char g_szSkinsList[][][] = {
-	{"1", 																"(Donateur) Momijo", 	"2", "0"},
-	{"2", 																"(Donateur) Nathan",	"2", "0"},
-	{"3", 																"(Donateur) Wick",		"2", "0"},
+	{"models/player/custom_player/riplay/momiji/momiji.mdl", 			"(Donateur) Momijo", 	"2", "0", "1"},
+	{"models/player/custom_player/riplay/nathandrake/nathandrake.mdl", 	"(Donateur) Nathan",	"2", "0", "2"},
+	{"models/player/custom_player/riplay/wick/wick.mdl", 				"(Donateur) Wick",		"2", "0", "3"},
 	
-	{"models/player/custom_player/legacy/lara/lara.mdl", 				"Lara", 			"1", "6"},
-	//{"models/player/custom_player/legacy/eva/eva.mdl", 					"Eva", 				"1", "5"},
-	{"models/player/custom_player/legacy/misty/misty.mdl", 				"Misty", 			"1", "5"},
-	{"models/player/custom_player/legacy/swagirl/swagirl.mdl", 			"Désirée",			"1", "4"},
-	{"models/player/custom_player/legacy/zoey/zoey.mdl", 				"Zoey", 			"1", "3"},
+	{"models/player/custom_player/legacy/lara/lara.mdl", 				"Lara", 			"1", "6", "0"},
+	//{"models/player/custom_player/legacy/eva/eva.mdl", 					"Eva", 				"1", "5", "0"},
+	{"models/player/custom_player/legacy/misty/misty.mdl", 				"Misty", 			"1", "5", "0"},
+	{"models/player/custom_player/legacy/swagirl/swagirl.mdl", 			"Désirée",			"1", "4", "0"},
+	{"models/player/custom_player/legacy/zoey/zoey.mdl", 				"Zoey", 			"1", "3", "0"},
 	
 	
-	{"models/player/custom_player/legacy/don_vito/don_vito.mdl", 		"Don Vito", 		"0", "7"},
-	{"models/player/custom_player/legacy/redfield/redfield.mdl",		"Redfield",			"0", "6"},
-	//{"models/player/custom_player/legacy/hitman/hitman.mdl", 			"Hitman", 			"0", "6"},
-	{"models/player/custom_player/legacy/50cent/50cent.mdl", 			"50cent", 			"0", "6"},
-	//{"models/player/custom_player/legacy/wuzimu/wuzimu.mdl", 			"Pong", 			"0", "5"},
-	//{"models/player/custom_player/legacy/lloyd/lloyd.mdl", 				"Loyd", 			"0", "5"},
-	{"models/player/custom_player/legacy/bzsoap/bzsoap.mdl", 			"BZ-Soap", 			"0", "5"},
-	//{"models/player/custom_player/legacy/leon/leon.mdl", 				"Leon", 			"0", "5"},
+	{"models/player/custom_player/legacy/don_vito/don_vito.mdl", 		"Don Vito", 		"0", "7", "0"},
+	{"models/player/custom_player/legacy/redfield/redfield.mdl",		"Redfield",			"0", "6", "0"},
+	//{"models/player/custom_player/legacy/hitman/hitman.mdl", 			"Hitman", 			"0", "6", "0"},
+	{"models/player/custom_player/legacy/50cent/50cent.mdl", 			"50cent", 			"0", "6", "0"},
+	//{"models/player/custom_player/legacy/wuzimu/wuzimu.mdl", 			"Pong", 			"0", "5", "0"},
+	//{"models/player/custom_player/legacy/lloyd/lloyd.mdl", 				"Loyd", 			"0", "5", "0"},
+	{"models/player/custom_player/legacy/bzsoap/bzsoap.mdl", 			"BZ-Soap", 			"0", "5", "0"},
+	//{"models/player/custom_player/legacy/leon/leon.mdl", 				"Leon", 			"0", "5", "0"},
 
-	{"models/player/custom_player/legacy/nick/nick.mdl", 				"Nick", 			"0", "5"},
-	//{"models/player/custom_player/legacy/vmaff/vmaff.mdl", 				"Marco", 			"0", "4"},
-	//{"models/player/custom_player/legacy/duke2/duke2.mdl", 				"Duke Nukem", 		"0", "3"},
+	{"models/player/custom_player/legacy/nick/nick.mdl", 				"Nick", 			"0", "5", "0"},
+	//{"models/player/custom_player/legacy/vmaff/vmaff.mdl", 				"Marco", 			"0", "4", "0"},
+	//{"models/player/custom_player/legacy/duke2/duke2.mdl", 				"Duke Nukem", 		"0", "3", "0"},
 	
 	
-	{"models/player/custom_player/legacy/tm_anarchist.mdl", 			"Anarchist", 		"0", "1"},
-	{"models/player/custom_player/legacy/tm_anarchist_varianta.mdl", 	"Anarchist - A", 	"0", "1"},
-	{"models/player/custom_player/legacy/tm_anarchist_variantb.mdl", 	"Anarchist - B", 	"0", "1"},
-	{"models/player/custom_player/legacy/tm_anarchist_variantc.mdl", 	"Anarchist - C", 	"0", "1"},
-	{"models/player/custom_player/legacy/tm_anarchist_variantd.mdl", 	"Anarchist - D", 	"0", "1"},
+	{"models/player/custom_player/legacy/tm_anarchist.mdl", 			"Anarchist", 		"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_anarchist_varianta.mdl", 	"Anarchist - A", 	"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_anarchist_variantb.mdl", 	"Anarchist - B", 	"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_anarchist_variantc.mdl", 	"Anarchist - C", 	"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_anarchist_variantd.mdl", 	"Anarchist - D", 	"0", "1", "0"},
 	
-	{"models/player/custom_player/legacy/tm_balkan_varianta.mdl", 		"Balkan", 			"0", "1"},
-	{"models/player/custom_player/legacy/tm_balkan_variantb.mdl", 		"Balkan - A", 		"0", "1"},
-	{"models/player/custom_player/legacy/tm_balkan_variantc.mdl", 		"Balkan - B", 		"0", "1"},
-	{"models/player/custom_player/legacy/tm_balkan_variantd.mdl", 		"Balkan - C", 		"0", "1"},
-	{"models/player/custom_player/legacy/tm_balkan_variante.mdl", 		"Balkan - D", 		"0", "1"},
+	{"models/player/custom_player/legacy/tm_balkan_varianta.mdl", 		"Balkan", 			"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_balkan_variantb.mdl", 		"Balkan - A", 		"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_balkan_variantc.mdl", 		"Balkan - B", 		"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_balkan_variantd.mdl", 		"Balkan - C", 		"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_balkan_variante.mdl", 		"Balkan - D", 		"0", "1", "0"},
 	
-	{"models/player/custom_player/legacy/tm_leet_varianta.mdl", 		"Leet", 			"0", "1"},
-	{"models/player/custom_player/legacy/tm_leet_variantb.mdl", 		"Leet - A", 		"0", "1"},
-	{"models/player/custom_player/legacy/tm_leet_variantc.mdl", 		"Leet - B", 		"0", "1"},
-	{"models/player/custom_player/legacy/tm_leet_variantd.mdl", 		"Leet - C", 		"0", "1"},
-	{"models/player/custom_player/legacy/tm_leet_variante.mdl", 		"Leet - D", 		"0", "1"},
+	{"models/player/custom_player/legacy/tm_leet_varianta.mdl", 		"Leet", 			"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_leet_variantb.mdl", 		"Leet - A", 		"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_leet_variantc.mdl", 		"Leet - B", 		"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_leet_variantd.mdl", 		"Leet - C", 		"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_leet_variante.mdl", 		"Leet - D", 		"0", "1", "0"},
 	
-	{"models/player/custom_player/legacy/tm_phoenix.mdl",				"Phoenix", 			"0", "1"},
-	{"models/player/custom_player/legacy/tm_phoenix_varianta.mdl", 		"Phoenix - A", 		"0", "1"},
-	{"models/player/custom_player/legacy/tm_phoenix_variantb.mdl", 		"Phoenix - B", 		"0", "1"},
-	{"models/player/custom_player/legacy/tm_phoenix_variantc.mdl", 		"Phoenix - C", 		"0", "1"},
-	{"models/player/custom_player/legacy/tm_phoenix_variantd.mdl", 		"Phoenix - D", 		"0", "1"},
+	{"models/player/custom_player/legacy/tm_phoenix.mdl",				"Phoenix", 			"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_phoenix_varianta.mdl", 		"Phoenix - A", 		"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_phoenix_variantb.mdl", 		"Phoenix - B", 		"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_phoenix_variantc.mdl", 		"Phoenix - C", 		"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_phoenix_variantd.mdl", 		"Phoenix - D", 		"0", "1", "0"},
 	
-	{"models/player/custom_player/legacy/tm_pirate.mdl", 				"Pirate", 			"0", "1"},
-	{"models/player/custom_player/legacy/tm_pirate_varianta.mdl", 		"Pirate - A", 		"0", "1"},
-	{"models/player/custom_player/legacy/tm_pirate_variantb.mdl", 		"Pirate - B", 		"0", "1"},
-	{"models/player/custom_player/legacy/tm_pirate_variantc.mdl", 		"Pirate - C", 		"0", "1"},
-	{"models/player/custom_player/legacy/tm_pirate_variantd.mdl", 		"Pirate - D", 		"0", "1"},
+	{"models/player/custom_player/legacy/tm_pirate.mdl", 				"Pirate", 			"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_pirate_varianta.mdl", 		"Pirate - A", 		"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_pirate_variantb.mdl", 		"Pirate - B", 		"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_pirate_variantc.mdl", 		"Pirate - C", 		"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_pirate_variantd.mdl", 		"Pirate - D", 		"0", "1", "0"},
 	
-	{"models/player/custom_player/legacy/tm_professional.mdl", 			"Professional", 	"0", "1"},
-	{"models/player/custom_player/legacy/tm_professional_var1.mdl", 	"Professional - A", "0", "1"},
-	{"models/player/custom_player/legacy/tm_professional_var2.mdl", 	"Professional - B", "0", "1"},
-	{"models/player/custom_player/legacy/tm_professional_var3.mdl", 	"Professional - C", "0", "1"},
-	{"models/player/custom_player/legacy/tm_professional_var4.mdl", 	"Professional - D", "0", "1"},
+	{"models/player/custom_player/legacy/tm_professional.mdl", 			"Professional", 	"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_professional_var1.mdl", 	"Professional - A", "0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_professional_var2.mdl", 	"Professional - B", "0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_professional_var3.mdl", 	"Professional - C", "0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_professional_var4.mdl", 	"Professional - D", "0", "1", "0"},
 	
-	{"models/player/custom_player/legacy/tm_separatist.mdl", 			"Séparatist", 		"0", "1"},
-	{"models/player/custom_player/legacy/tm_separatist_varianta.mdl", 	"Séparatist - A", 	"0", "1"},
-	{"models/player/custom_player/legacy/tm_separatist_variantb.mdl", 	"Séparatist - B", 	"0", "1"},
-	{"models/player/custom_player/legacy/tm_separatist_variantc.mdl", 	"Séparatist - C", 	"0", "1"},
-	{"models/player/custom_player/legacy/tm_separatist_variantd.mdl", 	"Séparatist - D", 	"0", "1"}
+	{"models/player/custom_player/legacy/tm_separatist.mdl", 			"Séparatist", 		"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_separatist_varianta.mdl", 	"Séparatist - A", 	"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_separatist_variantb.mdl", 	"Séparatist - B", 	"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_separatist_variantc.mdl", 	"Séparatist - C", 	"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_separatist_variantd.mdl", 	"Séparatist - D", 	"0", "1", "0"}
 };
 
 int g_iKnifeThrowID = -1;
@@ -1979,14 +1979,12 @@ void Draw_SkinList(int client, int test, int skinID) {
 			}
 			
 			rp_ClientGiveItem(client, ITEM_FITNESS, -prix);
+			rp_SetClientInt(client, i_SkinDonateur, StringToInt(g_szSkinsList[skinID][4]));
 			
-			if( StringToInt(g_szSkinsList[skinID][2]) == 2 ) {
-				rp_SetClientInt(client, i_SkinDonateur, StringToInt(g_szSkinsList[skinID][0]));
-			}
-			else {
+			if( StringToInt(g_szSkinsList[skinID][2]) != 2 ) {
 				rp_SetClientString(client, sz_Skin, g_szSkinsList[skinID][0], strlen(g_szSkinsList[skinID][0])+1);
+				rp_IncrementSuccess(client, success_list_vetement);
 			}
-			rp_IncrementSuccess(client, success_list_vetement);
 		}
 		
 		ServerCommand("sm_effect_setmodel \"%i\" \"%s\"", client, g_szSkinsList[skinID][0]);
