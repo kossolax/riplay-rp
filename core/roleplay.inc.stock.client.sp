@@ -770,13 +770,25 @@ void getPlayerSkin(int client, char model[PLATFORM_MAX_PATH], char hands[PLATFOR
 		if( strlen(g_szUserData[client][sz_Skin]) <= 5  ) {
 			Format(model, sizeof(model), "models/player/custom_player/legacy/tm_phoenix.mdl");
 		}
-		if( g_iUserData[client][i_Donateur] >= 1 && !g_bUserData[client][b_NoDonateurSkin] ) {
-			#if defined EVENT_NOEL
-			Format(model, sizeof(model), "models/player/custom_player/legacy/santa/santa.mdl");
-			#else
-			Format(model, sizeof(model), "models/player/custom_player/legacy/aiden_pearce/aiden_pearce.mdl");
-			#endif
+		
+		if( g_iUserData[client][i_Donateur] >= 1 && g_iUserData[client][i_SkinDonateur] > 0 ) {
+			
+			switch( g_iUserData[client][i_SkinDonateur] ) {
+				case 1: {
+					Format(model, sizeof(model), "models/player/custom_player/riplay/momiji/momiji.mdl");
+					break;
+				}
+				case 2: {
+					Format(model, sizeof(model), "models/player/custom_player/riplay/nathandrake/nathandrake.mdl");
+					break;
+				}
+				case 3: {
+					Format(model, sizeof(model), "models/player/custom_player/riplay/wick/wick.mdl");
+					break;
+				}
+			}
 		}
+		
 	}
 	else if( GetClientTeam(client) == CS_TEAM_CT ) {
 

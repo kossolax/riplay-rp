@@ -641,7 +641,6 @@ enum bool_user_data {
 	b_Lube,
 	b_Map,
 	b_CAPSLOCK,
-	b_NoDonateurSkin,
 	b_AdminHeal,
 	b_HasMail,
 	b_HasGrave,
@@ -798,6 +797,8 @@ enum int_user_data {
 
 	i_AmendeLiscence1,
 	i_AmendeLiscence2,
+	
+	i_SkinDonateur,
 	
 	i_udata_max
 };

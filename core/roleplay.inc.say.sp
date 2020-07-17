@@ -581,37 +581,8 @@ public Action Command_Say(int client, int args) {
 	else if(	strcmp(szSayTrig, "!skin", false) == 0		|| strcmp(szSayTrig, "/skin", false) == 0 ||
 	strcmp(szSayTrig, "!skins", false) == 0		|| strcmp(szSayTrig, "/skins", false) == 0
 	) {
-		//ACCESS_DENIED(client);
 
-		if( g_flUserData[client][fl_CoolDown] > GetGameTime() ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez rien utiliser pour encore %.2f seconde(s).", (g_flUserData[client][fl_CoolDown]-GetGameTime()) );
-			return Plugin_Handled;
-		}
-		
-		if( g_iUserData[client][i_Mask] > 0 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez un masque.");
-			return Plugin_Handled;
-		}
-		
-		if( rp_IsInPVP(client) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Inutilisable en PvP.");
-			return Plugin_Handled;
-		}
-		if( rp_GetClientVehicle(client) > 0 || rp_GetClientVehiclePassager(client) > 0 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Inutilisable en voiture.");
-			return Plugin_Handled;
-		}
-
-		g_bUserData[client][b_NoDonateurSkin] = !g_bUserData[client][b_NoDonateurSkin];
-		g_flUserData[client][fl_CoolDown] = GetGameTime() + 5.0;
-
-		if( GetClientTeam(client) == CS_TEAM_T ) {
-			char model[255];
-			Entity_GetModel(client, model, sizeof(model));
-			if( StrContains(model, "sprisioner", false) == -1 ) {
-				SetPersonalSkin(client);
-			}
-		}
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez vous rendre dans une cabine d'essage." );
 		return Plugin_Handled;
 	}
 	else if(

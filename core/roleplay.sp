@@ -21,7 +21,6 @@
 #include <basecomm>
 #include <SteamWorks>
 #include <dhooks>
-#include <advanced_motd>
 #include <rp_version>
 #include <unixtime_sourcemod>
 
@@ -38,6 +37,7 @@
 
 #include <roleplay.inc>
 #include <phun>
+#include <advanced_motd>
 
 #pragma newdecls required
 

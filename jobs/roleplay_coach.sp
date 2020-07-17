@@ -27,6 +27,10 @@ public Plugin myinfo = {
 };
 
 char g_szSkinsList[][][] = {
+	{"1", 																"(Donateur) Momijo", 	"2", "0"},
+	{"2", 																"(Donateur) Nathan",	"2", "0"},
+	{"3", 																"(Donateur) Wick",		"2", "0"},
+	
 	{"models/player/custom_player/legacy/lara/lara.mdl", 				"Lara", 			"1", "6"},
 	//{"models/player/custom_player/legacy/eva/eva.mdl", 					"Eva", 				"1", "5"},
 	{"models/player/custom_player/legacy/misty/misty.mdl", 				"Misty", 			"1", "5"},
@@ -1937,22 +1941,24 @@ void Draw_SkinList(int client, int test, int skinID) {
 			Format(tmp, sizeof(tmp), "%d %d", test, i);
 			if( test )
 				Format(tmp2, sizeof(tmp2), "%s", g_szSkinsList[i][1]);
+			else if( StringToInt(g_szSkinsList[i][3]) == 0 )
+				Format(tmp2, sizeof(tmp2), "%s - Gratuit", g_szSkinsList[i][1]);
 			else
 				Format(tmp2, sizeof(tmp2), "%s - %d points de fitness", g_szSkinsList[i][1], StringToInt(g_szSkinsList[i][3]));
 			
-			if( (female==1) && isfemale ) {
+			if( (female==2) && rp_GetClientInt(client, i_Donateur) >= 1 ) 
+				menu.AddItem(tmp, tmp2);			
+			if( (female==1) && isfemale )
 				menu.AddItem(tmp, tmp2);
-			}
-			if( (female==0) && !isfemale ) {
+			if( (female==0) && !isfemale )
 				menu.AddItem(tmp, tmp2);
-			}
 		}
 		menu.Display(client, 60);
 		return;
 	}
 	else {
 		
-		if( !IsModelPrecached(g_szSkinsList[skinID][0]) ) 
+		if( StringToInt(g_szSkinsList[skinID][2]) != 2 && !IsModelPrecached(g_szSkinsList[skinID][0]) ) 
 			if( !PrecacheModel(g_szSkinsList[skinID][0]) )
 				return;
 		
@@ -1973,7 +1979,13 @@ void Draw_SkinList(int client, int test, int skinID) {
 			}
 			
 			rp_ClientGiveItem(client, ITEM_FITNESS, -prix);
-			rp_SetClientString(client, sz_Skin, g_szSkinsList[skinID][0], strlen(g_szSkinsList[skinID][0])+1);
+			
+			if( StringToInt(g_szSkinsList[skinID][2]) == 2 ) {
+				rp_SetClientInt(client, i_SkinDonateur, StringToInt(g_szSkinsList[skinID][0]));
+			}
+			else {
+				rp_SetClientString(client, sz_Skin, g_szSkinsList[skinID][0], strlen(g_szSkinsList[skinID][0])+1);
+			}
 			rp_IncrementSuccess(client, success_list_vetement);
 		}
 		
