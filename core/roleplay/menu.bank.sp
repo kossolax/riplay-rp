@@ -619,7 +619,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 					int price = rp_GetWeaponPrice(id);
 					GetEdictClassname(id, szWeapon, sizeof(szWeapon));
 					
-					if( g_iUserData[client][i_Disposed] > 0 && StrContains(szWeapon, "weapon_knife") == -1 && StrContains(szWeapon, "weapon_bayonet") == -1 ) {
+					if( g_iUserData[client][i_Disposed] > 0 && StrContains(szWeapon, "weapon_knife") == -1 && StrContains(szWeapon, "weapon_bayonet") == -1 && StrContains(szWeapon, "weapon_fists") == -1 ) {
 						
 						Call_StartForward( view_as<Handle>(g_hRPNative[client][RP_OnResellWeapon]) );
 						Call_PushCell(client);
