@@ -139,7 +139,7 @@ void updateClanTag(int client) {
 		Format(ClanTag, sizeof(ClanTag), "TUTORIAL");
 	}
 
-	ServerCommand("sm_force_clantag %i \"%s\"", client, ClanTag);
+	ServerCommand("sm_force_clantag \"%i\" \"%s\"", client, ClanTag);
 }
 
 public Action SendToGrave(Handle timer, any client) {
