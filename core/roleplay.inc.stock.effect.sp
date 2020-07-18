@@ -472,7 +472,6 @@ void PoisonPlayer(int target, float time, int client) {
 	GetClientEyePosition(client, vecOrigin2);
 	
 	vecOrigin[2] -= 20.0; vecOrigin2[2] -= 20.0;
-	g
 	TE_SetupBeamPoints(vecOrigin, vecOrigin2, g_cBeam, 0, 0, 0, 0.1, 10.0, 10.0, 0, 10.0, {50, 250, 50, 250}, 10);
 	TE_SendToAll();
 	
