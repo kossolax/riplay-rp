@@ -436,6 +436,9 @@ public Action TIMER_Grattage(Handle timer, Handle dp) {
 	}
 	
 	rp_ClientGiveItem(client, itemID, -1);
+	rp_SetClientStat(client, i_ItemUsed, rp_GetClientStat(client, i_ItemUsed) + 1);
+	rp_SetClientStat(client, i_ItemUsedPrice, rp_GetClientStat(client, i_ItemUsedPrice) + rp_GetItemInt(itemID, item_type_prix));
+	
 	bool won = gratterTicket(client, amount, itemID);
 	
 	if( total < 0 && won ) {
