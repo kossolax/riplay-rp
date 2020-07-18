@@ -472,7 +472,7 @@ void PoisonPlayer(int target, float time, int client) {
 	GetClientEyePosition(client, vecOrigin2);
 	
 	vecOrigin[2] -= 20.0; vecOrigin2[2] -= 20.0;
-	
+	g
 	TE_SetupBeamPoints(vecOrigin, vecOrigin2, g_cBeam, 0, 0, 0, 0.1, 10.0, 10.0, 0, 10.0, {50, 250, 50, 250}, 10);
 	TE_SendToAll();
 	
@@ -483,18 +483,19 @@ void PoisonPlayer(int target, float time, int client) {
 		g_iUserData[target][i_Sickness] = 1;
 		g_flUserData[target][fl_LastPoison] = GetGameTime();
 		
-		/*if( time >= 0.1 ) {
-			CreateTimer(20.0, StopPoison, target);
-		}*/
+		if( time >= 0.1 ) {
+			CreateTimer(60.0, StopPoison, target);
+		}
 	}
 }
 
-/*public Action StopPoison(Handle time, any  target) {
-	if( g_iUserData[target][i_Sickness] == 1 && g_flUserData[target][fl_LastPoison]+19 <= GetGameTime() ) {
+public Action StopPoison(Handle time, any  target) {
+	if( g_iUserData[target][i_Sickness] == 1 && g_flUserData[target][fl_LastPoison]+59 <= GetGameTime() ) {
 		g_iUserData[target][i_Sickness] = 0;
+		g_flUserData[target][fl_LastPoison] = GetGameTime() + 12.0 * 60.0;
 	}
 	
-}*/
+}
 
 public void CTF_SNIPER_dot(int client) {
 	

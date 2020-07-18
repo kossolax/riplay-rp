@@ -695,6 +695,7 @@ void OnGameFrame_10(float time) {
 
 					if(health == 1 || !IsPlayerAlive(i)) {
 						g_iUserData[i][i_Sickness] = 0;
+						g_flUserData[i][fl_LastPoison] = GetGameTime() + 12.0 * 60.0;
 					} else {
 						Format(sound, sizeof(sound), "hostage/hpain/hpain%i.wav", Math_GetRandomInt(1, 6));
 						EmitSoundToAllAny(sound, i);
