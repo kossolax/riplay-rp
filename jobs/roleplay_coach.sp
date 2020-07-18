@@ -52,13 +52,13 @@ char g_szSkinsList[][][] = {
 	//{"models/player/custom_player/legacy/vmaff/vmaff.mdl", 				"Marco", 			"0", "4", "0"},
 	//{"models/player/custom_player/legacy/duke2/duke2.mdl", 				"Duke Nukem", 		"0", "3", "0"},
 	
-	
+/*
 	{"models/player/custom_player/legacy/tm_anarchist.mdl", 			"Anarchist", 		"0", "1", "0"},
 	{"models/player/custom_player/legacy/tm_anarchist_varianta.mdl", 	"Anarchist - A", 	"0", "1", "0"},
 	{"models/player/custom_player/legacy/tm_anarchist_variantb.mdl", 	"Anarchist - B", 	"0", "1", "0"},
 	{"models/player/custom_player/legacy/tm_anarchist_variantc.mdl", 	"Anarchist - C", 	"0", "1", "0"},
 	{"models/player/custom_player/legacy/tm_anarchist_variantd.mdl", 	"Anarchist - D", 	"0", "1", "0"},
-	
+*/
 	{"models/player/custom_player/legacy/tm_balkan_varianta.mdl", 		"Balkan", 			"0", "1", "0"},
 	{"models/player/custom_player/legacy/tm_balkan_variantb.mdl", 		"Balkan - A", 		"0", "1", "0"},
 	{"models/player/custom_player/legacy/tm_balkan_variantc.mdl", 		"Balkan - B", 		"0", "1", "0"},
@@ -76,13 +76,13 @@ char g_szSkinsList[][][] = {
 	{"models/player/custom_player/legacy/tm_phoenix_variantb.mdl", 		"Phoenix - B", 		"0", "1", "0"},
 	{"models/player/custom_player/legacy/tm_phoenix_variantc.mdl", 		"Phoenix - C", 		"0", "1", "0"},
 	{"models/player/custom_player/legacy/tm_phoenix_variantd.mdl", 		"Phoenix - D", 		"0", "1", "0"},
-	
+/*
 	{"models/player/custom_player/legacy/tm_pirate.mdl", 				"Pirate", 			"0", "1", "0"},
 	{"models/player/custom_player/legacy/tm_pirate_varianta.mdl", 		"Pirate - A", 		"0", "1", "0"},
 	{"models/player/custom_player/legacy/tm_pirate_variantb.mdl", 		"Pirate - B", 		"0", "1", "0"},
 	{"models/player/custom_player/legacy/tm_pirate_variantc.mdl", 		"Pirate - C", 		"0", "1", "0"},
 	{"models/player/custom_player/legacy/tm_pirate_variantd.mdl", 		"Pirate - D", 		"0", "1", "0"},
-	
+*/
 	{"models/player/custom_player/legacy/tm_professional.mdl", 			"Professional", 	"0", "1", "0"},
 	{"models/player/custom_player/legacy/tm_professional_var1.mdl", 	"Professional - A", "0", "1", "0"},
 	{"models/player/custom_player/legacy/tm_professional_var2.mdl", 	"Professional - B", "0", "1", "0"},
@@ -181,8 +181,11 @@ public void OnClientPostAdminCheck(int client) {
 	
 	if( rp_GetClientBool(client, b_Crayon) )
 		rp_HookEvent(client, RP_PrePlayerTalk, fwdTalkCrayon);
-	if( rp_GetClientBool(client, b_HasShoes) )
+	if( rp_GetClientBool(client, b_HasShoes) ) {
 		SDKHook(client, SDKHook_OnTakeDamage, fwdNoFallDamage);
+		rp_HookEvent(client, RP_OnAssurance,	fwdAssuranceShoes);
+		rp_HookEvent(client, RP_OnFrameSeconde, fwdVitalite);
+	}
 }
 public void OnClientDisconnect(int client) {
 	removeShield(client);
