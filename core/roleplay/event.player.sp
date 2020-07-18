@@ -30,7 +30,7 @@ public void EventFirstSpawn(int client) {
 	if( g_bUserData[client][b_ItemRecovered] )
 		CreateTimer(1.0, HUD_WarnDisconnect, client);
 
-	ServerCommand("sm_force_discord_group %N", Client);
+	ServerCommand("sm_force_discord_group %N", client);
 }
 public Action HUD_WarnDisconnect(Handle timer, any client) {
 	if( !g_bUserData[client][b_ItemRecovered] )

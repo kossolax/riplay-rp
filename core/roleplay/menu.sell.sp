@@ -819,15 +819,13 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			rp_ClientMoney(client, type == 5 ? i_Bank : i_Money, -RoundFloat(prixItem - reduc));
 			rp_ClientMoney(vendeur, i_Money, RoundToFloor(((prixItem * taxe) - reduc) * 0.5));
 			rp_ClientMoney(vendeur, i_AddToPay, RoundToCeil(((prixItem * taxe) - reduc) * 0.5));
-
-			// 0.1 = taxe pour les low capitals 
+			// ici pour modif gozer
+			
+			// a partir d'ici il reste 80% du prix
 
 			int capital =  RoundToFloor(prixItem - ((prixItem * taxe) - reduc));
 			int rest = RoundToFloor(capital * 0.1); // prend 10% du capital
 			int addcapital = capital - rest; // prend le reste du capital
-
-			/*int addcapital = RoundToCeil(prixItem*(1.0 - (taxe + 0.1))); 
-			int rest = RoundToFloor(prixItem*(1.0 - (1.0 - 0.1)));*/
 
 			RestToLowCapital(rest);
 			// rest = pour calc les low capitals
