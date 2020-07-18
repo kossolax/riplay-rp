@@ -390,7 +390,7 @@ public Action Cmd_Cop(int client) {
 	if (bit & (BITZONE_BLOCKJAIL | BITZONE_JAIL | BITZONE_HAUTESECU | BITZONE_LACOURS | BITZONE_PVP)) {  // Flic ripoux
 		ACCESS_DENIED(client);
 	}
-	if (rp_GetClientVehiclePassager(client) > 0 || Client_GetVehicle(client) > 0 || rp_GetClientInt(client, i_Sickness)) {  // En voiture, ou très malade
+	if (rp_GetClientVehiclePassager(client) > 0 || Client_GetVehicle(client) > 0 ) {  // En voiture, ou très malade
 		ACCESS_DENIED(client);
 	}
 	if ((job == 8 || job == 9) && rp_GetZoneInt(zone, zone_type_type) != 1) {  // Gardien, policier dans le PDP
