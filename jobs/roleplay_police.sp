@@ -992,7 +992,7 @@ void SendPlayerToJail(int target, int client = 0) {
 	int rand = Math_GetRandomInt(0, (MaxJail - 1));
 	rp_ClientTeleport(target, fLocation[rand]);
 	
-	SDKHook(target, SDKHook_WeaponDrop, OnWeaponDrop);
+	//SDKHook(target, SDKHook_WeaponDrop, OnWeaponDrop);
 	CreateTimer(MENU_TIME_DURATION.0, AllowWeaponDrop, target);
 	
 	Call_StartForward(rp_GetForwardHandle(target, RP_PostClientSendToJail));
@@ -1001,7 +1001,7 @@ void SendPlayerToJail(int target, int client = 0) {
 	Call_Finish();
 }
 public Action AllowWeaponDrop(Handle timer, any client) {
-	SDKUnhook(client, SDKHook_WeaponDrop, OnWeaponDrop);
+	//SDKUnhook(client, SDKHook_WeaponDrop, OnWeaponDrop);
 }
 public Action OnWeaponDrop(int client, int weapon) {
 	return Plugin_Handled;

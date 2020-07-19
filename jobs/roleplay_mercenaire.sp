@@ -173,7 +173,7 @@ public Action Cmd_ItemContrat(int args) {
 	rp_SetClientStat(vendeur, i_JobFails, rp_GetClientStat(client, i_JobFails) - 1);
 
 	
-	SDKHook(vendeur, SDKHook_WeaponDrop, OnWeaponDrop);
+	//SDKHook(vendeur, SDKHook_WeaponDrop, OnWeaponDrop);
 	
 	
 	if( StrContains(arg1, "classic") == 0 ) {
@@ -587,7 +587,7 @@ void RestoreAssassinNormal(int client) {
 	g_iKillerPoint[client][competance_cryo] = 0;
 	g_iKillerPoint[client][competance_berserk] = 0;
 	
-	SDKUnhook(client, SDKHook_WeaponDrop, OnWeaponDrop);
+	//SDKUnhook(client, SDKHook_WeaponDrop, OnWeaponDrop);
 	rp_UnhookEvent(client, RP_OnPlayerDead, fwdTueurDead);
 	rp_UnhookEvent(client, RP_PlayerCanKill, fwdTueurCanKill);
 	rp_UnhookEvent(rp_GetClientInt(client, i_ToKill), RP_PlayerCanKill, fwdTueurCanKill);

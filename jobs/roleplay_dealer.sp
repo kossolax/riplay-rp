@@ -755,7 +755,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		
 		rp_SetClientBool(client, b_MaySteal, false);
 		rp_SetClientBool(target, b_Stealing, true);
-		SDKHook(target, SDKHook_WeaponDrop, OnWeaponDrop);
+		//SDKHook(target, SDKHook_WeaponDrop, OnWeaponDrop);
 		
 		for (int i = 1; i <= MaxClients; i++) {
 			if( !IsValidClient(i) )
@@ -1280,8 +1280,8 @@ public Action ItemPickLockOver_18th(Handle timer, Handle dp) {
 	
 	rp_ClientColorize(client);
 	rp_ClientReveal(client);
-	if( IsValidClient(target) )
-		SDKUnhook(target, SDKHook_WeaponDrop, OnWeaponDrop);
+	//if( IsValidClient(target) )
+	//	SDKUnhook(target, SDKHook_WeaponDrop, OnWeaponDrop);
 	
 	bool couldSteal = rp_GetClientBool(target, b_Stealing);
 	rp_SetClientBool(target, b_Stealing, false);
