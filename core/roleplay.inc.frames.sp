@@ -905,10 +905,9 @@ public void CRON_TIMER() {
 	
 	if( StringToInt(szHours) == 6 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 06h00m00s
 		CPrintToChatAll("" ...MOD_TAG... " Le serveur vas {red}redémarrer{default} MAINTENANT.");
-		if( GetConVarInt(FindConVar("hostport")) != 27025 )
-			ServerCommand("crash");
-		else
-			ServerCommand("quit");
+		ServerCommand("sv_cheats 1");
+		ServerCommand("crash");
+		ServerCommand("quit");
 		
 	}
 	if( StringToInt(szDayOfWeek) == 3 ) { // Mercredi
