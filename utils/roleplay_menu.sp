@@ -55,7 +55,35 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 		openMenuGeneral(client);
 		return Plugin_Handled;
 	}
+	if( StrEqual(command, "steam") || StrEqual(command, "steamid") ) {
+		return showSteamID(client);
+	}
 	return Plugin_Continue;
+}
+public Action showSteamID(int client) {
+	char tmp[64], tmp2[64];
+	
+	PrintToConsole(client, "============================================================ ");
+	PrintToConsole(client, "============================================================ ");
+	PrintToConsole(client, "============================================================ ");
+	
+	for (int i = 1; i <= 64; i++) {
+		if( !IsValidClient(i) )
+			continue;
+		
+		GetClientAuthId(i, AuthId_Engine, tmp, sizeof(tmp));
+		GetClientAuthId(i, AuthId_SteamID64, tmp2, sizeof(tmp2));
+		
+		PrintToConsole(client, "%N %s (%s)", i, tmp2, tmp);
+		if( i == client )
+			CPrintToChat(client, "" ...MOD_TAG... " Votre SteamID est: %s (%s)", tmp2, tmp);
+	}
+	
+	PrintToConsole(client, "============================================================ ");
+	PrintToConsole(client, "============================================================ ");
+	PrintToConsole(client, "============================================================ ");
+	
+	return Plugin_Handled;
 }
 public Action OnPlayerRunCmd(int client, int &button) {
 	if( button & IN_USE && g_bPressedUse[client] == false ) {
