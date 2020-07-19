@@ -1414,23 +1414,25 @@ public Action Command_Say(int client, int args) {
 			return Plugin_Handled;
 		}
 	}
-
-	if( strlen(szSayText) > 0 ) {
-		if( StrEqual(g_szLastMessage[client][0], szSayText, false) ||
-		StrEqual(g_szLastMessage[client][1], szSayText, false) ||
-		StrEqual(g_szLastMessage[client][2], szSayText, false) ||
-		StrEqual(g_szLastMessage[client][3], szSayText, false) ||
-		StrEqual(g_szLastMessage[client][4], szSayText, false)
-		) {
-			CPrintToChat(client, "" ...MOD_TAG... " Votre message a été bloqué afin d'éviter d'éventuel spam.");
-			return Plugin_Handled;
+	
+	if( !IsAdmin(client) ) {
+		if( strlen(szSayText) > 0 ) {
+			if( StrEqual(g_szLastMessage[client][0], szSayText, false) ||
+			StrEqual(g_szLastMessage[client][1], szSayText, false) ||
+			StrEqual(g_szLastMessage[client][2], szSayText, false) ||
+			StrEqual(g_szLastMessage[client][3], szSayText, false) ||
+			StrEqual(g_szLastMessage[client][4], szSayText, false)
+			) {
+				CPrintToChat(client, "" ...MOD_TAG... " Votre message a été bloqué afin d'éviter d'éventuel spam.");
+				return Plugin_Handled;
+			}
+	
+			strcopy(g_szLastMessage[client][4], sizeof(g_szLastMessage[][]), g_szLastMessage[client][3]);
+			strcopy(g_szLastMessage[client][3], sizeof(g_szLastMessage[][]), g_szLastMessage[client][2]);
+			strcopy(g_szLastMessage[client][2], sizeof(g_szLastMessage[][]), g_szLastMessage[client][1]);
+			strcopy(g_szLastMessage[client][1], sizeof(g_szLastMessage[][]), g_szLastMessage[client][0]);
+			strcopy(g_szLastMessage[client][0], sizeof(g_szLastMessage[][]), szSayText);
 		}
-
-		strcopy(g_szLastMessage[client][4], sizeof(g_szLastMessage[][]), g_szLastMessage[client][3]);
-		strcopy(g_szLastMessage[client][3], sizeof(g_szLastMessage[][]), g_szLastMessage[client][2]);
-		strcopy(g_szLastMessage[client][2], sizeof(g_szLastMessage[][]), g_szLastMessage[client][1]);
-		strcopy(g_szLastMessage[client][1], sizeof(g_szLastMessage[][]), g_szLastMessage[client][0]);
-		strcopy(g_szLastMessage[client][0], sizeof(g_szLastMessage[][]), szSayText);
 	}
 
 	g_iSuccess_last_chat[client] = GetTime();
