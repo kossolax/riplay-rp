@@ -98,7 +98,7 @@ public Action Cmd_Sanction(int client, int args) {
 public void OnClientPostAdminCheck(int client) {
 	char URL[128], szSteamID[32];
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
-	Format(URL, sizeof(URL), "https://www.ts-x.eu/api/user/pilori/%s/next", szSteamID);
+	Format(URL, sizeof(URL), "https://riplay.fr/api/user/pilori/%s/next", szSteamID);
 	
 	Handle req = SteamWorks_CreateHTTPRequest(k_EHTTPMethodGET, URL);
 	SteamWorks_SetHTTPCallbacks(req, OnSteamWorksHTTPComplete);
@@ -308,14 +308,11 @@ void SQL_Insert(int client, int target, int duration, const char[] reason, const
 	GetClientAuthId(client, AUTH_TYPE, szClient, sizeof(szClient));
 	GetClientAuthId(target, AUTH_TYPE, szTarget, sizeof(szTarget));
 	
-	ReplaceString(szClient, sizeof(szClient), "STEAM_1", "STEAM_0");
-	ReplaceString(szTarget, sizeof(szTarget), "STEAM_1", "STEAM_0");
-	
 	int size = strlen(reason) * 2 + 1;
 	char[] eReason = new char[size];
 	SQL_EscapeString(rp_GetDatabase(), reason, eReason, size);
 	
-	Format(query, sizeof(query), "INSERT INTO `ts-x`.`srv_bans` (`id`, `SteamID`, `StartTime`, `EndTime`, `Length`, `adminSteamID`, `BanReason`, `game`) ");
+	Format(query, sizeof(query), "INSERT INTO `rp_csgo`.`srv_bans` (`id`, `SteamID`, `StartTime`, `EndTime`, `Length`, `adminSteamID`, `BanReason`, `game`) ");
 	Format(query, sizeof(query), "%s VALUES(NULL, '%s', UNIX_TIMESTAMP(), UNIX_TIMESTAMP()+%d, '%d', '%s', '%s', '%s'); ", query, szTarget, duration*60, duration*60, szClient, eReason, type);
 	SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 }
