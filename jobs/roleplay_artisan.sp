@@ -785,6 +785,9 @@ void addStatsToMenu(int client, Handle menu) {
 	AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	
 	float pc = rp_GetClientInt(client, i_ArtisanXP) / float(getNextLevel(rp_GetClientInt(client, i_ArtisanLevel)));
+	if( pc != pc )
+		pc = 0.0;
+	
 	rp_Effect_LoadingBar(tmp2, sizeof(tmp2),  pc );
 	Format(tmp, sizeof(tmp), "Expérience: %s %.1f%%", tmp2, pc*100.0 );
 	AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
