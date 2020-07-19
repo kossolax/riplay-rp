@@ -70,7 +70,7 @@ public Action Cmd_ItemMine(int args) {
 	
 	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
 	
-	AcceptEntityInput(ent, "DisableMotion");
+	rp_AcceptEntityInput(ent, "DisableMotion");
 	
 	TeleportEntity(ent, vecOrigin, NULL_VECTOR, NULL_VECTOR);
 	

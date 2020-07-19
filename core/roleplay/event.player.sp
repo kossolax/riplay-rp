@@ -212,7 +212,7 @@ public void CommandUse(int Client) {
 			Entity_GetAbsAngles(g_iGrabbing[Client], vecAngle);
 			vecAngle[0] = vecAngle[2] = 0.0;
 			TeleportEntity(g_iGrabbing[Client], NULL_VECTOR, vecAngle, vecNull);
-			AcceptEntityInput(g_iGrabbing[Client], "Sleep");
+			rp_AcceptEntityInput(g_iGrabbing[Client], "Sleep");
 			ScheduleEntityInput(g_iGrabbing[Client], 0.25, "Wake");
 		}
 	}
@@ -296,7 +296,7 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	if( test )	LogToGame("[CRASH-TEST] 2");
 	int old = EntRefToEntIndex(g_iUserData[Client][i_FPD]);
 	if( old > 0 ) {	
-		AcceptEntityInput(old, "Kill");
+		rp_AcceptEntityInput(old, "Kill");
 		g_iUserData[Client][i_FPD] = 0;
 	}
 	if( test )	LogToGame("[CRASH-TEST] 3");

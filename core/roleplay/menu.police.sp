@@ -218,7 +218,7 @@ public int eventPayForLeaving_2(Handle menu, MenuAction action, int iTarget, int
 								continue;
 							if( GetPlayerZone(j) != i )
 								continue;
-							AcceptEntityInput(j, "Close");
+							rp_AcceptEntityInput(j, "Close");
 							ScheduleEntityInput(j, 0.1, "Lock");
 							
 						}

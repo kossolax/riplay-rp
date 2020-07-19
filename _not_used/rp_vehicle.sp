@@ -51,7 +51,7 @@ SpawnVehicle(Float:spawnorigin[3], Float:spawnangles[3], const String:ModelPath[
 	DispatchKeyValue(VehicleIndex, "targetname", TargetName);
 	
 	if( PrecacheModel(ModelPath) == 0 ) {
-		AcceptEntityInput(VehicleIndex, "Kill");
+		rp_AcceptEntityInput(VehicleIndex, "Kill");
 		
 		PrintToServer("********** vehiclemod: failed to precache");
 		return;
@@ -93,7 +93,7 @@ SpawnVehicle(Float:spawnorigin[3], Float:spawnangles[3], const String:ModelPath[
 	}
 	
 	if (TR_DidHit()) {
-		AcceptEntityInput(VehicleIndex, "Kill");
+		rp_AcceptEntityInput(VehicleIndex, "Kill");
 		
 		PrintToServer("********** vehiclemod: spawn coordinates not clear");
 		return;
@@ -105,7 +105,7 @@ SpawnVehicle(Float:spawnorigin[3], Float:spawnangles[3], const String:ModelPath[
 	
 	// force players in.
 	if (client != 0) {
-		AcceptEntityInput(VehicleIndex, "use", client);
+		rp_AcceptEntityInput(VehicleIndex, "use", client);
 	}
 }
 public bool:RayDontHitClient(entity, contentsMask, any:data)

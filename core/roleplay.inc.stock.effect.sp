@@ -53,7 +53,7 @@ void killSpect(int client) {
 	
 	int old = EntRefToEntIndex(g_iUserData[client][i_FPD]);
 	if( old > 0 ) {
-		AcceptEntityInput(old, "Kill");
+		rp_AcceptEntityInput(old, "Kill");
 		g_iUserData[client][i_FPD] = 0;
 		return;
 	}
@@ -71,9 +71,9 @@ void killSpect(int client) {
 	DispatchSpawn(ent);
 	
 	SetVariantString("!activator");
-	AcceptEntityInput(ent, "SetParent", ragdoll, ragdoll);
+	rp_AcceptEntityInput(ent, "SetParent", ragdoll, ragdoll);
 	SetVariantString("facemask");
-	AcceptEntityInput(ent, "SetParentAttachment", ragdoll, ragdoll);
+	rp_AcceptEntityInput(ent, "SetParentAttachment", ragdoll, ragdoll);
 	
 	SetEntityRenderMode(ent, RENDER_NONE);
 	

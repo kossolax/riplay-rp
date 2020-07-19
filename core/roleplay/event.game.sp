@@ -259,7 +259,7 @@ public void OnEntityCreated(int entity, const char[] classname)  {
 public void THINK_Grenade(int entity) {
 	if( StrEqual(g_szEntityName[entity], "smokegrenade_projectile") || StrEqual(g_szEntityName[entity], "flashbang_projectile") ) {
 		if( rp_GetZoneBit(rp_GetPlayerZone(entity)) & BITZONE_PEACEFULL ) 
-			AcceptEntityInput(entity, "Kill");
+			rp_AcceptEntityInput(entity, "Kill");
 	}
 	else {
 		SDKUnhook(entity, SDKHook_Think, THINK_Grenade);

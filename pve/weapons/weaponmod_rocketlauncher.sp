@@ -126,7 +126,7 @@ public Action OnExplode(int client, int entity) {
 		if( ent > 0 && IsValidEdict(ent) && IsValidEntity(ent) ) {
 			OnProjectileHit(client, entity, ent, 0);
 			g_iStack[entity][i] = INVALID_ENT_REFERENCE;
-			AcceptEntityInput(ent, "Kill");
+			rp_AcceptEntityInput(ent, "Kill");
 		}
 	}
 	
@@ -206,7 +206,7 @@ public Action _popStack(Handle timer, Handle dp) {
 	
 	if( ent > 0 && IsValidEdict(ent) && IsValidEntity(ent) ) {
 		g_iStack[entity][i] = INVALID_ENT_REFERENCE;
-		AcceptEntityInput(ent, "Kill");
+		rp_AcceptEntityInput(ent, "Kill");
 	}
 	
 	return Plugin_Stop;

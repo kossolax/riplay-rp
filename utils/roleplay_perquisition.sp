@@ -633,8 +633,8 @@ void DoorLock(int zone) {
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
 		
 		if( StrEqual(tmp, tmp2) ) {
-			AcceptEntityInput(i, "Close");
-			AcceptEntityInput(i, "Lock");
+			rp_AcceptEntityInput(i, "Close");
+			rp_AcceptEntityInput(i, "Lock");
 		}
 	}
 }

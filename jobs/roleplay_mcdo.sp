@@ -611,7 +611,7 @@ public Action BuildingBanana_touch(int index, int client) {
 	vecVelocity[2] = GetRandomFloat(600.0, 800.0);
 	TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, vecVelocity);	
 	
-	AcceptEntityInput(index, "Kill");
+	rp_AcceptEntityInput(index, "Kill");
 	SDKUnhook(index, SDKHook_Touch, BuildingBanana_touch);
 	
 	return Plugin_Continue;

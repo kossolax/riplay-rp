@@ -550,7 +550,7 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 		LogToFile("vehicules.txt", "no space to spawn the vehicle");
 
 		delete trace; 
-		AcceptEntityInput(ent, "Kill");	
+		rp_AcceptEntityInput(ent, "Kill");	
 		
 		return 0; 
 	}
@@ -578,8 +578,8 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	
 	LogToFile("vehicules.txt", "after TeleportEntity");
 
-	//AcceptEntityInput(ent, "HandBrakeOn");
-	AcceptEntityInput(ent, "TurnOff");
+	//rp_AcceptEntityInput(ent, "HandBrakeOn");
+	rp_AcceptEntityInput(ent, "TurnOff");
 	
 	if( IsValidClient(client) ) {
 		
@@ -729,7 +729,7 @@ void attachVehicleLight(int vehicle) {
 	DispatchSpawn(ent);
 	
 	SetVariantString("!activator");
-	AcceptEntityInput(ent, "SetParent", vehicle);
+	rp_AcceptEntityInput(ent, "SetParent", vehicle);
 	TeleportEntity(ent, view_as<float>({0.0, 0.0, 24.0}), view_as<float>({ 90.0, 0.0, 0.0 }), NULL_VECTOR);
 	
 	rp_SetVehicleInt(vehicle, car_light, ent);
@@ -743,7 +743,7 @@ void dettachVehicleLight(int vehicle) {
 	GetEdictClassname(ent, class, sizeof(class));
 	
 	if( StrEqual(class, "env_projectedtexture") && Entity_GetParent(ent) == vehicle )
-		AcceptEntityInput(ent, "Kill");
+		rp_AcceptEntityInput(ent, "Kill");
 	
 	rp_SetVehicleInt(vehicle, car_light, -1);
 }

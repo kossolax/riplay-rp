@@ -231,9 +231,9 @@ public Action Command_Say(int client, int args) {
 			}
 			
 			if( canUnlock || !wasLocked ) {
-				AcceptEntityInput(target, "Toggle", client);
+				rp_AcceptEntityInput(target, "Toggle", client);
 				if( door_bdd > 0 )
-					AcceptEntityInput(door_bdd+MaxClients, "Toggle", client);
+					rp_AcceptEntityInput(door_bdd+MaxClients, "Toggle", client);
 			}
 
 			if( wasLocked && canLock ) {
@@ -261,7 +261,7 @@ public Action Command_Say(int client, int args) {
 		}
 
 		//Open:
-		AcceptEntityInput(target, "Toggle", client);
+		rp_AcceptEntityInput(target, "Toggle", client);
 
 		return Plugin_Handled;
 	}

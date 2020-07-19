@@ -39,19 +39,19 @@ public OnMapStart()
 	HookSingleEntityOutput(ent, "OnLightOn", OutputHook, true);
 	HookSingleEntityOutput(ent, "OnLightOff", OutputHook, true);
 	
-	AcceptEntityInput(ent, "LightOff", ent, ent);
-	AcceptEntityInput(ent, "LightOn", ent, ent);
+	rp_AcceptEntityInput(ent, "LightOff", ent, ent);
+	rp_AcceptEntityInput(ent, "LightOn", ent, ent);
 	
-	AcceptEntityInput(ent, "LightOff", ent, ent);
-	AcceptEntityInput(ent, "LightOn", ent, ent);
+	rp_AcceptEntityInput(ent, "LightOff", ent, ent);
+	rp_AcceptEntityInput(ent, "LightOn", ent, ent);
 	
 	HookSingleEntityOutput(ent, "OnLightOn", OutputHook, false);
 	HookSingleEntityOutput(ent, "OnLightOff", OutputHook, false);
 	
-	AcceptEntityInput(ent, "LightOff", ent, ent);
-	AcceptEntityInput(ent, "LightOn", ent, ent);
-	AcceptEntityInput(ent, "LightOff", ent, ent);
-	AcceptEntityInput(ent, "LightOn", ent, ent);
+	rp_AcceptEntityInput(ent, "LightOff", ent, ent);
+	rp_AcceptEntityInput(ent, "LightOn", ent, ent);
+	rp_AcceptEntityInput(ent, "LightOff", ent, ent);
+	rp_AcceptEntityInput(ent, "LightOn", ent, ent);
 	
 	//Comment these out (and reload the plugin heaps) to test for leaks on plugin unload
 	UnhookSingleEntityOutput(ent, "OnLightOn", OutputHook);

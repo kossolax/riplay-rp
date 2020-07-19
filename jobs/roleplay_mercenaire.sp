@@ -682,7 +682,7 @@ public Action SendToTueur(Handle timer, any client) {
 		if( StrContains(classname, "door") != -1 &&
 			rp_GetZoneInt(rp_GetPlayerZone(i, 60.0) , zone_type_type) == 41
 			) {
-			AcceptEntityInput(i, "Close");
+			rp_AcceptEntityInput(i, "Close");
 			rp_ScheduleEntityInput(i, 0.01, "Lock");
 		}
 	}

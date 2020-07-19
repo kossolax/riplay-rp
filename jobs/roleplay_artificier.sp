@@ -373,7 +373,7 @@ public void gasExplode(int client, int ent) {
 	TeleportEntity(ent1, vecOrigin, NULL_VECTOR, NULL_VECTOR);
 		
 	SetVariantString("!activator");
-	AcceptEntityInput(ent1, "SetParent", ent);
+	rp_AcceptEntityInput(ent1, "SetParent", ent);
 	
 	SetEntPropFloat(ent1, Prop_Send, "m_FadeStartTime", 8.0);
 	SetEntPropFloat(ent1, Prop_Send, "m_FadeEndTime", 16.0);
@@ -458,10 +458,10 @@ public Action EMPExplode_Task(Handle timer, any ent) {
 			TE_SendToAll();
 			
 			if( StrContains(classname, "weapon_") == 0 && GetEntPropEnt(i, Prop_Send, "m_hOwnerEntity") <= 0 ) {
-				AcceptEntityInput(i, "Kill");
+				rp_AcceptEntityInput(i, "Kill");
 			}
 			else if( StrContains(classname, "rp_mine_") == 0 ) {
-				AcceptEntityInput(i, "Kill");
+				rp_AcceptEntityInput(i, "Kill");
 			}
 			else {
 				if( IsValidClient(i) && !(rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_PEACEFULL) ) {

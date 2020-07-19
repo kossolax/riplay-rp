@@ -239,9 +239,9 @@ public Action Cmd_Copter(client, args) {
 	SetEntityMoveType(ent, MOVETYPE_NOCLIP);
 	
 	SetVariantString("!activator");
-	AcceptEntityInput(ent2, "SetParent", ent);
+	rp_AcceptEntityInput(ent2, "SetParent", ent);
 //	SetVariantString("!activator");
-//	AcceptEntityInput(ent3, "SetParent", ent);
+//	rp_AcceptEntityInput(ent3, "SetParent", ent);
 	
 	TeleportEntity(ent, vecStart, vecAngles, vecDir);
 	TeleportEntity(ent2, view_as<float>( { 0.0, 0.0, 1250.0 } ), NULL_VECTOR, NULL_VECTOR);
@@ -322,10 +322,10 @@ public Action:Cmd_SetMask(client, args) {
 	
 	
 	SetVariantString("!activator");
-	AcceptEntityInput(ent, "SetParent", client, client);
+	rp_AcceptEntityInput(ent, "SetParent", client, client);
 	
 	SetVariantString("facemask");
-	AcceptEntityInput(ent, "SetParentAttachmentMaintainOffset");
+	rp_AcceptEntityInput(ent, "SetParentAttachmentMaintainOffset");
 	
 	new Float:offset[3];
 	offset[0] = GetCmdArgFloat(1);

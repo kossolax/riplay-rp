@@ -48,7 +48,7 @@ public int eventSetSkin(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 	}
 }
 public Action AlloMoving(Handle timer, any ent) {
-	AcceptEntityInput(ent, "EnableMotion");
+	rp_AcceptEntityInput(ent, "EnableMotion");
 }
 
 public int MenuNothing(Handle menu, MenuAction action, int client, int param2) {

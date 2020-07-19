@@ -113,7 +113,7 @@ public Action touch(int entity, int target) {
 	
 	}
 	else if( rp_IsMoveAble(target) )
-		AcceptEntityInput(target, "Kill");
+		rp_AcceptEntityInput(target, "Kill");
 	
 	return Plugin_Continue;
 }

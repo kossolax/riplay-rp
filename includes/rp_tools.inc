@@ -15,6 +15,11 @@
 
 #include <sdkhooks>
 #include <cstrike>
+
+bool rp_AcceptEntityInput(int dest, const char[] input, int activator=-1, int caller=-1, int outputid=0) {
+	if( dest > 0 && IsValidEdict(dest) && IsValidEntity(dest) )
+		AcceptEntityInput(dest, input, activator, caller, outputid);
+}
 // ----------------------------------------------------------------------------
 stock bool Weapon_ShouldBeEquip(const char[] weapon) {
 	if( StrContains(weapon, "weapon_knife") == 0 || StrEqual(weapon, "weapon_bayonet") ) // TODO: Add missing
@@ -482,7 +487,7 @@ public Action rp_ClientRemoveProp(int client, int target, int item_id) {
 						if (i > 0) {
 							rp_ClientGiveItem(client, i);
 						}
-						AcceptEntityInput(target, "Kill");
+						rp_AcceptEntityInput(target, "Kill");
 					}
 					else {
 						// DealDamage(target, 1000, client);
@@ -490,12 +495,12 @@ public Action rp_ClientRemoveProp(int client, int target, int item_id) {
 					}
 				}
 				else {
-					AcceptEntityInput(target, "Kill");
+					rp_AcceptEntityInput(target, "Kill");
 					CPrintToChat(client, "" ...MOD_TAG... " Le props a été supprime.");
 				}
 			}
 			else {
-				AcceptEntityInput(target, "Kill");
+				rp_AcceptEntityInput(target, "Kill");
 				CPrintToChat(client, "" ...MOD_TAG... " Le props a été supprime.");
 			}
 		}

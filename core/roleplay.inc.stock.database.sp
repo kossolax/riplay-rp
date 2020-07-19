@@ -838,7 +838,7 @@ void ResetUserData(int client) {
 		if( owner != client )
 			continue;
 		
-		AcceptEntityInput(i, "Kill");
+		rp_AcceptEntityInput(i, "Kill");
 	}
 	
 	g_Client_AMP[client] = -1.0;

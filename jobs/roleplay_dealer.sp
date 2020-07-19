@@ -1074,7 +1074,7 @@ public Action Frame_BuildingPlant(Handle timer, any ent) {
 	
 	int client = GetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity");
 	if( !IsValidClient(client) ) {
-		AcceptEntityInput(ent, "Kill");
+		rp_AcceptEntityInput(ent, "Kill");
 		return Plugin_Handled;
 	}
 	

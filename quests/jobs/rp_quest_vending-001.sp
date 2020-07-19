@@ -102,7 +102,7 @@ public void Q1_Abort(int objectiveID, int client) {
 	if (g_iGoing[client] > 0 && IsValidEdict(g_iGoing[client]) && IsValidEntity(g_iGoing[client])) {
 		GetEdictClassname(g_iGoing[client], classname, sizeof(classname));
 		if (StrContains(classname, "prop_dynamic_glow") == 0) {
-			AcceptEntityInput(g_iGoing[client], "Kill");
+			rp_AcceptEntityInput(g_iGoing[client], "Kill");
 			g_iGoing[client] = 0;
 		}
 	}
@@ -112,7 +112,7 @@ public void Q1_Frame(int objectiveID, int client) {
 	g_iDuration[client]--;
 	
 	if (Entity_GetDistance(client, g_iGoing[client]) < 32.0) {
-		AcceptEntityInput(g_iGoing[client], "Kill");
+		rp_AcceptEntityInput(g_iGoing[client], "Kill");
 		g_iGoing[client] = 0;
 		rp_QuestStepComplete(client, objectiveID);
 		

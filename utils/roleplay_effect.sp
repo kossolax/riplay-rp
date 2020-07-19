@@ -142,7 +142,7 @@ public Action Effect_Particle(int client, int args) {
 		if( args == 4 ) {
 			GetCmdArg(4, arg4, sizeof(arg4));
 			SetVariantString(arg4);
-			AcceptEntityInput(particles, "SetParentAttachment", particles, particles, 0);
+			rp_AcceptEntityInput(particles, "SetParentAttachment", particles, particles, 0);
 		}
 		
 		if( IsValidClient(target) ) {
@@ -163,7 +163,7 @@ public Action fwdPlayerDead(int client, int attacker, float& respawn, int& tdm) 
 		if( ent > 0 && ent != INVALID_ENT_REFERENCE && IsValidEdict(ent) && IsValidEntity(ent) ) {
 			GetEdictClassname(ent, classname, sizeof(classname));
 			if( StrEqual(classname, "info_particle_system") )
-				AcceptEntityInput(ent, "Stop");
+				rp_AcceptEntityInput(ent, "Stop");
 		}
 	}
 	g_iParentedParticle[client].Clear();
@@ -879,9 +879,9 @@ public Action Effect_Weather(int client, int args) {
 			SetEntPropFloat(id, Prop_Send, "m_fog.end", 500.0+float(amount)*6.0);
 			
 			SetVariantColor({128, 128, 128, 255});
-			AcceptEntityInput(id, "SetColor");
+			rp_AcceptEntityInput(id, "SetColor");
 			SetVariantColor({128, 128, 128, 255});
-			AcceptEntityInput(id, "SetColorSecondary");
+			rp_AcceptEntityInput(id, "SetColorSecondary");
 		}
 		
 		amount = 0;
@@ -897,9 +897,9 @@ public Action Effect_Weather(int client, int args) {
 			SetEntPropFloat(id, Prop_Send, "m_fog.end", 500.0+float(amount)*6.0);
 			
 			SetVariantColor({40, 40, 40, 255});
-			AcceptEntityInput(id, "SetColor");
+			rp_AcceptEntityInput(id, "SetColor");
 			SetVariantColor({40, 40, 40, 255});
-			AcceptEntityInput(id, "SetColorSecondary");
+			rp_AcceptEntityInput(id, "SetColorSecondary");
 		}
 	}
 	else {
@@ -951,7 +951,7 @@ public Action EffectSun(int client, int arg) {
 	Format(args, sizeof(args), "%f %f 0.0", x, y);
 	
 	SetVariantString(args);
-	AcceptEntityInput(id, "SetAngles");
+	rp_AcceptEntityInput(id, "SetAngles");
 	return Plugin_Handled;
 }
 public Action Effect_Group(int client, int args) {
@@ -1477,9 +1477,9 @@ public void OnGameFrame() {
 					color[3] = 255;
 					
 				//	SetVariantColor(color);
-				//	AcceptEntityInput(a, "SetColor");
+				//	rp_AcceptEntityInput(a, "SetColor");
 				//	SetVariantColor(color);
-				//	AcceptEntityInput(a, "SetColorSecondary");
+				//	rp_AcceptEntityInput(a, "SetColorSecondary");
 				}
 				//SetEntPropFloat(a, Prop_Send, "m_fog.farz",  (((5000.0-2000.0) * percent) + 2000.0) );
 				
@@ -1491,29 +1491,29 @@ public void OnGameFrame() {
 			
 			if( StrEqual(name2, "light_environment", false) ) {
 				SetVariantString(szLight);
-				AcceptEntityInput(a, "SetPattern");
+				rp_AcceptEntityInput(a, "SetPattern");
 			}
 			
 			if( StrEqual(name, "night_skybox", false) /*&& StrEqual(name2, "func_brush", false)*/ ) {
 				SetVariantString(szAlpha);
-				AcceptEntityInput(a, "Alpha");
+				rp_AcceptEntityInput(a, "Alpha");
 				SkyBoxID = a;
 			}
 			
 			if( alpha < 128 ) {
 				if( StrEqual(name, "night_light", false) ) {
-					AcceptEntityInput(a, "TurnOff");
+					rp_AcceptEntityInput(a, "TurnOff");
 				}
 				if( StrEqual(name, "night_spotlight", false) ) {
-					AcceptEntityInput(a, "LightOff");
+					rp_AcceptEntityInput(a, "LightOff");
 				}
 			}
 			else if( alpha > 128 ) {
 				if( StrEqual(name, "night_light", false) ) {
-					AcceptEntityInput(a, "TurnOn");
+					rp_AcceptEntityInput(a, "TurnOn");
 				}
 				if( StrEqual(name, "night_spotlight", false) ) {
-					AcceptEntityInput(a, "LightOn");
+					rp_AcceptEntityInput(a, "LightOn");
 				}
 			}
 		}

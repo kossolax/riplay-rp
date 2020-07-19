@@ -416,7 +416,7 @@ public int MenuPropAppart(Handle menu, MenuAction action, int client, int param2
 			delete trace;
 			
 			CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas assez de place.");
-			AcceptEntityInput(ent, "Kill");
+			rp_AcceptEntityInput(ent, "Kill");
 			return;
 		}
 		delete trace;
@@ -426,7 +426,7 @@ public int MenuPropAppart(Handle menu, MenuAction action, int client, int param2
 		
 		SetEntityMoveType(ent, MOVETYPE_VPHYSICS); 
 		TeleportEntity(ent, position, ang_ent, NULL_VECTOR);
-		AcceptEntityInput(ent, "DisableMotion");
+		rp_AcceptEntityInput(ent, "DisableMotion");
 		rp_ScheduleEntityInput(ent, 0.6, "EnableMotion");
 		
 		ServerCommand("sm_effect_fading %i 0.5", ent);
@@ -512,7 +512,7 @@ public int MenuPropOutdoor(Handle menu, MenuAction action, int client, int param
 			delete trace;
 			
 			CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas assez de place.");
-			AcceptEntityInput(ent, "Kill");
+			rp_AcceptEntityInput(ent, "Kill");
 			return;
 		}
 		delete trace;
@@ -522,7 +522,7 @@ public int MenuPropOutdoor(Handle menu, MenuAction action, int client, int param
 		
 		SetEntityMoveType(ent, MOVETYPE_VPHYSICS); 
 		TeleportEntity(ent, position, ang_ent, NULL_VECTOR);
-		AcceptEntityInput(ent, "DisableMotion");
+		rp_AcceptEntityInput(ent, "DisableMotion");
 		rp_ScheduleEntityInput(ent, 0.6, "EnableMotion");
 		
 		ServerCommand("sm_effect_fading %i 0.5", ent);

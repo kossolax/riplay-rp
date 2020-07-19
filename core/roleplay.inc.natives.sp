@@ -746,7 +746,7 @@ public Action Native_rp_CreateGrenade_Explode(Handle timer, Handle dp) {
 	Function fct = ReadPackFunction(dp);
 	
 	if( rp_GetZoneBit(rp_GetPlayerZone(ent)) & BITZONE_PEACEFULL ) {
-		AcceptEntityInput(ent, "Kill");
+		rp_AcceptEntityInput(ent, "Kill");
 		return;
 	}
 	
@@ -787,7 +787,7 @@ public int Native_rp_Effect_PropExplode(Handle plugin, int numParams) {
 	
 	TE_SetupExplosion(vecOrigin, g_cExplode, 1.0, 0, 0, 200, 200);
 	TE_SendToAll();
-	AcceptEntityInput(ent, "Kill");
+	rp_AcceptEntityInput(ent, "Kill");
 }
 public int Native_rp_SetClientKeyAppartement(Handle plugin, int numParams ) {
 	g_iDoorOwner_v2[GetNativeCell(1)][GetNativeCell(2)] = GetNativeCell(3);
@@ -815,9 +815,9 @@ public int Native_rp_SetDoorOpen(Handle plugin, int numParams) {
 	bool status = view_as<bool>(GetNativeCell(3));
 	
 	if( status )
-		AcceptEntityInput(door, "Open", client);
+		rp_AcceptEntityInput(door, "Open", client);
 	else
-		AcceptEntityInput(door, "Close", client);
+		rp_AcceptEntityInput(door, "Close", client);
 	
 	door_bdd = g_iDoorDouble[door_bdd];
 	
@@ -825,9 +825,9 @@ public int Native_rp_SetDoorOpen(Handle plugin, int numParams) {
 		door = (door_bdd + MaxClients);
 		
 		if( status )
-			AcceptEntityInput(door, "Open", client);
+			rp_AcceptEntityInput(door, "Open", client);
 		else
-			AcceptEntityInput(door, "Close", client);
+			rp_AcceptEntityInput(door, "Close", client);
 	}
 	
 	
@@ -950,9 +950,9 @@ public int Native_rp_SetClientVehiclePassager(Handle plugin, int numParams ) {
 	rp_ClientGiveHands(client);
 	
 	SetVariantString("!activator");
-	AcceptEntityInput(ent, "SetParent", car, car);
+	rp_AcceptEntityInput(ent, "SetParent", car, car);
 	SetVariantString(tmp);
-	AcceptEntityInput(ent, "SetParentAttachmentMaintainOffset");
+	rp_AcceptEntityInput(ent, "SetParentAttachmentMaintainOffset");
 	float vecOrigin[3];
 	Entity_GetAbsOrigin(car, vecOrigin);
 	
@@ -960,7 +960,7 @@ public int Native_rp_SetClientVehiclePassager(Handle plugin, int numParams ) {
 	TeleportEntity(client, vecOrigin, NULL_VECTOR, view_as<float>({ 0.0, 0.0, 0.0 }));
 	
 	SetVariantString("!activator");
-	AcceptEntityInput(client, "SetParent", ent, ent);
+	rp_AcceptEntityInput(client, "SetParent", ent, ent);
 	
 	int iFlags = GetEntProp(client, Prop_Send, "m_fEffects");
 	SetEntProp(client, Prop_Send, "m_fEffects", iFlags | EF_BONEMERGE | EF_NOSHADOW | EF_NOINTERP);

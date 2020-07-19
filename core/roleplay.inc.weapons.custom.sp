@@ -34,7 +34,7 @@ void ExplodeMine(int ent) {
 	GetEntPropVector(ent, Prop_Send, "m_vecOrigin", vecOrigin);
 	int owner = GetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity");
 	
-	AcceptEntityInput(ent, "Kill");	
+	rp_AcceptEntityInput(ent, "Kill");	
 	ExplosionDamage(vecOrigin, 150.0, dist, owner, ent);
 	
 	TE_SetupBeamRingPoint(vecOrigin, 1.0, dist, g_cShockWave, 0, 0, 20, 0.2, 20.0, 0.0, {255, 255, 255, 255}, 1, 0);

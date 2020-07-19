@@ -609,8 +609,8 @@ int SpawnMoney( float origin[3], bool away = false, bool high = false) {
 	
 	DispatchSpawn(id);
 	
-	AcceptEntityInput( id, "DisableCollision" );
-	AcceptEntityInput( id, "EnableCollision" );
+	rp_AcceptEntityInput( id, "DisableCollision" );
+	rp_AcceptEntityInput( id, "EnableCollision" );
 	
 	float vecVelocity[3];
 	
@@ -667,7 +667,7 @@ public void MoneyEntityGotTouch(int touched, int toucher) {
 	CPrintToChat(toucher, "" ...MOD_TAG... " Vous avez récupéré %i$.", amount);
 	
 	SDKUnhook(touched, SDKHook_Touch, MoneyEntityGotTouch);
-	AcceptEntityInput(touched, "Kill");
+	rp_AcceptEntityInput(touched, "Kill");
 	
 	return;
 }
@@ -825,7 +825,7 @@ void RP_SpawnBank() {
 			if( StrContains(classname, "rp_phone") == 0 || StrContains(classname, "rp_tree") == 0 || StrContains(classname, "rp_bank") == 0  || StrContains(classname, "rp_weaponbox") == 0 ) {
 				if( StrContains(classname, "rp_bank") == 0 && rp_GetBuildingData(i, BD_owner) != 0 )
 					continue;
-				AcceptEntityInput(i, "Kill");
+				rp_AcceptEntityInput(i, "Kill");
 			}
 		}
 		
@@ -925,13 +925,13 @@ void RP_SpawnBank() {
 			}
 			
 			TeleportEntity(ent, vecOrigin, vecAngles, NULL_VECTOR);
-			AcceptEntityInput( ent, "DisableCollision" );
-			AcceptEntityInput( ent, "EnableCollision" );
+			rp_AcceptEntityInput( ent, "DisableCollision" );
+			rp_AcceptEntityInput( ent, "EnableCollision" );
 			
 			#if defined EVENT_NOEL
 			if( StrEqual(type, "tree") || StrEqual(type, "tree2") ) {
 				if( GetConVarInt(g_hEVENT_NOEL) != 1 )
-					AcceptEntityInput(ent, "Kill");
+					rp_AcceptEntityInput(ent, "Kill");
 			}
 			#endif
 		}
@@ -1010,8 +1010,8 @@ stock void SpawnBonbon( float origin[3], int owner = 0) {
 	
 	DispatchSpawn(id);
 	
-	AcceptEntityInput( id, "DisableCollision" );
-	AcceptEntityInput( id, "EnableCollision" );
+	rp_AcceptEntityInput( id, "DisableCollision" );
+	rp_AcceptEntityInput( id, "EnableCollision" );
 	
 	TeleportEntity(id, origin, NULL_VECTOR, NULL_VECTOR);
 	SDKHook(id, SDKHook_Touch, 	BonbonEntityGotTouch);
@@ -1058,7 +1058,7 @@ public void BonbonEntityGotTouch(int touched, int toucher) {
 		}
 	}
 	
-	AcceptEntityInput(touched, "Kill");
+	rp_AcceptEntityInput(touched, "Kill");
 	
 	return;
 }
@@ -1102,7 +1102,7 @@ int RunMapCleaner(bool full = false, bool admin = false, int zone = 0) {
 				
 				if( zone == 0 || GetPlayerZone(i) == zone ) {
 					PrintToServer("[CLEANER-1] Supprimé: [%d] %s (full=%b admin=%b zone=%d) %s", i, classname, full, admin, zone, path);
-					AcceptEntityInput(i, "Kill");	amount++;
+					rp_AcceptEntityInput(i, "Kill");	amount++;
 				}
 			}
 			
@@ -1127,7 +1127,7 @@ int RunMapCleaner(bool full = false, bool admin = false, int zone = 0) {
 				
 				if( zone == 0 || GetPlayerZone(i) == zone ) {
 					PrintToServer("[CLEANER-2] Supprimé: [%d] %s (full=%b admin=%b zone=%d)", i, classname, full, admin, zone);
-					AcceptEntityInput(i, "Kill"); amount++;
+					rp_AcceptEntityInput(i, "Kill"); amount++;
 					if( !full && amount >= max )
 						break;
 				}
@@ -1148,7 +1148,7 @@ int RunMapCleaner(bool full = false, bool admin = false, int zone = 0) {
 				
 				if( ( zone == 0 || GetPlayerZone(i) == zone ) ) {
 					PrintToServer("[CLEANER-3] Supprimé: [%d] %s (full=%b admin=%b zone=%d)", i, classname, full, admin, zone);
-					AcceptEntityInput(i, "Kill");	amount++;
+					rp_AcceptEntityInput(i, "Kill");	amount++;
 				}
 			}
 			
@@ -1182,10 +1182,10 @@ int CleanUp(bool full = false, int zone = 0) {
 			continue;
 		
 		if( full ) {
-			AcceptEntityInput(i, "Kill"); amount++;
+			rp_AcceptEntityInput(i, "Kill"); amount++;
 		}
 		else if( GetPlayerZone(i) == zone ) {
-			AcceptEntityInput(i, "Kill"); amount++;
+			rp_AcceptEntityInput(i, "Kill"); amount++;
 		}
 	}
 	

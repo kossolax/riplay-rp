@@ -344,14 +344,14 @@ void LockSomeDoor(int door_bdd, int lock) {
 void ActivateDoor(int client, int door_bdd) {
 	int door = (door_bdd + MaxClients);
 	
-	AcceptEntityInput(door, "Toggle", client);
+	rp_AcceptEntityInput(door, "Toggle", client);
 	
 	door_bdd = g_iDoorDouble[door_bdd];
 	
 	if( door_bdd > 0 ) {
 		
 		door = (door_bdd + MaxClients);
-		AcceptEntityInput(door, "Toggle", client);
+		rp_AcceptEntityInput(door, "Toggle", client);
 	}
 }
 

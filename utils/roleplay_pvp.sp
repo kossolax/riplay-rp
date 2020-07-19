@@ -266,7 +266,7 @@ public Action Cmd_ItemFlag(int args) {
 		for (int i = 0; i < stackCount; i++) {
 			if( IsValidClient(g_iFlagData[ stackDrapeau[i] ][data_owner]) )
 				continue;
-			AcceptEntityInput(stackDrapeau[i], "KillHierarchy");
+			rp_AcceptEntityInput(stackDrapeau[i], "KillHierarchy");
 			can = true;
 			break;
 		}
@@ -339,7 +339,7 @@ public Action FlagThink(Handle timer, any data) {
 			TE_SetupBeamRingPoint(vecOrigin, 1.0, 50.0, g_cBeam, g_cBeam, 0, 30, 2.0, 5.0, 1.0, color, 10, 0);
 			TE_SendToAll();
 			
-			AcceptEntityInput(entity, "KillHierarchy");
+			rp_AcceptEntityInput(entity, "KillHierarchy");
 			return Plugin_Handled;
 		}
 	}
@@ -352,7 +352,7 @@ public Action FlagThink(Handle timer, any data) {
 			if( gID == rp_GetClientGroupID(i) )
 				ClientCommand(i, "play common/warning");
 		}
-		AcceptEntityInput(entity, "KillHierarchy");
+		rp_AcceptEntityInput(entity, "KillHierarchy");
 		return Plugin_Handled;
 	}
 	
@@ -376,7 +376,7 @@ void CAPTURE_Start() {
 	
 	int wall = Entity_FindByName("job=201__-pvp_wall", "func_brush");
 	if( wall > 0 )
-		AcceptEntityInput(wall, "Disable");
+		rp_AcceptEntityInput(wall, "Disable");
 	
 	
 	g_bIsInCaptureMode = true;
@@ -440,7 +440,7 @@ void CAPTURE_Start() {
 			
 			if( Weapon_GetOwner(i) > 0 )
 				RemovePlayerItem(Weapon_GetOwner(i), i);
-			AcceptEntityInput(i, "Kill");
+			rp_AcceptEntityInput(i, "Kill");
 		}
 	}
 	
@@ -482,7 +482,7 @@ void CAPTURE_Stop() {
 	
 	int wall = Entity_FindByName("job=201__-pvp_wall", "func_brush");
 	if( wall > 0 )
-		AcceptEntityInput(wall, "Enable");
+		rp_AcceptEntityInput(wall, "Enable");
 	
 	g_bIsInCaptureMode = false;
 	
@@ -561,7 +561,7 @@ void CAPTURE_UpdateLight() {
 		GetEdictClassname(i, tmp, sizeof(tmp));
 		if( StrEqual(tmp, "point_spotlight") && rp_IsInPVP(i) ) {
 			SetVariantString(tmp2);
-			AcceptEntityInput(i, "SetColor");
+			rp_AcceptEntityInput(i, "SetColor");
 		}
 	}
 }
@@ -1073,10 +1073,10 @@ int CTF_SpawnFlag(float vecOrigin[3], int skin, int color[3]) {
 	TeleportEntity(ent3, vecOrigin, NULL_VECTOR, NULL_VECTOR);
 	//
 	SetVariantString("!activator");
-	AcceptEntityInput(ent2, "SetParent", ent1);
+	rp_AcceptEntityInput(ent2, "SetParent", ent1);
 	//
 	SetVariantString("!activator");
-	AcceptEntityInput(ent3, "SetParent", ent1);
+	rp_AcceptEntityInput(ent3, "SetParent", ent1);
 	
 	SetEntityRenderMode(ent1, RENDER_TRANSALPHA);
 	SetEntityRenderMode(ent2, RENDER_TRANSALPHA);
@@ -1121,7 +1121,7 @@ void CTF_DropFlag(int client, int thrown) {
 	color[2] = g_iFlagData[flag][data_blue];
 	gID = g_iFlagData[flag][data_group];
 	
-	AcceptEntityInput(flag, "KillHierarchy");
+	rp_AcceptEntityInput(flag, "KillHierarchy");
 	
 	GetClientEyeAngles(client, vecAngles);
 	GetClientEyePosition(client, vecOrigin);
@@ -1166,10 +1166,10 @@ void CTF_FlagTouched(int client, int flag) {
 	ClientCommand(client, "play common/wpn_hudoff");
 	
 	SetVariantString("!activator");
-	AcceptEntityInput(flag, "SetParent", client);
+	rp_AcceptEntityInput(flag, "SetParent", client);
 	
 	SetVariantString("grenade2");
-	AcceptEntityInput(flag, "SetParentAttachment");
+	rp_AcceptEntityInput(flag, "SetParentAttachment");
 	
 	char strBuffer[4][8], tmp[64];
 	float vecOrigin[3], ang[3], pos[3];

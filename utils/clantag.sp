@@ -14,21 +14,17 @@ public void OnPluginStart() {
 }
 
 public Action cmdForceClangtag(int args) {
-	char arg1[8];
+	char arg1[8], arg2[16], tmp[16];
 	GetCmdArg(1, arg1, sizeof(arg1));
+	GetCmdArg(2, arg2, sizeof(arg2));
+	
 	int client = StringToInt(arg1, sizeof(arg1));
-
 	if(client <= 0 || !IsClientConnected(client) || !IsClientInGame(client)) {
 		return Plugin_Handled;
 	}
-
-	char arg2[32]
-	GetCmdArg(2, arg2, sizeof(arg2));
-
-	char szClanTag[32];
-	CS_GetClientClanTag(client, szClanTag, sizeof(szClanTag));
 	
-	if(!StrEqual(arg2, szClanTag)) {
+	CS_GetClientClanTag(client, tmp, sizeof(tmp));
+	if( !StrEqual(tmp, arg2) )
 		CS_SetClientClanTag(client, arg2);
-	}
+	return Plugin_Handled;
 }

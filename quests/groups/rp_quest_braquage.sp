@@ -166,7 +166,7 @@ void Q_Clean() {
 		OnBraqueurKilled(g_stkTeam[TEAM_BRAQUEUR][i]);
 	}
 	for (int i = 0; i < g_stkTeamCount[TEAM_HOSTAGE]; i++) {
-		AcceptEntityInput(g_stkTeam[TEAM_HOSTAGE][i], "Kill");
+		rp_AcceptEntityInput(g_stkTeam[TEAM_HOSTAGE][i], "Kill");
 	}
 	
 	if( g_bHasHelmet ) {
@@ -911,7 +911,7 @@ public int MenuRespawnBraqueur(Handle menu, MenuAction action, int client, int p
 			float pos[3];
 			Entity_GetAbsOrigin(hostage, pos);
 			removeClientTeam(hostage);
-			AcceptEntityInput(hostage, "Kill");
+			rp_AcceptEntityInput(hostage, "Kill");
 			
 			if( !IsPlayerAlive(target) )
 				CS_RespawnPlayer(target);
@@ -1205,7 +1205,7 @@ void OnBraqueurKilled(int client) {
 		rp_UnhookEvent(client, RP_OnPlayerUse, fwdPressUse);
 		
 		if( g_iMaskEntity[client] > 0 && IsValidEdict(g_iMaskEntity[client]) && IsValidEntity(g_iMaskEntity[client]) )
-			AcceptEntityInput(g_iMaskEntity[client], "Kill");
+			rp_AcceptEntityInput(g_iMaskEntity[client], "Kill");
 		g_iMaskEntity[client] = 0;
 	}
 }
@@ -1240,10 +1240,10 @@ void attachMask(int client) {
 	Entity_SetOwner(ent, client);
 	
 	SetVariantString("!activator");
-	AcceptEntityInput(ent, "SetParent", client, client);
+	rp_AcceptEntityInput(ent, "SetParent", client, client);
 	
 	SetVariantString("facemask");
-	AcceptEntityInput(ent, "SetParentAttachment");
+	rp_AcceptEntityInput(ent, "SetParentAttachment");
 	
 	SDKHook(ent, SDKHook_SetTransmit, Hook_SetTransmit);
 	g_iMaskEntity[client] = ent;

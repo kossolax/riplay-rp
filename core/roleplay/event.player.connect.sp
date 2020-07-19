@@ -77,7 +77,7 @@ public void OnClientDisconnect(int Client) {
 	int old = EntRefToEntIndex(g_iUserData[Client][i_FPD]);
 	if( old > 0 ) {
 		SetClientViewEntity(Client, Client);
-		AcceptEntityInput(old, "Kill");
+		rp_AcceptEntityInput(old, "Kill");
 		g_iUserData[Client][i_FPD] = 0;
 	}
 	
@@ -154,7 +154,7 @@ public void OnClientDisconnect(int Client) {
 					StrContains(classname, "rp_table") == 0 ||
 					StrContains(classname, "rp_bank") == 0
 					) {
-					AcceptEntityInput(i, "Kill");
+					rp_AcceptEntityInput(i, "Kill");
 				}
 			}
 		}

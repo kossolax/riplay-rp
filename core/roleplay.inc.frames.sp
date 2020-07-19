@@ -60,7 +60,7 @@ void OnGameFrame_01(float time) {
 		
 		if( pos[2] <= -10000.0 ) {
 			PrintToChatAll("Un props est tombe hors map... %d - %s", i, g_szEntityName[i]);
-			AcceptEntityInput(i, "Kill");
+			rp_AcceptEntityInput(i, "Kill");
 		}
 	}
 	if( g_bLoaded ) {

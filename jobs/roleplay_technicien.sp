@@ -603,7 +603,7 @@ void ExplodeProp(int ent) {
 	rp_Effect_Explode(vecOrigin, dmg, 250.0, ent, "rp_cashmachine");
 	TE_SetupExplosion(vecOrigin, g_cExplode, 1.0, 0, 0, 200, 200);
 	TE_SendToAll();
-	AcceptEntityInput(ent, "Kill");
+	rp_AcceptEntityInput(ent, "Kill");
 	
 }
 public void PropsTouched(int touched, int toucher) {

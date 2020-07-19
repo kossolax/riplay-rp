@@ -79,7 +79,7 @@ public void Q1_Frame(int objectiveID, int client) {
 	
 	g_iDuration[client]--;
 	if( Entity_GetDistance(client, g_iGoing[client]) < 32.0 ) {
-		AcceptEntityInput(g_iGoing[client], "Kill");
+		rp_AcceptEntityInput(g_iGoing[client], "Kill");
 		rp_QuestStepComplete(client, objectiveID);
 	}
 	else if( g_iDuration[client] <= 0 ) {

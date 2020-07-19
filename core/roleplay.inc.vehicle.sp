@@ -68,7 +68,7 @@ void rp__SetClientVehicle(int client, int vehicleID, bool force=false) {
 	rp_ClientGiveHands(client);
 	
 	SetEntProp(vehicleID, Prop_Data, "m_bLocked", 0);
-	AcceptEntityInput(vehicleID, "Use", client);
+	rp_AcceptEntityInput(vehicleID, "Use", client);
 	rp_ScheduleEntityInput(vehicleID, 0.1, "Lock");
 	
 	int iFlags = GetEntProp(client, Prop_Send, "m_fEffects") & (~EF_NODRAW);
@@ -86,7 +86,7 @@ void ExitVehicle(int client, int vehicleID, bool forced=false) {
 	
 	SetEntProp(vehicleID, Prop_Data, "m_bLocked", 0);
 	
-	AcceptEntityInput(client, "ClearParent");
+	rp_AcceptEntityInput(client, "ClearParent");
 	
 	SetEntPropEnt(client, Prop_Send, "m_hVehicle", -1);
 	SetEntPropEnt(vehicleID, Prop_Send, "m_hPlayer", -1);
@@ -132,8 +132,8 @@ void ExitVehicle(int client, int vehicleID, bool forced=false) {
 	CreateTimer(0.001, BashFirstPerson, client);
 	
 	rp_ClientGiveHands(client);
-	AcceptEntityInput(vehicleID, "Lock");
-	AcceptEntityInput(vehicleID, "TurnOff");
+	rp_AcceptEntityInput(vehicleID, "Lock");
+	rp_AcceptEntityInput(vehicleID, "TurnOff");
 	
 	if( g_iUserData[client][i_ThirdPerson] == 0 )
 		ClientCommand(client, "firstperson");
@@ -248,8 +248,8 @@ void LeaveVehiclePassager(int client, int vehicle=-1) {
 		
 		SetEntProp(client, Prop_Send, "m_bDrawViewmodel", 1);
 		ClientCommand(client, "cam_idealpitch 0");
-		AcceptEntityInput(client, "ClearParent");
-		AcceptEntityInput(g_iCarPassager[car][client], "Kill");
+		rp_AcceptEntityInput(client, "ClearParent");
+		rp_AcceptEntityInput(g_iCarPassager[car][client], "Kill");
 		SetEntProp(client, Prop_Send, "m_CollisionGroup", COLLISION_GROUP_PLAYER);
 		
 		int EntEffects = GetEntProp(client, Prop_Send, "m_fEffects") & (~EF_NODRAW) & (~EF_BONEMERGE) & (~EF_NOSHADOW) & (~EF_NOINTERP) & (~EF_BONEMERGE_FASTCULL) & (~EF_PARENT_ANIMATES);
@@ -346,7 +346,7 @@ public void vehicle_OnPreThinkPost(int client) {
 			if( !rp_GetClientKeyVehicle(client, InVehicle) ) {
 				ExitVehicle(client, InVehicle, true);
 				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas les clés de cette voiture.");
-				AcceptEntityInput(InVehicle, "Lock");
+				rp_AcceptEntityInput(InVehicle, "Lock");
 			}
 			ClientCommand(client, "cam_idealpitch 65");
 			SendConVarValue(client, FindConVar("sv_client_predict"), "0");
@@ -356,8 +356,8 @@ public void vehicle_OnPreThinkPost(int client) {
 		}
 		int speed = GetEntProp(InVehicle, Prop_Data, "m_nSpeed");
 		if( speed == 0 ) {
-			AcceptEntityInput(InVehicle, "TurnOn");
-			AcceptEntityInput(InVehicle, "HandBrakeOff");
+			rp_AcceptEntityInput(InVehicle, "TurnOn");
+			rp_AcceptEntityInput(InVehicle, "HandBrakeOff");
 		}
 		g_iGrabbing[client] = 0;
 	}

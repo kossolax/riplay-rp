@@ -711,7 +711,7 @@ public Action Cmd_Tazer(int client) {
 			
 			rp_Effect_Tazer(client, target);
 			rp_Effect_PropExplode(target, true);
-			AcceptEntityInput(target, "Kill");
+			rp_AcceptEntityInput(target, "Kill");
 			
 			rp_ClientMoney(client, i_AddToPay, reward);
 			rp_SetJobCapital(1, rp_GetJobCapital(1) + reward * 2);

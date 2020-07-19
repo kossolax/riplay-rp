@@ -375,7 +375,7 @@ public void Cmd_ItemCutThrow_TOUCH(int rocket, int entity) {
 	}
 	
 	SDKUnhook(rocket, SDKHook_Touch, Cmd_ItemCutThrow_TOUCH);	// Prevent TWICE touch.
-	AcceptEntityInput(rocket, "Kill");
+	rp_AcceptEntityInput(rocket, "Kill");
 }
 
 // ----------------------------------------------------------------------------
@@ -527,13 +527,13 @@ public Action Cmd_ItemRiotShield(int args) {
 	
 	
 	SetVariantString("!activator");
-	AcceptEntityInput(ent, "SetParent", client, client);
+	rp_AcceptEntityInput(ent, "SetParent", client, client);
 	
 	FakeClientCommand(client, "use weapon_fists");
 	FakeClientCommand(client, "use weapon_bayonet");
 	
 	SetVariantString("weapon_hand_L");
-	AcceptEntityInput(ent, "SetParentAttachment");
+	rp_AcceptEntityInput(ent, "SetParentAttachment");
 	TeleportEntity(ent, view_as<float>({ 2.0, 4.0, 0.0 }), g_vShieldPos[0], NULL_VECTOR);
 	rp_HookEvent(client, RP_OnAssurance,	fwdAssurance2);
 	rp_HookEvent(client, RP_PostTakeDamageWeapon, fwdTakeDamage);
@@ -555,14 +555,14 @@ public Action Hook_WeaponSwitch(int client, int weapon) {
 		
 		if( StrContains(wepname, "weapon_knife") == 0 || StrContains(wepname, "weapon_bayonet") == 0 ) {
 			SetVariantString("weapon_hand_L");
-			AcceptEntityInput(g_iRiotShield[client], "SetParentAttachment");
+			rp_AcceptEntityInput(g_iRiotShield[client], "SetParentAttachment");
 			
 			TeleportEntity(g_iRiotShield[client], view_as<float>({ 2.0, 4.0, 0.0 }), g_vShieldPos[0], NULL_VECTOR);
 		}
 		else {
 			
 			SetVariantString("primary");
-			AcceptEntityInput(g_iRiotShield[client], "SetParentAttachment");
+			rp_AcceptEntityInput(g_iRiotShield[client], "SetParentAttachment");
 			
 			TeleportEntity(g_iRiotShield[client], view_as<float>({ 5.0, 10.0, 0.0 }), g_vShieldPos[1], NULL_VECTOR);
 		}
@@ -618,7 +618,7 @@ void removeShield(int client) {
 		SDKUnhook(g_iRiotShield[client], SDKHook_SetTransmit, Hook_SetTransmit);
 		SDKUnhook(client, SDKHook_WeaponSwitch, Hook_WeaponSwitch);
 		
-		AcceptEntityInput( g_iRiotShield[client], "Kill");
+		rp_AcceptEntityInput( g_iRiotShield[client], "Kill");
 		g_iRiotShield[client] = 0;
 		
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez perdu votre bouclier anti-émeute.");
@@ -1013,10 +1013,10 @@ public Action CmdItemMask(int args) {
 	Entity_SetOwner(ent, client);
 	
 	SetVariantString("!activator");
-	AcceptEntityInput(ent, "SetParent", client, client);
+	rp_AcceptEntityInput(ent, "SetParent", client, client);
 	
 	SetVariantString("facemask");
-	AcceptEntityInput(ent, "SetParentAttachment");
+	rp_AcceptEntityInput(ent, "SetParentAttachment");
 	
 	SDKHook(ent, SDKHook_SetTransmit, Hook_SetTransmit);
 	rp_HookEvent(client, RP_OnAssurance, fwdAssuranceMask);
@@ -1031,7 +1031,7 @@ public Action fwdKill(int client, int victim, char weapon[64], int& tdm) {
 	
 	if( client != victim && maskID > 0 ) {
 		if( IsValidEdict(maskID) && IsValidEntity(maskID) && Entity_GetParent(maskID) == client )
-			AcceptEntityInput(maskID, "Kill");
+			rp_AcceptEntityInput(maskID, "Kill");
 		
 		rp_SetClientInt(client, i_Mask, 0); 
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez perdu votre masque");

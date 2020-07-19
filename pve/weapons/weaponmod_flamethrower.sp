@@ -78,7 +78,7 @@ public Action OnAttack(int client, int entity) {
 	SetEntPropFloat(ent, Prop_Send, "m_flElasticity", 0.5);
 	Entity_SetMinMaxSize(ent, view_as<float>({-16.0, -16.0, -16.0}), view_as<float>({16.0, 16.0, 16.0}));
 	DispatchKeyValue(ent, "OnUser1", "!self,KillHierarchy,,0.5,-1");
-	AcceptEntityInput(ent, "FireUser1");
+	rp_AcceptEntityInput(ent, "FireUser1");
 	
 	if( GetRandomInt(0, 50) >= g_iParticleCount ) {
 		AttachParticle(ent, "office_child_flame01b", 0.5);
@@ -155,9 +155,9 @@ stock int AttachParticle(int ent, const char[] name, float time) {
 	TeleportEntity(particle, pos, NULL_VECTOR, NULL_VECTOR);
 	
 	SetVariantString("!activator");
-	AcceptEntityInput(particle, "SetParent", ent);
+	rp_AcceptEntityInput(particle, "SetParent", ent);
 	
-	AcceptEntityInput(particle, "Start");
-	AcceptEntityInput(particle, "FireUser1");
+	rp_AcceptEntityInput(particle, "Start");
+	rp_AcceptEntityInput(particle, "FireUser1");
 	return particle;
 }

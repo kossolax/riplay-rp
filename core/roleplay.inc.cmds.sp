@@ -371,14 +371,14 @@ public Action Timer_CheckWeapon(Handle timer, any wepId) {
 	if( IsValidClient(owner) ) {
 		if( !(GetZoneBit( GetPlayerZone(owner) ) & BITZONE_EVENT) ) {
 			RemovePlayerItem(owner, wepId);
-			AcceptEntityInput(wepId, "Kill");
+			rp_AcceptEntityInput(wepId, "Kill");
 			return Plugin_Stop;
 		}
 		
 	}
 	else {
 		if( !(GetZoneBit( GetPlayerZone(wepId) ) & BITZONE_EVENT) ) {
-			AcceptEntityInput(wepId, "Kill");
+			rp_AcceptEntityInput(wepId, "Kill");
 			return Plugin_Stop;
 		}
 	}

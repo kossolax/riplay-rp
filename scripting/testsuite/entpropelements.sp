@@ -157,7 +157,7 @@ public Action:sm_teststrings(client, argc)
 		ReplyToCommand(client, "At %d, I see a \"%s\"", i, value);
 	}
 	
-	AcceptEntityInput(gpe, "Kill");
+	rp_AcceptEntityInput(gpe, "Kill");
 	
 	return Plugin_Handled;
 }

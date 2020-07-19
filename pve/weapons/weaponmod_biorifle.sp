@@ -123,7 +123,7 @@ public Action OnAttackPost(int client, int entity) {
 	SetEntProp(ent, Prop_Send, "m_nSkin", g_iWeaponMode[entity]);
 	
 	DispatchKeyValue(ent, "OnUser1", "!self,Kill,,10.0,-1");
-	AcceptEntityInput(ent, "FireUser1");
+	rp_AcceptEntityInput(ent, "FireUser1");
 	
 	if( GetRandomInt(0, 50) >= g_iParticleCount ) {
 		TE_SetupBeamFollow(ent, g_cBeam, g_cBeam, 0.25, scale * 2.0, 0.1, 1, g_iColors[g_iWeaponMode[entity]]);
@@ -166,7 +166,7 @@ public Action OnProjectileHit(int client, int wpnid, int entity, int target) {
 			SetEntProp(ent, Prop_Send, "m_nSkin", g_iWeaponMode[entity]);
 			
 			DispatchKeyValue(ent, "OnUser1", "!self,Kill,,5.0,-1");
-			AcceptEntityInput(ent, "FireUser1");
+			rp_AcceptEntityInput(ent, "FireUser1");
 			
 			if( GetRandomInt(0, 50) >= g_iParticleCount ) {
 				TE_SetupBeamFollow(ent, g_cBeam, g_cBeam, 0.25, scale * 2.0, 0.1, 1, g_iColors[g_iWeaponMode[entity]]);

@@ -55,7 +55,7 @@ public Action LoadSapin(Handle timer, any none) {
 			continue;
 		GetEdictClassname(i, classname, sizeof(classname));
 		if( StrEqual(classname, CLASSNAME) ) {
-			AcceptEntityInput(i, "Kill");
+			rp_AcceptEntityInput(i, "Kill");
 		}
 	}
 	

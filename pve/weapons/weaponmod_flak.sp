@@ -104,7 +104,7 @@ public Action OnAttack(int client, int entity) {
 		SetEntityGravity(ent, 0.65);
 		SetEntPropFloat(ent, Prop_Send, "m_flElasticity", 0.65);
 		DispatchKeyValue(ent, "OnUser1", tmp);
-		AcceptEntityInput(ent, "FireUser1");
+		rp_AcceptEntityInput(ent, "FireUser1");
 		
 		if( GetRandomInt(0, 50) >= g_iParticleCount ) {
 			TE_SetupBeamFollow(ent, g_cModel, 0, GetRandomFloat(0.2, 0.5), 0.25, 0.0, 1, {255, 255, 255, 50});

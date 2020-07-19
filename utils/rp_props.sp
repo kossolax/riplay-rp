@@ -475,7 +475,7 @@ public Action Command_remove(int client,int args ) {
 		return Plugin_Handled;
 	
 	if ( index > MaxClients ) {
-		AcceptEntityInput(index, "Kill");
+		rp_AcceptEntityInput(index, "Kill");
 	}
 	else {
 		return Plugin_Handled;
@@ -558,7 +558,7 @@ public Action Command_fire(int client,int args) {
 	GetCmdArg(3, arg2, sizeof(arg2));
 	
 	SetVariantString(arg2);
-	AcceptEntityInput(GetCmdArgInt(1), arg);
+	rp_AcceptEntityInput(GetCmdArgInt(1), arg);
 	ReplyToCommand(client, "%d %s %s", GetCmdArgInt(1), arg, arg2);
 	
 	return Plugin_Handled;
@@ -574,11 +574,11 @@ public Action Command_fires(int client,int args) {
 		
 		GetEdictClassname(i, plop, sizeof(plop));
 		if (StrContains(plop, arg, false) != -1 ) {
-			AcceptEntityInput(i, arg2);
+			rp_AcceptEntityInput(i, arg2);
 		}
 	}
 	
-	AcceptEntityInput(GetCmdArgInt(1), arg);
+	rp_AcceptEntityInput(GetCmdArgInt(1), arg);
 	
 	return Plugin_Handled;
 }
@@ -711,13 +711,13 @@ public Action Command_create(int client,int args) {
 	if ( !isPhysics ) {
 		// we need to make a prop_dynamic entity collide
 		// don't know why but the following code work
-		AcceptEntityInput( index, "DisableCollision" );
-		AcceptEntityInput( index, "EnableCollision" );
-		AcceptEntityInput(index, "TurnOn");
+		rp_AcceptEntityInput( index, "DisableCollision" );
+		rp_AcceptEntityInput( index, "EnableCollision" );
+		rp_AcceptEntityInput(index, "TurnOn");
 	}
 	else {
-		AcceptEntityInput(index, "EnableMotion");
-		AcceptEntityInput(index, "Wake");
+		rp_AcceptEntityInput(index, "EnableMotion");
+		rp_AcceptEntityInput(index, "Wake");
 	}
 	
 	int zone = rp_GetPlayerZone(client);
@@ -848,12 +848,12 @@ public Action MakeExplode( Handle timer, any Ent) {
 		
 		EmitSoundToAll("weapons/hegrenade/explode5.wav", ExplosionIndex, 1, 90);
 		
-		AcceptEntityInput(ExplosionIndex, "Explode");
+		rp_AcceptEntityInput(ExplosionIndex, "Explode");
 		
-		AcceptEntityInput(ExplosionIndex, "Kill");
+		rp_AcceptEntityInput(ExplosionIndex, "Kill");
 	}
 	
-	AcceptEntityInput(Ent, "Kill");
+	rp_AcceptEntityInput(Ent, "Kill");
 	
 	return Plugin_Handled;
 	
@@ -1993,13 +1993,13 @@ void RespawnProp(int client, float pPos[3], float pAng[3], int pCol[4], char pCl
 		DispatchSpawn( index );
 		
 		if ( !isPhysics ) {
-			AcceptEntityInput( index, "DisableCollision" );
-			AcceptEntityInput( index, "EnableCollision" );
-			AcceptEntityInput(index, "TurnOn");
+			rp_AcceptEntityInput( index, "DisableCollision" );
+			rp_AcceptEntityInput( index, "EnableCollision" );
+			rp_AcceptEntityInput(index, "TurnOn");
 		}
 		else {
-			AcceptEntityInput(index, "EnableMotion");
-			AcceptEntityInput(index, "Wake");
+			rp_AcceptEntityInput(index, "EnableMotion");
+			rp_AcceptEntityInput(index, "Wake");
 		}
 	}
 }
