@@ -39,6 +39,7 @@ enum competance {
 	competance_cryo,
 	competance_berserk,
 	competance_type,
+	competance_cut_given,
 	
 	competance_max
 };
@@ -461,6 +462,8 @@ public int AddCompetanceToAssassin(Handle menu, MenuAction action, int client, i
 		else if( StrEqual(options, "cut", false) ) {
 			g_iKillerPoint[client][competance_cut] = 1;
 			g_iKillerPoint_stored[client][competance_cut] = rp_GetClientInt(client, i_KnifeTrain);
+			int knife = GivePlayerItem(client, "weapon_knife");
+			EquipPlayerWeapon(client, knife);
 			rp_SetClientInt(client, i_KnifeTrain, 100);
 		}
 		else if( StrEqual(options, "tir", false) ) {
@@ -547,6 +550,7 @@ void RestoreAssassinNormal(int client) {
 	
 	if( g_iKillerPoint[client][competance_cut] ) {
 		rp_SetClientInt(client, i_KnifeTrain, g_iKillerPoint_stored[client][competance_cut]);
+		Client_RemoveWeapon(client, "weapon_knife");
 	}
 	if( g_iKillerPoint[client][competance_tir] ) {
 		rp_SetClientFloat(client, fl_WeaponTrain, float(g_iKillerPoint_stored[client][competance_tir]));
