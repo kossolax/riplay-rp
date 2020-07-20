@@ -14,7 +14,7 @@ public void OnPluginStart() {
 }
 
 public Action cmdForceClangtag(int args) {
-	char arg1[8], arg2[16], tmp[16];
+	char arg1[32], arg2[16], tmp[16];
 	GetCmdArg(1, arg1, sizeof(arg1));
 	GetCmdArg(2, arg2, sizeof(arg2));
 	
@@ -24,7 +24,7 @@ public Action cmdForceClangtag(int args) {
 	}
 	
 	CS_GetClientClanTag(client, tmp, sizeof(tmp));
-	if( !StrEqual(tmp, arg2) )
+	if( !StrEqual(tmp, arg2) || GetRandomInt(1, 10) == 5 )
 		CS_SetClientClanTag(client, arg2);
 	return Plugin_Handled;
 }

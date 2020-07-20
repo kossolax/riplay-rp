@@ -117,7 +117,7 @@ void KillStack_Timer(int client, int time) {
 }
 
 void updateClanTag(int client) {
-	static char ClanTag[16];
+	char ClanTag[16];
 	
 	Format(ClanTag, sizeof(ClanTag), "%s", g_szJobList[ g_iUserData[client][i_Job] ][job_type_tag]);
 	if( g_iUserData[client][i_Job] >= 1 && g_iUserData[client][i_Job] <= 10 ) {
@@ -139,7 +139,7 @@ void updateClanTag(int client) {
 		Format(ClanTag, sizeof(ClanTag), "TUTORIAL");
 	}
 
-	ServerCommand("sm_force_clantag \"%i\" \"%s\"", client, ClanTag);
+	ServerCommand("sm_force_clantag \"%d\" \"%s\"", client, ClanTag);
 }
 
 public Action SendToGrave(Handle timer, any client) {
