@@ -31,6 +31,8 @@ bool g_bCanSearchPlant[65];
 Handle g_hDrugTimer[65];
 int g_iWeaponStolen[2049], g_iStolenAmountTime[65];
 int g_iMarket[MAX_ITEMS], g_iMarketClient[MAX_ITEMS][65];
+bool g_bBlockDrop[65];
+
 // ----------------------------------------------------------------------------
 bool CanClientStealItem(int client, int target) {
 	Action a;
@@ -92,6 +94,7 @@ public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerUse,	fwdOnPlayerUse);
 	rp_HookEvent(client, RP_OnPlayerSteal,	fwdOnPlayerSteal);
 	g_bCanSearchPlant[client] = true;
+	g_bBlockDrop[client] = false;
 	rp_SetClientBool(client, b_MaySteal, true);
 	
 	for (int i = 0; i < MAX_ITEMS; i++) {
@@ -755,7 +758,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		
 		rp_SetClientBool(client, b_MaySteal, false);
 		rp_SetClientBool(target, b_Stealing, true);
-		//SDKHook(target, SDKHook_WeaponDrop, OnWeaponDrop);
+		g_bBlockDrop[target] = true;
 		
 		for (int i = 1; i <= MaxClients; i++) {
 			if( !IsValidClient(i) )
@@ -851,10 +854,12 @@ public Action fwdDamage(int client, int attacker, float& damage, int damagetype)
 	}	
 	return Plugin_Continue;
 }
-public Action OnWeaponDrop(int client, int weapon) {
-	
-	CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas lâcher votre arme pendant qu'un dealer vous vol, tirez lui dessus ou fuyez !");
-	return Plugin_Handled;
+public Action CS_OnCSWeaponDrop(int client, int weapon) {
+	if( g_bBlockDrop[client] ) {
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas lâcher votre arme pendant qu'un dealer vous vol, tirez lui dessus ou fuyez !");
+		return Plugin_Handled;
+	}
+	return Plugin_Continue;
 }
 public Action fwdZoneChange(int client, int newZone, int oldZone) {
 	int newType = rp_GetZoneInt(newZone, zone_type_type);
@@ -1280,8 +1285,8 @@ public Action ItemPickLockOver_18th(Handle timer, Handle dp) {
 	
 	rp_ClientColorize(client);
 	rp_ClientReveal(client);
-	//if( IsValidClient(target) )
-	//	SDKUnhook(target, SDKHook_WeaponDrop, OnWeaponDrop);
+	if( IsValidClient(target) )
+		g_bBlockDrop[target] = false;
 	
 	bool couldSteal = rp_GetClientBool(target, b_Stealing);
 	rp_SetClientBool(target, b_Stealing, false);

@@ -43,6 +43,7 @@ enum competance {
 	competance_max
 };
 
+bool g_bBlockDrop[65];
 int g_iKillerPoint[65][competance_max];
 int g_iKillerPoint_stored[65][competance_max];
 int g_bShouldOpen[65];
@@ -93,6 +94,7 @@ public void OnCvarChange(Handle cvar, const char[] oldVal, const char[] newVal) 
 public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerCommand, fwfCommand);
 	rp_HookEvent(client, RP_PostTakeDamageWeapon, fwdWeapon);
+	g_bBlockDrop[client] = false;
 }
 public void OnClientDisconnect(int client) {
 	if( rp_GetClientInt(client, i_ToKill) > 0 && rp_GetClientJobID(client) == 41 ) {
@@ -171,9 +173,7 @@ public Action Cmd_ItemContrat(int args) {
 	rp_HookEvent(vendeur, RP_PreGiveDamage, fwdDamage);
 	
 	rp_SetClientStat(vendeur, i_JobFails, rp_GetClientStat(client, i_JobFails) - 1);
-
-	
-	//SDKHook(vendeur, SDKHook_WeaponDrop, OnWeaponDrop);
+	g_bBlockDrop[vendeur] = true;
 	
 	
 	if( StrContains(arg1, "classic") == 0 ) {
@@ -346,9 +346,9 @@ public Action fwdTueurDead(int client, int attacker, float& respawn, int& tdm) {
 	
 	return Plugin_Continue;
 }
-public Action OnWeaponDrop(int client, int weapon) {
+public Action CS_OnCSWeaponDrop(int client, int weapon) {
 	
-	if( rp_GetClientJobID(client) == 41 && (g_iKillerPoint[client][competance_usp] || g_iKillerPoint[client][competance_awp] || g_iKillerPoint[client][competance_pompe]) ) {
+	if( rp_GetClientJobID(client) == 41 && g_bBlockDrop[client] && (g_iKillerPoint[client][competance_usp] || g_iKillerPoint[client][competance_awp] || g_iKillerPoint[client][competance_pompe]) ) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas lâcher vos armes pendant un contrat.");
 		return Plugin_Handled;
 	}
@@ -586,8 +586,8 @@ void RestoreAssassinNormal(int client) {
 	g_iKillerPoint[client][competance_vitesse] = 0;
 	g_iKillerPoint[client][competance_cryo] = 0;
 	g_iKillerPoint[client][competance_berserk] = 0;
-	
-	//SDKUnhook(client, SDKHook_WeaponDrop, OnWeaponDrop);
+	g_bBlockDrop[client] = false;
+
 	rp_UnhookEvent(client, RP_OnPlayerDead, fwdTueurDead);
 	rp_UnhookEvent(client, RP_PlayerCanKill, fwdTueurCanKill);
 	rp_UnhookEvent(rp_GetClientInt(client, i_ToKill), RP_PlayerCanKill, fwdTueurCanKill);

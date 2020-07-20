@@ -64,6 +64,7 @@ char g_szWeaponList[][] = {
 float g_flLastPos[65][3];
 DataPack g_hBuyMenu;
 char g_szTribunal[65][65];
+bool g_bBlockJail[65];
 
 ArrayList g_UsedWeapon[MAXPLAYERS+1];
 
@@ -138,6 +139,7 @@ public void OnClientPostAdminCheck(int client) {
 
 	CreateTimer(0.01, AllowStealing, client);
 	g_UsedWeapon[client] = new ArrayList(256);
+	g_bBlockJail[client] = false;
 }
 public void OnClientDisconnect(int client) {
 	delete g_UsedWeapon[client];
@@ -992,7 +994,7 @@ void SendPlayerToJail(int target, int client = 0) {
 	int rand = Math_GetRandomInt(0, (MaxJail - 1));
 	rp_ClientTeleport(target, fLocation[rand]);
 	
-	//SDKHook(target, SDKHook_WeaponDrop, OnWeaponDrop);
+	g_bBlockJail[target] = true;
 	CreateTimer(MENU_TIME_DURATION.0, AllowWeaponDrop, target);
 	
 	Call_StartForward(rp_GetForwardHandle(target, RP_PostClientSendToJail));
@@ -1001,16 +1003,19 @@ void SendPlayerToJail(int target, int client = 0) {
 	Call_Finish();
 }
 public Action AllowWeaponDrop(Handle timer, any client) {
-	//SDKUnhook(client, SDKHook_WeaponDrop, OnWeaponDrop);
-}
-public Action OnWeaponDrop(int client, int weapon) {
-	return Plugin_Handled;
+	g_bBlockJail[client] = false;
 }
 public Action CS_OnCSWeaponDrop(int client, int weapon) {
+	if( g_bBlockJail[client] ) {
+		return Plugin_Handled;
+	}
+	
 	char szWeapon[32];
 	GetEdictClassname(weapon, szWeapon, sizeof(szWeapon));
 	ReplaceString(szWeapon, 32, "weapon_", "");
 	putUsedWeapon(client, szWeapon);
+	
+	return Plugin_Continue;
 }
 // ----------------------------------------------------------------------------
 void AskJailTime(int client, int target) {

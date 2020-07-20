@@ -153,7 +153,8 @@ public Action OnWeaponCanUse(int client, int weapon) {
 
 	return Plugin_Continue;
 }
-public Action OnWeaponDrop(int client, int weapon) {
+
+public Action CS_OnCSWeaponDrop(int client, int weapon) {
 	if( !IsValidClient(client) )
 		return Plugin_Continue;
 	
