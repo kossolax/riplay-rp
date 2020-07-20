@@ -376,7 +376,6 @@ Menu Menu_Prolonge(int& client, int a, int b, int c, int d, int e) {
 				Format(query, sizeof(query), "%N et %N", i, to);
 				
 				subMenu.AddItem(tmp, query);
-				PrintToChatAll("found %N et %N", i, to);
 			}
 		}
 	}
