@@ -98,6 +98,8 @@ public Action fwdAssurance(int client, int& amount) {
 		amount += 100;
 	if( rp_GetClientBool(client, ch_Yeux) )
 		amount += 100;
+	if( rp_GetClientInt(client, i_Machine) > 0 )
+		amount += 150 * rp_GetClientInt(client, i_Machine);
 	
 	return Plugin_Changed; // N'a pas d'impact, pour le moment.
 }
@@ -304,8 +306,9 @@ public Action Cmd_ItemMoreCash(int args) {
 	
 	int client = GetCmdArgInt(1);
 	int amount = rp_GetClientInt(client, i_Machine);
+	int max = getMaxPerJob(client);
 	
-	if( amount >= 15 ) {
+	if( amount+max >= 15 ) {
 		int item_id = GetCmdArgInt(args);
 		ITEM_CANCEL(client, item_id);
 		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas avoir de machine supplémentaire.");
@@ -389,6 +392,18 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	}
 	return Plugin_Stop;
 }
+int getMaxPerJob(int client) {
+	int max = 3;
+	switch( rp_GetClientInt(client, i_Job) ) {
+		case 221: max = 15; 
+		case 222: max = 15;
+		case 223: max = 13;
+		case 224: max = 12;
+		case 225: max = 11;
+		case 226: max = 10;		
+	}
+	return max;
+}
 int BuildingCashMachine(int client, bool force=false) {
 	if( !rp_IsBuildingAllowed(client) )
 		return 0;
@@ -400,16 +415,7 @@ int BuildingCashMachine(int client, bool force=false) {
 	GetClientAbsOrigin(client, vecOrigin);
 	vecOrigin[2] += 12.0;
 	
-	int count, max = 3;
-	
-	switch( rp_GetClientInt(client, i_Job) ) {
-		case 221: max = 15; 
-		case 222: max = 15;
-		case 223: max = 13;
-		case 224: max = 12;
-		case 225: max = 11;
-		case 226: max = 10;		
-	}
+	int count, max = getMaxPerJob(client);
 	
 	count = CountMachine(client);
 	if( count == -1 )
