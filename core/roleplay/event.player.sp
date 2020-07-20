@@ -31,6 +31,8 @@ public void EventFirstSpawn(int client) {
 		CreateTimer(1.0, HUD_WarnDisconnect, client);
 
 	ServerCommand("sm_force_discord_group %N", client);
+	g_bUserData[client][b_Assurance] = true;
+	CPrintToChat(client, "" ...MOD_TAG... " Pendant la phase BETA du serveur, une assurance vous êtes offert.");
 }
 public Action HUD_WarnDisconnect(Handle timer, any client) {
 	if( !g_bUserData[client][b_ItemRecovered] )
