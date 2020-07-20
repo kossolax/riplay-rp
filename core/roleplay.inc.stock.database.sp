@@ -999,7 +999,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		g_iUserData[Client][i_ArtisanXP] = SQL_FetchInt(hQuery, 31);
 		g_iUserData[Client][i_ArtisanLevel] = SQL_FetchInt(hQuery, 32);
 		g_iUserData[Client][i_ArtisanPoints] = SQL_FetchInt(hQuery, 33);
-		g_iUserData[Client][fl_ArtisanFatigue] = SQL_FetchFloat(hQuery, 34);
+		g_flUserData[Client][fl_ArtisanFatigue] = SQL_FetchFloat(hQuery, 34);
 		g_iUserData[Client][i_KillMonth] = SQL_FetchInt(hQuery, 35);
 		g_iUserData[Client][i_DeathMonth] = SQL_FetchInt(hQuery, 36);
 		g_iUserData[Client][i_Kill31Days] = SQL_FetchInt(hQuery, 37);
