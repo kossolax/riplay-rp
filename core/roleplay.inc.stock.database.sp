@@ -867,7 +867,7 @@ void LoadUserData(int Client) {
 		Format(query, sizeof(query),
 			"%s `level`, `prestige`, `female`, `birthday`, `birthmonth`, `lastname`, `firstname`, `rules`, `jobplaytime`, `adminxp`, `dette`, `time_played`, ", query, SteamID); 
 		Format(query, sizeof(query),
-			"%s `permi_lege_start`, `permi_lourd_start`, `freekiller`, `amende_permi_lege`, `amende_permi_lourd` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
+			"%s `permi_lege_start`, `permi_lourd_start`, `freekiller`, `amende_permi_lege`, `amende_permi_lourd`, `skin_id` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
 
 		SQL_TQuery(g_hBDD, LoadUserData_2, query, Client, DBPrio_High);
 		
@@ -1024,6 +1024,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		
 		g_iUserData[Client][i_AmendeLiscence2] = SQL_FetchInt(hQuery, 57);
 		g_iUserData[Client][i_AmendeLiscence1] = SQL_FetchInt(hQuery, 58);
+		g_iUserData[Client][i_SkinDonateur] = SQL_FetchInt(hQuery, 59);
 
 		SQL_FetchString(hQuery, 47, g_szUserData[Client][sz_LastName], sizeof(g_szUserData[][]));
 		SQL_FetchString(hQuery, 48, g_szUserData[Client][sz_FirstName], sizeof(g_szUserData[][]));		
