@@ -1699,12 +1699,8 @@ void displayTribunal(int client, const char szSteamID[64]) {
 	GetClientAuthId(client, AUTH_TYPE, steamid, sizeof(steamid), false);
 	
 	Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_tribunal` (`uniqID`, `timestamp`, `steamid`) VALUES ('%s', '%i', '%s');", steamid, GetTime(), szSteamID);
+	SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery);
 	
-	Handle DB = rp_GetDatabase();
-	
-	SQL_LockDatabase(DB);
-	SQL_Query(DB, szQuery);
-	SQL_UnlockDatabase(DB);
 	
 	Format(szURL, sizeof(szURL), "https://rpweb.riplay.fr/index.php#/tribunal/case/%s", szSteamID);
 	PrintToConsole(client, "https://rpweb.riplay.fr/index.php#/tribunal/case/%s", szSteamID);
