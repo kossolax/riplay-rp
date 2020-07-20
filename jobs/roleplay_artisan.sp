@@ -233,6 +233,10 @@ public Action fwdCanStealItem(int client, int target) {
 // ----------------------------------------------------------------------------
 void displayArtisanMenu(int client) {
 	
+	if( rp_GetClientInt(client, i_ArtisanLevel) == 0 ) {
+		rp_SetClientInt(client, i_ArtisanLevel, 1);
+	}
+	
 	Handle menu = CreateMenu(eventArtisanMenu);
 	SetMenuTitle(menu, "== Artisanat ==\n ");
 	
