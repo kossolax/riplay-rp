@@ -300,13 +300,17 @@ void AFK_Check(int client) {
 		}
 	}
 	
+	if( g_bUserData[client][b_IsAFK] ) {
+		g_iUserData[client][i_TimeAFK_total]++;
+		g_iUserData[client][i_TimeAFK_today]++;
+	}
+	
 	if( same ) {
 		
 		g_iUserData[client][i_TimeAFK]++;
-		g_iUserData[client][i_TimeAFK_total]++;
-		g_iUserData[client][i_TimeAFK_today]++;
 		
 		if( g_iUserData[client][i_TimeAFK] > 180 ) {
+			
 			if( !g_bUserData[client][b_IsAFK] ) {
 				g_bUserData[client][b_IsAFK] = true;
 				CPrintToChat(client, "" ...MOD_TAG... " Vous êtes maintenant considéré comme AFK.");
