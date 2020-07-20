@@ -1987,7 +1987,6 @@ void getUsedWeapon(int client, char[] primary, int maxlenprimary, char[] seconda
 
 	for(int i = 0; i < g_UsedWeapon[client].Length; i++) {
 		g_UsedWeapon[client].GetString(i, item, 64);
-		PrintToChat(client, "item : %s", item);
 		ExplodeString(item, "|", split, sizeof(split), sizeof(split[]));
 
 		if(GetTime() > StringToInt(split[1])) {
