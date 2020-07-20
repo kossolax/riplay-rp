@@ -83,7 +83,7 @@ public Action OnWeaponSwitch(int Client, int weapon) {
 	g_bUserData[Client][b_WeaponIsKnife] = (StrContains(szWeapon, "weapon_knife") == 0 || StrContains(szWeapon, "weapon_bayonet") == 0);
 	g_bUserData[Client][b_WeaponIsHands] = (StrContains(szWeapon, "weapon_fists") == 0);
 	
-	if( g_flUserData[Client][fl_TazerTime] > GetTickedTime() || Client_GetVehicle(Client) > 0 ) {
+	if( g_flUserData[Client][fl_TazerTime] > GetGameTime() || Client_GetVehicle(Client) > 0 ) {
 		
 		if( !g_bUserData[Client][b_WeaponIsHands]  ) {
 			FakeClientCommand(Client, "use weapon_fists");
