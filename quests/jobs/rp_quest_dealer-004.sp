@@ -132,6 +132,9 @@ public Action fwdBlackMarket(int client, int jobID, int target, int victim, int&
 }
 public void Q1_Done(int objectiveID, int client) {
 	Q1_Abort(objectiveID, client);
+	
+	
+	rp_ClientXPIncrement(client, 1250);
 }
 // ----------------------------------------------------------------------------
 public int MenuNothing(Handle menu, MenuAction action, int client, int param2) {
