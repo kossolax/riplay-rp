@@ -663,7 +663,7 @@ void OnGameFrame_10(float time) {
 					Call_Finish();
 				}
 				// TODO: Déplacer ça dans le job hopital
-				if( !(g_iMinutes % 5) ) {
+				if( !(GetZoneBit(GetPlayerZone(i)) & (BITZONE_PVP|BITZONE_EVENT)) && !(g_iMinutes % 5) ) {
 					if( HasDoctor(i) 
 						&& !(rp_GetZoneBit( rp_GetPlayerZone(i) ) & BITZONE_PVP)
 						&& !(rp_GetZoneBit( rp_GetPlayerZone(i) ) & BITZONE_EVENT) ) {
@@ -689,7 +689,7 @@ void OnGameFrame_10(float time) {
 					}
 				}
 				
-				if( g_iUserData[i][i_Sickness] && (g_iMinutes % 5) == 0 ) {
+				if( !(GetZoneBit(GetPlayerZone(i)) & (BITZONE_PVP|BITZONE_EVENT)) && g_iUserData[i][i_Sickness] && (g_iMinutes % 5) == 0 ) {
 					
 					int health = GetClientHealth(i);
 
