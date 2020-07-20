@@ -310,7 +310,7 @@ public Action GameLogHook(const char[] message) {
 			
 			if( g_iKillLegitime[client][target] >= GetTime() ) {
 				log[strlen(log) - 1] = ' ';
-				Format(log, sizeof(log), "%s (légitime)", message);
+				Format(log, sizeof(log), "%s (légitime)", log);
 			}
 			
 			LogToGame(log);
