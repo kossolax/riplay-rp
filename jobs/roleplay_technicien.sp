@@ -427,8 +427,10 @@ int BuildingCashMachine(int client, bool force=false) {
 		max = 15;
 	
 	int appart = rp_GetPlayerZoneAppart(client);
-	if( appart > 0 && (rp_GetAppartementInt(appart, appart_bonus_coffre)||(rp_GetClientJobID(client) == 61 && !rp_GetClientBool(client, b_GameModePassive))) )
-		max += 3;
+	if( appart > 0 && (rp_GetAppartementInt(appart, appart_bonus_coffre)||(rp_GetClientJobID(client) == 61 && !rp_GetClientBool(client, b_GameModePassive))) ) {
+		if( rp_GetClientKeyAppartement(client, appart) )
+			max += 3;
+	}
 	if( rp_GetClientInt(client, i_PlayerLVL) >= 182 )
 		max += 2;
 	if( rp_GetClientInt(client, i_PlayerLVL) >= 506 )
@@ -679,8 +681,11 @@ int BuildingBigCashMachine(int client) {
 		return 0;
 	
 	int appart = rp_GetPlayerZoneAppart(client);
-	if( appart > 0 && (rp_GetAppartementInt(appart, appart_bonus_coffre)||(rp_GetClientJobID(client) == 61 && !rp_GetClientBool(client, b_GameModePassive))) )
+	if( appart > 0 && rp_GetClientKeyAppartement(client, appart) &&
+		( rp_GetAppartementInt(appart, appart_bonus_coffre) || (rp_GetClientJobID(client) == 61 && !rp_GetClientBool(client, b_GameModePassive)) )
+		) {
 		max += 3;
+	}
 	if( rp_GetClientInt(client, i_PlayerLVL) >= 182 )
 		max += 2;
 	if( rp_GetClientInt(client, i_PlayerLVL) >= 506 )
