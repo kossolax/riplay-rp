@@ -1950,7 +1950,7 @@ void Draw_SkinList(int client, int test, int skinID) {
 			else
 				Format(tmp2, sizeof(tmp2), "%s - %d pass de fitness", g_szSkinsList[i][1], StringToInt(g_szSkinsList[i][3]));
 			
-			if( (female==2) && rp_GetClientInt(client, i_Donateur) >= 1 ) 
+			if( (female==2) && ((rp_GetClientInt(client, i_Donateur) >= 1&&rp_GetClientInt(client, i_Donateur) <=10)||test) ) 
 				menu.AddItem(tmp, tmp2);			
 			if( (female==1) && isfemale )
 				menu.AddItem(tmp, tmp2);
