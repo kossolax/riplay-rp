@@ -158,6 +158,8 @@ public Action Cmd_ItemPermi(int args) {
 	}
 	
 	rp_ClientSave(client);
+	
+	return Plugin_Handled;
 }
 public Action Cmd_ItemBankCard(int args) {
 	
@@ -173,6 +175,8 @@ public Action Cmd_ItemBankCard(int args) {
 	
 	CPrintToChat(client, "" ...MOD_TAG... " Votre carte bancaire est maintenant activée.");
 	rp_ClientSave(client);
+	
+	return Plugin_Handled;
 }
 public Action Cmd_ItemBankSort(int args) {
 
@@ -187,6 +191,8 @@ public Action Cmd_ItemBankSort(int args) {
 
 	rp_SetClientBool(client, b_CanSort, true);
 	CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez maintenant trier votre inventaire jusqu'à votre déconnexion.");
+	
+	return Plugin_Handled;
 }
 public Action Cmd_ItemBankKey(int args) {
 	
@@ -202,6 +208,8 @@ public Action Cmd_ItemBankKey(int args) {
 	rp_SetClientBool(client, b_HaveAccount, true);
 	CPrintToChat(client, "" ...MOD_TAG... " Votre compte bancaire est maintenant actif.");
 	rp_ClientSave(client);
+	
+	return Plugin_Handled;
 }
 public Action Cmd_ItemBankSwap(int args) {
 	
@@ -217,6 +225,8 @@ public Action Cmd_ItemBankSwap(int args) {
 	rp_SetClientBool(client, b_PayToBank, true);
 	CPrintToChat(client, "" ...MOD_TAG... " Vous recevrez maintenant votre paye en banque.");
 	rp_ClientSave(client);
+	
+	return Plugin_Handled;
 }
 // ----------------------------------------------------------------------------
 public Action Cmd_ItemAssurance(int args) {
@@ -466,6 +476,10 @@ public Action Cmd_ItemPackDebutant(int args) { //Permet d'avoir la CB, le compte
 	rp_SetClientBool(client, b_License1, true);
  	rp_SetClientBool(client, b_License2, true);
  	rp_SetClientBool(client, b_LicenseSell, true);
+ 	
+ 	
+	rp_SetClientInt(client, i_StartLicense1, GetTime());
+	rp_SetClientInt(client, i_StartLicense2, GetTime());
  	
 	CPrintToChat(client, "" ...MOD_TAG... " Votre carte bancaire, votre coffre, votre RIB et vos permis sont maintenant actifs.");
 
