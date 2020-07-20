@@ -353,7 +353,7 @@ public Action Cmd_ItemPiedBiche(int args) {
 	int target = getDistrib(client, type);
 	if( target <= 0 ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous devez être sur la place, ou viser une voiture.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez être sur la place, devant un distributeur.");
 		return Plugin_Handled;
 	}
 	
