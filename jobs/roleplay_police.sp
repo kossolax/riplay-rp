@@ -173,17 +173,6 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 		return Plugin_Stop;
 	}
 	
-	int zone = rp_GetZoneBit(rp_GetPlayerZone(client));
-	
-	if (zone & (BITZONE_JAIL | BITZONE_LACOURS | BITZONE_HAUTESECU) && rp_GetClientInt(client, i_JailTime) > 0) {
-		
-		if (verbose)
-			CPrintToChat(client, "" ...MOD_TAG... " Etant en prison, votre employeur vous verse seulement 10% de votre salaire.");
-		
-		topay = 0;
-		return Plugin_Stop;
-	}
-	
 	return Plugin_Continue;
 }
 public Action fwdSpawn(int client) {
