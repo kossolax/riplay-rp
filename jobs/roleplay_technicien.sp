@@ -679,9 +679,12 @@ int BuildingBigCashMachine(int client) {
 		return 0;
 	
 	int appart = rp_GetPlayerZoneAppart(client);
-	if( appart > 0 && rp_GetAppartementInt(appart, appart_bonus_coffre) ) {
+	if( appart > 0 && (rp_GetAppartementInt(appart, appart_bonus_coffre)||(rp_GetClientJobID(client) == 61 && !rp_GetClientBool(client, b_GameModePassive))) )
 		max += 3;
-	}
+	if( rp_GetClientInt(client, i_PlayerLVL) >= 182 )
+		max += 2;
+	if( rp_GetClientInt(client, i_PlayerLVL) >= 506 )
+		max += 3;
 	
 	if( count > (max-15) ) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez trop de machines actives.");
