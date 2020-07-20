@@ -206,8 +206,9 @@ public Action Cmd_Copter(client, args) {
 	vecDest[2] = vecEnd[2];
 	if (client > 0) {
 		
-		float tmp[3]; GetClientAbsOrigin(client, tmp);
-		TE_SetupBeamPoints(vecDest, tmp, LaserCache, 0, 0, 0, 7.5, 1.0, 10.0, 0, 0.0, { 250, 0, 0, 250 }, 20);
+		float tmp[3];
+		GetClientAbsOrigin(client, tmp);
+		TE_SetupBeamPoints(tmp, vecDest, LaserCache, 0, 0, 0, 7.5, 1.0, 10.0, 0, 0.0, { 250, 0, 0, 250 }, 20);
 		TE_SendToClient(client);
 		
 		TE_SetupBeamRingPoint(vecDest, 50.0, 250.0, LaserCache, 0, 0, 30, 7.5, 20.0, 0.0, { 255, 0, 0, 100 }, 10, 0);
