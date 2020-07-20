@@ -159,7 +159,16 @@ public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerUse,	fwdOnPlayerUse);
 	rp_HookEvent(client, RP_OnPlayerSteal,	fwdOnPlayerSteal);
 	rp_HookEvent(client, RP_OnPlayerBuild,	fwdOnPlayerBuild);
+	rp_HookEvent(client, RP_OnAssurance,	fwdAssurance);
 	rp_SetClientBool(client, b_MaySteal, true);
+}
+public Action fwdAssurance(int client, int& amount) {
+	for (int i = 1; i < 2048; i++) {
+		if( g_iDoorDefine_LOCKER[i] == client )
+			amount += 150;
+	}
+	
+	return Plugin_Changed;
 }
 public void OnClientDisconnect(int client) {
 	for(int i=0; i<2049; i++){
@@ -526,7 +535,7 @@ public Action Cmd_ItemPiedBiche(int args) {
 
 	if( target <= 0 ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser un distributeur, un téléphone, ou une imprimante.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser un distributeur, un téléphone, plant de drogue, ou une imprimante.");
 		return Plugin_Handled;
 	}
 	
