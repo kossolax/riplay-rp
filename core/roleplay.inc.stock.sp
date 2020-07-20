@@ -302,7 +302,9 @@ void AFK_Check(int client) {
 	
 	if( same ) {
 		
-		g_iUserData[client][i_TimeAFK]++;		
+		g_iUserData[client][i_TimeAFK]++;
+		g_iUserData[client][i_TimeAFK_total]++;
+		g_iUserData[client][i_TimeAFK_today]++;
 		
 		if( g_iUserData[client][i_TimeAFK] > 180 ) {
 			if( !g_bUserData[client][b_IsAFK] ) {
@@ -319,10 +321,7 @@ void AFK_Check(int client) {
 					g_iUserData[client][i_PlayerXP] -= 180;
 				
 			}
-			/*else {
-				g_iUserData[client][i_TimeAFK_total]++;
-				g_iUserData[client][i_TimeAFK_today]++;
-				
+			/*else {				
 				if( !IsClientInJail(client) ) {
 					if( g_iUserData[client][i_TimeAFK] > 3600 || g_iUserData[client][i_TimeAFK_total] > 7200 ) {
 						
