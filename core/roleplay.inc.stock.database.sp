@@ -546,8 +546,8 @@ void StoreUserData(int client) {
 		MysqlQuery, g_flUserData[client][fl_Vitality], g_bUserData[client][b_PayToBank], g_bUserData[client][b_HaveCard], g_bUserData[client][b_HaveAccount], in_bank, in_item, in_save, IP);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
-		"%s `malus`='%i', `freekill`='%i', `freekiller`='%i', `assurance`='%i', `train_esquive`='%i', `skin`='%s', ",
-		MysqlQuery, g_iUserData[client][i_Malus], g_iUserData[client][i_KillJailDuration], g_bUserData[client][b_IsFreekiller], GetAssurence(client), g_iUserData[client][i_Esquive], g_szUserData[client][sz_Skin]);
+		"%s `malus`='%i', `freekill`='%i', `freekiller`='%i', `assurance`='%i', `train_esquive`='%i', `skin`='%s', `skin_id`='%d', ",
+		MysqlQuery, g_iUserData[client][i_Malus], g_iUserData[client][i_KillJailDuration], g_bUserData[client][b_IsFreekiller], GetAssurence(client), g_iUserData[client][i_Esquive], g_szUserData[client][sz_Skin], g_iUserData[client][i_SkinDonateur]);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
 		"%s `sick`='%i', `tuto`='%i', `TimePlayedJob`='%d', `artisan_xp`='%d', `artisan_lvl`='%d', `artisan_points`='%d',  `artisan_fatigue`='%f', ",
