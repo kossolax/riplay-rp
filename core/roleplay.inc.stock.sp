@@ -49,9 +49,9 @@ int getKillContext(int attack, int victim) {
 		attackID = rp_GetClientKeyAppartement(attack, zoneID);
 		victimID = rp_GetClientKeyAppartement(victim, zoneID);
 		
-		if( attackID == zoneID && victimID == zoneID ) // Cas 1
+		if( attackID && victimID ) // Cas 1
 			return 11;
-		if( attackID == zoneID || victimID == zoneID ) // Cas 2
+		if( attackID || victimID ) // Cas 2
 			return 3;
 		return 7;
 	}
