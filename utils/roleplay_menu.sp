@@ -58,6 +58,14 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 	if( StrEqual(command, "steam") || StrEqual(command, "steamid") ) {
 		return showSteamID(client);
 	}
+	if( StrEqual(command, "discord") || StrEqual(command, "invite") ) {
+		return showDiscord(client);
+	}
+	return Plugin_Continue;
+}
+public Action showDiscord(int client) {
+	CPrintToChatAll("" ...MOD_TAG..." Rejoignez notre serveur {green}discord{default} <3!");
+	CPrintToChatAll("" ...MOD_TAG... " https://discord.gg/hw4GSSw");
 	return Plugin_Continue;
 }
 public Action showSteamID(int client) {
