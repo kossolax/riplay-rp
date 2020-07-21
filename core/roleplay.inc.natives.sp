@@ -1100,7 +1100,7 @@ public int Native_rp_GetRandomCapital(Handle plugin, int numParams) {
 	return capital_id;
 }
 public int Native_rp_GetPlayerZoneAppart(Handle plugin, int numParams) {
-	return getZoneAppart(GetNativeCell(1));
+	return getZoneAppart(GetNativeCell(1), GetNativeCell(2));
 }
 public int Native_rp_IsBuildingAllowed(Handle plugin, int numParams) {
 	return CheckBuild(GetNativeCell(1), !(view_as<bool>(GetNativeCell(2))));

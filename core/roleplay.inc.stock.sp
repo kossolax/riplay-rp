@@ -15,6 +15,7 @@
 //
 
 int getKillContext(int attack, int victim) {
+	char ZoneName[32];
 	int zoneID, attackID, victimID;
 	
 	// ---- dans le comico	
@@ -44,7 +45,7 @@ int getKillContext(int attack, int victim) {
 	}
 	
 	// ---- dans les appart
-	zoneID = rp_GetPlayerZoneAppart(victim);
+	zoneID = rp_GetPlayerZoneAppart(victim, false);
 	if( zoneID > 0 ) {
 		attackID = rp_GetClientKeyAppartement(attack, zoneID);
 		victimID = rp_GetClientKeyAppartement(victim, zoneID);

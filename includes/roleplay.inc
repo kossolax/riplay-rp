@@ -478,7 +478,7 @@ native void rp_ClientDrawWeaponMenu(int client, int ent, bool steal);					/* Aff
 native void rp_ClientGetName(int client, char[] name, int length);
 native void rp_ClientTeleport(int client, float dst[3]);
 // ----------------------------------------------------------------------------
-native int rp_GetPlayerZoneAppart(int client); 									/* Numéro de l'appartement: Uniquement si on se trouve dedans... */
+native int rp_GetPlayerZoneAppart(int client, bool appartIsRequired=true);			/* Numéro de l'appartement: Uniquement si on se trouve dedans... */
 native int rp_GetPlayerZone(int client, float cache = 0.25); 						/* Numéro de la zone actuelle. */
 native int rp_GetZoneBit(int client, float cache = 300.0);							/* Récupére une option sur une zone. val & BITZONE_BLOCKSTEAL --> On ne peut pas voler dans cette zone */
 native int rp_SetZoneBit(int client, int bits);										/* Set une option sur une zone. */
