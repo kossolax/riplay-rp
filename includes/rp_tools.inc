@@ -17,8 +17,17 @@
 #include <cstrike>
 
 bool rp_AcceptEntityInput(int dest, const char[] input, int activator=-1, int caller=-1, int outputid=0) {
-	if( dest > 0 && IsValidEdict(dest) && IsValidEntity(dest) )
+	static char tmp[64];
+	if( dest > 0 && IsValidEdict(dest) && IsValidEntity(dest) ) {
+		GetEdictClassname(dest, tmp, sizeof(tmp));
+		
+		if( !StrEqual(tmp, "env_cascade_light") )
+			LogToGame("[DEBUG] [ENTITY-IO] %d %s %s %d %d %d", dest, tmp, input, activator, caller, outputid);
 		AcceptEntityInput(dest, input, activator, caller, outputid);
+	}
+	else {
+		LogToGame("[DEBUG] [ENTITY-IO] %d UNKNOWN %s %d %d %d", dest, input, activator, caller, outputid);
+	}
 }
 // ----------------------------------------------------------------------------
 stock bool Weapon_ShouldBeEquip(const char[] weapon) {

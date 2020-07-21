@@ -40,7 +40,9 @@ public Action Command_Say(int client, int args) {
 	
 	if( !g_bUserData[client][b_Crayon] )
 		CRemoveTags(szSayText, sizeof(szSayText));
-		
+	
+	LogToGame("[DEBUG] [TALK] %L %s %s %d", client, szSayTrig, szSayText, target);
+	
 	Action act = Plugin_Continue;
 	Call_StartForward( view_as<Handle>(g_hRPNative[client][RP_PrePlayerTalk]) );
 	Call_PushCell(client);

@@ -98,6 +98,7 @@ public int eventItemMenu(Handle p_hItemMenu, MenuAction p_oAction, int p_iParam1
 			}
 			
 			if( !StrEqual(g_szItemList[ id ][item_type_extra_cmd], "none", false) ) {
+				LogToGame("[DEBUG] [ITEM] %s %d %d", g_szItemList[ id ][item_type_extra_cmd], p_iParam1, id);
 				ServerCommand("%s %i %i", g_szItemList[ id ][item_type_extra_cmd], p_iParam1, id);
 				used = true;
 			}
