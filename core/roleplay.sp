@@ -333,7 +333,7 @@ public Action Command_DebugBF(int client, int args) {
 public void OnConfigsExecuted() {
 	ServerCommand("weapon_accuracy_nospread 1");
 	ServerCommand("spec_freeze_deathanim_time 999999");
-	ServerCommand("mp_forcecamera 0");	
+	ServerCommand("mp_forcecamera 1");	
 	ServerCommand("mp_radar_showall 1");
 	
 	g_hWeaponScale = FindConVar("weapon_recoil_scale");
