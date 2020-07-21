@@ -642,6 +642,7 @@ public Action fwdOnPlayerUse(int client) {
 				continue;
 			
 			rp_ClientGiveItem(client, sub, rp_GetBuildingData(i, BD_count));
+			rp_SetClientStat(client, i_S_DrugPickedUp, rp_GetClientStat(client, i_S_DrugPickedUp) + rp_GetBuildingData(i, BD_count));
 			FakeClientCommand(client, "say /item");
 		}
 		else {
