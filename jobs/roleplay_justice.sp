@@ -1251,22 +1251,13 @@ float getAvocatRatio(int client) {
 int calculAudienceXp(int numb) {
 	int value = 0;
 
-	PrintToChatAll("numb g_iXpAudience = %i", sizeof(g_iXpAudience));
-
 	for(int i = 0; i < sizeof(g_iXpAudience); i++) {
-		PrintToChatAll("debug %i -> %i", i, g_iXpAudience[i]);
-
-		if(g_iXpAudience[i] <= numb) {
-			PrintToChatAll("colision with %i -> %i", i, g_iXpAudience[i]);
+		if(g_iXpAudience[i] <= numb)
 			value = i;
-		}
 	}
-
-	PrintToChatAll("found %i -> %i ", value, g_iXpAudience[value]);
 
 	if(value > 0) {
 		value = g_iXpAudience[value] / 2;
-		PrintToChatAll("value > 0 so value = %i", value);
 	}
 
 	return value;
