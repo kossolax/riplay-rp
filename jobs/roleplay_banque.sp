@@ -626,7 +626,9 @@ void DisplayMetroMenu(int client) {
 	
 	if( GetConVarInt(g_hEVENT) == 1 )
 		AddMenuItem(menu, "metro_event", "Métro: Station événementiel");
-	
+	if( GetConVarInt(g_hEVENT) == 5 )
+		AddMenuItem(menu, "metro_event2", "Métro: Station événementiel");
+
 	AddMenuItem(menu, "metro_paix", 	"Métro: Station de la paix");
 	AddMenuItem(menu, "metro_zoning", 	"Métro: Station Place Station");
 	AddMenuItem(menu, "metro_inno", 	"Métro: Station de l'innovation");
@@ -649,11 +651,11 @@ public int eventMetroMenu(Handle menu, MenuAction action, int client, int param2
 		if( !IsInMetro(client) )
 			return;
 		
-		if( StrEqual(options, "metro_event") && GetConVarInt(g_hEVENT) == 0 ) {
+		if( StrContains(options, "metro_event") == 0 && GetConVarInt(g_hEVENT) == 0 ) {
 			return;
 		}
 		
-		int Max, i, hours, min, iLocation[150];
+		int Max, i, hours, min, iLocation[MAX_LOCATIONS];
 		
 		for( i=0; i<150; i++ ) {
 			rp_GetLocationData(i, location_type_base, tmp, sizeof(tmp));
@@ -697,7 +699,7 @@ public Action metroTeleport(Handle timer, any client) {
 	
 	rp_GetLocationData(tp, location_type_base, tmp, sizeof(tmp));
 	
-	if( StrEqual(tmp, "metro_event") ) {
+	if( StrContains(tmp, "metro_event") == 0) {
 		if( rp_GetClientBool(client, b_IsMuteEvent) == true ) {
 			CPrintToChat(client, "" ...MOD_TAG... " En raison de votre mauvais comportement, il vous est temporairement interdit de participer à un event.");
 			return Plugin_Handled;
