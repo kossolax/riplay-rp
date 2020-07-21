@@ -1064,7 +1064,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 					SteamID, assurance);
 				
 				SQL_TQuery(g_hBDD, SQL_QueryCallBack, szQuery, 0, DBPrio_Low);
-				SetJobCapital(211, (GetJobCapital(211)-(assurance/2)));
+				//SetJobCapital(211, (GetJobCapital(211)-(assurance/2)));
 				//int cap = rp_GetRandomCapital(211);
 				//SetJobCapital(cap, (GetJobCapital(cap)-(assurance/2)));
 			}
