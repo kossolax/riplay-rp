@@ -594,6 +594,37 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 		rp_ClientGiveItem(client, ITEM_PIEDBICHE, 1);
 		return Plugin_Stop;
 	}
+	
+	switch(type) {
+		case 4: { // Imprimante
+			int owner = rp_GetBuildingData(target, BD_owner);
+			if( IsValidClient(owner) ) {				
+				rp_ClientAggroIncrement(client, owner, 1000);
+			}
+		}
+		case 5: { // Photocopieuse
+			int owner = rp_GetBuildingData(target, BD_owner);
+			if( IsValidClient(owner) ) {				
+				rp_ClientAggroIncrement(client, owner, 1000);
+			}
+		}
+		case 7: { // Plant de drogue
+			int count = rp_GetBuildingData(target, BD_count);
+			if( count > 0  ) {				
+				int owner = rp_GetBuildingData(target, BD_owner);
+				if( IsValidClient(owner) ) {				
+					rp_ClientAggroIncrement(client, owner, 1000);
+				}
+			}
+		}
+		case 8: { // Distrib Perso
+			int owner = rp_GetBuildingData(target, BD_owner);
+			if( IsValidClient(owner) ) {
+				rp_ClientAggroIncrement(client, owner, 1000);
+			}
+		}
+	}
+			
 	if( percent >= 1.0 ) {
 		rp_ClientColorize(client);
 		
@@ -880,6 +911,14 @@ public Action ItemPickLockOver_frame(Handle timer, Handle dp) {
 		difficulte += 1;
 	if( g_iDoorDefine_LOCKER[doorID] )
 		difficulte += 2;
+	
+	for (int i = 1; i <= MaxClients; i++) {
+		if( !IsValidClient(i) )
+			continue;
+		
+		if( rp_GetClientKeyDoor(i, doorID) )
+			rp_ClientAggroIncrement(client, i, 1000);
+	}
 	
 	if( percent >= 1.0 ) {
 		
