@@ -585,9 +585,11 @@ void StoreUserData(int client) {
 	
 	SQL_TQuery(g_hBDD, SQL_QueryCallBack, MysqlQuery);	
 }
+bool g_bDoingSync = false;
 void SynFromWeb() {
-	if( g_iPlayerCount > 0 ) {
+	if( g_iPlayerCount > 0 && g_bDoingSync == false ) {
 		SQL_LockDatabase(g_hBDD);
+		g_bDoingSync = true;
 		Handle hQuery = SQL_Query(g_hBDD, "SELECT `money`, `bank`, `job_id`, `group_id`, `steamid`, `pseudo`, `steamid2`, `jail`, `raison`, `id`, UNIX_TIMESTAMP(`timestamp`) as `date`, `itemid`, `itemAmount`, `itemToBank`, `xp` FROM `rp_users2`;");
 		if( hQuery == INVALID_HANDLE ) {
 			SQL_UnlockDatabase(g_hBDD);
@@ -731,6 +733,7 @@ void SynFromWeb() {
 			CloseHandle(hQuery);
 		
 		SQL_UnlockDatabase(g_hBDD);
+		g_bDoingSync = false;
 	}
 }
 void ResetUserData(int client) {
