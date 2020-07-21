@@ -1,7 +1,16 @@
 #pragma semicolon 1
 
+#pragma semicolon 1
+
 #include <sourcemod>
+#include <sdkhooks>
+#include <smlib>
+#include <colors_csgo>
+#include <basecomm>
 #include <SteamWorks>
+
+#pragma newdecls required
+#include <roleplay.inc>	// https://www.ts-x.eu
 
 #pragma newdecls required
 
@@ -18,11 +27,20 @@ public Plugin myinfo = {
 };
 
 StringMap g_hScoring;
+StringMap g_hWhitelist;
+
 ArrayList g_hQueue;
 bool g_bProcessing;
 
 Handle g_hCvarScore;
 
+public Action Cmd_Reload(int args) {
+	char name[64];
+	GetPluginFilename(INVALID_HANDLE, name, sizeof(name));
+	ServerCommand("sm plugins reload %s", name);
+	return Plugin_Continue;
+}
+	
 public void OnPluginStart() {
 	
 	g_hScoring = new StringMap();
@@ -31,21 +49,39 @@ public void OnPluginStart() {
 	
 	CreateTimer(QUEUE_SPEED, Timer_TICK, _, TIMER_REPEAT);
 	
-	g_hCvarScore = CreateConVar("sv_autoban_vpn_score", "0.99");
+	g_hCvarScore = CreateConVar("sv_autoban_vpn_score", "0.991");
 	AutoExecConfig();
+	
+	RegAdminCmd("sm_vpn_reload", Cmd_ReloadWhiteList, ADMFLAG_BAN);
+	RegServerCmd("rp_quest_reload", Cmd_Reload);
+	SQL_TQuery(rp_GetDatabase(), SQL_WhiteList, "SELECT `steamid` FROM `srv_vpn`");
 	
 	for (int i = 1; i < MaxClients; i++)
 		if( IsClientInGame(i) )
 			OnClientPostAdminCheck(i);
 }
-
-public void OnClientPostAdminCheck(int client) {
-	char tmp[16];
-	float score;
+public Action Cmd_ReloadWhiteList(int client, int args) {
+	SQL_TQuery(rp_GetDatabase(), SQL_WhiteList, "SELECT `steamid` FROM `srv_vpn`");
+	return Plugin_Handled;
+}
+public void SQL_WhiteList(Handle owner, Handle row, const char[] error, any none) {
+	char tmp[64];
 	
+	g_hWhitelist.Clear();
+	while( SQL_FetchRow(row) ) {
+		SQL_FetchString(row, 0, tmp, sizeof(tmp));
+		g_hWhitelist.SetValue(tmp, 1);	
+	}
+}
+public void OnClientPostAdminCheck(int client) {
+	char tmp[16], steamid[64];
+	float score;
+	int thrust;
+	
+	GetClientAuthId(client, AUTH_TYPE, steamid, sizeof(steamid));
 	GetClientIP(client, tmp, sizeof(tmp));
 	
-	if( g_hScoring.GetValue(tmp, score) ) {
+	if( g_hScoring.GetValue(tmp, score) && !g_hWhitelist.GetValue(steamid, thrust) ) {
 		if( score >= GetConVarFloat(g_hCvarScore) ) {
 			BanClient(client, BAN_TIME, BANFLAG_IP, "VPN", "VPN are not allowed on this server");
 		}
