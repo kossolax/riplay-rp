@@ -216,6 +216,7 @@ public Action fwdTueurCanKill(int attacker, int victim) {
 }
 public Action fwdFrame(int client) {
 	int target = rp_GetClientInt(client, i_ToKill);
+	char tmp[128];
 	
 	if( !IsValidClient(target) ) {
 		SetContratFail(client);
@@ -224,8 +225,9 @@ public Action fwdFrame(int client) {
 		SetContratFail(client);
 	}
 	else {
+		rp_GetZoneData(rp_GetPlayerZone(target), zone_type_name, tmp, sizeof(tmp));
 		rp_Effect_BeamBox(client, target, NULL_VECTOR, 255, 0, 0);
-		PrintHintText(client, "Cible: %N", target);
+		PrintHintText(client, "Cible: %N\n%Zone: %s", target, tmp);
 	}
 	
 	return Plugin_Continue;
@@ -532,7 +534,9 @@ public int AddCompetanceToAssassin(Handle menu, MenuAction action, int client, i
 		}
 		
 		g_iKillerPoint[client][competance_left]--;
-		OpenSelectSkill(client);
+		
+		if( rp_GetClientInt(client, i_ToKill) > 0 )
+			OpenSelectSkill(client);
 	}
 	else if (action == MenuAction_End) {
 		CloseHandle(menu);
