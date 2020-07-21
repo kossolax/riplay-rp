@@ -32,8 +32,8 @@ public Plugin myinfo = {
 
 int gain2[] =  { 0, 300, 400, 600, -5000, 900, 300, 500, 900, 300, 400, 550, 800, 500, 300, 500, 600, 5000, 600, 300, 700, 450, 350, 800, 0};
 char symbol[][] = {" ☘ ", "㍴", " ♥ ", "☎", " ♫ ", "♘", "☆", "☠", "♕", " ♠ ", "Δ", "§", " ♦ ", " † ", "☀", "♙ "};
-int wheel[10][3][13];
-int gain[10][7] =  {
+int wheel[13][3][13];
+int gain[13][7] =  {
 	{200,	100,	50,	25,	5,	3,	-1}, // 1
 	{250,	100,	50,	20,	10,	5,	-1}, // 2
 	{100,	50,		25,	20,	15,	10,	-1}, // 3
@@ -43,7 +43,11 @@ int gain[10][7] =  {
 	{500,	100,	20,	10,	6,	3,	-1}, // 7
 	{150,	30,		25,	20,	15,	10,	-1}, // 8
 	{15,	15,		15,	15,	15,	15,	-1}, // 9
-	{0,		0,		0,	0,	0,	25,	-1}  // 10
+	{0,		0,		0,	0,	0,	25,	-1},  // 10
+	
+	{200,	100,	50,	25,	5,	3,	-1}, // 11
+	{250,	100,	50,	20,	10,	5,	-1}, // 12
+	{100,	50,		25,	20,	15,	10,	-1} // 13
 };
 int lstJOB[] =  { 11, 21, 31, 41, 51, 61, 71, 81, 111, 131, 171, 191, 211, 221 };
 int g_iLastMachine[65], g_iRotation[65][2][3], g_iJettonInMachine[65], g_iJoker[65][3];
@@ -273,7 +277,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown) {
 	return Plugin_Stop;
 }
 public Action fwdOnPlayerUse(int client) {
-	if( rp_GetPlayerZone(client) == 278 ) {
+	if( rp_GetPlayerZone(client) == 278 || rp_GetPlayerZone(client) == 279 ) {
 		displayCasino(client);
 	}
 }
