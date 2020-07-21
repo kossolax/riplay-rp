@@ -1590,8 +1590,13 @@ public Action BuildingKevlarBox_post(Handle timer, any entity) {
 }
 public void BuildingKevlarBox_break(const char[] output, int caller, int activator, float delay) {
 	
-	int client = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
-	CPrintToChat(client,"" ...MOD_TAG... " Votre valise remplie de préservatifs a été détruite.");
+	int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
+	
+	if( IsValidClient(activator) && IsValidClient(owner) ) {
+		rp_ClientAggroIncrement(activator, owner, 1000);
+	}
+	
+	CPrintToChat(owner,"" ...MOD_TAG... " Votre valise remplie de préservatifs a été détruite.");
 	
 	float vecOrigin[3];
 	Entity_GetAbsOrigin(caller,vecOrigin);

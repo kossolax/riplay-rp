@@ -589,6 +589,10 @@ public Action BuildingATM_post(Handle timer, any entity) {
 public void BuildingATM_break(const char[] output, int caller, int activator, float delay) {
 	
 	int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
+	if( IsValidClient(activator) && IsValidClient(owner) ) {
+		rp_ClientAggroIncrement(activator, owner, 1000);
+	}
+	
 	if( IsValidClient(owner) ) {
 		CPrintToChat(owner, "" ...MOD_TAG... " Votre distributeur portable a été détruit.");
 	}
@@ -856,6 +860,9 @@ public void OnEntityDestroyed(int entity) {
 public void BuildingSIGN_break(const char[] output, int caller, int activator, float delay) {
 	
 	int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
+	if( IsValidClient(activator) && IsValidClient(owner) ) {
+		rp_ClientAggroIncrement(activator, owner, 1000);
+	}
 	if( IsValidClient(owner) ) {
 		CPrintToChat(owner, "" ...MOD_TAG... " Votre panneau a été détruit.");
 	}

@@ -495,9 +495,11 @@ public void BuildingCashMachine_break(const char[] output, int caller, int activ
 	if( IsValidClient(activator) ) {
 		rp_IncrementSuccess(activator, success_list_no_tech);
 		
-		if( rp_IsInPVP(caller) ) {
-			int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
-			if( IsValidClient(owner) ) {
+		int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
+		if( IsValidClient(owner) ) {
+			rp_ClientAggroIncrement(activator, owner, 1000);
+			
+			if( rp_IsInPVP(caller) ) {
 				if( rp_GetClientGroupID(activator) > 0 && rp_GetClientGroupID(owner) > 0 && rp_GetClientGroupID(activator) != rp_GetClientGroupID(owner) ) {
 					CashMachine_Destroy(caller);
 				}

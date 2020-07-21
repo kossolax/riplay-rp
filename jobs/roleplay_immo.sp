@@ -539,11 +539,15 @@ public int MenuPropOutdoor(Handle menu, MenuAction action, int client, int param
 }
 public void PropBuilt_break(const char[] output, int caller, int activator, float delay) {
 	
-	int client = rp_GetBuildingData(caller, BD_owner);
+	int owner = rp_GetBuildingData(caller, BD_owner);
 	rp_SetBuildingData(caller, BD_owner, 0);
+	
+	if( IsValidClient(activator) && IsValidClient(owner) ) {
+		rp_ClientAggroIncrement(activator, owner, 1000);
+	}
 
-	if( client == activator ) {
-		rp_IncrementSuccess(client, success_list_ikea_fail);
+	if( owner == activator ) {
+		rp_IncrementSuccess(owner, success_list_ikea_fail);
 	}
 }
 // ----------------------------------------------------------------------------

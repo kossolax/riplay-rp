@@ -190,14 +190,18 @@ public Action BuildingMicrowave_post(Handle timer, any entity) {
 }
 public void BuildingMicrowave_break(const char[] output, int caller, int activator, float delay) {
 	
-	int client = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
-	CPrintToChat(client,"" ...MOD_TAG... " Votre micro-ondes vient d'être détruit");
+	int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
+	CPrintToChat(owner,"" ...MOD_TAG... " Votre micro-ondes vient d'être détruit");
+	
+	if( IsValidClient(activator) && IsValidClient(owner) ) {
+		rp_ClientAggroIncrement(activator, owner, 1000);
+	}
 	
 	float vecOrigin[3];
 	Entity_GetAbsOrigin(caller,vecOrigin);
 	TE_SetupSparks(vecOrigin, view_as<float>({0.0,0.0,1.0}),120,40);
 	TE_SendToAll();
-	rp_UnhookEvent(client, RP_OnPlayerUse, fwdOnPlayerUse);
+	rp_UnhookEvent(owner, RP_OnPlayerUse, fwdOnPlayerUse);
 	//rp_Effect_Explode(vecOrigin, 200.0, 600.0, activator, "micro_onde");
 }
 public Action fwdOnPlayerUse(int client) {
