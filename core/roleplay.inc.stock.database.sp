@@ -585,152 +585,175 @@ void StoreUserData(int client) {
 	
 	SQL_TQuery(g_hBDD, SQL_QueryCallBack, MysqlQuery);	
 }
+
 void SynFromWeb() {
-	if( g_iPlayerCount > 0 ) {
-		SQL_LockDatabase(g_hBDD);
-		Handle hQuery = SQL_Query(g_hBDD, "SELECT `money`, `bank`, `job_id`, `group_id`, `steamid`, `pseudo`, `steamid2`, `jail`, `raison`, `id`, UNIX_TIMESTAMP(`timestamp`) as `date`, `itemid`, `itemAmount`, `itemToBank`, `xp` FROM `rp_users2`;");
-		if( hQuery == INVALID_HANDLE ) {
-			SQL_UnlockDatabase(g_hBDD);
-		}
-		char szPseudo[64], szSteamID[64], szSteamID2[64], szRaison[256], SteamID[64];
+	static char base[] = "SELECT `money`, `bank`, `job_id`, `group_id`, `steamid`, `pseudo`, `steamid2`, `jail`, `raison`, `id`, UNIX_TIMESTAMP(`timestamp`) as `date`, `itemid`, `itemAmount`, `itemToBank`, `xp` FROM `rp_users2` ";
+	static char steamid[128*32];
+	static char query[128 * 32 + 1024];
+	static char tmp[64];
+	
+	steamid[0] = 0;
+	int count = 0;
+	
+	for(int i=0; i<=MaxClients; i++) {
+		if( !IsValidClient(i) )
+			continue;
+		if( !g_bUserData[i][b_isConnected] )
+			continue;
+		if ( !g_bUserData[i][b_isConnected2] )
+			continue;
+		if( g_bUserData[i][b_IsFirstSpawn] )
+			continue;
 		
-		char query[1024];
-		while( SQL_FetchRow(hQuery) ) {
-			int money = SQL_FetchInt(hQuery, 0);
-			int bank = SQL_FetchInt(hQuery, 1);
-			int job_id = SQL_FetchInt(hQuery, 2);
-			int group_id = SQL_FetchInt(hQuery, 3);
+		
+		GetClientAuthId(i, AUTH_TYPE, tmp, sizeof(tmp), false);
+		Format(steamid, sizeof(steamid), "%s,'%s'", steamid, tmp);
+		
+		count++;
+	}
+	
+	steamid[0] = ' ';
+	
+	if( count > 0 ) {
+		Format(query, sizeof(query), "%s WHERE `steamid` IN (%s)", base, steamid);
+		SQL_TQuery(g_hBDD, SynFromWeb_call, query, 0, DBPrio_Low);
+	}
+}
+
+public void SynFromWeb_call(Handle owner, Handle hQuery, const char[] error, any Client) {
+	static char query[1024];
+	static char szPseudo[64], szSteamID[64], szSteamID2[64], szRaison[256], SteamID[64];
+	
+	while( SQL_FetchRow(hQuery) ) {
+		int money = SQL_FetchInt(hQuery, 0);
+		int bank = SQL_FetchInt(hQuery, 1);
+		int job_id = SQL_FetchInt(hQuery, 2);
+		int group_id = SQL_FetchInt(hQuery, 3);
+		
+		SQL_FetchString(hQuery, 4, szSteamID, sizeof(szSteamID));
+		SQL_FetchString(hQuery, 5, szPseudo, sizeof(szPseudo));
+		SQL_FetchString(hQuery, 6, szSteamID2, sizeof(szSteamID2));
+		
+		int jail = SQL_FetchInt(hQuery, 7);
+		SQL_FetchString(hQuery, 8, szRaison, sizeof(szRaison));
+		int id = SQL_FetchInt(hQuery, 9);
+		int timestamp = SQL_FetchInt(hQuery, 10);
+		int itemID = SQL_FetchInt(hQuery, 11);
+		int itemAmount = SQL_FetchInt(hQuery, 12);
+		int itemToBank = SQL_FetchInt(hQuery, 13);
+		int xp = SQL_FetchInt(hQuery, 14);
+		
+		
+		if( StrEqual(szSteamID, "CAPITAL") ) {
+			SetJobCapital(job_id, GetJobCapital(job_id)+money+bank);
+		}
+		else {
+			int Client = 0;
 			
-			SQL_FetchString(hQuery, 4, szSteamID, sizeof(szSteamID));
-			
-			ReplaceString(szSteamID, sizeof(szSteamID), "STEAM_0", "STEAM_1");
-			
-			SQL_FetchString(hQuery, 5, szPseudo, sizeof(szPseudo));
-			SQL_FetchString(hQuery, 6, szSteamID2, sizeof(szSteamID2));
-			int jail = SQL_FetchInt(hQuery, 7);
-			SQL_FetchString(hQuery, 8, szRaison, sizeof(szRaison));
-			int id = SQL_FetchInt(hQuery, 9);
-			int timestamp = SQL_FetchInt(hQuery, 10);
-			int itemID = SQL_FetchInt(hQuery, 11);
-			int itemAmount = SQL_FetchInt(hQuery, 12);
-			int itemToBank = SQL_FetchInt(hQuery, 13);
-			int xp = SQL_FetchInt(hQuery, 14);
-			
-			
-			if( StrEqual(szSteamID, "CAPITAL") ) {
-				SetJobCapital(job_id, GetJobCapital(job_id)+money+bank);
+			for(int i=0; i<=MaxClients; i++) {
+				if( !IsValidClient(i) )
+					continue;
+				if( !g_bUserData[i][b_isConnected] )
+					continue;
+				if ( !g_bUserData[i][b_isConnected2] )
+					continue;
+				if( g_bUserData[i][b_IsFirstSpawn] )
+					continue;
+				
+				GetClientAuthId(i, AUTH_TYPE, SteamID, sizeof(SteamID), false);
+				
+				if( StrEqual(szSteamID, SteamID, true) ) {
+					Client = i;
+					break;
+				}
 			}
+			
+			if( IsValidClient(Client) ) {
+				if( (money+bank) != 0 )
+					ChangePersonnal(Client, SynType_money, (money+bank), 0, szPseudo, szSteamID2, szRaison);
+				if( job_id != -1 )
+					ChangePersonnal(Client, SynType_job, job_id, 0, szPseudo, szSteamID2, szRaison);
+				if( group_id != -1 )
+					ChangePersonnal(Client, SynType_group, group_id, 0, szPseudo, szSteamID2, szRaison);
+				if( jail != -1 )
+					ChangePersonnal(Client, SynType_jail, jail, 0, szPseudo, szSteamID2, szRaison);
+				if( itemID != -1 ) {
+					if( itemToBank == 1 )
+						ChangePersonnal(Client, SynType_itemBank, itemID, itemAmount, szPseudo, szSteamID2, szRaison);
+					else
+						ChangePersonnal(Client, SynType_item, itemID, itemAmount, szPseudo, szSteamID2, szRaison);
+				}
+				if( xp != 0 )
+					ChangePersonnal(Client, SynType_xp, xp, 0, szPseudo, szSteamID2, szRaison);
+				
+			}
+			/*
 			else {
-				int Client = 0;
 				
-				for(int i=0; i<=MaxClients; i++) {
-					if( !IsValidClient(i) )
-						continue;
-					if( !g_bUserData[i][b_isConnected] )
-						continue;
-					if ( !g_bUserData[i][b_isConnected2] )
-						continue;
-					if( g_bUserData[i][b_IsFirstSpawn] )
-						continue;
-					
-					GetClientAuthId(i, AUTH_TYPE, SteamID, sizeof(SteamID), false);
-					
-					if( StrEqual(szSteamID, SteamID, true) ) {
-						Client = i;
-						break;
-					}
-				}
+				if( jail != -1 && timestamp+(7*24*60*60) > GetTime() )
+					continue;
+				if( timestamp+(1*60*60) > GetTime() )
+					continue;
 				
-				if( IsValidClient(Client) ) {
-					if( (money+bank) != 0 )
-						ChangePersonnal(Client, SynType_money, (money+bank), 0, szPseudo, szSteamID2, szRaison);
-					if( job_id != -1 )
-						ChangePersonnal(Client, SynType_job, job_id, 0, szPseudo, szSteamID2, szRaison);
-					if( group_id != -1 )
-						ChangePersonnal(Client, SynType_group, group_id, 0, szPseudo, szSteamID2, szRaison);
-					if( jail != -1 )
-						ChangePersonnal(Client, SynType_jail, jail, 0, szPseudo, szSteamID2, szRaison);
-					if( itemID != -1 ) {
-						if( itemToBank == 1 )
-							ChangePersonnal(Client, SynType_itemBank, itemID, itemAmount, szPseudo, szSteamID2, szRaison);
-						else
-							ChangePersonnal(Client, SynType_item, itemID, itemAmount, szPseudo, szSteamID2, szRaison);
-					}
-					if( xp != 0 )
-						ChangePersonnal(Client, SynType_xp, xp, 0, szPseudo, szSteamID2, szRaison);
-					
+				if( money != 0 ) {
+					Format(query, sizeof(query), "UPDATE `rp_users` SET `money`=`money`+%d WHERE `steamid`='%s' LIMIT 1;", money, szSteamID);
+					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
+					LogToGame("[TSX-RP] [SYN] [MONEY] Console<0><%s><> à reçu %d$ par %s (%s).", szSteamID, money, szPseudo, szSteamID2);
+
 				}
-				else {
+				if( bank != 0 ) {
+					Format(query, sizeof(query), "UPDATE `rp_users` SET `bank`=`bank`+%d WHERE `steamid`='%s' LIMIT 1;", bank, szSteamID);
+					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
+					LogToGame("[TSX-RP] [SYN] [MONEY] Console<0><%s><> à reçu %d$ par %s (%s).", szSteamID, bank, szPseudo, szSteamID2);
+				}
+				if( job_id != -1 ) {
+					if( job_id == 0 ) {
+						Format(query, sizeof(query), "UPDATE `rp_users` SET `job_id`=%d, `TimePlayedJob`=0 WHERE `steamid`='%s' LIMIT 1;", job_id, szSteamID);
+					}
+					else {
+						Format(query, sizeof(query), "UPDATE `rp_users` SET `job_id`=%d WHERE `steamid`='%s' LIMIT 1;", job_id, szSteamID);
+					}
 					
-					if( jail != -1 && timestamp+(7*24*60*60) > GetTime() )
-						continue;
-					if( timestamp+(1*60*60) > GetTime() )
-						continue;
+					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
+					LogToGame("[TSX-RP] [SYN] [JOB] Console<0><%s><> était INCONU et est maintenant %s par %s (%s).", szSteamID, g_szJobList[job_id][job_type_name], szPseudo, szSteamID2);
+				}
+				if( group_id != -1 ) {
+					Format(query, sizeof(query), "UPDATE `rp_users` SET `group_id`=%d WHERE `steamid`='%s' LIMIT 1;", group_id, szSteamID);
+					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
 					
-					if( money != 0 ) {
-						Format(query, sizeof(query), "UPDATE `rp_users` SET `money`=`money`+%d WHERE `steamid`='%s' LIMIT 1;", money, szSteamID);
-						SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-						LogToGame("[TSX-RP] [SYN] [MONEY] Console<0><%s><> à reçu %d$ par %s (%s).", szSteamID, money, szPseudo, szSteamID2);
+					LogToGame("[TSX-RP] [SYN] [GROUP] Console<0><%s><> était INCONU et est maintenant %s par %s (%s).", szSteamID, g_szGroupList[group_id][job_type_name], szPseudo, szSteamID2);
+				}
+				if( jail != -1 ) {
+					Format(query, sizeof(query), "UPDATE `rp_users` SET `jailled`=`jailled`+'%d' WHERE `steamid`='%s' LIMIT 1;", jail, szSteamID);
+					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
+					
+					LogToGame("[TSX-RP] [SYN] [JAIL] Console<0><%s><> %d heures pour %s par %s (%s).", szSteamID, jail/60, szRaison, szPseudo, szSteamID2);
 
-					}
-					if( bank != 0 ) {
-						Format(query, sizeof(query), "UPDATE `rp_users` SET `bank`=`bank`+%d WHERE `steamid`='%s' LIMIT 1;", bank, szSteamID);
-						SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-						LogToGame("[TSX-RP] [SYN] [MONEY] Console<0><%s><> à reçu %d$ par %s (%s).", szSteamID, bank, szPseudo, szSteamID2);
-					}
-					if( job_id != -1 ) {
-						if( job_id == 0 ) {
-							Format(query, sizeof(query), "UPDATE `rp_users` SET `job_id`=%d, `TimePlayedJob`=0 WHERE `steamid`='%s' LIMIT 1;", job_id, szSteamID);
-						}
-						else {
-							Format(query, sizeof(query), "UPDATE `rp_users` SET `job_id`=%d WHERE `steamid`='%s' LIMIT 1;", job_id, szSteamID);
-						}
-						
-						SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-						LogToGame("[TSX-RP] [SYN] [JOB] Console<0><%s><> était INCONU et est maintenant %s par %s (%s).", szSteamID, g_szJobList[job_id][job_type_name], szPseudo, szSteamID2);
-					}
-					if( group_id != -1 ) {
-						Format(query, sizeof(query), "UPDATE `rp_users` SET `group_id`=%d WHERE `steamid`='%s' LIMIT 1;", group_id, szSteamID);
-						SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-						
-						LogToGame("[TSX-RP] [SYN] [GROUP] Console<0><%s><> était INCONU et est maintenant %s par %s (%s).", szSteamID, g_szGroupList[group_id][job_type_name], szPseudo, szSteamID2);
-					}
-					if( jail != -1 ) {
-						Format(query, sizeof(query), "UPDATE `rp_users` SET `jailled`=`jailled`+'%d' WHERE `steamid`='%s' LIMIT 1;", jail, szSteamID);
-						SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-						
-						LogToGame("[TSX-RP] [SYN] [JAIL] Console<0><%s><> %d heures pour %s par %s (%s).", szSteamID, jail/60, szRaison, szPseudo, szSteamID2);
+				}
+				if( xp != 0 ) {
+					Format(query, sizeof(query), "UPDATE `rp_users` SET `xp`=`xp`+'%d' WHERE `steamid`='%s' LIMIT 1;", xp, szSteamID);
+					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
+					
+					LogToGame("[TSX-RP] [SYN] [XP] Console<0><%s><> %d XP.", szSteamID, xp);
 
-					}
-					if( xp != 0 ) {
-						Format(query, sizeof(query), "UPDATE `rp_users` SET `xp`=`xp`+'%d' WHERE `steamid`='%s' LIMIT 1;", xp, szSteamID);
-						SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-						
-						LogToGame("[TSX-RP] [SYN] [XP] Console<0><%s><> %d XP.", szSteamID, xp);
+				}
+				if( itemID != -1 ) {
+					if( itemToBank ) 
+						Format(query, sizeof(query), "UPDATE `rp_users` SET `in_bank`=CONCAT(`in_bank`,'%d,%d;') WHERE `steamid`='%s' LIMIT 1;", itemID, itemAmount, szSteamID);
+					else
+						Format(query, sizeof(query), "UPDATE `rp_users` SET `in_item`=CONCAT(`in_item`,'%d,%d;') WHERE `steamid`='%s' LIMIT 1;", itemID, itemAmount, szSteamID);
+					
+					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
+					
+					LogToGame("[TSX-RP] [SYN] [ITEM-TRANSFERT] Console<0><%s><> %d %s pour %s (%s)", szSteamID, itemAmount, g_szItemList[itemID][item_type_name], szPseudo, szSteamID2);
 
-					}
-					if( itemID != -1 ) {
-						if( itemToBank ) 
-							Format(query, sizeof(query), "UPDATE `rp_users` SET `in_bank`=CONCAT(`in_bank`,'%d,%d;') WHERE `steamid`='%s' LIMIT 1;", itemID, itemAmount, szSteamID);
-						else
-							Format(query, sizeof(query), "UPDATE `rp_users` SET `in_item`=CONCAT(`in_item`,'%d,%d;') WHERE `steamid`='%s' LIMIT 1;", itemID, itemAmount, szSteamID);
-						
-						SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-						
-						LogToGame("[TSX-RP] [SYN] [ITEM-TRANSFERT] Console<0><%s><> %d %s pour %s (%s)", szSteamID, itemAmount, g_szItemList[itemID][item_type_name], szPseudo, szSteamID2);
-
-					}
 				}
 			}
+			*/
 			
 			Format(query, sizeof(query), "DELETE FROM `rp_users2` WHERE `id`='%i';", id);
-			SQL_FastQuery(g_hBDD, query);
+			SQL_TQuery(g_hBDD, SQL_QueryCallBack, query, 0, DBPrio_High);
 		}
-		
-		if(  hQuery != INVALID_HANDLE )
-			CloseHandle(hQuery);
-		
-		SQL_UnlockDatabase(g_hBDD);
 	}
 }
 void ResetUserData(int client) {
