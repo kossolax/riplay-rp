@@ -1,6 +1,8 @@
 #include <sourcemod>
 #include <SteamWorks>
 
+ArrayList g_hQueue;
+
 public Plugin:myinfo =
 {
 	name = "Force Discord Group",
@@ -8,6 +10,11 @@ public Plugin:myinfo =
 	version = "1.0",
 	description = "Change le groupe discord",
 };
+
+public void OnMapStart() {
+	g_hQueue = new ArrayList(64);
+	CreateTimer(10.0, Timer_Process, _, TIMER_REPEAT);
+}
 
 public void OnPluginStart() {
 	RegServerCmd("sm_force_discord_group", cmdForceDiscordGroup);
@@ -18,7 +25,7 @@ public void OnClientPutInServer(int client) {
 		return;
 	}
 
-	SetDiscordGroup(client);
+	AddAuthToQueue(client);
 }
 
 public Action cmdForceDiscordGroup(int args) {
@@ -30,15 +37,30 @@ public Action cmdForceDiscordGroup(int args) {
 		return Plugin_Handled;
 	}
 
-	SetDiscordGroup(client);
+	AddAuthToQueue(client);
 
 	return Plugin_Handled;
 }
 
-public void SetDiscordGroup(client) {
+public void AddAuthToQueue(int client) {
 	char authid[32];
 	GetClientAuthId(client, AuthId_SteamID64, authid, sizeof(authid));
 
+	g_hQueue.PushString(authid);
+}
+
+public Action Timer_Process(Handle timer) {
+	static char authid[64];
+
+	if(g_hQueue.Length > 0) {
+		g_hQueue.GetString(0, authid, sizeof(authid));
+		g_hQueue.Erase(0);
+
+		SetDiscordGroup(authid);
+	}
+}
+
+public void SetDiscordGroup(char[] authid) {
 	char url[512];
 	Format(url, sizeof(url), "http://riplay.fr/discord/synchro.php?password=IAçZ03ns*SAçs_Au1824suXA_&authid=%s", authid);
 
