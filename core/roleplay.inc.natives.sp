@@ -532,32 +532,31 @@ public int Native_rp_ClientAgroIncrement(Handle plugin, int numParams) {
 	g_iAggro[client][target] += damage;
 		
 	if( (g_iAggro[client][target]*4) > GetClientHealth(target) && g_iAggroTimer[target][client] <= time ) {
-		
 		KillStack_Add(target, client);		
 		
 		g_iKillLegitime[target][client] = time + LEGIT_KILL_TIME;
 		g_iAggroTimer[client][target] = time + LEGIT_KILL_TIME*2;
 	}
 	
-		
-	// Retirer les dégâts envoyés après 10 sec.
-	Handle dp;
-	CreateDataTimer(float(LEGIT_KILL_TIME), ClientAgroDecrement, dp, TIMER_DATA_HNDL_CLOSE);
-	WritePackCell(dp, client);
-	WritePackCell(dp, target);
-	WritePackCell(dp, damage);
+	int tmp[KillStack_max];
+	tmp[KillStack_target] = target;
+	tmp[KillStack_time] = time + LEGIT_KILL_TIME;
+	tmp[KillStack_damage] = damage;
 	
+	g_hAggro[client].PushArray(tmp, sizeof(tmp));	
 	return 1;
 }
-public Action ClientAgroDecrement(Handle timer, Handle dp) {
-	ResetPack(dp);
-	int client = ReadPackCell(dp);
-	int target = ReadPackCell(dp);
-	int damage = ReadPackCell(dp);
+public Action ClientAgroDecrement(int client) {
+	if( g_hAggro[client].Length > 0 ) {
+		int tmp[KillStack_max];
+		g_hAggro[client].GetArray(0, tmp, sizeof(tmp));	
+		
+		if( tmp[KillStack_time] < GetTime() ) {
+			g_hAggro[client].Erase(0);
+			g_iAggro[client][ tmp[KillStack_target] ] -= tmp[KillStack_damage];	
+		}
+	}
 	
-//	PrintToChatAll("%N a fait %d dégâts à %N ces 10 dernières secondes. (%d)", client, g_iAggro[client][target], target, g_iAggro[client][target] - damage);
-	
-	g_iAggro[client][target] -= damage;	
 }
 public int Native_rp_ClientFloodIncrement(Handle plugin, int numParams) {
 	int client = view_as<int>(GetNativeCell(1));

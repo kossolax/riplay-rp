@@ -331,12 +331,13 @@ void OnGameFrame_10(float time) {
 		ServerCommand("sm_effect_group %i", g_iLDR);		
 	}
 	if( g_iMinutes%10 == 5 ) {
+		SynFromWeb();
 		updateLotery();
 	}
 	if( g_iMinutes == 0 ) {
 		CleanUp();
 	}
-	SynFromWeb();
+	
 	CRON_TIMER();
 	if( g_iMinutes%30 == 0 ) {
 		PrintTag();
@@ -467,7 +468,7 @@ void OnGameFrame_10(float time) {
 			}
 			
 			
-			
+			ClientAgroDecrement(i);
 			DoBeacon(i);
 			
 			if( g_iMinutes == 0 ) {

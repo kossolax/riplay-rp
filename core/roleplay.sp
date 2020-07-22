@@ -45,6 +45,7 @@ int g_cSnow;
 bool g_bPreventLoadConfig = false;
 Handle g_hTeleport, g_hLookupAttachment, g_hForward_RP_OnPlayerGotPay;
 
+
 #if defined ROLEPLAY_SUB
 	#include "../roleplay.inc.const.sp"
 #else
@@ -266,6 +267,7 @@ public void OnPluginStart() {
 		g_iChatData[i] = new ArrayList(1);
 		g_iDoubleCompte[i] = new ArrayList(64);
 		g_iParentedParticle[i] = new ArrayList(1);
+		g_hAggro[i] = new ArrayList(1, 0);
 	}
 	
 	g_hForward_RP_OnPlayerGotPay = CreateGlobalForward("RP_OnPlayerGotPay", ET_Hook, Param_Cell, Param_Cell, Param_CellByRef, Param_Cell);

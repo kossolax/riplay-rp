@@ -97,6 +97,13 @@ enum SynType {
 	
 	SynType_max
 };
+enum KillStack {
+	KillStack_target,
+	KillStack_damage,
+	KillStack_time,
+	
+	KillStack_max
+};
 char g_szMonth[12][8] = {	"Jan",	"Fév",	"Mar",	"Avr",	"Mai",	"Juin",	"Juil",	"Août",	"Sept",	"Oct",	"Nov",	"Déc"	};
 
 float g_flVehicleDamage = 1.0;
@@ -116,6 +123,8 @@ int g_iUserStat[MAX_PLAYERS+1][ view_as<int>(i_uStat_max) ];
 
 int g_iBlockedTime[MAX_PLAYERS+1][MAX_PLAYERS+1];
 int g_iHideNextLog[MAX_PLAYERS+1][MAX_PLAYERS+1];
+
+ArrayList g_hAggro[MAX_PLAYERS+1];
 int g_iAggro[MAX_PLAYERS+1][MAX_PLAYERS+1];
 int g_iAggroTimer[MAX_PLAYERS+1][MAX_PLAYERS+1];
 int g_iKillLegitime[MAX_PLAYERS+1][MAX_PLAYERS+1];
