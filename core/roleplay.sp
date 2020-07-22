@@ -267,7 +267,7 @@ public void OnPluginStart() {
 		g_iChatData[i] = new ArrayList(1);
 		g_iDoubleCompte[i] = new ArrayList(64);
 		g_iParentedParticle[i] = new ArrayList(1);
-		g_hAggro[i] = new ArrayList(1, 0);
+		g_hAggro[i] = new ArrayList(KillStack_max, 0);
 	}
 	
 	g_hForward_RP_OnPlayerGotPay = CreateGlobalForward("RP_OnPlayerGotPay", ET_Hook, Param_Cell, Param_Cell, Param_CellByRef, Param_Cell);
