@@ -20,6 +20,11 @@ int getZoneAppart(int client) {
 	
 	char ZoneName[32];
 	Format(ZoneName, sizeof(ZoneName), "%s", g_szZoneList[GetPlayerZone(client)][zone_type_type]);
+
+	if(StrContains(ZoneName, "appart_") == -1) {
+		return 0;
+	}
+
 	ReplaceString(ZoneName, sizeof(ZoneName), "appart_", "");
 	int res = StringToInt(ZoneName);
 	
