@@ -28,12 +28,15 @@ bool IsValidVehicle(int car) {
 }
 int LookupAttachment(int entity, char[] point) {
 	if( g_hLookupAttachment == INVALID_HANDLE ) {
+		
 		Handle hGameConf = LoadGameConfigFile("roleplay.gamedata");
 		StartPrepSDKCall(SDKCall_Entity);
 		PrepSDKCall_SetFromConf(hGameConf, SDKConf_Signature, "LookupAttachment");
 		PrepSDKCall_SetReturnInfo(SDKType_PlainOldData, SDKPass_Plain);
 		PrepSDKCall_AddParameter(SDKType_String, SDKPass_Pointer);
 		g_hLookupAttachment = EndPrepSDKCall();
+		
+		CloseHandle(hGameConf);
 		if( g_hLookupAttachment == INVALID_HANDLE )
 			return -1;
 	}
