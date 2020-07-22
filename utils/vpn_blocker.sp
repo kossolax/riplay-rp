@@ -83,15 +83,17 @@ public void OnClientPostAdminCheck(int client) {
 	
 	if( g_hScoring.GetValue(tmp, score) && !g_hWhitelist.GetValue(steamid, thrust) ) {
 		if( score >= GetConVarFloat(g_hCvarScore) ) {
-			CreateTimer(30.0, Ban_Task, client);
+			CreateTimer(30.0, Ban_Task, GetClientUserId(client));
 		}
 	}
 	else {
 		g_hQueue.PushString(tmp);
 	}	
 }
-public Action Ban_Task(Handle timer, any client) {
-	BanClient(client, BAN_TIME, BANFLAG_IP, "VPN", "VPN are not allowed on this server");
+public Action Ban_Task(Handle timer, any userid) {
+	int client = GetClientOfUserId(userid);
+	if( IsValidClient(client) )
+		BanClient(client, BAN_TIME, BANFLAG_IP, "VPN", "VPN are not allowed on this server");
 }
 public Action Timer_TICK(Handle timer, any none) {
 	static char tmp[16], URL[128];
@@ -155,7 +157,7 @@ public int HttpRequestData(const char[] body, any dp) {
 				GetClientAuthId(i, AUTH_TYPE, steamid, sizeof(steamid));
 				
 				if( StrEqual(IP, tmp) && !g_hWhitelist.GetValue(steamid, thrust) ) {
-					CreateTimer(30.0, Ban_Task, i);
+					CreateTimer(30.0, Ban_Task, GetClientUserId(i));
 				}
 			}
 		}
