@@ -9,7 +9,7 @@
 	#include "roleplay.sp"
 #endif
 
-stock int getZoneAppart(int client, bool required=true) {
+int getZoneAppart(int client) {
 	
 	static float g_flLastCheck[65] = 0.0;
 	static g_iLastData[65];
@@ -20,16 +20,8 @@ stock int getZoneAppart(int client, bool required=true) {
 	
 	char ZoneName[32];
 	Format(ZoneName, sizeof(ZoneName), "%s", g_szZoneList[GetPlayerZone(client)][zone_type_type]);
-	int res = -1;
-	
-	if( required && g_iUserData[client][i_AppartCount] > 0 && StrContains(ZoneName, "appart_", false) == 0 ) {
-		ReplaceString(ZoneName, sizeof(ZoneName), "appart_", "");
-		res = StringToInt(ZoneName);
-	}
-	if( !required && StrContains(ZoneName, "appart_", false) == 0 ) {
-		ReplaceString(ZoneName, sizeof(ZoneName), "appart_", "");
-		res = StringToInt(ZoneName);
-	}
+	ReplaceString(ZoneName, sizeof(ZoneName), "appart_", "");
+	int res = StringToInt(ZoneName);
 	
 	g_iLastData[client] = res;
 	g_flLastCheck[client] = GetGameTime() + 1.0;

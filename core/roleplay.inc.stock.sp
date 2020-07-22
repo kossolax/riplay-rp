@@ -45,7 +45,7 @@ int getKillContext(int attack, int victim) {
 	}
 	
 	// ---- dans les appart
-	zoneID = rp_GetPlayerZoneAppart(victim, false);
+	zoneID = rp_GetPlayerZoneAppart(victim);
 	if( zoneID > 0 ) {
 		attackID = rp_GetClientKeyAppartement(attack, zoneID);
 		victimID = rp_GetClientKeyAppartement(victim, zoneID);
