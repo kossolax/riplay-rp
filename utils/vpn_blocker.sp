@@ -15,7 +15,7 @@
 #pragma newdecls required
 
 #define SERVICE_URL	"http://check.getipintel.net/check.php?ip=%s&contact=kossolax@gmail.com&flags=f"
-#define	BAN_TIME	15
+#define	BAN_TIME	1
 #define	QUEUE_SPEED	10.0
 
 public Plugin myinfo = {
@@ -44,13 +44,13 @@ public Action Cmd_Reload(int args) {
 public void OnPluginStart() {
 	
 	g_hScoring = new StringMap();
+	g_hWhitelist = new StringMap();
 	g_hQueue = new ArrayList(16, 0);
 	g_bProcessing = false;
 	
 	CreateTimer(QUEUE_SPEED, Timer_TICK, _, TIMER_REPEAT);
 	
 	g_hCvarScore = CreateConVar("sv_autoban_vpn_score", "0.991");
-	AutoExecConfig();
 	
 	RegAdminCmd("sm_vpn_reload", Cmd_ReloadWhiteList, ADMFLAG_BAN);
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
@@ -127,7 +127,7 @@ public int OnSteamWorksHTTPComplete(Handle req, bool fail, bool success, EHTTPSt
 }
 
 public int HttpRequestData(const char[] body, any dp) {
-	char IP[16], tmp[16];
+	char IP[16], tmp[16], steamid[64];
 	
 	ResetPack(dp);
 	ReadPackString(dp, IP, sizeof(IP));
@@ -148,8 +148,10 @@ public int HttpRequestData(const char[] body, any dp) {
 					continue;
 				
 				GetClientIP(i, tmp, sizeof(tmp));
+				int thrust;
+				GetClientAuthId(i, AUTH_TYPE, steamid, sizeof(steamid));
 				
-				if( StrEqual(IP, tmp) ) {
+				if( StrEqual(IP, tmp) && !g_hWhitelist.GetValue(steamid, thrust) ) {
 					BanClient(i, BAN_TIME, BANFLAG_IP, "VPN", "VPN are not allowed on this server");
 				}
 			}
