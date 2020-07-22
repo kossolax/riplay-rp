@@ -475,7 +475,6 @@ public void ClientConVar(QueryCookie cookie, int client, ConVarQueryResult resul
 	}
 	
 }
-
 public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 	int Client = GetClientOfUserId(GetEventInt(ev, "userid"));
 	int Attacker = GetClientOfUserId(GetEventInt(ev, "attacker"));
@@ -608,10 +607,11 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 
 				if( g_iUserData[Attacker][i_KillJailDuration] >= 106 ) {
 					g_bUserData[Attacker][b_IsFreekiller] = true;
-
 					ServerCommand("rp_SendToJail %d 0", Attacker);
-					rp_SetClientInt(Attacker, i_JailTime, (rp_GetClientInt(Attacker, i_JailTime) + g_iUserData[Attacker][i_KillJailDuration] * 60));
-
+					
+					if( rp_GetClientInt(Attacker, i_JailTime) < g_iUserData[Attacker][i_KillJailDuration] * 60 )
+						rp_SetClientInt(Attacker, i_JailTime, g_iUserData[Attacker][i_KillJailDuration] * 60);
+				
 					KickClient(Attacker, "Vous avez été kické pour FREEKILL abusif");
 				}
 
