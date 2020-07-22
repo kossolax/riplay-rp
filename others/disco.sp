@@ -213,6 +213,10 @@ public Action Cmd_Ball(int client, int args) {
 	return Plugin_Handled;
 }
 public void OnEntityDestroyed(int entity) {
+	if(entity > sizeof(g_bEntityManaged)) {
+		return;
+	}
+	
 	if (g_bEntityManaged[entity]) {
 		g_bEntityManaged[entity] = false;
 		
