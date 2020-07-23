@@ -546,14 +546,18 @@ public int Native_rp_ClientAgroIncrement(Handle plugin, int numParams) {
 	g_hAggro[client].PushArray(tmp, sizeof(tmp));	
 	return 1;
 }
-public Action ClientAgroDecrement(int client) {
-	if( g_hAggro[client].Length > 0 ) {
+void ClientAgroDecrement(int client) {
+	
+	while( g_hAggro[client].Length > 0 ) {
 		int tmp[KillStack_max];
 		g_hAggro[client].GetArray(0, tmp, sizeof(tmp));	
 		
 		if( tmp[KillStack_time] < GetTime() ) {
 			g_hAggro[client].Erase(0);
 			g_iAggro[client][ tmp[KillStack_target] ] -= tmp[KillStack_damage];	
+		}
+		else {
+			break;
 		}
 	}
 	
