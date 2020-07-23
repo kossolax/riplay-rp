@@ -3,7 +3,7 @@
 #include <sdktools>
 #include <phun>
 
-public Plugin:myinfo = 
+public Plugin myinfo = 
 {
 	name = "Global Ban",
 	author = "KoSSoLaX",
@@ -12,10 +12,10 @@ public Plugin:myinfo =
 	url = "http://www.ts-x.eu"
 }
 
-// Handle:BDD
-new Handle:g_hBDD;
-new String:g_szError[1024];
-new String:g_szQuery[1024];
+// Handle BDD
+Handle g_hBDD;
+char g_szError[1024];
+char g_szQuery[1024];
 
 
 public OnPluginStart() {
@@ -39,22 +39,16 @@ public OnMapStart() {
 	ServerCommand("sm plugins unload basebans");
 }
 public OnMapEnd() {
-	
 	CloseHandle(g_hBDD);
 }
-public SQL_QueryCallBack(Handle:owner, Handle:handle, const String:error[], any:data) {
+public SQL_QueryCallBack(Handle owner, Handle handle, const char[] error, any data) {
 	if( handle == INVALID_HANDLE ) {
 		LogError("[SQL] [ERROR] %s", error);
 	}
 }
-public OnClientAuthorized(client, const String:auth[]) {
-	if( !IsFakeClient(client) ) {
-		CheckBanned(client);
-	}
-}
 public OnClientPostAdminCheck(client) {
 	if( !IsFakeClient(client) ) {
-		CheckBanned(client);
+		CreateTimer(30.0, CheckBanned, GetClientUserId(client));
 	}
 }
 
@@ -62,7 +56,7 @@ public OnClientPostAdminCheck(client) {
 //
 // Admin commands
 //
-public Action:Cmd_Ban(client, args) {
+public Action Cmd_Ban(client, args) {
 	if( args < 3 || args > 3) {
 		if( client != 0 )
 			ReplyToCommand(client, "Utilisation: amx_ban \"joueur\" \"temps\" \"raison\"");
@@ -72,18 +66,19 @@ public Action:Cmd_Ban(client, args) {
 		return Plugin_Handled;
 	}
 	
-	decl String:arg1[64];
-	decl String:arg2[12];
-	decl String:arg3[256];
+	char arg1[64];
+	char arg2[12];
+	char arg3[256];
 	
 	GetCmdArg(1, arg1, sizeof( arg1 ) );
 	GetCmdArg(2, arg2, sizeof( arg2 ) );
 	GetCmdArg(3, arg3, sizeof( arg3 ) );
 	
-	new time = StringToInt(arg2);
+	int time = StringToInt(arg2);
 	
-	decl String:target_name[MAX_TARGET_LENGTH];
-	decl target_list[MAXPLAYERS], target_count, bool:tn_is_ml;
+	char target_name[MAX_TARGET_LENGTH];
+	int target_list[MAXPLAYERS], target_count;
+	bool tn_is_ml;
 	
 	if ((target_count = ProcessTargetString(
 			arg1,
@@ -99,9 +94,9 @@ public Action:Cmd_Ban(client, args) {
 		return Plugin_Handled;
 	}
 	
-	for (new i = 0; i < target_count; i++)
+	for (int i = 0; i < target_count; i++)
 	{
-		decl String:targetSteamID[64];
+		char targetSteamID[64];
 		GetClientAuthId(target_list[i], AuthId_SteamID64, targetSteamID, sizeof(targetSteamID));
 		
 		InsertBan(client, target_list[i], targetSteamID, time, arg3);
@@ -114,7 +109,7 @@ public Action:Cmd_Ban(client, args) {
 	
 	return Plugin_Handled;
 }
-public Action:Cmd_AddBan(client, args) {
+public Action Cmd_AddBan(client, args) {
 	if( args < 3 || args > 3) {
 		
 		if( client != 0 )
@@ -125,15 +120,15 @@ public Action:Cmd_AddBan(client, args) {
 		return Plugin_Handled;
 	}
 	
-	decl String:arg1[64];
-	decl String:arg2[12];
-	decl String:arg3[256];
+	char arg1[64];
+	char arg2[12];
+	char arg3[256];
 	
 	GetCmdArg(1, arg1, sizeof( arg1 ) );
 	GetCmdArg(2, arg2, sizeof( arg2 ) );
 	GetCmdArg(3, arg3, sizeof( arg3 ) );
 	
-	new time = StringToInt(arg2);
+	int time = StringToInt(arg2);
 	
 	InsertBan(client, 0, arg1, time, arg3);
 	
@@ -144,7 +139,7 @@ public Action:Cmd_AddBan(client, args) {
 		
 	return Plugin_Handled;
 }
-public Action:Cmd_Unban(client, args) {
+public Action Cmd_Unban(client, args) {
 	if( args < 2 || args > 2) {
 		if( client != 0 )
 			ReplyToCommand(client, "Utilisation: amx_unban \"SteamID\" \"raison\"");
@@ -154,16 +149,16 @@ public Action:Cmd_Unban(client, args) {
 		return Plugin_Handled;
 	}
 	
-	decl String:arg1[64];
-	decl String:arg2[256];
+	char arg1[64];
+	char arg2[256];
 	
 	GetCmdArg(1, arg1, sizeof( arg1 ) );
 	GetCmdArg(2, arg2, sizeof( arg2 ) );
 
-	decl String:clientSteamID[64];
+	char clientSteamID[64];
 	GetClientAuthId(client, AuthId_SteamID64, clientSteamID, sizeof(clientSteamID));
 
-	decl String:safe_reason[512];
+	char safe_reason[512];
 	SQL_EscapeString(g_hBDD, arg2, safe_reason, sizeof(safe_reason));
 	
 	Format(g_szQuery, sizeof(g_szQuery), 
@@ -179,12 +174,12 @@ public Action:Cmd_Unban(client, args) {
 	
 	return Plugin_Handled;
 }
-stock InsertBan(client, target, String:targetSteamID[64], time, const String:reason[256]) {
+stock InsertBan(client, target, char targetSteamID[64], int time, const char reason[256]) {
 	
-	decl String:safe_reason[512];
+	char safe_reason[512];
 	SQL_EscapeString(g_hBDD, reason, safe_reason, sizeof(safe_reason));
 	
-	decl String:clientSteamID[64];
+	char clientSteamID[64];
 	if( client == 0 ) {
 		Format(clientSteamID, 63, "SERVER");
 	}
@@ -195,7 +190,7 @@ stock InsertBan(client, target, String:targetSteamID[64], time, const String:rea
 		Format(clientSteamID, 63, "SERVER");
 	}
 	
-	new String:game[32];
+	char game[32];
 	GetGameFolderName(game, sizeof(game));
 	
 	ReplaceString(targetSteamID, sizeof(targetSteamID), "STEAM_1", "STEAM_0");
@@ -205,10 +200,23 @@ stock InsertBan(client, target, String:targetSteamID[64], time, const String:rea
 	
 	SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery);
 	
-	new String:szSteamID[64];
-	for(new i=1; i<MaxClients; i++) {
+	char szSteamID[64];
+	for(int i=1; i<MaxClients; i++) {
 		if( !IsValidClient(i) )
 			continue;
+		
+		GetClientAuthId(i, AuthId_Engine, szSteamID, sizeof(szSteamID));
+		ReplaceString(szSteamID, sizeof(szSteamID), "STEAM_1", "STEAM_0");
+		
+		if( StrEqual(szSteamID, targetSteamID) ) {
+			KickClient(i, "banned");
+		}
+		
+		GetClientAuthId(i, AuthId_Engine, szSteamID, sizeof(szSteamID));
+		
+		if( StrEqual(szSteamID, targetSteamID) ) {
+			KickClient(i, "banned");
+		}
 		
 		GetClientAuthId(i, AuthId_SteamID64, szSteamID, sizeof(szSteamID));
 		ReplaceString(szSteamID, sizeof(szSteamID), "STEAM_1", "STEAM_0");
@@ -218,53 +226,63 @@ stock InsertBan(client, target, String:targetSteamID[64], time, const String:rea
 		}
 	}
 }
-stock CheckBanned(client) {
+public Action CheckBanned(Handle timer, any userid) {
+	int client = GetClientOfUserId(userid);
+	
 	if( !IsFakeClient(client) ) {
 		
-		decl String:SteamID[64];
-		GetClientAuthId(client, AuthId_SteamID64, SteamID, sizeof(SteamID));
-		ReplaceString(SteamID, sizeof(SteamID), "STEAM_1", "STEAM_0");
+		char SteamID64[64];
+		char SteamID1[64];
+		char SteamID0[64];
+		GetClientAuthId(client, AuthId_SteamID64, SteamID64, sizeof(SteamID64));
+		GetClientAuthId(client, AuthId_Engine, SteamID1, sizeof(SteamID0));
+		GetClientAuthId(client, AuthId_Engine, SteamID0, sizeof(SteamID0));
+		ReplaceString(SteamID0, sizeof(SteamID0), "STEAM_1", "STEAM_0");
 		
-		if( StrEqual(SteamID, "STEAM_0:0:7490757") )
-			return;
-		
-		new String:game[32];
+		char game[32];
 		GetGameFolderName(game, sizeof(game));
 		
-		decl String:IP[64];
+		char IP[64];
 		GetClientIP(client, IP, sizeof(IP));
 		
-		Format(g_szQuery, sizeof(g_szQuery), "SELECT `BanReason` FROM `srv_bans` WHERE `SteamID`='%s' AND (`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0' AND (`game`='%s' OR `game`='ALL');", SteamID, game);
+		Format(g_szQuery, sizeof(g_szQuery), "SELECT `BanReason` FROM `srv_bans` WHERE `SteamID`='%s' AND (`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0' AND (`game`='%s' OR `game`='ALL');", SteamID64, game);
+		SQL_TQuery(g_hBDD, CheckBanned_2, g_szQuery, userid);
 		
-		SQL_TQuery(g_hBDD, CheckBanned_2, g_szQuery, client);
+		Format(g_szQuery, sizeof(g_szQuery), "SELECT `BanReason` FROM `srv_bans` WHERE `SteamID`='%s' AND (`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0' AND (`game`='%s' OR `game`='ALL');", SteamID1, game);
+		SQL_TQuery(g_hBDD, CheckBanned_2, g_szQuery, userid);
 		
-		Format(g_szQuery, sizeof(g_szQuery), "SELECT `banReason` FROM `srv_bans` A WHERE ( A.`SteamID`='%s' AND (A.`Length`='0' OR A.`EndTime`>UNIX_TIMESTAMP()) AND A.`is_unban`='0' AND (A.`game`='%s' OR A.`game`='ALL') ) AND NOT EXISTS ( SELECT B.`id` FROM `srv_bans` B WHERE B.`SteamID`='%s' AND (B.`Length`='0' OR B.`EndTime`>UNIX_TIMESTAMP()) AND B.`is_unban`='0' AND (B.`game`='whitelist') ) AND NOT EXISTS ( SELECT C.`id` FROM `srv_bans` C WHERE C.`SteamID`='%s' AND (C.`Length`='0' OR C.`EndTime`>UNIX_TIMESTAMP()) AND C.`is_unban`='0' AND (C.`game`='%s' OR C.`game`='ALL') ) ", IP, game, SteamID, SteamID, game);
-		SQL_TQuery(g_hBDD, CheckBanned_3, g_szQuery, client);
+		Format(g_szQuery, sizeof(g_szQuery), "SELECT `BanReason` FROM `srv_bans` WHERE `SteamID`='%s' AND (`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0' AND (`game`='%s' OR `game`='ALL');", SteamID0, game);
+		SQL_TQuery(g_hBDD, CheckBanned_2, g_szQuery, userid);
+		
+		Format(g_szQuery, sizeof(g_szQuery), "SELECT `banReason` FROM `srv_bans` A WHERE ( A.`SteamID`='%s' AND (A.`Length`='0' OR A.`EndTime`>UNIX_TIMESTAMP()) AND A.`is_unban`='0' AND (A.`game`='%s' OR A.`game`='ALL') ) AND NOT EXISTS ( SELECT B.`id` FROM `srv_bans` B WHERE B.`SteamID`='%s' AND (B.`Length`='0' OR B.`EndTime`>UNIX_TIMESTAMP()) AND B.`is_unban`='0' AND (B.`game`='whitelist') ) AND NOT EXISTS ( SELECT C.`id` FROM `srv_bans` C WHERE C.`SteamID`='%s' AND (C.`Length`='0' OR C.`EndTime`>UNIX_TIMESTAMP()) AND C.`is_unban`='0' AND (C.`game`='%s' OR C.`game`='ALL') ) ", IP, game, SteamID64, SteamID64, game);
+		SQL_TQuery(g_hBDD, CheckBanned_3, g_szQuery, userid);
 	}
 }
-public CheckBanned_2(Handle:owner, Handle:handle, const String:error[], any:data) {
+public CheckBanned_2(Handle owner, Handle handle, const char[] error, any userid) {
+	int client = GetClientOfUserId(userid);
+	
 	if( handle == INVALID_HANDLE ) {
 		LogError("[SQL] [ERROR] %s", error);
 	}
 	if( SQL_FetchRow(handle) ) {
-		new String:sql_row[128], String:szReason[256];
-		SQL_FetchString(handle, 0, sql_row, 127);
+		char sql_row[128], szReason[256];
+		SQL_FetchString(handle, 0, sql_row, sizeof(sql_row));
 		Format(szReason, 255, "Vous avez ete bannis pour: %s.\n Plus d info sur http://riplay.fr/", sql_row);
 		
-		KickClient(data, szReason);
+		KickClient(client, szReason);
 	}
 }
-public CheckBanned_3(Handle:owner, Handle:handle, const String:error[], any:data) {
+public CheckBanned_3(Handle owner, Handle handle, const char[] error, any data) {
 	if( handle == INVALID_HANDLE ) {
 		LogError("[SQL] [ERROR] %s", error);
 	}
 	if( SQL_FetchRow(handle) ) {
-		decl String:SteamID[64];
+		char SteamID[64];
 		
 		GetClientAuthId(data, AuthId_SteamID64, SteamID, sizeof(SteamID));
 		ReplaceString(SteamID, sizeof(SteamID), "STEAM_1", "STEAM_0");
 		
-		new String:sql_row[256];
+		char sql_row[256];
 		SQL_FetchString(handle, 0, sql_row, sizeof(sql_row));
 		
 		InsertBan(0, data, SteamID, 0, sql_row);
