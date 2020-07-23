@@ -110,6 +110,9 @@ public Action Cmd_ItemDrugs(int args) {
 	int item_id = GetCmdArgInt(args);
 	float dur = DRUG_DURATION;
 	
+	if( !IsValidClient(client) )
+		return Plugin_Handled;
+	
 	bool drugged = rp_GetClientBool(client, b_Drugged);
 	if (drugged && !rp_IsTutorialOver(client) ) {
 		CPrintToChat(client, "" ...MOD_TAG... " Attention vous allez tomber malade, terminer votre tutoriel avant de tenter le diable.");
