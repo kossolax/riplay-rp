@@ -273,13 +273,13 @@ public Action Cmd_Verif(int client) {
 		}
 	}
 
-	if(!StrEqual(lastWeapon[0], "AUCUNE")) { // primary
+	if(!StrEqual(lastWeapon[1], "AUCUNE")) { // primary
 		if(rp_GetClientBool(target, b_License1) == false) {
 			amendeLicense1 = true;
 		}
 	}
 
-	if(!StrEqual(lastWeapon[1], "AUCUNE")) { // secondary
+	if(!StrEqual(lastWeapon[0], "AUCUNE")) { // secondary
 		if(rp_GetClientBool(target, b_License2) == false) {
 			amendeLicense2 = true;
 		}
@@ -311,13 +311,13 @@ public Action Cmd_Verif(int client) {
 
 	if(amendeLicense1 && amendeLicense2 && applyLiscence1 && applyLiscence2) {
 		Format(item, 255, "%d_permilegerlourd", target);
-		menu.AddItem(item, "Amende 4000$ - Permi lourd & léger", forcehidden ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
+		menu.AddItem(item, "Amende 4000$ - Permis lourd & léger", forcehidden ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
 	} else {
 		Format(item, 255, "%d_permileger", target);
-		menu.AddItem(item, "Amende 1600$ - Permi léger", !amendeLicense2 || forcehidden || !applyLiscence2 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
+		menu.AddItem(item, "Amende 1600$ - Permis léger", !amendeLicense2 || forcehidden || !applyLiscence2 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
 
 		Format(item, 255, "%d_permilourd", target);
-		menu.AddItem(item, "Amende 2400$ - Permi lourd", !amendeLicense1 || forcehidden || !applyLiscence1 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
+		menu.AddItem(item, "Amende 2400$ - Permis lourd", !amendeLicense1 || forcehidden || !applyLiscence1 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
 	}
 	
 	SetMenuExitButton(menu, true);
