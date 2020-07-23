@@ -20,9 +20,6 @@ bool rp_AcceptEntityInput(int dest, const char[] input, int activator=-1, int ca
 	static char tmp[64];
 	if( dest > 0 && IsValidEdict(dest) && IsValidEntity(dest) ) {
 		GetEdictClassname(dest, tmp, sizeof(tmp));
-		
-		if( !StrEqual(tmp, "env_cascade_light") )
-			LogToGame("[DEBUG] [ENTITY-IO] %d %s %s %d %d %d", dest, tmp, input, activator, caller, outputid);
 		AcceptEntityInput(dest, input, activator, caller, outputid);
 	}
 	else {
