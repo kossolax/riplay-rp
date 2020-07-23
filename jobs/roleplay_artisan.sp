@@ -42,7 +42,7 @@ float g_flClientBook[65][book_max];
 
 
 
-int lstJOB[] =  { 11, 21, 31, 41, 51, 61, 71, 81, 111, 131, 171, 191, 211, 221 };
+int lstJOB[] =  { 11, 21, 31, 41, 51, 61, 71, 81, 111, 131, 171, 211, 221 };
 
 public Plugin myinfo = {
 	name = "Jobs: ARTISAN", author = "KoSSoLaX",
@@ -248,6 +248,24 @@ void displayArtisanMenu(int client) {
 	
 	DisplayMenu(menu, client, 30);
 }
+int getNumberOfCraftInJob(int client, int jobID) {
+	static char tmp[32];
+	ArrayList magic;
+	
+	int cpt = 0;
+	for(int i = 0; i < MAX_ITEMS; i++) {
+		if( !g_bCanCraft[client][i] && !doRP_CanClientCraftForFree(client, i) )
+			continue;
+		if( rp_GetItemInt(i, item_type_job_id) != jobID && jobID != -1 )
+			continue;
+		Format(tmp, sizeof(tmp), "%d", i);
+		if( !g_hReceipe.GetValue(tmp, magic) )
+			continue;
+		
+		cpt++;
+	}
+	return cpt;
+}
 void displayBuildMenu(int client, int jobID, int itemID) {
 	
 	int clientItem[MAX_ITEMS], data[craft_type_max];
@@ -264,11 +282,16 @@ void displayBuildMenu(int client, int jobID, int itemID) {
 		AddMenuItem(menu, "build -1", "Tous les jobs");
 		
 		for (int i = 0; i < sizeof(lstJOB); i++) {
+			int count = getNumberOfCraftInJob(client, lstJOB[i]);
 			
-			rp_GetJobData(lstJOB[i], job_type_name, tmp, sizeof(tmp));
-			ExplodeString(tmp, " - ", prettyJob, sizeof(prettyJob), sizeof(prettyJob[]));
-			Format(tmp, sizeof(tmp), "build %d", lstJOB[i]);
-			AddMenuItem(menu, tmp, prettyJob[1]);
+			if( count > 0 ) {
+				rp_GetJobData(lstJOB[i], job_type_name, tmp, sizeof(tmp));
+				ExplodeString(tmp, " - ", prettyJob, sizeof(prettyJob), sizeof(prettyJob[]));
+			
+				Format(tmp, sizeof(tmp), "build %d", lstJOB[i]);
+				Format(tmp2, sizeof(tmp2), "%s (%d)", prettyJob[1], count);
+				AddMenuItem(menu, tmp, tmp2);
+			}
 		}
 	}
 	else if( itemID == 0 ) {
