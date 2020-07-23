@@ -1734,9 +1734,10 @@ public void Event_Weapon_Fire(Event event, const char[] name, bool dontBroadcast
 void StripWeapons(int client) {
 	
 	int wepIdx;
+	LogToGame("removed weapon of %N", client);
 	
 	for (int i = 0; i < 5; i++) {
-		if (i == CS_SLOT_KNIFE)continue;
+		if (i == CS_SLOT_KNIFE) continue;
 		
 		while ((wepIdx = GetPlayerWeaponSlot(client, i)) != -1) {
 			

@@ -16,7 +16,6 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 	int victim_zone = GetPlayerZone(victim);
 	int attacker_zone = GetPlayerZone(attacker);
 	
-	
 	if( IsValidClient(victim) ) {
 		if( attacker == inflictor && inflictor > MaxClients && damagetype == 1 ) {
 			float pos[3], min[3], max[3];
@@ -457,7 +456,7 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 		//
 		// ------------------------------------
 		if( GetClientHealth(victim) <= damage ) {
-
+			LogToGame("removed weapon of %N", victim);
 			int wepIdx = 0;
 			if( Math_GetRandomInt(0, 100) > 75 ) {
 				while( ( wepIdx = GetPlayerWeaponSlot( victim, CS_SLOT_SECONDARY ) ) != -1 ) {

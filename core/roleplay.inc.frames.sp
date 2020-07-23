@@ -439,6 +439,7 @@ void OnGameFrame_10(float time) {
 				}
 			}
 			
+			g_bUserData[i][b_Assurance] = true;
 			AFK_Check(i);
 			if( !g_bUserData[i][b_IsAFK] ) {
 				rp_ClientXPIncrement(i);
