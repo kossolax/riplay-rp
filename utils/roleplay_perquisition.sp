@@ -189,9 +189,11 @@ void INIT_PERQUIZ(int client, int zone, int target, int type) {
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	int array[PQ_Max];
 	
-	if( g_hPerquisition.GetArray(tmp, array, sizeof(array)) ) {
+	if( g_hPerquisition.GetArray(tmp, array, sizeof(array)) )
 		return;
-	}
+	if( isZoneInPerquiz(zone) )
+		return;
+
 	
 	setPerquizData(client, zone, target, 0, type, 0);
 	
@@ -208,6 +210,8 @@ public void VERIF_PERQUIZ(Handle owner, Handle row, const char[] error, any zone
 	if( !g_hPerquisition.GetArray(tmp, array, sizeof(array)) ) {	
 		return;
 	}
+	if( isZoneInPerquiz(zone) )
+		return;
 	
 	int cd = getCooldown(array[PQ_client], zone);
 	if( row != INVALID_HANDLE && SQL_FetchRow(row) ) {
@@ -264,6 +268,9 @@ void START_PERQUIZ(int zone) {
 	}
 	CreateTimer(1.0, TIMER_PERQUIZ, zone, TIMER_REPEAT);
 }
+public Action ChangeZoneSafe(Handle timer, any zone) {
+	changeZoneState(zone, false);
+}
 void END_PERQUIZ(int zone, bool abort) {
 	int array[PQ_Max];
 	char tmp[64], date[64], query[512];
@@ -273,7 +280,7 @@ void END_PERQUIZ(int zone, bool abort) {
 		return;
 	}
 	g_hPerquisition.Remove(tmp);
-	changeZoneState(zone, false);
+	CreateTimer(10.0, ChangeZoneSafe, zone);
 	TeleportCT(zone);
 	DoorLock(zone);
 	
@@ -637,6 +644,24 @@ void DoorLock(int zone) {
 			rp_AcceptEntityInput(i, "Lock");
 		}
 	}
+}
+bool isZoneInPerquiz(int zone) {
+	int bits;
+	char tmp[64], tmp2[64];
+	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	
+	for (int i = 0; i < 310; i++) {
+		
+		rp_GetZoneData(i, zone_type_type, tmp2, sizeof(tmp2));
+		if( !StrEqual(tmp, tmp2) )
+			continue;
+		
+		if( rp_GetZoneBit(i) & BITZONE_PERQUIZ )
+			return true;
+		return false;
+	}
+	
+	return false;
 }
 void changeZoneState(int zone, bool enabled) {
 	int bits;

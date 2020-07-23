@@ -19,8 +19,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 *.smx
-<<<<<<< HEAD
 compiled/report.txt
-=======
 report.txt
->>>>>>> 0105786b95bcde036082acbf6698f7636b655e4a
+upload.bat
+upload.sh
