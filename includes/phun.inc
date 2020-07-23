@@ -351,7 +351,6 @@ stock int ShowTrack(int client, char cmd[128], float pos[3], float ang[3], float
 stock int AttachParticle(int ent, const char[] particleType, float time, int target=0)
 {
 	int particle = CreateEntityByName("info_particle_system");
-	PrintToServer("[WARNING] %d --> %s (%.2f) @ %d", ent, particleType, time, target);
 	
 	if (IsValidEdict(particle))
 	{
@@ -363,7 +362,6 @@ stock int AttachParticle(int ent, const char[] particleType, float time, int tar
 		
 		
 		if( target > 0 ) {
-			PrintToServer("[WARNING] !!!");
 			char tName[64];
 			Format(tName, sizeof(tName), "ph_child_%i%i_%i", particle, target, GetRandomInt(1111, 9999));
 			DispatchKeyValue(ent, "targetname", tName);
@@ -579,9 +577,9 @@ public Action BarTimeStop(Handle time, any client) {
 }
 
 stock void DealDamage(victim, damage, attacker=0, dmg_type=DMG_GENERIC, String:weapon[]="") {
-	//PrintToServer("pre-damage--> %d", victim);
+	PrintToServer("pre-damage--> %d", victim);
 	Entity_Hurt(victim, damage, attacker, dmg_type, weapon);
-	//PrintToServer("post-damage--> %d", victim);
+	PrintToServer("post-damage--> %d", victim);
 	return;
 }
 public bool ____TraceEntityFilterPlayers(int entity, int contentsMask, any data ) {
