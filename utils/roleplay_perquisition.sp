@@ -207,9 +207,8 @@ public void VERIF_PERQUIZ(Handle owner, Handle row, const char[] error, any zone
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	int array[PQ_Max];
 	
-	if( !g_hPerquisition.GetArray(tmp, array, sizeof(array)) ) {	
+	if( !g_hPerquisition.GetArray(tmp, array, sizeof(array)) )
 		return;
-	}
 	if( isZoneInPerquiz(zone) )
 		return;
 	
