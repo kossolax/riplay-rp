@@ -365,20 +365,23 @@ public int Native_rp_Effect_Cashflow(Handle plugin, int numParams) {
 	int amount = GetNativeCell(2);
 	
 	if( amount <= 10 ) {
+		g_iUserData[client][i_LastVolCashFlowTime] = GetTime() + amount;
 		ServerCommand("sm_effect_particles %d trail_money %d knife", client, amount);
 	}
 	else {
+		g_iUserData[client][i_LastVolCashFlowTime] = GetTime() + RoundToFloor(10.0 + (amount / 100.0));
+		
 		for (int i = 0; i <= amount; i+=100) {
 			g_iParentedParticle[client].Push(CreateTimer( i / 100.0, CashFlow_TASK, client));
 			rp_HookEvent(client, RP_OnPlayerDead, fwdPlayerDead);
 			rp_HookEvent(client, RP_PostClientSendToJail, fwdPlayerDead);
-			
 		}
 	}
 }
 public Action CashFlow_TASK(Handle timer, any client) {
-	if( timer && IsValidHandle(timer) )
+	if( timer && IsValidHandle(timer) ) {
 		ServerCommand("sm_effect_particles %d trail_money 10 knife", client);
+	}
 }
 public Action fwdPlayerDead(int client, int attacker, float& respawn, int& tdm) {
 	Handle timer;
@@ -389,6 +392,7 @@ public Action fwdPlayerDead(int client, int attacker, float& respawn, int& tdm) 
 		}
 	}
 	g_iParentedParticle[client].Clear();
+	g_iUserData[client][i_LastVolCashFlowTime] = 0;
 	rp_UnhookEvent(client, RP_OnPlayerDead, fwdPlayerDead);
 	rp_UnhookEvent(client, RP_PostClientSendToJail, fwdPlayerDead);
 }
