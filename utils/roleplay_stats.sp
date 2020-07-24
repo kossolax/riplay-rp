@@ -288,8 +288,7 @@ public void DisplayRTStats(int client){
 		AddMenuItem(menu, "", tmp, ITEMDRAW_DISABLED);
 	}
 
-	GetEdictClassname(wep_id, tmp, sizeof(tmp));
-	if( StrContains(tmp, "weapon_bayonet") != 0 && StrContains(tmp, "weapon_knife") != 0 ) {
+	if( !Weapon_ShouldBeEquip(tmp) ) {
 		AddMenuItem(menu, "", "------ Votre Arme ------", ITEMDRAW_DISABLED);
 		Format(tmp, sizeof(tmp), "Nombre de balles: %d", Weapon_GetPrimaryClip(wep_id));
 		AddMenuItem(menu, "", tmp, ITEMDRAW_DISABLED);
