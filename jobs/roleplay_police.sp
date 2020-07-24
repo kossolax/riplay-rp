@@ -1212,11 +1212,10 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 				return;
 			}
 			if (IsValidClient(rp_GetClientInt(target, i_LastVolTarget))) {
-				// i_LostVolCashFlowTime;
-
-				if(rp_GetClientInt(target, i_LastVolTime) + rp_GetClientInt(target, i_LastVolCashFlowTime) < GetTime()) {
+				if( rp_GetClientInt(target, i_LastVolCashFlowTime) < GetTime() ) {
 					CPrintToChat(target, "" ...MOD_TAG... " Vous avez réussi à cacher votre butin, vous ne remboursez pas votre victime");
-				} else {
+				}
+				else {
 					int tg = rp_GetClientInt(target, i_LastVolTarget);
 					rp_ClientMoney(tg, i_Money, rp_GetClientInt(target, i_LastVolAmount));
 					rp_ClientMoney(target, i_AddToPay, -rp_GetClientInt(target, i_LastVolAmount));
@@ -1836,11 +1835,16 @@ public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int 
 				data[BM_Prix] = 0;
 			}
 			
-			if (rp_GetClientInt(client, i_Bank) < data[BM_Prix])
+			if (rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money) < data[BM_Prix])
+				return 0;
+			if( Weapon_ShouldBeEquip(name) && Client_HasWeapon(client, name) )
 				return 0;
 			
 			Format(name, sizeof(name), "weapon_%s", name);
 			int wepid = GivePlayerItem(client, name);
+			if( Weapon_ShouldBeEquip(name) )
+				EquipPlayerWeapon(client, wepid);
+			
 			rp_SetWeaponBallType(wepid, view_as<enum_ball_type>(data[BM_Type]));
 			if (data[BM_PvP] > 0)
 				rp_SetWeaponGroupID(wepid, rp_GetClientGroupID(client));

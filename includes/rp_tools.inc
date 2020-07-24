@@ -28,7 +28,7 @@ bool rp_AcceptEntityInput(int dest, const char[] input, int activator=-1, int ca
 }
 // ----------------------------------------------------------------------------
 stock bool Weapon_ShouldBeEquip(const char[] weapon) {
-	if( StrContains(weapon, "weapon_knife") == 0 || StrEqual(weapon, "weapon_bayonet") ) // TODO: Add missing
+	if( StrContains(weapon, "weapon_knife") == 0 || StrEqual(weapon, "weapon_bayonet") || StrEqual(weapon, "weapon_taser") ) // TODO: Add missing
 		return true;
 	
 	if( StrEqual(weapon, "weapon_fists") || StrEqual(weapon, "weapon_axe") || StrEqual(weapon, "weapon_hammer") || StrEqual(weapon, "weapon_spanner") || StrEqual(weapon, "weapon_shield") )
