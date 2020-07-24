@@ -724,7 +724,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		int wepid = findPlayerWeapon(client, target);
 		
 		if( wepid == -1 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " %N n'a pas d'argent, ni d'arme sur lui.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " %N n'a pas d'argent, ni d'arme que vous pouvez lui voler.", target);
 			cooldown = 1.0;
 			return Plugin_Stop;
 		}
@@ -1549,27 +1549,16 @@ void openMarketMenu(int client, int itemID = 0) {
 }
 int findPlayerWeapon(int client, int target) {
 	
-	if( !rp_IsTutorialOver(target) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Ce joueur n'a pas terminé le tutoriel.");
+	if( !rp_IsTutorialOver(target) )
 		return -1;
-	}
-	if( rp_GetClientBool(target, b_Stealing) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Quelqu'un d'autre est déjà en train de voler ce joueur.");
+	if( rp_GetClientBool(target, b_Stealing) )
 		return -1;
-	}
-	
-	if( (g_iStolenAmountTime[target] >= 3 && rp_GetClientFloat(target, fl_LastStolen)+(STEAL_TIME) > GetGameTime()) || (g_iStolenAmountTime[target] >= 5) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Ce joueur s'est déjà fait volé récemment.");
+	if( (g_iStolenAmountTime[target] >= 3 && rp_GetClientFloat(target, fl_LastStolen)+(STEAL_TIME) > GetGameTime()) || (g_iStolenAmountTime[target] >= 5) )
 		return -1;
-	}
-	if( rp_GetClientFloat(target, fl_Invincible) >= GetGameTime() ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Ce joueur est invincible.");
+	if( rp_GetClientFloat(target, fl_Invincible) >= GetGameTime() )
 		return -1;
-	}
-	if( rp_GetClientJobID(target) == 81 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas voler un autre dealer.");
+	if( rp_GetClientJobID(target) == 81 )
 		return -1;
-	}
 	
 	int wepid;
 	for( int i = 0; i < 5; i++ ) {
@@ -1586,7 +1575,6 @@ int findPlayerWeapon(int client, int target) {
 		
 		return wepid;
 	}
-	CPrintToChat(client, "" ...MOD_TAG... " Ce joueur n'a pas d'arme.");
 	return -1;
 }
 int appartToZoneID(int appartid){
