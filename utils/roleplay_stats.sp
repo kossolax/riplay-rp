@@ -292,6 +292,7 @@ public void DisplayRTStats(int client){
 	if( StrContains(tmp, "weapon_bayonet") != 0 && StrContains(tmp, "weapon_knife") != 0 ) {
 		AddMenuItem(menu, "", "------ Votre Arme ------", ITEMDRAW_DISABLED);
 		Format(tmp, sizeof(tmp), "Nombre de balles: %d", Weapon_GetPrimaryClip(wep_id));
+		AddMenuItem(menu, "", tmp, ITEMDRAW_DISABLED);
 	}
 
 	DisplayMenu(menu, client, 60);
