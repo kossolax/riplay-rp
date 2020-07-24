@@ -417,14 +417,18 @@ public Action Cmd_ItemAdrenaline(int args) {
 	int item_id = GetCmdArgInt(args);
 	
 	if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
-		ITEM_CANCEL(client, item_id);
+		if( item_id > 0 ) {
+			ITEM_CANCEL(client, item_id);
+		}
 		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet objet pour le moment.");
 		return Plugin_Handled;
 	}
 	
 	if( rp_GetClientBool(client, b_Drugged) ) {
+		if( item_id > 0 ) {
+			ITEM_CANCEL(client, item_id);
+		}
 		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes déjà drogué.");
-		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	

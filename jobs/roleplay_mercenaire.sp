@@ -530,7 +530,7 @@ public int AddCompetanceToAssassin(Handle menu, MenuAction action, int client, i
 		}
 		else if( StrEqual(options, "berserk", false) ) {
 			g_iKillerPoint[client][competance_berserk] = 1;
-			rp_ClientGiveItem(client, 6);
+			ServerCommand("rp_item_adrenaline %d", client);
 		}
 		
 		g_iKillerPoint[client][competance_left]--;
