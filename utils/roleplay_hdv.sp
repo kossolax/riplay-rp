@@ -164,6 +164,8 @@ void HDV_Sell(int client, int itemID, int quantity, int sellPrice, int confirm) 
 			return;
 		}
 		
+		int jobID = rp_GetItemInt(itemID, item_type_job_id);
+		rp_SetJobCapital(jobID, rp_GetJobCapital(jobID) + tax);
 		rp_ClientMoney(client, i_Money, -tax);
 		rp_ClientGiveItem(client, itemID, -quantity);
 		rp_IncrementSuccess(client, success_list_hdv);
@@ -317,12 +319,13 @@ public int Handler_MainHDV(Handle hItem, MenuAction oAction, int client, int par
 public void SQL_DepositCB(Handle owner, Handle handle, const char[] error, any data) {
 	if( strlen(error) >= 1  ) {
 		ResetPack(data);
-		int client, itemID ,quantity ,tax;
-		client = ReadPackCell(data);
-		itemID = ReadPackCell(data);
-		quantity = ReadPackCell(data);
-		tax = ReadPackCell(data);
+		int client = ReadPackCell(data);
+		int itemID = ReadPackCell(data);
+		int quantity = ReadPackCell(data);
+		int tax = ReadPackCell(data);
 		
+		int jobID = rp_GetItemInt(itemID, item_type_job_id);
+		rp_SetJobCapital(jobID, rp_GetJobCapital(jobID) + tax);
 		rp_ClientMoney(client, i_Bank, tax);
 		rp_ClientGiveItem(client, itemID, quantity);
 		
