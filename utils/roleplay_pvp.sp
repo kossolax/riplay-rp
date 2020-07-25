@@ -367,8 +367,8 @@ public Action SDKHideFlag(int from, int to ) {
 }
 // -----------------------------------------------------------------------------------------------------------------
 void CAPTURE_Start() {
-	CPrintToChatAll("{lightblue} ================================== {default}");
-	CPrintToChatAll("{lightblue} Le bunker peut maintenant être capturé! {default}");
+	CPrintToChatAll("{lightblue} =================================={default} ");
+	CPrintToChatAll("{lightblue} Le bunker peut maintenant être capturé!{default} ");
 	
 	
 	g_iCaptureStart = GetTime();
@@ -458,7 +458,7 @@ void CAPTURE_Start() {
 	if( botFound ) {
 		CPrintToChatAll("{lightblue} Cette capture est enregistrée à cette adresse: https://www.ts-x.eu/tv/%s.dem", szDayOfWeek);
 	}
-	CPrintToChatAll("{lightblue} ================================== {default}");
+	CPrintToChatAll("{lightblue} =================================={default} ");
 }
 public Action fwdCommand(int client, char[] command, char[] arg) {
 	if( StrEqual(command, "pvp") ) {
@@ -476,9 +476,9 @@ void CAPTURE_Stop() {
 	int winner, maxPoint = 0;
 	char optionsBuff[4][32], tmp[256];
 	
-	CPrintToChatAll("{lightblue} ================================== {default}");
-	CPrintToChatAll("{lightblue} Le bunker ne peut plus être capturé. {default}");
-	CPrintToChatAll("{lightblue} ================================== {default}");
+	CPrintToChatAll("{lightblue} =================================={default} ");
+	CPrintToChatAll("{lightblue} Le bunker ne peut plus être capturé.{default} ");
+	CPrintToChatAll("{lightblue} =================================={default} ");
 	
 	int wall = Entity_FindByName("job=201__-pvp_wall", "func_brush");
 	if( wall > 0 )
@@ -528,7 +528,7 @@ void CAPTURE_Stop() {
 	rp_SetCaptureInt(cap_villa, winner);
 			
 	CPrintToChatAll("{lightblue} Le bunker appartient maintenant à... %s !", optionsBuff[1]);
-	CPrintToChatAll("{lightblue} ================================== {default}");
+	CPrintToChatAll("{lightblue} =================================={default} ");
 	
 	UnhookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Post);
 	UnhookEvent("weapon_fire", Event_PlayerShoot, EventHookMode_Post);
@@ -646,9 +646,9 @@ public Action CAPTURE_Tick(Handle timer, any none) {
 	if( maxPoint-250 >= g_iCapture_POINT[defense] && winner != defense ) {
 		rp_GetGroupData(winner, group_type_name, tmp, sizeof(tmp));
 		ExplodeString(tmp, " - ", strBuffer, sizeof(strBuffer), sizeof(strBuffer[]));
-		CPrintToChatAll("{lightblue} ================================== {default}");
-		CPrintToChatAll("{lightblue} Le bunker est maintenant défendu par les %s! {default}", strBuffer[1]);
-		CPrintToChatAll("{lightblue} ================================== {default}");
+		CPrintToChatAll("{lightblue} =================================={default} ");
+		CPrintToChatAll("{lightblue} Le bunker est maintenant défendu par les %s!{default} ", strBuffer[1]);
+		CPrintToChatAll("{lightblue} =================================={default} ");
 		
 		for (int i = 1; i <= MaxClients; i++) {
 			if( !IsValidClient(i) )

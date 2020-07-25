@@ -563,7 +563,7 @@ void CheckLotery() {
 public void SQL_GetLoteryWiner(Handle owner, Handle hQuery, const char[] error, any none) {
 	int place = 0;
 	int iGain = 0;
-	CPrintToChatAll("{lightblue} ================================== {default}");
+	CPrintToChatAll("{lightblue} =================================={default} ");
 	char szSteamID[32], szName[64];
 	
 	int g_iLOTO = rp_GetServerInt(lotoCagnotte);
@@ -615,7 +615,7 @@ public void SQL_GetLoteryWiner(Handle owner, Handle hQuery, const char[] error, 
 	
 	rp_SetJobCapital(171, rp_GetJobCapital(171) - g_iLOTO);
 	
-	CPrintToChatAll("{lightblue} ================================== {default}");
+	CPrintToChatAll("{lightblue} =================================={default} ");
 	SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, "TRUNCATE `rp_loto`");
 }
 // ------------------------------------------------------------------------------

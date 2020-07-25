@@ -828,7 +828,7 @@ public Action cmd_SetBlind(int client, int args) {
 		int target = target_list[i];
 		g_bUserData[target][b_Blind] = 1;
 		ReplyToCommand(client, "[TSX-RP] %N a été aveuglé.", target);
-		CPrintToChat(target, "" ...MOD_TAG... " L'admin: %N vous a aveuglé.", client);
+		CPrintToChat(target, "" ...MOD_TAG... " L'admin: %N{default} vous a aveuglé.", client);
 	}
 	
 	return Plugin_Handled;
@@ -1000,7 +1000,7 @@ public Action cmd_UnBlind(int client, int args) {
 		int target = target_list[i];
 		g_bUserData[target][b_Blind] = 0;
 		ReplyToCommand(client, "[TSX-RP] %N a récupéré la vue.", target);
-		CPrintToChat(target, "" ...MOD_TAG... " L'admin: %N vous a rendu la vue.", client);
+		CPrintToChat(target, "" ...MOD_TAG... " L'admin: %N{default} vous a rendu la vue.", client);
 	}
 	
 	return Plugin_Handled;

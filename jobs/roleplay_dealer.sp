@@ -150,17 +150,17 @@ public Action Cmd_ItemDrugs(int args) {
 			return Plugin_Handled;
 		}
 		if( !rp_IsTutorialOver(target) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " %N n'a pas terminé le tutoriel.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas terminé le tutoriel.", target);
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
 		if( rp_IsClientNew(target) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " %N est un nouveau joueur.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " %N{default} est un nouveau joueur.", target);
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
 		if( rp_GetClientBool(target, b_Lube) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " %N vous glisse entre les mains.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " %N{default} vous glisse entre les mains.", target);
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
@@ -701,12 +701,12 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		rp_GetClientFloat(target, fl_LastStolen)+60.0 > GetGameTime() ||
 		rp_ClientFloodTriggered(client, target, fd_vol) ||
 		( rp_IsClientNew(target) && rp_GetClientFloat(target, fl_LastStolen)+300.0 > GetGameTime() ) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " %N n'a pas d'argent sur lui.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas d'argent sur lui.", target);
 		cooldown = 1.0;
 		return Plugin_Stop;
 	}
 	if( rp_GetZoneInt(rp_GetPlayerZone(target), zone_type_type) == 81 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas voler %N ici.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas voler %N{default} ici.", target);
 		return Plugin_Handled;
 	}
 	
@@ -724,7 +724,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		int wepid = findPlayerWeapon(client, target);
 		
 		if( wepid == -1 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " %N n'a pas d'argent, ni d'arme que vous pouvez lui voler.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas d'argent, ni d'arme que vous pouvez lui voler.", target);
 			cooldown = 1.0;
 			return Plugin_Stop;
 		}
@@ -840,7 +840,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		rp_ClientOverlays(target, o_Action_StealMoney, 10.0);
 	}
 	else {
-		CPrintToChat(client, "" ...MOD_TAG... " %N n'a pas d'argent sur lui.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas d'argent sur lui.", target);
 		cooldown = 1.0;
 	}
 	
@@ -1299,12 +1299,12 @@ public Action ItemPickLockOver_18th(Handle timer, Handle dp) {
 	rp_SetClientBool(target, b_Stealing, false);
 	
 	if( couldSteal == false || !IsPlayerAlive(client) || !IsPlayerAlive(target) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " %N s'est débattu, le vol a échoué.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " %N{default} s'est débattu, le vol a échoué.", target);
 		CreateTimer(10.0, AllowStealing, client);
 		return Plugin_Handled;
 	}
 	if( (rp_IsClientNew(target) || (rp_GetClientJobID(target)==41 && rp_GetClientInt(target, i_ToKill) > 0) || (rp_GetWeaponBallType(wepid) == ball_type_nosteal)) && Math_GetRandomInt(0,3) != 0 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " %N est plus difficile à voler qu'un autre...", target);
+		CPrintToChat(client, "" ...MOD_TAG... " %N{default} est plus difficile à voler qu'un autre...", target);
 		CreateTimer(5.0, AllowStealing, client);
 		return Plugin_Handled;
 	}
@@ -1371,7 +1371,7 @@ public Action ItemPickLockOver_18th(Handle timer, Handle dp) {
 			Call_Finish();
 		}
 		else {
-			CPrintToChat(client, "" ...MOD_TAG... " L'arme %s de %N s'est déjà faite volée il y a quelques instants.", wepname, target);
+			CPrintToChat(client, "" ...MOD_TAG... " L'arme %s de %N{default} s'est déjà faite voler il y a quelques instants.", wepname, target);
 		}
 	}
 	else {

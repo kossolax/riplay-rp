@@ -117,9 +117,9 @@ public void QUERY_SetMaire(Handle owner, Handle handle, const char[] error, any 
 		SQL_FetchString(handle, 0, g_szMaireName, sizeof(g_szMaireName));
 		SQL_FetchString(handle, 1, tmp2, sizeof(tmp2));
 		
-		CPrintToChatAll("{lightblue} ================================== {default}");
+		CPrintToChatAll("{lightblue} =================================={default} ");
 		CPrintToChatAll("" ...MOD_TAG... " Félicitation à %s, qui devient notre nouveau maire!", tmp);
-		CPrintToChatAll("{lightblue} ================================== {default}");
+		CPrintToChatAll("{lightblue} =================================={default} ");
 		
 		rp_SetServerString(maireName, tmp, sizeof(tmp));
 		rp_SetServerString(mairieID, tmp2, sizeof(tmp2));
@@ -360,7 +360,7 @@ public void QUERY_PostCandidate(Handle owner, Handle handle, const char[] error,
 	}
 	else {
 		CPrintToChat(client, "" ...MOD_TAG... " Votre candidature a été validée.");
-		CPrintToChatAll("" ...MOD_TAG... " %N s'est présenté comme candidat à la mairie.", client);
+		CPrintToChatAll("" ...MOD_TAG... " %N{default} s'est présenté comme candidat à la mairie.", client);
 	}
 }
 public void QUERY_VoteCandidate(Handle owner, Handle handle, const char[] error, any client) {
@@ -516,9 +516,9 @@ void Draw_Mairie_AddRules(int client, int rulesID=-1, int arg=-1, int target=-1)
 		
 		getRulesName(view_as<serverRules>(rulesID-1000), target, arg, tmp, sizeof(tmp));
 		
-		CPrintToChatAll("{lightblue} ================================== {default}");
+		CPrintToChatAll("{lightblue} =================================={default} ");
 		CPrintToChatAll("" ...MOD_TAG... " Le maire vient de décréter une nouvelle règle: %s.", tmp);
-		CPrintToChatAll("{lightblue} ================================== {default}");
+		CPrintToChatAll("{lightblue} =================================={default} ");
 		
 		delete menu;
 		return;

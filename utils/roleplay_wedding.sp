@@ -55,8 +55,8 @@ public void SQL_CheckWedding(Handle owner, Handle handle, const char[] error, an
 			GetClientAuthId(i, AUTH_TYPE, target, sizeof(target));
 			
 			if( StrEqual(steamid, target) && rp_GetClientInt(i, i_MarriedTo) == 0 ) {
-				CPrintToChat(i, "" ...MOD_TAG... " Votre conjoint %N a rejoint la ville.", client);
-				CPrintToChat(client, "" ...MOD_TAG... " Votre conjoint %N a rejoint la ville.", i);
+				CPrintToChat(i, "" ...MOD_TAG... " Votre conjoint %N{default} a rejoint la ville.", client);
+				CPrintToChat(client, "" ...MOD_TAG... " Votre conjoint %N{default} a rejoint la ville.", i);
 				
 				rp_SetClientInt(i, i_MarriedTo, client);
 				rp_SetClientInt(client, i_MarriedTo, i);
@@ -119,8 +119,8 @@ void Marier(int juge, int epoux, int epouse) {
 	PrintToChatZone(pos_1, "" ...MOD_TAG... " %N répond: OUI !", epouse);
 	PrintToChatZone(pos_1, "" ...MOD_TAG... " %N et %N sont maintenant unis par les liens du mariage, vous pouvez féliciter les mariés !", epoux, epouse);
 	
-	CPrintToChat(epoux, "" ...MOD_TAG... " Vous et %N êtes unis par les liens du mariage, vous pouvez embrasser la mariée félicitation !", epouse);
-	CPrintToChat(epouse, "" ...MOD_TAG... " Vous et %N êtes unis par les liens du mariage, félicitations !", epoux);
+	CPrintToChat(epoux, "" ...MOD_TAG... " Vous et %N{default} êtes unis par les liens du mariage, vous pouvez embrasser la mariée félicitation !", epouse);
+	CPrintToChat(epouse, "" ...MOD_TAG... " Vous et %N{default} êtes unis par les liens du mariage, félicitations !", epoux);
 	
 	// On paye le gentil juge et on preleve aux heureux élus
 	rp_ClientMoney(epoux, i_Money, -(prix / 2));

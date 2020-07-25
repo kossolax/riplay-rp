@@ -522,9 +522,9 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 				continue;
 
 			if( Attacker <= 0 || Attacker == Client )
-				CPrintToChat(i, "" ...MOD_TAG... " %N s'est tué.", Client);
+				CPrintToChat(i, "" ...MOD_TAG... " %N{default} s'est tué.", Client);
 			else
-				CPrintToChat(i, "" ...MOD_TAG... " %N a tué %N.", Attacker, Client);
+				CPrintToChat(i, "" ...MOD_TAG... " %N{default} a tué %N{default}.", Attacker, Client);
 		}
 		return Plugin_Continue;
 	}
@@ -650,7 +650,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 	if( Client ) {
 
 		if( g_bUserData[Client][b_Beacon] == 1 ) {
-			CPrintToChatAll("" ...MOD_TAG... " %N a été tué.", Client);
+			CPrintToChatAll("" ...MOD_TAG... " %N{default} a été tué.", Client);
 			g_bUserData[Client][b_Beacon] = 0;
 		}
 		
@@ -670,9 +670,9 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 			int flags = GetUserFlagBits(i);
 			if (flags & ADMFLAG_GENERIC || flags & ADMFLAG_ROOT) {
 				if( Attacker <= 0 || Attacker == Client )
-					CPrintToChat(i, "" ...MOD_TAG... " %N s'est tué.", Client);
+					CPrintToChat(i, "" ...MOD_TAG... " %N{default} s'est tué.", Client);
 				else
-					CPrintToChat(i, "" ...MOD_TAG... " %N a tué %N.", Attacker, Client);
+					CPrintToChat(i, "" ...MOD_TAG... " %N{default} a tué %N{default}.", Attacker, Client);
 			}
 		}
 	}

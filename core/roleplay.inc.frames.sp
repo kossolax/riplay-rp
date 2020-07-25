@@ -381,7 +381,7 @@ void OnGameFrame_10(float time) {
 
 	if( g_iHours == 1 && g_iMinutes == 1 ) {
 		if(g_bIsBlackFriday) {
-			Format(bfAnnoucement, sizeof(bfAnnoucement), "" ...MOD_TAG... " Journée exceptionnelle du Black Friday ! Profitez d'une réduction de {lightblue}-%iPCT {default}sur tous vos achats !", g_iBlackFriday[1]);
+			Format(bfAnnoucement, sizeof(bfAnnoucement), "" ...MOD_TAG... " Journée exceptionnelle du Black Friday ! Profitez d'une réduction de {lightblue}-%iPCT{default} sur tous vos achats !", g_iBlackFriday[1]);
 			ReplaceString(bfAnnoucement, sizeof(bfAnnoucement), "PCT", "%%", true);
 			CPrintToChatAll(bfAnnoucement);
 		}
@@ -509,7 +509,7 @@ void OnGameFrame_10(float time) {
 
 				if(infoPeineTime == 180) {
 					if(g_bUserData[i][b_ExitJailMenu]) {
-						CPrintToChat(i, "{lightblue}[TSX-RP] {default}Tu peux modifier la durée/zone de ton emprisonnement en tapant /peine");
+						CPrintToChat(i, "{lightblue}[TSX-RP]{default} Tu peux modifier la durée/zone de ton emprisonnement en tapant /peine");
 					}
 				}
 

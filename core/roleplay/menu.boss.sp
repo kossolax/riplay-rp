@@ -155,7 +155,7 @@ public int eventSetJobMenu(Handle p_hHireMenu, MenuAction p_oAction, int p_iPara
 				GetClientAuthId(i, AUTH_TYPE, SteamID, sizeof(SteamID), false);
 				
 				if( StrEqual(SteamID, data[0]) ) {
-					CPrintToChat(i, "" ...MOD_TAG... " %N a modifié votre job. Vous êtes maintenant: %s.", p_iParam1, g_szJobList[iJobID][job_type_name]);
+					CPrintToChat(i, "" ...MOD_TAG... " %N{default} a modifié votre job. Vous êtes maintenant: %s.", p_iParam1, g_szJobList[iJobID][job_type_name]);
 					g_iUserData[i][i_Job] = iJobID;
 					break;
 				}

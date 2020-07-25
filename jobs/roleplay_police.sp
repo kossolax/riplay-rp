@@ -338,7 +338,7 @@ public int MenuHandler_Verif(Handle menu, MenuAction action, int client, int par
 
 		if(StrEqual(data[1], "permileger")) {
 			CPrintToChat(target, "" ...MOD_TAG... " Vous avez été contrôlé en possession d'arme(s) légère(s) sans permis valide, vous devez vous acquitter d'une amande de 1600$");
-			CPrintToChat(client, "" ...MOD_TAG... " Une amende de 1600$ vient d'être prélevée auprès de %N pour défaut de permis de port d'arme légère", target);
+			CPrintToChat(client, "" ...MOD_TAG... " Une amende de 1600$ vient d'être prélevée auprès de %N{default} pour défaut de permis de port d'arme légère", target);
 	
 			rp_ClientMoney(target, i_Money, -1600);
 			
@@ -348,7 +348,7 @@ public int MenuHandler_Verif(Handle menu, MenuAction action, int client, int par
 		}
 		if(StrEqual(data[1], "permilourd")) {
 			CPrintToChat(target, "" ...MOD_TAG... " Vous avez été contrôlé en possession d'arme(s) lourde(s) sans permis valide, vous devez vous acquitter d'une amande de 2400$");
-			CPrintToChat(client, "" ...MOD_TAG... " Une amende de 2400$ vient d'être prélevée auprès de %N pour défaut de permis de port d'arme lourde", target);
+			CPrintToChat(client, "" ...MOD_TAG... " Une amende de 2400$ vient d'être prélevée auprès de %N{default} pour défaut de permis de port d'arme lourde", target);
 
 			rp_ClientMoney(target, i_Money, -2400);
 			
@@ -358,7 +358,7 @@ public int MenuHandler_Verif(Handle menu, MenuAction action, int client, int par
 		}
 		if(StrEqual(data[1], "permilegerlourd")) {
 			CPrintToChat(target, "" ...MOD_TAG... " Vous avez été contrôlé en possession d'arme(s) lourde(s) et légère(s) sans permis valide, vous devez vous acquitter d'une amende de 4000$");
-			CPrintToChat(client, "" ...MOD_TAG... " Une amende de 4000$ vient d'être prélevée auprès de %N pour défaut de permis de port d'arme légere et lourde", target);
+			CPrintToChat(client, "" ...MOD_TAG... " Une amende de 4000$ vient d'être prélevée auprès de %N{default} pour défaut de permis de port d'arme légere et lourde", target);
 			rp_ClientMoney(target, i_Money, -4000);
 			
 			rp_ClientMoney(client, i_ToPay, 600);
@@ -534,12 +534,12 @@ public Action Cmd_Tazer(int client) {
 		}
 		
 		if (!(rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PERQUIZ || rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PERQUIZ) && rp_GetClientBool(target, b_Lube) && Math_GetRandomInt(1, 5) != 5) {
-			CPrintToChat(client, "" ...MOD_TAG... " %N vous glisse entre les mains.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " %N{default} vous glisse entre les mains.", target);
 			return Plugin_Handled;
 		}
 		
 		if (!(rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PERQUIZ || rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PERQUIZ) && !CanSendToJail(client, target)) {
-			CPrintToChat(client, "" ...MOD_TAG... " %N vous glisse entre les mains.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " %N{default} vous glisse entre les mains.", target);
 			return Plugin_Handled;
 		}
 		
@@ -838,12 +838,12 @@ public Action Cmd_Jail(int client) {
 			return Plugin_Handled;
 		
 		if (!CanSendToJail(client, client2)) {
-			CPrintToChat(client, "" ...MOD_TAG... " %N ne peut être mis en prison pour le moment à cause d'une quête.", client2);
+			CPrintToChat(client, "" ...MOD_TAG... " %N{default} ne peut être mis en prison pour le moment à cause d'une quête.", client2);
 			return Plugin_Handled;
 		}
 		if (IsValidClient(client2)) {
 			rp_ClientVehicleExit(client2, target, true);
-			CPrintToChat(client2, "" ...MOD_TAG... " %N vous a sorti de votre voiture.", client);
+			CPrintToChat(client2, "" ...MOD_TAG... " %N{default} vous a sorti de votre voiture.", client);
 		}
 		return Plugin_Handled;
 	}
@@ -854,11 +854,11 @@ public Action Cmd_Jail(int client) {
 	if (Client_GetVehicle(target) > 0) {
 		if (IsValidClient(target)) {
 			if (!CanSendToJail(client, target)) {
-				CPrintToChat(client, "" ...MOD_TAG... " %N ne peut être mis en prison pour le moment à cause d'une quête.", target);
+				CPrintToChat(client, "" ...MOD_TAG... " %N{default} ne peut être mis en prison pour le moment à cause d'une quête.", target);
 				return Plugin_Handled;
 			}
 			rp_ClientVehicleExit(target, Client_GetVehicle(target), true);
-			CPrintToChat(target, "" ...MOD_TAG... " %N vous a sorti de votre voiture.", client);
+			CPrintToChat(target, "" ...MOD_TAG... " %N{default} vous a sorti de votre voiture.", client);
 		}
 		return Plugin_Handled;
 	}
@@ -868,7 +868,7 @@ public Action Cmd_Jail(int client) {
 	}
 	
 	if (!CanSendToJail(client, target)) {
-		CPrintToChat(client, "" ...MOD_TAG... " %N ne peut être mis en prison pour le moment à cause d'une quête.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " %N{default} ne peut être mis en prison pour le moment à cause d'une quête.", target);
 		return Plugin_Handled;
 	}
 	
@@ -970,8 +970,8 @@ void SendPlayerToJail(int target, int client = 0) {
 			rp_SetClientInt(target, i_JailledBy, client);
 		
 		rp_SetClientBool(target, b_ExitJailMenu, false);
-		CPrintToChat(target, "" ...MOD_TAG... " %N {default}vous a mis en prison.", client);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez mis %N {default}en prison.", target);
+		CPrintToChat(target, "" ...MOD_TAG... " %N{default} vous a mis en prison.", client);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez mis %N{default} en prison.", target);
 		
 		AskJailTime(client, target);
 		LogToGame("[TSX-RP] [JAIL-0] %L (%d) a mis %L (%d) en prison.", client, rp_GetPlayerZone(client, 1.0), target, rp_GetPlayerZone(target, 1.0));
@@ -1074,7 +1074,7 @@ public int eventAskJail2Time(Handle menu, MenuAction action, int client, int par
 			rp_SetClientInt(iTarget, i_JailledBy, client);
 			rp_ClientOverlays(iTarget, o_Jail_Juge, 20.0);
 			
-			CPrintToChatAll("" ...MOD_TAG... " %N {default}a été condamné à faire %i heures de prison par le juge %N{default}.", iTarget, iTime, client);
+			CPrintToChatAll("" ...MOD_TAG... " %N{default} a été condamné à faire %i heures de prison par le juge %N{default}.", iTarget, iTime, client);
 			LogToGame("[TSX-RP] [JUGE] %L a été condamné à faire %i heures de prison par le juge %L.", iTarget, iTime, client);
 		}
 	}
@@ -1105,7 +1105,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 			rp_SetClientBool(target, b_IsFreekiller, false);
 
 			CPrintToChat(client, "" ...MOD_TAG... " Vous avez libéré %N{default}.", target);
-			CPrintToChat(target, "" ...MOD_TAG... " %N {default}vous a libéré.", client);
+			CPrintToChat(target, "" ...MOD_TAG... " %N{default} vous a libéré.", client);
 
 			LogToGame("[TSX-RP] [JAIL] [LIBERATION] %L a liberé %L", client, target);
 			
@@ -1130,7 +1130,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 				rp_ClientTeleport(target, view_as<float>( { 473.7, -1979.5, -2007.9 } ));
 			
 			CPrintToChat(target, "" ...MOD_TAG... " Vous avez été mis en prison, en attente de jugement par: %N", client);
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez mis: %N {default}dans la prison du Tribunal.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez mis: %N{default} dans la prison du Tribunal.", target);
 			
 			LogToGame("[TSX-RP] [TRIBUNAL] %L a mis %L dans la prison du Tribunal.", client, target);
 			return;
@@ -1320,8 +1320,8 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 		rp_SetClientInt(target, i_jailTime_Last, time_to_spend);
 		
 		if (IsValidClient(client) && IsValidClient(target)) {
-			CPrintToChat(client, "" ...MOD_TAG... " %N {default}restera en prison %.1f heures pour \"%s\"", target, time_to_spend / 60.0, g_szJailRaison[type][jail_raison]);
-			CPrintToChat(target, "" ...MOD_TAG... " %N {default}vous a mis %.1f heures de prison pour \"%s\"", client, time_to_spend / 60.0, g_szJailRaison[type][jail_raison]);
+			CPrintToChat(client, "" ...MOD_TAG... " %N{default} restera en prison %.1f heures pour \"%s\"", target, time_to_spend / 60.0, g_szJailRaison[type][jail_raison]);
+			CPrintToChat(target, "" ...MOD_TAG... " %N{default} vous a mis %.1f heures de prison pour \"%s\"", client, time_to_spend / 60.0, g_szJailRaison[type][jail_raison]);
 			explainJail(target, type);
 		}
 		else {

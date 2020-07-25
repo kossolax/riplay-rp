@@ -160,9 +160,9 @@ public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
 						
 						rp_ClientSendToSpawn(client, false);
 						
-						CPrintToChat(client, "" ...MOD_TAG... " %N vous a libéré.", target);
+						CPrintToChat(client, "" ...MOD_TAG... " %N{default} vous a libéré.", target);
 						PrintHintText(client,"{lightblue}[TSX-RP]{red} Vous avez été libéré de prison par %N . Vous avez donc été teleporté sur la map ! Ne vous faites pas prendre par les forces de l'ordre. ", target);
-						CPrintToChat(target, "" ...MOD_TAG... " vous avez libéré %N et reçu une récompense de 500$.", client);
+						CPrintToChat(target, "" ...MOD_TAG... " vous avez libéré %N{default} et reçu une récompense de 500$.", client);
 						LogToGame("[QUETE] [MAFIA] %L a libéré %L", target, client);
 						
 						lastFree[client] = GetGameTime() + 180.0;

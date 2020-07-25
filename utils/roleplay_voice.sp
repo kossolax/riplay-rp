@@ -439,18 +439,18 @@ public int MenuJobs3(Handle p_hItemMenu, MenuAction p_oAction, int client, int p
 			char zoneName[64];
 			rp_GetZoneData(rp_GetPlayerZone(client), zone_type_name, zoneName, sizeof(zoneName));
 			switch(item_id){
-				case -1: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N aimerait être recruté, il est actuellement: %s", client, zoneName);
-				case -2: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N a besoin d'un crochetage de porte, il est actuellement: %s", client, zoneName);
-				case -3: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N aimerait acheter ou vendre une arme, il est actuellement: %s", client, zoneName);
+				case -1: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} aimerait être recruté, il est actuellement: %s", client, zoneName);
+				case -2: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} a besoin d'un crochetage de porte, il est actuellement: %s", client, zoneName);
+				case -3: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} aimerait acheter ou vendre une arme, il est actuellement: %s", client, zoneName);
 				case -4: {
-					CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N a besoin d'un juge, il est actuellement: %s", client, zoneName);
+					CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} a besoin d'un juge, il est actuellement: %s", client, zoneName);
 					LogToGame("[TSX-RP] [CALL] %L a demandé les services de juge de %L", client, target);
 				}
-				case -5: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N a besoin d'un avocat, il est actuellement: %s", client, zoneName);
-				case -6: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N souhaiterait acheter un appartement, merci de le contacter pour plus de renseignement. Il est actuellement: %s", client, zoneName);
+				case -5: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} a besoin d'un avocat, il est actuellement: %s", client, zoneName);
+				case -6: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} souhaiterait acheter un appartement. Il est actuellement: %s", client, zoneName);
 				default: {
 					rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
-					CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N a besoin de {lime}%s{default}, il est actuellement: %s", client, tmp, zoneName);
+					CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} a besoin de {lime}%s{default}, il est actuellement: %s", client, tmp, zoneName);
 					LogToGame("[TSX-RP] [CALL] %L a demandé %s à %L", client, tmp, target);
 				}
 			}

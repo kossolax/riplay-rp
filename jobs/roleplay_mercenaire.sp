@@ -263,7 +263,7 @@ public Action fwdTueurKill(int client, int attacker, float& respawn, int& tdm) {
 				rp_SetJobCapital(41, rp_GetJobCapital(41) + 200);
 			}
 			
-			CPrintToChat(from, "" ...MOD_TAG... " %N a rempli son contrat en tuant %N.", attacker, client);
+			CPrintToChat(from, "" ...MOD_TAG... " %N{default} a rempli son contrat en tuant %N.", attacker, client);
 			rp_IncrementSuccess(from, success_list_tueur);
 			
 			if( g_iKillerPoint[attacker][competance_type] == 1003 ) {
@@ -628,13 +628,13 @@ void SetContratFail(int client, bool time = false, bool annule = false) { // tim
 		if( IsValidClient(target) ) {		
 			
 			if( time )
-				CPrintToChat(target, "" ...MOD_TAG... " %N n'a pas rempli son contrat à temps.", client);
+				CPrintToChat(target, "" ...MOD_TAG... " %N{default} n'a pas rempli son contrat à temps.", client);
 			else if( jobClient != 41 ) // si le tueur a démissionné entre temps
-				CPrintToChat(target, "" ...MOD_TAG... " %N n'est plus mercenaire et ne peut plus remplir votre contrat.", client);
+				CPrintToChat(target, "" ...MOD_TAG... " %N{default} n'est plus mercenaire et ne peut plus remplir votre contrat.", client);
 			else if(annule)
-				CPrintToChat(target, "" ...MOD_TAG... " %N a annulé son contrat.", client);
+				CPrintToChat(target, "" ...MOD_TAG... " %N{default} a annulé son contrat.", client);
 			else
-				CPrintToChat(target, "" ...MOD_TAG... " %N a été tué et n'a pas pu remplir son contrat.", client);
+				CPrintToChat(target, "" ...MOD_TAG... " %N{default} a été tué et n'a pas pu remplir son contrat.", client);
 			
 			
 			int prix = rp_GetClientInt(client, i_ContratPay);
@@ -743,8 +743,8 @@ public Action fwdZoneChange(int client, int newZone, int oldZone) {
 			rp_SetClientInt( target, i_ContratFor, rp_GetClientInt(client, i_ToPay) );
 			SetContratFail( target , true);
 			
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez pris la fuite, vous êtes libre !");
-			CPrintToChat(target, "" ...MOD_TAG... " %N s'est échappé.", client);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez pris la fuite, vous êtes libres !");
+			CPrintToChat(target, "" ...MOD_TAG... " %N{default} s'est échappé.", client);
 		}
 		else {
 			rp_ClientTeleport(client,  view_as<float>({-5553.9, -2838.9, -1959.9}));
@@ -762,7 +762,7 @@ public Action fwdDead(int client, int attacker, float& respawn, int& tdm) {
 	SetContratFail( target , true);
 	
 	CPrintToChat(client, "" ...MOD_TAG... " Vos ravisseurs vous ont tué.");
-	CPrintToChat(target, "" ...MOD_TAG... " %N s'est échappé.", client);
+	CPrintToChat(target, "" ...MOD_TAG... " %N{default} s'est échappé.", client);
 	
 	
 	return Plugin_Continue;
@@ -797,8 +797,8 @@ public int eventKidnapping(Handle p_hItemMenu, MenuAction p_oAction, int client,
 			rp_ClientMoney(client, i_Bank, -2500);
 			rp_ClientMoney(from, i_Bank, 2500);		
 			
-			CPrintToChat(from, "" ...MOD_TAG... " %N a payé la rançon de 2500$.", client);
-			CPrintToChat(target, "" ...MOD_TAG... " %N a payé la rançon de 2500$.", client);
+			CPrintToChat(from, "" ...MOD_TAG... " %N{default} a payé la rançon de 2500$.", client);
+			CPrintToChat(target, "" ...MOD_TAG... " %N{default} a payé la rançon de 2500$.", client);
 			
 			rp_IncrementSuccess(from, success_list_kidnapping);
 			
@@ -854,7 +854,7 @@ public int eventKidnapping(Handle p_hItemMenu, MenuAction p_oAction, int client,
 				if( rp_GetClientJobID(i) != 1 && rp_GetClientJobID(i) != 101 )
 					continue;
 				
-				CPrintToChat(i, "" ...MOD_TAG... " Un enlèvement a eut lieu. Vous devez libérer %N dans %s.", client, dest);
+				CPrintToChat(i, "" ...MOD_TAG... " Un enlèvement a eu lieu. Vous devez libérer %N{default} dans %s.", client, dest);
 				rp_Effect_BeamBox(i, client);
 				ClientCommand(i, "play buttons/blip1.wav");
 			}
@@ -871,7 +871,7 @@ public int eventKidnapping(Handle p_hItemMenu, MenuAction p_oAction, int client,
 				if( rp_GetClientJobID(i) != 91 )
 					continue;
 				
-				CPrintToChat(i, "" ...MOD_TAG... " Un enlèvement a eu lieu. Vous devez libérer %N dans %s.", client, dest);
+				CPrintToChat(i, "" ...MOD_TAG... " Un enlèvement a eu lieu. Vous devez libérer %N{default} dans %s.", client, dest);
 				rp_Effect_BeamBox(i, client);
 				ClientCommand(i, "play buttons/blip1.wav");
 			}

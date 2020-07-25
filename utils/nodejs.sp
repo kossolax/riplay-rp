@@ -96,7 +96,7 @@ public bool OnWebRequest(WebConnection connection, const char[] method, const ch
 			
 			GetClientAuthId(i, AUTH_TYPE, arg, sizeof(arg));
 			if( StrEqual(options[2], arg) ) {
-				CPrintToChatAll("" ...MOD_TAG... " Un joueur vient de report %N pour %s.", i, options[3]);
+				CPrintToChatAll("" ...MOD_TAG... " Un joueur vient de report %N{default} pour %s.", i, options[3]);
 				found = true;
 				break;
 			}

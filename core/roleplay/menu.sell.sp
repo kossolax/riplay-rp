@@ -62,7 +62,7 @@ void DrawVendreMenu(int client) {
 				continue;
 			
 			if( g_iDoorOwner_v2[i][can] ) {
-				CPrintToChat(client, "" ...MOD_TAG... " %N est déjà proprietaire de cet appartement.", i);
+				CPrintToChat(client, "" ...MOD_TAG... " %N{default} est déjà propriétaire de cet appartement.", i);
 				return;
 			}
 		}
@@ -229,7 +229,7 @@ public int eventGiveMenu_1(Handle p_hItemMenu, MenuAction p_oAction, int client,
 
 					if(g_iUserData[client][i_Job] == 13 && g_flUserData[target][fl_TazerTime] > GetGameTime()) {
 						CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas bénéficier de plusieurs chirurgies en même temps, merci de patienter.");
-						CPrintToChat(target, "" ...MOD_TAG... " %N ne peux pas bénéficier de plusieurs chirurgies en même temps, merci de patienter.", target);
+						CPrintToChat(target, "" ...MOD_TAG... " %N{default} ne peux pas bénéficier de plusieurs chirurgies en même temps, merci de patienter.", target);
 						
 						return;
 					}
@@ -396,7 +396,7 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 				return;
 			}
 			if( !IsTutorialOver(target) ) {
-				CPrintToChat(client, "" ...MOD_TAG... " %N n'a pas terminé le tutorial.", target);
+				CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas terminé le tutorial.", target);
 				return;
 			}
 			
@@ -426,7 +426,7 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 					return;
 				}
 				if( g_iUserData[target][i_PlayerLVL] < 306 ) {
-					CPrintToChat(client, "" ...MOD_TAG... " %N doit être au moins de niveau 306 \"Haut conseillé\", afin d'effectuer un contrat kidnapping.");
+					CPrintToChat(client, "" ...MOD_TAG... " %N{default} doit être au moins de niveau 306 \"Haut conseillé\", afin d'effectuer un contrat kidnapping.");
 					return;
 				}
 				type = 1005;
@@ -587,7 +587,7 @@ public int eventGiveMenu_2Bis(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 				return;
 			}
 			if( !IsTutorialOver(target) ) {
-				CPrintToChat(client, "" ...MOD_TAG... " %N n'a pas terminé le tutorial.", target);
+				CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas terminé le tutorial.", target);
 				return;
 			}
 			
@@ -706,7 +706,7 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			if( type == 3 ) {
 				g_iBlockedTime[client][vendeur] = GetTime();
 				CPrintToChat(vendeur, "" ...MOD_TAG... " Le client a refusé l'achat et vous ignorera pour 6 heures.");
-				CPrintToChat(client, "" ...MOD_TAG... " Vous ignorerez les demandes d'achat de %N pour 6 heures.", vendeur);
+				CPrintToChat(client, "" ...MOD_TAG... " Vous ignorerez les demandes d'achat de %N{default} pour 6 heures.", vendeur);
 				return;
 			}
 			if( type == 2 ) {
