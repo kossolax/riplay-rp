@@ -874,8 +874,7 @@ public int Native_rp_GetWeaponStorage(Handle plugin, int numParams) {
 	return g_iWeaponFromStore[GetNativeCell(1)];
 }
 public int Native_rp_IsClientNew(Handle plugin, int numParams) {
-	return false;
-//	return (g_iClient_OLD[GetNativeCell(1)]!=1);
+	return (g_iClient_OLD[GetNativeCell(1)]!=1);
 }
 public int Native_rp_ClientVehiclePassagerExit(Handle plugin, int numParams) {
 	LeaveVehiclePassager(GetNativeCell(1), GetNativeCell(2) );
