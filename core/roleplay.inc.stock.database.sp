@@ -643,7 +643,11 @@ public void SynFromWeb_call(Handle owner, Handle hQuery, const char[] error, any
 		int itemToBank = SQL_FetchInt(hQuery, 13);
 		int xp = SQL_FetchInt(hQuery, 14);
 		
-		
+        char szId[8];
+		Format(szId, sizeof(szId), "%d", id);
+
+		if( g_hSynProcessed.GetValue(szId, id) ) continue; // On execute pas 2 fois une syn
+
 		if( StrEqual(szSteamID, "CAPITAL") ) {
 			SetJobCapital(job_id, GetJobCapital(job_id)+money+bank);
 		}
@@ -751,6 +755,8 @@ public void SynFromWeb_call(Handle owner, Handle hQuery, const char[] error, any
 			}
 			*/
 			
+			g_hSynProcessed.SetValue(szId, id, false);
+
 			Format(query, sizeof(query), "DELETE FROM `rp_users2` WHERE `id`='%i';", id);
 			SQL_TQuery(g_hBDD, SQL_QueryCallBack, query, 0, DBPrio_High);
 		}
