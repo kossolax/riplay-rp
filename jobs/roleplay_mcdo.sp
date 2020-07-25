@@ -416,7 +416,7 @@ public Action Cmd_ItemHamburger(int args) {
 		rp_GetItemData(rand, item_type_name, cmd, sizeof(cmd));
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu comme cadeau: %s", cmd);
 		
-		if( rand == GetCmdArgInt(args) )
+		if( rand == GetCmdArgInt(args) && StrEqual(arg1, "happymeal") )
 			rp_IncrementSuccess(client, success_list_mcdo);
 	}
 	else if( StrEqual(arg1, "box") ) { // TODO: Move to roleplay_armurerie
