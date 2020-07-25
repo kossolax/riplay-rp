@@ -62,7 +62,11 @@ public Plugin myinfo = {
 //
 //	PLUGIN START
 //
-public void OnPluginStart() {	
+public void OnPluginStart() {
+	Handle hHostname = FindConVar("hostname");
+	GetConVarString(hHostname, g_szHostname, sizeof(g_szHostname));
+	SetConVarString(hHostname, "Initialisation du roleplay en cours ...");
+
 	SetRandomSeed(GetTime());
 	AddNormalSoundHook(sound_hook);
 
@@ -311,7 +315,10 @@ public Action Command_DebugBF(int client, int args) {
 	ReplyToCommand(client, "BF REDUCTION : %i", g_iBlackFriday[1]);
 }
 
-/*public void OnAllPluginsLoaded() {
+public void OnAllPluginsLoaded() {
+	CreateTimer(10.0, PostLoad);
+
+	/*
 	if( GetConVarInt(FindConVar("hostport")) != 27015 ) {
 		AddCommandOverride("sm_rcon", Override_Command, ReadFlagString("c"));
 		AddCommandOverride("sm_noclip", Override_Command, ReadFlagString("c"));
@@ -333,7 +340,21 @@ public Action Command_DebugBF(int client, int args) {
 		AddCommandOverride("rp_clean", Override_Command, 0);
 		AddCommandOverride("rp_debug", Override_Command, 0);
 	}
-}*/
+	*/
+}
+
+public Action PostLoad(Handle timer, any coucou){
+	char szPassword[16];
+	Handle password_cvar = FindConVar("sv_password");
+	GetConVarString(password_cvar, szPassword, sizeof(szPassword));
+
+	SetConVarString(FindConVar("hostname"), g_szHostname);
+
+	if(StrEqual(szPassword, "_____")){
+		SetConVarString(password_cvar, "");
+	}
+}
+
 public void OnConfigsExecuted() {
 	ServerCommand("weapon_accuracy_nospread 1");
 	ServerCommand("spec_freeze_deathanim_time 999999");

@@ -111,6 +111,8 @@ Handle g_hAllowDamage;
 
 //
 // Globals
+char g_szHostname[128];
+
 int g_iSID = -1;
 Handle g_hRPNative[65][ view_as<int>(RP_EventMax) ];
 
