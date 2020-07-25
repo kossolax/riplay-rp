@@ -745,7 +745,7 @@ public Action EventPlayerShot(Handle ev, const char[] name, bool  bd) {
 		return Plugin_Continue;
 
 	float train = g_flUserData[client][fl_WeaponTrainAdmin] < 0 ? g_flUserData[client][fl_WeaponTrain] : g_flUserData[client][fl_WeaponTrainAdmin];
-	train = train > 5 ? 5.0 : train;
+	train = train > 4 ? 4.0 : train;
 	float vecOrigin[3];
 	
 	vecOrigin[0] = GetEventFloat(ev, "x");
