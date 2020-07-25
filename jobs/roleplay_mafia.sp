@@ -709,6 +709,8 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 					rp_ClientMoney(owner, i_Bank, -stealAMount);
 					rp_ClientMoney(client, i_AddToPay, stealAMount);
 
+					rp_SetClientStat(owner, i_MoneySpent_Stolen, rp_GetClientStat(owner, i_MoneySpent_Stolen) + amount);
+
 					CPrintToChat(owner, "" ...MOD_TAG... " Attention, quelqu'un à piraté votre distributeur et vous à voler %i$.", stealAMount);
 					CPrintToChat(client, "" ...MOD_TAG... " Vous avez piraté %i$ !", stealAMount);
 				} else {

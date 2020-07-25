@@ -1356,6 +1356,8 @@ public Action ItemPickLockOver_18th(Handle timer, Handle dp) {
 				
 				rp_ClientMoney(client, i_AddToPay, amount);
 				rp_ClientMoney(target, i_Money, -amount);
+				rp_SetClientStat(target, i_MoneySpent_Stolen, rp_GetClientStat(owner, i_MoneySpent_Stolen) + amount);
+
 			}
 			
 			int cpt = rp_GetRandomCapital(81);
@@ -1416,6 +1418,7 @@ public int MenuBuildingDealer(Handle menu, MenuAction action, int client, int pa
 			
 			int ent = BuildingPlant(client, StringToInt(szMenuItem));
 			if( ent > 0 ) {
+				rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
 				rp_SetBuildingData(ent, BD_FromBuild, 1);
 				rp_SetBuildingData(ent, BD_max, 30);
 			}
