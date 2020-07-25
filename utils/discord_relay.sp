@@ -21,7 +21,10 @@ public Action Command_Say(int client, int args) {
 
 	GetCmdArgString(tmp, sizeof(tmp));
 	StripQuotes(tmp);
+	ReplaceString(tmp, sizeof(tmp), "@here", "");
+	ReplaceString(tmp, sizeof(tmp), "@everyone", "");
 	TrimString(tmp);
+	
 	
 	if( tmp[0] != '/' && tmp[0] != '!' && tmp[0] != 0 ) {
 		
