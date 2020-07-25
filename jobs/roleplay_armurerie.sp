@@ -163,7 +163,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 	char wep_name[32];
 	GetEdictClassname(wep_id, wep_name, 31);
-	if( StrContains(wep_name, "weapon_bayonet") == 0 || StrContains(wep_name, "weapon_knife") == 0 ) {
+	if( Weapon_ShouldBeEquip(wep_name) ) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous devez prendre une arme en main pour la modifier.");
 		return Plugin_Handled;
 	}
