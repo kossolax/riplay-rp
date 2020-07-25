@@ -323,11 +323,15 @@ public Action Cmd_ItemPlant(int args) {
 	
 	int type = GetCmdArgInt(1);
 	int client = GetCmdArgInt(2);
+	int item_id = GetCmdArgInt(args);
 	
-	if( BuildingPlant(client, type) == 0 ) {
-		int item_id = GetCmdArgInt(args);
+	int entity = BuildingPlant(client, type);
+	if( entity == 0 ) {
 		ITEM_CANCEL(client, item_id);
+		return Plugin_Handled;
 	}
+	
+	rp_SetBuildingData(ent, BD_original_id, item_id);
 	
 	return Plugin_Handled;
 }
@@ -982,6 +986,7 @@ int BuildingPlant(int client, int type) {
 	rp_SetBuildingData(ent, BD_count, 0);
 	rp_SetBuildingData(ent, BD_owner, client);
 	rp_SetBuildingData(ent, BD_item_id, type);
+	rp_SetBuildingData(ent, BD_original_id, 0);
 	rp_SetBuildingData(ent, BD_FromBuild, 0);
 	
 	CreateTimer(3.0, BuildingPlant_post, ent);

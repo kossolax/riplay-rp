@@ -939,6 +939,7 @@ enum building_prop_data {
 	BD_owner,
 	BD_Trapped,
 	BD_item_id,
+	BD_original_id,
 	BD_FromBuild,
 	
 	building_prop_data_max
