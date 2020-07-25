@@ -331,7 +331,7 @@ public Action Cmd_ItemPlant(int args) {
 		return Plugin_Handled;
 	}
 	
-	rp_SetBuildingData(ent, BD_original_id, item_id);
+	rp_SetBuildingData(entity, BD_original_id, item_id);
 	
 	return Plugin_Handled;
 }
