@@ -176,6 +176,7 @@ int g_iLastData_ZONE[MAX_ZONES+1];
 char g_szSellingKeys[MAX_ENTITIES][view_as<int>(key_type_max)][256];
 char g_szGroupList[MAX_JOBS][view_as<int>(job_type_max)][64];
 char g_szVillaOwner[view_as<int>(rp_serv_max)][64];
+StringMap g_hSynProcessed;
 //
 char g_szEntityName[MAX_ENTITIES][128];
 bool g_bPrethinkBuffer[MAX_PLAYERS+1];

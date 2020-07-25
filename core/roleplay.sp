@@ -219,6 +219,8 @@ public void OnPluginStart() {
 		SQL_Query(g_hBDD, "SET NAMES 'utf8mb4'");
 		SQL_UnlockDatabase(g_hBDD);
 	}
+
+	g_hSynProcessed = new StringMap(); // Ne pas executer une syn plusieures fois
 	
 	for (int i = 1; i <= MaxClients; i++) {
 		view_as<Handle>(g_hRPNative[i][RP_PreTakeDamage]) = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_FloatByRef, Param_Cell);
