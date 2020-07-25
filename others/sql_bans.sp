@@ -1,7 +1,6 @@
 #pragma semicolon 1
 #include <sourcemod>
 #include <sdktools>
-#include <phun>
 
 public Plugin myinfo = 
 {
@@ -46,7 +45,7 @@ public SQL_QueryCallBack(Handle owner, Handle handle, const char[] error, any da
 		LogError("[SQL] [ERROR] %s", error);
 	}
 }
-public OnClientPostAdminCheck(client) {
+public OnClientPostAdminCheck(int client) {
 	if( !IsFakeClient(client) ) {
 		CreateTimer(30.0, CheckBanned, GetClientUserId(client));
 	}
@@ -56,7 +55,7 @@ public OnClientPostAdminCheck(client) {
 //
 // Admin commands
 //
-public Action Cmd_Ban(client, args) {
+public Action Cmd_Ban(int client, int args) {
 	if( args < 3 || args > 3) {
 		if( client != 0 )
 			ReplyToCommand(client, "Utilisation: amx_ban \"joueur\" \"temps\" \"raison\"");
@@ -109,7 +108,7 @@ public Action Cmd_Ban(client, args) {
 	
 	return Plugin_Handled;
 }
-public Action Cmd_AddBan(client, args) {
+public Action Cmd_AddBan(int client, int args) {
 	if( args < 3 || args > 3) {
 		
 		if( client != 0 )
@@ -139,7 +138,7 @@ public Action Cmd_AddBan(client, args) {
 		
 	return Plugin_Handled;
 }
-public Action Cmd_Unban(client, args) {
+public Action Cmd_Unban(int client, int args) {
 	if( args < 2 || args > 2) {
 		if( client != 0 )
 			ReplyToCommand(client, "Utilisation: amx_unban \"SteamID\" \"raison\"");
@@ -174,7 +173,22 @@ public Action Cmd_Unban(client, args) {
 	
 	return Plugin_Handled;
 }
-stock InsertBan(client, target, char targetSteamID[64], int time, const char reason[256]) {
+public bool IsValidClient(int client) {
+	if( client <= 0 )
+		return false;
+	
+	if( client > MaxClients )
+		return false;
+	
+	if( !IsValidEdict(client) )
+		return false;
+	
+	if( !IsClientConnected(client) )
+		return false;
+	
+	return true;
+}
+stock InsertBan(int client, int target, char targetSteamID[64], int time, const char reason[256]) {
 	
 	char safe_reason[512];
 	SQL_EscapeString(g_hBDD, reason, safe_reason, sizeof(safe_reason));

@@ -194,7 +194,7 @@ stock void PrecacheEffect(const char[] sEffectName) {
 }
 public Action Cmd_Fixes(int client, int args) {
 	char classname[64], targetname[64];
-	for(int i=GetMaxClients(); i<=GetMaxEntities(); i++) {
+	for(int i=MaxClients; i<=2048; i++) {
 		if( !IsValidEdict(i) || !IsValidEntity(i) )
 				continue;
 		
@@ -1459,7 +1459,7 @@ public void OnGameFrame() {
 		
 		g_flFADE_TIME_last = GetGameTime() + ( (g_flFADE_TIME_end-g_flFADE_TIME_start) / 255.0);
 		
-		for(int a=GetMaxClients(); a<=GetMaxEntities(); a++) {
+		for(int a=MaxClients; a<=2048; a++) {
 			if( !IsValidEdict(a) )
 				continue;
 			if( !IsValidEntity(a) )

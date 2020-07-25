@@ -26,7 +26,7 @@ public Plugin:myinfo =
 
 public OnPluginStart() 
 { 
-	CreateConVar("sm_ragdolls_version", PLUGIN_VERSION, "Ragdolls Version", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	CreateConVar("sm_ragdolls_version", PLUGIN_VERSION, "Ragdolls Version", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	g_hEnabled = CreateConVar("sm_ragdolls_enabled", "1.0", "Enables/Disables all features of this plugin.", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_hRagdolls = CreateConVar("sm_ragdolls_mode", "0.0", "If enabled, ragdolls will be exaggerated upon death.", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_hXAxis = CreateConVar("sm_ragdolls_exaggerate_x", "100.0", "The 'x' factor to be applied on exaggerated ragdolls.", FCVAR_NONE);

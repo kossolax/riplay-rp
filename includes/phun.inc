@@ -67,7 +67,7 @@
 //
 #if defined _tsxrp_included_
 #else
-int GetClientTarget(int client) {
+stock int GetClientTarget(int client) {
 	float vecStart[3], vecAngles[3];
 	GetClientEyePosition(client, vecStart);
 	GetClientEyeAngles(client, vecAngles);
@@ -583,7 +583,7 @@ stock void DealDamage(victim, damage, attacker=0, dmg_type=DMG_GENERIC, String:w
 	return;
 }
 public bool ____TraceEntityFilterPlayers(int entity, int contentsMask, any data ) {
-	return entity > GetMaxClients() && entity != data;
+	return entity > MaxClients && entity != data;
 }
 stock void TE_SetupBSPDecal(const float vecOrigin[3], int entity, int index) {
 	

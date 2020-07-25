@@ -20,7 +20,7 @@
 #include <roleplay.inc>	// https://www.ts-x.eu
 
 bool g_dataloaded[MAXPLAYERS];
-int g_iStat_LastSave[MAXPLAYERS][i_uStat_nosavemax];
+int g_iStat_LastSave[MAXPLAYERS][view_as<int>(i_uStat_nosavemax)];
 int_stat_data g_Sassoc[] = { // Fait le lien entre une stat et sa valeur sauvegardée
 	i_nostat, // Pas une stat à save
 	i_nostat,

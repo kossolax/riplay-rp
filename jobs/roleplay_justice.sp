@@ -85,7 +85,7 @@ float g_flCondamnation[6] = {0.2, 0.4, 0.6, 0.8, 1.0, 1.5};
 float g_flCoords[3][2][3];
 
 int g_iArticles[3][ sizeof(g_szArticles) ];
-int g_iTribunalData[3][td_Max];
+int g_iTribunalData[3][view_as<int>(td_Max)];
 char g_szJugementDATA[65][3][32];
 bool g_bClientDisconnected[65];
 

@@ -26,19 +26,19 @@ enum craft_type {
 	craft_type_max
 }
 enum craft_book {
-	Float:book_xp,
-	Float:book_sleep,
-	Float:book_focus,
-	Float:book_speed,
-	Float:book_steal,
-	Float:book_luck,
+	book_xp,
+	book_sleep,
+	book_focus,
+	book_speed,
+	book_steal,
+	book_luck,
 	book_max
 }
 
 StringMap g_hReceipe;
 bool g_bCanCraft[65][MAX_ITEMS];
 bool g_bInCraft[65];
-float g_flClientBook[65][book_max];
+float g_flClientBook[65][view_as<int>(book_max)];
 
 
 
@@ -147,7 +147,7 @@ public void SQL_LoadReceipe(Handle owner, Handle hQuery, const char[] error, any
 	}
 	g_hReceipe = new StringMap();
 	
-	int data[craft_type_max];
+	int[] data = new int[craft_type_max];
 	char itemID[12];
 	ArrayList magic;
 	
@@ -158,10 +158,10 @@ public void SQL_LoadReceipe(Handle owner, Handle hQuery, const char[] error, any
 		data[craft_rate] = SQL_FetchInt(hQuery, 3);
 		
 		if( !g_hReceipe.GetValue(itemID, magic) ) {
-			magic = new ArrayList(sizeof(data), 0);
+			magic = new ArrayList(craft_type_max, 0);
 			g_hReceipe.SetValue(itemID, magic);
 		}
-		magic.PushArray(data, sizeof(data));
+		magic.PushArray(data, craft_type_max);
 	}
 	return;
 }
@@ -269,7 +269,8 @@ int getNumberOfCraftInJob(int client, int jobID) {
 }
 void displayBuildMenu(int client, int jobID, int itemID) {
 	
-	int clientItem[MAX_ITEMS], data[craft_type_max];
+	int clientItem[MAX_ITEMS];
+	int[] data = new int[craft_type_max];
 	for(int i = 0; i < MAX_ITEMS; i++)
 		clientItem[i] = rp_GetClientItem(client, i);
 	
@@ -420,7 +421,7 @@ void displayLearngMenu(char[] type, int client, int jobID, int itemID) {
 	ArrayList magic;
 	Handle menu = CreateMenu(eventArtisanMenu);
 	int count = rp_GetClientInt(client, i_ArtisanPoints);
-	int data[craft_type_max];
+	int[] data = new int[craft_type_max];
 	bool can, skip = StrEqual(type, "learn") ? false : true;
 	if( !skip && count == 0 ) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez aucun point d'apprentissage. Pour en avoir vous pouvez gagner un niveau d'artisanat ou acheter et lire un livre de sagesse.");
@@ -627,7 +628,7 @@ public Action stopBuilding(Handle timer, Handle dp) {
 	}
 	
 	ArrayList magic;
-	int data[craft_type_max];
+	int[] data = new int[craft_type_max];
 	char tmp[64];
 	Format(tmp, sizeof(tmp), "%d", itemID);
 	
@@ -755,7 +756,7 @@ float getDuration(int client, int itemID) {
 	if( rp_GetItemInt(itemID, item_type_job_id) == 91 )
 		return -1.0;
 	char tmp[12];
-	int data[craft_type_max];
+	int[] data = new int[craft_type_max];
 	Format(tmp, sizeof(tmp), "%d", itemID);
 	
 	ArrayList magic;

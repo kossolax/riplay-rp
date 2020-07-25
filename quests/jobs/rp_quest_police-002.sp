@@ -118,7 +118,7 @@ public void Q1_Frame(int objectiveID, int client) {
 }
 public void Q1_Abort(int objectiveID, int client) {
 	if(g_iTickXp[client] > 0){
-		int xp = RoundToFloor( g_iTickXp[client] * ( (24*60) / 1500 ) );
+		int xp = RoundToFloor( g_iTickXp[client] * ( (24.0*60.0) / 1500.0 ) );
 		rp_ClientXPIncrement(client, xp);
 	}
 	PrintHintText(client, "Quête: %s\nLa quête est terminée.", QUEST_NAME);

@@ -25,7 +25,7 @@
 enum flag_data { data_group, data_skin, data_red, data_green, data_blue, data_time, data_owner, data_lastOwner, flag_data_max };
 int g_iClientFlag[65];
 float g_fLastDrop[65], g_flClientLastScore[65];
-int g_iFlagData[MAX_ENTITIES+1][flag_data_max];
+int g_iFlagData[MAX_ENTITIES+1][view_as<int>(flag_data_max)];
 // -----------------------------------------------------------------------------------------------------------------
 Handle g_hCapturable = INVALID_HANDLE;
 Handle g_hGodTimer[65], g_hKillTimer[65];
@@ -85,7 +85,7 @@ char g_szSoundList[soundList][] = {
 	"DeadlyDesire/announce/Dominating.mp3",
 	"DeadlyDesire/announce/Godlike.mp3"
 };
-int g_CyclAnnouncer[MAX_ANNOUNCES][announcerData], g_CyclAnnouncer_start, g_CyclAnnouncer_end;
+int g_CyclAnnouncer[MAX_ANNOUNCES][view_as<int>(announcerData)], g_CyclAnnouncer_start, g_CyclAnnouncer_end;
 int g_iKillingSpree[65], g_iKilling[65];
 bool g_bStopSound[65];
 bool g_bFirstBlood, g_b5MinutesLeft, g_b1MinuteLeft;
@@ -576,7 +576,7 @@ void CAPTURE_Reward(int totalPoints) {
 		LogToGame("[CAPTURE] %s - %d", optionsBuff[1], g_iCapture_POINT[i]);
 	}
 	
-	for(int client=1; client<=GetMaxClients(); client++) {
+	for(int client=1; client<=MaxClients; client++) {
 		if( !IsValidClient(client) || rp_GetClientGroupID(client) == 0 )
 			continue;
 		
@@ -585,8 +585,8 @@ void CAPTURE_Reward(int totalPoints) {
 		int bonus = RoundToCeil(g_iCapture_POINT[gID] / 200.0);
 		
 		GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
-		int array[gdm_max];
-		g_hGlobalDamage.GetArray(szSteamID, array, sizeof(array));
+		int[] array = new int[gdm_max];
+		g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
 		
 		if( gID == rp_GetCaptureInt(cap_bunker) ) {
 			amount = 10;
@@ -1205,11 +1205,11 @@ void GDM_Init(int client) {
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	GetClientName(client, tmp, sizeof(tmp));
 	
-	int array[gdm_max];
+	int[] array = new int[gdm_max];
 	
-	if( !g_hGlobalDamage.GetArray(szSteamID, array, sizeof(array)) ) {
+	if( !g_hGlobalDamage.GetArray(szSteamID, array, gdm_max) ) {
 		array[gdm_elo] = 1500;
-		g_hGlobalDamage.SetArray(szSteamID, array, sizeof(array));
+		g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
 	}
 	
 	g_hGlobalSteamID.SetString(szSteamID, tmp, true);
@@ -1218,60 +1218,63 @@ void GDM_RegisterHit(int client, int damage=0, int hitbox=0) {
 	char szSteamID[32];
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	
-	int array[gdm_max];
-	g_hGlobalDamage.GetArray(szSteamID, array, sizeof(array));
+	int[] array = new int[gdm_max];
+	g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
 	array[gdm_touch]++;
 	array[gdm_damage] += damage;
 	array[gdm_hitbox] += (hitbox == 1 ? 1:0);
 	
-	g_hGlobalDamage.SetArray(szSteamID, array, sizeof(array));
+	g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
 }
 void GDM_RegisterFlag(int client) {
 	char szSteamID[32];
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	
-	int array[gdm_max];
-	g_hGlobalDamage.GetArray(szSteamID, array, sizeof(array));
+	int[] array = new int[gdm_max];
+	g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
 	array[gdm_flag]++;
-	g_hGlobalDamage.SetArray(szSteamID, array, sizeof(array));
+	g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
 }
 void GDM_RegisterKill(int client) {
 	char szSteamID[32];
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	
-	int array[gdm_max];
-	g_hGlobalDamage.GetArray(szSteamID, array, sizeof(array));
+	int[] array = new int[gdm_max];
+	g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
 	array[gdm_kill]++;
-	g_hGlobalDamage.SetArray(szSteamID, array, sizeof(array));
+	g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
 }
 int GDM_GetFlagCount(int client) {
 	char szSteamID[32];
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	
-	int array[gdm_max];
-	g_hGlobalDamage.GetArray(szSteamID, array, sizeof(array));
+	int[] array = new int[gdm_max];
+	g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
 	return array[gdm_flag];
 }
 void GDM_RegisterShoot(int client) {
 	char szSteamID[32];
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	
-	int array[gdm_max];
-	g_hGlobalDamage.GetArray(szSteamID, array, sizeof(array));
+	int[] array = new int[gdm_max];
+	g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
 	array[gdm_shot]++;
-	g_hGlobalDamage.SetArray(szSteamID, array, sizeof(array));
+	g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
 }
-int GDM_ELOKill(int client, int target, bool flag = false) {
+stock int GDM_ELOKill(int client, int target, bool flag = false) {
 	
 	char szSteamID[32], szSteamID2[32];
-	int attacker[gdm_max], victim[gdm_max], cgID, tgID, cElo, tElo;
+	int[] attacker = new int[gdm_max];
+	int[] victim = new int[gdm_max];
+	int cgID, tgID, cElo, tElo;
+	
 	float cDelta, tDelta;
 	
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	GetClientAuthId(target, AUTH_TYPE, szSteamID2, sizeof(szSteamID2));
 	
-	g_hGlobalDamage.GetArray(szSteamID, attacker, sizeof(attacker));
-	g_hGlobalDamage.GetArray(szSteamID2, victim, sizeof(victim));
+	g_hGlobalDamage.GetArray(szSteamID, attacker, gdm_max);
+	g_hGlobalDamage.GetArray(szSteamID2, victim, gdm_max);
 	
 	cDelta = 1.0/((Pow(10.0, - (attacker[gdm_elo] - victim[gdm_elo]) / 400.0)) + 1.0);
 	tDelta = 1.0/((Pow(10.0, - (victim[gdm_elo] - attacker[gdm_elo]) / 400.0)) + 1.0);
@@ -1292,8 +1295,8 @@ int GDM_ELOKill(int client, int target, bool flag = false) {
 	attacker[gdm_elo] = cElo;
 	victim[gdm_elo] = tElo;
 	
-	g_hGlobalDamage.SetArray(szSteamID, attacker, sizeof(attacker));
-	g_hGlobalDamage.SetArray(szSteamID2, victim, sizeof(victim));
+	g_hGlobalDamage.SetArray(szSteamID, attacker, gdm_max);
+	g_hGlobalDamage.SetArray(szSteamID2, victim, gdm_max);
 	
 	
 	rp_ClientXPIncrement(client, tmp);
@@ -1303,11 +1306,12 @@ int GDM_ELOKill(int client, int target, bool flag = false) {
 int GDM_ELOSuicide(int client) {
 	
 	char szSteamID[32];
-	int attacker[gdm_max], cgID, cElo;
+	int[] attacker = new int[gdm_max];
+	int cgID, cElo;
 	float cDelta;
 	
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
-	g_hGlobalDamage.GetArray(szSteamID, attacker, sizeof(attacker));
+	g_hGlobalDamage.GetArray(szSteamID, attacker, gdm_max);
 	
 	cDelta = 1.0/((Pow(10.0, - (1500 - attacker[gdm_elo]) / 400.0)) + 1.0);
 	cElo = RoundFloat(float(attacker[gdm_elo]) + ELO_FACTEUR_K * (0.0 - cDelta));
@@ -1320,13 +1324,14 @@ int GDM_ELOSuicide(int client) {
 	}
 	
 	attacker[gdm_elo] = cElo;
-	g_hGlobalDamage.SetArray(szSteamID, attacker, sizeof(attacker));
+	g_hGlobalDamage.SetArray(szSteamID, attacker, gdm_max);
 	
 	return tmp;
 }
 void GDM_Resume() {
 	StringMapSnapshot KeyList = g_hGlobalDamage.Snapshot();
-	int array[gdm_max], delta, nbrParticipant = KeyList.Length;
+	int[] array = new int[gdm_max];
+	int delta, nbrParticipant = KeyList.Length;
 	char szSteamID[32], tmp[64], key[64], name[64];
 	
 	if( g_hStatsMenu != INVALID_HANDLE )
@@ -1343,7 +1348,7 @@ void GDM_Resume() {
 	
 	for (int i = 0; i < nbrParticipant; i++) {
 		KeyList.GetKey(i, szSteamID, sizeof(szSteamID));
-		g_hGlobalDamage.GetArray(szSteamID, array, sizeof(array));
+		g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
 		g_hGlobalSteamID.GetString(szSteamID, name, sizeof(name));
 		
 		if( array[gdm_touch] != 0 && array[gdm_shot] != 0  ) {

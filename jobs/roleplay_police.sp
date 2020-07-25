@@ -247,7 +247,7 @@ public Action Cmd_Verif(int client) {
 	Format(szTitle, sizeof(szTitle), "%s Permis vente: %s\n", szTitle, rp_GetClientBool(target, b_LicenseSell) ? "OUI":"NON");
 
 	int wepIdx;
-	char classname[32], msg[128];
+	char classname[32];
 	bool amendeLicense1, amendeLicense2 = false;
 
 	char lastWeapon[2][256];
@@ -327,7 +327,7 @@ public Action Cmd_Verif(int client) {
 }
 
 public int MenuHandler_Verif(Handle menu, MenuAction action, int client, int param2) {
-	char options[64], data[2][32], szQuery[1024];
+	char options[64], data[2][32];
 	
 	if (action == MenuAction_Select) {
 		GetMenuItem(menu, param2, options, 63);
@@ -1765,7 +1765,7 @@ void Cmd_BuyWeapon(int client, bool free) {
 	DataPackPos max = rp_WeaponMenu_GetMax(g_hBuyMenu);
 	DataPackPos position = rp_WeaponMenu_GetPosition(g_hBuyMenu);
 	char name[65], tmp[8], tmp2[129];
-	int data[BM_Max];
+	int[] data = new int[BM_Max];
 	
 	if (position >= max) {
 		CPrintToChat(client, "" ...MOD_TAG... " Désolé, aucune arme n'est disponible pour le moment.");
@@ -1820,7 +1820,7 @@ public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int 
 			ExplodeString(szMenu, " ", buffer, sizeof(buffer), sizeof(buffer[]));
 			
 			char name[65];
-			int data[BM_Max];
+			int[] data = new int[BM_Max];
 			DataPackPos position = view_as<DataPackPos>(StringToInt(buffer[0]));
 			rp_WeaponMenu_Get(g_hBuyMenu, position, name, data);
 			

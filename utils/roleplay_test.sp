@@ -152,7 +152,7 @@ bool L4D2_CreateInstructorHint(const char[] name, int target = 0, const char[] c
 	
 	return true;
 }
-bool L4D2_StopInstructorHint(const char[] name) {
+stock bool L4D2_StopInstructorHint(const char[] name) {
 	Handle event = CreateEvent("instructor_server_hint_stop", true);
 	if (event == INVALID_HANDLE) {
 		return false;
@@ -345,9 +345,9 @@ public Action:Cmd_SetMask(client, args) {
 }
 
 public Action Hook(const char[] te_name, const int[] Players, int numClients, float delay) {
-	new data = TE_ReadNum("m_iEffectName");
-	new num = TE_ReadNum("m_nHitBox");
-	new ent = TE_ReadNum("entindex");
+	int data = TE_ReadNum("m_iEffectName");
+	//int num = TE_ReadNum("m_nHitBox");
+	int ent = TE_ReadNum("entindex");
 
 	if( data == 5 && (IsValidClient(ent) || delay < 0.0) ) {
 		return Plugin_Continue;

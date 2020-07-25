@@ -442,7 +442,7 @@ public Action Command_getSkin(int Client,int args) {
 	GetEntPropString(Ent, Prop_Data, "m_ModelName", modelname, 128);
 	GetEntPropString(Ent, Prop_Data, "m_iName", i_targetname, sizeof(i_targetname));
 	
-	PrintToChat(Client, "[SKIN] %s [CLASS] %s [ID] %d [PERM-ID] %d [NAME] %s",modelname, name, Ent, (Ent-GetMaxClients()), i_targetname);         
+	PrintToChat(Client, "[SKIN] %s [CLASS] %s [ID] %d [PERM-ID] %d [NAME] %s",modelname, name, Ent, (Ent-MaxClients), i_targetname);         
 	return Plugin_Handled;
 }
 public Action Command_remove(int client,int args ) {
@@ -491,7 +491,7 @@ public Action Command_remove(int client,int args ) {
 	char szSteamID[64];
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	
-	LogToGame("[REMOVED] %L [SKIN] %s [CLASS] %s [ID] %d [PERM-ID] %d [NAME] %s", client, modelname, name, Ent, (Ent-GetMaxClients()), i_targetname);
+	LogToGame("[REMOVED] %L [SKIN] %s [CLASS] %s [ID] %d [PERM-ID] %d [NAME] %s", client, modelname, name, Ent, (Ent-MaxClients), i_targetname);
 	return Plugin_Handled;
 }
 public Action Command_rotate(int client,int args) {
@@ -1125,7 +1125,7 @@ void doSnapping(int ent, float fMoveTo[3]) {
 	
 	TeleportEntity(ent, fMoveTo, NULL_VECTOR, NULL_VECTOR);
 }
-void SetupGlow(int entity, int r, int g, int b, int a) {
+stock void SetupGlow(int entity, int r, int g, int b, int a) {
 	static int offset;
 
 	// Get sendprop offset for prop_dynamic_override
@@ -1497,7 +1497,7 @@ public Action Block_JUMP(int index, int client) {
 	}
 }
 public void OnGameFrame() {
-	for(int client=1; client<=GetMaxClients(); client++) {
+	for(int client=1; client<=MaxClients; client++) {
 		if( !IsValidClient(client) )
 			continue;
 		

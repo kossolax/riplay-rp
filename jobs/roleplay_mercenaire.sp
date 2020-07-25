@@ -45,8 +45,8 @@ enum competance {
 };
 
 bool g_bBlockDrop[65];
-int g_iKillerPoint[65][competance_max];
-int g_iKillerPoint_stored[65][competance_max];
+int g_iKillerPoint[65][view_as<int>(competance_max)];
+int g_iKillerPoint_stored[65][view_as<int>(competance_max)];
 int g_bShouldOpen[65];
 Handle g_vCapture = INVALID_HANDLE;
 Handle g_vConfigTueur = INVALID_HANDLE;

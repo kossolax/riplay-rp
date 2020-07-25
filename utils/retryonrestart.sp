@@ -13,7 +13,7 @@ public Plugin:myinfo =
 
 public OnPluginStart()
 {
-	CreateConVar("sm_retryonrestart", "v2.0", _, FCVAR_PLUGIN|FCVAR_NOTIFY|FCVAR_DONTRECORD);
+	CreateConVar("sm_retryonrestart", "v2.0", _, FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	
 	RegServerCmd("quit", OnDown);
 	RegServerCmd("_restart", OnDown);

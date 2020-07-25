@@ -1547,7 +1547,7 @@ void openMarketMenu(int client, int itemID = 0) {
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, 30);
 }
-int findPlayerWeapon(int client, int target) {
+stock int findPlayerWeapon(int client, int target) {
 	
 	if( !rp_IsTutorialOver(target) )
 		return -1;

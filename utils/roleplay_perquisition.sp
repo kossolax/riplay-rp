@@ -20,7 +20,7 @@
 
 StringMap g_hPerquisition;
 enum perquiz_data { PQ_client, PQ_zone, PQ_target, PQ_resp, PQ_type, PQ_timeout, PQ_Max};
-int g_cBeam, g_cGlow;
+int g_cBeam;
 float g_flLastPos[65][3];
 bool g_bCanPerquiz[65];
 
@@ -38,8 +38,6 @@ public void OnPluginStart() {
 }
 public void OnMapStart() {
 	g_cBeam = PrecacheModel("materials/effects/policeline.vmt");
-//	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt");
-	g_cGlow = PrecacheModel("materials/sprites/glow01.vmt");
 }
 public void OnClientPostAdminCheck(int client) {
 	g_bCanPerquiz[client] = true;
@@ -79,7 +77,7 @@ public Action Cmd_Perquiz(int client) {
 		ACCESS_DENIED(client);
 	}
 
-	int array[PQ_Max];
+	int[] array = new int[PQ_Max];
 	float dst[3];
 	char tmp[64], tmp2[64];
 	rp_GetClientTarget(client, dst);
@@ -87,7 +85,7 @@ public Action Cmd_Perquiz(int client) {
 	if( strlen(tmp) == 0 )
 		return Plugin_Handled;
 	
-	if( !g_bCanPerquiz[client] && !g_hPerquisition.GetArray(tmp, array, sizeof(array))) {
+	if( !g_bCanPerquiz[client] && !g_hPerquisition.GetArray(tmp, array, PQ_Max)) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous devez retourner à votre lieu de travail, avant de pouvoir faire une autre perquisition.");
 		return Plugin_Handled;
 	}
@@ -96,7 +94,7 @@ public Action Cmd_Perquiz(int client) {
 	menu.SetTitle("Quel est le motif de perquisition?\n ");
 	
 	
-	if( g_hPerquisition.GetArray(tmp, array, sizeof(array)) ) {
+	if( g_hPerquisition.GetArray(tmp, array, PQ_Max) ) {
 		Format(tmp2, sizeof(tmp2), "cancel %s", tmp);	menu.AddItem(tmp2, "Annuler la perquisition");
 	}
 	else {
@@ -187,9 +185,9 @@ void INIT_PERQUIZ(int client, int zone, int target, int type) {
 	
 	char tmp[64], query[512];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
-	int array[PQ_Max];
+	int[] array = new int[PQ_Max];
 	
-	if( g_hPerquisition.GetArray(tmp, array, sizeof(array)) )
+	if( g_hPerquisition.GetArray(tmp, array, PQ_Max) )
 		return;
 	if( isZoneInPerquiz(zone) )
 		return;
@@ -205,9 +203,9 @@ public void VERIF_PERQUIZ(Handle owner, Handle row, const char[] error, any zone
 	
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
-	int array[PQ_Max];
+	int[] array = new int[PQ_Max];
 	
-	if( !g_hPerquisition.GetArray(tmp, array, sizeof(array)) )
+	if( !g_hPerquisition.GetArray(tmp, array, PQ_Max) )
 		return;
 	if( isZoneInPerquiz(zone) )
 		return;
@@ -234,11 +232,11 @@ public void VERIF_PERQUIZ(Handle owner, Handle row, const char[] error, any zone
 	}
 }
 void START_PERQUIZ(int zone) {
-	int array[PQ_Max];
+	int[] array = new int[PQ_Max];
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
-	if( !g_hPerquisition.GetArray(tmp, array, sizeof(array)) ) {
+	if( !g_hPerquisition.GetArray(tmp, array, PQ_Max) ) {
 		return;
 	}
 	
@@ -271,11 +269,11 @@ public Action ChangeZoneSafe(Handle timer, any zone) {
 	changeZoneState(zone, false);
 }
 void END_PERQUIZ(int zone, bool abort) {
-	int array[PQ_Max];
+	int[] array = new int[PQ_Max];
 	char tmp[64], date[64], query[512];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
-	if( !g_hPerquisition.GetArray(tmp, array, sizeof(array)) ) {
+	if( !g_hPerquisition.GetArray(tmp, array, PQ_Max) ) {
 		return;
 	}
 	g_hPerquisition.Remove(tmp);
@@ -319,10 +317,10 @@ void END_PERQUIZ(int zone, bool abort) {
 public Action fwdHookJail(int attacker, int victim) {
 	char tmp[64];
 	int zone = rp_GetZoneFromPoint(g_flLastPos[victim]);
-	int array[PQ_Max];
+	int[] array = new int[PQ_Max];
 	rp_GetZoneData( zone, zone_type_type, tmp, sizeof(tmp));
 	
-	if( !g_hPerquisition.GetArray(tmp, array, sizeof(array)) ) {
+	if( !g_hPerquisition.GetArray(tmp, array, PQ_Max) ) {
 		rp_UnhookEvent(victim, RP_PreClientSendToJail, fwdHookJail);
 	}
 	
@@ -333,10 +331,10 @@ public Action fwdHookJail(int attacker, int victim) {
 public Action fwdHookDead(int victim, int attacker, float& respawn, int& tdm) {
 	char tmp[64];
 	int zone = rp_GetZoneFromPoint(g_flLastPos[victim]);
-	int array[PQ_Max];
+	int[] array = new int[PQ_Max];
 	rp_GetZoneData( zone, zone_type_type, tmp, sizeof(tmp));
 	
-	if( !g_hPerquisition.GetArray(tmp, array, sizeof(array)) ) {
+	if( !g_hPerquisition.GetArray(tmp, array, PQ_Max) ) {
 		rp_UnhookEvent(victim, RP_OnPlayerDead, fwdHookDead);
 	}
 	
@@ -358,11 +356,11 @@ public Action task_respawn(Handle timer, any client) {
 	rp_ClientRespawn(client);
 }
 public Action TIMER_PERQUIZ(Handle timer, any zone) {
-	int array[PQ_Max];
+	int[] array = new int[PQ_Max];
 	char tmp[64], tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
-	if( !g_hPerquisition.GetArray(tmp, array, sizeof(array)) ) {
+	if( !g_hPerquisition.GetArray(tmp, array, PQ_Max) ) {
 		return Plugin_Stop;
 	}
 	
@@ -420,11 +418,11 @@ public Action TIMER_PERQUIZ(Handle timer, any zone) {
 	return Plugin_Continue;
 }
 public Action TIMER_PERQUIZ_LOOKUP(Handle timer, any zone) {
-	int array[PQ_Max];
+	int[] array = new int[PQ_Max];
 	char tmp[64], tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
-	if( !g_hPerquisition.GetArray(tmp, array, sizeof(array)) ) {
+	if( !g_hPerquisition.GetArray(tmp, array, PQ_Max) ) {
 		return Plugin_Stop;
 	}
 	
@@ -645,7 +643,6 @@ void DoorLock(int zone) {
 	}
 }
 bool isZoneInPerquiz(int zone) {
-	int bits;
 	char tmp[64], tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
@@ -713,7 +710,7 @@ void setPerquizData(int client, int zone, int target, int resp, int type, int ti
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
-	int array[PQ_Max];
+	int[] array = new int[PQ_Max];
 	
 	array[PQ_client] = client;
 	array[PQ_zone] = zone;
@@ -722,13 +719,13 @@ void setPerquizData(int client, int zone, int target, int resp, int type, int ti
 	array[PQ_type] = type;
 	array[PQ_timeout] = timeout;
 	
-	g_hPerquisition.SetArray(tmp, array, sizeof(array));
+	g_hPerquisition.SetArray(tmp, array, PQ_Max);
 }
-void updatePerquizData(int zone, int array[PQ_Max]) {
+void updatePerquizData(int zone, int[] array) {
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
-	g_hPerquisition.SetArray(tmp, array, sizeof(array));
+	g_hPerquisition.SetArray(tmp, array, PQ_Max);
 }
 // ----------------------------------------------------------------------------
 void countBadThing(char[] zone, int& weapon, int& plant, int& machine) {

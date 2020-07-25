@@ -1236,7 +1236,7 @@ void deleteBuyMenu(DataPackPos pos) {
 	DataPack clone = new DataPack();
 	clone.WriteCell(0);
 	
-	int data[IM_Max];
+	int[] data = new int[IM_Max];
 	 
 	while( position < max ) {
 		
@@ -1258,7 +1258,7 @@ void deleteBuyMenu(DataPackPos pos) {
 	delete g_hBuyMenu;
 	g_hBuyMenu = clone;
 }
-void getBuyMenu(DataPackPos pos, int data[IM_Max]) {
+void getBuyMenu(DataPackPos pos, int[] data) {
 	g_hBuyMenu.Position = pos;
 	
 	for (int i = 0; i < view_as<int>(IM_Max); i++) {
@@ -1267,7 +1267,7 @@ void getBuyMenu(DataPackPos pos, int data[IM_Max]) {
 }
 void addBuyMenu(int client, int target, int itemID) {
 	
-	int data[IM_Max];
+	int[] data = new int[IM_Max];
 	
 	data[IM_Owner] = client;
 	data[IM_StealFrom] = target;
@@ -1289,7 +1289,7 @@ void Cmd_BuyItemMenu(int client, bool free) {
 	DataPackPos max = g_hBuyMenu.ReadCell();
 	DataPackPos position = g_hBuyMenu.Position;
 	char tmp[8], tmp2[129];
-	int data[IM_Max];
+	int[] data = new int[IM_Max];
 	
 	if( position >= max ) {
 		CPrintToChat(client, "" ...MOD_TAG... " Désolé il n'y a pas d'objet disponible pour le moment.");
@@ -1324,7 +1324,7 @@ public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int 
 		if( GetMenuItem(p_hMenu, p_iParam2, szMenu, sizeof(szMenu)) ) {
 			
 			ExplodeString(szMenu, " ", buffer, sizeof(buffer), sizeof(buffer[]));
-			int data[IM_Max];
+			int[] data = new int[IM_Max];
 			DataPackPos position = view_as<DataPackPos>(StringToInt(buffer[0]));
 			getBuyMenu(position, data);
 			

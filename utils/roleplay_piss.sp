@@ -73,13 +73,13 @@ public OnGameFrame()
 					
 					if(aang[1] > 0)
 					{
-						ppos[0]+=FloatSub(10.0, FloatMul(FloatDiv(10.0, 90.0), aang[1]));
-						ppos[1]+=FloatSub(10.0, FloatMul(FloatDiv(10.0, 90.0), FloatAbs(FloatSub(aang[1], 90.0))));
+						ppos[0] += 10.0 - ((10.0 / 90.0) * aang[1]);
+						ppos[1] += 10.0 - ((10.0 / 90.0) * FloatAbs(aang[1]-90.0));
 					}
 					else
 					{
-						ppos[0]+=FloatSub(10.0, FloatMul(FloatDiv(10.0, 90.0), FloatAbs(aang[1])));
-						ppos[1]-=FloatSub(10.0, FloatMul(FloatDiv(10.0, 90.0), FloatAbs(FloatSub(FloatAbs(aang[1]), 90.0))));
+						ppos[0] += 10.0 - ((10.0/90.0) * FloatAbs(aang[1]));
+						ppos[1] -= 10.0 - ((10.0/90.0) * FloatAbs(FloatAbs(aang[1]) - 90.0));
 					}
 					
 					

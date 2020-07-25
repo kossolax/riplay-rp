@@ -32,7 +32,6 @@ new Float:g_flLastDamage[2049];
 new g_sprite = -1;
 new g_sprite2 = -1;
 new g_cLaser = -1;
-new g_MaxClients = 64;
 
 new g_iClientCubeID[65];
 bool g_iClientBeam[65];
@@ -60,9 +59,7 @@ public OnPluginStart() {
 	RegAdminCmd("sm_laser_cube_size", Cmd_LaserCube_size, ADMFLAG_BAN);
 	RegAdminCmd("sm_laser_beacon", Cmd_LaserBeacon, ADMFLAG_BAN);
 	
-	g_MaxClients = GetMaxClients();
-	
-	for(new i=1;i<=g_MaxClients; i++) {
+	for(new i=1;i<=MaxClients; i++) {
 		if( !IsValidClient(i) )
 			continue;
 		

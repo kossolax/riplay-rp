@@ -418,7 +418,7 @@ void tracePath(int client, float src[3], float dst[3], int color[4], float durat
 	src = dst;
 }	
 // ----------------------------------------- UTILS
-void Math_GetRandomVector(int[] vec, int size) {
+stock void Math_GetRandomVector(int[] vec, int size) {
 	for (int i = 0; i < size; i++) {
 		vec[i] = Math_GetRandomInt(0, 255);
 	}

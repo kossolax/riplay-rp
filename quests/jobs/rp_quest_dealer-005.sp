@@ -28,8 +28,6 @@
 #define	QUEST_TYPE		quest_daily
 #define	QUEST_JOBID		81
 
-#define MAX_ZONES		310
-
 public Plugin myinfo = {
 	name = "Quête: "...QUEST_NAME, author = "KoSSoLaX",
 	description = "RolePlay - Quête Mafia: "...QUEST_NAME,
