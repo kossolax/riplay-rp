@@ -1,21 +1,22 @@
 #pragma semicolon 1
 
 #include <sourcemod>
-#include <sdktools>
 #include <sdkhooks>
-
-#include <cstrike>
-#include <smlib>      	// https://github.com/bcserv/smlib
+#include <colors_csgo>	// https://forums.alliedmods.net/showthread.php?p=2205447#post2205447
+#include <smlib>		// https://github.com/bcserv/smlib
 #include <emitsoundany> // https://forums.alliedmods.net/showthread.php?t=237045
+
+#pragma newdecls required
+#include <roleplay.inc>	// https://www.ts-x.eu
 
 #define FCT RoundFloat(GetTickedTime() * 5.0)
 
 bool g_bEntityManaged[2049] =  { false, ... };
 
 public void OnPluginStart() {
-	RegAdminCmd("sm_effect_id", Cmd_MyId, ADMFLAG_ROOT);
-	RegAdminCmd("sm_effect_ball", Cmd_Ball, ADMFLAG_ROOT);
-	RegAdminCmd("sm_effect_smoke", Cmd_Smoke, ADMFLAG_ROOT);
+	RegAdminCmd("sm_effect_id", Cmd_MyId, ADMFLAG_KICK);
+	RegAdminCmd("sm_effect_ball", Cmd_Ball, ADMFLAG_KICK);
+	RegAdminCmd("sm_effect_smoke", Cmd_Smoke, ADMFLAG_KICK);
 }
 public void OnMapStart() {
 	PrecacheModel("models/props/cs_office/projector.mdl");
@@ -92,7 +93,13 @@ public Action Cmd_Smoke(int client, int args) {
 	SDKHook(parent, SDKHook_VPhysicsUpdate, OnThink);
 	SetEntPropEnt(parent, Prop_Data, "m_hEffectEntity", ent);
 	
-	Entity_SetHealth(parent, 1, true);
+	
+	SetEntPropEnt(parent, Prop_Send, "m_hOwnerEntity", client);
+	SetEntProp(parent, Prop_Data, "m_takedamage", 2);
+	SetEntProp(parent, Prop_Data, "m_iHealth", 1000);
+	rp_SetBuildingData(parent, BD_started, GetTime());
+	rp_SetBuildingData(parent, BD_owner, client );
+	rp_SetBuildingData(parent, BD_FromBuild, 0);
 	
 	return Plugin_Handled;
 }
@@ -152,7 +159,6 @@ public Action Cmd_Ball(int client, int args) {
 	AcceptEntityInput(parent, "SetParent", node);
 	SetEntPropEnt(node, Prop_Data, "m_hEffectEntity", parent);
 	
-	Entity_SetHealth(node, 1, true);
 	SetEntityMoveType(node, MOVETYPE_NONE);
 	
 	g_bEntityManaged[node] = true;
@@ -209,6 +215,13 @@ public Action Cmd_Ball(int client, int args) {
 	
 	SetVariantString("!activator");
 	AcceptEntityInput(ent, "SetParent", node);
+	
+	SetEntPropEnt(node, Prop_Send, "m_hOwnerEntity", client);
+	SetEntProp(node, Prop_Data, "m_takedamage", 2);
+	SetEntProp(node, Prop_Data, "m_iHealth", 1000);
+	rp_SetBuildingData(node, BD_started, GetTime());
+	rp_SetBuildingData(node, BD_owner, client );
+	rp_SetBuildingData(node, BD_FromBuild, 0);
 	
 	return Plugin_Handled;
 }
@@ -286,10 +299,4 @@ public float OctavePerlin(int x, int frequency, int octaves, float persistence, 
 	}
 	
 	return total / maxValue;
-}
-
-public int GetCmdArgInt(int index) {
-	char arg[32];
-	GetCmdArg(index, arg, sizeof(arg));
-	return StringToInt(arg);
 }
