@@ -506,6 +506,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown) {
 		return Plugin_Continue;
 	
 	int ent = BuildingHealBox(client);
+	rp_SetBuildingData(ent, BD_FromBuild, 1);
 	
 	if( ent > 0 ) {
 		rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
@@ -578,6 +579,7 @@ int BuildingHealBox(int client) {
 	
 	rp_SetBuildingData(ent, BD_started, GetTime());
 	rp_SetBuildingData(ent, BD_owner, client );
+	rp_SetBuildingData(ent, BD_FromBuild, 0);
 	
 	CreateTimer(3.0, BuildingHealBox_post, ent);
 	return ent;

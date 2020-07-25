@@ -90,6 +90,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 		return Plugin_Continue;
 	
 	int ent = BuildingMicrowave(client);
+	rp_SetBuildingData(ent, BD_FromBuild, 1);
 	
 	if( ent > 0 )
 		rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
@@ -150,6 +151,7 @@ int BuildingMicrowave(int client) {
 	
 	rp_SetBuildingData(ent, BD_started, GetTime());
 	rp_SetBuildingData(ent, BD_owner, client );
+	rp_SetBuildingData(ent, BD_FromBuild, 0);
 	g_eMwAct[ent] = true;
 	CreateTimer(3.0, BuildingMicrowave_post, ent);
 	return ent;

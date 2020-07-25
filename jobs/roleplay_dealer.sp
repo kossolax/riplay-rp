@@ -10,7 +10,7 @@
  */
 #pragma semicolon 1
 
-#include <sourcemod>
+//#include <sourcemod>
 #include <sdkhooks>
 #include <cstrike>
 #include <colors_csgo>	// https://forums.alliedmods.net/showthread.php?p=2205447#post2205447

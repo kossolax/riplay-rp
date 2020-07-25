@@ -296,9 +296,6 @@ void AFK_Check(int client) {
 	}
 	if( !g_bUserData[client][b_IsAFK] ) {
 		g_iUserData[client][i_TimePlays]++;
-		if( !g_bUserData[client][b_Assurance] && g_iUserData[client][i_TimePlays] >= (60*60) && GetClientCount(true) >= 4 ) {
-			g_bUserData[client][b_Assurance] = true;
-		}
 	}
 	
 	if( g_bUserData[client][b_IsAFK] ) {

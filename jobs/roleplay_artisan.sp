@@ -214,6 +214,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown) {
 		return Plugin_Continue;
 	
 	int ent = BuidlingTABLE(client);
+	rp_SetBuildingData(ent, BD_FromBuild, 1);
 	
 	if( ent > 0 ) {
 		rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
@@ -891,6 +892,7 @@ int BuidlingTABLE(int client) {
 	
 	CreateTimer(3.0, BuildingTABLE_post, ent);
 	rp_SetBuildingData(ent, BD_owner, client);
+	rp_SetBuildingData(ent, BD_FromBuild, 0);
 	return ent;
 }
 public Action BuildingTABLE_post(Handle timer, any entity) {

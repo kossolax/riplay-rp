@@ -871,49 +871,52 @@ int GetAssurence(int client, bool forced = false) {
 		GetEdictClassname(i, tmp, 63);
 		if( rp_GetBuildingData(i, BD_owner) == client ) {
 			if( StrEqual(tmp, "rp_cashmachine") ) {
-				if( IsTech(client) )
-					amount += 10;
-				else
-					amount += 100;
+				if( !rp_GetBuildingData(i, BD_FromBuild) ) {
+					amount += 75;
+				}
 			}
 			else if( StrEqual(tmp, "rp_bigcashmachine") ) {
-				if( IsTech(client) )
-					amount += 525;
-				else
-					amount += 5250;
+				if( !rp_GetBuildingData(i, BD_FromBuild) ) {
+					amount += 4000;
+				}
 			}
 			else if( StrEqual(tmp, "rp_plant") ) {
-				if( IsDealer(client) )
-					amount += 100;
-				else
-					amount += 1000;
+				if( !rp_GetBuildingData(i, BD_FromBuild) ) {
+					int item_id = rp_GetBuildingData(i, BD_item_id);
+					if( item_id > 0 ) {
+						amount += (StringToInt(g_szItemList[item_id][item_type_prix]) * 3 / 4);
+					}
+				}
 			}
 			else if( StrEqual(tmp, "rp_kevlarbox") ) {
-				if( IsSexShop(client) )
-					amount += 200;
-				else
-					amount += 2000;
+				if( !rp_GetBuildingData(i, BD_FromBuild) ) {
+					amount += 1250;
+				}
 			}
 			else if( StrEqual(tmp, "rp_healbox") ) {
-				if( IsMedic(client) )
-					amount += 200;
-				else
-					amount += 2000;
+				if( !rp_GetBuildingData(i, BD_FromBuild) ) {
+					amount += 1250;
+				}
 			}
 			else if( StrEqual(tmp, "rp_microwave") ) {
-				if( IsMcDo(client) )
-					amount += 200;
-				else
-					amount += 2000;
+				if( !rp_GetBuildingData(i, BD_FromBuild) ) {
+					amount += 1250;
+				}
 			}
 			else if( StrEqual(tmp, "rp_table") ) {
-				if( IsArtisan(client) )
-					amount += 250;
-				else
-					amount += 2500;
+				if( !rp_GetBuildingData(i, BD_FromBuild) ) {
+					amount += 2000;
+				}
 			}
 			else if( StrEqual(tmp, "rp_bank") ) {
-				amount += 2500;
+				if( !rp_GetBuildingData(i, BD_FromBuild) ) {
+					amount += 2000;
+				}
+			}
+			else if( StrEqual(tmp, "rp_sign") ) {
+				if( !rp_GetBuildingData(i, BD_FromBuild) ) {
+					amount += 750;
+				}
 			}
 		}
 		else if( !hasCas && StrContains(tmp, "prop_vehicle_") == 0 && g_iVehicleData[i][car_owner] == client ) {
@@ -923,7 +926,7 @@ int GetAssurence(int client, bool forced = false) {
 	}
 	
 	if( g_bUserData[client][b_HasGrave] ) {
-		amount += 250;
+		amount += 200;
 	}
 	
 	char wepname[64];

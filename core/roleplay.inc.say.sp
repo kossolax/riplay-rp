@@ -451,7 +451,7 @@ public Action Command_Say(int client, int args) {
 		if( GetZoneBit( GetPlayerZone(client) ) & BITZONE_BLOCKSTEAL ) {
 			ACCESS_DENIED(client);
 		}
-		if( g_bUserData[client][b_MaySteal] == 0 || g_bUserData[client][i_LastVolCashFlowTime] > GetTime() ) {
+		if( g_bUserData[client][b_MaySteal] == 0 || g_iUserData[client][i_LastVolCashFlowTime] > GetTime() ) {
 			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas voler pour le moment.");
 			return Plugin_Handled;
 		}

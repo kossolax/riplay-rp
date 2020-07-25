@@ -491,6 +491,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown) {
 		return Plugin_Continue;
 	
 	int ent = BuidlingATM(client);
+	rp_SetBuildingData(ent, BD_FromBuild, 1);
 	
 	if( ent > 0 ) {
 		rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
@@ -572,6 +573,7 @@ int BuidlingATM(int client) {
 	
 	CreateTimer(3.0, BuildingATM_post, ent);
 	rp_SetBuildingData(ent, BD_owner, client);
+	rp_SetBuildingData(ent, BD_FromBuild, 0);
 	return ent;
 }
 
@@ -829,6 +831,7 @@ int BuidlingSIGN(int client) {
 	
 	CreateTimer(3.0, BuildingSIGN_post, ent);
 	rp_SetBuildingData(ent, BD_owner, client);
+	rp_SetBuildingData(ent, BD_FromBuild, 0);
 	return ent;
 }
 public Action fwdFrozen(int client, float& speed, float& gravity) {

@@ -119,8 +119,6 @@ public Action Cmd_ItemBioKev(int args) {
 	if( rp_GetClientBool(client, ch_Kevlar) ) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà une régénération bionique.");
 		ITEM_CANCEL(client, item_id);
-		
-		LogToGame("[CHEATING] %L a tenté de cumuler les regens bioniques.", client);
 		return Plugin_Handled;
 	}
 	
@@ -376,6 +374,8 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	}
 	
 	ent = (job == 221 || job == 222) ? BuildingBigCashMachine(client) : BuildingCashMachine(client, false);
+	rp_SetBuildingData(ent, BD_FromBuild, 1);
+	
 	if( ent > 0 ) {
 		rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
 		switch(job){
@@ -471,6 +471,7 @@ int BuildingCashMachine(int client, bool force=false) {
 	
 	rp_SetBuildingData(ent, BD_started, GetTime());
 	rp_SetBuildingData(ent, BD_owner, client );
+	rp_SetBuildingData(ent, BD_FromBuild, 0);
 	
 	CreateTimer(3.0, BuildingCashMachine_post, ent);
 
@@ -726,6 +727,7 @@ int BuildingBigCashMachine(int client) {
 	
 	rp_SetBuildingData(ent, BD_started, GetTime());
 	rp_SetBuildingData(ent, BD_owner, client );
+	rp_SetBuildingData(ent, BD_FromBuild, 0);
 	
 	CreateTimer(5.0, BuildingBigCashMachine_post, ent);
 
