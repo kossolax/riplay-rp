@@ -411,7 +411,7 @@ public Action Cmd_ItemHamburger(int args) {
 		}
 		
 		int rand = iItemRand[ Math_GetRandomInt(0, amount-1) ];
-		rp_ClientGiveItem(client, rand, 1, StrEqual(arg1, "happy"));
+		rp_ClientGiveItem(client, rand, 1, true);
 		
 		rp_GetItemData(rand, item_type_name, cmd, sizeof(cmd));
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu comme cadeau: %s", cmd);
