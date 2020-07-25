@@ -23,16 +23,6 @@ public void OnPluginStart() {
 		SetFailState("Failed to register request handler.");
 	}	
 	defaultResponse = new WebStringResponse("<!DOCTYPE html>\n<html><body><h1>404 Not Found</h1></body></html>");
-
-	RegConsoleCmd("sm_testtime", cmd_time);
-}
-
-public Action cmd_time(int client, int args) {
-	int hour, minutes, timestamp;
-	rp_GetTime(hour, minutes);
-  	timestamp = GetTime();
-
-  	PrintToServer("%i %i %i", hour, minutes, timestamp);
 }
 
 public Action GameLogHook(const char[] message) {
@@ -153,7 +143,7 @@ public bool OnWebRequest(WebConnection connection, const char[] method, const ch
 		char options[3][256];
 		ExplodeString(url, "/", options, sizeof(options), sizeof(options[]));
 		
-		CPrintToChatAll("" ...MOD_TAG... " %s.", options[2]);
+		CPrintToChatAll("" ...MOD_TAG... " %s", options[2]);
 		
 		WebResponse response = new WebStringResponse("1");
 		bool success = connection.QueueResponse(WebStatus_OK, response);
