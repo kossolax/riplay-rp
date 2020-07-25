@@ -1416,6 +1416,7 @@ public int MenuBuildingDealer(Handle menu, MenuAction action, int client, int pa
 			
 			int ent = BuildingPlant(client, StringToInt(szMenuItem));
 			if( ent > 0 ) {
+				rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
 				rp_SetBuildingData(ent, BD_FromBuild, 1);
 				rp_SetBuildingData(ent, BD_max, 30);
 			}
