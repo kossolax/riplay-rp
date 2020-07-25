@@ -1,0 +1,21 @@
+name: riplay-rp-test
+on: [push, pull_request]
+
+jobs:
+  test-build:
+    name: Test and build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install sourcemod deps
+        run: |
+          sudo apt-get update && sudo apt-get install libc6-i386 lib32stdc++6
+
+
+      - name: Compile
+        run: |
+          ./compile_all_linux.sh
+
+
