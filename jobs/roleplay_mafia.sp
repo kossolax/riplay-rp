@@ -498,6 +498,7 @@ public Action Cmd_ItemHack(int args) {
 	WritePackCell(dp, target);
 	WritePackCell(dp, start);
 	WritePackCell(dp, type);
+	WritePackCell(dp, item_id);
 	
 	return Plugin_Handled;
 }
@@ -558,6 +559,7 @@ public Action Cmd_ItemPiedBiche(int args) {
 	WritePackCell(dp, target);
 	WritePackCell(dp, start);
 	WritePackCell(dp, type);
+	WritePackCell(dp, item_id);
 	
 	return Plugin_Handled;
 }
@@ -567,6 +569,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 	int target = ReadPackCell(dp);
 	float percent = ReadPackCell(dp);
 	int type = ReadPackCell(dp);
+	int item_id = ReadPackCell(dp);
 	int type2;
 	
 	
@@ -577,7 +580,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 		MENU_ShowPickLock(client, percent, -1, type);
 		rp_ClientColorize(client);
 		CreateTimer(0.1, AllowStealing, client);
-		rp_ClientGiveItem(client, ITEM_PIEDBICHE, 1);
+		rp_ClientGiveItem(client, item_id, 1);
 		return Plugin_Stop;
 	}
 	
@@ -653,7 +656,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				int owner = rp_GetBuildingData(target, BD_owner);
 				if( IsValidClient(owner) ) {
 					rp_ClientMoney(owner, i_Bank, -25);
-					CPrintToChat(owner, "" ...MOD_TAG... " Quelqu'un vol vos faux billets.");
+					CPrintToChat(owner, "" ...MOD_TAG... " Quelqu'un vole vos faux billets.");
 				}
 			}
 			case 5: { // Photocopieuse
@@ -665,7 +668,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				int owner = rp_GetBuildingData(target, BD_owner);
 				if( IsValidClient(owner) ) {
 					rp_ClientMoney(owner, i_Bank, -25 * 15);
-					CPrintToChat(owner, "" ...MOD_TAG... " Quelqu'un vol vos faux billets.");
+					CPrintToChat(owner, "" ...MOD_TAG... " Quelqu'un vole vos faux billets.");
 				}
 				
 				
