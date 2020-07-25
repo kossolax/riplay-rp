@@ -126,7 +126,7 @@ public Action PostLoading(Handle timer, any zomg) {
 	AddServerTag("ba-jail");
 
 	//CleanUp();
-	SteamWorks_SetGameDescription("Ramsès II");
+	SteamWorks_SetGameDescription("ROLEPLAY CSGO");
 	ServerCommand("rp_quest_reload");
 	g_bLoaded = true;
 
