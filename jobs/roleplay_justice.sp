@@ -466,7 +466,7 @@ Menu AUDIENCE_Condamner(int type, int articles) {
 	char tmp[64], tmp2[64];
 	
 	if( IsVolAndRecidive(type) ) {
-		CPrintToChatSearch(type, "" ...MOD_TAG... " Le juge %N a tenté de faire un abus. Cet incident a été reporté.", g_iTribunalData[type][td_Owner]);
+		CPrintToChatSearch(type, "" ...MOD_TAG... " Le juge %N{default} a tenté de faire un abus. Cet incident a été reporté.", g_iTribunalData[type][td_Owner]);
 		LogToGame("[CHEATING] [JUGE] [CONDAMNER] %L a tenté de faire une condamnation pour récidive de vol.", g_iTribunalData[type][td_Owner]);
 		return null;
 	}
@@ -496,7 +496,7 @@ Menu AUDIENCE_Condamner(int type, int articles) {
 		amende = RoundFloat(float(amende) * g_flCondamnation[articles]);
 		
 		SQL_Insert(type, 1, articles, heure, amende);
-		CPrintToChatSearch(type, "" ...MOD_TAG... " %N a été condamné à %d heure%s et %d$ d'amende. Le juge a été %s.", g_iTribunalData[type][td_Suspect], heure, heure >= 2 ? "s" :"",amende, g_szCondamnation[articles]);
+		CPrintToChatSearch(type, "" ...MOD_TAG... " %N{default} a été condamné à %d heure%s et %d$ d'amende. Le juge a été %s.", g_iTribunalData[type][td_Suspect], heure, heure >= 2 ? "s" :"",amende, g_szCondamnation[articles]);
 		
 		AUDIENCE_Stop(type);
 	}
@@ -519,7 +519,7 @@ Menu AUDIENCE_Acquitter(int type, int articles) {
 		
 		SQL_Insert(type, 0, articles, 0, 0);
 		
-		CPrintToChatSearch(type, "" ...MOD_TAG... " %N a été acquitté: %s.", g_iTribunalData[type][td_Suspect], g_szAcquittement[articles]);
+		CPrintToChatSearch(type, "" ...MOD_TAG... " %N{default} a été acquitté: %s.", g_iTribunalData[type][td_Suspect], g_szAcquittement[articles]);
 		AUDIENCE_Stop(type);
 	}
 	
@@ -571,7 +571,7 @@ Menu AUDIENCE_Dedommagement(int type) {
 	if( g_iTribunalData[type][td_DoneDedommagement] == 0 ) {
 		
 		if( IsVolAndRecidive(type) ) {
-			CPrintToChatSearch(type, "" ...MOD_TAG... " Le juge %N a tenté de faire un abus. Cet incident a été reporté.", g_iTribunalData[type][td_Owner]);
+			CPrintToChatSearch(type, "" ...MOD_TAG... " Le juge %N{default} a tenté de faire un abus. Cet incident a été reporté.", g_iTribunalData[type][td_Owner]);
 			LogToGame("[CHEATING] [JUGE] [DEDO] %L a tenté de faire une dédo pour récidive de vol.", g_iTribunalData[type][td_Owner]);
 			return null;
 		}
@@ -585,7 +585,7 @@ Menu AUDIENCE_Dedommagement(int type) {
 		rp_ClientMoney(target, i_Money, -money);
 		rp_ClientMoney(client, i_Money, money);
 		
-		CPrintToChatSearch(type, "" ...MOD_TAG... " %N a dédommagé %N de %d$.", target, client, money);
+		CPrintToChatSearch(type, "" ...MOD_TAG... " %N{default} a dédommagé %N{default} de %d$.", target, client, money);
 	}
 	
 	return null;
@@ -699,7 +699,7 @@ Menu AUDIENCE_Forward(int type, int a) {
 		}
 	}
 	else {
-		CPrintToChatSearch(type, "" ...MOD_TAG... " %N cède sa place de juge à %N.", g_iTribunalData[type][td_Owner], a);
+		CPrintToChatSearch(type, "" ...MOD_TAG... " %N{default} cède sa place de juge à %N{default}.", g_iTribunalData[type][td_Owner], a);
 		g_iTribunalData[type][td_Owner] = a;
 	}
 	return subMenu;
@@ -785,7 +785,7 @@ Menu AUDIENCE_Identity(int& client, int a, int b, int c) {
 		}
 		else {
 			CPrintToChat(client, "" ...MOD_TAG... " Vous avez refusé de changer de sexe.");
-			CPrintToChat(a, "" ...MOD_TAG... " %N a refusé de changer de sexe.", client);
+			CPrintToChat(a, "" ...MOD_TAG... " %N{default} a refusé de changer de sexe.", client);
 			
 		}
 	}
@@ -912,11 +912,11 @@ public Action Timer_AUDIENCE(Handle timer, any type) {
 	}
 		
 	if( time < 60 && time % 20 == 0 ) {
-		CPrintToChatSearch(type, "" ...MOD_TAG... " %N est convoqué par le {green}Tribunal n°%d{default} de Princeton [%d/3].", target, type, time/20 + 1);
+		CPrintToChatSearch(type, "" ...MOD_TAG... " %N{default} est convoqué par le {green}Tribunal n°%d{default} de Princeton [%d/3].", target, type, time/20 + 1);
 		LogToGame("[TRIBUNAL] [AUDIENCE] Le juge %L a convoque %L [%d/3].", g_iTribunalData[type][td_Owner], target, time/20 + 1);
 	}
 	else if( time % 60 == 0 ) {
-		CPrintToChatSearch(type, "" ...MOD_TAG... " %N est recherché par le {green}Tribunal n°%d{default} de Princeton depuis %d minutes.", target, type, time/60);
+		CPrintToChatSearch(type, "" ...MOD_TAG... " %N{default} est recherché par le {green}Tribunal n°%d{default} de Princeton depuis %d minutes.", target, type, time/60);
 		LogToGame("[TRIBUNAL] [AUDIENCE] Le juge %L recherche %L depuis %d minutes.", g_iTribunalData[type][td_Owner], target, time/60);
 		
 		if( time >= 24*60 )
@@ -930,11 +930,11 @@ public Action Timer_AUDIENCE(Handle timer, any type) {
 	if( zone == jail ) {
 	
 		if( time < 60 )
-			CPrintToChatSearch(type, "" ...MOD_TAG... " %N est arrivé sans retard.", target);
+			CPrintToChatSearch(type, "" ...MOD_TAG... " %N{default} est arrivé sans retard.", target);
 		else if ( time > 300 )
-			CPrintToChatSearch(type, "" ...MOD_TAG... " %N est arrivé après %d minutes, il y a un {red}manquement{default} à la convocation!", target, time/60);
+			CPrintToChatSearch(type, "" ...MOD_TAG... " %N{default} est arrivé après %d minutes, il y a un {red}manquement{default} à la convocation!", target, time/60);
 		else
-			CPrintToChatSearch(type, "" ...MOD_TAG... " %N est arrivé après %d minutes.", target, time/60);
+			CPrintToChatSearch(type, "" ...MOD_TAG... " %N{default} est arrivé après %d minutes.", target, time/60);
 		
 		LogToGame("[TRIBUNAL] [AUDIENCE] Le juge %L termine la convocation de %L après %d minute%s.", g_iTribunalData[type][td_Owner], target, time/60, time/60 >= 2 ? "s":"");
 		g_iTribunalData[type][td_SuspectArrive] = 1;

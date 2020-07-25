@@ -105,8 +105,8 @@ public Action Cmd_ItemChirurgie(int args) {
 		WritePackCell(dp, vendeur);
 	}
 	
-	CPrintToChat(client, "" ...MOD_TAG... " %N vous fait une opération chirurgicale.", vendeur);
-	CPrintToChat(vendeur, "" ...MOD_TAG... " Vous commencez à opérer %N.", client);
+	CPrintToChat(client, "" ...MOD_TAG... " %N{default} vous fait une opération chirurgicale.", vendeur);
+	CPrintToChat(vendeur, "" ...MOD_TAG... " Vous commencez à opérer %N{default}.", client);
 	
 	rp_HookEvent(client, RP_PrePlayerPhysic, fwdFrozen, time);
 	rp_HookEvent(vendeur, RP_PrePlayerPhysic, fwdFrozen, time);

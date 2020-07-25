@@ -1007,7 +1007,7 @@ void CheckAppart() {
 }
 public void SQL_GetAppartWiner(Handle owner, Handle hQuery, const char[] error, any none) {
 	int gain, place = 0;
-	CPrintToChatAll("{lightblue} ================================== {default}");
+	CPrintToChatAll("{lightblue} =================================={default} ");
 	char szSteamID[32], szName[64], szQuery[1024], szSteamID2[32];
 	
 	while( SQL_FetchRow(hQuery) ) {

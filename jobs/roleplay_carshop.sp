@@ -936,7 +936,7 @@ public int AskToJoinCar_Menu(Handle p_hItemMenu, MenuAction p_oAction, int clien
 			else if( type == 3 ) {
 				g_iBlockedTime[client][request] = GetTime();
 				CPrintToChat(request, "" ...MOD_TAG... " Le conducteur a refusé, et vous ignorera.");
-				CPrintToChat(client, "" ...MOD_TAG... " Vous ignorerez les demandes de %N pour 6 heures", request);
+				CPrintToChat(client, "" ...MOD_TAG... " Vous ignorez les demandes de %N{default} pour 6 heures", request);
 				return;
 			}
 		}

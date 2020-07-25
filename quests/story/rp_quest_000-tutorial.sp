@@ -720,7 +720,7 @@ public int MenuSelectJob(Handle menu, MenuAction action, int client, int param2)
 					continue;
 				if( i == client )
 					continue;
-				CPrintToChat(i, "" ...MOD_TAG... " %N vient de terminer son tutorial, il est %s. Aidez le !", client, options);
+				CPrintToChat(i, "" ...MOD_TAG... " %N{default} vient de terminer son tutorial, il est %s. Aidez le !", client, options);
 			}
 		}
 	}

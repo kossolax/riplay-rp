@@ -211,7 +211,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		rp_GetClientFloat(target, fl_LastStolen)+60.0 > GetGameTime() ||
 		rp_ClientFloodTriggered(client, target, fd_vol) ||
 		( rp_IsClientNew(target) && rp_GetClientFloat(target, fl_LastStolen)+300.0 > GetGameTime() ) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " %N n'a pas d'argent sur lui.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas d'argent sur lui.", target);
 		cooldown = 1.0;
 		return Plugin_Stop;
 	}
@@ -220,7 +220,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 	}
 	
 	if( rp_GetZoneInt(rp_GetPlayerZone(target), zone_type_type) == 91 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas voler %N ici.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas voler %N{default} ici.", target);
 		return Plugin_Handled;
 	}
 	
@@ -251,7 +251,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		}
 		
 		if( amount == 0  ) {
-			CPrintToChat(client, "" ...MOD_TAG... " %N n'a pas d'argent, ni d'item sur lui.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas d'argent, ni d'item sur lui.", target);
 			cooldown = 1.0;
 			return Plugin_Stop;
 		}
@@ -383,7 +383,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		rp_ClientOverlays(target, o_Action_StealMoney, 10.0);
 	}
 	else {
-		CPrintToChat(client, "" ...MOD_TAG... " %N n'a pas d'argent sur lui.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas d'argent sur lui.", target);
 		cooldown = 1.0;
 	}
 	
@@ -1382,7 +1382,7 @@ public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int 
 				rp_SetJobCapital(91, rp_GetJobCapital(91) + RoundToCeil(float(data[IM_Prix]) * 0.5));
 				rp_ClientMoney(data[IM_Owner], i_AddToPay, RoundToFloor(float(data[IM_Prix]) * 0.5));
 				
-				CPrintToChat(data[IM_Owner], "" ...MOD_TAG... " Vous avez vendu 1 %s à %N au marché noir pour %d$", tmp, client, data[IM_Prix]);
+				CPrintToChat(data[IM_Owner], "" ...MOD_TAG... " Vous avez vendu 1 %s à %N{default} au marché noir pour %d$", tmp, client, data[IM_Prix]);
 			}
 			else {
 				rp_SetJobCapital(91, rp_GetJobCapital(91) + data[IM_Prix]);

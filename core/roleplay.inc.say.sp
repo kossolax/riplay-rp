@@ -129,9 +129,9 @@ public Action Command_Say(int client, int args) {
 			ACCESS_DENIED(client);
 		}
 
-		CPrintToChatAll("{red} ================================== {default}");
+		CPrintToChatAll("{red} =================================={default} ");
 		CPrintToChatAll("{lightblue}%s{default} ({red}ADMIN{default}): %s", name, szSayText);
-		CPrintToChatAll("{red} ================================== {default}");
+		CPrintToChatAll("{red} =================================={default} ");
 
 		return Plugin_Handled;
 	}
@@ -475,7 +475,7 @@ public Action Command_Say(int client, int args) {
 			return Plugin_Handled;
 		}
 		if( !IsTutorialOver(target) ) {
-			CPrintToChat(target, "" ...MOD_TAG... " %N n'a pas terminé le tutorial.", target);
+			CPrintToChat(target, "" ...MOD_TAG... " %N{default} n'a pas terminé le tutorial.", target);
 			return Plugin_Handled;
 		}
 		
@@ -632,7 +632,7 @@ public Action Command_Say(int client, int args) {
 					if( IsValidClient(driver) ) {
 						if( g_iVehicleData[target][car_owner] == client && driver != client ) {
 							ExitVehicle(driver, target, true);
-							CPrintToChat(driver, "" ...MOD_TAG... " %N vous a sorti de votre voiture.", client);
+							CPrintToChat(driver, "" ...MOD_TAG... " %N{default} vous a sorti de votre voiture.", client);
 						}
 					}
 				}
@@ -701,20 +701,20 @@ public Action Command_Say(int client, int args) {
 
 		if( ClientZoneJob != TargetZoneJob ) {
 			if( !in_appart ) {
-				CPrintToChat(client, "" ...MOD_TAG... " %N n'est pas dans votre zone.", target);
+				CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'est pas dans votre zone.", target);
 				return Plugin_Handled;
 			}
 		}
 		if( ClientZone != TargetZone ) {
 			if( in_appart ) {
-				CPrintToChat(client, "" ...MOD_TAG... " %N n'est pas dans votre zone.", target);
+				CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'est pas dans votre zone.", target);
 				return Plugin_Handled;
 			}
 		}
 		
 		if( in_appart ) {
 			if( g_iDoorOwner_v2[target][appart] ) {
-				CPrintToChat(client, "" ...MOD_TAG... " %N est un de vos collocataires.", target);
+				CPrintToChat(client, "" ...MOD_TAG... " %N{default} est un de vos collocataires.", target);
 				return Plugin_Handled;
 			}
 			
@@ -727,8 +727,8 @@ public Action Command_Say(int client, int args) {
 			}
 		}
 		
-		CPrintToChat(client, "" ...MOD_TAG... " %N a été mis dehors.", target);
-		CPrintToChat(target, "" ...MOD_TAG... " %N vous a mis dehors.", client);
+		CPrintToChat(client, "" ...MOD_TAG... " %N{default} a été mis dehors.", target);
+		CPrintToChat(target, "" ...MOD_TAG... " %N{default} vous a mis dehors.", client);
 		LogToGame("[OUT] %L a sorti %L", client, target);
 		
 		SendPlayerToSpawn(target, true);
@@ -1109,7 +1109,7 @@ public Action Command_Say(int client, int args) {
 		
 
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez donné %i$ à %N.", amount, target);
-		CPrintToChat(target, "" ...MOD_TAG... " %N vous a donné %i$.", client, amount);
+		CPrintToChat(target, "" ...MOD_TAG... " %N{default} vous a donné %i$.", client, amount);
 		
 		LogToGame("[TSX-RP] [GIVE-MONEY] %L a donné %i$ à %L.", client, amount, target);
 		
@@ -1158,7 +1158,7 @@ public Action Command_Say(int client, int args) {
 		rp_ClientXPIncrement(target, amount);
 
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez donné %iXP à %N.", amount, target);
-		CPrintToChat(target, "" ...MOD_TAG... " %N vous a donné %iXP.", client, amount);
+		CPrintToChat(target, "" ...MOD_TAG... " %N{default} vous a donné %iXP.", client, amount);
 		
 		LogToGame("[TSX-RP] [GIVE-XP] %L a donné %iXP à %L.", client, amount, target);
 		
@@ -1194,7 +1194,7 @@ public Action Command_Say(int client, int args) {
 		rp_ClientMoney(target, i_Money, amount);
 
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez donné %i$ a %N.", amount, target);
-		CPrintToChat(target, "" ...MOD_TAG... " %N vous a donné %i$.", client, amount);
+		CPrintToChat(target, "" ...MOD_TAG... " %N{default} vous a donné %i$.", client, amount);
 		
 		LogToGame("[TSX-RP] [GIVE-MONEY] %L a donné %i$ à %L.", client, amount, target);
 
@@ -1255,7 +1255,7 @@ public Action Command_Say(int client, int args) {
 					continue;
 				
 				CPrintToChat(client, "" ...MOD_TAG... " Au moins un tueur est connecté (%N), impossible d'utiliser le /enquete.", i);
-				CPrintToChat(i, "" ...MOD_TAG... " %N veut faire une enquête sur %N (%s).", client, target, g_szZoneList[GetPlayerZone(client)][zone_type_name]);
+				CPrintToChat(i, "" ...MOD_TAG... " %N{default} veut faire une enquête sur %N{default} (%s).", client, target, g_szZoneList[GetPlayerZone(client)][zone_type_name]);
 				TargetBeamBox(i, target);
 				ClientCommand(i, "play buttons/blip1.wav");
 				return Plugin_Handled;
@@ -1278,7 +1278,7 @@ public Action Command_Say(int client, int args) {
 		SetJobCapital(1,	(GetJobCapital(1)+50) );
 
 
-		CPrintToChat(target, "" ...MOD_TAG... " %N vient de vérifier vos informations", client);
+		CPrintToChat(target, "" ...MOD_TAG... " %N{default} vient de vérifier vos informations", client);
 
 		LogToGame("[TSX-RP] [ENQUETE] %L a regardé %L", client, target);
 

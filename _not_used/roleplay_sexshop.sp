@@ -219,14 +219,14 @@ public Action Cmd_ItemMenottes(int args){
 		return;
 	}
 	if( rp_GetClientBool(target, b_Lube) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " %N vous glisse entre les mains.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " %N{default} vous glisse entre les mains.", target);
 		ITEM_CANCEL(client, item_id);
 		return;
 	}
 	
 	if( rp_ClientFloodTriggered(client, target, fd_menotte) ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " %N vous glisse entre les mains.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " %N{default} vous glisse entre les mains.", target);
 		return;
 	}
 	rp_ClientFloodIncrement(client, target, fd_menotte, 11.0);
@@ -393,7 +393,7 @@ public Action Cmd_ItemFouet(int args) {
 	
 	if( rp_ClientFloodTriggered(client, target, fd_fouet) ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " %N vous glisse entre les mains.", target);
+		CPrintToChat(client, "" ...MOD_TAG... " %N{default} vous glisse entre les mains.", target);
 		return Plugin_Handled;
 	}
 	rp_ClientFloodIncrement(client, target, fd_fouet, 5.0);
@@ -434,7 +434,7 @@ public Action Cmd_ItemAlcool(int args) {
 		}
 		if( rp_GetClientFloat(target, fl_Alcool) > 0.0 ) {
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "" ...MOD_TAG... " %N a trop bu, il n'est pas raisonable de lui donner à boire.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " %N{default} a trop bu, il n'est pas raisonable de lui donner à boire.", target);
 			return Plugin_Handled;
 		}
 		float vecTarget[3];
@@ -848,7 +848,7 @@ public int MenuRubanColor(Handle menu, MenuAction action, int client, int param2
 		}
 		
 		if( rp_ClientFloodTriggered(client, target, fd_ruban) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " %N vous glisse entre les mains.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " %N{default} vous glisse entre les mains.", target);
 			return;
 		}
 		rp_ClientFloodIncrement(client, target, fd_ruban, 31.0);
