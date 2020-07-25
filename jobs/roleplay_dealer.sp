@@ -1356,7 +1356,7 @@ public Action ItemPickLockOver_18th(Handle timer, Handle dp) {
 				
 				rp_ClientMoney(client, i_AddToPay, amount);
 				rp_ClientMoney(target, i_Money, -amount);
-				rp_SetClientStat(target, i_MoneySpent_Stolen, rp_GetClientStat(owner, i_MoneySpent_Stolen) + amount);
+				rp_SetClientStat(target, i_MoneySpent_Stolen, rp_GetClientStat(target, i_MoneySpent_Stolen) + amount);
 
 			}
 			
