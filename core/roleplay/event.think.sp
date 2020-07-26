@@ -32,8 +32,8 @@ public void OnPostThinkPost(int client) {
 	
 	
 	if( g_flUserData[client][fl_Alcool] > 0.0 ) {
-		SetEntDataFloat(client,m_flFlashDuration, GetGameTime()+0.1,true);
-		SetEntDataFloat(client,m_flFlashMaxAlpha, g_flUserData[client][fl_Alcool] * 10.0 + 20.0, true);
+		SetEntDataFloat(client, m_flFlashDuration, GetGameTime()+0.1,true);
+		SetEntDataFloat(client, m_flFlashMaxAlpha, g_flUserData[client][fl_Alcool] * 10.0 + 20.0, true);
 	}
 }
 public void OnPostThink(int client) {
@@ -88,6 +88,10 @@ public void OnPostThink(int client) {
 }
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon) {
 	static int lastButtons[MAXPLAYERS + 1];
+	
+	if( g_bUserData[client][b_isConnected] || g_bUserData[client][b_isConnected2] )
+		return Plugin_Continue;
+		
 	bool changed = false;
 	
 	if (buttons & IN_ATTACK2) {
