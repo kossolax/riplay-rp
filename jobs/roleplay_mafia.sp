@@ -621,7 +621,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 		rp_SetClientStat(client, i_JobFails, rp_GetClientStat(client, i_JobFails) - 1);
 		
 		float time = (rp_IsNight() ? STEAL_TIME:STEAL_TIME*2.0);
-		int stealAMount;
+		int stealAmount;
 		
 		Call_StartForward(rp_GetForwardHandle(client, RP_PostPiedBiche));
 		Call_PushCell(client);
@@ -639,18 +639,18 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 					CreateTimer(i / 5.0, SpawnMoney, EntIndexToEntRef(target));
 				
 				CPrintToChat(client, "" ...MOD_TAG... " %d billets ont été sorti du distributeur.", rand);
-				stealAMount = 25*rand;
+				stealAmount = 25*rand;
 			}
 			case 3: { // Armu
 				time /= 2.0;
 				rp_ClientDrawWeaponMenu(client, target, true);
-				stealAMount = 100; 
+				stealAmount = 100; 
 				
 			}
 			case 4: { // Imprimante
 				time /= 4.0;
 				CreateTimer(0.1, SpawnMoney, EntIndexToEntRef(target));
-				stealAMount = 25;
+				stealAmount = 25;
 				rp_ClientDamage(target, 25, client);
 				
 				int owner = rp_GetBuildingData(target, BD_owner);
@@ -672,13 +672,13 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				}
 				
 				
-				stealAMount = 25 * 15;
+				stealAmount = 25 * 15;
 				rp_ClientDamage(target, 250, client);
 				
 			}
 			case 6: { // Téléphone
 				time *= 6.0;
-				stealAMount = 250;
+				stealAmount = 250;
 				missionTelephone(client);
 			}
 			case 7: { // Plant de drogue
@@ -691,7 +691,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 					rp_GetItemData(sub, item_type_name, classname, sizeof(classname));
 					rp_ClientGiveItem(client, sub, count);
 					rp_SetBuildingData(target, BD_count, 0);
-					stealAMount = 75 * count;
+					stealAmount = 75 * count;
 					SetEntityModel(target, "models/custom_prop/marijuana/marijuana_0.mdl");
 					SDKHooks_TakeDamage(target, client, client, 125.0);
 					
@@ -707,15 +707,25 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				int owner = rp_GetBuildingData(target, BD_owner);
 
 				if( IsValidClient(owner) ) {
-					stealAMount = Math_GetRandomInt(1, 150);
+					stealAmount = Math_GetRandomInt(1, 150);
 
-					rp_ClientMoney(owner, i_Bank, -stealAMount);
-					rp_ClientMoney(client, i_AddToPay, stealAMount);
+					if((rp_GetClientInt(owner, i_Bank)+rp_GetClientInt(owner, i_Money)) < stealAmount){
+						CPrintToChat(client, "" ...MOD_TAG... " Ce distributeur est vide !");
 
-					rp_SetClientStat(owner, i_MoneySpent_Stolen, rp_GetClientStat(owner, i_MoneySpent_Stolen) + stealAMount);
+						MENU_ShowPickLock(client, percent, -1, type);
+						rp_ClientColorize(client);
+						CreateTimer(0.1, AllowStealing, client);
+						rp_ClientGiveItem(client, item_id, 1);
+						return Plugin_Stop;						
+					}
 
-					CPrintToChat(owner, "" ...MOD_TAG... " Attention, quelqu'un à piraté votre distributeur et vous à voler %i$.", stealAMount);
-					CPrintToChat(client, "" ...MOD_TAG... " Vous avez piraté %i$ !", stealAMount);
+					rp_ClientMoney(owner, i_Bank, -stealAmount);
+					rp_ClientMoney(client, i_AddToPay, stealAmount);
+
+					rp_SetClientStat(owner, i_MoneySpent_Stolen, rp_GetClientStat(owner, i_MoneySpent_Stolen) + stealAmount);
+
+					CPrintToChat(owner, "" ...MOD_TAG... " Attention, quelqu'un à piraté votre distributeur et vous à voler %i$.", stealAmount);
+					CPrintToChat(client, "" ...MOD_TAG... " Vous avez piraté %i$ !", stealAmount);
 				} else {
 					CPrintToChat(client, "" ...MOD_TAG... " Le vol a été annulé.");
 				}
@@ -724,7 +734,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 		
 		rp_SetClientInt(client, i_LastVolTime, GetTime());
 		rp_SetClientInt(client, i_LastVolTarget, -1);
-		rp_SetClientInt(client, i_LastVolAmount, stealAMount); 
+		rp_SetClientInt(client, i_LastVolAmount, stealAmount); 
 		
 		CreateTimer(time, AllowStealing, client);
 		return Plugin_Stop;
