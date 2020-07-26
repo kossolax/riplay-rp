@@ -89,7 +89,7 @@ public void OnPostThink(int client) {
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon) {
 	static int lastButtons[MAXPLAYERS + 1];
 	
-	if( g_bUserData[client][b_isConnected] || g_bUserData[client][b_isConnected2] )
+	if( !g_bUserData[client][b_isConnected] || !g_bUserData[client][b_isConnected2] )
 		return Plugin_Continue;
 		
 	bool changed = false;

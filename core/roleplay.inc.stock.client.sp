@@ -813,14 +813,14 @@ void getPlayerSkin(int client, char model[PLATFORM_MAX_PATH], char hands[PLATFOR
 		}
 	}
 
-	if( !FileExists(model, true) || PrecacheModel(model) == 0 ) {
+	if( strlen(model) < 16 || !FileExists(model, true) || PrecacheModel(model) == 0 ) {
 		Format(model, sizeof(model), "models/player/custom_player/legacy/tm_phoenix.mdl");
 	}
 	
 	Format(hands, sizeof(hands), "%s_EOF", model);
 	ReplaceString(hands, sizeof(hands), ".mdl_EOF", "_arms.mdl");
 	
-	if( !FileExists(hands, true) || PrecacheModel(hands) == 0 ) {
+	if( strlen(model) < 16 || !FileExists(hands, true) || PrecacheModel(hands) == 0 ) {
 		switch(GetClientTeam(client)) {
 			case CS_TEAM_CT: 	Format(hands, sizeof(hands), "models/weapons/ct_arms.mdl");
 			default: 			Format(hands, sizeof(hands), "models/weapons/t_arms.mdl");
@@ -840,7 +840,7 @@ void SetPersonalSkin(int client) {
 	getPlayerSkin(client, model, hands);
 	Entity_GetModel(client, prev, sizeof(prev));
 	
-	if( !StrEqual(model, prev) ) {
+	if( !StrEqual(model, prev) && strlen(model) > 0 ) {
 		SetEntityModel(client, model);
 	}	
 }

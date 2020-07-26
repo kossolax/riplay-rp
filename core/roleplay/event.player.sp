@@ -293,33 +293,24 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 		return Plugin_Continue;
 	
 	bool test = false;
-	char steamid[64];
-	GetClientAuthId(Client, AUTH_TYPE, steamid, sizeof(steamid));
-	if( StrEqual(steamid, "STEAM_1:1:17566443") )
-		test = true;
-	
-	if( test )	LogToGame("[CRASH-TEST] 1");
 	g_iCarPassager2[Client] = 0;
 	SetClientViewEntity(Client, Client);
-	if( test )	LogToGame("[CRASH-TEST] 2");
+	
 	int old = EntRefToEntIndex(g_iUserData[Client][i_FPD]);
 	if( old > 0 ) {	
 		rp_AcceptEntityInput(old, "Kill");
 		g_iUserData[Client][i_FPD] = 0;
 	}
-	if( test )	LogToGame("[CRASH-TEST] 3");
 	
-	if( test )	LogToGame("[CRASH-TEST] 4");
 	GetClientEyeAngles(Client, g_Position[Client]);
 	Client_SetMoney(Client, 0);
 	FakeClientCommand(Client, "use weapon_fists");
 	g_bUserData[Client][b_WeaponIsKnife] = true;
-	if( test )	LogToGame("[CRASH-TEST] 5");
 	if( g_iUserData[Client][i_ThirdPerson] == 1 )
 		ClientCommand(Client, "thirdperson");
 	else
 		ClientCommand(Client, "firstperson");
-	if( test )	LogToGame("[CRASH-TEST] 6");
+	
 	if( g_flUserData[Client][fl_Alcool] > 0.0 ) {
 		g_flUserData[Client][fl_Alcool] -= 2.0;
 		if( g_flUserData[Client][fl_Alcool] <= 0.0 ) {
@@ -327,7 +318,7 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 			SendConVarValue(Client, FindConVar("host_timescale"), "1.0000");
 		}
 	}
-	if( test )	LogToGame("[CRASH-TEST] 7");
+
 	g_iUserData[Client][i_Kevlar] = 0;
 	if( g_iUserData[Client][i_PlayerLVL] >= 156 )
 		SetEntityHealth(Client, 200);
@@ -339,13 +330,13 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 		 g_iUserData[Client][i_Kevlar] = 250;
 	if( g_iUserData[Client][i_KnifeTrain] <= 4 )
 		g_iUserData[Client][i_KnifeTrain] = 5;
-	if( test )	LogToGame("[CRASH-TEST] 8");
+
 	g_iGrabbing[Client] = 0;
 	g_bIsSeeking[Client] = false;
 	g_iKnifeType[Client] = ball_type_none;
 	g_flUserData[Client][fl_Speed] = DEFAULT_SPEED;
 	g_flUserData[Client][fl_Gravity] = 1.0;
-	if( test )	LogToGame("[CRASH-TEST] 9");
+
 	PerformFade(Client, 1, {0, 0, 0, 0});
 	RP_PerformFade(Client);
 	g_bUserData[Client][b_Drugged] = g_bUserData[Client][b_KeyReverse] = g_bUserData[Client][b_AdminHeal] = false;
@@ -353,7 +344,7 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	if( g_iUserData[Client][i_Cryptage] > 0 && Math_GetRandomInt(1, 4) == 1 ) {
 		g_iUserData[Client][i_Cryptage]--;
 	}
-	if( test )	LogToGame("[CRASH-TEST] 10");
+
 	
 	Entity_SetMaxHealth(Client, 500);
 	
@@ -362,29 +353,30 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 		g_iUserData[Client][i_Kevlar] = 250;
 		FakeClientCommand(Client, "say /shownotes");
 	}
-	if( test )	LogToGame("[CRASH-TEST] 11");
+
 	StripWeapons(Client);
 	
 	if( IsInPVP(Client) )
 		GroupColor(Client);
 	
-	if( test )	LogToGame("[CRASH-TEST] 12");
-	CreateTimer(0.1, OnPlayerSpawnPost, Client);
-	if( test )	LogToGame("[CRASH-TEST] 13");
+
+	CreateTimer(0.1, OnPlayerSpawnPost, GetClientUserId(Client));
+
 	Call_StartForward( view_as<Handle>(g_hRPNative[Client][RP_OnPlayerSpawn]));
 	Call_PushCell(Client);
 	Call_Finish();
-	if( test )	LogToGame("[CRASH-TEST] 14");
+
 	Colorize(Client, 0, 0, 0, 0);
-	ServerCommand("sm_effect_fading %i 1.0", Client);
-	if( test )	LogToGame("[CRASH-TEST] 15");
+	
+	if( g_bUserData[Client][b_isConnected] && g_bUserData[Client][b_isConnected2] )
+		ServerCommand("sm_effect_fading %i 1.0", Client);
+
 	if( g_iUserData[Client][i_Malus] > GetTime() ) {
 		CPrintToChat(Client, "" ...MOD_TAG... " Vous avez un malus pour encore: %.1f minute(s).", (float(g_iUserData[Client][i_Malus]-GetTime())/60.0) );
 	}
 	else {
 		g_iUserData[Client][i_Malus] = 0;
 	}
-	if( test )	LogToGame("[CRASH-TEST] 16");
 
 	g_iUserData[Client][i_Sickness] = 0;
 
@@ -392,7 +384,6 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	QueryClientConVar(Client, "cl_join_advertise", view_as<ConVarQueryFinished>(ClientConVar), Client);
 	ClientCommand(Client, "cam_idealpitch 0");
 	
-	if( test )	LogToGame("[CRASH-TEST] 17");
 
 	if( g_iUserData[Client][i_JailTime] > 0 ) {
 		return Plugin_Continue;
@@ -401,7 +392,6 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	if( g_iSuccess_last_1st[Client] == 1 ) {
 		WonSuccess(Client, success_list_only_one);
 	}
-	if( test )	LogToGame("[CRASH-TEST] 18");
 
 	SetClientViewEntity(Client, Client);
 	SetEntProp(Client, Prop_Data, "m_iAmmo", 100, _, 19);
@@ -412,13 +402,11 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	if( g_flUserData[Client][fl_WeaponTrainAdmin] >= 0.0 ) {
 		g_flUserData[Client][fl_WeaponTrainAdmin] = -1.0;
 	}
-	if( test )	LogToGame("[CRASH-TEST] 19");
 	
 	if( GetClientTeam(Client) == CS_TEAM_CT && rp_GetClientJobID(Client) == 101 ) {
 		float pos[3][3] =  {  { -321.1, -1650.4, -2007.9 }, { -328.3, -1845.0, -2007.9 }, { -319.2, -1444.5, -2007.9 } };
 		TeleportClient(Client, pos[Math_GetRandomInt(0, 2)], NULL_VECTOR, NULL_VECTOR);
 	}
-	if( test )	LogToGame("[CRASH-TEST] 20");
 	
 	if( g_bUserData[Client][b_SpawnToGrave] &&
 		!g_bUserData[Client][b_SpawnToMetro] && !g_bUserData[Client][b_SpawnToTribunal] && !g_bUserData[Client][b_SpawnToTueur] &&
@@ -430,31 +418,20 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 		CreateTimer(0.01, SendToMetro, Client);
 	}
 	
-	if( test )	LogToGame("[CRASH-TEST] 21");
-	
 	detectCapsLock(Client);
 	updateBankCost(Client);
 	rp_ClientOverlays(Client, o_OverlayNone);
-	
-	if( test )	LogToGame("[CRASH-TEST] 22");
 
 	if( GetConVarInt(g_hSick) == 0 ) {
 		g_iUserData[Client][i_Sick] = 0;
 	}
-	if( test )	LogToGame("[CRASH-TEST] 23");
 
 	return Plugin_Continue;
 }
-public Action OnPlayerSpawnPost(Handle timer, any client) {
-	bool test = false;
-	char steamid[64];
-	GetClientAuthId(client, AUTH_TYPE, steamid, sizeof(steamid));
-	if( StrEqual(steamid, "STEAM_1:1:17566443") )
-		test = true;
-	
-	if( test )	LogToGame("[CRASH-TEST] 24");
-	SetPersonalSkin(client);
-	if( test )	LogToGame("[CRASH-TEST] 25");
+public Action OnPlayerSpawnPost(Handle timer, any userid) {
+	int client = GetClientOfUserId(userid);
+	if( IsValidClient(client) )
+		SetPersonalSkin(client);
 }
 public void ClientConVar(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue) {
 	if( StrEqual(cvarName, "cl_downloadfilter", false) ) {
