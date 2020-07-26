@@ -26,7 +26,7 @@ $COMP_PATH -i includes -i core -i scripting "./core/roleplay.sp" -o=compiled/rol
 NUMB_SP=0
 NUMB_SMX=0
 
-for file in `/usr/bin/find . -type f -name "*.sp" | /usr/bin/egrep "^\./(jobs|quests|utils|weapons)/"`
+for file in `/usr/bin/find . -type f -name "*.sp" | /usr/bin/egrep "^\./(jobs|quests|utils|weapons|others)/"`
 do
 	NUMB_SP=$(($NUMB_SP + 1))
 
