@@ -73,7 +73,8 @@ public void Q_Start(int objectiveID, int client) {
 	rp_HookEvent(client, RP_OnJugementOver, fwdJugementOver);
 }
 public Action fwdJugementOver(int client, int data[6], int charges[28]) {
-	if( data[2] >= 1 && data[3] >= 1 && charges[0] >= 2 ) {
+	int nbCharges = charges[0] + charges[1] + charges[2];
+	if( data[2] >= 1 && data[3] >= 1 && nbCharges >= 2 ) {
 		rp_QuestStepComplete(client, g_iDoing[client]);
 	}
 }
