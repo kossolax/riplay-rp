@@ -885,6 +885,13 @@ public void CRON_TIMER() {
 	FormatTime(szMinutes, 11, "%M");
 	FormatTime(szSecondes, 11, "%S");
 	
+	/* Tout les jours à 00h03 */
+	if( StringToInt(szHours) == 0 && StringToInt(szMinutes) == 3 && StringToInt(szSecondes) == 0 ) {
+		if(GetTime() > g_iBlackFriday[0] && GetTime() < g_iBlackFriday[0] + 24*60*60) {
+			g_bIsBlackFriday = true;
+		}
+	}
+
 	if( StringToInt(szDayOfWeek) == 2 || StringToInt(szDayOfWeek) == 6 ) {	// Mardi & Samedi
 		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
 			ServerCommand("rp_force_loto");
