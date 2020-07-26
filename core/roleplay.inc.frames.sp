@@ -40,14 +40,18 @@ void OnGameFrame_01(float time) {
 	float pos[3];
 	g_iEntityCount = MaxClients;
 	
-	/* calc Black Friday */
-	if(g_bIsBlackFriday == true) {
-		// 03/01/2020 00h01 > 03/01/2020
-		if(GetTime() >= g_iBlackFriday[0] + 24*60*60) {
+	if(g_bIsBlackFriday) {
+		if(GetTime() >= g_iBlackFriday[0] + 24*60*60) { // 03/01/2020 00h01 > 03/01/2020
 			g_bIsBlackFriday = false;
-			ServerCommand("rp_blackfriday"); // new black friday
+			ServerCommand("rp_blackfriday");
 		}
-	} 
+	}
+
+	if(!g_bIsBlackFriday) {
+		if(GetTime() > g_iBlackFriday[0] && GetTime() < g_iBlackFriday[0] + 24*60*60) {
+			g_bIsBlackFriday = true;
+		}
+	}
 
 	for(int i=MaxClients; i<2048; i++) {
 		if( !IsValidEdict(i) || !IsValidEntity(i) )
@@ -884,13 +888,6 @@ public void CRON_TIMER() {
 	FormatTime(szHours, 11, "%H");
 	FormatTime(szMinutes, 11, "%M");
 	FormatTime(szSecondes, 11, "%S");
-	
-	/* Tout les jours à 00h03 */
-	if( StringToInt(szHours) == 0 && StringToInt(szMinutes) == 3 && StringToInt(szSecondes) == 0 ) {
-		if(GetTime() > g_iBlackFriday[0] && GetTime() < g_iBlackFriday[0] + 24*60*60) {
-			g_bIsBlackFriday = true;
-		}
-	}
 
 	if( StringToInt(szDayOfWeek) == 2 || StringToInt(szDayOfWeek) == 6 ) {	// Mardi & Samedi
 		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
