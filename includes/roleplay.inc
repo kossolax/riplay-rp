@@ -458,6 +458,7 @@ native void rp_Effect_Cashflow(int client, int amount);
 native int rp_Effect_Explode(float origin[3], float damage, float length, int entity=0, char[] weapon = "");	/* Inflige des dégats aux alentours */
 native void rp_Effect_Push(float origin[3], float radius, float speed, int ignore = -1);		/* Pousse toutes les entités aux alentours. Ou utiliser qql math compris dans le /push. Cette fonction est lourde... */
 // ----------------------------------------------------------------------------
+native bool rp_CanMakeSuccess(int client, rp_success_list success);		/* Verifie si le joueur peut faire un succès */
 native void rp_IncrementSuccess(int client, rp_success_list success, int amount = 1);		/* Augmente les stats un succès */
 // ----------------------------------------------------------------------------
 native int rp_GetClientItem(int client, int itemID, bool fromBank = false);				/* Combien fois un joueur possède un certain item? MAX 300. */

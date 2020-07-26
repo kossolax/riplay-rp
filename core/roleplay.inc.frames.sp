@@ -522,7 +522,10 @@ void OnGameFrame_10(float time) {
 						tmpKillDuration = g_iUserData[i][i_KillJailDuration];
 						g_iUserData[i][i_KillJailDuration] = 0;
 
-						FakeClientCommand(i, "say /cop");
+						CS_SwitchTeam(i, CS_TEAM_T);
+						SetEntProp(i, Prop_Send, "m_bHasHelmet", 0);
+						rp_ClientResetSkin(i);
+						
 						g_iUserData[i][i_KillJailDuration] = tmpKillDuration;
 					}
 				}	
