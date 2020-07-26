@@ -1087,15 +1087,19 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		
 		if( GetGameTime() <= (15.0*60.0) || GetConVarInt(g_hItemBackup) == 1 ) {	
 			if( assurance >= 0 ) {
-				char szQuery[1024];
-				Format(szQuery, sizeof(szQuery), 
-					"INSERT INTO `rp_users2` (`steamid`, `money`, `bank`, `job_id`, `group_id`, `pseudo`, `steamid2`) VALUES ('%s', '0', '%i', '-1', '-1', 'l\\'assurance', 'SERVER');", 
-					SteamID, assurance);
-				
-				SQL_TQuery(g_hBDD, SQL_QueryCallBack, szQuery, 0, DBPrio_Low);
-				//SetJobCapital(211, (GetJobCapital(211)-(assurance/2)));
-				//int cap = rp_GetRandomCapital(211);
-				//SetJobCapital(cap, (GetJobCapital(cap)-(assurance/2)));
+				int assuWr;
+				if( !g_hSynAssuWritten.GetValue(SteamID, assuWr) ){
+					char szQuery[1024];
+					Format(szQuery, sizeof(szQuery), 
+						"INSERT INTO `rp_users2` (`steamid`, `money`, `bank`, `job_id`, `group_id`, `pseudo`, `steamid2`) VALUES ('%s', '0', '%i', '-1', '-1', 'l\\'assurance', 'SERVER');", 
+						SteamID, assurance);
+					
+					g_hSynAssuWritten.SetValue(SteamID, 0, false);
+					SQL_TQuery(g_hBDD, SQL_QueryCallBack, szQuery, 0, DBPrio_Low);
+					//SetJobCapital(211, (GetJobCapital(211)-(assurance/2)));
+					//int cap = rp_GetRandomCapital(211);
+					//SetJobCapital(cap, (GetJobCapital(cap)-(assurance/2)));
+				}
 			}
 		}
 	}
