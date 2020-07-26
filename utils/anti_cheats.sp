@@ -90,6 +90,10 @@ public void OnPluginStart() {
 			}
 		}
 	}
+	
+	int flag = GetConVarFlags(FindConVar("weapon_recoil_scale"));
+	flag &= ~FCVAR_CHEAT;
+	SetConVarFlags(FindConVar("weapon_recoil_scale"), flag);
 }
 public void OnCvarChange(Handle cvar, const char[] oldVal, const char[] newVal) {
 	if( cvar == g_cVarEnable ) {
