@@ -122,7 +122,7 @@ public void OnCvarChange(Handle cvar, const char[] oldVal, const char[] newVal) 
 public void OnClientPostAdminCheck(int client) {
 	int flags = GetUserFlagBits(client);
 	if ( !(flags & ADMFLAG_CHEATS || flags & ADMFLAG_ROOT) && GetConVarInt(FindConVar("hostport")) != 27015 ) {
-		SendConVarValue(client, g_cVarCheat, "0");
+		//SendConVarValue(client, g_cVarCheat, "0");
 		CreateTimer(60.0, task_ClientCheckConVar, GetClientUserId(client));
 	}
 	g_iAimDetections[client] = g_iTriggerDetections[client] = g_iCmdDetections[client] = g_iSpeedDetections[client] = 0;
@@ -273,7 +273,7 @@ public Action task_ClientCheckConVar(Handle timer, any client) {
 	if( client == 0 )
 		return Plugin_Handled;
 	
-	QueryClientConVar(client, "sv_cheats", ClientConVar, 0);
+	//QueryClientConVar(client, "sv_cheats", ClientConVar, 0);
 	QueryClientConVar(client, "r_drawothermodels",ClientConVar, 1);
 	QueryClientConVar(client, "mat_wireframe", ClientConVar, 0);
 	QueryClientConVar(client, "r_drawrenderboxes", ClientConVar, 0);
