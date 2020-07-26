@@ -649,7 +649,7 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 			}			
 			
 			if( origin[client] > 0 && IsBoss(origin[client]) ) {
-				if( CanMadeSuccess(origin[client], success_list_bon_patron) )
+				if( CanMakeSuccess(origin[client], success_list_bon_patron) )
 					IncrementSuccess(origin[client], success_list_bon_patron, -1);
 			}
 		}

@@ -498,7 +498,7 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 public Action EventPlayerFallDamage(Handle ev, const char[] name, bool broadcast) {
 	int client = GetClientOfUserId(GetEventInt(ev, "userid"));
 	
-	if( CanMadeSuccess(client, success_list_to_infini) ) {
+	if( CanMakeSuccess(client, success_list_to_infini) ) {
 		float damage = GetEventFloat(ev, "damage");
 
 		int heal = GetClientHealth(client);
