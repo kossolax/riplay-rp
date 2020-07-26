@@ -56,6 +56,7 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 	CreateNative("rp_Effect_BeamBox", Native_rp_Effect_BeamBox);
 	CreateNative("rp_Effect_Cashflow", Native_rp_Effect_Cashflow);
 	
+	CreateNative("rp_CanMakeSuccess",	Native_rp_CanMakeSuccess);
 	CreateNative("rp_IncrementSuccess",	Native_rp_IncrementSuccess);
 	
 	CreateNative("rp_ClientRespawn",	Native_rp_ClientRespawn);
@@ -1279,6 +1280,9 @@ public int Native_rp_ClientRespawn(Handle plugin, int numParams) {
 
 	g_flUserData[client][fl_RespawnTime] = GetGameTime() + duration + Math_GetRandomFloat(-0.33, 0.33);
 	
+}
+public int Native_rp_CanMakeSuccess(Handle plugin, int numParams) {
+	return view_as<int>(CanMakeSuccess(GetNativeCell(1), GetNativeCell(2)));
 }
 public int Native_rp_IncrementSuccess(Handle plugin, int numParams) {
 	IncrementSuccess(GetNativeCell(1), GetNativeCell(2), GetNativeCell(3));

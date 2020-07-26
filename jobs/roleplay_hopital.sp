@@ -81,9 +81,11 @@ public void OnClientPostAdminCheck(int client) {
 		rp_HookEvent(client, RP_OnPlayerSpawn, fwdSpawn);
 }
 public Action fwdDeath(int victim, int attacker, float& respawn, int& tdm) {
-	if( g_iSuccess_last_faster_dead[attacker] +1 >= GetTime() ) {
-		rp_IncrementSuccess(attacker, success_list_faster_dead);
-		return Plugin_Handled;
+	if ( rp_CanMakeSuccess(attacker, success_list_faster_dead) ){
+		if( g_iSuccess_last_faster_dead[attacker] +1 >= GetTime() ) {
+			rp_IncrementSuccess(attacker, success_list_faster_dead);
+			return Plugin_Handled;
+		}
 	}
 	return Plugin_Continue;
 }

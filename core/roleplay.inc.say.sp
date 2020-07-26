@@ -1115,7 +1115,7 @@ public Action Command_Say(int client, int args) {
 		
 		StoreUserData(client);
 		StoreUserData(target);		
-		if( CanMadeSuccess(client, success_list_robin_wood) ) {
+		if( CanMakeSuccess(client, success_list_robin_wood) ) {
 			if( (g_iUserData[target][i_Money]+g_iUserData[target][i_Bank]-amount) <= 500 && amount >= 10000 ) {
 				for( int i=0; i<10; i++ ) {
 					if( StrEqual(g_szSuccess_last_give[client][i], targetSteamID) )

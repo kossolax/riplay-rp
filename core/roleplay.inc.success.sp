@@ -132,7 +132,7 @@ void Draw_Success(int client, int type) {
 		int size = success_list_all;
 		
 		for(int i=0; i < size; i++) {
-			if( CanMadeSuccess(client, i) )
+			if( CanMakeSuccess(client, i) )
 				continue;
 			if( i == view_as<int>(success_list_cpt) )
 				continue;
@@ -145,7 +145,7 @@ void Draw_Success(int client, int type) {
 		int size = success_list_all;
 	
 		for(int i=0; i < size; i++) {
-			if( !CanMadeSuccess(client, i) )
+			if( !CanMakeSuccess(client, i) )
 				continue;
 			if( i == view_as<int>(success_list_cpt) )
 				continue;
@@ -373,7 +373,7 @@ void CheckDeadSuccess(int Client, int Attacker) {
 
 void WonSuccess(int client, int success) {
 	
-	if( IsValidClient(client) && CanMadeSuccess(client, success) && g_bUserData[client][b_isConnected] && g_bUserData[client][b_isConnected2] && IsTutorialOver(client) ) {
+	if( IsValidClient(client) && CanMakeSuccess(client, success) && g_bUserData[client][b_isConnected] && g_bUserData[client][b_isConnected2] && IsTutorialOver(client) ) {
 		
 		char szSteamID[64], query[1024];
 		GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
@@ -392,13 +392,13 @@ void WonSuccess(int client, int success) {
 	}
 }
 void IncrementSuccess(int client, int success, int amount =1) {
-	if( IsValidClient(client) && CanMadeSuccess(client, success) && g_bUserData[client][b_isConnected] && g_bUserData[client][b_isConnected2] && IsTutorialOver(client) ) {
+	if( IsValidClient(client) && CanMakeSuccess(client, success) && g_bUserData[client][b_isConnected] && g_bUserData[client][b_isConnected2] && IsTutorialOver(client) ) {
 		g_iUserSuccess[client][success][sd_count] += amount;
 		if( g_iUserSuccess[client][success][sd_count] >= StringToInt(g_szSuccessData[success][success_type_max_objective]) ) {
 			WonSuccess(client, success);
 		}
 	}
 }
-bool CanMadeSuccess(int client, int success) {
+bool CanMakeSuccess(int client, int success) {
 	return g_iUserSuccess[client][success][sd_last]+(31*24*60*60) < GetTime();
 }
