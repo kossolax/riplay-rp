@@ -206,7 +206,7 @@ public Action Command_Say(int client, int args) {
 		char url[1024], sso[128];
 		SSO_Forum(client, sso, sizeof(sso));
 			
-		Format(url, sizeof(url), "https://www.ts-x.eu/forum/viewtopic.php?f=10&t=26749%s", sso);
+		Format(url, sizeof(url), "https://forum.riplay.fr/index.php?/forum/60-r%C3%A8glements-roleplay/", sso);
 		RP_ShowMOTD(client, url);
 
 		return Plugin_Handled;
