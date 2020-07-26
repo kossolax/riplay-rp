@@ -26,12 +26,12 @@ enum craft_type {
 	craft_type_max
 }
 enum craft_book {
-	book_xp,
-	book_sleep,
-	book_focus,
-	book_speed,
-	book_steal,
-	book_luck,
+	Float:book_xp,
+	Float:book_sleep,
+	Float:book_focus,
+	Float:book_speed,
+	Float:book_steal,
+	Float:book_luck,
 	book_max
 }
 
