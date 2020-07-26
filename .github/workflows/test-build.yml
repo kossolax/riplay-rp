@@ -19,3 +19,10 @@ jobs:
           ./compile_all_linux.sh
 
 
+      - name: Upload compiled plugins
+        uses: actions/upload-artifact@v2
+        with: 
+          name: compiled
+          path: compiled/
+
+
