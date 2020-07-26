@@ -323,7 +323,7 @@ void Draw_Mairie_Candidate(int client, int target, int arg) {
 	else if( target == -1 ) {
 		if( arg == 0 ) {
 			Menu menu = new Menu(Handle_Mairie);
-			Format(tmp, sizeof(tmp), "Vous souhaitez poster votre candidature pour devenir Maire? Celà vous coûtera 50.000$, vous ne serrez pas remboursé si vous perdez les élections.");
+			Format(tmp, sizeof(tmp), "Vous souhaitez poster votre candidature pour devenir Maire? Celà vous coûtera 250.000$, vous ne serrez pas remboursé si vous perdez les élections.");
 			String_WordWrap(tmp, 60);
 			
 			menu.SetTitle("Candidature pour la Mairie\n \n%s\n ", tmp);
