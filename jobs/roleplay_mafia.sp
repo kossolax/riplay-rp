@@ -698,6 +698,11 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 					int owner = rp_GetBuildingData(target, BD_owner);
 					if( IsValidClient(owner) ) {
 						CPrintToChat(owner, "" ...MOD_TAG... " Quelqu'un vol votre drogue.");
+						if( rp_GetBuildingData(target, BD_FromBuild) ) {
+							stealAmount = rp_GetItemData(sub, item_type_prix) * count
+							rp_ClientMoney(owner, i_Bank, -stealAmount);
+							LogToGame("[CHEAT] [MAFIA] %L vole %L %d %s", client, owner, count, classname);
+						}
 					}
 					CPrintToChat(client, "" ...MOD_TAG... " Vous avez ramassé %d %s.", count, classname);
 				}
