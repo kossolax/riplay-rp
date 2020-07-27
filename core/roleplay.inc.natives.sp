@@ -375,7 +375,7 @@ public int Native_rp_Effect_Cashflow(Handle plugin, int numParams) {
 		for (int i = 0; i <= amount; i+=100) {
 			g_iParentedParticle[client].Push(CreateTimer( i / 100.0, CashFlow_TASK, client));
 			rp_HookEvent(client, RP_OnPlayerDead, fwdPlayerDead);
-			rp_HookEvent(client, RP_PostClientSendToJail, fwdPlayerDead);
+			rp_HookEvent(client, RP_PostClientSendToJail, fwdPlayerJail);
 		}
 	}
 }
@@ -383,6 +383,18 @@ public Action CashFlow_TASK(Handle timer, any client) {
 	if( timer && IsValidHandle(timer) ) {
 		ServerCommand("sm_effect_particles %d trail_money 10 knife", client);
 	}
+}
+public Action fwdPlayerJail(int client, int attacker) {
+	Handle timer;
+	for (int i = 0; i < g_iParentedParticle[client].Length; i++) {
+		timer = view_as<Handle>(g_iParentedParticle[client].Get(i));
+		if( timer && IsValidHandle(timer) ) {
+			delete timer;
+		}
+	}
+	g_iParentedParticle[client].Clear();
+	rp_UnhookEvent(client, RP_OnPlayerDead, fwdPlayerDead);
+	rp_UnhookEvent(client, RP_PostClientSendToJail, fwdPlayerDead);
 }
 public Action fwdPlayerDead(int client, int attacker, float& respawn, int& tdm) {
 	Handle timer;
