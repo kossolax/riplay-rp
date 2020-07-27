@@ -53,10 +53,10 @@ exports = module.exports = function (server) {
                 if (results.affectedRows != 1) {
                     return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
                 }
-                // On a r├®ussi a set approuv├® ├á true, pour le parainnage en question et il est valide, on donne l'argent & xp
+                // On a réussi a set approuvé à true, pour le parainnage en question et il est valide, on donne l'argent & xp
                 server.conn.query(
-                    "INSERT INTO `rp_users2` (`id`, `steamid`, `bank`, `xp`, `pseudo`) VALUES (NULL, ?, ?, ?, ?);",
-                    [uid, parainnageCash, parainnageExp, "Parainnage"], function (err, row) {
+                    "INSERT INTO `rp_users2` (`id`, `steamid`, `bank`, `xp`, `pseudo`, `steamid2`) VALUES (NULL, ?, ?, ?, ?, ?);",
+                    [uid, parainnageCash, parainnageExp, "Parrainage", "SERVER"], function (err, row) {
 
                         if (err) return res.send(new ERR.InternalServerError("Error rp_users2 " + err));
 

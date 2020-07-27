@@ -689,6 +689,12 @@ public void SynFromWeb_call(Handle owner, Handle hQuery, const char[] error, any
 				}
 				if( xp != 0 )
 					ChangePersonnal(Client, SynType_xp, xp, 0, szPseudo, szSteamID2, szRaison);
+
+				if( StrEqual(szSteamID2, "SERVER") && StrEqual(szPseudo, "Parrainage") ){
+					IncrementSuccess(Client, success_list_w_friends);
+					IncrementSuccess(Client, success_list_w_friends2);
+					IncrementSuccess(Client, success_list_w_friends3);
+				}
 				
 			}
 			/*
