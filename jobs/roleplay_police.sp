@@ -1017,7 +1017,7 @@ void AskJailTime(int client, int target) {
 	SetMenuTitle(menu, tmp);
 	
 	Format(tmp, 255, "%d_-1", target);
-	AddMenuItem(menu, tmp, "Annuler la peine / Liberer");
+	AddMenuItem(menu, tmp, "Annuler la peine / Libérer");
 	
 	if (rp_GetClientJobID(client) == 101 || rp_GetClientBool(target, b_IsSearchByTribunal)) {
 		Format(tmp, 255, "%d_-3", target);
