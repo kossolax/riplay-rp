@@ -1,0 +1,464 @@
+[
+   [
+      "police",
+      "Un casier vierge",
+      "Ne pas se faire arrêter après plus d'une semaine.",
+      "7",
+      "0"
+   ],
+   [
+      "hopital",
+      "L'homme qui vallait 3 milliards",
+      "Se procurer les améliorations de chirurgiens, et les cumuler pendant plus de 48 heures.",
+      "2880",
+      "0"
+   ],
+   [
+      "mcdo",
+      "Inception",
+      "Gagner un happy-meal… dans un happy-meal.",
+      "1",
+      "0"
+   ],
+   [
+      "tueur",
+      "L'assassin anonyme",
+      "Acheter plus de 50 contrats, réussis, à des tueurs à gage.",
+      "50",
+      "0"
+   ],
+   [
+      "coach",
+      "Le sport, c'est la santé",
+      "Cumuler plus de 500 niveaux d'entrainement.",
+      "500",
+      "0"
+   ],
+   [
+      "dealer",
+      "Rasta drogué",
+      "Tomber en overdose.",
+      "1",
+      "0"
+   ],
+   [
+      "mafia",
+      "Cosa Nostra",
+      "Crocheter, voler, et tuer un policier en moins de 60 secondes.",
+      "1",
+      "0"
+   ],
+   [
+      "armurerie",
+      "La gachette facile",
+      "Acheter une arme, tuer l'armurier, ainsi qu'un policier à proximité en moins d'une minute.",
+      "1",
+      "0"
+   ],
+   [
+      "vetement",
+      "Concours de costumes",
+      "Changer plus de 100x son propre skin.",
+      "100",
+      "0"
+   ],
+   [
+      "detective",
+      "L'indiscret",
+      "Se procurer plus de 250 informations sur des joueurs à un détective privé.",
+      "250",
+      "0"
+   ],
+   [
+      "moniteur",
+      "Fan de paintball",
+      "Tirer l'équivalent de 5 000 billes de paintball.",
+      "5000",
+      "0"
+   ],
+   [
+      "loterie",
+      "Ce n'est que le début",
+      "Remporter pour un total de plus de 250 000$ grace à la loterie.",
+      "250000",
+      "0"
+   ],
+   [
+      "sexshop",
+      "Sex-Appeal",
+      "S'envoyer en l'air avec 10 joueurs en même temps, grâce à la sucette duo.",
+      "1",
+      "0"
+   ],
+   [
+      "technicien",
+      "Le trafiquant",
+      "Avoir une machine à faux-billets fonctionnelle pendant plus de 48 heures.",
+      "48",
+      "0"
+   ],
+   [
+      "touch_down",
+      "Toucher le fond...",
+      "Posséder 0$ pendant plus d'une journée, tout en étant sans emploi.",
+      "1",
+      "0"
+   ],
+   [
+      "touch_up",
+      "... Et rebondir",
+      "Avoir plus de 10 000$, un job, après avoir remporté le succès: \"Toucher le fond\".",
+      "1",
+      "0"
+   ],
+   [
+      "life_short",
+      "La vie est courte",
+      "Rester connecté pendant plus de 3 heures d'affilées sur le serveur.",
+      "1",
+      "0"
+   ],
+   [
+      "vengeur",
+      "Le vengeur masqué",
+      "Tuer 7x une personne venant de tuer un policier, dans les 7 secondes précédentes.",
+      "7",
+      "0"
+   ],
+   [
+      "marathon",
+      "Marathonien",
+      "Parcourir plus de 42,195km en courant.",
+      "42195",
+      "0"
+   ],
+   [
+      "brulure",
+      "Brûlure au second degré",
+      "Tuer un joueur enflammé, ainsi que le joueur l'ayant brulé.",
+      "1",
+      "0"
+   ],
+   [
+      "immune",
+      "Réflexe immunitaire",
+      "Utiliser un anti-poison dans la seconde qui suit votre empoisonnement.",
+      "1",
+      "0"
+   ],
+   [
+      "jetumeurs",
+      "Je meurs, tu meurs",
+      "Après avoir été tué par un policier, tuez le à son tour, dans les 60 secondes.",
+      "1",
+      "0"
+   ],
+   [
+      "noviolence",
+      "Non-Violent",
+      "Ne tuer personne pendant plus d'une semaine",
+      "7",
+      "0"
+   ],
+   [
+      "5sectokill",
+      "Cinq secondes pour tuer",
+      "Tuer un joueur en moins de 5 secondes après votre première connexion de la journée.",
+      "1",
+      "0"
+   ],
+   [
+      "no_spy",
+      "Contre-Espionnage",
+      "Tuer un joueur invisible.",
+      "1",
+      "0"
+   ],
+   [
+      "shared_work",
+      "Travail collectif",
+      "Faire partie d'un métier ayant 20 personnes actives.",
+      "1",
+      "0"
+   ],
+   [
+      "worldspawn",
+      "Dans le décor",
+      "Causer une chute fatale à un autre joueur grace à une arme à feu.",
+      "1",
+      "0"
+   ],
+   [
+      "only_one",
+      "Il n'en restera qu'un!",
+      "Se connecter en premier suite à un redémarrage du serveur.",
+      "1",
+      "0"
+   ],
+   [
+      "student",
+      "Bon élève",
+      "Écrire uniquement en utilisant le chat local pendant plus d'un mois.",
+      "31",
+      "0"
+   ],
+   [
+      "robin_wood",
+      "Robin des bois",
+      "Donner plus de 10 000$ à dix personnes différentes, ayant moins de 500$, sans se déconnecter.",
+      "10",
+      "0"
+   ],
+   [
+      "unknown",
+      "Professeur, et volontaire! [BIENTÔT]",
+      "Modifier un article du WiKi.",
+      "1",
+      "1"
+   ],
+   [
+      "in_gang",
+      "La guerre des gangs",
+      "Faire partie d'un groupe, et tuer 100 membres d'un autre groupe en zone PVP.",
+      "100",
+      "0"
+   ],
+   [
+      "pyramid",
+      "BRAAAAAAAAAAHHHHHHH",
+      "Faire partie d'une pyramide de 9 joueurs.",
+      "1",
+      "0"
+   ],
+   [
+      "ikea_fail",
+      "Le briseur du dimanche",
+      "Avoir posé, et détruit plus de 500 de ses propres meubles.",
+      "500",
+      "0"
+   ],
+   [
+      "graffiti",
+      "L'art de la rue",
+      "Poser 250 fois son tag.",
+      "250",
+      "0"
+   ],
+   [
+      "fireworks",
+      "Un beau spectacle",
+      "Exploser plus de 100 feux d'artifice.",
+      "100",
+      "0"
+   ],
+   [
+      "assurance",
+      "L'assurance à vie",
+      "S'assurer 10x contre les crashs.",
+      "10",
+      "0"
+   ],
+   [
+      "no_tech",
+      "Non à la contrebande",
+      "Détruire plus de 250 machines à faux billets.",
+      "250",
+      "0"
+   ],
+   [
+      "no_18th",
+      "Non à la contrebande II",
+      "Tuer plus de 25 membres des 18th lorsqu'ils volent une arme.",
+      "25",
+      "0"
+   ],
+   [
+      "million",
+      "Le million, le million, le million",
+      "Posséder plus d'un million de $.",
+      "1000000",
+      "0"
+   ],
+   [
+      "pas_vu_pas_pris",
+      "Pas vu, pas pris",
+      "Ne pas se faire voler pendant plus d'une semaine RP.",
+      "7",
+      "0"
+   ],
+   [
+      "pissing",
+      "J'te pisse au cul",
+      "Étant complètement bourré, pisser sur un policier pendant plus de 30 secondes.",
+      "30",
+      "0"
+   ],
+   [
+      "trafiquant",
+      "Trafiquant",
+      "Récolter plus de 100 plants de cannabis.",
+      "100",
+      "0"
+   ],
+   [
+      "faster_dead",
+      "Plus rapide que la mort",
+      "Se faire soigner par un médecin, et le tuer dans la seconde.",
+      "1",
+      "0"
+   ],
+   [
+      "collector",
+      "Le collectionneur",
+      "Posséder 50 items différent sur soi.",
+      "50",
+      "0"
+   ],
+   [
+      "pvpkill",
+      "Stratège",
+      "Participer à une capture PvP, et remporter l'une des bases.",
+      "1",
+      "0"
+   ],
+   [
+      "monopoly",
+      "Monopoly",
+      "Posséder 7 appartements ou plus.",
+      "7",
+      "0"
+   ],
+   [
+      "menotte",
+      "Justicier de l'amour",
+      "Menotter plus de 100 personnes.",
+      "100",
+      "0"
+   ],
+   [
+      "cafeine",
+      "Accro à la caféïne",
+      "Boire plus de 100 cafés.",
+      "100",
+      "0"
+   ],
+   [
+      "to_infini",
+      "Vers l'infini.. Et au-delà!",
+      "Toucher le plafond de la map, s'écraser au sol, et mourir.",
+      "1",
+      "0"
+   ],
+   [
+      "with_succes",
+      "Avec succès",
+      "Réussir 50 succès.",
+      "50",
+      "0"
+   ],
+   [
+      "kidnapping",
+      "Kidnapping",
+      "Enlever un joueur, et obtenir la rancon.",
+      "1",
+      "0"
+   ],
+   [
+      "killpvp2",
+      "Tuerie !",
+      "Tuer 7 membres d'un autre gang en PvP lors d'une capture, sans mourir.",
+      "7",
+      "0"
+   ],
+   [
+      "alcool_abuse",
+      "L'alcoolique anonyme",
+      "Boire plus de 1000 boissons alcoolisées.",
+      "1000",
+      "0"
+   ],
+   [
+      "tel",
+      "Dring dring…",
+      "Atteindre le niveau 5 sur chacune des missions téléphoniques.",
+      "10",
+      "0"
+   ],
+   [
+      "w_friends",
+      "Entre amis",
+      "Parrainer 5 joueurs.",
+      "5",
+      "1"
+   ],
+   [
+      "w_friends2",
+      "Entre amis II",
+      "Parrainer 10 joueurs.",
+      "10",
+      "1"
+   ],
+   [
+      "w_friends3",
+      "Entre amis III",
+      "Parrainer 15 joueurs.",
+      "15",
+      "1"
+   ],
+   [
+      "bon_patron",
+      "Bon patron",
+      "En jeu, engager 50 nouveaux joueurs différents dans son propre job.",
+      "50",
+      "0"
+   ],
+   [
+      "rainbow",
+      "Arc en ciel",
+      "Utiliser 12 crayons de couleurs.",
+      "12",
+      "0"
+   ],
+   [
+      "hdv",
+      "Hôtel des ventes",
+      "Vendre 10 lots d'objets dans l'Hôtel des ventes.",
+      "10",
+      "1"
+   ],
+   [
+      "carkill",
+      "G.T.A.",
+      "Ecraser 100 joueurs sur la route.",
+      "100",
+      "0"
+   ],
+   [
+      "carshop",
+      "Collectionneur de voitures",
+      "Posséder et personnaliser 5 voitures avec des couleurs différentes.",
+      "5",
+      "0"
+   ],
+   [
+      "lotto",
+      "Loto, toujours les mêmes…",
+      "Gagner à la loterie de princeton.",
+      "1",
+      "1"
+   ],
+   [
+      "quota",
+      "Quota",
+      "En tant que chef, dépasser son quota d'au moins 25% pendant 1 ans.",
+      "365",
+      "0"
+   ],
+   [
+      "cpt",
+      "cpt",
+      "cpt",
+      "100",
+      "2"
+   ]
+]
