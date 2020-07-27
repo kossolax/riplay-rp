@@ -617,6 +617,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 				int id = WeaponsGetDeployedWeaponIndex(client);
 				if( id > 0 ) {
 					int price = rp_GetWeaponPrice(id);
+					price /= 4;
 					GetEdictClassname(id, szWeapon, sizeof(szWeapon));
 					
 					if( g_iUserData[client][i_Disposed] > 0 && StrContains(szWeapon, "weapon_knife") == -1 && StrContains(szWeapon, "weapon_bayonet") == -1 && StrContains(szWeapon, "weapon_fists") == -1 ) {
@@ -624,7 +625,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 						Call_StartForward( view_as<Handle>(g_hRPNative[client][RP_OnResellWeapon]) );
 						Call_PushCell(client);
 						Call_PushCell(id);
-						Call_PushCell(price/4);
+						Call_PushCell(price);
 						Call_Finish();
 						
 						RemovePlayerItem(client, id );
@@ -634,10 +635,12 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 						
 						g_iUserData[client][i_Disposed]--;
 						
-						SetJobCapital(81, (GetJobCapital(81) + (price/4)));
+						SetJobCapital(81, (GetJobCapital(81) + (price)));
 						
-						rp_ClientMoney(client, i_AddToPay, (price/4));
-						
+						rp_ClientMoney(client, i_AddToPay, (price));
+
+						rp_SetClientStat(client, i_MoneyEarned_Sales, rp_GetClientStat(client, i_MoneyEarned_Sales) + price);
+				
 						
 						LogToGame("[TSX-RP] [RESELL-ARMES] %L a déposé: %s", client, szWeapon);
 						ReplaceString(szWeapon, sizeof(szWeapon), "weapon_", "");
