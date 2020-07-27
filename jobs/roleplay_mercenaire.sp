@@ -420,6 +420,8 @@ void OpenSelectSkill(int client) {
 	
 	char tmp[255];
 	int target = rp_GetClientInt(client, i_ToKill);
+
+	if( target == 0 ) return;
 	
 	Format(tmp, 254, "Sélectionner les compétences à utiliser pour votre contrat sur %N (%i)", target, g_iKillerPoint[client][competance_left]);
 	
@@ -640,13 +642,13 @@ void SetContratFail(int client, bool time = false, bool annule = false) { // tim
 			int prix = rp_GetClientInt(client, i_ContratPay);
 			int reduction = rp_GetClientInt(client, i_Reduction);
 			
-			rp_ClientMoney(target, i_Bank, prix - (RoundFloat((float(prix) / 100.0) * float(reduction)) / 2));
-			rp_ClientMoney(client, i_AddToPay, -(prix - RoundFloat((float(prix) / 100.0) * float(reduction))) / 2);
-			rp_SetJobCapital(41, rp_GetJobCapital(41) - (prix / 2));
+			rp_ClientMoney(target, i_Bank, prix - (RoundFloat((float(prix) / 100.0) * float(reduction)) * 0.8));
+			rp_ClientMoney(client, i_AddToPay, -(prix - RoundFloat((float(prix) / 100.0) * float(reduction))) * 0.8);
+			rp_SetJobCapital(41, rp_GetJobCapital(41) - (prix * 0.8));
 			
 			Call_StartForward(rp_GetForwardHandle(client, RP_OnPlayerSell));
 			Call_PushCell(client);
-			Call_PushCell(- (prix - RoundFloat( (float(prix) / 100.0) * float(reduction))) / 2);
+			Call_PushCell(- (prix - RoundFloat( (float(prix) / 100.0) * float(reduction))));
 			Call_Finish();
 		}
 		else {
