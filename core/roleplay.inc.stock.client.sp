@@ -946,16 +946,8 @@ int GetAssurence(int client, bool forced = false) {
 		
 		if( IsPolice(client) && rp_GetWeaponStorage(wepIdx) )
 			continue;
-		GetEdictClassname(wepIdx, wepname, sizeof(wepname));
 		
-		char wepdata[64];
-		Format(wepdata, sizeof(wepdata), "%s", wepname);
-		ReplaceString(wepdata, sizeof(wepdata), "weapon_", "");
-		ReplaceString(wepdata, sizeof(wepdata), "item_", "");
-		
-		int price = CS_GetWeaponPrice2(client, CS_AliasToWeaponID(wepdata), true);
-		
-		amount += RoundFloat( (float(price)/100.0) * (50.0) );
+		amount += RoundFloat( float(rp_GetWeaponPrice(wepIdx)) * 0.5);
 	}
 	
 	amount += GivePlayerPay(client, true);
