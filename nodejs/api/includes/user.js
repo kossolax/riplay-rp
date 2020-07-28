@@ -1057,7 +1057,9 @@ server.get('/user/:id/stats', function (req, res, next) {
 
     var arr = new Array();
     for(var i=0; i<rows.length; i++) {
-      arr.push( {name: statData[rows[i].stat_id], data: rows[i].data} )
+      if(statData[rows[i].stat_id] != ""){
+        arr.push( {name: statData[rows[i].stat_id], data: rows[i].data} )
+      }
     }
     obj.stat = arr;
     cb(obj);
