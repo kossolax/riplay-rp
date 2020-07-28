@@ -749,10 +749,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		
 		rp_SetClientStat(client, i_JobFails, rp_GetClientStat(client, i_JobFails) + 1);
 		rp_SetClientInt(client, i_LastVolVehicleTime, GetTime());
-		rp_SetClientInt(client, i_LastVolAmount, 100);
-		rp_SetClientInt(client, i_LastVolTarget, target);
 		rp_SetClientFloat(target, fl_LastStolen, GetGameTime() + (rp_GetClientBool(target, b_IsAFK) ? 300.0 : 0.0));
-		rp_Effect_Cashflow(client, price / 4);
 		
 		rp_HookEvent(client, RP_PrePlayerPhysic, fwdAccelerate, StealTime);
 		rp_HookEvent(client, RP_PreTakeDamage, fwdDamage, StealTime);
@@ -1384,10 +1381,10 @@ public Action ItemPickLockOver_18th(Handle timer, Handle dp) {
 		return Plugin_Handled;
 	}
 	
-	
 	rp_SetClientFloat(target, fl_LastStolen, GetGameTime() + (rp_GetClientBool(target, b_IsAFK) ? 300.0 : 0.0));
 	rp_SetClientInt(client, i_LastVolTime, GetTime());
 	rp_SetClientInt(client, i_LastVolAmount, price/4);
+	rp_Effect_Cashflow(client, price / 4);
 	rp_SetClientInt(client, i_LastVolTarget, target);
 	rp_SetClientInt(target, i_LastVol, client);
 	
