@@ -639,12 +639,13 @@ void SetContratFail(int client, bool time = false, bool annule = false) { // tim
 				CPrintToChat(target, "" ...MOD_TAG... " %N{default} a été tué et n'a pas pu remplir son contrat.", client);
 			
 			
-			int prix = rp_GetClientInt(client, i_ContratPay);
+			int prix = RoundFloat(rp_GetClientInt(client, i_ContratPay) * 0.8);
+			int capital = RoundFloat(rp_GetClientInt(client, i_ContratPay) * 0.2);
 			int reduction = rp_GetClientInt(client, i_Reduction);
 			
-			rp_ClientMoney(target, i_Bank, prix - (RoundFloat((float(prix) / 100.0) * float(reduction)) * 0.8));
-			rp_ClientMoney(client, i_AddToPay, -(prix - RoundFloat((float(prix) / 100.0) * float(reduction))) * 0.8);
-			rp_SetJobCapital(41, rp_GetJobCapital(41) - (prix * 0.8));
+			rp_ClientMoney(target, i_Bank, prix - (RoundFloat((float(prix) / 100.0) * float(reduction)) / 2));
+			rp_ClientMoney(client, i_AddToPay, -(prix - RoundFloat((float(prix) / 100.0) * float(reduction))) / 2);
+			rp_SetJobCapital(41, rp_GetJobCapital(41) - capital);
 			
 			Call_StartForward(rp_GetForwardHandle(client, RP_OnPlayerSell));
 			Call_PushCell(client);
