@@ -31,13 +31,6 @@ public void EventFirstSpawn(int client) {
 		CreateTimer(1.0, HUD_WarnDisconnect, client);
 
 	ServerCommand("sm_force_discord_group %N", client);
-	CPrintToChat(client, "" ...MOD_TAG... " Pendant la phase BETA du serveur, une assurance vous êtes offerte.");
-	
-	if( GetGameTime() <= (15.0*60.0) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Le serveur a crash, nous avons besoin de votre aide.");
-		CPrintToChat(client, "" ...MOD_TAG... " Dites nous votre dernière action sur le channel discord #report-crash");
-		CPrintToChat(client, "" ...MOD_TAG... " Ensemble, nous pourrons trouver la source du problème et profiter d'un serveur stable. Merci!");	
-	}
 }
 public Action HUD_WarnDisconnect(Handle timer, any client) {
 	if( !g_bUserData[client][b_ItemRecovered] )

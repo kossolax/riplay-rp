@@ -986,10 +986,16 @@ void SendPlayerToJail(int target, int client = 0) {
 	g_bBlockJail[target] = true;
 	CreateTimer(MENU_TIME_DURATION.0, AllowWeaponDrop, target);
 	
+	int tmp2 = rp_GetClientInt(target, i_LastVolCashFlowTime);
+	
 	Call_StartForward(rp_GetForwardHandle(target, RP_PostClientSendToJail));
 	Call_PushCell(target);
 	Call_PushCell(client);
 	Call_Finish();
+	
+	if( tmp2 > GetTime() ) {
+		rp_SetClientInt(target, i_LastVolCashFlowTime, rp_GetClientInt(target, i_LastVolTime) - tmp2); // volontairement en négatif.
+	}
 }
 public Action AllowWeaponDrop(Handle timer, any client) {
 	g_bBlockJail[client] = false;
@@ -1017,7 +1023,7 @@ void AskJailTime(int client, int target) {
 	SetMenuTitle(menu, tmp);
 	
 	Format(tmp, 255, "%d_-1", target);
-	AddMenuItem(menu, tmp, "Annuler la peine / Liberer");
+	AddMenuItem(menu, tmp, "Annuler la peine / Libérer");
 	
 	if (rp_GetClientJobID(client) == 101 || rp_GetClientBool(target, b_IsSearchByTribunal)) {
 		Format(tmp, 255, "%d_-3", target);
@@ -1212,7 +1218,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 				return;
 			}
 			if (IsValidClient(rp_GetClientInt(target, i_LastVolTarget))) {
-				if( rp_GetClientInt(target, i_LastVolCashFlowTime) < GetTime() ) {
+				if( rp_GetClientInt(target, i_LastVolCashFlowTime) >= 0 ) {
 					CPrintToChat(target, "" ...MOD_TAG... " Vous avez réussi à cacher votre butin, vous ne remboursez pas votre victime");
 				}
 				else {
