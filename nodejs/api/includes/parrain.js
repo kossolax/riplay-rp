@@ -45,12 +45,10 @@ exports = module.exports = function (server) {
             if (row.length == 0) return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
             var uid = row[0].steamid;
 
-            var sql = "UPDATE P "
-            sql += "SET P.approuved = 1 ";
-            sql += "FROM rp_parrain P ";
+            var sql = "UPDATE rp_parrain P "
             sql += "INNER JOIN rp_idcard ID ON ID.steamid=P.steamid ";
+            sql += "SET P.approuved = 1 ";
             sql += "WHERE  P.approuved = 0 AND ID.played>72000 AND P.steamid = ? and P.parent = ? ";
-           
             server.conn.query(sql, [req.params['steamidfilleul'], uid], function (err, result) {
                 if (result.affectedRows != 1) {
                     return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
