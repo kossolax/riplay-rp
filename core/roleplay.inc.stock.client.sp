@@ -884,7 +884,9 @@ int GetAssurence(int client, bool forced = false) {
 				if( !rp_GetBuildingData(i, BD_FromBuild) ) {
 					int item_id = rp_GetBuildingData(i, BD_original_id);
 					if( item_id > 0 ) {
-						amount += (StringToInt(g_szItemList[BD_original_id][item_type_prix]) * 3 / 4);
+						amount += (StringToInt(g_szItemList[BD_original_id][item_type_prix]) * 3 / 4);					
+						if( rp_GetBuildingData(i, BD_max) > 3 )
+							amount += ((rp_GetBuildingData(i, BD_max) - 3) * 75);
 					}
 				}
 			}
