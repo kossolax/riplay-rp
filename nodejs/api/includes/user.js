@@ -1213,6 +1213,7 @@ server.get('/user/:id/incomes/:scale', function (req, res, next) {
   
   var steamid = steamidconvert.convertToText(req.params['id']);
   steamid = steamid.replace('STEAM_0', 'STEAM_1');
+  steamid = req.params['id'];
 
   server.conn.query(sql, [steamid], function(err, rows) {
     if( err ) return res.send(new ERR.InternalServerError(err));

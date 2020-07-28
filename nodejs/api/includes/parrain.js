@@ -16,13 +16,14 @@ exports = module.exports = function (server) {
             if (row.length == 0) return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
             var uid = row[0].steamid;
 
-            var sql = "SELECT P.steamid, P.timestamp, ID.played, P.approuved ";
+            var sql = "SELECT P.steamid, P.timestamp, ID.played, P.approuved, U.name ";
             sql += "FROM rp_parrain P ";
             sql += "INNER JOIN rp_idcard ID ON ID.steamid=P.steamid ";
+            sql += "INNER JOIN rp_users U ON U.steamid=P.steamid ";
             sql += "WHERE P.parent = ? "
             sql += "ORDER BY ID.played DESC"
+          
             server.conn.query(sql, [uid], function (err, rows) {
-		console.log(rows, err, uid);
                 return res.send(rows);
             });
         });
@@ -49,8 +50,9 @@ exports = module.exports = function (server) {
             sql += "FROM rp_parrain P ";
             sql += "INNER JOIN rp_idcard ID ON ID.steamid=P.steamid ";
             sql += "WHERE  P.approuved = 0 AND ID.played>72000 AND P.steamid = ? and P.parent = ? ";
+           
             server.conn.query(sql, [req.params['steamidfilleul'], uid], function (err, result) {
-                if (results.affectedRows != 1) {
+                if (result.affectedRows != 1) {
                     return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
                 }
                 // On a r├®ussi a set approuv├® ├á true, pour le parainnage en question et il est valide, on donne l'argent & xp

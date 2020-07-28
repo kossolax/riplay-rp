@@ -720,9 +720,52 @@ app.controller('rpDonation', function($scope, $http, $routeParams, $location) {
   });
 });
 
-app.controller('rpSuccess', function($scope, $http, $timeout, $interval, $window, $location, $routeParams) {
-  console.log("toto 3");
+app.controller('rpParrainage', function($scope, $http, $routeParams, $location) {
+  document.title = "Riplay.fr | RolePlay - Parrainage";
+  
+  if(_steamid == null || _steamid == undefined || !_steamid) {
+    $window.location.href = 'http://rpweb.riplay.fr';
+  }
 
+  $http.get("https://riplay.fr/api/parrain").then(function(res) { 
+    console.log(res);
+    var data = [];
+    var pos = 0;
+    var need_time = 72000;
+
+    res.data.forEach( item => {
+      data.push({
+        approuved: item.approuved,
+        name: item.name,
+        steamid: item.steamid,
+        played: item.played,
+        canvalidate: item.played >= need_time ? true:false,
+        progress: ((item.played / need_time) * 100).toFixed(2)
+      });
+    });
+
+    $scope.need_time = need_time;
+    $scope.data = data;
+  });
+
+  $scope.validate = function(steamid) {
+    $http.post("https://riplay.fr/api/parrain/"+steamid+"/validate") .then(function (res) {
+      
+      $scope.editShowNote = false;
+
+      let index = $scope.data.findIndex(element => element.steamid == steamid);
+      $scope.data[index].approuved = 1;
+
+      $scope.data = $scope.data;
+
+      console.log(res);
+    },function (res){
+      $scope.errmessage = "Error";
+    });
+  }
+});
+
+app.controller('rpSuccess', function($scope, $http, $timeout, $interval, $window, $location, $routeParams) {
   document.title = "Riplay RolePlay - Success";
   $scope.steamid = $routeParams.sub;
 

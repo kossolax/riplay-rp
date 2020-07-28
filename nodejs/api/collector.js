@@ -8,7 +8,8 @@ var mysql = require('mysql2');
 var chokidar = require('chokidar');
 var Tail = require('tail').Tail;
 
-var db_config = { socketPath: '/var/run/mysqld/mysqld.sock', user : 'superuser', password : 'HNGFYi~IZJO&', database : 'rp_csgo'};
+var server = {};
+require('./auth.js')(server);
 var conn;
 
 function chunk(array, size) {
@@ -55,7 +56,7 @@ function steamIDToProfile(steamID) {
 }
 
 function handleDisconnect() {
-	conn = mysql.createConnection(db_config);
+	conn = mysql.createConnection(server.db_config);
 	conn.connect(function(err) {
 		if( err ) {
 			setTimeout(handleDisconnect, 2000);
