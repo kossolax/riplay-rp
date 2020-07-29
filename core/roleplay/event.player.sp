@@ -344,7 +344,6 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	if( GetClientTeam(Client) == CS_TEAM_CT ) {	
 		SetEntityHealth(Client, 500);
 		g_iUserData[Client][i_Kevlar] = 250;
-		FakeClientCommand(Client, "say /shownotes");
 	}
 
 	StripWeapons(Client);
