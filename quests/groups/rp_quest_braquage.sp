@@ -11,7 +11,7 @@
 #pragma semicolon 1
 
 #include <sourcemod>
-#include <sdktools>
+#include <sdktools> 
 #include <cstrike>
 #include <colors_csgo>   // https://forums.alliedmods.net/showthread.php?p=2205447#post2205447
 #include <smlib>      // https://github.com/bcserv/smlib
@@ -105,10 +105,10 @@ public bool fwdCanStart(int client) {
 	if( rp_GetClientInt(client, i_PlayerLVL) < 210 )
 		return false;
 	
+	/*
 	char szDayOfWeek[12], szHours[12];
 	FormatTime(szDayOfWeek, 11, "%w");
 	FormatTime(szHours, 11, "%H");
-	
 	if( StringToInt(szDayOfWeek) == 3 ) { // Mercredi
 		if( StringToInt(szHours) >= 17 && StringToInt(szHours) < 19  ) {	// 18h00m00s
 			return false;
@@ -119,6 +119,7 @@ public bool fwdCanStart(int client) {
 			return false;
 		}
 	}
+	*/
 	int ct = 0;
 	int t = 0;
 	for (int i = 1; i <= MaxClients; i++) {
@@ -840,8 +841,12 @@ public Action fwdDead(int client, int attacker, float& respawn, int& tdm) {
 	if( g_iPlayerTeam[attacker] == TEAM_BRAQUEUR && g_bHasHelmet ) {
 		return Plugin_Handled;
 	}
-	if( g_iPlayerTeam[attacker] == TEAM_POLICE && g_bHasHelmet && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == g_iPlanque) {
-		return Plugin_Handled;
+	if( g_iPlayerTeam[attacker] == TEAM_POLICE && g_bHasHelmet ) {
+		if( rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == g_iPlanque ) {
+			return Plugin_Handled;
+		}
+		tdm = 0;
+		return Plugin_Changed;
 	}
 	return Plugin_Continue;
 }
