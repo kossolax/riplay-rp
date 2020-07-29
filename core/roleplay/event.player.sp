@@ -27,7 +27,7 @@ public void EventFirstSpawn(int client) {
 	if( g_iUserData[client][i_PlayerLVL] < 12 )
 		g_bUserData[client][b_GameModePassive] = true;
 	
-	if( g_bUserData[client][b_ItemRecovered] )
+	if( g_bUserData[client][b_ItemRecovered] && rp_IsClientNew(client) )
 		CreateTimer(1.0, HUD_WarnDisconnect, client);
 
 	ServerCommand("sm_force_discord_group %N", client);
