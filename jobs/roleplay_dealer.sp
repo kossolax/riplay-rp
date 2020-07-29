@@ -1453,6 +1453,8 @@ public int Menu_Market(Handle menu, MenuAction action, int client, int param2) {
 				return;
 			
 			rp_ClientMoney(client, i_Money, -prix);
+			rp_SetClientStat(client, i_MoneySpent_Shop, rp_GetClientStat(client, i_MoneySpent_Shop) + prix);
+
 			getItemFromMarket(itemID, amount);
 			
 			rp_ClientGiveItem(client, itemID, amount);
@@ -1482,8 +1484,9 @@ void getItemFromMarket(int itemID, int amount) {
 	
 	g_iMarket[itemID] -= amount;
 	
-	int stackClient[65], stackCpt, cpt, rnd;
+	int stackClient[65], stackCpt, cpt, rnd, money;
 	float ratio;
+
 	for (int i = 1; i <= MaxClients; i++) {
 		if( !IsValidClient(i) )
 			continue;
@@ -1501,7 +1504,11 @@ void getItemFromMarket(int itemID, int amount) {
 		ratio = getTaxe(stackClient[rnd]);
 		
 		g_iMarketClient[itemID][stackClient[rnd]]--;
-		rp_ClientMoney(stackClient[rnd], i_AddToPay, RoundFloat(prix*(1.0-ratio)) );
+		
+		money = RoundFloat(prix*(1.0-ratio));
+		rp_ClientMoney(stackClient[rnd], i_AddToPay, money);
+		rp_SetClientStat(stackClient[rnd], i_MoneyEarned_Sales, rp_GetClientStat(stackClient[rnd], i_MoneyEarned_Sales) + money);
+		
 		rp_SetJobCapital(81, rp_GetJobCapital(81) + RoundFloat(prix*ratio) );
 		
 		if( g_iMarketClient[itemID][stackClient[rnd]] == 0 ) {
