@@ -102,6 +102,11 @@ var CollectEnabled = 0;
 var sql1 = "INSERT INTO `rp_bigdata` (`date`, `steamid`, `target`, `amount`, `line`, `type`, `fileId`) VALUES ?";
 var sql2 = "INSERT INTO `rp_bigdata` (`date`, `steamid`, `target`, `amount`, `line`, `type`, `fileId`) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
+function parseDate(line) {
+	var time = filter["date"].exec(line);
+	if( time )
+		return new Date(time[3], time[1]-1, time[2], time[4], time[5], time[6], 0);
+}
 function parseLine(line) {
 	var time = filter["dateSteamID"].exec(line);
 	if( time ) {
@@ -154,14 +159,24 @@ conn.query("SELECT * FROM `rp_bigdata_files`", function(err, row) {
 		}
 	});
 
-	fileToParse.sort().map( i => parseNewFile(i) );
-	fileToWatch.sort().map( i => watchFile(i) );
+	var loading = fileToParse.length;
 
-	var watcher = chokidar.watch(dir+"*.log", {usePolling: true, interval: 100, ignoreInitial: true});
-	watcher.on('add', (ev, file) => {
-		console.log("New file to watch: ", file);
-		watchFile(file.replace(dir, ""))
-	});
+	function cb() {
+		loading--;
+
+		if( loading <= 0 ) {
+			fileToWatch.sort().map( i => watchFile(i) );
+			var watcher = chokidar.watch(dir+"*.log", {usePolling: true, interval: 100, ignoreInitial: true});
+			watcher.on('add', (ev, file) => {
+				console.log("New file to watch: ", file);
+				watchFile(file.replace(dir, ""));
+			});
+		}
+	}
+
+	fileToParse.sort().map( i => parseNewFile(i, cb) );
+	if( fileToParse.length == 0 )
+		cb();
 });
 
 function watchFile(file) {
@@ -191,16 +206,25 @@ function watchFile(file) {
 
 }
 function parseNewFile(file, cb) {
-	const lines = fs.readFileSync(dir+file, 'utf8').split("\n");
-	const data = lines.map( i => parseLine(i) ).filter(Boolean);
-	const first = data.length > 0 ? data[0][0] : new Date();
-	const last = data.length > 0 ? data[ data.length - 1][0] : new Date();
+	let data = fs.readFileSync(dir+file, 'utf8').split("\n");
+	let length = data.length
 
-	conn.query("INSERT INTO `rp_bigdata_files` (`name`, `start`, `stop`, `size`, `line`) VALUES (?, ?, ?, ?, ?);", [file, first, last, 0, lines.length], function(err, row) {
+	let first = parseDate(data[0]);
+	let last =  null;
+	for( let i = length -1; i>=0; i--) {
+		last = parseDate(data[i]);
+		if( last )
+			break;
+	}
+
+	data = data.map( i => parseLine(i) ).filter(Boolean);
+
+	conn.query("INSERT INTO `rp_bigdata_files` (`name`, `start`, `stop`, `size`, `line`) VALUES (?, ?, ?, ?, ?);", [file, first, last, 0, length], function(err, row) {
+
 		files[file] = {
 			start: first,
 			stop: last,
-			line: lines.length,
+			line: length,
 			id: row.insertId
 		}
 
