@@ -109,8 +109,8 @@ void HDV_Sell(int client, int itemID, int quantity, int sellPrice, int confirm) 
 	else if( sellPrice == 0 ) {
 		rp_GetItemData(itemID, item_type_name, tmp3, sizeof(tmp3));
 	
-		int minPrice = RoundToFloor(rp_GetItemFloat(itemID, item_type_prix) * 0.75);
-		int maxPrice = RoundToCeil(rp_GetItemFloat(itemID, item_type_prix) * 1.25);
+		int minPrice = RoundToFloor(rp_GetItemFloat(itemID, item_type_prix) * 0.9);
+		int maxPrice = RoundToCeil(rp_GetItemFloat(itemID, item_type_prix) * 1.1);
 		int step = RoundToCeil(rp_GetItemFloat(itemID, item_type_prix) * 0.01);
 		int lastp = 0;
 		
