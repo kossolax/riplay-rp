@@ -1316,7 +1316,7 @@ void Cmd_BuyItemMenu(int client, bool free) {
 		return;
 	}
 	
-	Menu menu = new Menu(Menu_BuyWeapon);
+	Menu menu = new Menu(Menu_BuyBlackMarket);
 	menu.SetTitle("Marché noir\n ");
 	
 	while( position < max ) {
@@ -1337,7 +1337,7 @@ void Cmd_BuyItemMenu(int client, bool free) {
 	menu.Display(client, 60);
 	return;
 }
-public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int p_iParam2) {
+public int Menu_BuyBlackMarket(Handle p_hMenu, MenuAction p_oAction, int client, int p_iParam2) {
 	if (p_oAction == MenuAction_Select) {
 		
 		char szMenu[64], tmp[64], buffer[2][32];
@@ -1373,6 +1373,8 @@ public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int 
 			
 			deleteBuyMenu(position);
 			rp_ClientMoney(client, i_Money, -data[IM_Prix]);
+			rp_SetClientStat(client, i_MoneySpent_Shop, rp_GetClientStat(client, i_MoneySpent_Shop) + data[IM_Prix]);
+			
 			rp_ClientGiveItem(client, data[IM_ItemID]);
 			rp_GetItemData(data[IM_ItemID], item_type_name, tmp, sizeof(tmp));
 			
@@ -1396,7 +1398,9 @@ public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int 
 			else if( IsValidClient(data[IM_Owner]) && rp_GetClientJobID(data[IM_Owner]) == 91 && data[IM_Prix] > 0 ) {
 				rp_SetJobCapital(91, rp_GetJobCapital(91) + RoundToCeil(float(data[IM_Prix]) * 0.5));
 				rp_ClientMoney(data[IM_Owner], i_AddToPay, RoundToFloor(float(data[IM_Prix]) * 0.5));
-				
+
+				rp_SetClientStat(data[IM_Owner], i_MoneyEarned_Sales, rp_GetClientStat(data[IM_Owner], i_MoneyEarned_Sales) + RoundToFloor(float(data[IM_Prix]) * 0.5));
+
 				CPrintToChat(data[IM_Owner], "" ...MOD_TAG... " Vous avez vendu 1 %s à %N{default} au marché noir pour %d$", tmp, client, data[IM_Prix]);
 			}
 			else {
