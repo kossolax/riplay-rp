@@ -1316,7 +1316,7 @@ void Cmd_BuyItemMenu(int client, bool free) {
 		return;
 	}
 	
-	Menu menu = new Menu(Menu_BuyWeapon);
+	Menu menu = new Menu(Menu_BuyBlackMarket);
 	menu.SetTitle("Marché noir\n ");
 	
 	while( position < max ) {
@@ -1337,7 +1337,7 @@ void Cmd_BuyItemMenu(int client, bool free) {
 	menu.Display(client, 60);
 	return;
 }
-public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int p_iParam2) {
+public int Menu_BuyBlackMarket(Handle p_hMenu, MenuAction p_oAction, int client, int p_iParam2) {
 	if (p_oAction == MenuAction_Select) {
 		
 		char szMenu[64], tmp[64], buffer[2][32];
