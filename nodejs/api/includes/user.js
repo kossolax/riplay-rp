@@ -827,11 +827,11 @@ server.get('/user/:id/personality', function (req, res, next) {
     }
 
     if( connected ==  1 ) {
-      var tmp = (new Date() - lastDate)/1000
+      var tmp = (lastRow.stop - lastDate)/1000
       connexionTime += tmp;
     }
     if( connected ==  2 ) {
-      var tmp = (new Date() - lastDate)/1000 + (3*60);
+      var tmp = (lastRow.stop - lastDate)/1000 + (3*60);
       afkTime += tmp;
     }
 
@@ -951,11 +951,11 @@ server.get('/user/:id/playtime/:type', function (req, res, next) {
 
 
       if( connected ==  1 ) {
-        var tmp = (new Date() - lastDate)/1000
+        var tmp = (lastRow.stop  - lastDate)/1000
         connexionTime += tmp;
       }
       if( connected ==  2 ) {
-        var tmp = (new Date() - lastDate)/1000 + (3*60);
+        var tmp = (lastRow.stop - lastDate)/1000 + (3*60);
         afkTime += tmp;
       }
 

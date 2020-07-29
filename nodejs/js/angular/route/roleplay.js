@@ -49,11 +49,10 @@ exports = module.exports = function(app) {
       templateUrl: function(p) { return "/templates/node/roleplay_success.tpl"; },
       reloadOnSearch: false,
       controller: 'rpSuccess'
-    }).when('/zboubzboub/', {
+    }).when('/parrainage', {
       templateUrl: function(p) { return "/templates/node/roleplay_parrainage.tpl"; },
       reloadOnSearch: false,
       controller: 'rpParrainage'
-
     }).when('/success/', {
       templateUrl: function(p) { return "/templates/node/roleplay_success.tpl"; },
       reloadOnSearch: false,
