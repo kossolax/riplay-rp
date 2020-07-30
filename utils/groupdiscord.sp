@@ -45,6 +45,7 @@ public Action cmdForceDiscordGroup(int args) {
 public void AddAuthToQueue(int client) {
 	char authid[32];
 	GetClientAuthId(client, AuthId_SteamID64, authid, sizeof(authid));
+	if(g_gQueue.FindString(authid) > -1) continue;
 
 	g_hQueue.PushString(authid);
 }
