@@ -887,7 +887,7 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 				g_iSuccess_last_armu[client][0] = GetTime();
 			}
 			
-			if( IsGangMaffia(client) || IsGang18th(client)) {
+			if( IsGangMaffia(client) || IsDealer(client)) {
 				g_flUserData[vendeur][fl_LastVente] = GetGameTime();
 			}
 			
