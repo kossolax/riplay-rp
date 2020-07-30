@@ -52,6 +52,24 @@ public void OnPluginStart() {
 	for (int i = 1; i <= MaxClients; i++) 
 		if( IsValidClient(i) )
 			OnClientPostAdminCheck(i);
+	
+	
+	char classname[64];
+	for (int i = MaxClients; i <= 2048; i++) {
+		if( !IsValidEdict(i) )
+			continue;
+		if( !IsValidEntity(i) )
+			continue;
+		
+		GetEdictClassname(i, classname, sizeof(classname));
+		if( StrEqual(classname, "rp_healbox") ) {
+			
+			rp_SetBuildingData(i, BD_started, GetTime());
+			rp_SetBuildingData(i, BD_owner, GetEntPropEnt(i, Prop_Send, "m_hOwnerEntity") );
+			
+			CreateTimer(Math_GetRandomFloat(0.0, 1.0), BuildingHealBox_post, i);
+		}
+	}
 }
 public void OnMapStart() {
 	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt", true);
@@ -217,7 +235,10 @@ public Action fwdAssurance(int client, int& amount) {
 	}
 	if( rp_GetClientBool(client, ch_Speed) ) {
 		amount += 1000;
-	}	
+	}
+	if( rp_GetClientBool(client, b_HasProtImmu) ) {
+		amount += 2250;
+	}
 	
 	return Plugin_Changed; // N'a pas d'impact, pour le moment.
 }
@@ -339,12 +360,7 @@ public Action Cmd_ItemProtImmu(int args) {
 	
 	rp_SetClientBool(client, b_HasProtImmu, true);
 	CPrintToChat(client, "" ...MOD_TAG... " Vous bénéficiez maintenant d'une protection immunitaire.");
-	rp_HookEvent(client, RP_OnAssurance,	fwdAssurance2);
 	return Plugin_Handled;
-}
-public Action fwdAssurance2(int client, int& amount) {
-	amount += 250;
-	return Plugin_Changed;
 }
 public Action Cmd_ItemRespawn(int args) {
 	
