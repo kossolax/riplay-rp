@@ -926,7 +926,7 @@ public Action Cmd_Push(int client) {
 	TeleportEntity(target, NULL_VECTOR, NULL_VECTOR, f_Velocity);
 	
 	
-	LogToGame("[TSX-RP] [TAZER] %L a tazé %N dans %d.", client, target, rp_GetPlayerZone(target));
+	LogToGame("[TSX-RP] [TAZER] %L a push %N dans %d.", client, target, rp_GetPlayerZone(target));
 	
 	return Plugin_Handled;
 }
