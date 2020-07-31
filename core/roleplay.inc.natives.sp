@@ -571,7 +571,13 @@ void ClientAgroDecrement(int client) {
 		
 		if( tmp[KillStack_time] < GetTime() ) {
 			g_hAggro[client].Erase(0);
-			g_iAggro[client][ tmp[KillStack_target] ] -= tmp[KillStack_damage];	
+			g_iAggro[client][ tmp[KillStack_target] ] -= tmp[KillStack_damage];
+			
+			
+			if( g_hAggro[client].Length == 0 ) {
+				delete g_hAggro[i];
+				g_hAggro[i] = new ArrayList(KillStack_max, 0);
+			}
 		}
 		else {
 			break;

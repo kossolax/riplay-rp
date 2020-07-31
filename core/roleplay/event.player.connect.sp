@@ -13,6 +13,7 @@
 public void OnClientPutInServer(int Client) {
 	check_dead(Client);
 	g_iEntityLimit = GetConVarInt(g_hMAX_ENT);
+	g_hAggro[i] = new ArrayList(KillStack_max, 0);
 }
 public void OnClientPostAdminCheck(int Client) {
 	if(!IsFakeClient(Client)) {
@@ -73,6 +74,8 @@ public void OnClientDisconnect(int Client) {
 		for (int i = 0; i < view_as<int>(RP_EventMax); i++)
 			RemoveAllFromForward(g_hRPNative[Client][i], plugin);
 	}
+	
+	delete g_hAggro[Client];
 	
 	int old = EntRefToEntIndex(g_iUserData[Client][i_FPD]);
 	if( old > 0 ) {

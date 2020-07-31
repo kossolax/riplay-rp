@@ -104,8 +104,8 @@ public void OnPluginStart() {
 	HookEvent("weapon_fire", Event_Weapon_Fire);
 	
 	for (int i = 1; i <= MaxClients; i++)
-	if (IsValidClient(i))
-		OnClientPostAdminCheck(i);
+		if (IsValidClient(i))
+			OnClientPostAdminCheck(i);
 }
 
 public void OnAllPluginsLoaded() {
@@ -114,6 +114,9 @@ public void OnAllPluginsLoaded() {
 public void OnPluginEnd() {
 	if (g_hBuyMenu)
 		rp_WeaponMenu_Clear(g_hBuyMenu);
+	
+	for (int i = 1; i <= MaxClients; i++)
+		OnClientDisconnect(i);
 }
 public Action Cmd_GetStoreWeapon(int args) {
 	Cmd_BuyWeapon(GetCmdArgInt(1), true);
