@@ -905,19 +905,28 @@ public void CRON_TIMER() {
 	}
 	
 	
-	
-	if( StringToInt(szHours) == 5 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 30 ) {	// 05h59m30s
-		ServerCommand("rp_give_assu");
+	if( (StringToInt(szHours) ==  4 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 30) ||
+		(StringToInt(szHours) == 16 && StringToInt(szMinutes) == 29 && StringToInt(szSecondes) == 30) 
+		) {	
 		CPrintToChatAll("" ...MOD_TAG... " Le serveur vas {red}redémarrer{default} dans 30 secondes.");
+		CPrintToChatAll("" ...MOD_TAG... " Le serveur vas {red}redémarrer{default} dans 30 secondes.");
+		CPrintToChatAll("" ...MOD_TAG... " Le serveur vas {red}redémarrer{default} dans 30 secondes.");
+		ServerCommand("rp_give_assu");
 	}
-	
-	if( StringToInt(szHours) == 6 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 06h00m00s
+	if( (StringToInt(szHours) ==  5 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0) ||
+		(StringToInt(szHours) == 16 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0)	) {
 		CPrintToChatAll("" ...MOD_TAG... " Le serveur vas {red}redémarrer{default} MAINTENANT.");
+		
+		for(int i = 1; i <= MaxClients; i++)
+			if( IsValidClient(i) )
+				ClientCommand(i, "retry"); // force retry
+			
+		ServerCommand("quit");
 		ServerCommand("sv_cheats 1");
 		ServerCommand("crash");
-		ServerCommand("quit");
-		
 	}
+	
+	
 	if( StringToInt(szDayOfWeek) == 3 ) { // Mercredi
 		if( StringToInt(szHours) == 18 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 18h00m00s
 			ServerCommand("rp_capture active");
