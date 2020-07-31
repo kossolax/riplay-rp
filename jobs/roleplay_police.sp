@@ -1331,7 +1331,9 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 		if (IsValidClient(client) && IsValidClient(target)) {
 			CPrintToChat(client, "" ...MOD_TAG... " %N{default} restera en prison %.1f heures pour \"%s\"", target, time_to_spend / 60.0, g_szJailRaison[type][jail_raison]);
 			CPrintToChat(target, "" ...MOD_TAG... " %N{default} vous a mis %.1f heures de prison pour \"%s\"", client, time_to_spend / 60.0, g_szJailRaison[type][jail_raison]);
-			explainJail(target, type);
+			
+			if( time_to_spend > 0 || amende > 0 )
+				explainJail(target, type);
 		}
 		else {
 			CPrintToChat(client, "" ...MOD_TAG... " Le joueur s'est déconnecté mais il fera %.1f heures de prison", time_to_spend / 60.0);
