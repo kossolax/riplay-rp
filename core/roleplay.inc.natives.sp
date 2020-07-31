@@ -575,8 +575,8 @@ void ClientAgroDecrement(int client) {
 			
 			
 			if( g_hAggro[client].Length == 0 ) {
-				delete g_hAggro[i];
-				g_hAggro[i] = new ArrayList(KillStack_max, 0);
+				delete g_hAggro[client];
+				g_hAggro[client] = new ArrayList(KillStack_max, 0);
 			}
 		}
 		else {

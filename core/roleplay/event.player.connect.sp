@@ -13,7 +13,7 @@
 public void OnClientPutInServer(int Client) {
 	check_dead(Client);
 	g_iEntityLimit = GetConVarInt(g_hMAX_ENT);
-	g_hAggro[i] = new ArrayList(KillStack_max, 0);
+	g_hAggro[Client] = new ArrayList(KillStack_max, 0);
 }
 public void OnClientPostAdminCheck(int Client) {
 	if(!IsFakeClient(Client)) {
