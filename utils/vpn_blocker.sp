@@ -40,7 +40,9 @@ public Action Cmd_Reload(int args) {
 	ServerCommand("sm plugins reload %s", name);
 	return Plugin_Continue;
 }
-	
+public void OnPluginEnd() {
+	delete g_hQueue;
+}
 public void OnPluginStart() {
 	
 	g_hScoring = new StringMap();
