@@ -496,7 +496,7 @@ native void rp_ClientOpenDoor(int client, int doorID, bool status);					/* Le jo
 // ----------------------------------------------------------------------------
 native void rp_SetWeaponGroupID(int wepID, int groupID);							/* Défini le numéro de groupe d'une arme. cf rp_GetClientGroupID */
 native void rp_SetWeaponBallType(int wepID, enum_ball_type typeID);					/* Défini le type de balle d'une arme */
-native void rp_SetClientKnifeType(int client, enum_ball_type typeID);					/* Défini le type de couteau qu'un joueur porte... (Incendiaire, poison, para, etc) */
+native bool rp_SetClientKnifeType(int client, enum_ball_type typeID);					/* Défini le type de couteau qu'un joueur porte... (Incendiaire, poison, para, etc) */
 native enum_ball_type rp_GetWeaponBallType(int wepID);							/* Quel est le type de balle d'une arme */
 native enum_ball_type rp_GetClientKnifeType(int client);							/* Quel est le type de couteau d'un joueur */
 native bool rp_GetWeaponStorage(int wepID);									/* L'arme vient-elle de l'armurerie police ? */

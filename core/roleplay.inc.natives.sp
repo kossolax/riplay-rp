@@ -1247,12 +1247,35 @@ public int Native_rp_ClientIgnite(Handle plugin, int numParams) {
 	IgnitePlayer(GetNativeCell(1), view_as<float>(GetNativeCell(2)), GetNativeCell(3));
 	return 1;
 }
-public int Native_rp_GetClientKnifeType(Handle plugin, int numParams) {
-	return g_iKnifeType[GetNativeCell(1)];
-}
 public int Native_rp_SetClientKnifeType(Handle plugin, int numParams) {
-	g_iKnifeType[GetNativeCell(1)] = GetNativeCell(2);
-	return 1;
+	int client = GetNativeCell(1);
+	int wepid = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+	if( !IsValidEntity(wepid) ) {
+		return view_as<int>(false);
+	}
+	
+	char classname[64];
+	GetEdictClassname(wepid, classname, sizeof(classname));
+	if( !Weapon_ShouldBeEquip(classname) {
+		return view_as<int>(false);
+	}
+	
+	g_iWeaponsBallType[wpnid] = GetNativeCell(2);
+}
+public int Native_rp_GetClientKnifeType(Handle plugin, int numParams) {
+	int client = GetNativeCell(1);
+	int wepid = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+	if( !IsValidEntity(wepid) ) {
+		return 0;
+	}
+	
+	char classname[64];
+	GetEdictClassname(wepid, classname, sizeof(classname));
+	if( !Weapon_ShouldBeEquip(classname) {
+		return 0;
+	}
+	
+	return g_iWeaponsBallType[wepid];
 }
 public int Native_rp_GetWeaponBallType(Handle plugin, int numParams) {
 	return g_iWeaponsBallType[GetNativeCell(1)];

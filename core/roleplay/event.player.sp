@@ -298,7 +298,9 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	GetClientEyeAngles(Client, g_Position[Client]);
 	Client_SetMoney(Client, 0);
 	FakeClientCommand(Client, "use weapon_fists");
-	g_bUserData[Client][b_WeaponIsKnife] = true;
+	g_bUserData[Client][b_WeaponIsKnife] = false;
+	g_bUserData[Client][b_WeaponIsHands] = true;
+	
 	if( g_iUserData[Client][i_ThirdPerson] == 1 )
 		ClientCommand(Client, "thirdperson");
 	else

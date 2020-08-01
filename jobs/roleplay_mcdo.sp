@@ -468,7 +468,10 @@ public Action Cmd_ItemHamburger(int args) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu comme cadeau: %dx %s", rnd, cmd);
 	}
 	else if( StrEqual(arg1, "spacy") ) {
-		rp_SetClientKnifeType(client, ball_type_fire);
+		if( !rp_SetClientKnifeType(client, ball_type_fire) ) {
+			ITEM_CANCEL(client, item_id);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
+		}
 	}
 	return Plugin_Handled;
 }

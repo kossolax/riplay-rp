@@ -409,7 +409,12 @@ public Action Cmd_ItemKnifeType(int args) {
 		return Plugin_Handled;
 	}
 	
-	rp_SetClientKnifeType(client, ball_type_type);
+	if( !rp_SetClientKnifeType(client, ball_type_type) ) {
+		ITEM_CANCEL(client, item_id);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
+	}
+	
+	
 	
 	return Plugin_Handled;
 }
@@ -1755,7 +1760,7 @@ public Action Cmd_ItemCigarette(int args) {
 	else
 		ServerCommand("sm_effect_particles %d shacks_exhaust 30 facemask", client);
 	
-	if( g_hCigarette[client] && IsValidHandle(g_hCigarette[client]) )
+	if( g_hCigarette[client] != INVALID_HANDLE )
 		delete g_hCigarette[client];
 	
 	g_hCigarette[client] = CreateTimer( 30.0, ItemStopCig, client);
@@ -1767,7 +1772,7 @@ public Action Task_UningiteEntity(Handle timer, any client) {
 	UningiteEntity(client);
 }
 public Action ItemStopCig(Handle timer, any client) {
-	
+	g_hCigarette[client] = INVALID_HANDLE;
 	rp_SetClientBool(client, b_Smoking, false);
 }
 public Action fwdCigGravity(int client, float& speed, float& gravity) {
