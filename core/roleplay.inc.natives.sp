@@ -1256,11 +1256,11 @@ public int Native_rp_SetClientKnifeType(Handle plugin, int numParams) {
 	
 	char classname[64];
 	GetEdictClassname(wepid, classname, sizeof(classname));
-	if( !Weapon_ShouldBeEquip(classname) {
+	if( !Weapon_ShouldBeEquip(classname) ) {
 		return view_as<int>(false);
 	}
 	
-	g_iWeaponsBallType[wpnid] = GetNativeCell(2);
+	g_iWeaponsBallType[wepid] = GetNativeCell(2);
 }
 public int Native_rp_GetClientKnifeType(Handle plugin, int numParams) {
 	int client = GetNativeCell(1);
@@ -1271,7 +1271,7 @@ public int Native_rp_GetClientKnifeType(Handle plugin, int numParams) {
 	
 	char classname[64];
 	GetEdictClassname(wepid, classname, sizeof(classname));
-	if( !Weapon_ShouldBeEquip(classname) {
+	if( !Weapon_ShouldBeEquip(classname) ) {
 		return 0;
 	}
 	
