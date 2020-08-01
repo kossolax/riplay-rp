@@ -9,7 +9,7 @@
 	#include "roleplay.sp"
 #endif
 
-bool HasDoctor(int client) {	
+stock bool HasDoctor(int client) {	
 	
 	static float g_flLastCheck = 0.0;
 	static bool g_bLastData = false;
@@ -46,136 +46,135 @@ bool HasDoctor(int client) {
 }
 //
 // Jobs:
-bool IsPolice(int client) {
+stock bool IsPolice(int client) {
 	if( g_iUserData[client][i_Job] == 1 || StringToInt(g_szJobList[ g_iUserData[client][i_Job] ][job_type_ownboss]) == 1)
 		return true;
 	
 	return false;
 }
-public bool IsFBI(int client) {
+stock bool IsFBI(int client) {
 	
 	if( g_iUserData[client][i_Job] == 7)
 		return true;
 	
 	return false;
 }
-bool IsMedic(int client) {
+stock bool IsMedic(int client) {
 	if( g_iUserData[client][i_Job] == 11 || StringToInt(g_szJobList[ g_iUserData[client][i_Job] ][job_type_ownboss]) == 11)
 		return true;
 	
 	return false;
 }
-bool IsMcDo(int client) {
+stock bool IsMcDo(int client) {
 	if( g_iUserData[client][i_Job] == 21 || StringToInt(g_szJobList[ g_iUserData[client][i_Job] ][job_type_ownboss]) == 21)
 		return true;
 	
 	return false;
 }
-bool IsArtisan(int client) {
+stock bool IsArtisan(int client) {
 	if( g_iUserData[client][i_Job] == 31 || StringToInt(g_szJobList[ g_iUserData[client][i_Job] ][job_type_ownboss]) == 31)
 		return true;
 	
 	return false;
 }
-bool IsTueur(int client) {
+stock bool IsTueur(int client) {
 	if( g_iUserData[client][i_Job] == 41 || StringToInt(g_szJobList[ g_iUserData[client][i_Job] ][job_type_ownboss]) == 41)
 		return true;
 	
 	return false;
-}/*
-bool IsVendeurVoiture(int client) {
+}
+stock bool IsVendeurVoiture(int client) {
 	if( g_iUserData[client][i_Job] == 51 || StringToInt(g_szJobList[ g_iUserData[client][i_Job] ][job_type_ownboss]) == 51)
 		return true;
 	
 	return false;
-}*/
-bool IsAppartVendeur(int client) {
+}
+stock bool IsAppartVendeur(int client) {
 	if( g_iUserData[client][i_Job] == 61 || StringToInt(g_szJobList[ g_iUserData[client][i_Job] ][job_type_ownboss]) == 61)
 		return true;
 	
 	return false;
 }
-bool IsCoach(int client) {
+stock bool IsCoach(int client) {
 	if( g_iUserData[client][i_Job] == 71 || StringToInt(g_szJobList[ g_iUserData[client][i_Job] ][job_type_ownboss]) == 71)
 		return true;
 	
 	return false;
 }
-bool IsDealer(int client) {
+stock bool IsDealer(int client) {
 	if( g_iUserData[client][i_Job] == 81 || StringToInt(g_szJobList[ g_iUserData[client][i_Job] ][job_type_ownboss]) == 81)
 		return true;
 	
 	return false;
 }
-bool IsGangMaffia(int client) {
+stock bool IsGangMaffia(int client) {
 	if( g_iUserData[client][i_Job] == 91 || StringToInt(g_szJobList[ g_iUserData[client][i_Job] ][job_type_ownboss]) == 91)
 		return true;
 	
 	return false;
 }
-bool IsJuge(int client) {
+stock bool IsJuge(int client) {
 	if( g_iUserData[client][i_Job] == 101 || StringToInt(g_szJobList[ g_iUserData[client][i_Job] ][job_type_ownboss]) == 101)
 		return true;
 	
 	return false;
 }
-bool IsArmu(int client) {
+stock bool IsArmu(int client) {
 	if( g_iUserData[client][i_Job] == 111 || StringToInt(g_szJobList[ g_iUserData[client][i_Job] ][job_type_ownboss]) == 111)
 		return true;
 	
 	return false;
-}/*
-bool IsVendeurSkins(int client) {
+}
+stock bool IsVendeurSkins(int client) {
 	if( g_iUserData[client][i_Job] == 121 || StringToInt(g_szJobList[ g_iUserData[client][i_Job] ][job_type_ownboss]) == 121)
 		return true;
 	
 	return false;
 }
-bool IsArtificier(int client) {
+stock bool IsArtificier(int client) {
 	if( g_iUserData[client][i_Job] == 131 || StringToInt(g_szJobList[ g_iUserData[client][i_Job] ][job_type_ownboss]) == 131)
 		return true;
 	
 	return false;
 }
-bool IsDetective(int client) {
+stock bool IsDetective(int client) {
 	if( g_iUserData[client][i_Job] == 141 || StringToInt(g_szJobList[ g_iUserData[client][i_Job] ][job_type_ownboss]) == 141)
 		return true;
 	
 	return false;
-}*/
-/*
-bool IsLoto(int client) {
+}
+stock bool IsLoto(int client) {
 	if( g_iUserData[client][i_Job] == 171 || StringToInt(g_szJobList[ g_iUserData[client][i_Job] ][job_type_ownboss]) == 171)
 		return true;
 	
 	return false;
 	
-}*/
-bool IsGang18th(int client) {
+}
+stock bool IsGang18th(int client) {
 	if( g_iUserData[client][i_Job] == 181 || StringToInt(g_szJobList[ g_iUserData[client][i_Job] ][job_type_ownboss]) == 181)
 		return true;
 	
 	return false;
 }
-bool IsSexShop(int client) {
+stock bool IsSexShop(int client) {
 	if( g_iUserData[client][i_Job] == 191 || StringToInt(g_szJobList[ g_iUserData[client][i_Job] ][job_type_ownboss]) == 191)
 		return true;
 	
 	return false;
-}/*
-bool IsBanquier(int client) {
+}
+stock bool IsBanquier(int client) {
 	if( g_iUserData[client][i_Job] == 211 || StringToInt(g_szJobList[ g_iUserData[client][i_Job] ][job_type_ownboss]) == 211)
 		return true;
 	
 	return false;
-}*/
-bool IsTech(int client) {
+}
+stock bool IsTech(int client) {
 	if( g_iUserData[client][i_Job] == 221 || StringToInt(g_szJobList[ g_iUserData[client][i_Job] ][job_type_ownboss]) == 221)
 		return true;
 	
 	return false;
 }
-bool IsBoss(int client) {
+stock bool IsBoss(int client) {
 	if( !IsValidClient(client) )
 		return false;
 	
