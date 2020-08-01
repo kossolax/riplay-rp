@@ -913,8 +913,8 @@ public void CRON_TIMER() {
 		CPrintToChatAll("" ...MOD_TAG... " Le serveur vas {red}redémarrer{default} dans 30 secondes.");
 		ServerCommand("rp_give_assu");
 	}
-	if( (StringToInt(szHours) ==  5 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0) ||
-		(StringToInt(szHours) == 16 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0)	) {
+	if( (StringToInt(szHours) ==  5 && StringToInt(szMinutes) ==  0 && StringToInt(szSecondes) == 0) ||
+		(StringToInt(szHours) == 16 && StringToInt(szMinutes) == 30 && StringToInt(szSecondes) == 0) ) {
 		CPrintToChatAll("" ...MOD_TAG... " Le serveur vas {red}redémarrer{default} MAINTENANT.");
 		
 		for(int i = 1; i <= MaxClients; i++)
