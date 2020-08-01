@@ -128,7 +128,7 @@ public void Q1_Abort(int objectiveID, int client) {
 	PrintHintText(client, "Quête: %s\nLa quête est terminée.", QUEST_NAME);
 }
 public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
-	static int zoneID[3] =  { 13, 198, 221 };
+	static int zoneID[3] =  { 13, 158, 180 };
 	static float lastFree[65];
 	
 	if( lastFree[client] > GetGameTime() )
