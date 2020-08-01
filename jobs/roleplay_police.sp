@@ -1747,7 +1747,6 @@ void StripWeapons(int client) {
 	LogToGame("removed weapon of %N", client);
 	
 	for (int i = 0; i < 5; i++) {
-		if (i == CS_SLOT_KNIFE) continue;
 		
 		while ((wepIdx = GetPlayerWeaponSlot(client, i)) != -1) {
 			
@@ -1759,6 +1758,8 @@ void StripWeapons(int client) {
 		}
 	}
 	
+	int tmp = GivePlayerItem(client, "weapon_fists");
+	EquipPlayerWeapon(client, tmp);
 	FakeClientCommand(client, "use weapon_fists");
 }
 
@@ -1935,12 +1936,12 @@ bool canWeaponBeAddedInPoliceStore(int weaponID) {
 	
 	char classname[64];
 	GetEdictClassname(weaponID, classname, sizeof(classname));
-	if (StrContains(classname, "default") >= 0 || StrContains(classname, "knife") >= 0)
+	if (StrContains(classname, "default") >= 0 || StrContains(classname, "fists") >= 0)
 		return false;
 	
 	int index = GetEntProp(weaponID, Prop_Send, "m_iItemDefinitionIndex");
 	CSGO_GetItemDefinitionNameByIndex(index, classname, sizeof(classname));
-	if (StrContains(classname, "default") >= 0 || StrContains(classname, "knife") >= 0)
+	if (StrContains(classname, "default") >= 0 || StrContains(classname, "fists") >= 0)
 		return false;
 	
 	int owner = GetEntPropEnt(weaponID, Prop_Send, "m_hPrevOwner");
