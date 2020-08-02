@@ -654,6 +654,7 @@ public Action Cmd_ItemCashBig(int args) {
 		return Plugin_Handled;
 	}
 	
+	rp_SetClientInt(client, i_Machine, 14);
 	g_bProps_trapped[target] = false;
 	return Plugin_Handled;
 }

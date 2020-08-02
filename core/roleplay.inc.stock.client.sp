@@ -881,7 +881,7 @@ int GetAssurence(int client, bool forced = false) {
 			}
 			else if( StrEqual(tmp, "rp_bigcashmachine") ) {
 				if( !rp_GetBuildingData(i, BD_FromBuild) ) {
-					amount += 4000;
+					amount += (4000 - (150*14) ); // i_Machine est déjà compté dedans, ce qui ne devrait pas.
 				}
 			}
 			else if( StrEqual(tmp, "rp_plant") ) {
