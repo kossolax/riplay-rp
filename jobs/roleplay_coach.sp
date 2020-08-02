@@ -153,6 +153,24 @@ public void OnPluginStart() {
 	for (int i = 1; i <= MaxClients; i++) 
 		if( IsValidClient(i) )
 			OnClientPostAdminCheck(i); 
+	
+	
+	char classname[64];
+	for (int i = MaxClients; i <= 2048; i++) {
+		if( !IsValidEdict(i) )
+			continue;
+		if( !IsValidEntity(i) )
+			continue;
+		
+		GetEdictClassname(i, classname, sizeof(classname));
+		if( StrEqual(classname, "rp_kevlarbox") ) {
+			
+			rp_SetBuildingData(i, BD_started, GetTime());
+			rp_SetBuildingData(i, BD_owner, GetEntPropEnt(i, Prop_Send, "m_hOwnerEntity") );
+			
+			CreateTimer(Math_GetRandomFloat(0.0, 1.0), BuildingKevlarBox_post, i);
+		}
+	}
 
 }
 public void OnConVarChange(Handle cvar, const char[] oldVal, const char[] newVal) {
