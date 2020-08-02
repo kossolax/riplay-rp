@@ -398,11 +398,25 @@ public void Cmd_ItemCutThrow_TOUCH(int rocket, int entity) {
 
 // ----------------------------------------------------------------------------
 public Action Cmd_ItemKnifeType(int args) {
-	char arg1[12];
-	GetCmdArg(1, arg1, sizeof(arg1));
+	char arg1[12], classname[64];
 	
+	GetCmdArg(1, arg1, sizeof(arg1));
 	int client = GetCmdArgInt(2);
 	int item_id = GetCmdArgInt(args);
+	
+	int wepid = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+	if( !IsValidEntity(wepid) ) {
+		ITEM_CANCEL(client, item_id);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez porter votre couteau en main.");
+		return Plugin_Handled;
+	}
+	
+	GetEdictClassname(wepid, classname, sizeof(classname));
+	if( !Weapon_ShouldBeEquip(classname) ) {
+		ITEM_CANCEL(client, item_id);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez porter votre couteau en main.");
+	}
+	
 	
 	enum_ball_type ball_type_type = ball_type_none;
 
@@ -428,8 +442,8 @@ public Action Cmd_ItemKnifeType(int args) {
 	}
 	
 	if( !rp_SetClientKnifeType(client, ball_type_type) ) {
-		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
+//		ITEM_CANCEL(client, item_id);
+//		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
 	}
 	
 	

@@ -1261,6 +1261,8 @@ public int Native_rp_SetClientKnifeType(Handle plugin, int numParams) {
 	}
 	
 	g_iWeaponsBallType[wepid] = GetNativeCell(2);
+	
+	return view_as<int>(true);
 }
 public int Native_rp_GetClientKnifeType(Handle plugin, int numParams) {
 	int client = GetNativeCell(1);
