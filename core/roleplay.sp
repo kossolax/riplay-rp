@@ -199,14 +199,16 @@ public void OnPluginStart() {
 	
 	// a modif quand serv test 
 	if( GetConVarInt(FindConVar("hostport")) == 27015 ) {
+		KvSetString(KV,"user",		"rp_csgo");
 		KvSetString(KV,"database",	"rp_csgo");
+		KvSetString(KV,"pass",		"DYhpWeEaWvDsMDc9");
 	}
 	else {
+		KvSetString(KV,"user",		"rp_test");
 		KvSetString(KV,"database",	"rp_test");
+		KvSetString(KV,"pass",		"pI3SzTTd3Ow1Tsjd");
 	}
 
-	KvSetString(KV,"user",		"rp_csgo");
-	KvSetString(KV,"pass",		"DYhpWeEaWvDsMDc9");
 	KvSetString(KV,"port",		"3306");
 	g_hBDD = SQL_ConnectCustom(KV, g_szError, sizeof(g_szError), true);
 
