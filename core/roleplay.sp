@@ -134,18 +134,18 @@ public void OnPluginStart() {
 	RegAdminCmd("rp_restarttuto", 		cmd_RestartTutorial,ADMFLAG_ROOT);
 	RegAdminCmd("rp_debug", 			cmd_ToggleDebug,	ADMFLAG_ROOT);
 	//
-	/*if( GetConVarInt(FindConVar("hostport")) == 27015 ) {*/
-	RegAdminCmd("rp_givemejob",		cmd_ForceMeJob,		ADMFLAG_ROOT);
-	RegAdminCmd("rp_givemegroup",	cmd_ForceMeGroup,	ADMFLAG_ROOT);
-	RegAdminCmd("rp_giveitems",		cmd_GiveItem,		ADMFLAG_ROOT);
-	/*}*/
-	/*else {
+	if( GetConVarInt(FindConVar("hostport")) == 27015 ) {
+		RegAdminCmd("rp_givemejob",		cmd_ForceMeJob,		ADMFLAG_ROOT);
+		RegAdminCmd("rp_givemegroup",	cmd_ForceMeGroup,	ADMFLAG_ROOT);
+		RegAdminCmd("rp_giveitems",		cmd_GiveItem,		ADMFLAG_ROOT);
+	}
+	else {
 		RegConsoleCmd("rp_givemejob", 	cmd_ForceMeJob);
 		RegConsoleCmd("rp_givemegroup", cmd_ForceMeGroup);
 		RegConsoleCmd("rp_giveitems", 	cmd_GiveItem);
 		RegConsoleCmd("rp_givecash", 	cmd_GiveCash);
 		RegConsoleCmd("rp_givemexp", 	cmd_GiveMeXP);
-	}*/
+	}
 	//
 	RegAdminCmd("rp_create_mapconfig", 	CmdGenMapConfig,	ADMFLAG_ROOT);
 	RegAdminCmd("rp_create_point",		CmdSpawn2_Add,		ADMFLAG_ROOT);
@@ -198,12 +198,12 @@ public void OnPluginStart() {
 	KvSetString(KV,"host",		"5.196.39.48");
 	
 	// a modif quand serv test 
-	//if( GetConVarInt(FindConVar("hostport")) == 27015 ) {
-	KvSetString(KV,"database",	"rp_csgo");
-	//}
-	//else {
-	//	KvSetString(KV,"database",	"rp_test");
-	//}
+	if( GetConVarInt(FindConVar("hostport")) == 27015 ) {
+		KvSetString(KV,"database",	"rp_csgo");
+	}
+	else {
+		KvSetString(KV,"database",	"rp_test");
+	}
 
 	KvSetString(KV,"user",		"rp_csgo");
 	KvSetString(KV,"pass",		"DYhpWeEaWvDsMDc9");
