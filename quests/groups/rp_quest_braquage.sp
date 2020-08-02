@@ -938,6 +938,8 @@ public int MenuRespawnBraqueur(Handle menu, MenuAction action, int client, int p
 				int wepid = GivePlayerItem(target, "weapon_revolver");
 				rp_SetWeaponBallType(wepid, ball_type_braquage);
 			}
+			
+			FakeClientCommand(target, "sm_stuck");
 		}
 	}
 	else if( action == MenuAction_End ) {
