@@ -520,7 +520,7 @@ void OnGameFrame_10(float time) {
 				
 				CheckLiscence(i);
 				
-				if( IsPolice(i) || IsJustice(i) ) {
+				if( IsPolice(i) || IsJuge(i) ) {
 					if( GetClientTeam(i) != CS_TEAM_T && g_iUserData[i][i_KillJailDuration] > 1) {
 						tmpKillDuration = g_iUserData[i][i_KillJailDuration];
 						g_iUserData[i][i_KillJailDuration] = 0;
