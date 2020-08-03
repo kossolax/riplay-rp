@@ -511,7 +511,7 @@ void OnGameFrame_10(float time) {
 			if( IsPlayerAlive(i) ) {
 
 				if(infoPeineTime == 180) {
-					if(g_bUserData[i][b_ExitJailMenu]) {
+					if( g_bUserData[i][b_ExitJailMenu] && g_iUserData[i][i_JailTime] > 0 ) {
 						CPrintToChat(i, "{lightblue}[TSX-RP]{default} Tu peux modifier la durée/zone de ton emprisonnement en tapant /peine");
 					}
 				}
@@ -556,7 +556,7 @@ void OnGameFrame_10(float time) {
 					}
 				}
 				
-				if( g_iUserData[i][i_Job] == 0 && (g_iUserData[i][i_Money]+g_iUserData[i][i_Bank]) ) {
+				if( g_iUserData[i][i_Job] == 0 && (g_iUserData[i][i_Money]+g_iUserData[i][i_Bank]) <= 1000 ) {
 					if( g_iSuccess_last_touchdown[i] < 1 ) {
 						g_iSuccess_last_touchdown[i] = GetTime();
 					}
