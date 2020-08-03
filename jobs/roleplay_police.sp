@@ -138,6 +138,7 @@ public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_PreGiveDamage, fwdDmg);
 	rp_HookEvent(client, RP_OnPlayerZoneChange, fwdOnZoneChange);
 	rp_HookEvent(client, RP_OnPlayerUse, fwdOnPlayerUse);
+	rp_HookEvent(client, RP_OnFrameSeconde, fwdOnFrame);
 	rp_SetClientBool(client, b_IsSearchByTribunal, false);
 
 	CreateTimer(0.01, AllowStealing, client);
@@ -146,6 +147,23 @@ public void OnClientPostAdminCheck(int client) {
 }
 public void OnClientDisconnect(int client) {
 	delete g_UsedWeapon[client];
+}
+public Action fwdOnFrame(int client) {
+	if( rp_GetClientJobID(client) == 101 && GetClientTeam(client) == CS_TEAM_CT && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 101 ) {
+		
+		if( GetEntProp(client, Prop_Send, "m_bDrawViewmodel") == 1 ) {
+			Handle hud = CreateHudSynchronizer();
+			if( jugeCanJail() ) {
+				SetHudTextParams(0.0125, 0.0125, 1.1, 19, 213, 45, 255, 2, 0.0, 0.0, 0.0);
+				ShowSyncHudText(client, hud, "/jail autorisé");
+			}
+			else {
+				SetHudTextParams(0.0125, 0.0125, 1.1, 213, 19, 45, 255, 2, 0.0, 0.0, 0.0);
+				ShowSyncHudText(client, hud, "/jail non autorisé");
+			}
+			CloseHandle(hud);
+		}
+	}
 }
 public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
 	
@@ -758,36 +776,26 @@ public Action Cmd_Jail(int client) {
 		ACCESS_DENIED(client);
 	}
 	
-	float time = GetGameTime();
-	int ct = 0;
-	
-	for (int i = 1; i <= MaxClients; i++) {
-		if (!IsValidClient(i) || IsClientSourceTV(i))
-			continue;
-		if (rp_GetClientJobID(i) == 1)
-			ct++;
-		
-		if (Entity_GetDistance(client, i) < MAX_AREA_DIST) {
-			if (!IsPlayerAlive(i) && rp_GetClientFloat(i, fl_RespawnTime) < time)
-				CS_RespawnPlayer(i);
-			if (rp_GetClientJobID(i) == 1)
-				ct += 10;
-		}
-	}
-	
+	float time = GetGameTime();	
 	int target = rp_GetClientTarget(client);
 	
 	if (target <= 0 || !IsValidEdict(target) || !IsValidEntity(target)) {
 		return Plugin_Handled;
 	}
-
+	
+	for (int i = 1; i <= MaxClients; i++) {
+		if (!IsValidClient(i) || IsClientSourceTV(i))
+			continue;
+		
+		if (Entity_GetDistance(client, i) < MAX_AREA_DIST) {
+			if (!IsPlayerAlive(i) && rp_GetClientFloat(i, fl_RespawnTime) < time)
+				CS_RespawnPlayer(i);
+		}
+	}
+	
 	// target is not a player
 	if (!IsValidClient(target)) {
 		return Plugin_Handled;
-	}
-
-	if (rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PERQUIZ || rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PERQUIZ) { // Les juges peuvent jail en perqui
-		ct = 0;
 	}
 	
 	if (IsValidClient(target) && rp_GetClientFloat(target, fl_Invincible) > GetGameTime()) {  //le target utilise une poupée gonflable
@@ -802,9 +810,14 @@ public Action Cmd_Jail(int client) {
 		ACCESS_DENIED(client);
 	}
 	
-	if( IsValidClient(target) && rp_GetClientJobID(client) == 101 && rp_GetClientBool(target, b_IsSearchByTribunal) == false) {  // Jail dans la rue sur non recherché.
-		if (ct >= 3 && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 101) {
-			ACCESS_DENIED(client);
+	
+	if( IsValidClient(target) && rp_GetClientJobID(client) == 101 &&
+		rp_GetClientBool(target, b_IsSearchByTribunal) == false &&
+		rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 101 && 
+		!(rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PERQUIZ || rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PERQUIZ) ) {  // Jail dans la rue sur non recherché.
+		if( !jugeCanJail() ) {
+			CPrintToChat(client, "" ...MOD_TAG... " La commande est temporairement inaccessible, il y a suffisamment de gendarmes connectés");
+			return Plugin_Handled;
 		}
 	}
 	
@@ -882,6 +895,36 @@ public Action Cmd_Jail(int client) {
 	// g_iUserMission[target][mission_type] = -1; 
 	
 	return Plugin_Handled;
+}
+bool jugeCanJail() {
+	static int nextCheck = 0;
+	static bool result = false;
+	
+	if( nextCheck > GetTime() ) {
+		return result;
+	}
+	
+	int ct = 0;
+	int t = 0;
+	
+	for (int i = 1; i <= MaxClients; i++) {
+		if (!IsValidClient(i) || IsClientSourceTV(i))
+			continue;
+		if( rp_GetClientBool(i, b_IsAFK) )
+			continue;
+		
+		if ( rp_GetClientJobID(i) == 1 ) {
+			if( GetClientTeam(i) == CS_TEAM_CT )
+				ct++;
+		}
+		else {
+			t++;
+		}
+	}
+	
+	result = !(ct > t / 10);
+	nextCheck = GetTime() + 30;
+	return result;
 }
 public Action Cmd_Push(int client) {
 	int job = rp_GetClientInt(client, i_Job);
