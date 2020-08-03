@@ -375,7 +375,10 @@ public void QUERY_MairieCandidate(Handle owner, Handle handle, const char[] erro
 	Menu menu = new Menu(Handle_Mairie);
 	menu.SetTitle("Candidature pour la Mairie\n ");
 	
+	int count = 0;
+	
 	while( SQL_FetchRow(handle) ) {
+		count++;
 		int id = SQL_FetchInt(handle, 0);
 		SQL_FetchString(handle, 1, tmp, sizeof(tmp));
 		SQL_FetchString(handle, 2, tmp2, sizeof(tmp2));
@@ -397,6 +400,10 @@ public void QUERY_MairieCandidate(Handle owner, Handle handle, const char[] erro
 	if( StrEqual(tmp2, szSteamID) )
 		myself = true;
 	
+	if( count == 0 ) {
+		menu.AddItem("", "Il n'y a pas de candidat", ITEMDRAW_DISABLED);
+	}
+
 	if( rp_GetClientInt(client, i_PlayerLVL) >= 90 && !myself && StringToInt(szDayOfWeek) != 1)
 		menu.AddItem("5 -1 0", "Poster ma candidature (250 000$)", ((rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 250000) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
 	
