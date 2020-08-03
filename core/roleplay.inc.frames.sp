@@ -840,7 +840,7 @@ void OnGameFrame_10(float time) {
 			
 			if( GetEntProp(i, Prop_Send, "m_bDrawViewmodel") == 1 ) {
 				Handle hud = CreateHudSynchronizer();
-				SetHudTextParams(0.45, 1.0, 1.1, 19, 213, 45, 255, 2, 0.0, 0.0, 0.0);
+				SetHudTextParams(-1.0, 1.0, 1.1, 19, 213, 45, 255, 2, 0.0, 0.0, 0.0);
 				ShowSyncHudText(i, hud, szDates);
 				CloseHandle(hud);
 			}
