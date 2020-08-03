@@ -574,21 +574,22 @@ stock int rp_GetWeaponPriceCartouche(int weaponID) {
 stock int rp_CountPoliceNear(int client) {
 	static float g_flLastCheck[65];
 	static int g_iLastData[65];
+	char tmp[64];
 	
 	if (g_flLastCheck[client] > GetGameTime()) {
 		return g_iLastData[client];
 	}
 	
-	int job, count, zone;
+	int job, count;
 	for (int i = 1; i < MaxClients; i++) {
 		if (!IsValidClient(i))
 			continue;
 		
 		job = rp_GetClientInt(i, i_Job);
-		zone = rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type);
+		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_name, tmp, sizeof(tmp));
 		
 		if (GetClientTeam(i) == CS_TEAM_CT || (job >= 1 && job <= 7)) {
-			if (Entity_GetDistance(client, i) < MAX_AREA_DIST && !rp_GetClientBool(i, b_IsAFK) && zone != 1 && zone != 101 ) {
+			if (Entity_GetDistance(client, i) < MAX_AREA_DIST && !rp_GetClientBool(i, b_IsAFK) && StrContains(tmp, "Prison") == -1 && StrContains(tmp, "Tribunal") == -1 ) {
 				count++;
 			}
 		}
