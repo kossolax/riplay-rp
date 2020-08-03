@@ -294,15 +294,15 @@ public Action Cmd_Verif(int client) {
 		}
 	}
 
-	if(!StrEqual(lastWeapon[1], "AUCUNE")) { // primary
-		if(rp_GetClientBool(target, b_License1) == false) {
-			amendeLicense1 = true;
+	if(!StrEqual(lastWeapon[0], "AUCUNE")) { // primary
+		if(rp_GetClientBool(target, b_License2) == false) {
+			amendeLicense2 = true;
 		}
 	}
 
-	if(!StrEqual(lastWeapon[0], "AUCUNE")) { // secondary
-		if(rp_GetClientBool(target, b_License2) == false) {
-			amendeLicense2 = true;
+	if(!StrEqual(lastWeapon[1], "AUCUNE")) { // secondary
+		if(rp_GetClientBool(target, b_License1) == false) {
+			amendeLicense1 = true;
 		}
 	}
 
@@ -335,10 +335,10 @@ public Action Cmd_Verif(int client) {
 		menu.AddItem(item, "Amende 4000$ - Permis lourd & léger", forcehidden ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
 	} else {
 		Format(item, 255, "%d_permileger", target);
-		menu.AddItem(item, "Amende 1600$ - Permis léger", !amendeLicense2 || forcehidden || !applyLiscence2 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
+		menu.AddItem(item, "Amende 1600$ - Permis léger", !amendeLicense1 || forcehidden || !applyLiscence1 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
 
 		Format(item, 255, "%d_permilourd", target);
-		menu.AddItem(item, "Amende 2400$ - Permis lourd", !amendeLicense1 || forcehidden || !applyLiscence1 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
+		menu.AddItem(item, "Amende 2400$ - Permis lourd", !amendeLicense2 || forcehidden || !applyLiscence2 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
 	}
 	
 	SetMenuExitButton(menu, true);
@@ -363,7 +363,8 @@ public int MenuHandler_Verif(Handle menu, MenuAction action, int client, int par
 	
 			rp_ClientMoney(target, i_Money, -1600);
 			
-			rp_ClientMoney(client, i_ToPay, 200);
+			rp_ClientMoney(client, i_AddToPay, 100);
+			rp_ClientMoney(client, i_Money, 100);
 			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 1400));
 			rp_SetClientInt(target, i_AmendeLiscence2, GetTime());
 		}
@@ -373,7 +374,8 @@ public int MenuHandler_Verif(Handle menu, MenuAction action, int client, int par
 
 			rp_ClientMoney(target, i_Money, -2400);
 			
-			rp_ClientMoney(client, i_ToPay, 400);
+			rp_ClientMoney(client, i_AddToPay, 400);
+			rp_ClientMoney(client, i_Money, 200);
 			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 2000));
 			rp_SetClientInt(target, i_AmendeLiscence1, GetTime());
 		}
@@ -382,7 +384,8 @@ public int MenuHandler_Verif(Handle menu, MenuAction action, int client, int par
 			CPrintToChat(client, "" ...MOD_TAG... " Une amende de 4000$ vient d'être prélevée auprès de %N{default} pour défaut de permis de port d'arme légere et lourde", target);
 			rp_ClientMoney(target, i_Money, -4000);
 			
-			rp_ClientMoney(client, i_ToPay, 600);
+			rp_ClientMoney(client, i_AddToPay, 600);
+			rp_ClientMoney(client, i_Money, 300);
 			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 3200));
 			rp_SetClientInt(target, i_AmendeLiscence2, GetTime());
 			rp_SetClientInt(target, i_AmendeLiscence1, GetTime());
