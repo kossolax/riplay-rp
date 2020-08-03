@@ -575,7 +575,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 					g_iUserData[Attacker][i_KillingSpread] += (killDuration > 1 ? 1:0);
 				}
 
-				if( g_iUserData[Attacker][i_KillJailDuration] >= 106 ) {
+				if( g_iUserData[Attacker][i_KillJailDuration] >= 120 ) {
 					g_bUserData[Attacker][b_IsFreekiller] = true;
 					ServerCommand("rp_SendToJail %d 0", Attacker);
 					
