@@ -355,7 +355,7 @@ void Draw_Mairie_Candidate(int client, int target, int arg) {
 }
 public void QUERY_PostCandidate(Handle owner, Handle handle, const char[] error, any client) {
 	if( strlen(error) >= 1  ) {
-		rp_ClientMoney(client, i_Bank, 50000);
+		rp_ClientMoney(client, i_Bank, 250000);
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà posté une candidature, vous avez donc été remboursé.");
 	}
 	else {
@@ -374,7 +374,6 @@ public void QUERY_MairieCandidate(Handle owner, Handle handle, const char[] erro
 	
 	Menu menu = new Menu(Handle_Mairie);
 	menu.SetTitle("Candidature pour la Mairie\n ");
-	PrintToChatAll(error);
 	
 	while( SQL_FetchRow(handle) ) {
 		int id = SQL_FetchInt(handle, 0);
@@ -399,7 +398,7 @@ public void QUERY_MairieCandidate(Handle owner, Handle handle, const char[] erro
 		myself = true;
 	
 	if( rp_GetClientInt(client, i_PlayerLVL) >= 90 && !myself && StringToInt(szDayOfWeek) != 1)
-		menu.AddItem("5 -1 0", "Poster ma candidature (250 000$)", (rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 250000 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
+		menu.AddItem("5 -1 0", "Poster ma candidature (250 000$)", ((rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 250000) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
 	
 	menu.Display(client, MENU_TIME_FOREVER);
 }
