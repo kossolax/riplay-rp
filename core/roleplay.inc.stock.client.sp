@@ -786,7 +786,7 @@ void getPlayerSkin(int client, char model[PLATFORM_MAX_PATH], char hands[PLATFOR
 				case 1: Format(model, sizeof(model), "models/player/custom_player/riplay/momiji/momiji.mdl");
 				case 2: Format(model, sizeof(model), "models/player/custom_player/riplay/nathandrake/nathandrake.mdl");
 				case 3: Format(model, sizeof(model), "models/player/custom_player/riplay/wick/wick.mdl");
-				case 4: Format(model, sizeof(model), "models/player/custom_player/legacy/aiden_pearce/aiden_pearce.md");
+				case 4: Format(model, sizeof(model), "models/player/custom_player/legacy/aiden_pearce/aiden_pearce.mdl");
 			}
 		}
 		
