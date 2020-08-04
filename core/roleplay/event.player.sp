@@ -27,7 +27,7 @@ public void EventFirstSpawn(int client) {
 	if( g_iUserData[client][i_PlayerLVL] < 12 )
 		g_bUserData[client][b_GameModePassive] = true;
 	
-	if( g_bUserData[client][b_ItemRecovered] && g_iClient_OLD[client] == 1 )
+	if( g_bUserData[client][b_ItemRecovered] && g_iClient_OLD[client] == 0 && g_iUserData[client][i_JailTime] == 0 )
 		CreateTimer(1.0, HUD_WarnDisconnect, client);
 
 	ServerCommand("sm_force_discord_group %N", client);
@@ -575,15 +575,6 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 					g_iUserData[Attacker][i_KillingSpread] += (killDuration > 1 ? 1:0);
 				}
 
-				if( g_iUserData[Attacker][i_KillJailDuration] >= 120 ) {
-					g_bUserData[Attacker][b_IsFreekiller] = true;
-					ServerCommand("rp_SendToJail %d 0", Attacker);
-					
-					if( rp_GetClientInt(Attacker, i_JailTime) < g_iUserData[Attacker][i_KillJailDuration] * 60 )
-						rp_SetClientInt(Attacker, i_JailTime, g_iUserData[Attacker][i_KillJailDuration] * 60);
-				
-					KickClient(Attacker, "Vous avez été kické pour FREEKILL abusif");
-				}
 
 				if( (StrContains(weapon, "knife") == 0 || StrContains(weapon, "bayonet") == 0) ) {
 					g_iUserData[Attacker][i_KnifeTrain]--;
@@ -611,6 +602,18 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 			if( GetClientTeam(Client) == CS_TEAM_CT ) {
 				if( !IsInPVP(Client) && g_iHideNextLog[Attacker][Client] == 0 ) {
 					g_iUserData[Attacker][i_KillJailDuration] += killDuration;
+				}
+			}
+			
+			if( g_iHideNextLog[Attacker][Client] == 0 ) {
+				if( g_iUserData[Attacker][i_KillJailDuration] >= 120 ) {
+					g_bUserData[Attacker][b_IsFreekiller] = true;
+					ServerCommand("rp_SendToJail %d 0", Attacker);
+					
+					if( rp_GetClientInt(Attacker, i_JailTime) < g_iUserData[Attacker][i_KillJailDuration] * 60 )
+						rp_SetClientInt(Attacker, i_JailTime, g_iUserData[Attacker][i_KillJailDuration] * 60);
+				
+					KickClient(Attacker, "Vous avez été kické pour FREEKILL abusif");
 				}
 			}
 			
