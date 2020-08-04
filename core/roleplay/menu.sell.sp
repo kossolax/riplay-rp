@@ -815,6 +815,10 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			g_iUserStat[vendeur][i_MoneyEarned_Sales] += RoundFloat(((prixItem * taxe) - reduc) * 1.0);
 			g_iUserData[vendeur][i_Reduction] = reduction;
 			g_iUserStat[client][i_MoneySpent_Shop] += RoundFloat(prixItem - reduc);
+
+			if( StrContains(g_szItemList[item_id][item_type_extra_cmd], "rp_item_contrat") == 0 ) {
+				g_iUserData[vendeur][I_ContratPay] = prixItem;
+			}
 			
 			rp_ClientMoney(client, type == 5 ? i_Bank : i_Money, -RoundFloat(prixItem - reduc));
 			rp_ClientMoney(vendeur, i_Money, RoundToFloor(((prixItem * taxe) - reduc) * 0.5));
