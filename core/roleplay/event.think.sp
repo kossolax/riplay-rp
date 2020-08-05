@@ -14,8 +14,13 @@ void setRecoil(int client) {
 	float train = g_flUserData[client][fl_WeaponTrainAdmin] < 0 ? g_flUserData[client][fl_WeaponTrain] : g_flUserData[client][fl_WeaponTrainAdmin];
 	if( train <= 4.0 ) {
 		int shoot = GetEntProp(client, Prop_Send, "m_iShotsFired");
-		float vecAngles[3];
+		float vecAngles[3], vecPunch[3];
 		vecAngles[0] = vecAngles[1] = vecAngles[2] = -float(shoot) * (4.0 - train) * 0.1;
+		
+		
+		GetEntPropVector(client, Prop_Send, "m_aimPunchAngle", vecPunch);
+		
+		AddVectors(vecPunch, vecAngles, vecAngles);
 		SetEntPropVector(client, Prop_Send, "m_aimPunchAngle", vecAngles);
 	}
 }
