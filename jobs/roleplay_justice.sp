@@ -103,6 +103,7 @@ public void OnPluginStart() {
 	g_flCoords[2][0] = view_as<float>( { 308.0, -1530.0, -1870.0 } );
 	g_flCoords[2][1] = view_as<float>( { 200.0, -1530.0, -1870.0 } );
 	
+	RegServerCmd("rp_item_enquete_menu",Cmd_ItemEnqueteMenu,	"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_enquete",		Cmd_ItemEnquete,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	CreateTimer(1.0, Timer_Light, _, TIMER_REPEAT);
 	
@@ -123,6 +124,7 @@ public void OnClientPostAdminCheck(int client) {
 			rp_HookEvent(client, RP_OnPlayerHUD, fwdHUD);
 	}
 }
+// ----------------------------------------------------------------------------
 public Action RP_OnPlayerGotPay(int client, int salary, int& topay, bool verbose) {
 	int jobID = rp_GetClientJobID(client);
 	
@@ -1386,6 +1388,55 @@ public Action Cmd_ItemEnquete(int args) {
 	
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, MENU_TIME_DURATION);
+}
+
+// ----------------------------------------------------------------------------
+public Action Cmd_ItemEnqueteMenu(int args) {
+	char arg1[12];
+	GetCmdArg(1, arg1, 11);
+	
+	int client = StringToInt(arg1);
+	
+	Handle menu = CreateMenu(Cmd_ItemEnqueteMenu_2);
+	SetMenuTitle(menu, "Sélectionner sur qui récupérer des informations\n ");
+	
+	char name[128], tmp[64];
+	GetClientName(client, name, 127);
+	Format(tmp, 64, "%i", client);
+	
+	AddMenuItem(menu, tmp, name);
+	
+	for(int i = 1; i <= MaxClients; i++) {
+		
+		if( !IsValidClient(i) )
+			continue;
+		if( !IsClientConnected(i) )
+			continue;
+		if( i == client )
+			continue;
+		
+		GetClientName(i, name, 127);
+		Format(tmp, 64, "%i", i);
+		
+		AddMenuItem(menu, tmp, name);		
+	}
+	
+	SetMenuExitButton(menu, true);
+	DisplayMenu(menu, client, MENU_TIME_DURATION);
+}
+public int Cmd_ItemEnqueteMenu_2(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_iParam2) {
+	if (p_oAction == MenuAction_Select) {
+		
+		char szMenuItem[64];
+		if( GetMenuItem(p_hItemMenu, p_iParam2, szMenuItem, sizeof(szMenuItem)) ) {
+			
+			int target = StringToInt(szMenuItem);
+			ServerCommand("rp_item_enquete \"%i\" \"%i\"", client, target);
+		}		
+	}
+	else if (p_oAction == MenuAction_End) {
+		CloseHandle(p_hItemMenu);
+	}
 }
 public int MenuNothing(Handle menu, MenuAction action, int client, int param2) {
 	

@@ -63,7 +63,7 @@ public void OnPluginStart() {
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	RegServerCmd("rp_item_contrat",		Cmd_ItemContrat,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_conprotect",	Cmd_ItemConProtect,		"RP-ITEM",	FCVAR_UNREGISTERED);
-	RegServerCmd("rp_item_enquete_menu",Cmd_ItemEnqueteMenu,	"RP-ITEM",	FCVAR_UNREGISTERED);
+
 	RegServerCmd("rp_item_cryptage",	Cmd_ItemCryptage,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_map",			Cmd_ItemMaps,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	
@@ -935,54 +935,6 @@ public Action Cmd_ItemCryptage(int args) {
 	rp_SetClientInt(client, i_Cryptage, level);
 	CPrintToChat(client, "" ...MOD_TAG... " Les mercenaires vous couvrent, vous avez désormais %i/100 de chance d'être caché.", level*20);
 	return Plugin_Handled;
-}
-// ----------------------------------------------------------------------------
-public Action Cmd_ItemEnqueteMenu(int args) {
-	char arg1[12];
-	GetCmdArg(1, arg1, 11);
-	
-	int client = StringToInt(arg1);
-	
-	Handle menu = CreateMenu(Cmd_ItemEnqueteMenu_2);
-	SetMenuTitle(menu, "Sélectionner sur qui récupérer des informations\n ");
-	
-	char name[128], tmp[64];
-	GetClientName(client, name, 127);
-	Format(tmp, 64, "%i", client);
-	
-	AddMenuItem(menu, tmp, name);
-	
-	for(int i = 1; i <= MaxClients; i++) {
-		
-		if( !IsValidClient(i) )
-			continue;
-		if( !IsClientConnected(i) )
-			continue;
-		if( i == client )
-			continue;
-		
-		GetClientName(i, name, 127);
-		Format(tmp, 64, "%i", i);
-		
-		AddMenuItem(menu, tmp, name);		
-	}
-	
-	SetMenuExitButton(menu, true);
-	DisplayMenu(menu, client, MENU_TIME_DURATION);
-}
-public int Cmd_ItemEnqueteMenu_2(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_iParam2) {
-	if (p_oAction == MenuAction_Select) {
-		
-		char szMenuItem[64];
-		if( GetMenuItem(p_hItemMenu, p_iParam2, szMenuItem, sizeof(szMenuItem)) ) {
-			
-			int target = StringToInt(szMenuItem);
-			ServerCommand("rp_item_enquete \"%i\" \"%i\"", client, target);
-		}		
-	}
-	else if (p_oAction == MenuAction_End) {
-		CloseHandle(p_hItemMenu);
-	}
 }
 public Action fwdWeapon(int victim, int attacker, float &damage, int wepID, float pos[3]) {
 	bool changed = true;
