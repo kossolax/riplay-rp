@@ -974,9 +974,11 @@ int GetAssurence(int client, bool forced = false) {
 				if( g_iAppartBonus[a][appart_bonus_coffre] )
 					amount += 200;
 				
-				amount += g_iAppartBonus[a][appart_bonus_paye] * 6;
+				amount += (g_iAppartBonus[a][appart_bonus_paye] * 6);
 			}
-			amount += 600;
+			else {
+				amount += 600;
+			}
 		}
 	}
 	
