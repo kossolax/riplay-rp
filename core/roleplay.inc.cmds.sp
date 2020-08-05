@@ -327,7 +327,7 @@ public Action cmd_GiveWeaponEvent(int client, int args) {
 			int analyse = 3;
 			int wepId = GivePlayerItem(target, Arg2);
 			
-			if( Weapon_ShouldBeEquip(Arg2) && !Client_HasWeapon(client, Arg2) ) {
+			if( Weapon_ShouldBeEquip(Arg2) && !Client_HasWeapon(target, Arg2) ) {
 				EquipPlayerWeapon(target, wepId);
 				CPrintToChat(target, "" ...MOD_TAG... "Vous avez reçu une arme pour l'event.");
 			}
