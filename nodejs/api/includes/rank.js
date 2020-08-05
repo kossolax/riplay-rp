@@ -130,8 +130,11 @@ server.get('/rank/:type', function (req, res, next) {
       server.conn.query(sql, [], function(err, rows) {
         server.cache.set( req._url.pathname, rows, 3600);
 
-        //obj.needed = rows[9].cpt.toFixed(2);
-        obj.needed = parseFloat(((rows[9].cpt + 0.35) / (1 - 0.029)).toFixed(2)) + 0.01;
+        if(rows.length == 10) {
+          obj.needed = parseFloat(((rows[rows.length-1].cpt + 0.35) / (1 - 0.029)).toFixed(2)) + 0.01;
+        } else {
+          obj.needed = null;
+        }
 
         server.cache.set( req._url.pathname, obj, 3600);
         res.send(obj);

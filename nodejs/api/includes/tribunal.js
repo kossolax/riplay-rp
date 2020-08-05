@@ -74,16 +74,16 @@ exports = module.exports = function(server){
                 });
               }
               else {
-                var dStart = moment().startOf('month').toDate();
-                var dEnd = moment().startOf('month').add(1, 'months').toDate();
+                var dStart = moment().subtract(7, 'days').toDate();
+                var dEnd = moment().add(1, 'hour').toDate();
                 callback(null, tokken.replace("STEAM_0", "STEAM_1").trim(), dStart, dEnd);
               }
             });
           });
         }
         else {
-          var dStart = moment().startOf('month').toDate();
-          var dEnd = moment().startOf('month').add(1, 'months').toDate();
+          var dStart = moment().subtract(7, 'days').toDate();
+          var dEnd = moment().add(1, 'hour').toDate();
 
           callback(null, tokken.replace("STEAM_0", "STEAM_1").trim(), dStart, dEnd);
         }
