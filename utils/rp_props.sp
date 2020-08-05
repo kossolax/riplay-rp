@@ -2002,7 +2002,8 @@ void RespawnProp(int client, float pPos[3], float pAng[3], int pCol[4], char pCl
 		Format(rendcol, sizeof(rendcol), "%i %i %i", pCol[0], pCol[1], pCol[2]);
 		DispatchKeyValue(index, "rendermode", "5");
 		DispatchKeyValue(index, "rendercolor", rendcol);
-		DispatchKeyValue(index, "disableshadows", "1");
+		DispatchKeyValue(index, "disableshadows", "1");	
+		DispatchKeyValue(index, "DisableBoneFollowers", "1");
 		SetEntPropFloat(index,  Prop_Send, "m_flModelScale", pScale);
 		DispatchKeyValue(index, "physdamagescale", "0.0");
 		DispatchKeyValue(index, "health", "200");
