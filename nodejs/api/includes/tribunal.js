@@ -74,16 +74,16 @@ exports = module.exports = function(server){
                 });
               }
               else {
-                var dStart = moment().startOf('month').toDate();
-                var dEnd = moment().startOf('month').add(1, 'months').toDate();
+                var dStart = moment().subtract(7, 'days').toDate();
+                var dEnd = moment().add(1, 'hour').toDate();
                 callback(null, tokken.replace("STEAM_0", "STEAM_1").trim(), dStart, dEnd);
               }
             });
           });
         }
         else {
-          var dStart = moment().startOf('month').toDate();
-          var dEnd = moment().startOf('month').add(1, 'months').toDate();
+          var dStart = moment().subtract(7, 'days').toDate();
+          var dEnd = moment().add(1, 'hour').toDate();
 
           callback(null, tokken.replace("STEAM_0", "STEAM_1").trim(), dStart, dEnd);
         }
@@ -254,12 +254,6 @@ server.get('/tribunal/:id/:type', function (req, res, next) {
     validateTokken(req, req.params['id'], function(err, tSteamID, dStart, dEnd) {
 
       if( err ) return res.send(new ERR.InternalServerError(err));
-
-      var pattern = /^STEAM_[01]:[01]:[0-9]{1,18}$/g;
-      if( !pattern.test(req.params['id']) && req.params['type'] == "buy") {
-        server.cache.set(req._url.pathname, []);
-        return res.send([]);
-      }
 
       var cache = server.cache.get( req._url.pathname);
       if( cache != undefined ) return res.send(cache);

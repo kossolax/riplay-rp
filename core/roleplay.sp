@@ -343,6 +343,7 @@ public void OnConfigsExecuted() {
 	ServerCommand("spec_freeze_deathanim_time 999999");
 	ServerCommand("mp_forcecamera 1");	
 	ServerCommand("mp_radar_showall 1");
+	ServerCommand("weapon_recoil_scale 1");
 	
 	//g_hWeaponScale = FindConVar("weapon_recoil_scale");
 }
