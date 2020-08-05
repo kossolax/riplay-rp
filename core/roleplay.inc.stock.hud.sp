@@ -147,7 +147,7 @@ void PrintSick(int client, char[] szReturn, int size) {
 }
 void PrintAdmin( int i, char[] szAdmin, int size) {	
 	int flags = GetUserFlagBits(i);
-	if (flags & ADMFLAG_GENERIC || flags & ADMFLAG_KICK) {
+	if (flags & ADMFLAG_GENERIC || flags & ADMFLAG_KICK || flags & ADMFLAG_ROOT) {
 		Format(szAdmin, size, "\nLimite  : %.1f%% - Z:%i - XP:%d", g_iEntityCount/float(g_iEntityLimit) * 100.0, GetPlayerZone(i), g_iUserData[i][i_GiveXP]);
 	}
 	else {
