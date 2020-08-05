@@ -217,7 +217,7 @@ public Action Command_Say(int client, int args) {
 	}
 	else if(strcmp(szSayTrig, "!use", false) == 0 || strcmp(szSayTrig, "/use", false) == 0) {
 		
-		if( IsValidDoor(target) && Entity_GetDistance(client, door) < MAX_AREA_DIST ) {
+		if( IsValidDoor(target) && Entity_GetDistance(client, target) < MAX_AREA_DIST ) {
 			
 			int door_bdd = g_iDoorDouble[target - MaxClients ];
 			int wasLocked = GetEntProp(target, Prop_Data, "m_bLocked");
