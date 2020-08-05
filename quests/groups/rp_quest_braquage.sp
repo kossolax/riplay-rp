@@ -1013,6 +1013,8 @@ void addClientToTeam(int client, int team) {
 		g_stkTeam[team][ g_stkTeamCount[team]++ ] = client;
 	
 	g_iPlayerTeam[client] = team;
+	
+	LogToGame("[DEBUG] [BRAQUAGE] %L was added to team: %d", client, team);
 }
 void removeClientTeam(int client) {
 	if( g_iPlayerTeam[client] != TEAM_NONE ) {
@@ -1026,6 +1028,7 @@ void removeClientTeam(int client) {
 			}
 		}
 		
+		LogToGame("[DEBUG] [BRAQUAGE] %L was removed from team %d", client, g_iPlayerTeam[client]);
 		g_iPlayerTeam[client] = TEAM_NONE;
 	}
 }
