@@ -326,7 +326,7 @@ void CheckDeadSuccess(int Client, int Attacker) {
 	int time = GetTime() - (31*24*60*60);
 	
 	if( Attacker == 0  ) {
-		if( g_iUserSuccess[Client][success_list_worldspawn][sd_last] > time && g_iSuccess_last_shot[Client][1]+(5) > GetTime() ) {
+		if( g_iSuccess_last_shot[Client][1]+(5) > GetTime() ) {
 			WonSuccess(g_iSuccess_last_shot[Client][0], success_list_worldspawn);
 		}
 	}
