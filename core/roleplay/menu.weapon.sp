@@ -71,9 +71,10 @@ void SelectingAmmunition(int client, int ent, bool crochettage = false) {
 					}
 				}
 			}
-			
-			Format(tmp, sizeof(tmp), "M4A1: Braquage (%d/%d)", cpt, max);
-			AddMenuItem(hBuyMenu, "braquage", tmp, cpt>=max? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+			if( !crochettage ){
+				Format(tmp, sizeof(tmp), "M4A1: Braquage (%d/%d)", cpt, max);
+				AddMenuItem(hBuyMenu, "braquage", tmp, cpt>=max? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+			}
 		}
 		
 		for(int lp; lp < MAX_BUYWEAPONS; lp++) {
