@@ -216,8 +216,8 @@ public Action Command_Say(int client, int args) {
 		return Plugin_Handled;
 	}
 	else if(strcmp(szSayTrig, "!use", false) == 0 || strcmp(szSayTrig, "/use", false) == 0) {
-
-		if( IsValidDoor(target) ) {
+		
+		if( IsValidDoor(target) && IsEntitiesNear(client, target) ) {
 			
 			int door_bdd = g_iDoorDouble[target - MaxClients ];
 			int wasLocked = GetEntProp(target, Prop_Data, "m_bLocked");
