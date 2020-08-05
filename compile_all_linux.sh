@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -e
 set -o pipefail
 
 rm -rf compiled
