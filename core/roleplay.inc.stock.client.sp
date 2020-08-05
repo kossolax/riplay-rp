@@ -275,9 +275,13 @@ void showPlayerHintBox(int client, int target) {
 			}
 		}
 		
-		if( IsJuge(target)) {
+		if(IsJuge(target)) {
 			if( GetClientTeam(target) != CS_TEAM_CT ) {
-				PrintHintText(client, "%s%s</font>[HP: %i]%s\nJob: %s", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail, g_szJobList[0][job_type_name]);
+				if(g_iUserData[target][i_KillJailDuration] > 1) {
+					PrintHintText(client, "%s%s</font>[HP: %i]%s\nJob: Criminel", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail);
+				} else {
+					PrintHintText(client, "%s%s</font>[HP: %i]%s\nJob: Justice", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail);
+				}
 			}
 		}
 
@@ -782,7 +786,7 @@ void getPlayerSkin(int client, char model[PLATFORM_MAX_PATH], char hands[PLATFOR
 				case 1: Format(model, sizeof(model), "models/player/custom_player/riplay/momiji/momiji.mdl");
 				case 2: Format(model, sizeof(model), "models/player/custom_player/riplay/nathandrake/nathandrake.mdl");
 				case 3: Format(model, sizeof(model), "models/player/custom_player/riplay/wick/wick.mdl");
-				case 4: Format(model, sizeof(model), "models/player/custom_player/legacy/aiden_pearce/aiden_pearce.md");
+				case 4: Format(model, sizeof(model), "models/player/custom_player/legacy/aiden_pearce/aiden_pearce.mdl");
 			}
 		}
 		
@@ -877,7 +881,7 @@ int GetAssurence(int client, bool forced = false) {
 			}
 			else if( StrEqual(tmp, "rp_bigcashmachine") ) {
 				if( !rp_GetBuildingData(i, BD_FromBuild) ) {
-					amount += 4000;
+					amount += (4000 - (150*14) ); // i_Machine est déjà compté dedans, ce qui ne devrait pas.
 				}
 			}
 			else if( StrEqual(tmp, "rp_plant") ) {
@@ -970,9 +974,11 @@ int GetAssurence(int client, bool forced = false) {
 				if( g_iAppartBonus[a][appart_bonus_coffre] )
 					amount += 200;
 				
-				amount += g_iAppartBonus[a][appart_bonus_paye] * 6;
+				amount += (g_iAppartBonus[a][appart_bonus_paye] * 6);
 			}
-			amount += 600;
+			else {
+				amount += 600;
+			}
 		}
 	}
 	

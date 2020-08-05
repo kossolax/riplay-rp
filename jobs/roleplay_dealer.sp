@@ -953,9 +953,10 @@ int BuildingPlant(int client, int type) {
 	
 	DispatchKeyValue(ent, "classname", classname);
 	DispatchKeyValue(ent, "model", MODEL_PLANT_0);
-	DispatchKeyValue(ent, "solid", "0");
-	SetEntProp(ent, Prop_Data, "m_nSolidType", 0); 
-	SetEntProp(ent, Prop_Send, "m_CollisionGroup", 1); 
+	
+	SetEntPropVector(ent, Prop_Send, "m_vecMins", view_as<float>({-8.0, -8.0,  0.0}));
+	SetEntPropVector(ent, Prop_Send, "m_vecMaxs", view_as<float>({ 8.0,  8.0, 14.0}));
+	SetEntProp(ent, Prop_Send, "m_nSolidType", 2);
 	
 	DispatchSpawn(ent);
 	ActivateEntity(ent);
@@ -1000,6 +1001,9 @@ public Action BuildingPlant_post(Handle timer, any entity) {
 	
 	SDKHook(entity, SDKHook_OnTakeDamage, DamagePlant);
 	CreateTimer(10.0, Frame_BuildingPlant, EntIndexToEntRef(entity));
+	
+	Entity_MarkSurrBoundsDirty(entity);
+	
 	return Plugin_Handled;
 }
 public Action DamagePlant(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
@@ -1104,6 +1108,12 @@ public Action Frame_BuildingPlant(Handle timer, any ent) {
 				case 2: SetEntityModel(ent, MODEL_PLANT_2);
 				case 3: SetEntityModel(ent, MODEL_PLANT_3);
 			}
+			
+			
+			SetEntPropVector(ent, Prop_Send, "m_vecMins", view_as<float>({-8.0, -8.0,  0.0}));
+			SetEntPropVector(ent, Prop_Send, "m_vecMaxs", view_as<float>({ 8.0,  8.0, 14.0}));
+			SetEntProp(ent, Prop_Send, "m_nSolidType", 2);
+			Entity_MarkSurrBoundsDirty(ent);
 			
 			ServerCommand("sm_effect_particles %d chicken_gone_zombie 1", ent);
 			

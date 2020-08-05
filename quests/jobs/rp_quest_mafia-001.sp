@@ -128,7 +128,7 @@ public void Q1_Abort(int objectiveID, int client) {
 	PrintHintText(client, "Quête: %s\nLa quête est terminée.", QUEST_NAME);
 }
 public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
-	static int zoneID[3] =  { 13, 198, 221 };
+	static int zoneID[3] =  { 13, 158, 180 };
 	static float lastFree[65];
 	
 	if( lastFree[client] > GetGameTime() )
@@ -149,7 +149,7 @@ public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
 		for (int j = 0; j < sizeof(zoneID); j++) {
 			if( z == zoneID[j] ) {
 				for (int k = 0; k < sizeof(zoneID); k++) {
-					if( rp_GetZoneBit(oldZone) & BITZONE_JAIL &&  zoneID[k] == newZone ) {
+					if( (rp_GetZoneBit(oldZone) & (BITZONE_JAIL|BITZONE_LACOURS|BITZONE_HAUTESECU)) &&  zoneID[k] == newZone ) {
 						
 						int cap = rp_GetRandomCapital(91);
 						rp_SetJobCapital(cap, rp_GetJobCapital(cap) - 600);

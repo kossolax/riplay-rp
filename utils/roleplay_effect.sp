@@ -101,6 +101,10 @@ public void OnMapStart() {
 
 //	CreateTimer(20.0, MapFix, _, TIMER_FLAG_NO_MAPCHANGE);
 }
+public void OnPluginEnd() {
+	for (int i = 0; i < MAXPLAYERS; i++)
+		delete g_iParentedParticle[i];
+}
 public Action MapFix(Handle timer, any none) {
 	char map[128];
 	GetCurrentMap(map, sizeof(map));

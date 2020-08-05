@@ -94,11 +94,11 @@ public Action Cmd_Smoke(int client, int args) {
 	SetEntPropEnt(parent, Prop_Data, "m_hEffectEntity", ent);
 	
 	
-	SetEntPropEnt(parent, Prop_Send, "m_hOwnerEntity", client);
+	SetEntPropEnt(parent, Prop_Send, "m_hOwnerEntity", target);
 	SetEntProp(parent, Prop_Data, "m_takedamage", 2);
 	SetEntProp(parent, Prop_Data, "m_iHealth", 1000);
 	rp_SetBuildingData(parent, BD_started, GetTime());
-	rp_SetBuildingData(parent, BD_owner, client );
+	rp_SetBuildingData(parent, BD_owner, target );
 	rp_SetBuildingData(parent, BD_FromBuild, 0);
 	
 	return Plugin_Handled;
@@ -216,11 +216,11 @@ public Action Cmd_Ball(int client, int args) {
 	SetVariantString("!activator");
 	AcceptEntityInput(ent, "SetParent", node);
 	
-	SetEntPropEnt(node, Prop_Send, "m_hOwnerEntity", client);
+	SetEntPropEnt(node, Prop_Send, "m_hOwnerEntity", target);
 	SetEntProp(node, Prop_Data, "m_takedamage", 2);
 	SetEntProp(node, Prop_Data, "m_iHealth", 1000);
 	rp_SetBuildingData(node, BD_started, GetTime());
-	rp_SetBuildingData(node, BD_owner, client );
+	rp_SetBuildingData(node, BD_owner, target );
 	rp_SetBuildingData(node, BD_FromBuild, 0);
 	
 	return Plugin_Handled;

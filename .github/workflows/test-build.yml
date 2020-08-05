@@ -11,7 +11,7 @@ jobs:
 
       - name: Install sourcemod deps
         run: |
-          sudo apt-get update && sudo apt-get install libc6-i386 lib32stdc++6
+          sudo apt-get update && sudo apt-get install libc6-i386 lib32stdc++6 ncftp
 
 
       - name: Compile
@@ -25,4 +25,9 @@ jobs:
           name: compiled
           path: compiled/
 
-
+      - name: Upload to dev server
+        if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
+        env: 
+          ftp_password: ${{ secrets.FTPPassword }}
+        run: |
+          ncftpput -u rp_test -p $ftp_password cpu-linux.riplay.fr plugins compiled/*

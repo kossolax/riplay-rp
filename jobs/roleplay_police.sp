@@ -104,8 +104,8 @@ public void OnPluginStart() {
 	HookEvent("weapon_fire", Event_Weapon_Fire);
 	
 	for (int i = 1; i <= MaxClients; i++)
-	if (IsValidClient(i))
-		OnClientPostAdminCheck(i);
+		if (IsValidClient(i))
+			OnClientPostAdminCheck(i);
 }
 
 public void OnAllPluginsLoaded() {
@@ -114,6 +114,9 @@ public void OnAllPluginsLoaded() {
 public void OnPluginEnd() {
 	if (g_hBuyMenu)
 		rp_WeaponMenu_Clear(g_hBuyMenu);
+	
+	for (int i = 1; i <= MaxClients; i++)
+		OnClientDisconnect(i);
 }
 public Action Cmd_GetStoreWeapon(int args) {
 	Cmd_BuyWeapon(GetCmdArgInt(1), true);
@@ -135,6 +138,7 @@ public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_PreGiveDamage, fwdDmg);
 	rp_HookEvent(client, RP_OnPlayerZoneChange, fwdOnZoneChange);
 	rp_HookEvent(client, RP_OnPlayerUse, fwdOnPlayerUse);
+	rp_HookEvent(client, RP_OnFrameSeconde, fwdOnFrame);
 	rp_SetClientBool(client, b_IsSearchByTribunal, false);
 
 	CreateTimer(0.01, AllowStealing, client);
@@ -143,6 +147,23 @@ public void OnClientPostAdminCheck(int client) {
 }
 public void OnClientDisconnect(int client) {
 	delete g_UsedWeapon[client];
+}
+public Action fwdOnFrame(int client) {
+	if( rp_GetClientJobID(client) == 101 && GetClientTeam(client) == CS_TEAM_CT && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 101 ) {
+		
+		if( GetEntProp(client, Prop_Send, "m_bDrawViewmodel") == 1 ) {
+			Handle hud = CreateHudSynchronizer();
+			if( jugeCanJail() ) {
+				SetHudTextParams(0.0125, 0.0125, 1.1, 19, 213, 45, 255, 2, 0.0, 0.0, 0.0);
+				ShowSyncHudText(client, hud, "/jail autorisé");
+			}
+			else {
+				SetHudTextParams(0.0125, 0.0125, 1.1, 213, 19, 45, 255, 2, 0.0, 0.0, 0.0);
+				ShowSyncHudText(client, hud, "/jail non autorisé");
+			}
+			CloseHandle(hud);
+		}
+	}
 }
 public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
 	
@@ -273,15 +294,15 @@ public Action Cmd_Verif(int client) {
 		}
 	}
 
-	if(!StrEqual(lastWeapon[1], "AUCUNE")) { // primary
-		if(rp_GetClientBool(target, b_License1) == false) {
-			amendeLicense1 = true;
+	if(!StrEqual(lastWeapon[0], "AUCUNE")) { // primary
+		if(rp_GetClientBool(target, b_License2) == false) {
+			amendeLicense2 = true;
 		}
 	}
 
-	if(!StrEqual(lastWeapon[0], "AUCUNE")) { // secondary
-		if(rp_GetClientBool(target, b_License2) == false) {
-			amendeLicense2 = true;
+	if(!StrEqual(lastWeapon[1], "AUCUNE")) { // secondary
+		if(rp_GetClientBool(target, b_License1) == false) {
+			amendeLicense1 = true;
 		}
 	}
 
@@ -314,10 +335,10 @@ public Action Cmd_Verif(int client) {
 		menu.AddItem(item, "Amende 4000$ - Permis lourd & léger", forcehidden ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
 	} else {
 		Format(item, 255, "%d_permileger", target);
-		menu.AddItem(item, "Amende 1600$ - Permis léger", !amendeLicense2 || forcehidden || !applyLiscence2 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
+		menu.AddItem(item, "Amende 1600$ - Permis léger", !amendeLicense1 || forcehidden || !applyLiscence1 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
 
 		Format(item, 255, "%d_permilourd", target);
-		menu.AddItem(item, "Amende 2400$ - Permis lourd", !amendeLicense1 || forcehidden || !applyLiscence1 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
+		menu.AddItem(item, "Amende 2400$ - Permis lourd", !amendeLicense2 || forcehidden || !applyLiscence2 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
 	}
 	
 	SetMenuExitButton(menu, true);
@@ -342,7 +363,8 @@ public int MenuHandler_Verif(Handle menu, MenuAction action, int client, int par
 	
 			rp_ClientMoney(target, i_Money, -1600);
 			
-			rp_ClientMoney(client, i_ToPay, 200);
+			rp_ClientMoney(client, i_AddToPay, 100);
+			rp_ClientMoney(client, i_Money, 100);
 			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 1400));
 			rp_SetClientInt(target, i_AmendeLiscence2, GetTime());
 		}
@@ -352,7 +374,8 @@ public int MenuHandler_Verif(Handle menu, MenuAction action, int client, int par
 
 			rp_ClientMoney(target, i_Money, -2400);
 			
-			rp_ClientMoney(client, i_ToPay, 400);
+			rp_ClientMoney(client, i_AddToPay, 400);
+			rp_ClientMoney(client, i_Money, 200);
 			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 2000));
 			rp_SetClientInt(target, i_AmendeLiscence1, GetTime());
 		}
@@ -361,7 +384,8 @@ public int MenuHandler_Verif(Handle menu, MenuAction action, int client, int par
 			CPrintToChat(client, "" ...MOD_TAG... " Une amende de 4000$ vient d'être prélevée auprès de %N{default} pour défaut de permis de port d'arme légere et lourde", target);
 			rp_ClientMoney(target, i_Money, -4000);
 			
-			rp_ClientMoney(client, i_ToPay, 600);
+			rp_ClientMoney(client, i_AddToPay, 600);
+			rp_ClientMoney(client, i_Money, 300);
 			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 3200));
 			rp_SetClientInt(target, i_AmendeLiscence2, GetTime());
 			rp_SetClientInt(target, i_AmendeLiscence1, GetTime());
@@ -603,7 +627,7 @@ public Action Cmd_Tazer(int client) {
 			if (rp_GetBuildingData(target, BD_started) + 120 < GetTime()) {
 				Entity_GetModel(target, tmp, sizeof(tmp));
 				if (StrContains(tmp, "popcan01a") == -1) {
-					reward = 30;
+					reward = 38;
 				}
 			}
 		}
@@ -616,10 +640,10 @@ public Action Cmd_Tazer(int client) {
 				rp_WeaponMenu_Add(g_hBuyMenu, target, GetEntProp(target, Prop_Send, "m_OriginalOwnerXuidHigh"));
 			int prix = rp_GetWeaponPrice(target);
 			
-			reward = prix / 15;
+			reward = prix / 10;
 			
 			if (rp_GetWeaponBallType(target) != ball_type_none) {
-				reward += 50;
+				reward += 85;
 			}
 		}
 		else if (StrEqual(tmp2, "rp_cashmachine")) {
@@ -627,9 +651,9 @@ public Action Cmd_Tazer(int client) {
 			rp_GetZoneData(Tzone, zone_type_name, tmp, sizeof(tmp));
 			LogToGame("[TSX-RP] [TAZER] %L a supprimé une machine de %L dans %s", client, owner, tmp);
 			
-			reward = 10;
+			reward = 13;
 			if (rp_GetBuildingData(target, BD_started) + 120 < GetTime()) {
-				reward = 30;
+				reward = 38;
 				if (owner != client)
 					ClientTazedItem(client, reward);
 			}
@@ -645,9 +669,9 @@ public Action Cmd_Tazer(int client) {
 			rp_GetZoneData(Tzone, zone_type_name, tmp, sizeof(tmp));
 			LogToGame("[TSX-RP] [TAZER] %L a supprimé une photocopieuse de %L dans %s", client, owner, tmp);
 			
-			reward = 10;
+			reward = 13;
 			if (rp_GetBuildingData(target, BD_started) + 120 < GetTime()) {
-				reward = 450;
+				reward = 560;
 				if (owner != client)
 					ClientTazedItem(client, reward);
 			}
@@ -662,14 +686,14 @@ public Action Cmd_Tazer(int client) {
 			rp_GetZoneData(Tzone, zone_type_name, tmp, sizeof(tmp));
 			LogToGame("[TSX-RP] [TAZER] %L a supprimé un plant de %L dans %s", client, owner, tmp);
 			
-			reward = 35;
+			reward = 43;
 			if ((rp_GetBuildingData(target, BD_started) + 120 < GetTime() && rp_GetBuildingData(target, BD_FromBuild) == 0) || 
 				(rp_GetBuildingData(target, BD_started) + 300 < GetTime() && rp_GetBuildingData(target, BD_FromBuild) == 1)) {
 				
 				if (rp_GetBuildingData(target, BD_FromBuild) == 1)
-					reward += 20 * rp_GetBuildingData(target, BD_count);
+					reward += 25 * rp_GetBuildingData(target, BD_count);
 				else
-					reward += 65 * rp_GetBuildingData(target, BD_count);
+					reward += 72 * rp_GetBuildingData(target, BD_count);
 				
 				if (owner != client)
 					ClientTazedItem(client, reward);
@@ -755,36 +779,26 @@ public Action Cmd_Jail(int client) {
 		ACCESS_DENIED(client);
 	}
 	
-	float time = GetGameTime();
-	int ct = 0;
-	
-	for (int i = 1; i <= MaxClients; i++) {
-		if (!IsValidClient(i) || IsClientSourceTV(i))
-			continue;
-		if (rp_GetClientJobID(i) == 1)
-			ct++;
-		
-		if (Entity_GetDistance(client, i) < MAX_AREA_DIST) {
-			if (!IsPlayerAlive(i) && rp_GetClientFloat(i, fl_RespawnTime) < time)
-				CS_RespawnPlayer(i);
-			if (rp_GetClientJobID(i) == 1)
-				ct += 10;
-		}
-	}
-	
+	float time = GetGameTime();	
 	int target = rp_GetClientTarget(client);
 	
 	if (target <= 0 || !IsValidEdict(target) || !IsValidEntity(target)) {
 		return Plugin_Handled;
 	}
-
+	
+	for (int i = 1; i <= MaxClients; i++) {
+		if (!IsValidClient(i) || IsClientSourceTV(i))
+			continue;
+		
+		if (Entity_GetDistance(client, i) < MAX_AREA_DIST) {
+			if (!IsPlayerAlive(i) && rp_GetClientFloat(i, fl_RespawnTime) < time)
+				CS_RespawnPlayer(i);
+		}
+	}
+	
 	// target is not a player
 	if (!IsValidClient(target)) {
 		return Plugin_Handled;
-	}
-
-	if (rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PERQUIZ || rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PERQUIZ) { // Les juges peuvent jail en perqui
-		ct = 0;
 	}
 	
 	if (IsValidClient(target) && rp_GetClientFloat(target, fl_Invincible) > GetGameTime()) {  //le target utilise une poupée gonflable
@@ -799,9 +813,14 @@ public Action Cmd_Jail(int client) {
 		ACCESS_DENIED(client);
 	}
 	
-	if( IsValidClient(target) && rp_GetClientJobID(client) == 101 && rp_GetClientBool(target, b_IsSearchByTribunal) == false) {  // Jail dans la rue sur non recherché.
-		if (ct >= 3 && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 101) {
-			ACCESS_DENIED(client);
+	
+	if( IsValidClient(target) && rp_GetClientJobID(client) == 101 &&
+		rp_GetClientBool(target, b_IsSearchByTribunal) == false &&
+		rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 101 && 
+		!(rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PERQUIZ || rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PERQUIZ) ) {  // Jail dans la rue sur non recherché.
+		if( !jugeCanJail() ) {
+			CPrintToChat(client, "" ...MOD_TAG... " La commande est temporairement inaccessible, il y a suffisamment de gendarmes connectés");
+			return Plugin_Handled;
 		}
 	}
 	
@@ -880,6 +899,36 @@ public Action Cmd_Jail(int client) {
 	
 	return Plugin_Handled;
 }
+bool jugeCanJail() {
+	static int nextCheck = 0;
+	static bool result = false;
+	
+	if( nextCheck > GetTime() ) {
+		return result;
+	}
+	
+	int ct = 0;
+	int t = 0;
+	
+	for (int i = 1; i <= MaxClients; i++) {
+		if (!IsValidClient(i) || IsClientSourceTV(i))
+			continue;
+		if( rp_GetClientBool(i, b_IsAFK) )
+			continue;
+		
+		if ( rp_GetClientJobID(i) == 1 ) {
+			if( GetClientTeam(i) == CS_TEAM_CT )
+				ct++;
+		}
+		else {
+			t++;
+		}
+	}
+	
+	result = !(ct > t / 10);
+	nextCheck = GetTime() + 30;
+	return result;
+}
 public Action Cmd_Push(int client) {
 	int job = rp_GetClientInt(client, i_Job);
 	
@@ -926,7 +975,7 @@ public Action Cmd_Push(int client) {
 	TeleportEntity(target, NULL_VECTOR, NULL_VECTOR, f_Velocity);
 	
 	
-	LogToGame("[TSX-RP] [TAZER] %L a tazé %N dans %d.", client, target, rp_GetPlayerZone(target));
+	LogToGame("[TSX-RP] [TAZER] %L a push %N dans %d.", client, target, rp_GetPlayerZone(target));
 	
 	return Plugin_Handled;
 }
@@ -1328,7 +1377,9 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 		if (IsValidClient(client) && IsValidClient(target)) {
 			CPrintToChat(client, "" ...MOD_TAG... " %N{default} restera en prison %.1f heures pour \"%s\"", target, time_to_spend / 60.0, g_szJailRaison[type][jail_raison]);
 			CPrintToChat(target, "" ...MOD_TAG... " %N{default} vous a mis %.1f heures de prison pour \"%s\"", client, time_to_spend / 60.0, g_szJailRaison[type][jail_raison]);
-			explainJail(target, type);
+			
+			if( time_to_spend > 0 || amende > 0 )
+				explainJail(target, type);
 		}
 		else {
 			CPrintToChat(client, "" ...MOD_TAG... " Le joueur s'est déconnecté mais il fera %.1f heures de prison", time_to_spend / 60.0);
@@ -1742,7 +1793,6 @@ void StripWeapons(int client) {
 	LogToGame("removed weapon of %N", client);
 	
 	for (int i = 0; i < 5; i++) {
-		if (i == CS_SLOT_KNIFE) continue;
 		
 		while ((wepIdx = GetPlayerWeaponSlot(client, i)) != -1) {
 			
@@ -1754,6 +1804,8 @@ void StripWeapons(int client) {
 		}
 	}
 	
+	int tmp = GivePlayerItem(client, "weapon_fists");
+	EquipPlayerWeapon(client, tmp);
 	FakeClientCommand(client, "use weapon_fists");
 }
 
@@ -1843,10 +1895,11 @@ public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int 
 			
 			if (rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money) < data[BM_Prix])
 				return 0;
+			Format(name, sizeof(name), "weapon_%s", name);
+			
 			if( Weapon_ShouldBeEquip(name) && Client_HasWeapon(client, name) )
 				return 0;
-			
-			Format(name, sizeof(name), "weapon_%s", name);
+				
 			int wepid = GivePlayerItem(client, name);
 			if( Weapon_ShouldBeEquip(name) )
 				EquipPlayerWeapon(client, wepid);
@@ -1930,12 +1983,12 @@ bool canWeaponBeAddedInPoliceStore(int weaponID) {
 	
 	char classname[64];
 	GetEdictClassname(weaponID, classname, sizeof(classname));
-	if (StrContains(classname, "default") >= 0 || StrContains(classname, "knife") >= 0)
+	if (StrContains(classname, "default") >= 0 || StrContains(classname, "fists") >= 0)
 		return false;
 	
 	int index = GetEntProp(weaponID, Prop_Send, "m_iItemDefinitionIndex");
 	CSGO_GetItemDefinitionNameByIndex(index, classname, sizeof(classname));
-	if (StrContains(classname, "default") >= 0 || StrContains(classname, "knife") >= 0)
+	if (StrContains(classname, "default") >= 0 || StrContains(classname, "fists") >= 0)
 		return false;
 	
 	int owner = GetEntPropEnt(weaponID, Prop_Send, "m_hPrevOwner");

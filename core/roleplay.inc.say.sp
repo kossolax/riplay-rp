@@ -41,8 +41,6 @@ public Action Command_Say(int client, int args) {
 	if( !g_bUserData[client][b_Crayon] )
 		CRemoveTags(szSayText, sizeof(szSayText));
 	
-	LogToGame("[DEBUG] [TALK] %L %s %s %d", client, szSayTrig, szSayText, target);
-	
 	Action act = Plugin_Continue;
 	Call_StartForward( view_as<Handle>(g_hRPNative[client][RP_PrePlayerTalk]) );
 	Call_PushCell(client);
@@ -218,8 +216,8 @@ public Action Command_Say(int client, int args) {
 		return Plugin_Handled;
 	}
 	else if(strcmp(szSayTrig, "!use", false) == 0 || strcmp(szSayTrig, "/use", false) == 0) {
-
-		if( IsValidDoor(target) ) {
+		
+		if( IsValidDoor(target) && IsEntitiesNear(client, target) ) {
 			
 			int door_bdd = g_iDoorDouble[target - MaxClients ];
 			int wasLocked = GetEntProp(target, Prop_Data, "m_bLocked");

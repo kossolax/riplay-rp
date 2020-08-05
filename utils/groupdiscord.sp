@@ -11,13 +11,15 @@ public Plugin:myinfo =
 	description = "Change le groupe discord",
 };
 
-public void OnMapStart() {
-	g_hQueue = new ArrayList(64);
-	CreateTimer(10.0, Timer_Process, _, TIMER_REPEAT);
+public void OnPluginEnd() {
+	delete g_hQueue;
 }
 
 public void OnPluginStart() {
 	RegServerCmd("sm_force_discord_group", cmdForceDiscordGroup);
+	
+	g_hQueue = new ArrayList(64);
+	CreateTimer(10.0, Timer_Process, _, TIMER_REPEAT);
 }
 
 public void OnClientPutInServer(int client) {
@@ -45,6 +47,7 @@ public Action cmdForceDiscordGroup(int args) {
 public void AddAuthToQueue(int client) {
 	char authid[32];
 	GetClientAuthId(client, AuthId_SteamID64, authid, sizeof(authid));
+	if(g_hQueue.FindString(authid) > -1) return;
 
 	g_hQueue.PushString(authid);
 }

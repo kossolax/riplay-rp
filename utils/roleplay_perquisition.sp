@@ -184,6 +184,7 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 void INIT_PERQUIZ(int client, int zone, int target, int type) {	
 	
 	char tmp[64], query[512];
+	int resp = 0;
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	int[] array = new int[PQ_Max];
 	
@@ -192,8 +193,9 @@ void INIT_PERQUIZ(int client, int zone, int target, int type) {
 	if( isZoneInPerquiz(zone) )
 		return;
 
-	
-	setPerquizData(client, zone, target, 0, type, 0);
+	if( type == 0) resp = GetPerquizResp(zone);
+
+	setPerquizData(client, zone, target, resp, type, 0);
 	
 	Format(query, sizeof(query), "SELECT `time` FROM `rp_perquiz` WHERE `type`='%s' AND `job_id`='%d' AND `zone`='%s' ORDER BY `time` DESC;", target > 0 ? "search" : "trafic", rp_GetClientJobID(client), tmp);
 	
@@ -426,7 +428,8 @@ public Action TIMER_PERQUIZ_LOOKUP(Handle timer, any zone) {
 		return Plugin_Stop;
 	}
 	
-	array[PQ_resp] = GetPerquizResp(zone);
+	if ( !IsValidClient(array[PQ_resp])) array[PQ_resp] = GetPerquizResp(zone);
+
 	bool canStart = (array[PQ_timeout] >= 60 || !IsValidClient(array[PQ_resp]));
 	
 	if( IsValidClient(array[PQ_resp]) ) {

@@ -140,7 +140,7 @@ void DisplayBankMenu(int client, int target) {
 		}
 		
 		AddMenuItem(menu, "weaponAdd", "Déposer une arme");
-		if( rp_WeaponMenu_GetMax(g_iCustomBank[target]) > view_as<DataPackPos>(9) )
+		if( rp_WeaponMenu_GetMax(g_iCustomBank[target]) >= view_as<DataPackPos>( view_as<int>(BM_Max)) )
 			AddMenuItem(menu, "weaponGet", "Retirer une arme");
 	}
 	
@@ -481,6 +481,11 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 				
 				Format(name, sizeof(name), "weapon_%s", name);			
 				int wepid = GivePlayerItem(client, name);
+				
+				if( Weapon_ShouldBeEquip(name) )
+					EquipPlayerWeapon(client, wepid);
+				
+				
 				rp_SetWeaponBallType(wepid, view_as<enum_ball_type>(data[BM_Type]));
 				if(data[BM_PvP] > 0)
 					rp_SetWeaponGroupID(wepid, rp_GetClientGroupID(client));

@@ -1682,20 +1682,36 @@ public Action Command_loadEvent(int client,int args) {
 		Format(savename, sizeof(savename), "%s %s", savename, tmp);
 	}
 	SQL_EscapeString(db, savename, savename, sizeof(savename));
-	Format(query, sizeof(query), "SELECT `id`, `name` FROM `rp_shared`.`rp_propsaves` WHERE `name` LIKE '%%%s%%' AND `disabled` = 0 AND DATE_ADD(date, INTERVAL 14 DAY) > NOW()", savename);
+	Format(query, sizeof(query), "SELECT S.`id`, `name`, SUM(IF( C.classname LIKE \"weapon_%%\", 2, 1)) FROM `rp_shared`.`rp_propsaves` S INNER JOIN `rp_shared`.rp_propcontent C ON S.id=C.id WHERE `name` LIKE '%%%s%%' AND `disabled` = 0 GROUP BY S.`id` ORDER BY date DESC", savename);
 	SQL_TQuery(db, SQL_LoadEvent, query, client, DBPrio_High);
 
 	return Plugin_Handled;
 }
+int countEntity() {
+	int cpt = MaxClients;
+	for (int i = MaxClients; i <= 2048; i++) {
+		if( IsValidEdict(i) && IsValidEntity(i) )
+			cpt++;
+	}
+	return cpt;
+}
 public void SQL_LoadEvent(Handle owner, Handle row, const char[] error, any client) {
+	int max = GetConVarInt(FindConVar("rp_max_entity"));
+	int current = countEntity();
+	
 	int countLine = 0;
 	char tmp[128],tmp2[16];
 	Handle menu = CreateMenu(MenuLoadEvent);
 	SetMenuTitle(menu, "Selection de l'event à charger:");
 	while(SQL_FetchRow(row)){
 		SQL_FetchString(row, 1, tmp, sizeof(tmp));
+		
+		int cpt = SQL_FetchInt(row, 2);
+		
+		Format(tmp, sizeof(tmp), "%s (+%.1f%%)", tmp, cpt*100.0/float(max));
+		
 		Format(tmp2, sizeof(tmp2), "%i", SQL_FetchInt(row, 0));
-		AddMenuItem(menu, tmp2, tmp);
+		AddMenuItem(menu, tmp2, tmp, ((current+cpt) >= max) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 		countLine++;
 	}
 	CloseHandle(row);
@@ -1808,12 +1824,8 @@ public void SQL_RespawnEvent(Handle owner, Handle row, const char[] error, any c
 	float pPos[3], pAng[3], pScale;
 	StripWeapons(client);
 	
-	int entCount = 0;
-	for (int i = 1; i <= 2048; i++) {
-		if( !IsValidEdict(i) && !IsValidEntity(i) )
-			continue;
-		entCount++;
-	}
+	int entCount = countEntity();
+	int max = GetConVarInt(FindConVar("rp_max_entity"));
 	
 	PrintToChatAll(error);
 	while( SQL_FetchRow(row) ){
@@ -1843,7 +1855,13 @@ public void SQL_RespawnEvent(Handle owner, Handle row, const char[] error, any c
 		countProps++;
 		entCount++;
 		
-		if( entCount >= 2000 ) {
+		if( countEntity() != entCount && StrContains(pClass, "weapon_") != 0 ) {
+			CPrintToChat(client, "WARNING!!!!!: %s %s", pClass, pModel);
+		}
+		
+		entCount = countEntity(); // certains props compte pour plus d'une entité.
+		
+		if( countEntity() >= max ) {
 			CPrintToChat(client, "ERREUR !!! Votre event à risquer de faire crash le serveur. Trop de props.");
 			
 			for(int i=0;i<310;i++){
@@ -1931,10 +1949,13 @@ void RespawnProp(int client, float pPos[3], float pAng[3], int pCol[4], char pCl
 	else if(StrContains(pClass, "weapon_", false) == 0){
 		int wepid1 = GivePlayerItem(client, pClass);
 		int wepid = GivePlayerItem(client, pClass);
+		
 		RemovePlayerItem(client, wepid);
 		TeleportEntity(wepid, pPos, pAng, view_as<float>({0.0, 0.0, 0.0}));
+		
 		RemovePlayerItem(client, wepid1);
 		RemoveEdict(wepid1);
+		
 		Format(rendcol, sizeof(rendcol), "%i %i %i", pCol[0], pCol[1], pCol[2]);
 		DispatchKeyValue(wepid, "rendermode", "5");
 		DispatchKeyValue(wepid, "rendercolor", rendcol);

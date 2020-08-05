@@ -10,7 +10,20 @@
 	#include "roleplay.sp"
 #endif
 
-
+void setRecoil(int client) {
+	float train = g_flUserData[client][fl_WeaponTrainAdmin] < 0 ? g_flUserData[client][fl_WeaponTrain] : g_flUserData[client][fl_WeaponTrainAdmin];
+	if( train <= 4.0 ) {
+		int shoot = GetEntProp(client, Prop_Send, "m_iShotsFired");
+		float vecAngles[3], vecPunch[3];
+		vecAngles[0] = vecAngles[1] = vecAngles[2] = -float(shoot) * (4.0 - train) * 0.1;
+		
+		
+		GetEntPropVector(client, Prop_Send, "m_aimPunchAngle", vecPunch);
+		
+		AddVectors(vecPunch, vecAngles, vecAngles);
+		SetEntPropVector(client, Prop_Send, "m_aimPunchAngle", vecAngles);
+	}
+}
 
 public Action OnSetTransmit(int entity, int client) {
 	if( entity == client )
@@ -23,6 +36,9 @@ public Action OnSetTransmit(int entity, int client) {
 	}
 	return Plugin_Continue;
 }
+public void OnPreThink(int client) {
+	setRecoil(client);
+}
 public void OnPostThinkPost(int client) {
 	static int m_flFlashDuration = -1, m_flFlashMaxAlpha = -1;
 	if( m_flFlashDuration == -1 )
@@ -30,7 +46,7 @@ public void OnPostThinkPost(int client) {
 	if( m_flFlashMaxAlpha == -1 )
 		m_flFlashMaxAlpha = FindSendPropInfo("CCSPlayer", "m_flFlashMaxAlpha");
 	
-	
+	setRecoil(client);
 	if( g_flUserData[client][fl_Alcool] > 0.0 ) {
 		SetEntDataFloat(client, m_flFlashDuration, GetGameTime()+0.1,true);
 		SetEntDataFloat(client, m_flFlashMaxAlpha, g_flUserData[client][fl_Alcool] * 10.0 + 20.0, true);
@@ -51,8 +67,8 @@ public void OnPostThink(int client) {
 		SetEntPropEnt(client, Prop_Send, "m_hGroundEntity", 0);
 	}
 	
+	setRecoil(client);
 	CTF_SNIPER_dot(client);
-
 	
 	if( g_flUserData[client][fl_Alcool] > 0.0 ) {
 		fAngle[client] += Pow(g_flUserData[client][fl_Alcool], 1.5);
@@ -65,6 +81,7 @@ public void OnPostThink(int client) {
 		punch[1] += Cosine(radianConversion) * g_flUserData[client][fl_Alcool] * 100.0;
 		
 		SetEntPropVector(client, Prop_Send, "m_aimPunchAngleVel", punch);
+		
 		
 		char str[24];
 		float percent = 1.0 - (g_flUserData[client][fl_Alcool]/8.0);

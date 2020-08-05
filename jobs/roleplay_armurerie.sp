@@ -109,7 +109,7 @@ public Action Cmd_ItemBallType(int args) {
 	
 	char classname[64];
 	GetEdictClassname(wepid, classname, sizeof(classname));
-	if( StrContains(classname, "weapon_bayonet") == 0 || StrContains(classname, "weapon_knife") == 0 ) {
+	if( Weapon_ShouldBeEquip(classname) ) {
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}

@@ -99,7 +99,7 @@ public Action fwdAssurance(int client, int& amount) {
 	if( rp_GetClientBool(client, ch_Yeux) )
 		amount += 100;
 	if( rp_GetClientInt(client, i_Machine) > 0 )
-		amount += 150 * rp_GetClientInt(client, i_Machine);
+		amount += (150 * rp_GetClientInt(client, i_Machine));
 	
 	return Plugin_Changed; // N'a pas d'impact, pour le moment.
 }
@@ -653,6 +653,7 @@ public Action Cmd_ItemCashBig(int args) {
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
+	
 	rp_SetClientInt(client, i_Machine, 14);
 	g_bProps_trapped[target] = false;
 	return Plugin_Handled;

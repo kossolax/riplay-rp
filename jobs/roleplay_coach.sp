@@ -153,6 +153,24 @@ public void OnPluginStart() {
 	for (int i = 1; i <= MaxClients; i++) 
 		if( IsValidClient(i) )
 			OnClientPostAdminCheck(i); 
+	
+	
+	char classname[64];
+	for (int i = MaxClients; i <= 2048; i++) {
+		if( !IsValidEdict(i) )
+			continue;
+		if( !IsValidEntity(i) )
+			continue;
+		
+		GetEdictClassname(i, classname, sizeof(classname));
+		if( StrEqual(classname, "rp_kevlarbox") ) {
+			
+			rp_SetBuildingData(i, BD_started, GetTime());
+			rp_SetBuildingData(i, BD_owner, GetEntPropEnt(i, Prop_Send, "m_hOwnerEntity") );
+			
+			CreateTimer(Math_GetRandomFloat(0.0, 1.0), BuildingKevlarBox_post, i);
+		}
+	}
 
 }
 public void OnConVarChange(Handle cvar, const char[] oldVal, const char[] newVal) {
@@ -380,11 +398,25 @@ public void Cmd_ItemCutThrow_TOUCH(int rocket, int entity) {
 
 // ----------------------------------------------------------------------------
 public Action Cmd_ItemKnifeType(int args) {
-	char arg1[12];
-	GetCmdArg(1, arg1, sizeof(arg1));
+	char arg1[12], classname[64];
 	
+	GetCmdArg(1, arg1, sizeof(arg1));
 	int client = GetCmdArgInt(2);
 	int item_id = GetCmdArgInt(args);
+	
+	int wepid = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+	if( !IsValidEntity(wepid) ) {
+		ITEM_CANCEL(client, item_id);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez porter votre couteau en main.");
+		return Plugin_Handled;
+	}
+	
+	GetEdictClassname(wepid, classname, sizeof(classname));
+	if( !Weapon_ShouldBeEquip(classname) ) {
+		ITEM_CANCEL(client, item_id);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez porter votre couteau en main.");
+	}
+	
 	
 	enum_ball_type ball_type_type = ball_type_none;
 
@@ -409,7 +441,12 @@ public Action Cmd_ItemKnifeType(int args) {
 		return Plugin_Handled;
 	}
 	
-	rp_SetClientKnifeType(client, ball_type_type);
+	if( !rp_SetClientKnifeType(client, ball_type_type) ) {
+//		ITEM_CANCEL(client, item_id);
+//		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
+	}
+	
+	
 	
 	return Plugin_Handled;
 }
@@ -1755,7 +1792,7 @@ public Action Cmd_ItemCigarette(int args) {
 	else
 		ServerCommand("sm_effect_particles %d shacks_exhaust 30 facemask", client);
 	
-	if( g_hCigarette[client] && IsValidHandle(g_hCigarette[client]) )
+	if( g_hCigarette[client] != INVALID_HANDLE )
 		delete g_hCigarette[client];
 	
 	g_hCigarette[client] = CreateTimer( 30.0, ItemStopCig, client);
@@ -1767,7 +1804,7 @@ public Action Task_UningiteEntity(Handle timer, any client) {
 	UningiteEntity(client);
 }
 public Action ItemStopCig(Handle timer, any client) {
-	
+	g_hCigarette[client] = INVALID_HANDLE;
 	rp_SetClientBool(client, b_Smoking, false);
 }
 public Action fwdCigGravity(int client, float& speed, float& gravity) {

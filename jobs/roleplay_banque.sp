@@ -627,6 +627,8 @@ void DisplayMetroMenu(int client) {
 	if( !rp_IsTutorialOver(client) )
 		return;
 	
+	int zone = rp_GetPlayerZone(client);
+	
 	Handle menu = CreateMenu(eventMetroMenu);
 	SetMenuTitle(menu, "== Station de métro ==\n ");
 	
@@ -635,12 +637,13 @@ void DisplayMetroMenu(int client) {
 	if( GetConVarInt(g_hEVENT) == 5 )
 		AddMenuItem(menu, "metro_event2", "Métro: Station événementiel");
 
-	AddMenuItem(menu, "metro_paix", 	"Métro: Station de la paix");
-	AddMenuItem(menu, "metro_zoning", 	"Métro: Station Place Station");
-	AddMenuItem(menu, "metro_inno", 	"Métro: Station de l'innovation");
-	AddMenuItem(menu, "metro_pvp", 		"Métro: Station Belmont");
+	AddMenuItem(menu, "metro_paix", 	"Métro: Station de la paix", (zone == 57) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+	AddMenuItem(menu, "metro_zoning", 	"Métro: Station Place Station", (zone == 58) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+	AddMenuItem(menu, "metro_inno", 	"Métro: Station de l'innovation", (zone == 59) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+	AddMenuItem(menu, "metro_pvp", 		"Métro: Station Belmont", (zone == 200) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+	
 	if( rp_GetClientKeyAppartement(client, 50) ) {
-		AddMenuItem(menu, "metro_villa", 	"Métro: Villa");
+		AddMenuItem(menu, "metro_villa", 	"Métro: Villa", (zone == 245) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	}
 	
 	SetMenuPagination(menu, MENU_NO_PAGINATION);

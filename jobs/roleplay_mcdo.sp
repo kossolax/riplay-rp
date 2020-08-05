@@ -282,8 +282,7 @@ public void giveHamburger(int client){
 	}
 }
 public Action Cmd_ItemHamburger(int args) {
-	
-	char arg1[12];
+	char arg1[12], classname[64];
 	GetCmdArg(1, arg1, 11);
 	
 	int client = GetCmdArgInt(2);
@@ -468,7 +467,24 @@ public Action Cmd_ItemHamburger(int args) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu comme cadeau: %dx %s", rnd, cmd);
 	}
 	else if( StrEqual(arg1, "spacy") ) {
-		rp_SetClientKnifeType(client, ball_type_fire);
+		
+		int wepid = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+		if( !IsValidEntity(wepid) ) {
+			ITEM_CANCEL(client, item_id);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous devez porter votre couteau en main.");
+			return Plugin_Handled;
+		}
+		
+		GetEdictClassname(wepid, classname, sizeof(classname));
+		if( !Weapon_ShouldBeEquip(classname) ) {
+			ITEM_CANCEL(client, item_id);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous devez porter votre couteau en main.");
+		}
+		
+		if( !rp_SetClientKnifeType(client, ball_type_fire) ) {
+//			ITEM_CANCEL(client, item_id);
+//			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
+		}
 	}
 	return Plugin_Handled;
 }

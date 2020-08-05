@@ -370,7 +370,7 @@ public Action Cmd_ItemLoto(int args) {
 		return Plugin_Handled;
 	
 	
-	if( g_hTimer[client] ) {
+	if( g_hTimer[client] != INVALID_HANDLE ) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes déjà entrain de gratter des tickets.");
 		ITEM_CANCEL(client, itemID);
 		return Plugin_Handled;
@@ -435,7 +435,7 @@ public Action TIMER_Grattage(Handle timer, Handle dp) {
 	int amount = ReadPackCell(dp);
 	
 	if( rp_GetClientItem(client, itemID) <= 0 ) {
-		delete g_hTimer[client];
+		g_hTimer[client] = INVALID_HANDLE;
 		return Plugin_Stop;
 	}
 	
@@ -446,11 +446,11 @@ public Action TIMER_Grattage(Handle timer, Handle dp) {
 	bool won = gratterTicket(client, amount, itemID);
 	
 	if( total < 0 && won ) {
-		delete g_hTimer[client];
+		g_hTimer[client] = INVALID_HANDLE;
 		return Plugin_Stop;
 	}
 	if( total == 1 ) {
-		delete g_hTimer[client];
+		g_hTimer[client] = INVALID_HANDLE;
 		return Plugin_Stop;
 	}
 	

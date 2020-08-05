@@ -443,7 +443,6 @@ void OnGameFrame_10(float time) {
 				}
 			}
 			
-			g_bUserData[i][b_Assurance] = true;
 			AFK_Check(i);
 			if( !g_bUserData[i][b_IsAFK] ) {
 				rp_ClientXPIncrement(i);
@@ -512,7 +511,7 @@ void OnGameFrame_10(float time) {
 			if( IsPlayerAlive(i) ) {
 
 				if(infoPeineTime == 180) {
-					if(g_bUserData[i][b_ExitJailMenu]) {
+					if( g_bUserData[i][b_ExitJailMenu] && g_iUserData[i][i_JailTime] > 0 ) {
 						CPrintToChat(i, "{lightblue}[TSX-RP]{default} Tu peux modifier la durée/zone de ton emprisonnement en tapant /peine");
 					}
 				}
@@ -521,7 +520,7 @@ void OnGameFrame_10(float time) {
 				
 				CheckLiscence(i);
 				
-				if(rp_GetClientJobID(i) == 1) {
+				if( IsPolice(i) || IsJuge(i) ) {
 					if( GetClientTeam(i) != CS_TEAM_T && g_iUserData[i][i_KillJailDuration] > 1) {
 						tmpKillDuration = g_iUserData[i][i_KillJailDuration];
 						g_iUserData[i][i_KillJailDuration] = 0;
@@ -557,7 +556,7 @@ void OnGameFrame_10(float time) {
 					}
 				}
 				
-				if( g_iUserData[i][i_Job] == 0 && (g_iUserData[i][i_Money]+g_iUserData[i][i_Bank]) ) {
+				if( g_iUserData[i][i_Job] == 0 && (g_iUserData[i][i_Money]+g_iUserData[i][i_Bank]) <= 1000 ) {
 					if( g_iSuccess_last_touchdown[i] < 1 ) {
 						g_iSuccess_last_touchdown[i] = GetTime();
 					}
@@ -841,7 +840,7 @@ void OnGameFrame_10(float time) {
 			
 			if( GetEntProp(i, Prop_Send, "m_bDrawViewmodel") == 1 ) {
 				Handle hud = CreateHudSynchronizer();
-				SetHudTextParams(0.45, 1.0, 1.1, 19, 213, 45, 255, 2, 0.0, 0.0, 0.0);
+				SetHudTextParams(-1.0, 1.0, 1.1, 19, 213, 45, 255, 2, 0.0, 0.0, 0.0);
 				ShowSyncHudText(i, hud, szDates);
 				CloseHandle(hud);
 			}
@@ -906,19 +905,30 @@ public void CRON_TIMER() {
 	}
 	
 	
-	
-	if( StringToInt(szHours) == 5 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 30 ) {	// 05h59m30s
-		ServerCommand("rp_give_assu");
+	if( (StringToInt(szHours) ==  4 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 30) ||
+		(StringToInt(szHours) == 16 && StringToInt(szMinutes) == 29 && StringToInt(szSecondes) == 30) 
+		) {	
 		CPrintToChatAll("" ...MOD_TAG... " Le serveur vas {red}redémarrer{default} dans 30 secondes.");
+		CPrintToChatAll("" ...MOD_TAG... " Le serveur vas {red}redémarrer{default} dans 30 secondes.");
+		CPrintToChatAll("" ...MOD_TAG... " Le serveur vas {red}redémarrer{default} dans 30 secondes.");
+		ServerCommand("rp_give_assu");
+	}
+	if( (StringToInt(szHours) ==  4 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 59) ||
+		(StringToInt(szHours) == 16 && StringToInt(szMinutes) == 29 && StringToInt(szSecondes) == 59) ) {
+		CPrintToChatAll("" ...MOD_TAG... " Le serveur vas {red}redémarrer{default} MAINTENANT.");
+	}
+	if( (StringToInt(szHours) ==  5 && StringToInt(szMinutes) ==  0 && StringToInt(szSecondes) == 0) ||
+		(StringToInt(szHours) == 16 && StringToInt(szMinutes) == 30 && StringToInt(szSecondes) == 0) ) {
+		CPrintToChatAll("" ...MOD_TAG... " Le serveur vas {red}redémarrer{default} MAINTENANT.");
+		
+		for(int i = 1; i <= MaxClients; i++)
+			if( IsValidClient(i) )
+				ClientCommand(i, "retry"); // force retry
+		
+		RequestFrame(RebootServer);
 	}
 	
-	if( StringToInt(szHours) == 6 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 06h00m00s
-		CPrintToChatAll("" ...MOD_TAG... " Le serveur vas {red}redémarrer{default} MAINTENANT.");
-		ServerCommand("sv_cheats 1");
-		ServerCommand("crash");
-		ServerCommand("quit");
-		
-	}
+	
 	if( StringToInt(szDayOfWeek) == 3 ) { // Mercredi
 		if( StringToInt(szHours) == 18 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 18h00m00s
 			ServerCommand("rp_capture active");
@@ -935,4 +945,9 @@ public void CRON_TIMER() {
 			ServerCommand("rp_capture none");
 		}
 	}
+}
+public void RebootServer(any none) {
+	ServerCommand("quit");
+	ServerCommand("sv_cheats 1");
+	ServerCommand("crash");
 }

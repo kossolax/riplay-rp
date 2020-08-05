@@ -407,15 +407,17 @@ bool CheckValidGrab(int client, int result) {
 		GetEntPropVector(result, Prop_Send, "m_vecOrigin", fOrigin2);
 		
 		g_fGrabbedLength[client] = GetVectorDistance(fOrigin1, fOrigin2);
-		g_iGrabbing[client] = result;
-		g_iGrabbedBy[result] = client;
-		g_bIsSeeking[client] = false;
-		
+
 		if( g_bGrabNear[client] && g_fGrabbedLength[client] >= 250.0 ) {
 			FORCE_STOP(client);
 			return false;
 		}
-		else if( !g_bGrabNear[client] ) {
+
+		g_iGrabbing[client] = result;
+		g_iGrabbedBy[result] = client;
+		g_bIsSeeking[client] = false;
+		
+		if( !g_bGrabNear[client] ) {
 			char name[64];
 			GetEdictClassname(result, name, 63);
 			CPrintToChat(client, "[FORCE] Entity grabbed: %s[%i]", name, result);

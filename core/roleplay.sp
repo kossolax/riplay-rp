@@ -134,18 +134,18 @@ public void OnPluginStart() {
 	RegAdminCmd("rp_restarttuto", 		cmd_RestartTutorial,ADMFLAG_ROOT);
 	RegAdminCmd("rp_debug", 			cmd_ToggleDebug,	ADMFLAG_ROOT);
 	//
-	/*if( GetConVarInt(FindConVar("hostport")) == 27015 ) {*/
-	RegAdminCmd("rp_givemejob",		cmd_ForceMeJob,		ADMFLAG_ROOT);
-	RegAdminCmd("rp_givemegroup",	cmd_ForceMeGroup,	ADMFLAG_ROOT);
-	RegAdminCmd("rp_giveitems",		cmd_GiveItem,		ADMFLAG_ROOT);
-	/*}*/
-	/*else {
+	if( GetConVarInt(FindConVar("hostport")) == 27015 ) {
+		RegAdminCmd("rp_givemejob",		cmd_ForceMeJob,		ADMFLAG_ROOT);
+		RegAdminCmd("rp_givemegroup",	cmd_ForceMeGroup,	ADMFLAG_ROOT);
+		RegAdminCmd("rp_giveitems",		cmd_GiveItem,		ADMFLAG_ROOT);
+	}
+	else {
 		RegConsoleCmd("rp_givemejob", 	cmd_ForceMeJob);
 		RegConsoleCmd("rp_givemegroup", cmd_ForceMeGroup);
 		RegConsoleCmd("rp_giveitems", 	cmd_GiveItem);
 		RegConsoleCmd("rp_givecash", 	cmd_GiveCash);
 		RegConsoleCmd("rp_givemexp", 	cmd_GiveMeXP);
-	}*/
+	}
 	//
 	RegAdminCmd("rp_create_mapconfig", 	CmdGenMapConfig,	ADMFLAG_ROOT);
 	RegAdminCmd("rp_create_point",		CmdSpawn2_Add,		ADMFLAG_ROOT);
@@ -198,15 +198,17 @@ public void OnPluginStart() {
 	KvSetString(KV,"host",		"5.196.39.48");
 	
 	// a modif quand serv test 
-	//if( GetConVarInt(FindConVar("hostport")) == 27015 ) {
-	KvSetString(KV,"database",	"rp_csgo");
-	//}
-	//else {
-	//	KvSetString(KV,"database",	"rp_test");
-	//}
+	if( GetConVarInt(FindConVar("hostport")) == 27015 ) {
+		KvSetString(KV,"user",		"rp_csgo");
+		KvSetString(KV,"database",	"rp_csgo");
+		KvSetString(KV,"pass",		"DYhpWeEaWvDsMDc9");
+	}
+	else {
+		KvSetString(KV,"user",		"rp_test");
+		KvSetString(KV,"database",	"rp_test");
+		KvSetString(KV,"pass",		"pI3SzTTd3Ow1Tsjd");
+	}
 
-	KvSetString(KV,"user",		"rp_csgo");
-	KvSetString(KV,"pass",		"DYhpWeEaWvDsMDc9");
 	KvSetString(KV,"port",		"3306");
 	g_hBDD = SQL_ConnectCustom(KV, g_szError, sizeof(g_szError), true);
 
@@ -336,12 +338,14 @@ public Action Command_DebugBF(int client, int args) {
 	}
 }*/
 public void OnConfigsExecuted() {
-	ServerCommand("weapon_accuracy_nospread 1");
+	ServerCommand("weapon_accuracy_nospread 0");
+	ServerCommand("sv_usercmd_custom_random_seed 0");
 	ServerCommand("spec_freeze_deathanim_time 999999");
 	ServerCommand("mp_forcecamera 1");	
 	ServerCommand("mp_radar_showall 1");
+	ServerCommand("weapon_recoil_scale 1");
 	
-	g_hWeaponScale = FindConVar("weapon_recoil_scale");
+	//g_hWeaponScale = FindConVar("weapon_recoil_scale");
 }
 public Action SwitchOFF(Handle timer, any omg) {
 	SetConVarInt(g_hItemBackup, 0);

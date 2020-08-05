@@ -27,7 +27,7 @@ public void EventFirstSpawn(int client) {
 	if( g_iUserData[client][i_PlayerLVL] < 12 )
 		g_bUserData[client][b_GameModePassive] = true;
 	
-	if( g_bUserData[client][b_ItemRecovered] )
+	if( g_bUserData[client][b_ItemRecovered] && g_iClient_OLD[client] == 0 && g_iUserData[client][i_JailTime] == 0 )
 		CreateTimer(1.0, HUD_WarnDisconnect, client);
 
 	ServerCommand("sm_force_discord_group %N", client);
@@ -298,7 +298,9 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	GetClientEyeAngles(Client, g_Position[Client]);
 	Client_SetMoney(Client, 0);
 	FakeClientCommand(Client, "use weapon_fists");
-	g_bUserData[Client][b_WeaponIsKnife] = true;
+	g_bUserData[Client][b_WeaponIsKnife] = false;
+	g_bUserData[Client][b_WeaponIsHands] = true;
+	
 	if( g_iUserData[Client][i_ThirdPerson] == 1 )
 		ClientCommand(Client, "thirdperson");
 	else
@@ -344,7 +346,6 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	if( GetClientTeam(Client) == CS_TEAM_CT ) {	
 		SetEntityHealth(Client, 500);
 		g_iUserData[Client][i_Kevlar] = 250;
-		FakeClientCommand(Client, "say /shownotes");
 	}
 
 	StripWeapons(Client);
@@ -574,15 +575,6 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 					g_iUserData[Attacker][i_KillingSpread] += (killDuration > 1 ? 1:0);
 				}
 
-				if( g_iUserData[Attacker][i_KillJailDuration] >= 106 ) {
-					g_bUserData[Attacker][b_IsFreekiller] = true;
-					ServerCommand("rp_SendToJail %d 0", Attacker);
-					
-					if( rp_GetClientInt(Attacker, i_JailTime) < g_iUserData[Attacker][i_KillJailDuration] * 60 )
-						rp_SetClientInt(Attacker, i_JailTime, g_iUserData[Attacker][i_KillJailDuration] * 60);
-				
-					KickClient(Attacker, "Vous avez été kické pour FREEKILL abusif");
-				}
 
 				if( (StrContains(weapon, "knife") == 0 || StrContains(weapon, "bayonet") == 0) ) {
 					g_iUserData[Attacker][i_KnifeTrain]--;
@@ -610,6 +602,18 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 			if( GetClientTeam(Client) == CS_TEAM_CT ) {
 				if( !IsInPVP(Client) && g_iHideNextLog[Attacker][Client] == 0 ) {
 					g_iUserData[Attacker][i_KillJailDuration] += killDuration;
+				}
+			}
+			
+			if( g_iHideNextLog[Attacker][Client] == 0 ) {
+				if( g_iUserData[Attacker][i_KillJailDuration] >= 120 ) {
+					g_bUserData[Attacker][b_IsFreekiller] = true;
+					ServerCommand("rp_SendToJail %d 0", Attacker);
+					
+					if( rp_GetClientInt(Attacker, i_JailTime) < g_iUserData[Attacker][i_KillJailDuration] * 60 )
+						rp_SetClientInt(Attacker, i_JailTime, g_iUserData[Attacker][i_KillJailDuration] * 60);
+				
+					KickClient(Attacker, "Vous avez été kické pour FREEKILL abusif");
 				}
 			}
 			
@@ -713,23 +717,18 @@ public Action EventPlayerShot(Handle ev, const char[] name, bool  bd) {
 	int client = GetClientOfUserId(GetEventInt(ev, "userid"));
 	if( !IsPlayerAlive(client) )
 		return Plugin_Continue;
-
-	float train = g_flUserData[client][fl_WeaponTrainAdmin] < 0 ? g_flUserData[client][fl_WeaponTrain] : g_flUserData[client][fl_WeaponTrainAdmin];
-	train = train > 5 ? 5.0 : train;
+	
 	float vecOrigin[3];
 	
 	vecOrigin[0] = GetEventFloat(ev, "x");
 	vecOrigin[1] = GetEventFloat(ev, "y");
 	vecOrigin[2] = GetEventFloat(ev, "z");
 	
-	
 	int entity = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 	char weapon[32];
-	GetClientWeapon(client, weapon, sizeof(weapon));
+	float vecAngles[3], delta;
 	
-	char tmp[12];
-	Format(tmp, sizeof(tmp), "%f", 6.0 - train);
-	SendConVarValue(client, g_hWeaponScale, tmp);
+	GetClientWeapon(client, weapon, sizeof(weapon));
 	
 	if( IsValidEntity(entity) ) {
 		if( g_iWeaponsBallType[entity] != ball_type_revitalisante )
@@ -768,7 +767,7 @@ public Action EventPlayerShot(Handle ev, const char[] name, bool  bd) {
 				StrEqual(weapon, "weapon_ssg08") || StrEqual(weapon, "weapon_awp") ||
 				StrEqual(weapon, "weapon_g3sg1") ) {
 		
-				float vecAngles[3], delta;
+				
 				GetClientEyeAngles(client, vecAngles);
 				vecAngles[0] += delta;
 				vecAngles[1] += delta;
