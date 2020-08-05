@@ -343,7 +343,7 @@ public void OnConfigsExecuted() {
 	ServerCommand("mp_forcecamera 1");	
 	ServerCommand("mp_radar_showall 1");
 	
-	g_hWeaponScale = FindConVar("weapon_recoil_scale");
+	//g_hWeaponScale = FindConVar("weapon_recoil_scale");
 }
 public Action SwitchOFF(Handle timer, any omg) {
 	SetConVarInt(g_hItemBackup, 0);

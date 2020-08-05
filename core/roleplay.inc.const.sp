@@ -240,7 +240,7 @@ char g_szPaintBall[11][3][64] = {
 // Cvar's
 Handle g_hSick = INVALID_HANDLE;
 Handle g_hCapturable = INVALID_HANDLE;
-Handle g_hWeaponScale = INVALID_HANDLE;
+//Handle g_hWeaponScale = INVALID_HANDLE;
 //
 // HandleBDD
 Handle g_hBDD;
