@@ -161,10 +161,6 @@ public Action Cmd_ItemContrat(int args) {
 	
 	rp_SetClientInt(vendeur, i_ToKill, target);
 	rp_SetClientInt(vendeur, i_ContratFor, client);
-	if(item_id != 0)
-		rp_SetClientInt(vendeur, i_ContratPay, rp_GetItemInt(item_id, item_type_prix) );
-	else
-		rp_SetClientInt(vendeur, i_ContratPay, 0);
 
 	rp_HookEvent(vendeur, RP_OnPlayerDead, fwdTueurDead);
 	rp_HookEvent(vendeur, RP_PlayerCanKill, fwdTueurCanKill);
@@ -639,17 +635,20 @@ void SetContratFail(int client, bool time = false, bool annule = false) { // tim
 				CPrintToChat(target, "" ...MOD_TAG... " %N{default} a été tué et n'a pas pu remplir son contrat.", client);
 			
 			
-			int prix = RoundFloat(rp_GetClientInt(client, i_ContratPay) * 0.8);
-			int capital = RoundFloat(rp_GetClientInt(client, i_ContratPay) * 0.2);
-			int reduction = rp_GetClientInt(client, i_Reduction);
+			int prix = rp_GetClientInt(client, i_ContratPay);
+			float reduc = float(prix) / 100.0 * float(rp_GetClientInt(client, i_Reduction));
+
+			int partmercenaire = RoundFloat(((float(prix) * 0.2) - reduc));
+			int partcapital = RoundFloat(float(prix) * 0.8);
 			
-			rp_ClientMoney(target, i_Bank, prix - (RoundFloat((float(prix) / 100.0) * float(reduction)) / 2));
-			rp_ClientMoney(client, i_AddToPay, -(prix - RoundFloat((float(prix) / 100.0) * float(reduction))) / 2);
-			rp_SetJobCapital(41, rp_GetJobCapital(41) - capital);
+			rp_ClientMoney(target, i_Bank, partmercenaire);
+			rp_ClientMoney(client, i_AddToPay, -partmercenaire);
+			
+			rp_SetJobCapital(41, rp_GetJobCapital(41) - partcapital);
 			
 			Call_StartForward(rp_GetForwardHandle(client, RP_OnPlayerSell));
 			Call_PushCell(client);
-			Call_PushCell(- (prix - RoundFloat( (float(prix) / 100.0) * float(reduction))));
+			Call_PushCell(-prix);
 			Call_Finish();
 		}
 		else {
