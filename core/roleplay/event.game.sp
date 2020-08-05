@@ -103,6 +103,9 @@ public void OnRoundStart() {
 
 	ServerCommand("mp_ignore_round_win_conditions \"1\"");
 	ServerCommand("mp_c4timer \"10\"");
+	ServerCommand("rp_force_clean 311");
+	ServerCommand("rp_force_clean 310");
+
 	LoadDoors();
 
 	for(int i=1; i < MAX_ENTITIES; i++) {
