@@ -60,6 +60,9 @@ public int Native_rp_WeaponMenu_Add(Handle plugin, int numParams) {
 	if( StrEqual(weapon, "weapon_default") ) {
 		GetEntityClassname(weaponID, weapon, sizeof(weapon));
 	}
+	if( StrContains(weapon, "weapon_knife") == 0 || StrContains(weapon, "weapon_bayonet") == 0 ) {
+		Format(weapon, sizeof(weapon), "weapon_knife");
+	}
 	ReplaceString(weapon, sizeof(weapon), "weapon_", "");
 	
 	int[] data = new int[view_as<int>(BM_Max)];
