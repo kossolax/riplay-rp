@@ -262,7 +262,7 @@ void ToggleDoorLock(int client, int door, int lock_type) {
 	if( !IsValidDoor(door) )
 		return;
 	
-	if( !IsEntitiesNear(client, door) )
+	if( Entity_GetDistance(client, door) > MAX_AREA_DIST )
 		return;
 	
 	if( IsPlayerHaveKey( client, door, lock_type) ) {
