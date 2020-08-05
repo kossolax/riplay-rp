@@ -717,35 +717,18 @@ public Action EventPlayerShot(Handle ev, const char[] name, bool  bd) {
 	int client = GetClientOfUserId(GetEventInt(ev, "userid"));
 	if( !IsPlayerAlive(client) )
 		return Plugin_Continue;
-
-	float train = g_flUserData[client][fl_WeaponTrainAdmin] < 0 ? g_flUserData[client][fl_WeaponTrain] : g_flUserData[client][fl_WeaponTrainAdmin];
-	train = train > 5 ? 5.0 : train;
+	
 	float vecOrigin[3];
 	
 	vecOrigin[0] = GetEventFloat(ev, "x");
 	vecOrigin[1] = GetEventFloat(ev, "y");
 	vecOrigin[2] = GetEventFloat(ev, "z");
 	
-	
 	int entity = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 	char weapon[32];
 	float vecAngles[3], delta;
 	
 	GetClientWeapon(client, weapon, sizeof(weapon));
-	
-	int bullet = 0;	
-	switch( RoundFloat(train) ) {	
-		case 0:		bullet = 5;	
-		case 1:		bullet = 4;	
-		case 2:		bullet = 3;	
-		case 3:		bullet = 2;	
-		case 4:		bullet = 1;	
-		default:	bullet = 0;	
-	}
-	
-	int shoot = GetEntProp(client, Prop_Send, "m_iShotsFired");
-	if( bullet > shoot )
-		SetEntProp(client, Prop_Send, "m_iShotsFired", bullet + shoot);
 	
 	if( IsValidEntity(entity) ) {
 		if( g_iWeaponsBallType[entity] != ball_type_revitalisante )
@@ -793,9 +776,6 @@ public Action EventPlayerShot(Handle ev, const char[] name, bool  bd) {
 			}
 		}
 	}
-	
-	//vecAngles[0] = vecAngles[1] = vecAngles[2] = -float(bullet) * GetRandomFloat(0.75, 1.25);
-	//SetEntPropVector(client, Prop_Send, "m_aimPunchAngle", vecAngles);
 	
 	if( g_bUserData[client][b_Debuging] ) {
 		

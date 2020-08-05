@@ -1159,7 +1159,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 	updatePlayerRank(Client);
 	
 	SDKHook(Client, SDKHook_OnTakeDamage,	OnTakeDamage);
-//	SDKHook(Client, SDKHook_PreThink,		OnPreThink);
+	SDKHook(Client, SDKHook_PreThink,		OnPreThink);
 	SDKHook(Client, SDKHook_PostThink,		OnPostThink);
 	SDKHook(Client, SDKHook_PostThinkPost,	OnPostThinkPost);
 	
