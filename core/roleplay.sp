@@ -338,7 +338,8 @@ public Action Command_DebugBF(int client, int args) {
 	}
 }*/
 public void OnConfigsExecuted() {
-	ServerCommand("weapon_accuracy_nospread 1");
+	ServerCommand("weapon_accuracy_nospread 0");
+	ServerCommand("sv_usercmd_custom_random_seed 0");
 	ServerCommand("spec_freeze_deathanim_time 999999");
 	ServerCommand("mp_forcecamera 1");	
 	ServerCommand("mp_radar_showall 1");
