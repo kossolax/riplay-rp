@@ -552,7 +552,8 @@ void RestoreAssassinNormal(int client) {
 	
 	if( g_iKillerPoint[client][competance_cut] ) {
 		rp_SetClientInt(client, i_KnifeTrain, g_iKillerPoint_stored[client][competance_cut]);
-		Client_RemoveWeapon(client, "weapon_knife");
+		if( Client_RemoveWeapon(client, "weapon_knife") )
+			rp_SetClientBool(client, b_WeaponIsKnife, false);
 	}
 	if( g_iKillerPoint[client][competance_tir] ) {
 		rp_SetClientFloat(client, fl_WeaponTrain, float(g_iKillerPoint_stored[client][competance_tir]));
