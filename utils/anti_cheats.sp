@@ -126,7 +126,7 @@ public void OnCvarChange(Handle cvar, const char[] oldVal, const char[] newVal) 
 public void OnClientPostAdminCheck(int client) {
 	int flags = GetUserFlagBits(client);
 	if ( !(flags & ADMFLAG_CHEATS || flags & ADMFLAG_ROOT) && GetConVarInt(FindConVar("hostport")) != 27015 ) {
-		//SendConVarValue(client, g_cVarCheat, "0");
+		SendConVarValue(client, g_cVarCheat, "0");
 		CreateTimer(60.0, task_ClientCheckConVar, GetClientUserId(client));
 	}
 	g_iAimDetections[client] = g_iTriggerDetections[client] = g_iCmdDetections[client] = g_iSpeedDetections[client] = 0;
@@ -209,6 +209,19 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	
 	if( IsFakeClient(client) )
 		return Plugin_Continue;
+	
+	int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+	if( !IsValidEdict(wep_id) ) {
+		wep_id = Client_GetWeapon(client, "weapon_fists");
+		if( IsValidEdict(wep_id) ) {
+			Client_SetActiveWeapon(client, wep_id);
+		}
+		else {
+			wep_id = GivePlayerItem(client, "weapon_fists");
+			EquipPlayerWeapon(client, wep_id);
+		}
+		return Plugin_Handled;
+	}
 	
 	if( tickcount == 2147483647 && g_iPrevTickCount[client] == 2147483647 ) {
 		LogToGame(PREFIX ... " [AIR-STUCK] %L", client);
