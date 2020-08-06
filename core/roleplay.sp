@@ -344,6 +344,7 @@ public void OnConfigsExecuted() {
 	ServerCommand("mp_forcecamera 1");	
 	ServerCommand("mp_radar_showall 1");
 	ServerCommand("weapon_recoil_scale 1");
+	ServerCommand("ammo_grenade_limit_snowballs 1");
 	
 	//g_hWeaponScale = FindConVar("weapon_recoil_scale");
 }
