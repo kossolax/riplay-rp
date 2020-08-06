@@ -25,8 +25,8 @@ void StripWeapons(int client ){
 	
 	Client_RemoveWeapon(client, "weapon_taser");
 	
-	g_bUserData[Client][b_WeaponIsKnife] = false;
-	g_bUserData[Client][b_WeaponIsHands] = true;
+	g_bUserData[client][b_WeaponIsKnife] = false;
+	g_bUserData[client][b_WeaponIsHands] = true;
 	
 	int tmp = GivePlayerItem(client, "weapon_fists");
 	EquipPlayerWeapon(client, tmp);
