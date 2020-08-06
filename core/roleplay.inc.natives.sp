@@ -1259,6 +1259,9 @@ public int Native_rp_SetClientKnifeType(Handle plugin, int numParams) {
 	if( !Weapon_ShouldBeEquip(classname) ) {
 		return view_as<int>(false);
 	}
+	if( StrEqual(classname, "weapon_fists") ) {
+		return view_as<int>(false);
+	}
 	
 	g_iWeaponsBallType[wepid] = GetNativeCell(2);
 	
