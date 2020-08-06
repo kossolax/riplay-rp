@@ -87,6 +87,8 @@ public void OnClientDisconnect(int Client) {
 	if( g_hTIMER[Client] )
 		delete g_hTIMER[Client];
 	
+	ClientCommand(Client, "r_screenoverlay \"\"");
+	
 	if(!IsFakeClient(Client) && g_bUserData[Client][b_isConnected]) {
 		
 		SendConVarValue(Client, cvar, "1.0");
@@ -155,6 +157,7 @@ public void OnClientDisconnect(int Client) {
 					StrContains(classname, "rp_grave") == 0 ||
 					StrContains(classname, "rp_microwave") == 0 ||
 					StrContains(classname, "rp_table") == 0 ||
+					StrContains(classname, "rp_sign") == 0 ||
 					StrContains(classname, "rp_bank") == 0
 					) {
 					rp_AcceptEntityInput(i, "Kill");
