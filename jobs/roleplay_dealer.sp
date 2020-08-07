@@ -1147,12 +1147,17 @@ public Action Frame_BuildingPlant(Handle timer, any ent) {
 	}
 	
 	
-	if( rp_GetBuildingData(ent, BD_FromBuild) == 1 )
-		time /= 10.0;
 	if( !rp_IsTutorialOver(client) )
 		time /= 10.0;
 	if( rp_GetClientInt(client, i_PlayerLVL) >= 812 )
 		time *= 0.75;
+
+	if( rp_GetBuildingData(ent, BD_FromBuild) == 1 ){
+		time /= 10.0;
+		if( rp_GetZoneInt(rp_GetPlayerZone(ent), zone_type_type) != 81 ){
+			time *= 4.0;
+		}
+	}
 	
 	int heal = Entity_GetHealth(ent) + RoundFloat(time) * 10;
 	if (heal > 5000) heal = 5000;
