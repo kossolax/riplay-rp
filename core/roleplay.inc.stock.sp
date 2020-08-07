@@ -715,8 +715,15 @@ float degrees_to_radians(float degreesGiven) {
 }
 bool IsAdmin(int client) {
 	char szSteamID[64];
-	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 	
+	if( GetConVarInt(FindConVar("hostport")) != 27015 ){
+		if( GetUserFlagBits(client) & ADMFLAG_ROOT){
+			return true;
+		}
+	}
+
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
+
 	for(int i = 0; i < sizeof(g_szSuperAdmin); i++) {
 		if(!StrEqual(g_szSuperAdmin[i], szSteamID)) {
 			continue;
