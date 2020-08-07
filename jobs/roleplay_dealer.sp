@@ -763,6 +763,9 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		
 		rp_SetClientBool(client, b_MaySteal, false);
 		rp_SetClientBool(target, b_Stealing, true);
+
+		EmitSoundToClientAny(target, "UI/arm_bomb.wav", target);
+
 		g_bBlockDrop[target] = true;
 		
 		for (int i = 1; i <= MaxClients; i++) {
