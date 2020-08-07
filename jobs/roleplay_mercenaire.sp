@@ -642,7 +642,7 @@ void SetContratFail(int client, bool time = false, bool annule = false) { // tim
 			int partmercenaire = RoundFloat(((float(prix) * 0.2) - reduc));
 			int partcapital = RoundFloat(float(prix) * 0.8);
 			
-			rp_ClientMoney(target, i_Bank, prix-reduc);
+			rp_ClientMoney(target, i_Bank, prix-RoundFloat(reduc));
 			rp_ClientMoney(client, i_AddToPay, -partmercenaire);
 			
 			rp_SetJobCapital(41, rp_GetJobCapital(41) - partcapital);
