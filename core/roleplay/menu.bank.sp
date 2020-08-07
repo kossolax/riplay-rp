@@ -495,6 +495,10 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 					Weapon_SetPrimaryAmmoCount(wepid, data[BM_Chargeur]);
 					Client_SetWeaponPlayerAmmoEx(client, wepid, data[BM_Chargeur]);
 				}
+
+				if( data[BM_Prix] == 0 ){
+					g_iWeaponFromStore[wepid] = 1;
+				}
 				
 				rp_WeaponMenu_Delete(g_iCustomBank[target], view_as<DataPackPos>(StringToInt(expl[1])));
 					

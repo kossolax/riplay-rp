@@ -51,8 +51,11 @@ public int Native_rp_WeaponMenu_Add(Handle plugin, int numParams) {
 	int weaponID = GetNativeCell(2);
 	int owner = GetNativeCell(3);
 	
-	if( rp_GetWeaponStorage(weaponID) == true )
-		return view_as<bool>(false);
+	if( rp_GetWeaponStorage(weaponID) == true ){
+		if(owner > MAX_PLAYERS){
+			return view_as<bool>(false);
+		}
+	}
 	
 	char weapon[65];
 	int index = GetEntProp(weaponID, Prop_Send, "m_iItemDefinitionIndex");
@@ -73,6 +76,10 @@ public int Native_rp_WeaponMenu_Add(Handle plugin, int numParams) {
 	data[view_as<int>(BM_Type)] = view_as<int>(rp_GetWeaponBallType(weaponID));
 	data[view_as<int>(BM_Prix)] = 50 + rp_GetWeaponPrice(weaponID) / 4;
 	data[view_as<int>(BM_Owner)] = owner;
+
+	if(rp_GetWeaponStorage(weaponID)){
+		data[view_as<int>(BM_Prix)] = 0;
+	}
 	
 	hBuyMenu.Reset();
 	DataPackPos pos = hBuyMenu.ReadCell();
@@ -84,6 +91,7 @@ public int Native_rp_WeaponMenu_Add(Handle plugin, int numParams) {
 	pos = hBuyMenu.Position;
 	hBuyMenu.Reset();
 	hBuyMenu.WriteCell(pos);
+	
 	return view_as<bool>(true);
 }
 public int Native_rp_WeaponMenu_Delete(Handle plugin, int numParams) {
