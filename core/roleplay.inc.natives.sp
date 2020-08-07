@@ -217,6 +217,14 @@ public int Native_rp_ClientMoney(Handle plugin, int numParams) {
 	int client = GetNativeCell(1);
 	int type = GetNativeCell(2);
 	int amount = GetNativeCell(3);
+	bool unsafe = view_as<bool>(GetNativeCell(4));
+
+	if(amount > 250000 || amount < -250000){
+		if(!unsafe){
+			LogToGame("[CHEATING] [CLIENT-MONEY] %L aurait du recevoir %d.", client, amount);
+			CPrintToChat(client, "Transaction de %d bloquée, contactez un admin immédiatement.", amount);
+		}
+	}
 	
 	int dette = g_iUserData[client][i_Dette];
 	if( dette > 0 && amount > 0 ) {

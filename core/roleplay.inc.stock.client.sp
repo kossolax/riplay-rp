@@ -676,7 +676,7 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 	}
 	else if( type == SynType_money) {
 		
-		rp_ClientMoney(client, i_Bank, to_id);
+		rp_ClientMoney(client, i_Bank, to_id, true);
 		
 		if( to_id > 0 ) {
 			Format(szMessage, sizeof(szMessage), "%s reçu %i$", szMessage, to_id);

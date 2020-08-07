@@ -1245,7 +1245,7 @@ void loadItem_Bank(int Client, Handle hQuery) {
 	
 	for (int i = 0; i < size; i++) {
 		if( g_iItems_BANK[Client][i][STACK_item_amount] < 0 ) {
-			rp_ClientMoney(Client, i_Bank, -(rp_GetItemInt(g_iItems_BANK[Client][i][STACK_item_id], item_type_prix) * -g_iItems_BANK[Client][i][STACK_item_amount]));
+			rp_ClientMoney(Client, i_Bank, -(rp_GetItemInt(g_iItems_BANK[Client][i][STACK_item_id], item_type_prix) * -g_iItems_BANK[Client][i][STACK_item_amount]), true);
 			rp_ClientGiveItem(Client, g_iItems_BANK[Client][i][STACK_item_id], -g_iItems_BANK[Client][i][STACK_item_amount], true);
 		}
 	}

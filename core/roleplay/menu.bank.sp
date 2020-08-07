@@ -254,7 +254,7 @@ public int BankATM_depot_capital(Handle menu, MenuAction action, int client, int
 				int capital = GetJobCapital(g_iUserData[client][i_Job]);
 				SetJobCapital(g_iUserData[client][i_Job], (capital+amount));
 				
-				rp_ClientMoney(client, i_Money, -amount);
+				rp_ClientMoney(client, i_Money, -amount, true);
 				CPrintToChat(client, "" ...MOD_TAG... " Vous avez fait un dépot de %i$ dans votre capital.", amount);
 				BankATM_transfer(client, 3);
 			}
@@ -282,7 +282,7 @@ public int BankATM_depot_group(Handle menu, MenuAction action, int client, int p
 			else {
 				int capital = GetGroupCapital(g_iUserData[client][i_Group]);
 				SetGroupCapital(g_iUserData[client][i_Group], (capital+amount));
-				rp_ClientMoney(client, i_Money, -amount);
+				rp_ClientMoney(client, i_Money, -amount, true);
 				
 				CPrintToChat(client, "" ...MOD_TAG... " Vous avez fait un dépot de %i$ dans votre capital de groupe .", amount);
 				BankATM_transfer(client, 5);
@@ -311,7 +311,7 @@ public int BankATM_don_capital(Handle menu, MenuAction action, int client, int p
 			else {
 				int capital = GetJobCapital(211);
 				SetJobCapital(211, (capital+amount));
-				rp_ClientMoney(client, i_Bank, -amount);
+				rp_ClientMoney(client, i_Bank, -amount, true);
 				
 				CPrintToChat(client, "" ...MOD_TAG... " Vous avez fait un don de %i$ pour l'Etat.", amount);
 				BankATM_transfer(client, 4);

@@ -106,7 +106,7 @@ public void OnClientDisconnect(int Client) {
 		}
 		
 		QuestClean(Client);
-		rp_ClientMoney(Client, i_Money, g_iUserData[Client][i_AddToPay]);
+		rp_ClientMoney(Client, i_Money, g_iUserData[Client][i_AddToPay], true);
 		g_iUserData[Client][i_AddToPay] = 0;
 		StoreUserData(Client);
 
