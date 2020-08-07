@@ -190,6 +190,7 @@ public void OnPluginStart() {
 	RegAdminCmd("db_removeevent", 	Command_removeEvent,	ADMFLAG_SLAY,	"Deletes an event");
 	
 	RegAdminCmd("sm_goto", 			Command_GoTo,			ADMFLAG_SLAY,	"Teleport to player");
+	RegAdminCmd("sm_bring", 		Command_Bring,			ADMFLAG_SLAY,	"Teleport a player to you");
 	
 	
 	HookEvent("player_death", 		EventReset, 		EventHookMode_Pre);
@@ -207,6 +208,7 @@ public void OnPluginStart() {
 		OnClientPutInServer(i);
 	}
 }
+
 public Action Command_GoTo(int client, int args) {
 	if( args < 1 || args > 1) {
 		if( client != 0 )
@@ -245,6 +247,49 @@ public Action Command_GoTo(int client, int args) {
 		rp_ClientTeleport(client, vec);
 		
 		ShowActivity(client, "s'est Téléporté sur %N.", target);
+	}
+	return Plugin_Handled;
+}
+
+public Action Command_Bring(int client, int args) {
+	if( args < 1 || args > 1) {
+		if( client != 0 )
+			ReplyToCommand(client, "Utilisation: sm_bring \"joueur\"");
+		else
+			PrintToServer("Utilisation: sm_bring \"joueur\"");
+		
+		return Plugin_Handled;
+	}
+	
+	char arg1[64];
+	GetCmdArg(1, arg1, sizeof( arg1 ) );
+	
+	char target_name[MAX_TARGET_LENGTH];
+	int target_list[MAXPLAYERS], target_count;
+	bool tn_is_ml;
+	
+	if ((target_count = ProcessTargetString(
+		arg1,
+		client,
+		target_list,
+		MAXPLAYERS,
+		COMMAND_FILTER_CONNECTED|COMMAND_FILTER_ALIVE,
+		target_name,
+		sizeof(target_name),
+		tn_is_ml)) <= 0)
+	{
+		ReplyToTargetError(client, target_count);
+		return Plugin_Handled;
+	}
+	
+	float vec[3];
+	Entity_GetAbsOrigin(client, vec);
+
+	for (int i = 0; i < target_count; i++) {
+		int target = target_list[i];
+		rp_ClientTeleport(target, vec);
+		
+		ShowActivity(client, "a Téléporté %N.", target);
 	}
 	return Plugin_Handled;
 }
