@@ -593,7 +593,6 @@ void SynFromWeb() {
 	static char tmp[64];
 	
 	steamid[0] = 0;
-	int count = 0;
 	
 	for(int i=0; i<=MaxClients; i++) {
 		if( !IsValidClient(i) )
@@ -608,16 +607,13 @@ void SynFromWeb() {
 		
 		GetClientAuthId(i, AUTH_TYPE, tmp, sizeof(tmp), false);
 		Format(steamid, sizeof(steamid), "%s,'%s'", steamid, tmp);
-		
-		count++;
 	}
 	
+	Format(steamid, sizeof(steamid), "%s,'CAPITAL'", steamid);
 	steamid[0] = ' ';
 	
-	if( count > 0 ) {
-		Format(query, sizeof(query), "%s WHERE `steamid` IN (%s)", base, steamid);
-		SQL_TQuery(g_hBDD, SynFromWeb_call, query, 0, DBPrio_Low);
-	}
+	Format(query, sizeof(query), "%s WHERE `steamid` IN (%s)", base, steamid);
+	SQL_TQuery(g_hBDD, SynFromWeb_call, query, 0, DBPrio_Low);
 }
 
 public void SynFromWeb_call(Handle owner, Handle hQuery, const char[] error, any Client) {
@@ -697,69 +693,6 @@ public void SynFromWeb_call(Handle owner, Handle hQuery, const char[] error, any
 				}
 				
 			}
-			/*
-			else {
-				
-				if( jail != -1 && timestamp+(7*24*60*60) > GetTime() )
-					continue;
-				if( timestamp+(1*60*60) > GetTime() )
-					continue;
-				
-				if( money != 0 ) {
-					Format(query, sizeof(query), "UPDATE `rp_users` SET `money`=`money`+%d WHERE `steamid`='%s' LIMIT 1;", money, szSteamID);
-					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-					LogToGame("[TSX-RP] [SYN] [MONEY] Console<0><%s><> à reçu %d$ par %s (%s).", szSteamID, money, szPseudo, szSteamID2);
-
-				}
-				if( bank != 0 ) {
-					Format(query, sizeof(query), "UPDATE `rp_users` SET `bank`=`bank`+%d WHERE `steamid`='%s' LIMIT 1;", bank, szSteamID);
-					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-					LogToGame("[TSX-RP] [SYN] [MONEY] Console<0><%s><> à reçu %d$ par %s (%s).", szSteamID, bank, szPseudo, szSteamID2);
-				}
-				if( job_id != -1 ) {
-					if( job_id == 0 ) {
-						Format(query, sizeof(query), "UPDATE `rp_users` SET `job_id`=%d, `TimePlayedJob`=0 WHERE `steamid`='%s' LIMIT 1;", job_id, szSteamID);
-					}
-					else {
-						Format(query, sizeof(query), "UPDATE `rp_users` SET `job_id`=%d WHERE `steamid`='%s' LIMIT 1;", job_id, szSteamID);
-					}
-					
-					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-					LogToGame("[TSX-RP] [SYN] [JOB] Console<0><%s><> était INCONU et est maintenant %s par %s (%s).", szSteamID, g_szJobList[job_id][job_type_name], szPseudo, szSteamID2);
-				}
-				if( group_id != -1 ) {
-					Format(query, sizeof(query), "UPDATE `rp_users` SET `group_id`=%d WHERE `steamid`='%s' LIMIT 1;", group_id, szSteamID);
-					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-					
-					LogToGame("[TSX-RP] [SYN] [GROUP] Console<0><%s><> était INCONU et est maintenant %s par %s (%s).", szSteamID, g_szGroupList[group_id][job_type_name], szPseudo, szSteamID2);
-				}
-				if( jail != -1 ) {
-					Format(query, sizeof(query), "UPDATE `rp_users` SET `jailled`=`jailled`+'%d' WHERE `steamid`='%s' LIMIT 1;", jail, szSteamID);
-					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-					
-					LogToGame("[TSX-RP] [SYN] [JAIL] Console<0><%s><> %d heures pour %s par %s (%s).", szSteamID, jail/60, szRaison, szPseudo, szSteamID2);
-
-				}
-				if( xp != 0 ) {
-					Format(query, sizeof(query), "UPDATE `rp_users` SET `xp`=`xp`+'%d' WHERE `steamid`='%s' LIMIT 1;", xp, szSteamID);
-					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-					
-					LogToGame("[TSX-RP] [SYN] [XP] Console<0><%s><> %d XP.", szSteamID, xp);
-
-				}
-				if( itemID != -1 ) {
-					if( itemToBank ) 
-						Format(query, sizeof(query), "UPDATE `rp_users` SET `in_bank`=CONCAT(`in_bank`,'%d,%d;') WHERE `steamid`='%s' LIMIT 1;", itemID, itemAmount, szSteamID);
-					else
-						Format(query, sizeof(query), "UPDATE `rp_users` SET `in_item`=CONCAT(`in_item`,'%d,%d;') WHERE `steamid`='%s' LIMIT 1;", itemID, itemAmount, szSteamID);
-					
-					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-					
-					LogToGame("[TSX-RP] [SYN] [ITEM-TRANSFERT] Console<0><%s><> %d %s pour %s (%s)", szSteamID, itemAmount, g_szItemList[itemID][item_type_name], szPseudo, szSteamID2);
-
-				}
-			}
-			*/
 			
 			g_hSynProcessed.SetValue(szId, id, false);
 
