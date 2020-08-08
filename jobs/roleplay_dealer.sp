@@ -1356,7 +1356,7 @@ public Action ItemPickLockOver_18th(Handle timer, Handle dp) {
 		Entity_GetOwner(wepid) == target
 	) {
 		
-		if( rp_GetClientFloat(target, fl_LastStolen)+(60.0) < GetGameTime() && g_iWeaponStolen[wepid]+(120) < GetTime() ) {
+		if( g_iWeaponStolen[wepid]+(120) < GetTime() ) {
 			
 			if( !rp_GetClientBool(target, b_IsAFK) && (rp_GetClientJobID(target) == 1 || rp_GetClientJobID(target) == 101) ) {
 			
