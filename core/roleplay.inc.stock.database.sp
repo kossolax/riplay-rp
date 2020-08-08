@@ -430,7 +430,7 @@ public void showCagnotteInfo(Handle owner, Handle hQuery, const char[] error, an
 }
 public void SQL_SetLoteryAmount(Handle owner, Handle hQuery, const char[] error, any none) {
 	if( SQL_FetchRow(hQuery) ) {
-		Format(g_szVillaOwner[lotoCagnotte], sizeof(g_szVillaOwner[]), "%d", 100000 + SQL_FetchInt(hQuery, 0) * 420);
+		Format(g_szVillaOwner[lotoCagnotte], sizeof(g_szVillaOwner[]), "%d", 100000 + SQL_FetchInt(hQuery, 0) * 350);
 		ServerCommand("sm_effect_loto %s", g_szVillaOwner[lotoCagnotte]);
 	}
 }
