@@ -558,7 +558,7 @@ void CheckLotery() {
 	Plus il y en a, plus vos chances de perdre augmentent.
 	*/
 	
-	SQL_TQuery( rp_GetDatabase() , SQL_GetLoteryWiner, "SELECT DISTINCT T.`steamid`,`name` FROM ( SELECT `steamid` FROM `rp_loto` ORDER BY RAND()  ) AS T INNER JOIN `rp_users` U ON U.`steamid`=T.`steamid` LIMIT 3;");
+	SQL_TQuery( rp_GetDatabase() , SQL_GetLoteryWiner, "SELECT DISTINCT T.`steamid`,`name` FROM ( SELECT `steamid` FROM `rp_loto` ORDER BY RAND()  ) AS T LEFT JOIN `rp_users` U ON U.`steamid`=T.`steamid` LIMIT 3;");
 }
 public void SQL_GetLoteryWiner(Handle owner, Handle hQuery, const char[] error, any none) {
 	int place = 0;
