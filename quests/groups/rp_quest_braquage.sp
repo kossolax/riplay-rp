@@ -772,7 +772,7 @@ public void OnClientDisconnect(int client) {
 		char szQuery[512], szSteamID[64];
 		GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 		
-		Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_users2` (`id`, `steamid`, `bank` ) VALUES (NULL, '%s', '%i' );", szQuery, szSteamID, -1000);
+		Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_users2` (`id`, `steamid`, `bank` ) VALUES (NULL, '%s', '%i' );", szSteamID, -1000);
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery);	
 	}
 		
