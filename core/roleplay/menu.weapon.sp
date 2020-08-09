@@ -157,7 +157,7 @@ public int eventAmmunitionPickup(Handle p_hBuyMenu, MenuAction p_oAction, int cl
 		if (GetMenuItem(p_hBuyMenu, p_iParam2, szMenuItem, sizeof(szMenuItem))) {
 			
 			ExplodeString(szMenuItem, " ", explo, sizeof(explo), sizeof(explo[]));
-
+			
 			int ent = GetClientAimTarget(client, false);
 			if( !IsAmmunition(ent) )
 				return;
@@ -167,7 +167,7 @@ public int eventAmmunitionPickup(Handle p_hBuyMenu, MenuAction p_oAction, int cl
 			int iWeaponSlot;
 			
 			for(int lp; lp < MAX_BUYWEAPONS; lp++) {
-				if (strcmp(g_szBuyWeapons[lp][0], explo[0]) == 0) {
+				if (strcmp(g_szBuyWeapons[lp][0], szMenuItem) == 0) {
 					iWeaponSlot = StringToInt(g_szBuyWeapons[lp][2]);
 					break;
 				}
