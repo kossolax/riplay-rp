@@ -134,7 +134,8 @@ public Action Cmd_ItemChirurgie(int args) {
 	
 	rp_SetClientFloat(client, fl_TazerTime, GetGameTime() + time);
 	rp_SetClientFloat(vendeur, fl_TazerTime, GetGameTime() + time);
-	rp_SetClientFloat(vendeur, fl_LastStolen, GetGameTime() + time - 35.0);
+
+	rp_SetClientFloat(vendeur, fl_LastVente, GetGameTime() + time + 17.0);
 	
 	g_iSuccess_last_faster_dead[client] = GetTime() - RoundToCeil(time);
 	
