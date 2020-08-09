@@ -278,7 +278,7 @@ void Draw_Mairie_Prestige(int client, int target) {
 			menu.AddItem("_", "Avantage: 50 cadeaux\n ", ITEMDRAW_DISABLED);
 		}
 		else {
-			menu.AddItem("_", "Avantage: 2 500 000$ cash", ITEMDRAW_DISABLED);
+			menu.AddItem("_", "Avantage: 1 000 000$ cash", ITEMDRAW_DISABLED);
 			menu.AddItem("_", "Avantage: 100 cadeaux\n ", ITEMDRAW_DISABLED);
 		}
 		
@@ -299,9 +299,9 @@ void Draw_Mairie_Prestige(int client, int target) {
 		}
 		else {
 			CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 100 cadeaux dans votre banque.");
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 2 500 000$.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 1 000 000$.");
 			rp_ClientGiveItem(client, ITEM_CADEAU, 100, true);
-			rp_ClientMoney(client, i_Bank, 2500000);
+			rp_ClientMoney(client, i_Bank, 1000000);
 		}
 		
 		rp_SetClientInt(client, i_PlayerXP, (3600 * 99) - 10);
