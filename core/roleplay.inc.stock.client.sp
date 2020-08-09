@@ -630,7 +630,7 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 		
 		from_id = g_iUserData[client][i_Job];
 		g_iUserData[client][i_Job] = to_id;
-		
+		ServerCommand("sm_force_discord_group %N", client);
 		
 		
 		if( to_id > 0 ) {
@@ -645,11 +645,9 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 			if( client == invoker ) {
 				Format(szMessage, sizeof(szMessage), "%s démissioné de votre job", szMessage);
 				g_bUserData[client][b_LicenseSell] = false;
-				ServerCommand("sm_force_discord_group %N", client);
 			}
 			else {
 				Format(szMessage, sizeof(szMessage), "%s été viré de votre job", szMessage);
-				ServerCommand("sm_force_discord_group %N", client);
 			}			
 			
 			if( origin[client] > 0 && IsBoss(origin[client]) ) {
@@ -676,7 +674,7 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 	}
 	else if( type == SynType_money) {
 		
-		rp_ClientMoney(client, i_Bank, to_id);
+		rp_ClientMoney(client, i_Bank, to_id, true);
 		
 		if( to_id > 0 ) {
 			Format(szMessage, sizeof(szMessage), "%s reçu %i$", szMessage, to_id);

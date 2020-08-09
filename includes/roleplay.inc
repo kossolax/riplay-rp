@@ -556,7 +556,7 @@ native void rp_ClientAggroIncrement(int client, int target, int damage);
 native bool rp_ClientCanAttack(int client, int target);
 native void rp_ClientOverlays(int client, overlaysImg img, float duration = -1.0);
 native void rp_ClientXPIncrement(int client, int xp=1);
-native void rp_ClientMoney(int client, int_user_data type, int amount, bool unsafe = false);
+native void rp_ClientMoney(int client, int_user_data type, int amount, bool isSafe = false);
 // ----------------------------------------------------------------------------
 typedef NextMessageCallback = function void(int client, any data, char[] message);
 native void rp_GetClientNextMessage(int client, any data, NextMessageCallback cb);
