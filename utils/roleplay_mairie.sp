@@ -323,20 +323,20 @@ void Draw_Mairie_Candidate(int client, int target, int arg) {
 	else if( target == -1 ) {
 		if( arg == 0 ) {
 			Menu menu = new Menu(Handle_Mairie);
-			Format(tmp, sizeof(tmp), "Vous souhaitez poster votre candidature pour devenir Maire? Celà vous coûtera 250.000$, vous ne serrez pas remboursé si vous perdez les élections.");
+			Format(tmp, sizeof(tmp), "Vous souhaitez poster votre candidature pour devenir Maire? Celà vous coûtera 75.000$, vous ne serrez pas remboursé si vous perdez les élections.");
 			String_WordWrap(tmp, 60);
 			
 			menu.SetTitle("Candidature pour la Mairie\n \n%s\n ", tmp);
 			
 			menu.AddItem("5 0 0", "Annuler, ne pas participer aux élections");
-			menu.AddItem("5 -1 1", "Je confirme ma candidature, je paye 250.000$");
+			menu.AddItem("5 -1 1", "Je confirme ma candidature, je paye 75.000$");
 			
 			menu.Display(client, MENU_TIME_FOREVER);
 		}
 		if( arg == 1 ) {
 			
-			if( (rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 250000 ) {
-				rp_ClientMoney(client, i_Money, -250000);
+			if( (rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 75000 ) {
+				rp_ClientMoney(client, i_Money, -75000);
 				
 				GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 				
@@ -355,7 +355,7 @@ void Draw_Mairie_Candidate(int client, int target, int arg) {
 }
 public void QUERY_PostCandidate(Handle owner, Handle handle, const char[] error, any client) {
 	if( strlen(error) >= 1  ) {
-		rp_ClientMoney(client, i_Bank, 250000);
+		rp_ClientMoney(client, i_Bank, 75000);
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà posté une candidature, vous avez donc été remboursé.");
 	}
 	else {
@@ -405,7 +405,7 @@ public void QUERY_MairieCandidate(Handle owner, Handle handle, const char[] erro
 	}
 
 	if( rp_GetClientInt(client, i_PlayerLVL) >= 90 && !myself && StringToInt(szDayOfWeek) != 1)
-		menu.AddItem("5 -1 0", "Poster ma candidature (250 000$)", ((rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 250000) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
+		menu.AddItem("5 -1 0", "Poster ma candidature (75 000$)", ((rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 75000) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
 	
 	menu.Display(client, MENU_TIME_FOREVER);
 }
