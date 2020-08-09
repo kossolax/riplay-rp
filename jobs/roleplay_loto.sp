@@ -576,15 +576,15 @@ public void SQL_GetLoteryWiner(Handle owner, Handle hQuery, const char[] error, 
 		
 		if( place == 1 ) {
 			iGain = (g_iLOTO/100*70);
-			CPrintToChatAll("" ...MOD_TAG... " Le gagnant de la loterie est... %s et remporte %d$!", szName, iGain);
+			CPrintToChatAll("" ...MOD_TAG... " Le gagnant de la loterie est... %s{default} et remporte %d$!", szName, iGain);
 		}
 		else if( place == 2 ) {
 			iGain = (g_iLOTO/100*20);
-			CPrintToChatAll("" ...MOD_TAG... " suivi de.... %s et remporte %d$!", szName, iGain);
+			CPrintToChatAll("" ...MOD_TAG... " suivi de.... %s {default}qui remporte %d$!", szName, iGain);
 		}
 		else if( place == 3 ) {
 			iGain = (g_iLOTO/100*10);
-			CPrintToChatAll("" ...MOD_TAG... " %s remporte le lot de consolation de %d$!", szName, iGain);
+			CPrintToChatAll("" ...MOD_TAG... " %s {default}remporte le lot de consolation de %d$!", szName, iGain);
 		}
 		LogToGame("[LOTO-%d] %s %s %d", place, szName, szSteamID, iGain);
 		
