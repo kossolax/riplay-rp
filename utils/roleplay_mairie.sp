@@ -259,8 +259,8 @@ void Draw_Mairie_Main(int client) {
 	menu.AddItem("3 0 0", "Règlement communal");
 	if( rp_GetClientInt(client, i_PlayerLVL) >= 30 )
 		menu.AddItem("5 0 0", "Candidature pour la Mairie");
-	if( rp_GetClientInt(client, i_PlayerLVL) >= 600 && rp_GetClientInt(client, i_PlayerLVL) < 1000 )
-		menu.AddItem("6 0 0", "Prestige niveau 600");
+	// if( rp_GetClientInt(client, i_PlayerLVL) >= 600 && rp_GetClientInt(client, i_PlayerLVL) < 1000 )
+	// 	menu.AddItem("6 0 0", "Prestige niveau 600");
 	if( rp_GetClientInt(client, i_PlayerLVL) >= 1000 )
 		menu.AddItem("6 0 0", "Prestige niveau 1000");
 		
