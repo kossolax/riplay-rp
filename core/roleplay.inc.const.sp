@@ -6,7 +6,7 @@
 #include <rp_const>
 
 
-#define MAX_BUYWEAPONS			35
+#define MAX_BUYWEAPONS			40
 #define MAX_KEYSELL				200
 #define	MAX_RANK				33
 

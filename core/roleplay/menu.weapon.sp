@@ -109,7 +109,7 @@ void SelectingAmmunition(int client, int ent, bool crochettage = false) {
 			// S'il est policier ou plus:
 			if( (rp_GetClientJobID(client) == 1 && g_iUserData[client][i_Job] <= 8) || (rp_GetClientJobID(client) == 101 && g_iUserData[client][i_Job] <= 108) || braquage) {
 				if( StrEqual(g_szBuyWeapons[lp][0], "weapon_famas" ) ||
-					StrEqual(g_szBuyWeapons[lp][0], "weapon_mp5navy" )					
+					StrEqual(g_szBuyWeapons[lp][0], "weapon_mp5sd" )					
 				) {
 					AddMenuItem(hBuyMenu, g_szBuyWeapons[lp][0], g_szBuyWeapons[lp][1]);
 					continue;
@@ -118,7 +118,6 @@ void SelectingAmmunition(int client, int ent, bool crochettage = false) {
 			// S'il est FBI ou plus:
 			if( (rp_GetClientJobID(client) == 1 && g_iUserData[client][i_Job] <= 7) || (rp_GetClientJobID(client) == 101 && g_iUserData[client][i_Job] <= 107) || braquage) {
 				if( StrContains(g_szBuyWeapons[lp][0], "weapon_m4a1" ) == 0 ||
-					StrEqual(g_szBuyWeapons[lp][0], "weapon_scout") ||
 					StrEqual(g_szBuyWeapons[lp][0], "weapon_ssg08")
 				) {
 					AddMenuItem(hBuyMenu, g_szBuyWeapons[lp][0], g_szBuyWeapons[lp][1]);
@@ -127,7 +126,10 @@ void SelectingAmmunition(int client, int ent, bool crochettage = false) {
 			}
 			// S'il est CIA ou plus:
 			if( g_iUserData[client][i_Job] <= 6 || g_iUserData[client][i_Job] == 101  || g_iUserData[client][i_Job] == 102 || braquage) {
-				if( StrEqual(g_szBuyWeapons[lp][0], "weapon_awp" ) ) {
+				if( StrEqual(g_szBuyWeapons[lp][0], "weapon_awp")  ||
+					StrEqual(g_szBuyWeapons[lp][0], "weapon_aug") ||
+					StrEqual(g_szBuyWeapons[lp][0], "weapon_sg556")
+				) {
 					AddMenuItem(hBuyMenu, g_szBuyWeapons[lp][0], g_szBuyWeapons[lp][1]);
 					continue;
 				}
@@ -150,9 +152,12 @@ void SelectingAmmunition(int client, int ent, bool crochettage = false) {
 public int eventAmmunitionPickup(Handle p_hBuyMenu, MenuAction p_oAction, int client, int p_iParam2) {
 	if (p_oAction == MenuAction_Select) {
 		char szMenuItem[32];
-		
+		char explo[2][32];
+
 		if (GetMenuItem(p_hBuyMenu, p_iParam2, szMenuItem, sizeof(szMenuItem))) {
 			
+			ExplodeString(szMenuItem, " ", explo, sizeof(explo), sizeof(explo[]));
+
 			int ent = GetClientAimTarget(client, false);
 			if( !IsAmmunition(ent) )
 				return;
@@ -162,16 +167,16 @@ public int eventAmmunitionPickup(Handle p_hBuyMenu, MenuAction p_oAction, int cl
 			int iWeaponSlot;
 			
 			for(int lp; lp < MAX_BUYWEAPONS; lp++) {
-				if (strcmp(g_szBuyWeapons[lp][0], szMenuItem) == 0) {
+				if (strcmp(g_szBuyWeapons[lp][0], explo[0]) == 0) {
 					iWeaponSlot = StringToInt(g_szBuyWeapons[lp][2]);
 					break;
 				}
 			}
 			
-			if( StrEqual(szMenuItem, "reload", false) ) {
+			if( StrEqual(explo[0], "reload", false) ) {
 				RedrawWeapon(client);
 			}
-			else if( StrEqual(szMenuItem, "braquage", false) ) {
+			else if( StrEqual(explo[0], "braquage", false) ) {
 				
 				int wepid = GivePlayerItem(client, "weapon_m4a1");
 				FakeClientCommand(client, "use weapon_m4a1");
@@ -180,7 +185,7 @@ public int eventAmmunitionPickup(Handle p_hBuyMenu, MenuAction p_oAction, int cl
 				g_iWeaponFromStore[wepid] = 1;
 				
 			}
-			else if( StrEqual(szMenuItem, "remove", false) ) {
+			else if( StrEqual(explo[0], "remove", false) ) {
 				int id = WeaponsGetDeployedWeaponIndex(client);
 				if( id > 0 ) {
 					RemovePlayerItem(client, id );
@@ -194,9 +199,9 @@ public int eventAmmunitionPickup(Handle p_hBuyMenu, MenuAction p_oAction, int cl
 					return;
 				}
 				
-				int id = GivePlayerItem(client, szMenuItem);
+				int id = GivePlayerItem(client, explo[0]);
 				g_iWeaponFromStore[id] = 1;
-				if( StrContains(szMenuItem, "m4", false) >= 0 || StrContains(szMenuItem, "usp")  >= 0 ) {
+				if( StrContains(explo[1], "caouchouc", false) >= 0) {
 					g_iWeaponsBallType[id] = ball_type_caoutchouc;
 				}
 			}
