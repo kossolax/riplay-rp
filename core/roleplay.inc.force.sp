@@ -261,7 +261,7 @@ void IncrementForceKill(int client,int victim) {
 	
 	LogToGame("[TSX-RP] [FORCE-KILL] %L tue avec la force (%i/10).", client, g_iCurrentKill[client]);
 	
-	CPrintToChat( client, "\x04[TSX-RP]\x01 Vous avez perdu 250$ pour avoir tué avec la force. (%i/10)", g_iCurrentKill[client]);
+	CPrintToChat( client, "" ...MOD_TAG... " Vous avez perdu 250$ pour avoir tué avec la force. (%i/10)", g_iCurrentKill[client]);
 	rp_ClientMoney(client, i_Money, -250);
 	
 	if( g_iCurrentKill[client] >= 10 ) {

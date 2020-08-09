@@ -1152,7 +1152,7 @@ public int Handle_VoteCleanMenu(Menu menu, MenuAction action, int param1, int pa
 					continue;
 				if (!CheckCommandAccess(i, "sm_chat", ADMFLAG_CHAT)) // On display la réponse que a ceux qui ont le sm_chat, basiquement tous les admins
 					continue;
-				PrintToChat(i, "[TSX-RP] %N ne souhaite pas rp_clean.", param1);
+				CPrintToChat(i, "" ...MOD_TAG... " %N ne souhaite pas rp_clean.", param1);
 			}
 		}
 	}
@@ -1164,7 +1164,7 @@ public void Handle_VoteResults(Menu menu, int num_votes, int num_clients, const 
 				continue;
 			if (!CheckCommandAccess(i, "sm_chat", ADMFLAG_CHAT)) // On display la réponse que a ceux qui ont le sm_chat, basiquement tous les admins
 				continue;
-			PrintToChat(i, "[TSX-RP]  Un ou plusieurs administrateur/VIP ne souhaite(nt) pas rp_clean.");
+			CPrintToChat(i, "" ...MOD_TAG... "  Un ou plusieurs administrateur/VIP ne souhaite(nt) pas rp_clean.");
 		}
 	}
 	else {
@@ -1174,7 +1174,7 @@ public void Handle_VoteResults(Menu menu, int num_votes, int num_clients, const 
 				continue;
 			if (!CheckCommandAccess(i, "sm_chat", ADMFLAG_CHAT)) // On display la réponse que a ceux qui ont le sm_chat, basiquement tous les admins
 				continue;
-			PrintToChat(i, "[TSX-RP] %i props ont été supprimés par %N.", total, requester);
+			CPrintToChat(i, "" ...MOD_TAG... " %i props ont été supprimés par %N.", total, requester);
 		}
 	}
 }
@@ -1214,7 +1214,7 @@ public Action cmd_CleanMapForce(int client, int args) {
 	
 	int total = RunMapCleaner(true, true, GetCmdArgInt(1) );
 	if( client > 0 )
-		PrintToChat(client, "[TSX-RP] %i props ont été supprimés.", total);
+		CPrintToChat(client, "" ...MOD_TAG... " %i props ont été supprimés.", total);
 	
 	return Plugin_Handled;
 }

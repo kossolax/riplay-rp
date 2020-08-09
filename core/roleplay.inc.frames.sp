@@ -512,7 +512,7 @@ void OnGameFrame_10(float time) {
 
 				if(infoPeineTime == 180) {
 					if( g_bUserData[i][b_ExitJailMenu] && g_iUserData[i][i_JailTime] > 0 ) {
-						CPrintToChat(i, "{lightblue}[TSX-RP]{default} Tu peux modifier la durée/zone de ton emprisonnement en tapant /peine");
+						CPrintToChat(i, "" ...MOD_TAG... "{default} Tu peux modifier la durée/zone de ton emprisonnement en tapant /peine");
 					}
 				}
 
