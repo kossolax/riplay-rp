@@ -118,6 +118,7 @@ public Action Cmd_ItemChirurgie(int args) {
 	float time = rp_GetClientInt(vendeur, i_Job) == 13 ? 30.0 : 5.0;
 
 
+
 	for (float i = 0.0; i < time; i+= 5.0) {
 		Handle dp = CreateDataPack();
 		CreateDataTimer(i, ChiruEffect, dp);
@@ -133,6 +134,7 @@ public Action Cmd_ItemChirurgie(int args) {
 	
 	rp_SetClientFloat(client, fl_TazerTime, GetGameTime() + time);
 	rp_SetClientFloat(vendeur, fl_TazerTime, GetGameTime() + time);
+	rp_SetClientFloat(vendeur, fl_LastStolen, GetGameTime() + time - 35.0);
 	
 	g_iSuccess_last_faster_dead[client] = GetTime() - RoundToCeil(time);
 	
