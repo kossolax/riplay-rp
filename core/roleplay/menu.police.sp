@@ -71,7 +71,7 @@ void ReduceJailTime(int client) {
 
 	AddMenuItem(menu, "cours", "Envoyez moi dans la cour");
 
-	int qhsPrice = 100 * rp_GetClientInt(client, i_KillJailDuration);
+	int qhsPrice = 50 * rp_GetClientInt(client, i_KillJailDuration);
 
 	if( g_iUserData[client][i_Money]+g_iUserData[client][i_Bank] >= qhsPrice ) {
 		Format(tmp, 255, "Envoyer moi au QHS (%i$)", qhsPrice);
