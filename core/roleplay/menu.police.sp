@@ -65,12 +65,13 @@ void ReduceJailTime(int client) {
 	// Format(tmp, 255, "%sVous pouvez réduire ce temps de %d heures\nà tout moment pour %i$\n\n ", tmp, reduction, amende);
 
 	SetMenuTitle(menu, tmp);
-	
-	//AddMenuItem(menu, "yes", "J'accepte!");
+
+	AddMenuItem(menu, "", "Vous pouvez réouvrir ce menu avec /peine", ITEMDRAW_DISABLED);
+	AddMenuItem(menu, "", "En QHS votre temps passe 2x plus vite mais vous ne pouvez pas y afk", ITEMDRAW_DISABLED);
 
 	AddMenuItem(menu, "cours", "Envoyez moi dans la cour");
 
-	int qhsPrice = 100 * rp_GetClientInt(client, i_KillJailDuration);
+	int qhsPrice = 50 * RoundFloat(float(g_iUserData[client][i_JailTime])/60.0);
 
 	if( g_iUserData[client][i_Money]+g_iUserData[client][i_Bank] >= qhsPrice ) {
 		Format(tmp, 255, "Envoyer moi au QHS (%i$)", qhsPrice);

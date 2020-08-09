@@ -723,15 +723,9 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 	else
 		amount = Math_GetRandomInt(1, VOL_MAX);
 	
-	if( VOL_MAX > 0 && money <= 0 && rp_GetClientInt(client, i_Job) <= 84 && !rp_IsClientNew(target) && CanClientStealItem(client, target) ) {
-
-		int wepid = findPlayerWeapon(client, target);
-		
-		if( wepid == -1 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas d'argent, ni d'arme que vous pouvez lui voler.", target);
-			cooldown = 1.0;
-			return Plugin_Stop;
-		}
+	int wepid = findPlayerWeapon(client, target);
+	
+	if( VOL_MAX > 0 && wepid != -1 && rp_GetClientInt(client, i_Job) <= 84 && !rp_IsClientNew(target) && CanClientStealItem(client, target) ) {
 				
 		CPrintToChat(target, "" ...MOD_TAG... " Quelqu'un essaye de vous voler.");
 		LogToGame("[TSX-RP] [VOL] %L a commencé un vol d'arme sur %L.", client, target);
@@ -844,7 +838,10 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		rp_ClientOverlays(target, o_Action_StealMoney, 10.0);
 	}
 	else {
-		CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas d'argent sur lui.", target);
+		if(rp_GetClientInt(client, i_Job) <= 84 && !rp_IsClientNew(target) && CanClientStealItem(client, target))
+			CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas d'argent, ni d'arme que vous pouvez lui voler.", target);
+		else 
+			CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas d'argent sur lui.", target);
 		cooldown = 1.0;
 	}
 	

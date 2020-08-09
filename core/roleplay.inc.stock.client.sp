@@ -620,11 +620,11 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 			return;
 		}
 		
-		if( to_id == 0 ) {
-			if( GetClientTeam(client) == CS_TEAM_CT && (IsPolice(client) || IsJuge(client)) ) {
+		if( (to_id < 1 || to_id > 10) && (to_id < 101 || to_id > 110) && GetClientTeam(client) == CS_TEAM_CT ) {
 				CS_SwitchTeam(client, CS_TEAM_T);
-			}
-			
+		}
+
+		if( to_id == 0 ){
 			g_iUserData[client][i_TimePlayedJob] = 0;
 		}
 		

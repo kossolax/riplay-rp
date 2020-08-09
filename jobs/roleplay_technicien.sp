@@ -549,6 +549,11 @@ public Action Frame_CashMachine(Handle timer, any ent) {
 	}
 	
 	float time = GetMachineTime(client);
+
+	if( rp_GetBuildingData(ent, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(ent), zone_type_type) != 221 ){
+		time *= 2.0;
+	}
+
 	
 	if( rp_GetServerRules(rules_Productions, rules_Enabled) == 1 ) {
 		int target = rp_GetServerRules(rules_Productions, rules_Target);

@@ -508,6 +508,10 @@ public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
 				CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 50 cadeaux dans votre banque.");
 				rp_ClientGiveItem(client, ITEM_CADEAU, 50, true);
 			}
+			if( b == 600 ) {
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 25 cadeaux dans votre banque.");
+				rp_ClientGiveItem(client, ITEM_CADEAU, 25, true);
+			}
 			
 			CPrintToChat(client, "" ...MOD_TAG... " Vous avez atteint le niveau {green}%d{default}. Vous êtes maintenant {green}%s{default}!", g_iUserData[client][i_PlayerLVL], g_szLevelList[ g_iUserData[client][i_PlayerRank] ][rank_type_name]);
 		}
