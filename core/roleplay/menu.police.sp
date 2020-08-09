@@ -65,8 +65,9 @@ void ReduceJailTime(int client) {
 	// Format(tmp, 255, "%sVous pouvez réduire ce temps de %d heures\nà tout moment pour %i$\n\n ", tmp, reduction, amende);
 
 	SetMenuTitle(menu, tmp);
-	
-	//AddMenuItem(menu, "yes", "J'accepte!");
+
+	AddMenuItem(menu, "", "Vous pouvez réouvrir ce menu avec /peine", ITEMDRAW_DISABLED);
+	AddMenuItem(menu, "", "En QHS votre temps passe 2x plus vite mais vous ne pouvez pas y afk", ITEMDRAW_DISABLED);
 
 	AddMenuItem(menu, "cours", "Envoyez moi dans la cour");
 
