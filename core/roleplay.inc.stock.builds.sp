@@ -52,7 +52,7 @@ public int Native_rp_WeaponMenu_Add(Handle plugin, int numParams) {
 	int owner = GetNativeCell(3);
 	
 	if( rp_GetWeaponStorage(weaponID) == true ){
-		if(owner == 0 || owner > MAX_PLAYERS){
+		if(owner == 0 || owner > 1000+MAX_PLAYERS){
 			return view_as<bool>(false);
 		}
 	}
