@@ -351,7 +351,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		if( amount < 50 )
 			cooldown *= 0.5;
 		if( amount < 26 )
-			targetStealImmunity = 15.0;
+			targetStealImmunity = 20.0;
 		if( amount < 5 )
 			cooldown *= 0.5;
 			
