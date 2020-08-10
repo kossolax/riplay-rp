@@ -324,6 +324,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		if( amount > money )
 			amount = money;
 			
+		float targetStealImmunity = 60.0;
 		rp_SetClientStat(target, i_MoneySpent_Stolen, rp_GetClientStat(target, i_MoneySpent_Stolen) + amount);
 		rp_ClientMoney(client, i_AddToPay, amount);
 		rp_ClientMoney(target, i_Money, -amount);
@@ -331,7 +332,6 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		rp_SetClientInt(client, i_LastVolAmount, amount);
 		rp_SetClientInt(client, i_LastVolTarget, target);
 		rp_SetClientInt(target, i_LastVol, client);
-		rp_SetClientFloat(target, fl_LastStolen, GetGameTime() + (rp_GetClientBool(target, b_IsAFK) ? 300.0 : 0.0));
 		
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez volé %d$ à %N.", amount, target);
 		CPrintToChat(target, "" ...MOD_TAG... " Quelqu'un vous a volé %d$.", amount);
@@ -350,13 +350,15 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		
 		if( amount < 50 )
 			cooldown *= 0.5;
+		if( amount < 26 )
+			targetStealImmunity = 20.0;
 		if( amount < 5 )
 			cooldown *= 0.5;
 			
 		if( amount > 500 )
-			rp_SetClientFloat(client, fl_LastVente, GetGameTime() + 10.0);
+			targetStealImmunity = 70.0;
 		if( amount > 2000 )
-			rp_SetClientFloat(client, fl_LastVente, GetGameTime() + 30.0);
+			targetStealImmunity = 90.0;
 		
 		for (int i = 1; i <= MaxClients; i++) {
 			if( !IsValidClient(i) )
@@ -369,6 +371,14 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		if(amount >= 25) {
 			rp_Effect_Cashflow(client, Math_Clamp(RoundToNearest(Pow(amount*2.0, 0.85)), 1, 1000)  );
 		}
+
+		if (rp_GetClientBool(target, b_IsAFK)){
+			targetStealImmunity = 300.0;
+		}
+
+
+		rp_SetClientFloat(target, fl_LastStolen, GetGameTime() + targetStealImmunity - 60.0);
+
 
 		int cpt = rp_GetRandomCapital(91);
 		rp_SetJobCapital(91, rp_GetJobCapital(91) + (amount/4));
