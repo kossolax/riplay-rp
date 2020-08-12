@@ -104,7 +104,8 @@ public bool fwdCanStart(int client) {
 		return false;
 	if( rp_GetClientInt(client, i_PlayerLVL) < 210 )
 		return false;
-	
+	if( GetGameTime() < 60*30 && GetConVarInt(FindConVar("hostport")) != 27025 )
+		return false;
 	/*
 	char szDayOfWeek[12], szHours[12];
 	FormatTime(szDayOfWeek, 11, "%w");
