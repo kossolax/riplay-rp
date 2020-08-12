@@ -793,6 +793,8 @@ public Action Command_create(int client,int args) {
 		Entity_SetHealth(index, 100000, true);
 		SDKHook(index, SDKHook_OnTakeDamagePost, OnTakeDamageBall);
 	}
+
+	PrintToConsole(client, "RP_PROPS: Props %d créé", index);
 	
 	return Plugin_Handled;
 }
