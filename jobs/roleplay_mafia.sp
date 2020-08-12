@@ -848,7 +848,8 @@ public Action Cmd_ItemPickLock(int args) {
 	
 	int appartID = zoneToAppartID(rp_GetPlayerZone(door));
 	if( appartID > 0 ) {
-		static int newPickTime = 60 * 3;
+		int newPickTime = (appartID == 50 || appartID == 51) ? 60 * 18 : 60 * 24;
+		int appartPickThreshold = (appartID == 50 || appartID == 51) ? 12 : 3;
 
 		if(g_flAppartProtection[appartID] > GetGameTime()) {
 			ITEM_CANCEL(client, item_id);
@@ -866,11 +867,11 @@ public Action Cmd_ItemPickLock(int args) {
 		g_iAppartPickLockCount[appartID]++;
 
 		// never be sure ^^ 
-		if(g_iAppartPickLockCount[appartID] > 3 || g_iAppartPickLockCount[appartID] <= 0) {
+		if(g_iAppartPickLockCount[appartID] > appartPickThreshold || g_iAppartPickLockCount[appartID] <= 0) {
 			return Plugin_Handled;
 		}
 
-		if(g_iAppartPickLockCount[appartID] == 3) {
+		if(g_iAppartPickLockCount[appartID] == appartPickThreshold) {
 			g_iAppartNewPickLock[appartID] = GetTime() + newPickTime;
 			g_iAppartPickLockCount[appartID] = 0;
 		}
