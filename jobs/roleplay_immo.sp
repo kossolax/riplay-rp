@@ -145,13 +145,18 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 	return Plugin_Continue;
 }
 public Action Cmd_ItemGiveAppart(int args) {
-	char arg1[12], arg2[12];
+	char arg1[12], arg2[12], arg3[12];
 	
 	GetCmdArg(1, arg1, sizeof(arg1));
 	GetCmdArg(2, arg2, sizeof(arg2));
+	GetCmdArg(3, arg3, sizeof(arg3));
 	
 	int client = StringToInt(arg1);
 	int appart = StringToInt(arg2);
+	int vendeur = StringToInt(arg3);
+
+	rp_SetClientFloat(vendeur, fl_LastVente, GetGameTime() + 17.0);
+
 	
 	if( !rp_GetClientKeyAppartement(client, appart) ) { // TODO: Check si y a pas déjà un proprio... 
 		

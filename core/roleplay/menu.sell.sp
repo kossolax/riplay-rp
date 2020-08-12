@@ -894,6 +894,12 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			if( IsGangMaffia(client) || IsDealer(client)) {
 				g_flUserData[vendeur][fl_LastVente] = GetGameTime();
 			}
+
+			if( g_iUserData[vendeur][i_Job] == 61){
+				if( StrContains(g_szZoneList[GetPlayerZone(vendeur)][zone_type_type], "appart_") == 0 ) {
+					g_flUserData[vendeur][fl_LastVente] = GetGameTime()+17.0;
+				}
+			}
 			
 			if( item_type == 0 ) {
 				if( StringToInt(g_szItemList[ item_id ][item_type_auto]) ) {
