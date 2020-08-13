@@ -352,6 +352,9 @@ public Action Hook(const char[] te_name, const int[] Players, int numClients, fl
 	if( data == 5 && (IsValidClient(ent) || delay < 0.0) ) {
 		return Plugin_Continue;
 	}
+	if( data == 16 ) {
+		return Plugin_Handled;
+	}
 	
 	return Plugin_Continue;
 }

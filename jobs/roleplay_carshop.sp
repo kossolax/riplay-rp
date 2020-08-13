@@ -508,7 +508,7 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	}
 	
 	DispatchKeyValue(ent, "model", 				model);
-	//DispatchKeyValue(ent, "vehiclescript", 		ScriptPath);
+	DispatchKeyValue(ent, "vehiclescript", 		ScriptPath);
 
 	DispatchKeyValue(ent, "solid",				"6");
 	DispatchKeyValue(ent, "actionScale",		"1");
