@@ -482,8 +482,8 @@ public Action Cmd_ItemHamburger(int args) {
 		}
 		
 		if( !rp_SetClientKnifeType(client, ball_type_fire) ) {
-//			ITEM_CANCEL(client, item_id);
-//			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
+			ITEM_CANCEL(client, item_id);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
 		}
 	}
 	return Plugin_Handled;

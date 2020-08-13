@@ -442,8 +442,8 @@ public Action Cmd_ItemKnifeType(int args) {
 	}
 	
 	if( !rp_SetClientKnifeType(client, ball_type_type) ) {
-//		ITEM_CANCEL(client, item_id);
-//		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
+		ITEM_CANCEL(client, item_id);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
 	}
 	
 	
