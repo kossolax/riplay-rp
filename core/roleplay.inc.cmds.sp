@@ -325,7 +325,7 @@ public Action cmd_GiveWeaponEvent(int client, int args) {
 	
 		if( GetZoneBit( GetPlayerZone(target) ) & BITZONE_EVENT) {
 			
-			if( Weapon_ShouldBeEquip(Arg2) && !Client_HasWeapon(target, Arg2) )
+			if( Weapon_ShouldBeEquip(Arg2) && Client_HasWeapon(target, Arg2) )
 				continue;
 			
 			int analyse = 3;
