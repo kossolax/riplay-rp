@@ -77,6 +77,15 @@ exports = module.exports = function(server){
     return converted;
   }
 
+
+server.get('/user/admin', function (req, res, next) {
+      server.conn.query(server.getAuthAdminID, [req.headers.auth], function(err, row) {
+        if( err ) return res.send(new ERR.InternalServerError(err));
+        if( row[0] == null ) return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
+        return res.send("ok");
+     });
+});
+
   /**
    * @api {get} /user/:SteamID GetUserBySteamID
    * @apiName GetUserBySteamID
@@ -448,7 +457,7 @@ exports = module.exports = function(server){
       server.conn.query("INSERT INTO `rp_double_contest` (`steamid`, `target`, `approuved`) VALUES (?, ?, ?);", [SteamID, req.params['target'], parseInt(req.params['reason'])], function(err, rows) {
 	if( err ) return res.send(new ERR.BadRequestError("Impossible de contester ce double-compte."));
 
-        sendmail({from: 'account@ts-x.eu', to: 'kossolax@ts-x.eu', subject: 'Double compte: '+ UserName, html: mail }, function(err, reply) {
+        sendmail({from: 'account@ts-x.eu', to: 'gozer@riplay.fr', subject: 'Double compte: '+ UserName, html: mail }, function(err, reply) {
           return res.send("Votre contestation va être annalysée sous les 24 heures.");
         });
       });

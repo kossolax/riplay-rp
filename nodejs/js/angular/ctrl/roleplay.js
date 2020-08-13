@@ -14,6 +14,10 @@ app.controller('mainCtrl', function($scope, $http, $filter, $location, $routePar
   $scope.isAdmin = false;
   $scope.Math = window.Math;
 
+  $http.get("https://riplay.fr/api/user/admin").then(function(res) {
+      $scope.isAdmin = true;
+  });
+
   $scope.isConnectedToForum = _member_id == null || _member_id == '' ? false:true;
 
   $scope.reloadTimer = function(timer) {
@@ -116,7 +120,7 @@ app.controller('rpJobGang', function($scope, $http, $routeParams, $location) {
   $scope.dropCallback = function(event, index, item, external, type) {
     for(var i in $scope.data.notes ) {
       if( $scope.data.notes[i].id == item.id ) {
-        console.log(i);
+        
       }
     }
   };
@@ -192,7 +196,7 @@ app.controller('rpIndex', function($scope, $http, $timeout, $interval, $window, 
   function dateDiff(date1, date2){
     var diff = {}  
     var tmp = Math.abs(date1 - date2);
-    console.log(tmp);
+    
     tmp = Math.floor(tmp/1000);  
     diff.sec = tmp % 60;    
  
@@ -234,7 +238,7 @@ app.controller('rpIndex', function($scope, $http, $timeout, $interval, $window, 
       $scope.end = res.data.end_date;
       $scope.calcEnd = dateDiff(now, $scope.end * 1000);
 
-      console.log(res.data.start_date_f);
+    
       $interval( function() {
         $scope.calcEnd = dateDiff(Date.now(), $scope.end * 1000);
       }, 1000);
@@ -608,6 +612,7 @@ app.controller('rpTribunalCase', function($scope, $location, $routeParams, $http
       $scope.condamner = parseInt(res.data.condamner);
       $scope.acquitter = parseInt(res.data.acquitter);
 
+      $http.get("https://riplay.fr/api/tribunal/next").then(function(res) { $scope.report = res.data; });
 
       $timeout(function() { $scope.disableButton = false; }, 5000);
 
@@ -728,7 +733,6 @@ app.controller('rpParrainage', function($scope, $http, $routeParams, $location) 
   }
 
   $http.get("https://riplay.fr/api/parrain").then(function(res) { 
-    console.log(res);
     var data = [];
     var pos = 0;
     var need_time = 72000;
@@ -757,8 +761,6 @@ app.controller('rpParrainage', function($scope, $http, $routeParams, $location) 
       $scope.data[index].approuved = 1;
 
       $scope.data = $scope.data;
-
-      console.log(res);
     },function (res){
       $scope.errmessage = "Error";
     });

@@ -82,7 +82,7 @@ server.pre(function (request, response, next) {
 });
 
 server.get('/', function (req, res, next) {
-  return res.redirect('https://riplay.fr/');
+  return res.send("hello");
 });
 
 server.listen(8080, 'cpu-linux.riplay.fr', function () {

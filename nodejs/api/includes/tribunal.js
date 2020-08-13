@@ -199,7 +199,7 @@ exports = module.exports = function(server){
   	try {
       validateTokken(req, req.params['id'], function(err, tSteamID, dStart, dEnd, more) {
         if( err ) return res.send(new ERR.InternalServerError(err));
-        server.conn.query("SELECT SUM(IF(vote=1,1,0)) AS condamner, SUM(IF(vote=0,1,0)) AS acquitter FROM `rp_report`.`site_report_votes` WHERE reportid=? GROUP BY `steamid`", [req.params['id']], function(err, rows) {
+        server.conn.query("SELECT SUM(IF(vote=1,1,0)) AS condamner, SUM(IF(vote=0,1,0)) AS acquitter FROM `rp_report`.`site_report_votes` WHERE reportid=?", [req.params['id']], function(err, rows) {
           return res.send({steamid: tSteamID, dStart, dEnd, data: more, condamner: rows[0] ? rows[0].condamner : 0, acquitter: rows[0] ? rows[0].acquitter : 0});
         });
       });
@@ -228,7 +228,7 @@ exports = module.exports = function(server){
 
           var SteamID = row[0].steamid.replace("STEAM_0", "STEAM_1");
 
-          server.conn.query("DELETE `rp_report`.`site_report_votes` WHERE `reportid`=? AND `steamid`=?", [req.params['id'], SteamID], function(err, row) {
+          server.conn.query("DELETE FROM `rp_report`.`site_report_votes` WHERE `reportid`=? AND `steamid`=?", [req.params['id'], SteamID], function(err, row) {
             server.conn.query("INSERT INTO `rp_report`.`site_report_votes`(`reportid`, `steamid`, `vote`) VALUES (?, ?, ?);", [req.params['id'], SteamID, req.params['vote']], function(err, row) {
               return res.send({redirect: "/tribunal/rules", message: "Votre vote a bien été pris en compte, merci!"});
             });
