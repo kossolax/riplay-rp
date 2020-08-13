@@ -92,7 +92,6 @@ server.put('/job/:id/approuve', function (req, res, next) {
     if( err ) return res.send(new ERR.InternalServerError(err));
     if( row.length == 0 ) return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
     var SteamID = row[0].steamid.replace("STEAM_0", "STEAM_1");
-    if( SteamID != "76561198018935404" ) return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
 
      server.conn.query("UPDATE `rp_notes` SET `approuved` = '1' WHERE `job_id` = ?;", [req.params['id']], function(err, row) {
 	server.conn.query("UPDATE `rp_jobs` SET `approuved` = '1' WHERE `job_id` = ?;", [req.params['id']], function(err, row) {

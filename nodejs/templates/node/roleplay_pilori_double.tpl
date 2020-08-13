@@ -3,7 +3,7 @@
   <a class="btn btn-default" href="#/pilori/double/{{steamid}}"> Vos doubles comptes </a>
   <a class="btn btn-default" href="#/pilori/last/0"> Les dernières condamnations </a>
 </div>
-<form ng-show="isAdmin">
+<form ng-show="isAdmin || $parent.isAdmin">
   <div class="form-inline">
 		<div class="input-group">
 			<input type="text" class="form-control" placeholder="STEAM_0:x:abcdef" ng-model="target">

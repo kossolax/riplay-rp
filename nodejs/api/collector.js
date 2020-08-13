@@ -28,7 +28,7 @@ function steamIDToProfile(steamID) {
 	if( steamID == undefined ) return null;
 
 	var parts = steamID.split(":");
-	if( parts.length <= 1 ) return null;
+	if( parts.length <= 1 ) return steamID;
 	var iServer = Number(parts[1]);
 	var iAuthID = Number(parts[2]);
 	var converted = "76561197960265728"
