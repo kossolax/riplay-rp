@@ -223,11 +223,11 @@ public Action Cmd_Jugement(int client, char[] arg) {
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	SQL_EscapeString(rp_GetDatabase(), arg, escape, length*2 + 1);
 	
-	Format(query, sizeof(query), "UPDATE `ts-x`.`site_report` SET `jail`='%d', `amende`='%d', `juge`='%s', `reason`='%s' WHERE `id`='%d' LIMIT 1;", heure, amende, szSteamID, escape, id);
+	Format(query, sizeof(query), "UPDATE `rp_report`.`site_report` SET `jail`='%d', `amende`='%d', `juge`='%s', `reason`='%s' WHERE `id`='%d' LIMIT 1;", heure, amende, szSteamID, escape, id);
 	SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 	
 	if( type != 3 ) {
-		Format(query, sizeof(query), "INSERT INTO `rp_csgo`.`rp_users2` (`steamid`, `xp`, `pseudo`) (SELECT `steamid`, '100', 'Tribunal Forum' FROM `ts-x`.`site_report_votes` WHERE `reportid`=%d AND `vote`=%d GROUP BY `steamid`)", id, type == 1 ? 1 : 0);
+		Format(query, sizeof(query), "INSERT INTO `rp_csgo`.`rp_users2` (`steamid`, `xp`, `pseudo`) (SELECT `steamid`, '100', 'Tribunal Forum' FROM `rp_report`.`site_report_votes` WHERE `reportid`=%d AND `vote`=%d GROUP BY `steamid`)", id, type == 1 ? 1 : 0);
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 	}
 	
@@ -235,7 +235,7 @@ public Action Cmd_Jugement(int client, char[] arg) {
 		GetClientName(client, nick, sizeof(nick));
 		SQL_EscapeString(rp_GetDatabase(), nick, pseudo, sizeof(pseudo));
 		
-		Format(query, sizeof(query), "INSERT INTO `rp_csgo`.`rp_users2` (`steamid`, `money`, `jail`, `pseudo`, `steamid2`, `raison`) ( SELECT `report_steamid`, '%d', '%d', '%s', '%s', '%s' FROM `ts-x`.`site_report` WHERE `id`='%d' )", -amende, heure*60, pseudo, szSteamID, escape, id); 
+		Format(query, sizeof(query), "INSERT INTO `rp_csgo`.`rp_users2` (`steamid`, `money`, `jail`, `pseudo`, `steamid2`, `raison`) ( SELECT `report_steamid`, '%d', '%d', '%s', '%s', '%s' FROM `rp_report`.`site_report` WHERE `id`='%d' )", -amende, heure*60, pseudo, szSteamID, escape, id); 
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 	}
 	
@@ -713,7 +713,7 @@ Menu AUDIENCE_Forum(int client, int a, int b) {
 	if( a == 0 ) {
 		GetClientAuthId(client, AUTH_TYPE, tmp, sizeof(tmp));
 		
-		Format(query, sizeof(query), "SELECT R.`id`, `report_steamid`, COUNT(`vote`) cpt, `name`, SUM(IF(`vote`=1,1,0)) as cpt2 FROM `ts-x`.`site_report` R INNER JOIN `ts-x`.`site_report_votes` V ON V.`reportid`=R.`id` INNER JOIN `rp_csgo`.`rp_users` U ON U.`steamid`=R.`report_steamid` WHERE V.`vote`<>'2' AND R.`jail`=-1 AND R.`own_steamid`<>'%s' AND R.`report_steamid`<>'%s' GROUP BY R.`id` HAVING cpt>=5 ORDER BY cpt DESC;", tmp, tmp);
+		Format(query, sizeof(query), "SELECT R.`id`, `report_steamid`, COUNT(`vote`) cpt, `name`, SUM(IF(`vote`=1,1,0)) as cpt2 FROM `rp_report`.`site_report` R INNER JOIN `rp_report`.`site_report_votes` V ON V.`reportid`=R.`id` INNER JOIN `rp_csgo`.`rp_users` U ON U.`steamid`=R.`report_steamid` WHERE V.`vote`<>'2' AND R.`jail`=-1 AND R.`own_steamid`<>'%s' AND R.`report_steamid`<>'%s' GROUP BY R.`id` HAVING cpt>=5 ORDER BY cpt DESC;", tmp, tmp);
 		SQL_TQuery(rp_GetDatabase(), SQL_AUDIENCE_Forum, query, client);
 	}
 	else if( b == 0 ) {
