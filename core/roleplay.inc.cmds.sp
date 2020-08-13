@@ -376,6 +376,10 @@ public Action Timer_CheckWeapon(Handle timer, any wepId) {
 		if( !(GetZoneBit( GetPlayerZone(owner) ) & BITZONE_EVENT) ) {
 			RemovePlayerItem(owner, wepId);
 			rp_AcceptEntityInput(wepId, "Kill");
+			
+			FakeClientCommand(client, "use weapon_fists");
+			g_bUserData[client][b_WeaponIsKnife] = false;
+			g_bUserData[client][b_WeaponIsHands] = true;
 			return Plugin_Stop;
 		}
 		
