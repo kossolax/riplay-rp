@@ -389,7 +389,6 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 					RemovePlayerItem(client, wep);
 					RemoveEdict(wep);
 					FakeClientCommand(client, "use weapon_fists");
-					FakeClientCommand(client, "use weapon_fistsgg");
 				}
 			}
 			else if( StrEqual( options, "weaponGet") ) {

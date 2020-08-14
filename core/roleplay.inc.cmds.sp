@@ -377,9 +377,9 @@ public Action Timer_CheckWeapon(Handle timer, any wepId) {
 			RemovePlayerItem(owner, wepId);
 			rp_AcceptEntityInput(wepId, "Kill");
 			
-			FakeClientCommand(client, "use weapon_fists");
-			g_bUserData[client][b_WeaponIsKnife] = false;
-			g_bUserData[client][b_WeaponIsHands] = true;
+			FakeClientCommand(owner, "use weapon_fists");
+			g_bUserData[owner][b_WeaponIsKnife] = false;
+			g_bUserData[owner][b_WeaponIsHands] = true;
 			return Plugin_Stop;
 		}
 		
