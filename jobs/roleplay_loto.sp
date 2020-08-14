@@ -500,7 +500,7 @@ bool gratterTicket(int client, int amount, int itemID) {
 	
 	rp_SetClientStat(client, i_LotoSpent, rp_GetClientStat(client, i_LotoSpent) + amount);
 	if( rp_GetClientJobID(client) == 171 ) // Pas de cheat inter job.
-		luck += 40;
+		luck += 15;
 	if( !rp_IsClientLucky(client) )
 		luck += 40;
 	
