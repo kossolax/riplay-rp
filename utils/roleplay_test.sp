@@ -25,6 +25,34 @@ public Plugin:myinfo =
 new OCCclient;
 new LaserCache;
 
+char g_szCaseModels[][] = {
+	"models/props/crates/csgo_drop_crate_armsdeal1.mdl",
+	"models/props/crates/csgo_drop_crate_armsdeal2.mdl",
+	"models/props/crates/csgo_drop_crate_armsdeal3.mdl",
+	"models/props/crates/csgo_drop_crate_bloodhound.mdl",
+	"models/props/crates/csgo_drop_crate_bravo.mdl",
+	"models/props/crates/csgo_drop_crate_breakout.mdl",
+	"models/props/crates/csgo_drop_crate_chroma.mdl",
+	"models/props/crates/csgo_drop_crate_chroma2.mdl",
+	"models/props/crates/csgo_drop_crate_chroma3.mdl",
+	"models/props/crates/csgo_drop_crate_clutch.mdl",
+	"models/props/crates/csgo_drop_crate_dangerzone.mdl",
+	"models/props/crates/csgo_drop_crate_gamma.mdl",
+	"models/props/crates/csgo_drop_crate_gamma2.mdl",
+	"models/props/crates/csgo_drop_crate_glove.mdl",
+	"models/props/crates/csgo_drop_crate_horizon.mdl",
+	"models/props/crates/csgo_drop_crate_huntsman.mdl",
+	"models/props/crates/csgo_drop_crate_hydra.mdl",
+	"models/props/crates/csgo_drop_crate_phoenix.mdl",
+	"models/props/crates/csgo_drop_crate_revolver.mdl",
+	"models/props/crates/csgo_drop_crate_shadow.mdl",
+	"models/props/crates/csgo_drop_crate_spectrum.mdl",
+	"models/props/crates/csgo_drop_crate_spectrum2.mdl",
+	"models/props/crates/csgo_drop_crate_vanguard.mdl",
+	"models/props/crates/csgo_drop_crate_wildfire.mdl",
+	"models/props/crates/csgo_drop_crate_winteroffensive.mdl"
+};
+
 public Action sound_hook2(char sample[PLATFORM_MAX_PATH], int &entity, float & volume, int &level, int &pitch, float pos[3], int &flags, float & delay) {
 	//PrintToChat(3, "AMBIANT: %s", sample);
 	return Plugin_Continue;
@@ -43,6 +71,7 @@ public OnPluginStart() {
 	
 	RegAdminCmd("sm_effect_copter", Cmd_Copter, ADMFLAG_ROOT);
 	RegAdminCmd("sm_effect_copter2", Cmd_Copter, ADMFLAG_ROOT);
+	RegConsoleCmd("sm_effect_crate", Cmd_Crate);
 	
 	for (new i = 1; i <= MaxClients; i++) {
 		if (!IsValidClient(i))
@@ -77,6 +106,124 @@ public OnPluginStart() {
 		
 	}
 }
+public Action Cmd_Crate(int client, int args) {
+	// models/props_survival/parachute/chute.mdl
+	// models/props/crates/csgo_drop_crate_armsdeal1.mdl
+	float dst[3], bot[3];
+	GetClientAbsOrigin(client, dst);
+	dst[2] = 0.0;
+	
+	int idx = GetRandomInt(0, sizeof(g_szCaseModels) - 1);
+	int parent = createCrate(dst, 1.0, idx, 100);
+	int node = GetEntPropEnt(parent, Prop_Data, "m_hEffectEntity");
+	
+	int chute = CreateEntityByName("prop_dynamic");
+	DispatchKeyValue(chute, "model", "models/props_survival/parachute/chute.mdl");
+	DispatchSpawn(chute);
+	ActivateEntity(chute);
+	TeleportEntity(chute, dst, NULL_VECTOR, NULL_VECTOR);
+	
+	SetVariantString("!activator");
+	AcceptEntityInput(chute, "SetParent", node);
+	
+	TeleportEntity(chute, view_as<float>({ 0.0, 0.0, -64.0}), NULL_VECTOR, NULL_VECTOR);
+	SetEntPropEnt(node, Prop_Data, "m_hEffectEntity", chute);
+	
+	CreateTimer(0.1, CrateThink, EntIndexToEntRef(parent));
+	
+	return Plugin_Handled;
+}
+int createCrate(float dst[3], float mass, int idx, int health) {
+	static char tmp[128];
+	
+	Format(tmp, sizeof(tmp), "mass,%f,inertia,1.0,damping,1.0,rotdamping,1.0", mass);
+	
+	int parent = CreateEntityByName("prop_physics");
+	DispatchKeyValue(parent, "model", "models/props/coop_cementplant/coop_military_crate/coop_military_crate.mdl");
+	DispatchKeyValue(parent, "classname", "rp_crate");
+	DispatchKeyValue(parent, "overridescript", tmp);
+	DispatchKeyValue(parent, "rendercolor", "0 0 0");
+	DispatchKeyValue(parent, "renderamt", "0");
+	DispatchKeyValue(parent, "rendermode", "3");
+	DispatchKeyValue(parent, "disableshadows", "1");
+	
+	
+	DispatchSpawn(parent);
+	ActivateEntity(parent);
+	
+	SetEntProp(parent, Prop_Data, "m_takedamage", 2);
+	SetEntProp(parent, Prop_Data, "m_iHealth", health+10000);
+	SDKHook(parent, SDKHook_OnTakeDamage, OnCrateDamage);
+	
+	SetEntityGravity(parent, 0.1);
+	TeleportEntity(parent, dst, NULL_VECTOR, NULL_VECTOR);
+	
+	int node = CreateEntityByName("prop_dynamic");
+	DispatchKeyValue(node, "model", g_szCaseModels[idx]);
+	DispatchKeyValue(node, "solid", "0");
+	DispatchSpawn(node);
+	ActivateEntity(node);
+	TeleportEntity(node, dst, NULL_VECTOR, NULL_VECTOR);
+	
+	SetVariantString("!activator");
+	AcceptEntityInput(node, "SetParent", parent);
+	SetEntPropEnt(parent, Prop_Data, "m_hEffectEntity", node);
+	
+	return parent;
+}
+public Action OnCrateDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype) {
+	if( IsValidClient(attacker) && Entity_GetHealth(victim)-RoundFloat(damage) < 10000 ) {
+		rp_ClientGiveItem(attacker, 132);
+		CPrintToChatAll("" ...MOD_TAG... " %N a trouvé une caisse!", attacker);
+		AcceptEntityInput(victim, "Kill");
+	}
+}
+
+public bool FilterToTarget(entity, mask, any data) {
+	return (entity == data);
+}
+public Action CrateThink(Handle timer, any data) {
+	int entity = EntRefToEntIndex(data);
+	
+	if( !IsValidEdict(entity) )
+		return Plugin_Handled;
+	
+	float src[3], dst[3];
+	Entity_GetAbsOrigin(entity, src);
+	Entity_GetAbsOrigin(entity, dst);
+	dst[2] = -9999.9;
+	
+	Handle tr = TR_TraceRayFilterEx(src, dst, MASK_SOLID_BRUSHONLY, RayType_EndPoint, FilterToTarget, 0);
+	if( tr && TR_DidHit(tr) ) {
+		TR_GetEndPosition(dst, tr);
+		
+		if( GetVectorDistance(src, dst) <= 256.0 ) {
+			int box = GetEntPropEnt(data, Prop_Data, "m_hEffectEntity");
+			int chute = GetEntPropEnt(box, Prop_Data, "m_hEffectEntity");
+			
+			if( chute > 0 ) {
+				AcceptEntityInput(entity, "Kill");
+				char tmp[256];
+				Entity_GetModel(box, tmp, sizeof(tmp));
+				Entity_GetAbsAngles(entity, dst);
+
+				for (int i = 0; i < sizeof(g_szCaseModels); i++) {
+					if( StrEqual(tmp, g_szCaseModels[i]) ) {
+						int parent = createCrate(src, 50.0, i, 1);
+						TeleportEntity(parent, src, dst, view_as<float>( { 0.0, 0.0, -200.0 }) );
+						rp_ScheduleEntityInput(parent, 10.0, "Kill");
+					}
+				}
+				return Plugin_Handled;
+			}
+		}
+	}
+	CloseHandle(tr);
+	
+	CreateTimer(0.1, CrateThink, data);
+	return Plugin_Handled;
+}
+
 public Action Cmd_AddBot(int client, int args) {
 	char name[32], skin[128];
 	
@@ -362,6 +509,13 @@ public OnMapStart() {
 	LaserCache = PrecacheModel("materials/sprites/laserbeam.vmt", true);
 	PrecacheModel("models/props_vehicles/helicopter_rescue.mdl", true);
 	PrecacheSound("vehicles/loud_helicopter_lp_01.wav", true);
+	
+	PrecacheModel("models/props/coop_cementplant/coop_military_crate/coop_military_crate.mdl", true);
+	PrecacheModel("models/props_survival/parachute/chute.mdl", true);
+	
+	for (int i = 0; i < sizeof(g_szCaseModels); i++) {
+		PrecacheModel(g_szCaseModels[i], true);
+	}
 }
 public Action:Cmd_Test2(client, args) {
 	new color[4];
