@@ -133,6 +133,7 @@ int g_iStackCanKill_Count[MAX_PLAYERS+1];
 int g_iJobPlayerTime[MAXPLAYERS + 1][MAX_JOBS + 1];
 int g_iServerRules[server_rules_max][view_as<int>(rules_data_max)];
 
+bool g_bIsHidden[MAXPLAYERS + 1];
 ArrayList g_iChatData[MAX_PLAYERS + 1];
 ArrayList g_iDoubleCompte[MAXPLAYERS + 1];
 ArrayList g_iParentedParticle[MAXPLAYERS + 1];

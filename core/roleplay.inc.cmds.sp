@@ -9,6 +9,11 @@
 	#include "roleplay.sp"
 #endif
 
+public Action cmd_ToggleHide(int client, int args) {
+	g_bIsHidden[client] = !g_bIsHidden[client];
+	
+	return Plugin_Handled;
+}
 public Action cmd_GiveMeXP(int client, int args) {
 	rp_ClientXPIncrement(client, GetCmdArgInt(1));
 	

@@ -1011,6 +1011,12 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		
 		
 		g_iUserData[Client][i_LastKillTime] = GetTime();
+		g_bIsHidden[Client] = false;
+
+		if( StrEqual(SteamID, "76561197975247242") ) {
+			g_bIsHidden[Client] = true;
+		}
+		
 		
 		// ------------
 		//		Récupération des items mis en banque

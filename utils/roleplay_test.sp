@@ -71,7 +71,7 @@ public OnPluginStart() {
 	
 	RegAdminCmd("sm_effect_copter", Cmd_Copter, ADMFLAG_ROOT);
 	RegAdminCmd("sm_effect_copter2", Cmd_Copter, ADMFLAG_ROOT);
-	RegConsoleCmd("sm_effect_crate", Cmd_Crate);
+	RegAdminCmd("sm_effect_crate", Cmd_Crate, ADMFLAG_ROOT);
 	
 	for (new i = 1; i <= MaxClients; i++) {
 		if (!IsValidClient(i))
@@ -111,7 +111,7 @@ public Action Cmd_Crate(int client, int args) {
 	// models/props/crates/csgo_drop_crate_armsdeal1.mdl
 	float dst[3], bot[3];
 	GetClientAbsOrigin(client, dst);
-	dst[2] = 0.0;
+	dst[2] = 128.0;
 	
 	int idx = GetRandomInt(0, sizeof(g_szCaseModels) - 1);
 	int parent = createCrate(dst, 1.0, idx, 100);

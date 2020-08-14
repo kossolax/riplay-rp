@@ -1454,12 +1454,17 @@ public Action Command_Say(int client, int args) {
 		Format(szSayText, sizeof(szSayText), "%s %s", szSayTrig, szSayText);
 	}
 	
+	char targetSteamID[64];
+	GetClientAuthId(target, AUTH_TYPE, targetSteamID, sizeof(targetSteamID), false);
+	
 	char tag[32];
-	if( flags & ADMFLAG_ROOT || flags & ADMFLAG_CHEATS ) {
-		Format(tag, sizeof(tag), "{green}ADMIN{default} ");
-	}
-	else if( flags & ADMFLAG_KICK ) {
-		Format(tag, sizeof(tag), "{green}VIP{default} ");
+	if( g_bIsHidden[client] == false ) {
+		if( flags & ADMFLAG_ROOT || flags & ADMFLAG_CHEATS ) {
+			Format(tag, sizeof(tag), "{green}ADMIN{default} ");
+		}
+		else if( flags & ADMFLAG_KICK ) {
+			Format(tag, sizeof(tag), "{green}VIP{default} ");
+		}
 	}
 	
 	CPrintToChatAllEx(client, "%s{teamcolor}%s{default}: %s", tag, name, szSayText);
