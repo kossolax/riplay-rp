@@ -201,10 +201,12 @@ public Action Cmd_SpawnTag(int args) {
 			rp_IncrementSuccess(client, success_list_graffiti);
 		}
 		else {
+			CloseHandle(tr);
 			ITEM_CANCEL(client, item_id);
 		}
 	}
 	else {
+		CloseHandle(tr);
 		ITEM_CANCEL(client, item_id);
 	}
 	CloseHandle(tr);
