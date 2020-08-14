@@ -925,7 +925,7 @@ public void CRON_TIMER() {
 			if( IsValidClient(i) )
 				ClientCommand(i, "retry"); // force retry
 		
-		RequestFrame(RebootServer);
+		CreateTimer(0.1, RebootServer);
 	}
 	
 	
@@ -946,7 +946,7 @@ public void CRON_TIMER() {
 		}
 	}
 }
-public void RebootServer(any none) {
+public Action RebootServer(Handle timer, any none) {
 	ServerCommand("quit");
 	ServerCommand("sv_cheats 1");
 	ServerCommand("crash");
