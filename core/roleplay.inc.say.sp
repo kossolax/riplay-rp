@@ -1454,9 +1454,6 @@ public Action Command_Say(int client, int args) {
 		Format(szSayText, sizeof(szSayText), "%s %s", szSayTrig, szSayText);
 	}
 	
-	char targetSteamID[64];
-	GetClientAuthId(target, AUTH_TYPE, targetSteamID, sizeof(targetSteamID), false);
-	
 	char tag[32];
 	if( g_bIsHidden[client] == false ) {
 		if( flags & ADMFLAG_ROOT || flags & ADMFLAG_CHEATS ) {

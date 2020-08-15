@@ -133,7 +133,7 @@ public void OnPluginStart() {
 	RegAdminCmd("rp_deagleweapon", 		cmd_GiveAkDeagle,	ADMFLAG_ROOT);
 	RegAdminCmd("rp_restarttuto", 		cmd_RestartTutorial,ADMFLAG_ROOT);
 	RegAdminCmd("rp_debug", 			cmd_ToggleDebug,	ADMFLAG_ROOT);
-	RegAdminCmd("rp_hide", 				cmd_ToggleHide,		ADMFLAG_KICK);
+	RegAdminCmd("rp_hideadm",			cmd_ToggleHide,		ADMFLAG_KICK);
 	//
 	if( GetConVarInt(FindConVar("hostport")) == 27015 ) {
 		RegAdminCmd("rp_givemejob",		cmd_ForceMeJob,		ADMFLAG_ROOT);
