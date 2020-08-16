@@ -63,7 +63,7 @@ char g_szSuccessData[view_as<int>(success_list_all)][view_as<int>(success_type_a
 	{ "fireworks", "Un beau spectacle", "Exploser plus de 100 feux d'artifice.", "100" , "0" },
 	{ "assurance", "L'assurance à vie", "S'assurer 10x contre les crashs.", "10" , "0" },
 	{ "no_tech", "Non à la contrebande", "Détruire plus de 250 machines à faux billets.", "250" , "0" },
-	{ "no_18th", "Non à la contrebande II", "Tuer plus de 25 membres des 18th lorsqu'ils volent une arme.", "25" , "0" },
+	{ "no_18th", "Non à la contrebande II", "Tuer plus de 25 membres des Dealer lorsqu'ils volent une arme.", "25" , "0" },
 	{ "million", "Le million, le million, le million", "Posséder plus d'un million de $.", "1000000" , "0" },
 	{ "pas_vu_pas_pris", "Pas vu, pas pris", "Ne pas se faire voler pendant plus d'une semaine RP.", "7" , "0" },
 	{ "pissing", "J'te pisse au cul", "Étant complètement bourré, pisser sur un policier pendant plus de 30 secondes.", "30" , "0" },

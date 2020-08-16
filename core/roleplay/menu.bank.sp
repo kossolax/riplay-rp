@@ -574,7 +574,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 				g_iUserData[client][i_ItemCountSaved] = amount;
 				
 				DrawBankTransfer(client);
-				CPrintToChat(client, "" ...MOD_TAG... " Vos items préféré ont été sauvegardé.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vos items préférés ont été sauvegardés.");
 				return;
 			}
 			else if( StrEqual(szMenuItem, "load", false) ) {
@@ -608,7 +608,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 					LogToGame("[TSX-RP] [BANK-ITEM] %L a retiré: %d %s", client,inBank, g_szItemList[g_iItems_SAVE[client][pos][STACK_item_id]][item_type_name]);
 				}
 				FakeClientCommand(client, "say /item");
-				CPrintToChat(client, "" ...MOD_TAG... " Vos items préféré ont été retirés de la banque.");
+				CPrintToChat(client, "" ...MOD_TAG... " Vos items préférés ont été retirés de la banque.");
 				
 				if( g_iUserData[client][i_LastForcedSave] < GetTime() ) {
 					StoreUserData(client);
