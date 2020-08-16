@@ -809,7 +809,7 @@ public Action Command_Say(int client, int args) {
 	) {
 
 		if( StringToInt(  g_szJobList[ g_iUserData[client][i_Job] ][job_type_isboss] ) == 1) {
-			CPrintToChat(client, "" ...MOD_TAG... " Pour demissionner, vous devez envoyer un message ici: https://www.ts-x.eu/forum/viewtopic.php?p=430883");
+			CPrintToChat(client, "" ...MOD_TAG... " Pour demissionner, vous devez envoyer un message ici: https://forum.riplay.fr/index.php?/topic/847-demission/");
 			return Plugin_Handled;
 		}
 		if( g_iClientQuests[client][questID] != -1 ) {		
