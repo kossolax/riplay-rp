@@ -479,11 +479,13 @@ public Action Cmd_ItemHamburger(int args) {
 		if( !Weapon_ShouldBeEquip(classname) ) {
 			ITEM_CANCEL(client, item_id);
 			CPrintToChat(client, "" ...MOD_TAG... " Vous devez porter votre couteau en main.");
+			return Plugin_Handled;
 		}
 		
 		if( !rp_SetClientKnifeType(client, ball_type_fire) ) {
 			ITEM_CANCEL(client, item_id);
 			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
+			return Plugin_Handled;
 		}
 	}
 	return Plugin_Handled;
