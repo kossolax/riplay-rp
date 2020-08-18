@@ -511,7 +511,7 @@ public Action rp_ClientRemoveProp(int client, int target, int item_id) {
 			}
 		}
 		else if (rp_IsValidVehicle(target) && rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PVP) {
-			int heal = rp_GetVehicleInt(target, car_health) - 500;
+			int heal = rp_GetVehicleInt(target, car_health) - 250;
 			int owner = rp_GetVehicleInt(target, car_owner);
 			rp_SetVehicleInt(target, car_health, heal);
 			
