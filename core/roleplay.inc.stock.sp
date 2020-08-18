@@ -1057,8 +1057,8 @@ public void BonbonEntityGotTouch(int touched, int toucher) {
 	
 	if( !g_bUserData[toucher][b_IsAFK] ) {
 		
-		if( Math_GetRandomInt(0, 1) && IsTutorialOver(toucher) ) {
-			int rand = Math_GetRandomInt(2, 5)*50;
+		if( Math_GetRandomInt(1, 100) > 20 && IsTutorialOver(toucher) ) {
+			int rand = Math_GetRandomPow(10, 15) * 10;
 			rp_ClientXPIncrement(toucher, rand);
 		}
 		else {
