@@ -112,9 +112,17 @@ public Action Cmd_Crate(int client, int args) {
 	float dst[3], bot[3];
 	GetClientAbsOrigin(client, dst);
 	dst[2] = 128.0;
+	dst[2] = -1500.0;
 	
 	int idx = GetRandomInt(0, sizeof(g_szCaseModels) - 1);
-	int parent = createCrate(dst, 1.0, idx, 100);
+	int parent = createCrate(dst, 1.0, idx, 1000);
+	createParachute(parent, dst);
+	
+	CreateTimer(0.1, CrateThink, EntIndexToEntRef(parent));
+	
+	return Plugin_Handled;
+}
+void createParachute(int parent, float dst[3]) {
 	int node = GetEntPropEnt(parent, Prop_Data, "m_hEffectEntity");
 	
 	int chute = CreateEntityByName("prop_dynamic");
@@ -128,10 +136,6 @@ public Action Cmd_Crate(int client, int args) {
 	
 	TeleportEntity(chute, view_as<float>({ 0.0, 0.0, -64.0}), NULL_VECTOR, NULL_VECTOR);
 	SetEntPropEnt(node, Prop_Data, "m_hEffectEntity", chute);
-	
-	CreateTimer(0.1, CrateThink, EntIndexToEntRef(parent));
-	
-	return Plugin_Handled;
 }
 int createCrate(float dst[3], float mass, int idx, int health) {
 	static char tmp[128];
@@ -146,7 +150,6 @@ int createCrate(float dst[3], float mass, int idx, int health) {
 	DispatchKeyValue(parent, "renderamt", "0");
 	DispatchKeyValue(parent, "rendermode", "3");
 	DispatchKeyValue(parent, "disableshadows", "1");
-	
 	
 	DispatchSpawn(parent);
 	ActivateEntity(parent);
@@ -173,8 +176,10 @@ int createCrate(float dst[3], float mass, int idx, int health) {
 }
 public Action OnCrateDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype) {
 	if( IsValidClient(attacker) && Entity_GetHealth(victim)-RoundFloat(damage) < 10000 ) {
-		rp_ClientGiveItem(attacker, 132);
-		CPrintToChatAll("" ...MOD_TAG... " %N a trouvé une caisse!", attacker);
+		
+		float vecPos[3];
+		Entity_GetAbsOrigin(victim, vecPos);
+		ServerCommand("rp_zombie_die %f %f %f", vecPos[0], vecPos[1], vecPos[2]+16.0);
 		AcceptEntityInput(victim, "Kill");
 	}
 }
@@ -197,7 +202,7 @@ public Action CrateThink(Handle timer, any data) {
 	if( tr && TR_DidHit(tr) ) {
 		TR_GetEndPosition(dst, tr);
 		
-		if( GetVectorDistance(src, dst) <= 256.0 ) {
+		if( GetVectorDistance(src, dst) <= 128.0 ) {
 			int box = GetEntPropEnt(data, Prop_Data, "m_hEffectEntity");
 			int chute = GetEntPropEnt(box, Prop_Data, "m_hEffectEntity");
 			
@@ -209,7 +214,7 @@ public Action CrateThink(Handle timer, any data) {
 
 				for (int i = 0; i < sizeof(g_szCaseModels); i++) {
 					if( StrEqual(tmp, g_szCaseModels[i]) ) {
-						int parent = createCrate(src, 50.0, i, 1);
+						int parent = createCrate(src, 50.0, i, 500);
 						TeleportEntity(parent, src, dst, view_as<float>( { 0.0, 0.0, -200.0 }) );
 						rp_ScheduleEntityInput(parent, 10.0, "Kill");
 					}
@@ -402,7 +407,7 @@ public Action Cmd_Copter(client, args) {
 	EmitSoundToAll("vehicles/loud_helicopter_lp_01.wav", ent2, SNDCHAN_AUTO, _, _, _, _, ent2, _, _, true);
 	
 	Handle dp;
-	CreateDataTimer(0.1, FrameCopter, dp, TIMER_REPEAT);
+	CreateDataTimer(0.175, FrameCopter, dp, TIMER_REPEAT);
 	
 	WritePackCell(dp, ent);
 	WritePackFloat(dp, vecDest[0]);
@@ -432,7 +437,16 @@ public Action FrameCopter(Handle timer, Handle dp) {
 	
 	if (GetVectorDistance(vecDest, vecPos) < 120.0) {
 		vecPos[2] += 800.0;
-		ServerCommand("rp_zombie_die %f %f %f %d", vecPos[0], vecPos[1], vecPos[2], client);
+		if( client > 0 ) {
+			ServerCommand("rp_zombie_die %f %f %f %d", vecPos[0], vecPos[1], vecPos[2], client);
+		}
+		else {
+			int idx = GetRandomInt(0, sizeof(g_szCaseModels) - 1);
+			int parent = createCrate(vecPos, 1.0, idx, 1000);
+			createParachute(parent, vecPos);
+			
+			CreateTimer(0.1, CrateThink, EntIndexToEntRef(parent));
+		}
 	}
 	
 	return Plugin_Continue;
