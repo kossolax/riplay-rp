@@ -627,7 +627,7 @@ public Action Cmd_Tazer(int client) {
 			if (rp_GetBuildingData(target, BD_started) + 120 < GetTime()) {
 				Entity_GetModel(target, tmp, sizeof(tmp));
 				if (StrContains(tmp, "popcan01a") == -1) {
-					reward = 38;
+					reward = 50;
 				}
 			}
 		}
@@ -643,7 +643,7 @@ public Action Cmd_Tazer(int client) {
 			reward = prix / 10;
 			
 			if (rp_GetWeaponBallType(target) != ball_type_none) {
-				reward += 85;
+				reward += 100;
 			}
 		}
 		else if (StrEqual(tmp2, "rp_cashmachine")) {
@@ -651,9 +651,9 @@ public Action Cmd_Tazer(int client) {
 			rp_GetZoneData(Tzone, zone_type_name, tmp, sizeof(tmp));
 			LogToGame("[TSX-RP] [TAZER] %L a supprimé une machine de %L dans %s", client, owner, tmp);
 			
-			reward = 13;
+			reward = 16;
 			if (rp_GetBuildingData(target, BD_started) + 120 < GetTime()) {
-				reward = 38;
+				reward = 50;
 				if (owner != client)
 					ClientTazedItem(client, reward);
 			}
@@ -669,9 +669,9 @@ public Action Cmd_Tazer(int client) {
 			rp_GetZoneData(Tzone, zone_type_name, tmp, sizeof(tmp));
 			LogToGame("[TSX-RP] [TAZER] %L a supprimé une photocopieuse de %L dans %s", client, owner, tmp);
 			
-			reward = 13;
+			reward = 17;
 			if (rp_GetBuildingData(target, BD_started) + 120 < GetTime()) {
-				reward = 560;
+				reward = 800;
 				if (owner != client)
 					ClientTazedItem(client, reward);
 			}
@@ -686,14 +686,14 @@ public Action Cmd_Tazer(int client) {
 			rp_GetZoneData(Tzone, zone_type_name, tmp, sizeof(tmp));
 			LogToGame("[TSX-RP] [TAZER] %L a supprimé un plant de %L dans %s", client, owner, tmp);
 			
-			reward = 43;
+			reward = 55;
 			if ((rp_GetBuildingData(target, BD_started) + 120 < GetTime() && rp_GetBuildingData(target, BD_FromBuild) == 0) || 
 				(rp_GetBuildingData(target, BD_started) + 300 < GetTime() && rp_GetBuildingData(target, BD_FromBuild) == 1)) {
 				
 				if (rp_GetBuildingData(target, BD_FromBuild) == 1)
-					reward += 25 * rp_GetBuildingData(target, BD_count);
+					reward += 50 * rp_GetBuildingData(target, BD_count);
 				else
-					reward += 72 * rp_GetBuildingData(target, BD_count);
+					reward += 100 * rp_GetBuildingData(target, BD_count);
 				
 				if (owner != client)
 					ClientTazedItem(client, reward);
