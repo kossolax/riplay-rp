@@ -82,7 +82,7 @@ public void OnPluginStart() {
 	RegServerCmd("rp_item_carstuff", 	Cmd_ItemVehicleStuff,	"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegAdminCmd("rp_vehiclexit",		Cmd_VehicleExit,		ADMFLAG_KICK);
 	
-	g_hMAX_CAR = CreateConVar("rp_max_car",	"25", "Nombre de voiture maximum sur le serveur", 0, true, 0.0, true, GetConVarInt(FindConVar("hostport")) == 27015 ? 50.0 : 500.0 );
+	g_hMAX_CAR = CreateConVar("rp_max_car",	"10", "Nombre de voiture maximum sur le serveur", 0, true, 0.0, true, GetConVarInt(FindConVar("hostport")) == 27015 ? 10.0 : 500.0 );
 	g_hCarJump = CreateConVar("rp_car_jump", GetConVarInt(FindConVar("hostport")) == 27015 ? "0" : "1", "Les voitures peuvent-être sauter?", 0, true, 0.0, true, 1.0);
 	g_hCarUnstuck = CreateConVar("rp_car_unstuck", "1", "Les voitures peuvent-elle s'auto-débloquer?", 0, true, 0.0, true, 1.0);
 	g_hCarHeal = CreateConVar("rp_car_heal", "1000", "La vie des voitures", 0, true, 100.0, true, 100000.0);
@@ -1255,11 +1255,13 @@ public int eventGarageMenu(Handle menu, MenuAction action, int client, int param
 						continue;
 
 					if(rp_GetVehicleInt(target, car_battery) >= 420){
-						rp_ClientMoney(client, i_AddToPay, 2000);
+						int toPay = 1500;
+						
+						rp_ClientMoney(client, i_AddToPay, toPay);
 						
 						int capital_id = rp_GetRandomCapital( rp_GetClientJobID(client)  );
-						rp_SetJobCapital( capital_id, rp_GetJobCapital(capital_id)-2000 );
-						CPrintToChat(client, "" ...MOD_TAG... " Vous avez vendu votre batterie. Le virement des 2000$ sera effectué en fin de journée.");
+						rp_SetJobCapital( capital_id, rp_GetJobCapital(capital_id)-toPay );
+						CPrintToChat(client, "" ...MOD_TAG... " Vous avez vendu votre batterie. Le virement des %d$ sera effectué en fin de journée.", toPay);
 						rp_SetVehicleInt(target, car_battery, -1);
 					}
 					
