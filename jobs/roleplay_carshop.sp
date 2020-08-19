@@ -78,6 +78,7 @@ public void OnPluginStart() {
 	RegServerCmd("rp_item_vehicle", 	Cmd_ItemVehicle,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_vehicle2", 	Cmd_ItemVehicle,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_vehicle3", 	Cmd_ItemVehicle,		"RP-ITEM",	FCVAR_UNREGISTERED);
+	RegAdminCmd("rp_vehicle", 			Cmd_SpawnVehicle,		ADMFLAG_KICK);
 	
 	RegServerCmd("rp_item_carstuff", 	Cmd_ItemVehicleStuff,	"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegAdminCmd("rp_vehiclexit",		Cmd_VehicleExit,		ADMFLAG_KICK);
@@ -221,6 +222,36 @@ int countVehicle(int client) {
 	}
 	return count;
 }
+public Action Cmd_SpawnVehicle(int client, int args) {
+	
+	if( !(rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_EVENT ) ) {
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez être en zone event.");
+		return Plugin_Handled;
+	}
+	
+	float vecOrigin[3], vecAngles[3];
+	GetClientAbsOrigin(client, vecOrigin);
+	vecOrigin[2] += 10.0;
+	
+	GetClientEyeAngles(client, vecAngles);
+	vecAngles[0] = vecAngles[2] = 0.0;
+	vecAngles[1] -= 90.0;
+	
+	int car = rp_CreateVehicle(vecOrigin, vecAngles, "models/natalya/vehicles/natalya_mustang_csgo_2016.mdl", 1, client);
+	if( !car ) {
+		CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas assez de place ici.");
+		return Plugin_Handled;
+	}
+	
+	rp_SetVehicleInt(car, car_owner, 0);
+	rp_SetVehicleInt(car, car_item_id, 0);
+	rp_SetVehicleInt(car, car_maxPassager, 3);
+	rp_SetVehicleInt(car, car_donateur, 0);
+	rp_SetVehicleInt(car, car_boost, 1);
+	
+	return Plugin_Handled;
+	
+}
 public Action Cmd_ItemVehicle(int args) {
 	
 	char arg1[128];
@@ -238,13 +269,13 @@ public Action Cmd_ItemVehicle(int args) {
 	if( rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PEACEFULL ) {
 		CAR_CANCEL(client, item_id);
 		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
-		return;
+		return Plugin_Handled;
 	}
 	
 	if( countVehicle(client) >= GetConVarInt(g_hMAX_CAR) ) {
 		CAR_CANCEL(client, item_id);
 		CPrintToChat(client, "" ...MOD_TAG... " Il y a trop de voitures en circulation pour l'instant.");
-		return;			
+		return Plugin_Handled;			
 	}
 	
 	float vecOrigin[3], vecAngles[3];
@@ -259,6 +290,7 @@ public Action Cmd_ItemVehicle(int args) {
 	if( !car ) {
 		CAR_CANCEL(client, item_id);
 		CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas assez de place ici.");
+		return Plugin_Handled;
 	}
 	
 	rp_SetVehicleInt(car, car_owner, client);
@@ -290,7 +322,7 @@ public Action Cmd_ItemVehicle(int args) {
 		rp_SetVehicleInt(car, car_owner, 0);
 	}
 	
-	return;
+	return Plugin_Handled;
 }
 public void VehicleTouch(int car, int entity) {
 	if( rp_IsValidDoor(entity) ) {
