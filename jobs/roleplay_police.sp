@@ -722,6 +722,22 @@ public Action Cmd_Tazer(int client) {
 				}
 			}
 		}
+		else if (StrContains(tmp2, "rp_") == 0 && rp_GetZoneBit(Tzone, 1.0) & BITZONE_PERQUIZ ) {
+			rp_GetZoneData(Tzone, zone_type_name, tmp, sizeof(tmp));
+			LogToGame("[TSX-RP] [TAZER] %L a retiré %s de %L dans %s", client, tmp2, owner, tmp);
+			
+			reward = 0;
+			
+			if (owner > 0) {
+				if (client == owner)
+					CPrintToChat(client, "" ...MOD_TAG... " Vous avez retiré votre propre %s.", tmp2);
+				else {
+					CPrintToChat(client, "" ...MOD_TAG... " Vous avez retiré %s de %N.", tmp2, owner);
+					CPrintToChat(owner, "" ...MOD_TAG... " Une de vos %s a été retirée par un agent de police.", tmp2);
+				}
+			}
+		}
+		
 		if (reward >= 0) {
 			
 			rp_Effect_Tazer(client, target);
