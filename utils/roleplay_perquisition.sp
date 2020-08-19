@@ -778,6 +778,7 @@ void TeleportCT(int zone) {
 		
 		if( StrEqual(tmp, tmp2) ) {
 			rp_ClientSendToSpawn(i, true);
+			rp_ClientColorize(i);
 		}
 	}
 }
