@@ -206,7 +206,9 @@ public Action Cmd_ItemNano(int args) {
 	int item_id = GetCmdArgInt(args);
 	
 	if( rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PEACEFULL ) {
-		ITEM_CANCEL(client, item_id);
+		if( item_id > 0 ) {
+			ITEM_CANCEL(client, item_id);
+		}
 		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
 		return Plugin_Handled;
 	}

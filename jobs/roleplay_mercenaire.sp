@@ -524,11 +524,11 @@ public int AddCompetanceToAssassin(Handle menu, MenuAction action, int client, i
 		}
 		else if( StrEqual(options, "nano", false) ) {
 			g_iKillerPoint[client][competance_cryo] = 1;
-			rp_ClientGiveItem(client, 78);
+			ServerCommand("rp_item_nano cryo %d 0", client);
 		}
 		else if( StrEqual(options, "berserk", false) ) {
 			g_iKillerPoint[client][competance_berserk] = 1;
-			ServerCommand("rp_item_adrenaline %d", client);
+			ServerCommand("rp_item_adrenaline %d 0", client);
 		}
 		
 		g_iKillerPoint[client][competance_left]--;
