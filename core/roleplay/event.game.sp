@@ -348,6 +348,7 @@ public Action GameLogHook(const char[] message) {
 			
 			GetRegexSubString(rgxProp, 3, arg, sizeof(arg));
 			Format(tmp, sizeof(tmp), "%L", target);
+			Format(arg, sizeof(arg), "<%s>", arg);
 			ReplaceStringEx(log, sizeof(log), arg, tmp);
 
 			LogToGame(log);
