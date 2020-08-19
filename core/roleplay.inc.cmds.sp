@@ -416,6 +416,7 @@ public Action cmd_Damage(int client, int args) {
 }
 public Action Cmd_ReloadSQL(int client, int args) {
 	LoadServerDatabase();
+	LoadDoors();
 	
 	ReplyToCommand(client, "La config a été mis à jour");
 	
