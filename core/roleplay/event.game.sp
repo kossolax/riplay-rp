@@ -280,28 +280,31 @@ public Action EventRoundStart(Handle ev, const char[] name, bool  bd) {
 }
 
 public Action GameLogHook(const char[] message) {
-	static char log[2048], arg[64];
+	static char log[2048], arg[64], tmp[128];
+	static Handle rgxKill;
+	static Handle rgxProp;
+	if( rgxKill == INVALID_HANDLE )
+ 		rgxKill = CompileRegex("\".*<([0-9]{1,5})><(?:STEAM_1:[0-1]:[0-9]{1,14})><(?:TERRORIST|CT)>\" \\[(-?[0-9]* -?[0-9]* -?[0-9]*)\\] killed \".*<([0-9]{1,5})><(?:STEAM_1:[0-1]:[0-9]{1,14})><(?:TERRORIST|CT)>\" \\[(-?[0-9]* -?[0-9]* -?[0-9]*)\\] with .*\"");
+
+	if( rgxProp == INVALID_HANDLE )
+ 		rgxProp = CompileRegex("\".*<([0-9]{1,5})><(?:STEAM_1:[0-1]:[0-9]{1,14})><(?:TERRORIST|CT)>\" \\[(-?[0-9]* -?[0-9]* -?[0-9]*)\\] killed other \".*<([0-9]{1,5})>\" \\[(-?[0-9]* -?[0-9]* -?[0-9]*)\\] with .*\"");
 	
-	static Handle regex;
-	if( regex == INVALID_HANDLE )
- 		regex = CompileRegex("\".*<([0-9]{1,5})><(?:STEAM_1:[0-1]:[0-9]{1,14})><(?:TERRORIST|CT)>\" \\[(-?[0-9]* -?[0-9]* -?[0-9]*)\\] killed \".*<([0-9]{1,5})><(?:STEAM_1:[0-1]:[0-9]{1,14})><(?:TERRORIST|CT)>\" \\[(-?[0-9]* -?[0-9]* -?[0-9]*)\\] with .*\"");
-	
-	int amount = MatchRegex(regex, message);
-		
+	int amount;
+	amount = MatchRegex(rgxKill, message);
 	if( amount > 0 ) {
 		strcopy(log, sizeof(log), message);
 		
-		GetRegexSubString(regex, 1, arg, sizeof(arg));
+		GetRegexSubString(rgxKill, 1, arg, sizeof(arg));
 		int client = GetClientOfUserId(StringToInt(arg));
 				
-		GetRegexSubString(regex, 3, arg, sizeof(arg));
+		GetRegexSubString(rgxKill, 3, arg, sizeof(arg));
 		int target = GetClientOfUserId(StringToInt(arg));
 		
 		if( IsValidClient(client) && IsValidClient(target) ) {
-			GetRegexSubString(regex, 2, arg, sizeof(arg));
+			GetRegexSubString(rgxKill, 2, arg, sizeof(arg));
 			ReplaceStringEx(log, sizeof(log), arg, g_szZoneList[GetPlayerZone(client)][zone_type_name]);
 			
-			GetRegexSubString(regex, 4, arg, sizeof(arg));
+			GetRegexSubString(rgxKill, 4, arg, sizeof(arg));
 			ReplaceStringEx(log, sizeof(log), arg, g_szZoneList[GetPlayerZone(target)][zone_type_name]);
 
 			if( IsInPVP(client) || IsInPVP(target) || g_iHideNextLog[client][target] == 1 ) {
@@ -318,10 +321,43 @@ public Action GameLogHook(const char[] message) {
 			
 			LogToGame(log);
 			return Plugin_Handled;
+		}
+		
+		return Plugin_Continue;
+	}
+	amount = MatchRegex(rgxProp, message);
+	if( amount > 0 ) {
+		strcopy(log, sizeof(log), message);
+		
+		GetRegexSubString(rgxProp, 1, arg, sizeof(arg));
+		int client = GetClientOfUserId(StringToInt(arg));
+				
+		GetRegexSubString(rgxProp, 3, arg, sizeof(arg));
+		int target = GetClientOfUserId(StringToInt(arg));
+		
+		if( IsValidEdict(target) && IsValidEntity(target) ) {
+			target = rp_GetBuildingData(target, BD_owner);
+		}
+		
+		if( IsValidClient(client) && IsValidClient(target) ) {
+			GetRegexSubString(rgxProp, 2, arg, sizeof(arg));
+			ReplaceStringEx(log, sizeof(log), arg, g_szZoneList[GetPlayerZone(client)][zone_type_name]);
+			
+			GetRegexSubString(rgxProp, 4, arg, sizeof(arg));
+			ReplaceStringEx(log, sizeof(log), arg, g_szZoneList[GetPlayerZone(target)][zone_type_name]);
+			
+			GetRegexSubString(rgxProp, 3, arg, sizeof(arg));
+			Format(tmp, sizeof(tmp), "%L", target);
+			ReplaceStringEx(log, sizeof(log), arg, tmp);
+
+			LogToGame(log);
+			return Plugin_Handled;
 
 		}
+		return Plugin_Continue;
 	}
-	else if( StrContains(message, ">\" triggered \"clantag\" (value \"") > 0 ) {
+	
+	if( StrContains(message, ">\" triggered \"clantag\" (value \"") > 0 ) {
 		return Plugin_Handled;
 	}
 	
