@@ -931,7 +931,7 @@ int BuildingPlant(int client, int type) {
 		max = 14;
 		
 	int appart = rp_GetPlayerZoneAppart(client);
-	if( appart > 0 && rp_GetAppartementInt(appart, appart_bonus_coffre) )
+	if( appart > 0 && ( rp_GetAppartementInt(appart, appart_bonus_coffre) || (rp_GetClientJobID(client) == 61 && !rp_GetClientBool(client, b_GameModePassive)) ) )
 		max += 1;
 	if( rp_GetClientInt(client, i_PlayerLVL) >= 110 )
 		max += 2;
@@ -1660,9 +1660,10 @@ bool CanStealVehicle(int client, int target) {
 		return false;
 	if( rp_GetClientKeyVehicle(client, target) )
 		return false;
+		
 	int owner = rp_GetVehicleInt(target, car_owner);
 	int appart = rp_GetPlayerZoneAppart(owner);
-	if( appart > 0 && rp_GetAppartementInt(appart, appart_bonus_garage) )
+	if( appart > 0 && ( rp_GetAppartementInt(appart, appart_bonus_garage) || (rp_GetClientJobID(owner) == 61 && !rp_GetClientBool(owner, b_GameModePassive)) ) )
 		return false;
 	if( rp_GetVehicleInt(target, car_health) > 5000 && GetConVarInt(FindConVar("rp_braquage")) == 1 )
 		return false;
