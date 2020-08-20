@@ -172,30 +172,6 @@ server.get('/user/admin', function (req, res, next) {
       if( req.params['game'] == "forum" || req.params['game'] == "ALL" ) {
 	server.conn.query("DELETE S FROM `forum`.`ipb_core_sessions` AS S INNER JOIN `forum`.`ipb_core_members` U ON S.`member_id`=U.`member_id` INNER JOIN `rp_csgo`.`srv_bans` B ON U.`steamid`=B.`steamid` WHERE (`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0' AND (`game`='forum' OR `game`='ALL')", function(err, row) { console.log(err); });
       }
-      if( req.params['game'] == "teamspeak" || req.params['game'] == "ALL" ) {
-        var tsClient = new TeamSpeak('176.31.38.179', 10011);
-    
-        tsClient.api.login({ client_login_name: "tsxbot", client_login_password: server.TSTokken}, function(err, resp, req) {
-          tsClient.api.use({ sid: 1}, function(err, resp, req) {
-            tsClient.send("clientupdate", {client_nickname: "[BOT2] ts-x.eu"});
-            tsClient.send('clientlist', function(err, resp, req) {
-              var clients = new Array();
-              resp.data.forEach(function(element) {
-                clients[element.client_database_id] = element.clid;
-              });
-              server.conn.query("SELECT `client_id` FROM `TeamSpeak`.`clients` WHERE `steamid`=?;", [target], function(err, rows) {
-                for(var i=0; i<rows.length; i++) {
-                  tsClient.send("servergroupdelclient", {sgid: 7, cldbid: rows[i].client_id});
-                  if( clients[rows[i].client_id] > 0 )
-                    tsClient.send("clientkick", {reasonid: 5, clid: clients[rows[i].client_id], reasonmsg: "banned"});
-                }
-
-                setTimeout(function() { tsClient.disconnect(); }, 3000);
-              });
-            });
-          });
-        });
-      }
       next();
     });
     next();
