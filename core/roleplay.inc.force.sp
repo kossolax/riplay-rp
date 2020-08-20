@@ -181,6 +181,7 @@ public Action FixForce(Handle timer, any client) {
 void FORCE_STOP(int client) {
 	if( g_iGrabbing[client] > 0  ) {
 		
+		SDKUnhook(g_iGrabbing[client], SDKHook_Touch, OnForceTouch);
 		if( IsValidClient(g_iGrabbing[client]) ) {
 			float nulVec[3];
 			int flags = GetEntityFlags(g_iGrabbing[client]);
@@ -261,11 +262,11 @@ void IncrementForceKill(int client,int victim) {
 	
 	LogToGame("[TSX-RP] [FORCE-KILL] %L tue avec la force (%i/10).", client, g_iCurrentKill[client]);
 	
-	CPrintToChat( client, "" ...MOD_TAG... " Vous avez perdu 250$ pour avoir tué avec la force. (%i/10)", g_iCurrentKill[client]);
+	CPrintToChat( client, "" ...MOD_TAG... " Vous avez perdu 250$ pour avoir abusé du pouvoir de la force. (%i/10)", g_iCurrentKill[client]);
 	rp_ClientMoney(client, i_Money, -250);
 	
 	if( g_iCurrentKill[client] >= 10 ) {
-		ServerCommand("amx_ban \"#%i\" \"60\" \"tue avec la force\"", GetClientUserId(client));
+		ServerCommand("amx_ban \"#%i\" \"60\" \"abuse de la force\"", GetClientUserId(client));
 	}
 }
 void OpenGestionForce(int client) {
@@ -416,6 +417,8 @@ bool CheckValidGrab(int client, int result) {
 		g_iGrabbing[client] = result;
 		g_iGrabbedBy[result] = client;
 		g_bIsSeeking[client] = false;
+		SDKHook(g_iGrabbing[client], SDKHook_Touch, OnForceTouch);
+
 		
 		if( !g_bGrabNear[client] ) {
 			char name[64];
@@ -430,6 +433,17 @@ bool CheckValidGrab(int client, int result) {
 		return true;
 	}
 	return false;
+}
+public Action OnForceTouch(int entity, int touched) {
+	if( IsValidVehicle(touched) && rp_GetZoneBit(rp_GetPlayerZone(touched)) & BITZONE_PARKING ) {
+		
+		IncrementForceKill(g_iGrabbedBy[entity], entity);
+		
+		FORCE_STOP(g_iGrabbedBy[entity]);
+		return Plugin_Stop;
+	}
+	
+	return Plugin_Continue;
 }
 bool IsAllowed_client(int client) {
 	int job = g_iUserData[client][i_Job];
