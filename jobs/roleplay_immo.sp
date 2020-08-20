@@ -285,7 +285,7 @@ public Action Cmd_ItemGiveBonus(int args) {
 	int itemID = GetCmdArgInt(args);
 	
 	int appartID = rp_GetPlayerZoneAppart(client);
-	if( appartID == -1 ) {
+	if( appartID == -1 || appartID >= 50) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous devez être dans votre appartement.");
 		ITEM_CANCEL(client, itemID);
 		return Plugin_Handled;
