@@ -44,18 +44,18 @@ enum jail_raison_type {
 	jail_type_max
 };
 char g_szJailRaison[][][128] =  {
-	{ "Garde à vue", "12", "12", "0", "0" }, 
-	{ "Meurtre", "-1", "-1", "-1", "1" }, 
-	{ "Agression physique", "1", "6", "250", "1" }, 
-	{ "Intrusion propriété privée", "0", "3", "100", "0" }, 
-	{ "Vol, tentative de vol", "0", "3", "50", "1" }, 
-	{ "Fuite, refus d'obtempérer", "0", "6", "200", "0" }, 
-	{ "Insultes, Irrespect", "1", "6", "250", "0" }, 
-	{ "Trafic illégal", "0", "6", "100", "0" }, 
-	{ "Nuisance sonore", "0", "6", "100", "0" }, 
-	{ "Tir dans la rue", "0", "6", "100", "1" }, 
-	{ "Conduite dangereuse", "0", "6", "150", "0" }, 
-	{ "Mutinerie, évasion", "-2", "-2", "50", "1" }
+	{ "Garde à vue", 					"12",	"12",	"0", 	"0" }, 
+	{ "Meurtre", 						"-1",	"-1",	"-1",	"1" }, 
+	{ "Agression physique", 			"1",	"6",	"250",	"1" }, 
+	{ "Intrusion propriété privée", 	"0",	"3",	"100",	"0" }, 
+	{ "Vol, tentative de vol", 			"0",	"3",	"50",	"1" }, 
+	{ "Fuite, refus d'obtempérer", 		"0",	"6",	"200",	"0" }, 
+	{ "Insultes, Irrespect", 			"1",	"6",	"250",	"0" }, 
+	{ "Trafic illégal", 				"0",	"6",	"100",	"0" }, 
+	{ "Nuisance sonore", 				"0",	"6",	"100",	"0" }, 
+	{ "Tir dans la rue", 				"0",	"6",	"100",	"1" }, 
+	{ "Conduite dangereuse", 			"0",	"6",	"150",	"0" }, 
+	{ "Mutinerie, évasion", 			"-2",	"-2",	"50",	"1" }
 };
 char g_szWeaponList[][] = { 
 	"ak47", "aug", "famas", "galilar", "sg556", "m4a1",  "g3sg1", "scar20", "ssg08", "awp", "bizon", "mac10", "mp7", "mp9", "p90", "ump45", "xm1014", "sawedoff", "nova", "mag7", "m249", "negev", "deagle", "elite", "fiveseven", "glock", "hkp2000", "p250", "tec9" 
@@ -1248,13 +1248,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 		int amende = StringToInt(g_szJailRaison[type][jail_amende]);
 		
 		if (amende == -1) {
-			amende = rp_GetClientInt(target, i_KillJailDuration) * 50;
-			/*
-				amende = rp_GetClientInt(target, i_KillJailDuration) * 100;
-				if(amende <= 1800) {
-					amende /= 2;
-				}
-			*/
+			amende = rp_GetClientInt(target, i_KillJailDuration) * 60;
 			if (amende == 0 && rp_GetClientInt(target, i_LastAgression) + 30 > GetTime())
 				amende = StringToInt(g_szJailRaison[3][jail_amende]);
 		}
@@ -1305,7 +1299,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 			amendeCalculation(target, amende);
 		}
 		
-		if (rp_GetClientInt(target, i_Money) >= amende || ((rp_GetClientInt(target, i_Money) + rp_GetClientInt(target, i_Bank)) >= amende * 250)) {
+		if ( amende <= 1800 && (rp_GetClientInt(target, i_Money) >= amende || ((rp_GetClientInt(target, i_Money) + rp_GetClientInt(target, i_Bank)) >= amende * 250)) ) {
 			rp_SetClientStat(target, i_MoneySpent_Fines, rp_GetClientStat(target, i_MoneySpent_Fines) + amende);
 			rp_ClientMoney(target, i_Money, -amende);
 			
@@ -1327,7 +1321,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 			
 			time_to_spend = StringToInt(g_szJailRaison[type][jail_temps]);
 			if (time_to_spend == -1) {
-				time_to_spend = rp_GetClientInt(target, i_KillJailDuration);
+				time_to_spend = rp_GetClientInt(target, i_KillJailDuration) * 30;
 				if (time_to_spend == 0 && rp_GetClientInt(target, i_LastAgression) + 30 > GetTime())
 					time_to_spend = StringToInt(g_szJailRaison[3][jail_temps]);
 				
@@ -1337,10 +1331,6 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 					if (rp_GetClientInt(i, i_LastKilled_Reverse) != target)
 						continue;
 					CPrintToChat(i, "" ...MOD_TAG... " Votre assassin a été mis en prison.");
-				}
-
-				if(amende <= 1800 ) {
-					time_to_spend /= 2;
 				}
 			}
 			
