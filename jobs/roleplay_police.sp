@@ -1248,7 +1248,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 		int amende = StringToInt(g_szJailRaison[type][jail_amende]);
 		
 		if (amende == -1) {
-			amende = rp_GetClientInt(target, i_KillJailDuration) * 60;
+			amende = rp_GetClientInt(target, i_KillJailDuration) * 50;
 			if (amende == 0 && rp_GetClientInt(target, i_LastAgression) + 30 > GetTime())
 				amende = StringToInt(g_szJailRaison[3][jail_amende]);
 		}
@@ -1321,7 +1321,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 			
 			time_to_spend = StringToInt(g_szJailRaison[type][jail_temps]);
 			if (time_to_spend == -1) {
-				time_to_spend = rp_GetClientInt(target, i_KillJailDuration) * 30;
+				time_to_spend = rp_GetClientInt(target, i_KillJailDuration)/2;
 				if (time_to_spend == 0 && rp_GetClientInt(target, i_LastAgression) + 30 > GetTime())
 					time_to_spend = StringToInt(g_szJailRaison[3][jail_temps]);
 				
