@@ -435,21 +435,30 @@ bool CheckValidGrab(int client, int result) {
 	return false;
 }
 public Action OnForceTouch(int entity, int touched) {
+	int client = g_iGrabbedBy[entity]
 	
-	if( g_iGrabbedBy[entity] <= 0 )
+	if( client <= 0 )
 		return Plugin_Continue;
 	
 	if( !IsValidVehicle(touched) )
 		return Plugin_Continue;
 	
-	if( rp_GetVehicleInt(touched, car_owner) ==  g_iGrabbedBy[entity] )
+	if( rp_GetVehicleInt(touched, car_owner) ==  client )
 		return Plugin_Continue;
 	
 	if( rp_GetZoneBit(rp_GetPlayerZone(touched)) & BITZONE_PARKING ) {
+		int zone = getZoneAppart(client);
 		
-		IncrementForceKill(g_iGrabbedBy[entity], entity);
+		if( zone > 0 && g_iDoorOwner_v2[client][zone] )
+			return Plugin_Continue;
+
+		zone = StringToInt(g_szZoneList[GetPlayerZone(client)][zone_type_type]);
+		if( zone != 0 && zone == GetJobPrimaryID(client) )
+			return Plugin_Continue;
 		
-		FORCE_STOP(g_iGrabbedBy[entity]);
+		IncrementForceKill(client, entity);
+		
+		FORCE_STOP(client);
 		return Plugin_Stop;
 	}
 	
