@@ -435,7 +435,17 @@ bool CheckValidGrab(int client, int result) {
 	return false;
 }
 public Action OnForceTouch(int entity, int touched) {
-	if( IsValidVehicle(touched) && rp_GetZoneBit(rp_GetPlayerZone(touched)) & BITZONE_PARKING ) {
+	
+	if( g_iGrabbedBy[entity] <= 0 )
+		return Plugin_Continue;
+	
+	if( !IsValidVehicle(touched) )
+		return Plugin_Continue;
+	
+	if( rp_GetVehicleInt(touched, car_owner) ==  g_iGrabbedBy[entity] )
+		return Plugin_Continue;
+	
+	if( rp_GetZoneBit(rp_GetPlayerZone(touched)) & BITZONE_PARKING ) {
 		
 		IncrementForceKill(g_iGrabbedBy[entity], entity);
 		
