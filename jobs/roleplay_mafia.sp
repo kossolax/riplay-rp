@@ -227,13 +227,8 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 	int VOL_MAX, amount, money, job, prix;
 	money = rp_GetClientInt(target, i_Money);
 	VOL_MAX = (money+rp_GetClientInt(target, i_Bank)) / 200;
-	
-	if( rp_IsClientNew(target) )
-		amount = Math_GetRandomPow(1, VOL_MAX);
-	else
-		amount = Math_GetRandomInt(1, VOL_MAX);
-	
-	if( VOL_MAX > 0 && money <= 0 && rp_GetClientInt(client, i_Job) <= 93 && !rp_IsClientNew(target) && CanClientStealItem(client, target) ) {
+		
+	if( VOL_MAX > 0 && money <= 25 && rp_GetClientInt(client, i_Job) <= 93 && !rp_IsClientNew(target) && CanClientStealItem(client, target) ) {
 		amount = 0;
 		
 		for(int i = 0; i < MAX_ITEMS; i++) {
@@ -250,77 +245,80 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 			RandomItem[amount++] = i;
 		}
 		
-		if( amount == 0  ) {
-			CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas d'argent, ni d'item sur lui.", target);
-			cooldown = 1.0;
-			return Plugin_Stop;
-		}
-		
-		int it = RandomItem[ Math_GetRandomInt(0, (amount-1)) ];
-		prix = rp_GetItemInt(it, item_type_prix) / 2;
-		
-		rp_ClientGiveItem(target, it, -1);
-		
-		rp_SetClientInt(client, i_LastVolTime, GetTime());
-		rp_SetClientInt(client, i_LastVolAmount, (prix * MARCHEMAFIA_PC) / 100);
-		rp_SetClientInt(client, i_LastVolTarget, target);
-		rp_SetClientInt(target, i_LastVol, client);		
-		rp_SetClientFloat(target, fl_LastVente, GetGameTime() + 10.0);
-		rp_SetClientFloat(target, fl_LastStolen, GetGameTime() + (rp_GetClientBool(target, b_IsAFK) ? 300.0 : 0.0));
-		
-		rp_GetItemData(it, item_type_name, tmp, sizeof(tmp));
-		
-		addBuyMenu(client, target, it);
-		amount = rp_GetItemInt(it, item_type_prix);
-		
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez volé %s à %N, il a été envoyé au marché noir.", tmp, target);
-		CPrintToChat(target, "" ...MOD_TAG... " Quelqu'un vous a volé: %s.", tmp);
-					
-		LogToGame("[TSX-RP] [VOL] %L a vole %L 1 %s", client, target, tmp);
-		
-		GetClientAuthId(client, AUTH_TYPE, tmp, sizeof(tmp), false);
-		Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`) VALUES (NULL, '%s', '%i', '%i', '2', '%i', '%s', '%i');",
-			tmp, rp_GetClientJobID(client), GetTime(), it, "Vol: Objet", amount);
+		if( amount != 0  ) {
+			int it = RandomItem[ Math_GetRandomInt(0, (amount-1)) ];
+			prix = rp_GetItemInt(it, item_type_prix) / 2;
+			
+			rp_ClientGiveItem(target, it, -1);
+			
+			rp_SetClientInt(client, i_LastVolTime, GetTime());
+			rp_SetClientInt(client, i_LastVolAmount, (prix * MARCHEMAFIA_PC) / 100);
+			rp_SetClientInt(client, i_LastVolTarget, target);
+			rp_SetClientInt(target, i_LastVol, client);		
+			rp_SetClientFloat(target, fl_LastVente, GetGameTime() + 10.0);
+			rp_SetClientFloat(target, fl_LastStolen, GetGameTime() + (rp_GetClientBool(target, b_IsAFK) ? 300.0 : 0.0));
+			
+			rp_GetItemData(it, item_type_name, tmp, sizeof(tmp));
+			
+			addBuyMenu(client, target, it);
+			amount = rp_GetItemInt(it, item_type_prix);
+			
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez volé %s à %N, il a été envoyé au marché noir.", tmp, target);
+			CPrintToChat(target, "" ...MOD_TAG... " Quelqu'un vous a volé: %s.", tmp);
+						
+			LogToGame("[TSX-RP] [VOL] %L a vole %L 1 %s", client, target, tmp);
+			
+			GetClientAuthId(client, AUTH_TYPE, tmp, sizeof(tmp), false);
+			Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`) VALUES (NULL, '%s', '%i', '%i', '2', '%i', '%s', '%i');",
+				tmp, rp_GetClientJobID(client), GetTime(), it, "Vol: Objet", amount);
 
-		SQL_TQuery( rp_GetDatabase(), SQL_QueryCallBack, szQuery);
-		
-		int alpha[4];
-		alpha[1] = 255;
-		alpha[3] = 50;
-		
-		if( rp_IsNight() ) {
-			cooldown *= 1.5;
-			alpha[3] = 25;
+			SQL_TQuery( rp_GetDatabase(), SQL_QueryCallBack, szQuery);
+			
+			int alpha[4];
+			alpha[1] = 255;
+			alpha[3] = 50;
+			
+			if( rp_IsNight() ) {
+				cooldown *= 1.5;
+				alpha[3] = 25;
+			}
+			else {
+				cooldown *= 2.0;
+			}
+			
+			if( amount < 50 )
+				cooldown *= 0.5;
+			if( amount < 5 )
+				cooldown *= 0.5;
+			
+			for (int i = 1; i <= MaxClients; i++) {
+				if( !IsValidClient(i) )
+					continue;
+				if( rp_GetClientJobID(i) == 91 && i != client )
+					rp_ClientFloodIncrement(i, target, fd_vol, cooldown);
+			}
+			rp_ClientFloodIncrement(client, target, fd_vol, 2.0 * cooldown);
+			
+			float vecTarget[3];
+			GetClientAbsOrigin(client, vecTarget);
+			rp_Effect_Cashflow(client, Math_Clamp(RoundToNearest(Pow(amount*2.0, 0.85)), 1, 1000)  );
+			
+			rp_ClientAggroIncrement(client, target, 1000);
+			if( rp_GetClientBool(client, b_GameModePassive) == false ) {
+				rp_HookEvent(client, RP_PrePlayerPhysic, fwdAccelerate, 5.0);
+			}
+			rp_ClientOverlays(target, o_Action_StealItem, 10.0);
+			//g_iSuccess_last_pas_vu_pas_pris[target] = GetTime();	
+			return Plugin_Stop;	
 		}
-		else {
-			cooldown *= 2.0;
-		}
-		
-		if( amount < 50 )
-			cooldown *= 0.5;
-		if( amount < 5 )
-			cooldown *= 0.5;
-		
-		for (int i = 1; i <= MaxClients; i++) {
-			if( !IsValidClient(i) )
-				continue;
-			if( rp_GetClientJobID(i) == 91 && i != client )
-				rp_ClientFloodIncrement(i, target, fd_vol, cooldown);
-		}
-		rp_ClientFloodIncrement(client, target, fd_vol, 2.0 * cooldown);
-		
-		float vecTarget[3];
-		GetClientAbsOrigin(client, vecTarget);
-		rp_Effect_Cashflow(client, Math_Clamp(RoundToNearest(Pow(amount*2.0, 0.85)), 1, 1000)  );
-		
-		rp_ClientAggroIncrement(client, target, 1000);
-		if( rp_GetClientBool(client, b_GameModePassive) == false ) {
-			rp_HookEvent(client, RP_PrePlayerPhysic, fwdAccelerate, 5.0);
-		}
-		rp_ClientOverlays(target, o_Action_StealItem, 10.0);
-		//g_iSuccess_last_pas_vu_pas_pris[target] = GetTime();		
 	}
-	else if( VOL_MAX > 0 && money >= 1 ) {
+
+	if( rp_IsClientNew(target) )
+		amount = Math_GetRandomPow(1, VOL_MAX);
+	else
+		amount = Math_GetRandomInt(1, VOL_MAX);
+
+	if( VOL_MAX > 0 && money >= 1 ) {
 		if( amount > money )
 			amount = money;
 			
@@ -391,14 +389,18 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 			rp_HookEvent(client, RP_PrePlayerPhysic, fwdAccelerate, 5.0);
 		
 		rp_ClientOverlays(target, o_Action_StealMoney, 10.0);
+		return Plugin_Stop;
 	}
-	else {
+
+	if(rp_GetClientInt(client, i_Job) <= 93)
+		CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas d'argent ni d'item sur lui.", target);
+	else
 		CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas d'argent sur lui.", target);
-		cooldown = 1.0;
-	}
-	
-	return Plugin_Stop;
+
+	cooldown = 1.0;
+	return Plugin_Stop;	
 }
+
 public Action fwdAccelerate(int client, float& speed, float& gravity) {
 	speed += 0.5;
 	return Plugin_Changed;
