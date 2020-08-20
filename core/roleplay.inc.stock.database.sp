@@ -785,6 +785,7 @@ void ResetUserData(int client) {
 	g_flLubrifian[client] = 0.0;
 	
 	g_iUserData[client][i_KnifeTrainAdmin] = -1;
+	g_iUserData[client][i_FistTrainAdmin] = -1;
 	g_flUserData[client][fl_WeaponTrainAdmin] = -1.0;
 	
 	

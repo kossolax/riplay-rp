@@ -695,6 +695,7 @@ enum int_user_data {
 	i_JailTime,
 	i_KnifeTrain,
 	i_KnifeTrainAdmin,
+	i_FistTrainAdmin,
 	i_Esquive,
 	i_LastKilled,
 	i_LastKilled_Reverse,
