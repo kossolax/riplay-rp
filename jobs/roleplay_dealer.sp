@@ -1525,18 +1525,19 @@ void getItemFromMarket(int client, int itemID, int amount) {
 		rp_ClientMoney(stackClient[rnd], i_AddToPay, money);
 		rp_SetClientStat(stackClient[rnd], i_MoneyEarned_Sales, rp_GetClientStat(stackClient[rnd], i_MoneyEarned_Sales) + money);
 		
-		char options[64], buffer[ (sizeof(options)*2+1) ];
-		rp_GetItemData(itemID, item_type_name, options, sizeof(options));
-		SQL_EscapeString(rp_GetDatabase(), options, buffer, sizeof(buffer));
-		
-		char SteamID[64], targetSteamID[64];
-		GetClientAuthId(stackClient[rnd], AUTH_TYPE, SteamID, sizeof(SteamID), false);
-		GetClientAuthId(client, AUTH_TYPE, targetSteamID, sizeof(targetSteamID), false);
-
-		char szQuery[1024];
-		Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`, `to_steamid`) VALUES (NULL, '%s', '%i', '%i', '0', '%i', '%s', '%i', '%s');",
-		SteamID, rp_GetClientJobID(stackClient[rnd]), GetTime(), itemID, buffer, 1, targetSteamID);
-		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery);
+		if( client != stackClient[rnd] ) {
+			char options[64], buffer[ (sizeof(options)*2+1) ];
+			rp_GetItemData(itemID, item_type_name, options, sizeof(options));
+			SQL_EscapeString(rp_GetDatabase(), options, buffer, sizeof(buffer));
+			
+			char SteamID[64], targetSteamID[64];
+			GetClientAuthId(stackClient[rnd], AUTH_TYPE, SteamID, sizeof(SteamID), false);
+			GetClientAuthId(client, AUTH_TYPE, targetSteamID, sizeof(targetSteamID), false);
+			char szQuery[1024];
+			Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`, `to_steamid`) VALUES (NULL, '%s', '%i', '%i', '0', '%i', '%s', '%i', '%s');",
+			SteamID, rp_GetClientJobID(stackClient[rnd]), GetTime(), itemID, buffer, 1, targetSteamID);
+			SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery);
+		}
 		
 		rp_SetJobCapital(81, rp_GetJobCapital(81) + RoundFloat(prix*ratio) );
 		
