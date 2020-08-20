@@ -547,6 +547,8 @@ public void OnPostThinkPost(int client) {
 // ----------------------------------------------------------------------------
 void RestoreAssassinNormal(int client) {
 	
+	LogToGame("[CONTRAT] RestoreAssassinNormal: %L", client);
+	
 	g_iKillerPoint[client][competance_left] = 0;
 	rp_SetClientInt(client, i_ContratType, 0);
 	
@@ -611,7 +613,16 @@ void RestoreAssassinNormal(int client) {
 }
 void SetContratFail(int client, bool time = false, bool annule = false) { // time = retro-compatibilité. 
 	
+	int target = rp_GetClientInt(client, i_ContratFor);
+	int victim = rp_GetClientInt(client, i_ToKill);
 	int jobClient = rp_GetClientJobID(client);
+	
+	LogToGame("[CONTRAT] SetContratFail: %L %d %d.", client, time, annule);
+	if( IsValidClient(target) )
+		LogToGame("[CONTRAT] SetContratFail-target: %L.", target);
+	if( IsValidClient(victim) )
+		LogToGame("[CONTRAT] SetContratFail-victim: %L.", victim);
+	
 	
 	if( time )
 		CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas rempli votre contrat à temps.");
@@ -622,7 +633,7 @@ void SetContratFail(int client, bool time = false, bool annule = false) { // tim
 	else
 		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes mort et n'avez pas rempli votre contrat.");
 	
-	int target = rp_GetClientInt(client, i_ContratFor);
+	
 	if(target != client){
 		if( IsValidClient(target) ) {		
 			
@@ -658,11 +669,8 @@ void SetContratFail(int client, bool time = false, bool annule = false) { // tim
 	}
 	
 	
-	target = rp_GetClientInt(client, i_ToKill);
-	
 	RestoreAssassinNormal(client);
-	
-	rp_SetClientInt(target, i_ContratTotal, rp_GetClientInt(target, i_ContratTotal) - 1);
+	rp_SetClientInt(victim, i_ContratTotal, rp_GetClientInt(victim, i_ContratTotal) - 1);
 }
 // ----------------------------------------------------------------------------
 public Action SendToTribunal(Handle timer, any client) {
@@ -719,6 +727,8 @@ public Action SendToTueur(Handle timer, any client) {
 	OpenKidnappingMenu(client);
 }
 void clearKidnapping(int client) {
+	LogToGame("[CONTRAT] clearKidnapping: %L", client);
+	
 	if( rp_GetClientInt(client, i_KidnappedBy) > 0 ) {
 		rp_UnhookEvent(client, RP_OnPlayerZoneChange, fwdZoneChange);
 		rp_UnhookEvent(client, RP_OnPlayerDead, fwdDead);
