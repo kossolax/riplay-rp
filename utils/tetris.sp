@@ -345,7 +345,7 @@ public Event_OnPlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast
 		}
 		
 		// Disable any movement
-		SetEntProp(client, Prop_Send, "m_fFlags", FL_CLIENT|FL_ATCONTROLS);
+		SetEntityMoveType(client, MOVETYPE_NONE);
 		
 		if (!g_bDisableSounds)
 			StopSoundAny(client, SNDCHAN_AUTO, TETRIS_MUSIC);
@@ -465,7 +465,7 @@ public Menu_MainMenu(Handle:menu, MenuAction:action, param1, param2)
 			}
 			
 			// Disable any movement
-			SetEntProp(param1, Prop_Send, "m_fFlags", FL_CLIENT|FL_ATCONTROLS);
+			SetEntityMoveType(param1, MOVETYPE_NONE);
 		}
 		// Resume running game
 		else if(StrEqual(info, "resume"))
@@ -494,7 +494,7 @@ public Menu_MainMenu(Handle:menu, MenuAction:action, param1, param2)
 			}
 			
 			// Disable any movement
-			SetEntProp(param1, Prop_Send, "m_fFlags", FL_CLIENT|FL_ATCONTROLS);
+			SetEntityMoveType(param1, MOVETYPE_NONE);
 		}
 		// Change the difficulty
 		else if(StrEqual(info, "difficulty"))
@@ -856,7 +856,7 @@ PauseTetrisGame(client)
 	if (!g_bDisableSounds)
 		StopSoundAny(client, SNDCHAN_AUTO, TETRIS_MUSIC);
 	CPrintToChat(client, "%sGame paused. You're able to resume with !tetris.", PREFIX);
-	SetEntProp(client, Prop_Send, "m_fFlags", FL_FAKECLIENT|FL_ONGROUND|FL_PARTIALGROUND);
+	SetEntityMoveType(client, MOVETYPE_WALK);
 }
 
 ResetTetrisGame(client)
@@ -1419,7 +1419,7 @@ DrawTetrisGameField(client, bool:bGameOver)
 		
 		if(!g_bDisableSounds && g_bEnableSound[client])
 			EmitSoundToClientAny(client, TETRIS_GAMEOVER);
-		SetEntProp(client, Prop_Send, "m_fFlags", FL_FAKECLIENT|FL_ONGROUND|FL_PARTIALGROUND);
+		SetEntityMoveType(client, MOVETYPE_WALK);
 		
 		new bool:bNewHighscore = false;
 		switch(g_fDifficulty[client])

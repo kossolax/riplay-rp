@@ -23,6 +23,9 @@
 #include <dhooks>
 #include <rp_version>
 #include <unixtime_sourcemod>
+#include <tetris>
+#include <pong>
+#include <snake>
 
 #define USING_VEHICLE
 //#define EVENT_APRIL

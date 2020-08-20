@@ -817,6 +817,9 @@ void OnGameFrame_10(float time) {
 				if( ! IsTutorialOver(i) ) {
 					DisplayTutorial(i);
 				}
+				else if( IsClientInTetrisGame(i) || IsClientInSnakeGame(i) || IsClientInPongGame(i) ) {
+					
+				}
 				else {
 					
 					PrintHUD(i, szHUD, sizeof(szHUD));
