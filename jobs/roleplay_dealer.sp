@@ -757,6 +757,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		
 		rp_SetClientBool(client, b_MaySteal, false);
 		rp_SetClientBool(target, b_Stealing, true);
+		rp_SetClientInt(client, i_LastVolAmount, 0);
 
 		EmitSoundToClientAny(target, "UI/arm_bomb.wav", target);
 
@@ -1534,7 +1535,7 @@ void getItemFromMarket(int client, int itemID, int amount) {
 
 		char szQuery[1024];
 		Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`, `to_steamid`) VALUES (NULL, '%s', '%i', '%i', '0', '%i', '%s', '%i', '%s');",
-		SteamID, rp_GetClientJobID(stackClient[rnd]), GetTime(), itemID, buffer, amount, targetSteamID);
+		SteamID, rp_GetClientJobID(stackClient[rnd]), GetTime(), itemID, buffer, 1, targetSteamID);
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery);
 		
 		rp_SetJobCapital(81, rp_GetJobCapital(81) + RoundFloat(prix*ratio) );
