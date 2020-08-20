@@ -32,6 +32,7 @@ int g_iDoorDefine_LOCKER[2049];
 int g_iAppartPickLockCount[200];
 int g_iAppartNewPickLock[200];
 float g_flAppartProtection[200];
+bool g_bCanUseCB[MAXPLAYERS+1];
 Handle g_vCapture;
 int g_cBeam;
 DataPack g_hBuyMenu;
@@ -161,6 +162,7 @@ public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerBuild,	fwdOnPlayerBuild);
 	rp_HookEvent(client, RP_OnAssurance,	fwdAssurance);
 	rp_SetClientBool(client, b_MaySteal, true);
+	g_bCanUseCB[client] = true;
 }
 public Action fwdAssurance(int client, int& amount) {
 	for (int i = 1; i < 2048; i++) {
@@ -472,18 +474,25 @@ public Action Cmd_ItemHack(int args) {
 		return Plugin_Continue;
 	}
 	
-	if( rp_GetClientBool(client, b_MaySteal) == false ) {
+	if( !g_bCanUseCB[client] ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas voler pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " Votre CB est déchargée pour le moment.");
 		return Plugin_Handled;
 	}
 	
 	int type;
 	int target = getDistrib(client, type);
+	int targetOwner = rp_GetBuildingData(target, BD_owner);
 
 	if( target <= 0 || type != 8) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser un distributeur clandestin.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser un distributeur personnel.");
+		return Plugin_Handled;
+	}
+
+	if( rp_GetClientFloat(targetOwner, fl_LastStolen)+60.0 > GetGameTime() ){
+		ITEM_CANCEL(client, item_id);
+		CPrintToChat(client, "" ...MOD_TAG... " Ce distributeur semble déjà bien endommagé.");
 		return Plugin_Handled;
 	}
 
@@ -492,10 +501,10 @@ public Action Cmd_ItemHack(int args) {
 	rp_SetClientStat(client, i_JobFails, rp_GetClientStat(client, i_JobFails) + 1);
 
 	rp_ClientGiveItem(client, item_id, -rp_GetClientItem(client, item_id));
-	rp_SetClientBool(client, b_MaySteal, false);
+	g_bCanUseCB[client] = false;
 	rp_SetClientInt(client, i_LastVolTime, GetTime());
 	rp_SetClientInt(client, i_LastVolAmount, 100);
-	rp_SetClientInt(client, i_LastVolTarget, -1);	
+	rp_SetClientInt(client, i_LastVolTarget, -1);
 	rp_ClientReveal(client);
 	
 	char classname[64];
@@ -514,6 +523,7 @@ public Action Cmd_ItemHack(int args) {
 	
 	return Plugin_Handled;
 }
+
 public Action Cmd_ItemPiedBiche(int args) {
 	
 	int client = GetCmdArgInt(1);
@@ -540,7 +550,7 @@ public Action Cmd_ItemPiedBiche(int args) {
 	
 	if(type == 8) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous devez utiliser une CB magnétique pour hack un distributeur clandestin.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez utiliser une CB magnétique pour hack un distributeur personnel.");
 		return Plugin_Handled;
 	}
 
@@ -591,8 +601,12 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 	if( getDistrib(client, type2) != target ) {
 		MENU_ShowPickLock(client, percent, -1, type);
 		rp_ClientColorize(client);
-		CreateTimer(0.1, AllowStealing, client);
 		rp_ClientGiveItem(client, item_id, 1);
+		if(type == 8)
+			CreateTimer(0.1, AllowStealingCB, client);
+		else
+			CreateTimer(0.1, AllowStealing, client);
+		
 		return Plugin_Stop;
 	}
 	
@@ -722,27 +736,40 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 			case 8: { // Distrib Perso
 				time *= 2.0;
 				int owner = rp_GetBuildingData(target, BD_owner);
+				int vol_max = rp_GetClientInt(owner, i_Money)+rp_GetClientInt(owner, i_Bank);
+				
+				stealAmount = 150;
+
+				if(vol_max/2000 > stealAmount){
+					stealAmount = vol_max/2000;
+				}
 
 				if( IsValidClient(owner) ) {
-					stealAmount = Math_GetRandomInt(1, 150);
 
-					if((rp_GetClientInt(owner, i_Bank)+rp_GetClientInt(owner, i_Money)) < stealAmount){
+					stealAmount = Math_GetRandomInt(1, stealAmount);
+
+					if(vol_max < stealAmount){
 						CPrintToChat(client, "" ...MOD_TAG... " Ce distributeur est vide !");
 
 						MENU_ShowPickLock(client, percent, -1, type);
 						rp_ClientColorize(client);
-						CreateTimer(0.1, AllowStealing, client);
+						CreateTimer(0.1, AllowStealingCB, client);
 						rp_ClientGiveItem(client, item_id, 1);
 						return Plugin_Stop;						
 					}
+
+					rp_SetClientFloat(owner, fl_LastStolen, GetGameTime());
 
 					rp_ClientMoney(owner, i_Bank, -stealAmount);
 					rp_ClientMoney(client, i_AddToPay, stealAmount);
 
 					rp_SetClientStat(owner, i_MoneySpent_Stolen, rp_GetClientStat(owner, i_MoneySpent_Stolen) + stealAmount);
 
-					CPrintToChat(owner, "" ...MOD_TAG... " Attention, quelqu'un à piraté votre distributeur et vous à voler %i$.", stealAmount);
+					CPrintToChat(owner, "" ...MOD_TAG... " Attention, quelqu'un à piraté votre distributeur et vous à volé %i$.", stealAmount);
 					CPrintToChat(client, "" ...MOD_TAG... " Vous avez piraté %i$ !", stealAmount);
+					
+					CreateTimer(time, AllowStealingCB, client);
+					time = 0.0;
 				} else {
 					CPrintToChat(client, "" ...MOD_TAG... " Le vol a été annulé.");
 				}
@@ -753,7 +780,9 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 		rp_SetClientInt(client, i_LastVolTarget, -1);
 		rp_SetClientInt(client, i_LastVolAmount, stealAmount); 
 		
-		CreateTimer(time, AllowStealing, client);
+		if(time >= 0.0)
+			CreateTimer(time, AllowStealing, client);
+		
 		return Plugin_Stop;
 	}
 	
@@ -1005,6 +1034,10 @@ public Action AllowStealing(Handle timer, any client) {
 	rp_SetClientBool(client, b_MaySteal, true);
 	CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez à nouveau voler.");
 }
+public Action AllowStealingCB(Handle timer, any client) {
+	g_bCanUseCB[client] = true;
+	CPrintToChat(client, "" ...MOD_TAG... " Votre CB magnétique est rechargée.");
+}
 int GetMaxKit(int client, int itemID) {
 	int max, job = rp_GetClientInt(client, i_Job);
 	
@@ -1114,7 +1147,7 @@ void MENU_ShowPickLock(int client, float percent, int difficulte, int type) {
 		case 5: SetMenuTitle(menu, "== Mafia: Crochetage d'une photocopieuse\n ");
 		case 6: SetMenuTitle(menu, "== Mafia: Crochetage d'un téléphone\n ");
 		case 7: SetMenuTitle(menu, "== Mafia: Crochetage d'un plant de drogue\n ");
-		case 8: SetMenuTitle(menu, "== Mafia: Hack d'un distributeur clandestin\n ");
+		case 8: SetMenuTitle(menu, "== Mafia: Hack d'un distributeur personnel\n ");
 	}
 	
 	char tmp[64];
