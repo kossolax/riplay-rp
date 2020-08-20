@@ -435,7 +435,7 @@ bool CheckValidGrab(int client, int result) {
 	return false;
 }
 public Action OnForceTouch(int entity, int touched) {
-	int client = g_iGrabbedBy[entity]
+	int client = g_iGrabbedBy[entity];
 	
 	if( client <= 0 )
 		return Plugin_Continue;
