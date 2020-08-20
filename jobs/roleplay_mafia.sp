@@ -848,7 +848,7 @@ public Action Cmd_ItemPickLock(int args) {
 	
 	int appartID = zoneToAppartID(rp_GetPlayerZone(door));
 	if( appartID > 0 ) {
-		int newPickTime = (appartID == 50 || appartID == 51) ? 60 * 18 : 60 * 24;
+		int newPickTime = (appartID == 50 || appartID == 51) ? 60 * 18 : 60 * 12;
 		int appartPickThreshold = (appartID == 50 || appartID == 51) ? 12 : 3;
 
 		if(g_flAppartProtection[appartID] > GetGameTime()) {
