@@ -191,9 +191,9 @@ public int eventAmmunitionPickup(Handle p_hBuyMenu, MenuAction p_oAction, int cl
 					RemovePlayerItem(client, id );
 					RemoveEdict( id );
 					
-					FakeClientCommand(owner, "use weapon_fists");
-					g_bUserData[owner][b_WeaponIsKnife] = false;
-					g_bUserData[owner][b_WeaponIsHands] = true;
+					FakeClientCommand(client, "use weapon_fists");
+					g_bUserData[client][b_WeaponIsKnife] = false;
+					g_bUserData[client][b_WeaponIsHands] = true;
 				}
 			}
 			else {
