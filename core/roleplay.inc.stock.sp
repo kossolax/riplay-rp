@@ -99,7 +99,7 @@ bool Client_CanAttack(int attacker, int victim) {
 		return true;
 	else if( g_bIsInCaptureMode && (rp_IsInPVP(attacker) || rp_IsInPVP(victim)) )
 		return true;
-	else if( rp_GetZoneBit( rp_GetPlayerZone(attacker) ) & (BITZONE_EVENT|BITZONE_PERQUIZ) )
+	else if( rp_GetZoneBit( rp_GetPlayerZone(attacker) ) & (BITZONE_EVENT|BITZONE_PERQUIZ|BITZONE_LEGIT) )
 		return true;
 	
 	Action a; // Quête, merco, ...

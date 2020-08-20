@@ -51,6 +51,7 @@ int g_bShouldOpen[65];
 Handle g_vCapture = INVALID_HANDLE;
 Handle g_vConfigTueur = INVALID_HANDLE;
 Handle g_hTimer[65];
+Handle g_hActive;
 
 // ----------------------------------------------------------------------------
 public Action Cmd_Reload(int args) {
@@ -68,6 +69,8 @@ public void OnPluginStart() {
 	RegServerCmd("rp_item_map",			Cmd_ItemMaps,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	
 	g_vConfigTueur = CreateConVar("rp_config_kidnapping", "225,226,227,228,236,237-238");
+	
+	g_hActive 		= CreateConVar("rp_braquage", "0");
 	
 	for (int i = 1; i <= MaxClients; i++)
 		if( IsValidClient(i) )
@@ -294,6 +297,8 @@ public Action fwdTueurKill(int client, int attacker, float& respawn, int& tdm) {
 				rp_HookEvent(client, RP_OnPlayerSpawn, fwdOnRespawn);
 				respawn = 0.05;				
 				kidnapping = true;
+				SetConVarInt(g_hActive, 1);
+				changeZoneState(41, true);
 				
 				rp_ClientFloodIncrement(0, client, fd_kidnapping, 6.0*60.0);
 			}
@@ -729,7 +734,10 @@ public Action SendToTueur(Handle timer, any client) {
 void clearKidnapping(int client) {
 	LogToGame("[CONTRAT] clearKidnapping: %L", client);
 	
-	if( rp_GetClientInt(client, i_KidnappedBy) > 0 ) {
+	if( rp_GetClientInt(client, i_KidnappedBy) > 0 ) {		
+		SetConVarInt(g_hActive, 0);
+		changeZoneState(41, false);
+		
 		rp_UnhookEvent(client, RP_OnPlayerZoneChange, fwdZoneChange);
 		rp_UnhookEvent(client, RP_OnPlayerDead, fwdDead);
 		rp_UnhookEvent(client, RP_OnFrameSeconde, fwdFrame);
@@ -1009,5 +1017,29 @@ public Action Cmd_ItemMaps(int args) {
 }
 public Action fwdAssurance2(int client, int& amount) {
 		amount += 1000;
+}
+
+void changeZoneState(int zone, bool enabled) {
+	int bits;
+	char tmp[64], tmp2[64];
+	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	
+	for (int i = 0; i < 310; i++) {
+		
+		rp_GetZoneData(i, zone_type_type, tmp2, sizeof(tmp2));
+		if( !StrEqual(tmp, tmp2) )
+			continue;
+		
+		bits = rp_GetZoneBit(i);
+		
+		if( enabled && !(bits & BITZONE_LEGIT) ) {
+			bits |= BITZONE_LEGIT;
+		}
+		else if( !enabled && (bits & BITZONE_LEGIT) ) {
+			bits &= ~BITZONE_LEGIT;
+		}
+		
+		rp_SetZoneBit(i, bits);
+	}
 }
 

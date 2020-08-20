@@ -467,7 +467,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 	
 
 	int killDuration = getKillContext(Attacker, Client);
-	if( g_iKillLegitime[Attacker][Client] >= GetTime() ) {
+	if( g_iKillLegitime[Attacker][Client] >= GetTime() || rp_GetZoneBit(rp_GetPlayerZone(victim)) & BITZONE_LEGIT ) {
 		killDuration = 1;
 		if( GetClientTeam(Attacker) == CS_TEAM_CT )
 			killDuration = 0;
