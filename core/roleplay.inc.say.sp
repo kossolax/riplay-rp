@@ -859,6 +859,9 @@ public Action Command_Say(int client, int args) {
 		int braquage = GetConVarInt(FindConVar("rp_braquage"));
 		
 		if( braquage > 0 ) {
+			CPrintToChat(client, "" ...MOD_TAG... " Attention, un braquage est en cours. Le fait de passer AFK diminue");
+			CPrintToChat(client, "" ...MOD_TAG... " les chances de win pour vos collègues. Si vous utilisez le /afk");
+			CPrintToChat(client, "" ...MOD_TAG... " avant le début du braquage, celui-ci restera équilibré. Pensez-y, merci.");
 			LogToGame("[CHEATING] [AFK-BRAQUAGE] %L.", client);
 		}
 		
