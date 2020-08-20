@@ -1037,6 +1037,9 @@ void removeClientTeam(int client) {
 }
 // ----------------------------------------------------------------------------
 int requiredTForCT() {
+#if defined USING_VEHICLE
+	return REQUIRED_T;
+#else
 	int minimum = REQUIRED_T;
 	int ct = 0;
 	
@@ -1050,6 +1053,7 @@ int requiredTForCT() {
 	if( ct > SUPPLEMENT_T )
 		minimum++;
 	return minimum;
+#endif
 }
 int countPlayerInZone(int jobID) {
 	int ret;
