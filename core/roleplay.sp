@@ -113,6 +113,7 @@ public void OnPluginStart() {
 	RegAdminCmd("rp_reset", 			cmd_SetClear,		ADMFLAG_BAN);
 	RegAdminCmd("rp_color",				cmd_SetColor,		ADMFLAG_BAN);
 	RegAdminCmd("rp_cut",				cmd_SetCut,			ADMFLAG_BAN);
+	RegAdminCmd("rp_fist",				cmd_SetFist,		ADMFLAG_BAN);
 	RegAdminCmd("rp_tir",				cmd_SetTir,			ADMFLAG_BAN);
 	RegAdminCmd("rp_beacon",			cmd_Beacon,			ADMFLAG_BAN);
 	RegAdminCmd("rp_saveall",			Cmd_SaveDoor,		ADMFLAG_BAN);

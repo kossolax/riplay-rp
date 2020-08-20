@@ -931,6 +931,51 @@ public Action cmd_SetCut(int client, int args) {
 	
 	return Plugin_Handled;
 }
+
+public Action cmd_SetFist(int client, int args) {
+	if( args < 2 || args > 2) {
+		if( client != 0 )
+			ReplyToCommand(client, "Utilisation: rp_fist \"joueur\" \"dégats\"");
+		else
+			PrintToServer("Utilisation: rp_fist \"joueur\" \"dégats\"");
+		
+		return Plugin_Handled;
+	}
+	
+	char arg1[64];
+	GetCmdArg(1, arg1, sizeof( arg1 ) );
+	
+	char arg2[12];
+	GetCmdArg(2, arg2, sizeof(arg2));
+	
+	
+	char target_name[MAX_TARGET_LENGTH];
+	int target_list[MAXPLAYERS], target_count; bool tn_is_ml;
+	
+	if ((target_count = ProcessTargetString(
+	arg1,
+	client,
+	target_list,
+	MAXPLAYERS,
+	COMMAND_FILTER_CONNECTED|COMMAND_FILTER_NO_BOTS|COMMAND_FILTER_NO_MULTI|COMMAND_FILTER_ALIVE,
+	target_name,
+	sizeof(target_name),
+	tn_is_ml)) <= 0)
+	{
+		ReplyToTargetError(client, target_count);
+		return Plugin_Handled;
+	}
+	
+	for (int i = 0; i < target_count; i++) {
+		int target = target_list[i];
+		ReplyToCommand(client, "[TSX-RP] %N fera %i points de dégats avec ses poings jusqu'a sa mort.", target, StringToInt(arg2));
+		
+		g_iUserData[target][i_FistTrainAdmin] = StringToInt(arg2);
+	}
+	
+	return Plugin_Handled;
+}
+
 public Action cmd_SetTir(int client, int args) {
 	if( args < 2 || args > 2) {
 		if( client != 0 )

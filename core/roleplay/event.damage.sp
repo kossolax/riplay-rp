@@ -234,6 +234,13 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 				}
 			}
 		}
+
+		if( g_bUserData[attacker][b_WeaponIsHands]	&& inflictor > 0 && inflictor < MaxClients ) {
+			if( g_iUserData[attacker][i_FistTrainAdmin] >= 0 ) {
+				damage = float(g_iUserData[attacker][i_FistTrainAdmin]);
+				changed = true;
+			}
+		}
 		
 		if( g_bUserData[attacker][b_WeaponIsKnife]	&& inflictor > 0 && inflictor < MaxClients ) {
 

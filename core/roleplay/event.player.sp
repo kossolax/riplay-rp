@@ -399,6 +399,9 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	if( g_iUserData[Client][i_KnifeTrainAdmin] >= 0 ) {
 		g_iUserData[Client][i_KnifeTrainAdmin] = -1;
 	}
+	if( g_iUserData[Client][i_FistTrainAdmin] >= 0 ) {
+		g_iUserData[Client][i_FistTrainAdmin] = -1;
+	}
 	if( g_flUserData[Client][fl_WeaponTrainAdmin] >= 0.0 ) {
 		g_flUserData[Client][fl_WeaponTrainAdmin] = -1.0;
 	}
