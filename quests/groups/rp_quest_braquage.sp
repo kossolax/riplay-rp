@@ -20,7 +20,7 @@
 #pragma newdecls required
 #include <roleplay.inc>   // https://www.ts-x.eu
 
-//#define		USING_VEHICLE
+#define		USING_VEHICLE
 #define		QUEST_UNIQID   	"braquage"
 #define		QUEST_NAME      "Braquage"
 #define		QUEST_TYPE     	quest_group
