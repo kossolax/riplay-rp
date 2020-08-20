@@ -734,7 +734,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				}
 			}
 			case 8: { // Distrib Perso
-				time *= 2.0;
+				time *= 4.0;
 				int owner = rp_GetBuildingData(target, BD_owner);
 				int vol_max = rp_GetClientInt(owner, i_Money)+rp_GetClientInt(owner, i_Bank);
 				
