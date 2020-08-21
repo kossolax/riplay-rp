@@ -755,7 +755,7 @@ void ResetUserData(int client) {
 	g_flUserData[client][fl_Size] = 1.0;
 	g_iClientQuests[client][questID] = -1;
 	g_iClientQuests[client][stepID] = -1;
-	
+	g_iCurrentKill[client] = 0;
 	
 	
 	for(int i=0; i<MAX_KEYSELL; i++) {
