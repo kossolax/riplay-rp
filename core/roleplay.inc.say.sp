@@ -653,7 +653,7 @@ public Action Command_Say(int client, int args) {
 		}
 	#endif
 		
-		if( Client_GetVehicle(target) > 0 || rp_GetClientVehiclePassager(target) >  0 {
+		if( Client_GetVehicle(target) > 0 || rp_GetClientVehiclePassager(target) > 0 ) {
 			ACCESS_DENIED(client);
 		}
 		
