@@ -812,11 +812,6 @@ public Action Cmd_Jail(int client) {
 		}
 	}
 	
-	// target is not a player
-	if (!IsValidClient(target)) {
-		return Plugin_Handled;
-	}
-	
 	if (IsValidClient(target) && rp_GetClientFloat(target, fl_Invincible) > GetGameTime()) {  //le target utilise une poupée gonflable
 		ACCESS_DENIED(client);
 	}

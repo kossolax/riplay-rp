@@ -632,6 +632,20 @@ public Action Command_Say(int client, int args) {
 							ExitVehicle(driver, target, true);
 							CPrintToChat(driver, "" ...MOD_TAG... " %N{default} vous a sorti de votre voiture.", client);
 						}
+						
+						if( g_iUserData[client][i_ToKill] == driver && driver != client ) {
+							ExitVehicle(driver, target, true);
+							CPrintToChat(driver, "" ...MOD_TAG... " %N{default} vous a sorti de votre voiture.", client);
+						}
+						
+						for(int i=1; i<=MaxClients; i++) {
+							if( !IsValidClient(i) )
+								continue;
+							if( g_iCarPassager[target][i] && g_iUserData[client][i_ToKill] == i && i != client ) {
+								LeaveVehiclePassager(i, target);
+							}
+						}
+						
 					}
 				}
 			}
