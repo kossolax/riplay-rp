@@ -639,15 +639,21 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 						RemovePlayerItem(client, id );
 						RemoveEdict( id );
 						
+						g_bUserData[client][b_WeaponIsKnife] = false;
+						g_bUserData[client][b_WeaponIsHands] = true;
 						FakeClientCommand(client, "use weapon_fists");
 						
 						g_iUserData[client][i_Disposed]--;
 						
 						SetJobCapital(81, (GetJobCapital(81) + (price)));
-						
 						rp_ClientMoney(client, i_AddToPay, (price));
-
 						rp_SetClientStat(client, i_MoneyEarned_Sales, rp_GetClientStat(client, i_MoneyEarned_Sales) + price);
+						
+						char SteamID[64], szQuery[1024];
+	
+						GetClientAuthId(client, AUTH_TYPE, SteamID, sizeof(SteamID), false);
+						Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`) VALUES (NULL, '%s', '%i', '%i', '4', '%i', '%s', '%i');",
+						SteamID, rp_GetClientJobID(client), GetTime(), 0, "Revente: Arme", price/4);
 				
 						
 						LogToGame("[TSX-RP] [RESELL-ARMES] %L a déposé: %s", client, szWeapon);
