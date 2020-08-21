@@ -111,6 +111,7 @@ int g_iSuccess_last_chat[MAX_PLAYERS+1];
 int g_iSuccess_last_pas_vu_pas_pris[MAX_PLAYERS+1];
 int g_iSuccess_last_faster_dead[MAX_PLAYERS+1];
 char g_szSuccess_last_give[MAX_PLAYERS+1][10][32];
+int g_iSuccess_last_vengeur[MAX_PLAYERS + 1];
 
 public Action cmd_SuccessTest(int client, int args) {
 	CheckNoWonSuccess(client);
@@ -325,13 +326,14 @@ void CheckNoWonSuccess(int client) {
 void CheckDeadSuccess(int Client, int Attacker) {
 	int time = GetTime() - (31*24*60*60);
 	
+	
 	if( Attacker == 0  ) {
 		if( g_iSuccess_last_shot[Client][1]+(5) > GetTime() ) {
 			WonSuccess(g_iSuccess_last_shot[Client][0], success_list_worldspawn);
 		}
 	}
 	else {
-		if( g_iUserData[Client][i_LastVol] > 1 && g_iUserData[Client][i_LastVol]+10 >= GetTime() ) {
+		if( g_iSuccess_last_vengeur[Client] > 1 && g_iSuccess_last_vengeur[Client]+7 >= GetTime() ) {
 			IncrementSuccess(Attacker, success_list_vengeur);
 		}
 		if( g_bUserData[Client][b_Invisible] ) {
@@ -364,6 +366,12 @@ void CheckDeadSuccess(int Client, int Attacker) {
 		if( GetClientTeam(Client) == CS_TEAM_CT ) {
 			g_iSuccess_last_mafia[Attacker] = GetTime();
 			g_iSuccess_last_armu[Attacker][2] = GetTime();
+			g_iSuccess_last_vengeur[Attacker] = GetTime();
+			
+			for (int i = 1; i <= MaxClients; i++ ) {
+				if( IsValidClient(i) && IsPlayerAlive(i) && CanMakeSuccess(i, success_list_vengeur) )
+					rp_ClientAggroIncrement(Attacker, i, 1000);
+			}
 		}
 		if( IsArmu(Client) ) {
 			g_iSuccess_last_armu[Attacker][1] = GetTime();
