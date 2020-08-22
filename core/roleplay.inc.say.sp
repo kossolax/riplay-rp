@@ -653,9 +653,6 @@ public Action Command_Say(int client, int args) {
 		}
 	#endif
 		
-		if( Client_GetVehicle(target) > 0 || rp_GetClientVehiclePassager(target) > 0 ) {
-			ACCESS_DENIED(client);
-		}
 		
 		int appart = getZoneAppart(client);
 		bool in_appart = false;
@@ -672,6 +669,9 @@ public Action Command_Say(int client, int args) {
 			return Plugin_Handled;
 
 		if( !IsPlayerAlive(target) )
+			return Plugin_Handled;
+		
+		if( Client_GetVehicle(target) > 0 || rp_GetClientVehiclePassager(target) > 0 )
 			return Plugin_Handled;
 
 		if( (GetZoneBit( GetPlayerZone(client) ) & BITZONE_BLOCKOUT) || (GetZoneBit( GetPlayerZone(target) ) & BITZONE_BLOCKOUT) ) {
