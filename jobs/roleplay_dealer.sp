@@ -364,6 +364,12 @@ public Action Cmd_ItemPiedBiche(int args) {
 		return Plugin_Handled;
 	}
 	
+	if( type == 1 ) {
+		if( IsValidClient(rp_GetVehicleInt(target, car_owner)) ) {
+			int owner = rp_GetVehicleInt(target, car_owner);
+			rp_ClientAggroIncrement(client, owner, 1000);
+		}
+	}
 	if( type == 5 ) {
 		rp_HookEvent(client, RP_PrePlayerPhysic, fwdFrozen);
 	}		
@@ -505,7 +511,7 @@ public Action ItemPiluleOver(Handle timer, Handle dp) {
 	int client = ReadPackCell(dp);
 	int item_id = ReadPackCell(dp);
 	int tptozone = ReadPackCell(dp);
-	int clientzone = rp_GetPlayerZone(client);
+	int clientzone = rp_GetPlayerZone(client, 0.0);
 	int clientzonebit = rp_GetZoneBit(clientzone);
 
 	if(!IsValidClient(client) || !IsPlayerAlive(client) || ( clientzonebit & BITZONE_JAIL || clientzonebit & BITZONE_LACOURS || clientzonebit & BITZONE_HAUTESECU || clientzonebit & BITZONE_PERQUIZ ) ){
@@ -514,6 +520,11 @@ public Action ItemPiluleOver(Handle timer, Handle dp) {
 			ITEM_CANCEL(client, item_id);
 		}
 		return Plugin_Handled;
+	}
+	if( rp_GetClientVehiclePassager(client) > 0 || Client_GetVehicle(client) > 0 ) {
+		CPrintToChat(client, "" ...MOD_TAG... " Impossible d'utiliser cet objet dans une voiture.");
+		rp_ClientColorize(client);
+		ITEM_CANCEL(client, item_id);
 	}
 	float zonemin[3], zonemax[3], tppos[3];
 
@@ -1220,9 +1231,14 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				rp_SetClientKeyVehicle(client, target, true);
 				rp_SetClientInt(client, i_LastVolVehicle, target);
 				rp_SetClientInt(client, i_LastVolVehicleTime, GetTime());
+				
 				if( IsValidClient(rp_GetVehicleInt(target, car_owner)) ) {
-					rp_ClientOverlays(rp_GetVehicleInt(target, car_owner), o_Action_StealVehicle, 10.0);
-					CPrintToChat(rp_GetVehicleInt(target, car_owner), "" ...MOD_TAG... " Quelqu'un vous a volé votre voiture. Pensez à la garer sur un parking.");
+					int owner = rp_GetVehicleInt(target, car_owner);
+					rp_ClientOverlays(owner, o_Action_StealVehicle, 10.0);
+					CPrintToChat(owner, "" ...MOD_TAG... " Quelqu'un vous a volé votre voiture. Pensez à la garer sur un parking.");
+					
+					rp_ClientMoney(owner, i_Money, -stealAMount);
+					rp_ClientAggroIncrement(client, owner, 1000);
 				}
 			}
 			case 2: {
