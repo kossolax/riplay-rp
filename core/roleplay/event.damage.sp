@@ -46,6 +46,11 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 			return Plugin_Changed;
 		}
 		
+		if( !rp_IsTutorialOver(victim) ) {
+			damage = 0.0;
+			return Plugin_Changed;
+		}
+		
 		float min[3] =  { -16.0, -16.0, -16.0 };
 		float max[3] =  { 16.0, 16.0, 16.0 };
 		
@@ -84,6 +89,11 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 				return Plugin_Changed;
 			}
 			
+			if( !rp_IsTutorialOver(victim) ) {
+				damage = 0.0;
+				return Plugin_Changed;
+			}
+			
 			float min[3] =  { -16.0, -16.0, -16.0 };
 			float max[3] =  { 16.0, 16.0, 16.0 };
 			
@@ -112,7 +122,10 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 			CloseHandle(tr);
 		}
 		
-		if( GetEntPropEnt(inflictor, Prop_Send, "m_hPlayer") > 0 ) {
+		if( IsValidClient(g_iGrabbedBy[inflictor]) ) {
+			attacker = g_iGrabbedBy[inflictor];
+		}
+		else if( GetEntPropEnt(inflictor, Prop_Send, "m_hPlayer") > 0 ) {
 			attacker = GetEntPropEnt(inflictor, Prop_Send, "m_hPlayer");
 			
 			if( IsValidClient(attacker ) ) {
