@@ -52,6 +52,10 @@ public void FORCE_FRAME(int client) {
 	g_iFrameCount[client]++;
 	
 	if( g_bIsSeeking[client] ) {
+		
+		if( g_iGrabbing[client] > 0 ) {
+			SDKUnhook(g_iGrabbing[client], SDKHook_Touch, OnForceTouch);
+		}
 		g_iGrabbing[client] = 0;
 		
 		float position[3];
@@ -236,6 +240,9 @@ public Action Cmd_grab(int client, int args) {
 		}
 	}
 	else {
+		if( g_iGrabbing[client] > 0 ) {
+			SDKUnhook(g_iGrabbing[client], SDKHook_Touch, OnForceTouch);
+		}
 		g_iGrabbing[client] = 0;
 		g_bIsSeeking[client] = true;
 		g_bToggle[client] = false;
