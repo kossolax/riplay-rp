@@ -198,7 +198,7 @@ public int eventAmmunitionPickup(Handle p_hBuyMenu, MenuAction p_oAction, int cl
 			}
 			else {
 				
-				if( GetPlayerWeaponSlot( client, iWeaponSlot) != -1 && (IsPolice(client) || IsJuge(client)) ) {
+				if( GetPlayerWeaponSlot( client, iWeaponSlot) != -1 ) {
 					CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà une arme de ce type");
 					return;
 				}

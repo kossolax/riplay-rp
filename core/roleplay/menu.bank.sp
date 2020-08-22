@@ -478,7 +478,27 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 				int[] data = new int[view_as<int>(BM_Max)];
 				rp_WeaponMenu_Get(g_iCustomBank[target], view_as<DataPackPos>(StringToInt(expl[1])), name, data);
 				
-				Format(name, sizeof(name), "weapon_%s", name);			
+				Format(name, sizeof(name), "weapon_%s", name);
+				
+				int iWeaponSlot = -1;
+			
+				for(int lp; lp < MAX_BUYWEAPONS; lp++) {
+					if (strcmp(g_szBuyWeapons[lp][0], name) == 0) {
+						iWeaponSlot = StringToInt(g_szBuyWeapons[lp][2]);
+						break;
+					}
+				}
+				if( data[BM_Prix] == 0 ) {
+					if( iWeaponSlot == -1 ) {
+						return;
+					}
+					if( GetPlayerWeaponSlot( client, iWeaponSlot) != -1 ) {
+						CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà une arme de ce type");
+						return;
+					}
+				}
+				
+					
 				int wepid = GivePlayerItem(client, name);
 				
 				if( Weapon_ShouldBeEquip(name) )
