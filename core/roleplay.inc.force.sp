@@ -453,8 +453,8 @@ public Action OnForceTouch(int entity, int touched) {
 		// Mais qui nous grab, bordel.
 		LogError("OnForceTouch with client <= 0");
 		for (int i = 1; i <= MaxClients; i++) {
-			if( g_iGrabbing[client] == entity ) {
-				SDKUnhook(g_iGrabbing[client], SDKHook_Touch, OnForceTouch);
+			if( g_iGrabbing[i] == entity ) {
+				FORCE_STOP(i);
 			}
 		}
 		return Plugin_Continue;
