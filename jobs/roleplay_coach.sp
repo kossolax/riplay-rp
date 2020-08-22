@@ -533,12 +533,21 @@ bool wpnCutDamage(int victim, int attacker, float &damage) {
 public Action Cmd_ItemPermiTir(int args) {
 
 	int client = GetCmdArgInt(1);
+	int item_id = GetCmdArgInt(args);
 	
-	float train = rp_GetClientFloat(client, fl_WeaponTrain) + 4.0;
+	float train = rp_GetClientFloat(client, fl_WeaponTrain);
+	if( train >= 8.0 ) {
+		CPrintToChat(client, "" ...MOD_TAG... " Votre entrainenment est déjà maximale.");
+		ITEM_CANCEL(client, item_id);
+		return Plugin_Handled;
+	}
+	
+	train += 4.0;
 	rp_SetClientFloat(client, fl_WeaponTrain, train < 8.0 ? train : 8.0);
 	
 	
 	CPrintToChat(client, "" ...MOD_TAG... " Votre entraînement est maintenant de %.2f%%", (train/5.0*100.0));
+	return Plugin_Handled;
 }
 // ----------------------------------------------------------------------------
 public Action Cmd_ItemRiotShield(int args) {
