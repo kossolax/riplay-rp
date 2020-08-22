@@ -444,8 +444,21 @@ bool CheckValidGrab(int client, int result) {
 public Action OnForceTouch(int entity, int touched) {
 	int client = g_iGrabbedBy[entity];
 	
-	if( client <= 0 )
+	if( client > 0 && g_iGrabbing[client] == 0 ) {
+		SDKUnhook(g_iGrabbing[client], SDKHook_Touch, OnForceTouch);
 		return Plugin_Continue;
+	}
+	
+	if( client <= 0 ) {
+		// Mais qui nous grab, bordel.
+		LogError("OnForceTouch with client <= 0");
+		for (int i = 1; i <= MaxClients; i++) {
+			if( g_iGrabbing[client] == entity ) {
+				SDKUnhook(g_iGrabbing[client], SDKHook_Touch, OnForceTouch);
+			}
+		}
+		return Plugin_Continue;
+	}
 	
 	if( !IsValidVehicle(touched) )
 		return Plugin_Continue;
