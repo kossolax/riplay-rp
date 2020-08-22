@@ -712,7 +712,7 @@ public Action:Timer_DrawInfoPanel(Handle:timer, any:userid)
 		Format(sCombo, sizeof(sCombo), "Combo: %d\n", g_iCombo[client]);
 	
 	if (g_bIsCSGO)
-		Client_PrintHintText(client, "<u>Tetris Stats</u>\nLevel: <b>%d</b>\tLines: <b>%d</b>\tScore: <b>%d</b>\t%s", g_iLevel[client], g_iLinesCleared[client], g_iScore[client], sCombo);
+		Client_PrintHintText(client, "Tetris Stats\nLevel: %d\tLines: %d\tScore: %d\t%s", g_iLevel[client], g_iLinesCleared[client], g_iScore[client], sCombo);
 	else
 		Client_PrintKeyHintText(client, "Tetris Stats\n\nLevel: %d\nLines: %d\nScore: %d\n%sNext:\n\n%s", g_iLevel[client], g_iLinesCleared[client], g_iScore[client], sCombo, sNextObject);
 	
