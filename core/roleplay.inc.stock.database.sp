@@ -777,6 +777,9 @@ void ResetUserData(int client) {
 		Format(g_szSuccess_last_give[client][i], 31, "");
 	}
 	
+	if( g_iGrabbing[client] > 0 ) {
+		SDKUnhook(g_iGrabbing[client], SDKHook_Touch, OnForceTouch);
+	}
 	g_iGrabbing[client] = 0;
 	g_iMayGrabAll[client] = 1;
 	
