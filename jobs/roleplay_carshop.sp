@@ -259,6 +259,10 @@ public Action Cmd_ItemVehicle(int args) {
 	
 	int skinid = GetCmdArgInt(2);
 	int client = GetCmdArgInt(3);
+	int sendToBank = 0;
+	if( args == 5 )
+		sendToBank = GetCmdArgInt(4);
+	
 	int item_id = GetCmdArgInt(args);
 	int max = 0;
 	
@@ -267,13 +271,13 @@ public Action Cmd_ItemVehicle(int args) {
 	}
 	
 	if( rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PEACEFULL ) {
-		CAR_CANCEL(client, item_id);
+		CAR_CANCEL(client, item_id, sendToBank);
 		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
 		return Plugin_Handled;
 	}
 	
 	if( countVehicle(client) >= GetConVarInt(g_hMAX_CAR) ) {
-		CAR_CANCEL(client, item_id);
+		CAR_CANCEL(client, item_id, sendToBank);
 		CPrintToChat(client, "" ...MOD_TAG... " Il y a trop de voitures en circulation pour l'instant.");
 		return Plugin_Handled;			
 	}
@@ -288,7 +292,7 @@ public Action Cmd_ItemVehicle(int args) {
 	
 	int car = rp_CreateVehicle(vecOrigin, vecAngles, arg1, skinid, client);
 	if( !car ) {
-		CAR_CANCEL(client, item_id);
+		CAR_CANCEL(client, item_id, sendToBank);
 		CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas assez de place ici.");
 		return Plugin_Handled;
 	}
@@ -338,9 +342,14 @@ public void VehicleTouch(int car, int entity) {
 		}
 	}
 }
-public void CAR_CANCEL(int client, int item_id){
+public void CAR_CANCEL(int client, int item_id, int fromBank ){
 	if( item_id != -1) {
-		ITEM_CANCEL(client, item_id);
+		if( fromBank == 1 ) {
+			rp_ClientGiveItem(client, item_id, 1, true);
+		}
+		else {
+			ITEM_CANCEL(client, item_id);
+		}
 	}
 }
 public Action Cmd_ItemVehicleStuff(int args) {
@@ -629,11 +638,14 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	
 //	SDKHook(ent, SDKHook_Touch, VehicleTouch);
 	CreateTimer(3.5, Timer_VehicleRemoveCheck, EntIndexToEntRef(ent));
+	CreateTimer(0.5, Timer_Flush);
 
 	LogToFile("vehicules.txt", "end");
 	return ent;
 }
-
+public Action Timer_Flush(Handle timer, any none) {
+	ServerCommand("vehicle_flushscript");
+}
 public void OnThink(int ent) {
 	SetEntPropFloat(ent, Prop_Data, "m_flTurnOffKeepUpright", 1.0);
 	SetEntProp(ent, Prop_Send, "m_bEnterAnimOn", 0);
@@ -1318,7 +1330,7 @@ public int eventGarageMenu2(Handle menu, MenuAction action, int client, int para
 			
 			if( rp_GetClientItem(client, itemID, true) > 0 ) {
 				rp_ClientGiveItem(client, itemID, -1, true);
-				ServerCommand("%s %d %d", szMenuItem, client, itemID);
+				ServerCommand("%s %d 1 %d", szMenuItem, client, itemID);
 			}
 		}
 	}
