@@ -211,6 +211,17 @@ stock bool IsPlayerHaveKey( int client, int door, int lock=0) {
 	if( (GetJobPrimaryID(client) == 1 || GetJobPrimaryID(client) == 101) && (GetZoneBit(GetPlayerZone(door)) & BITZONE_PERQUIZ) )
 		return true;
 	
+	
+	if( lock == 2 && (GetJobPrimaryID(client) == 51 || GetJobPrimaryID(client) == 61) ) {
+		int appart = getZoneAppart(door);
+		if( GetJobPrimaryID(client) == 51 && appart > 100 && !IsValidClient(g_iAppartBonus[appart][appart_proprio]) ) {
+			return true;
+		}
+		if( GetJobPrimaryID(client) == 61 && appart > 0 && appart < 50 && !IsValidClient(g_iAppartBonus[appart][appart_proprio]) ) {
+			return true;
+		}
+	}
+	
 	Action c;
 	Call_StartForward( view_as<Handle>(g_hRPNative[client][RP_OnPlayerCheckKey]));
 	Call_PushCell(client);
