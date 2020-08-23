@@ -508,13 +508,6 @@ void StoreUserData(int client) {
 	for (int i = 0; i < max; i++)
 		Format(in_item, size, "%s%d,%d;", in_item, g_iItems[client][i][STACK_item_id], g_iItems[client][i][STACK_item_amount]);
 
-	max = g_iUserData[client][i_ItemCountSaved];
-	size = max * 18 + 1;
-	char[] in_save = new char[ size ];
-
-	for (int i = 0; i < max; i++)
-		Format(in_save, size, "%s%d,%d;", in_save, g_iItems_SAVE[client][i][STACK_item_id], g_iItems_SAVE[client][i][STACK_item_amount]);
-	
 	
 	max = MAX_JOBS;
 	size = max * 18 + 1;
@@ -542,8 +535,8 @@ void StoreUserData(int client) {
 		MysqlQuery, g_bUserData[client][b_License1], g_bUserData[client][b_License2], g_bUserData[client][b_LicenseSell], g_iUserData[client][i_StartLicense1], g_iUserData[client][i_StartLicense2], g_flUserData[client][fl_WeaponTrain], g_iUserData[client][i_Group]);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
-		"%s `vitality`='%f', `pay_to_bank`='%i', `have_card`='%i', `have_account`='%i', `in_bank`='%s', `in_item`='%s', `in_save`='%s', `ip`='%s',",
-		MysqlQuery, g_flUserData[client][fl_Vitality], g_bUserData[client][b_PayToBank], g_bUserData[client][b_HaveCard], g_bUserData[client][b_HaveAccount], in_bank, in_item, in_save, IP);
+		"%s `vitality`='%f', `pay_to_bank`='%i', `have_card`='%i', `have_account`='%i', `in_bank`='%s', `in_item`='%s', `ip`='%s',",
+		MysqlQuery, g_flUserData[client][fl_Vitality], g_bUserData[client][b_PayToBank], g_bUserData[client][b_HaveCard], g_bUserData[client][b_HaveAccount], in_bank, in_item, IP);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
 		"%s `malus`='%i', `freekill`='%i', `freekiller`='%i', `assurance`='%i', `train_esquive`='%i', `skin`='%s', `skin_id`='%d', ",
@@ -791,6 +784,8 @@ void ResetUserData(int client) {
 	g_iUserData[client][i_FistTrainAdmin] = -1;
 	g_flUserData[client][fl_WeaponTrainAdmin] = -1.0;
 	
+	for( int i=0; i<sizeof(g_szItems_SAVE[]); i++ )
+		g_szItems_SAVE[client][i] = "";
 	
 	for(int i=1; i<2048; i++) {
 		if( !IsValidEdict(i) )
@@ -1026,9 +1021,10 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		//		Récupération des items mis en banque
 		//
 		loadItem_Bank(Client, hQuery);
-		loadItem_Preset(Client, hQuery);
 		loadItem_Item(Client, hQuery);
 		
+		ItemSave_LoadNames(Client);
+
 		updateBankCost(Client);
 		
 		loadJobPlayTime(Client, hQuery);
@@ -1193,44 +1189,7 @@ void loadItem_Bank(int Client, Handle hQuery) {
 		}
 	}
 }
-void loadItem_Preset(int Client, Handle hQuery) {
-	char split[2] = ";";
-	char buffer[BUFFER_SIZE], buffer2[BUFFER_SIZE], szData[2][BUFFER_SIZE];
-	int size = (BUFFER_SIZE+SQL_FetchSize(hQuery, 18));
-	char[] data = new char[size];
-	
-	SQL_FetchString(hQuery, 18, data, size);	
-	int c_pos = 0;
-	
-	for(int i=0; i<=MAX_ITEMS; i++){
-		g_iItems_SAVE[Client][i][STACK_item_id] = 0;
-		g_iItems_SAVE[Client][i][STACK_item_amount] = 0;
-	}
-	// ------------
-	//	Stocker sous le format: id,amount;id,amount;
-	//
-	while( SplitString(data, split, buffer, BUFFER_SIZE) != -1 ) {
-		
-		Format(buffer2, BUFFER_SIZE, "%s%s", buffer, split);
-		RemoveString(data, buffer2, false);
-		ExplodeString(buffer, ",", szData, sizeof(szData), BUFFER_SIZE);
-			
-		int objet_id = StringToInt(szData[0]);
-		int objet_amount = StringToInt(szData[1]);
-			
-		if( objet_id <= 0 || objet_id > MAX_ITEMS)
-			continue;
-		if( StrEqual(g_szItemList[objet_id][item_type_extra_cmd], "UNKNOWN") )
-			continue;
-		if( objet_amount <= 0 )
-			continue;
-			
-		g_iItems_SAVE[Client][c_pos][STACK_item_id]     = objet_id;
-		g_iItems_SAVE[Client][c_pos][STACK_item_amount] = objet_amount;
-		c_pos++;
-	}
-	g_iUserData[Client][i_ItemCountSaved] = c_pos;
-}
+
 void loadItem_Item(int Client, Handle hQuery) {
 	char split[2] = ";";
 	char buffer[BUFFER_SIZE], buffer2[BUFFER_SIZE], szData[2][BUFFER_SIZE];
@@ -1372,4 +1331,113 @@ public void CheckMute_2(Handle owner, Handle handle, const char[] error, any dat
 		
 		g_bUserData[data][dest] = true;
 	}
+}
+
+public void ItemSave_SetItems(int client, int saveid){
+	char SteamID[32];
+	int max = g_iUserData[client][i_ItemCount];
+	int size = max * 18 + 128;
+	char[] query = new char[ size ];
+	GetClientAuthId(client, AUTH_TYPE, SteamID, sizeof(SteamID), false);
+
+	Format(query, size, "UPDATE rp_itemsaves SET save='");
+
+	for (int i = 0; i < max; i++)
+		Format(query, size, "%s%d,%d;", query, g_iItems[client][i][STACK_item_id], g_iItems[client][i][STACK_item_amount]);
+
+	Format(query, size, "%s' WHERE steamid='%s' AND slot=%d", query, SteamID, saveid);
+
+	SQL_TQuery(g_hBDD, SQL_QueryCallBack, query, client);
+}
+
+public void ItemSave_SetName(int client, int saveid, char[] name){
+	strcopy(g_szItems_SAVE[client][saveid], sizeof(g_szItems_SAVE[][]), name);
+	char query[128];
+	GetClientAuthId(client, AUTH_TYPE, query, sizeof(query), false);
+	Format(query, sizeof(query), "UPDATE rp_itemsaves SET name='%s' WHERE steamid='%s' AND slot=%d", name, query, saveid);
+
+	SQL_TQuery(g_hBDD, SQL_QueryCallBack, query, client);
+}
+
+public void ItemSave_Withdraw(int client, int saveid){
+	char query[128];
+	GetClientAuthId(client, AUTH_TYPE, query, sizeof(query), false);
+	Format(query, sizeof(query), "SELECT name, save FROM rp_itemsaves WHERE steamid='%s' AND slot=%d", query, saveid);
+
+	SQL_TQuery(g_hBDD, itemSave_Withdraw_2, query, client, DBPrio_High);
+}
+
+public void itemSave_Withdraw_2(Handle owner, Handle hQuery, const char[] error, any client){
+	SQL_FetchRow(hQuery);
+	int amount;
+	int inBank;
+	char split[2] = ";";
+	char buffer[BUFFER_SIZE], buffer2[BUFFER_SIZE], szData[2][BUFFER_SIZE];
+	int size = (BUFFER_SIZE+SQL_FetchSize(hQuery, 1));
+	char[] data = new char[size];
+	
+	SQL_FetchString(hQuery, 1, data, size);	
+	// ------------
+	//	Stocké sous le format: id,amount;id,amount;
+	//
+	amount = g_iUserData[client][i_ItemCount];
+	for (int pos=0; pos < amount ; pos++) {
+		rp_ClientGiveItem(client, g_iItems[client][pos][STACK_item_id], g_iItems[client][pos][STACK_item_amount], true);
+		LogToGame("[TSX-RP] [BANK-ITEM] %L a déposé: %d %s", client, g_iItems[client][pos][STACK_item_amount], g_szItemList[g_iItems[client][pos][STACK_item_id]][item_type_name]);
+		g_iItems[client][pos][STACK_item_id] = g_iItems[client][pos][STACK_item_amount] = 0;
+	}
+	CPrintToChat(client, "" ...MOD_TAG... " Tous vos items ont été déposés.");
+	
+	g_iUserData[client][i_ItemCount] = 0;
+
+	while( SplitString(data, split, buffer, BUFFER_SIZE) != -1 ) {
+		
+		Format(buffer2, BUFFER_SIZE, "%s%s", buffer, split);
+		RemoveString(data, buffer2, false);
+		ExplodeString(buffer, ",", szData, sizeof(szData), BUFFER_SIZE);
+			
+		int objet_id = StringToInt(szData[0]);
+		int objet_amount = StringToInt(szData[1]);
+			
+		if( objet_id <= 0 || objet_id > MAX_ITEMS)
+			continue;
+		if( StrEqual(g_szItemList[objet_id][item_type_extra_cmd], "UNKNOWN") )
+			continue;
+		if( objet_amount <= 0 )
+			continue;
+			
+
+		inBank = rp_GetClientItem(client, objet_id, true);
+		if( inBank < objet_amount ){
+			CPrintToChat(client, "" ...MOD_TAG... " Il vous manque %d %s dans votre banque.", objet_amount-inBank, g_szItemList[objet_id][item_type_name]);
+			objet_amount = inBank;
+		}
+		rp_ClientGiveItem(client, objet_id, -objet_amount, true);
+		rp_ClientGiveItem(client, objet_id, objet_amount, false);
+		
+		LogToGame("[TSX-RP] [BANK-ITEM] %L a retiré: %d %s", client, objet_amount, g_szItemList[objet_id][item_type_name]);
+	}
+	SQL_FetchString(hQuery, 0, buffer, BUFFER_SIZE);
+	CPrintToChat(client, "" ...MOD_TAG... " Votre registre \"%s\" a été récupéré.", buffer);
+	CloseHandle(hQuery);
+}
+
+public void ItemSave_LoadNames(int client){
+	char query[128];
+	GetClientAuthId(client, AUTH_TYPE, query, sizeof(query), false);
+	Format(query, sizeof(query), "SELECT slot, name FROM rp_itemsaves WHERE steamid='%s'", query);
+
+	SQL_TQuery(g_hBDD, itemSave_LoadNames_2, query, client, DBPrio_High);
+}
+
+public void itemSave_LoadNames_2(Handle owner, Handle handle, const char[] error, any client) {
+	if( handle == INVALID_HANDLE ) {
+		LogError("[SQL] [ERROR] %s", error);
+	}
+	
+	while( SQL_FetchRow(handle) ) {
+		SQL_FetchString(handle, 1, g_szItems_SAVE[client][SQL_FetchInt(handle, 0)], sizeof(g_szItems_SAVE[][]));
+	}
+
+	CloseHandle(handle);
 }

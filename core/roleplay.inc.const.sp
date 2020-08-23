@@ -222,7 +222,9 @@ enum itemDATAStack {
 
 int g_iItems[MAX_PLAYERS+1][MAX_ITEMS+1][view_as<int>(STACK_itemStack_max)];
 int g_iItems_BANK[MAX_PLAYERS+1][MAX_ITEMS+1][view_as<int>(STACK_itemStack_max)];
-int g_iItems_SAVE[MAX_PLAYERS+1][MAX_ITEMS+1][view_as<int>(STACK_itemStack_max)];
+
+char g_szItems_SAVE[MAX_PLAYERS+1][64][32];
+
 
 char g_szPaintBall[11][3][64] = {
 	{	"paintball/pb_babyblue2.vmt",	"0",	"0"	},

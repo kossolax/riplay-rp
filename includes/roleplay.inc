@@ -754,7 +754,6 @@ enum int_user_data {
 
 	i_ItemCount,
 	i_ItemBankCount,
-	i_ItemCountSaved,
 	i_ItemBankPrice,
 
 	i_LastAgression,
