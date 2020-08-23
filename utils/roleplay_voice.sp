@@ -101,6 +101,8 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 			PrintToChat(client, "\x04[\x02MUTE\x01]\x01: Vous avez été interdit d'utiliser le chat local.");
 			return Plugin_Handled;
 		}
+
+		bool clientChat[MaxClients];
 		
 		for (int i = 1; i < 200; i++) {
 			if( !rp_GetClientKeyAppartement(client, i) )
@@ -112,8 +114,12 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 				if( !rp_GetClientKeyAppartement(j, i) )
 					continue;
 					
-				CPrintToChatEx(j, client, "{lightblue}%N{default} ({purple}COLOC{default}): %s", client, arg);
+				clientChat[i] = true,
 			}
+		}
+		for( int i = 0; i<MaxClients; i++ ){
+			if(clientChat[i])
+				CPrintToChatEx(j, client, "{lightblue}%N{default} ({purple}COLOC{default}): %s", client, arg);
 		}
 		
 		LogToGame("[TSX-RP] [CHAT-COLLOC] %L: %s", client, arg);
