@@ -526,6 +526,13 @@ public Action ItemPiluleOver(Handle timer, Handle dp) {
 		rp_ClientColorize(client);
 		ITEM_CANCEL(client, item_id);
 	}
+	
+	if( GetClientButtons(client) & IN_DUCK ) {
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez annulé la téléportation en restant accroupi.");
+		rp_ClientColorize(client);
+		ITEM_CANCEL(client, item_id);
+	}
+	
 	float zonemin[3], zonemax[3], tppos[3];
 
 	zonemin[0] = rp_GetZoneFloat(tptozone, zone_type_min_x);
