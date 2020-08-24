@@ -1429,7 +1429,11 @@ public void itemSave_Withdraw_2(Handle owner, Handle hQuery, const char[] error,
 
 		inBank = rp_GetClientItem(client, objet_id, true);
 		if( inBank < objet_amount ){
-			CPrintToChat(client, "" ...MOD_TAG... " Il vous manque %d %s dans votre banque.", objet_amount-inBank, g_szItemList[objet_id][item_type_name]);
+			if(inBank > 0)
+				CPrintToChat(client, "" ...MOD_TAG... " Il vous {green}manque{default} %d %s dans votre banque.", objet_amount-inBank, g_szItemList[objet_id][item_type_name]);
+			else
+				CPrintToChat(client, "" ...MOD_TAG... " Vous {red}n'avez plus de {default} %s (%d) dans votre banque.", g_szItemList[objet_id][item_type_name], objet_amount-inBank);
+			
 			objet_amount = inBank;
 		}
 		rp_ClientGiveItem(client, objet_id, -objet_amount, true);
