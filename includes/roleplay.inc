@@ -248,6 +248,12 @@ native int rp_GetClientGroupID(int client);
  * @param  {[type]} int client        Le joueur
  */
 native void rp_IncrementLuck(int client);
+/**
+ * Ajoute un slot de sauvegarde d'inventaire pour le joueur (Registre)
+ * @param  {[type]} int client        Le joueur
+ * @return bool     Success
+ */
+native bool rp_AddSaveSlot(int client);
 // ----------------------------------------------------------------------------
 //                                                           rp_Is
 // ----------------------------------------------------------------------------

@@ -78,12 +78,12 @@ void DrawBankTransfer(int client) {
 	
 	AddMenuItem(menu, "to_inve", "Retirer des objets");
 	AddMenuItem(menu, "hdv", "Hôtel des ventes");
-	AddMenuItem(menu, "save", 	"Editer une configuration", g_bUserData[client][b_HaveAccount] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
+	AddMenuItem(menu, "save", 	"Editer un registre", g_bUserData[client][b_HaveAccount] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
 	
 	if( canDisposit || g_iUserData[client][i_ItemCount] == 0 )
-		AddMenuItem(menu, "load", 	"Charger une configuration", g_bUserData[client][b_HaveAccount] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
+		AddMenuItem(menu, "load", 	"Charger un registre", g_bUserData[client][b_HaveAccount] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
 	else
-		AddMenuItem(menu, "load", 	"Charger une configuration - Coffre plein", ITEMDRAW_DISABLED );
+		AddMenuItem(menu, "load", 	"Charger un registre - Coffre plein", ITEMDRAW_DISABLED );
 	if( rp_GetClientBool(client, b_CanSort) == true )		
  		AddMenuItem(menu, "trier", 	"Trier ma banque");
  
@@ -893,6 +893,7 @@ public void fwdBankSetSaveName(int client, int save, char[] message) {
 	if (strlen(tmp) >= 3){
 		ItemSave_SetName(client, save, tmp);
 		CPrintToChat(client, "" ...MOD_TAG... " Le registre à bien été renommé.");
+		DrawBankTransfer(client);
 	}
 	else{
 		CPrintToChat(client, "" ...MOD_TAG... " Ce nom est trop court.");

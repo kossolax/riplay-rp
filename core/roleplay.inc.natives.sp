@@ -101,6 +101,8 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 	
 	CreateNative("rp_IsClientLucky", 	Native_rp_IsClientLucky);
 	CreateNative("rp_IncrementLuck", 	Native_rp_IsClientLucky);
+
+	CreateNative("rp_AddSaveSlot", 	Native_rp_AddSaveSlot);
 	
 	CreateNative("rp_GetJobCapital", Native_rp_GetJobCapital);
 	CreateNative("rp_SetJobCapital", Native_rp_SetJobCapital);
@@ -1189,6 +1191,9 @@ public int Native_rp_ScheduleEntityInput(Handle plugin, int numParams) {
 }
 public int Native_rp_IsClientLucky(Handle plugin, int numParams) {
 	return 0;
+}
+public int Native_rp_AddSaveSlot(Handle plugin, int numParams) {
+	return ItemSave_AddSave(GetNativeCell(1));
 }
 public int Native_rp_GetItemData(Handle plugin, int numParams) {
 	

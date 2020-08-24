@@ -784,8 +784,9 @@ void ResetUserData(int client) {
 	g_iUserData[client][i_FistTrainAdmin] = -1;
 	g_flUserData[client][fl_WeaponTrainAdmin] = -1.0;
 	
-	for( int i=0; i<sizeof(g_szItems_SAVE[]); i++ )
-		g_szItems_SAVE[client][i] = "";
+	Format(g_szItems_SAVE[client][0], sizeof(g_szItems_SAVE[][]), "Registre 1");
+	for( int i=1; i<sizeof(g_szItems_SAVE[]); i++ )
+		Format(g_szItems_SAVE[client][i], sizeof(g_szItems_SAVE[][]), "");
 	
 	for(int i=1; i<2048; i++) {
 		if( !IsValidEdict(i) )
@@ -924,6 +925,9 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		SQL_TQuery(g_hBDD, SQL_QueryCallBack, MysqlQuery);
 		
 		Format(MysqlQuery, sizeof(MysqlQuery), "INSERT IGNORE INTO `rp_success` (`steamid`) VALUES ('%s');", SteamID);
+		SQL_TQuery(g_hBDD, SQL_QueryCallBack, MysqlQuery);
+
+		Format(MysqlQuery, sizeof(MysqlQuery), "INSERT IGNORE INTO `rp_itemsaves` (`steamid`, `slot`, `name`, `save`) VALUES ('%s', 0, 'Registre 1', '');", SteamID);
 		SQL_TQuery(g_hBDD, SQL_QueryCallBack, MysqlQuery);
 		
 		LoadUserData(Client);
@@ -1357,6 +1361,22 @@ public void ItemSave_SetName(int client, int saveid, char[] name){
 	Format(query, sizeof(query), "UPDATE rp_itemsaves SET name='%s' WHERE steamid='%s' AND slot=%d", name, query, saveid);
 
 	SQL_TQuery(g_hBDD, SQL_QueryCallBack, query, client);
+}
+
+public bool ItemSave_AddSave(int client){
+	char query[128];
+	for(int i=0; i<sizeof(g_szItems_SAVE[]); i++){
+		if(StrEqual(g_szItems_SAVE[client][i], "")){
+			Format(g_szItems_SAVE[client][i], sizeof(g_szItems_SAVE[][]), "Registre %d", i+1);
+			GetClientAuthId(client, AUTH_TYPE, query, sizeof(query), false);
+			Format(query, sizeof(query), "INSERT INTO rp_itemsaves (steamid, slot, name, save) VALUES ('%s', %d, '%s', '')", query, i, g_szItems_SAVE[client][i]);
+
+			SQL_TQuery(g_hBDD, SQL_QueryCallBack, query, client);
+			
+			return true;
+		}
+	}
+	return false;
 }
 
 public void ItemSave_Withdraw(int client, int saveid){
