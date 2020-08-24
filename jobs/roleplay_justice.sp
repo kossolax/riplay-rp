@@ -908,6 +908,16 @@ public Action Timer_AUDIENCE(Handle timer, any type) {
 		PrintHintText(g_iTribunalData[type][td_Owner], "La convocation commencera dès que vous aurez ajoutez le premier article.");
 		return Plugin_Continue;
 	}
+	
+	if( rp_GetClientInt(target, i_TimeAFK) > 15*60 ) {
+		float pos[3];
+		pos = getZoneMiddle(GetTribunalJail(type));
+		if( !IsPlayerAlive(target) ) {
+			CS_RespawnPlayer(target);
+		}
+		rp_ClientTeleport(target, pos);
+		CPrintToChatSearch(type, "" ...MOD_TAG... " %N{default} est apparu, car il est resté AFK trop longtemps.", target);
+	}
 		
 	if( time < 60 && time % 20 == 0 ) {
 		CPrintToChatSearch(type, "" ...MOD_TAG... " %N{default} est convoqué par le {green}Tribunal n°%d{default} de Princeton [%d/3].", target, type, time/20 + 1);
