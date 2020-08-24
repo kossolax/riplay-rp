@@ -44,13 +44,13 @@ enum jail_raison_type {
 	jail_type_max
 };
 char g_szJailRaison[][][128] =  {
-	{ "Garde à vue", 					"12",	"12",	"0", 	"0" }, 
+	{ "Garde à vue", 					"12",	"12",	"0", 	"1" }, 
 	{ "Meurtre", 						"-1",	"-1",	"-1",	"1" }, 
 	{ "Agression physique", 			"1",	"6",	"250",	"1" }, 
 	{ "Intrusion propriété privée", 	"0",	"3",	"100",	"0" }, 
 	{ "Vol, tentative de vol", 			"0",	"3",	"50",	"1" }, 
 	{ "Fuite, refus d'obtempérer", 		"0",	"6",	"200",	"0" }, 
-	{ "Insultes, Irrespect", 			"1",	"6",	"250",	"0" }, 
+	{ "Insultes, Irrespect", 			"1",	"6",	"250",	"1" }, 
 	{ "Trafic illégal", 				"0",	"6",	"100",	"0" }, 
 	{ "Nuisance sonore", 				"0",	"6",	"100",	"0" }, 
 	{ "Tir dans la rue", 				"0",	"6",	"100",	"1" }, 
