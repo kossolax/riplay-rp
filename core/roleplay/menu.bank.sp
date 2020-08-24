@@ -78,12 +78,12 @@ void DrawBankTransfer(int client) {
 	
 	AddMenuItem(menu, "to_inve", "Retirer des objets");
 	AddMenuItem(menu, "hdv", "Hôtel des ventes");
-	AddMenuItem(menu, "save", 	"Sauvegarder ma configuration", g_bUserData[client][b_HaveAccount] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
+	AddMenuItem(menu, "save", 	"Editer un registre", g_bUserData[client][b_HaveAccount] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
 	
 	if( canDisposit || g_iUserData[client][i_ItemCount] == 0 )
-		AddMenuItem(menu, "load", 	"Charger ma configuration", g_bUserData[client][b_HaveAccount] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
+		AddMenuItem(menu, "load", 	"Charger un registre", g_bUserData[client][b_HaveAccount] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
 	else
-		AddMenuItem(menu, "load", 	"Charger ma configuration - Coffre plein", ITEMDRAW_DISABLED );
+		AddMenuItem(menu, "load", 	"Charger un registre - Coffre plein", ITEMDRAW_DISABLED );
 	if( rp_GetClientBool(client, b_CanSort) == true )		
  		AddMenuItem(menu, "trier", 	"Trier ma banque");
  
@@ -576,68 +576,69 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 				menu = CreateMenu(DrawBankTransfer_3);
 				SetMenuTitle(menu, "Que souhaitez-vous récuperer?\nVotre coffre est rempli à %d%%.\n ", RoundToFloor(float(g_iUserData[client][i_ItemBankPrice]) / float(getClientBankLimit(client)) * 100.0));
 			}
-			else if( StrEqual(szMenuItem, "save", false) ) {
-				
-				amount = g_iUserData[client][i_ItemCount];
-				if( amount == 0 ) {
-					CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas d'objet à sauvegarder.");
-					DrawBankTransfer(client);
-					return;
+			else if( StrContains(szMenuItem, "save", false) == 0 ) {
+				char buff[3][12];
+				ExplodeString(szMenuItem, " ", buff, sizeof(buff), sizeof(buff[]));
+
+				if( StrEqual(szMenuItem, "save", false) ){
+					menu = CreateMenu(DrawBankTransfer_2);
+					SetMenuTitle(menu, "Quelle registre voulez-vous editer?\n ");
+
+
+					for( int i=0; i<sizeof(g_szItems_SAVE[]); i++ ){
+						if(StrEqual(g_szItems_SAVE[client][i], "")){
+							break;
+						}
+
+						Format(tmp, sizeof(tmp), "save %d", i);			
+						AddMenuItem(menu, tmp, g_szItems_SAVE[client][i]);
+					}
+				} else if( StringToInt(buff[2]) == 0 ){
+					int config = StringToInt(buff[1]);
+					menu = CreateMenu(DrawBankTransfer_2);
+
+					SetMenuTitle(menu, "Edition du registre n°%d: %s\n ", config+1, g_szItems_SAVE[client][config]);
+					Format(tmp, sizeof(tmp), "save %d 1", config);	
+					AddMenuItem(menu, tmp, "Renommer le registre");
+					Format(tmp, sizeof(tmp), "save %d 2", config);	
+					AddMenuItem(menu, tmp, "Sauvegarder mes items actuels dans le registre");
+				} else {
+					int config = StringToInt(buff[1]);
+					if( StringToInt(buff[2]) == 1 ){
+						menu = CreateMenu(MenuNothing);
+						SetMenuTitle(menu, "Edition du registre n°%d: %s\n ", config+1, g_szItems_SAVE[client][config]);
+						AddMenuItem(menu, "_", "Entrez un nouveau nom pour ce registre dans le chat", ITEMDRAW_DISABLED);
+						rp_GetClientNextMessage(client, config, fwdBankSetSaveName);
+					} else if( StringToInt(buff[2]) == 2 ){
+						ItemSave_SetItems(client, config);
+
+						CPrintToChat(client, "" ...MOD_TAG... " Votre registre \"%s\" à été sauvegardé.", g_szItems_SAVE[client][config]);
+						return;
+					}
 				}
-				
-				for (int pos=0; pos < amount ; pos++) {
-					g_iItems_SAVE[client][pos][STACK_item_amount] = g_iItems[client][pos][STACK_item_amount];
-					g_iItems_SAVE[client][pos][STACK_item_id] = g_iItems[client][pos][STACK_item_id];
-					CPrintToChat(client, "" ...MOD_TAG... " %i %s ont été sauvegardé.", g_iItems[client][pos][STACK_item_amount], g_szItemList[g_iItems[client][pos][STACK_item_id]][item_type_name]);
-				}
-				
-				g_iUserData[client][i_ItemCountSaved] = amount;
-				
-				DrawBankTransfer(client);
-				CPrintToChat(client, "" ...MOD_TAG... " Vos items préférés ont été sauvegardés.");
-				return;
 			}
-			else if( StrEqual(szMenuItem, "load", false) ) {
-				if( g_iUserData[client][i_ItemCountSaved] == 0 ) {
-					CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas d'objet sauvegardé.");
-					DrawBankTransfer(client);
+			else if( StrContains(szMenuItem, "load", false) == 0 ) {
+				char buff[2][12];
+				ExplodeString(szMenuItem, " ", buff, sizeof(buff), sizeof(buff[]));
+
+				if( StrEqual(szMenuItem, "load", false) ){
+					menu = CreateMenu(DrawBankTransfer_2);
+					SetMenuTitle(menu, "Quelle registre voulez-vous récupérer?\n ");
+
+
+					for( int i=0; i<sizeof(g_szItems_SAVE[]); i++ ){
+						if(StrEqual(g_szItems_SAVE[client][i], "")){
+							break;
+						}
+
+						Format(tmp, sizeof(tmp), "load %d", i);	
+						AddMenuItem(menu, tmp, g_szItems_SAVE[client][i]);
+					}
+				} else {
+					int config = StringToInt(buff[1]);
+					ItemSave_Withdraw(client, config);
 					return;
 				}
-				
-				amount = g_iUserData[client][i_ItemCount];
-				for (int pos=0; pos < amount ; pos++) {
-					rp_ClientGiveItem(client, g_iItems[client][pos][STACK_item_id], g_iItems[client][pos][STACK_item_amount], true);
-					CPrintToChat(client, "" ...MOD_TAG... " %i %s ont été déposé.", g_iItems[client][pos][STACK_item_amount], g_szItemList[g_iItems[client][pos][STACK_item_id]][item_type_name]);
-					LogToGame("[TSX-RP] [BANK-ITEM] %L a déposé: %d %s", client, g_iItems[client][pos][STACK_item_amount], g_szItemList[g_iItems[client][pos][STACK_item_id]][item_type_name]);
-					g_iItems[client][pos][STACK_item_id] = g_iItems[client][pos][STACK_item_amount] = 0;
-				}
-				
-				g_iUserData[client][i_ItemCount] = 0;
-				
-				amount = g_iUserData[client][i_ItemCountSaved];
-				int inBank;
-				for (int pos=0; pos < amount ; pos++) {
-					inBank = rp_GetClientItem(client, g_iItems_SAVE[client][pos][STACK_item_id], true);
-					if( inBank > g_iItems_SAVE[client][pos][STACK_item_amount] )
-						inBank = g_iItems_SAVE[client][pos][STACK_item_amount];
-					
-					rp_ClientGiveItem(client, g_iItems_SAVE[client][pos][STACK_item_id], -inBank, true);
-					rp_ClientGiveItem(client, g_iItems_SAVE[client][pos][STACK_item_id], inBank, false);
-					CPrintToChat(client, "" ...MOD_TAG... " %i %s ont été retiré.", inBank, g_szItemList[g_iItems_SAVE[client][pos][STACK_item_id]][item_type_name]);
-					
-					LogToGame("[TSX-RP] [BANK-ITEM] %L a retiré: %d %s", client,inBank, g_szItemList[g_iItems_SAVE[client][pos][STACK_item_id]][item_type_name]);
-				}
-				FakeClientCommand(client, "say /item");
-				CPrintToChat(client, "" ...MOD_TAG... " Vos items préférés ont été retirés de la banque.");
-				
-				if( g_iUserData[client][i_LastForcedSave] < GetTime() ) {
-					StoreUserData(client);
-					g_iUserData[client][i_LastForcedSave] = (GetTime()+5);
-				}
-				
-				updateBankCost(client);
-				
-				return;
 			}
 			else if( StrEqual(szMenuItem, "to_resell", false) ) {
 				
@@ -882,5 +883,19 @@ public int DrawBankTransfer_4(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 	}
 	else if (p_oAction == MenuAction_End) {
 		CloseHandle(p_hItemMenu);
+	}
+}
+
+public void fwdBankSetSaveName(int client, int save, char[] message) {
+	char tmp[32];
+	SQL_EscapeString(g_hBDD, message, tmp, sizeof(tmp));
+	
+	if (strlen(tmp) >= 3){
+		ItemSave_SetName(client, save, tmp);
+		CPrintToChat(client, "" ...MOD_TAG... " Le registre à bien été renommé.");
+		DrawBankTransfer(client);
+	}
+	else{
+		CPrintToChat(client, "" ...MOD_TAG... " Ce nom est trop court.");
 	}
 }

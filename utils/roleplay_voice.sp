@@ -101,19 +101,25 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 			PrintToChat(client, "\x04[\x02MUTE\x01]\x01: Vous avez été interdit d'utiliser le chat local.");
 			return Plugin_Handled;
 		}
+
+		bool clientChat[MAXPLAYERS+1];
 		
 		for (int i = 1; i < 200; i++) {
 			if( !rp_GetClientKeyAppartement(client, i) )
 				continue;
 			
-			for(int j=1; j<=MaxClients; j++) {
+			for(int j=1; j<=MAXPLAYERS; j++) {
 				if( !IsValidClient(j) )
 					continue;
 				if( !rp_GetClientKeyAppartement(j, i) )
 					continue;
 					
-				CPrintToChatEx(j, client, "{lightblue}%N{default} ({purple}COLOC{default}): %s", client, arg);
+				clientChat[i] = true;
 			}
+		}
+		for( int i = 0; i<sizeof(clientChat); i++ ){
+			if(clientChat[i])
+				CPrintToChatEx(i, client, "{lightblue}%N{default} ({purple}COLOC{default}): %s", client, arg);
 		}
 		
 		LogToGame("[TSX-RP] [CHAT-COLLOC] %L: %s", client, arg);
@@ -306,7 +312,7 @@ public int MenuJobs(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_
 			int amount = 0;
 			char tmp[128], tmp2[128];
 
-			for(int i=1; i<MAXPLAYERS+1;i++){
+			for(int i=1; i<=MAXPLAYERS;i++){
 				if(!IsValidClient(i))
 					continue;
 

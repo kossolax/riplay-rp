@@ -205,7 +205,7 @@ public Action Task_ItemAppartSerrure(Handle timer, Handle dp) {
 	Handle menu = CreateMenu(MenuSerrureVirer);
 	SetMenuTitle(menu, "Qui faut-il virer de l'appartement ?");
 	char tmp[32], tmp2[32];
-	for(int i=1; i<MAXPLAYERS; i++){
+	for(int i=1; i<=MAXPLAYERS; i++){
 		if( !IsValidClient(i) )
 			continue;
 		
@@ -787,7 +787,7 @@ public Action Cmd_InfoColoc(int client){
 			Format(tmp,127,"  Proprio: %N", proprio);
 			AddMenuItem(menu, tmp, tmp,	ITEMDRAW_DISABLED);
 
-			for(int j=1; j<MAXPLAYERS; j++){
+			for(int j=1; j<=MAXPLAYERS; j++){
 				if( !IsValidClient(j) )
 					continue;
 				if(rp_GetClientKeyAppartement(j, i) && j != proprio){

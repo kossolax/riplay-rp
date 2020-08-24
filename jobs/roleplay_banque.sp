@@ -49,6 +49,7 @@ public void OnPluginStart() {
 	RegServerCmd("rp_item_permi",		Cmd_ItemPermi,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_distrib",		Cmd_ItemDistrib,		"RP-ITEM", 	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_banksort",	Cmd_ItemBankSort,		"RP-ITEM", 	FCVAR_UNREGISTERED);
+	RegServerCmd("rp_item_registre",	Cmd_ItemRegistre,		"RP-ITEM", 	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_sign",		Cmd_ItemCraftSign,		"RP-ITEM", 	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_assuVie",		Cmd_ItemAssuVie,		"RP-ITEM", 	FCVAR_UNREGISTERED);
 	
@@ -269,6 +270,22 @@ public Action Cmd_ItemAssuVie(int args){
 	rp_SetClientBool(client, b_AssuranceVie, true);
 	rp_HookEvent(client, RP_OnAssurance,	fwdAssurance);
 	rp_HookEvent(client, RP_OnPlayerDead, OnPlayerDeathFastRespawn);
+	
+	return Plugin_Handled;
+}
+public Action Cmd_ItemRegistre(int args){
+	
+	int client = GetCmdArgInt(1);
+	int item_id = GetCmdArgInt(args);
+	
+	if( rp_AddSaveSlot(client) ) {
+		CPrintToChat(client, "" ...MOD_TAG... " Vous disposez maintenant d'un registre supplémentaire.");
+		rp_IncrementSuccess(client, success_list_assurance);
+	}
+	else{
+		ITEM_CANCEL(client, item_id);
+		CPrintToChat(client, "" ...MOD_TAG... " Encore? Ca fait beaucoup là non?");
+	}
 	
 	return Plugin_Handled;
 }
