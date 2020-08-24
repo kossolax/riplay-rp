@@ -323,9 +323,10 @@ void AFK_Check(int client) {
 					g_iUserData[client][i_PlayerXP] -= 180;
 				
 			}
-			/*else {				
+			else {				
 				if( !IsClientInJail(client) ) {
-					if( g_iUserData[client][i_TimeAFK] > 3600 || g_iUserData[client][i_TimeAFK_total] > 7200 ) {
+					if( g_iUserData[client][i_TimeAFK] > (4*60*60) ||
+						(g_iUserData[client][i_TimeAFK] > (1*60*60) && g_iUserData[client][i_TimeAFK_total] > (8*60*60)) ) {
 						
 						for(int i=0; i<MAX_ITEMS; i++) { 
 							if( rp_GetClientItem(client, i) > 0 ) {
@@ -336,7 +337,7 @@ void AFK_Check(int client) {
 						KickClient(client, "Vous êtes resté trop longtemps AFK.");
 					}
 				}
-			}*/
+			}
 		}
 	}
 	else {

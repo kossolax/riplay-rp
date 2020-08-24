@@ -42,6 +42,24 @@ public void OnPluginStart() {
 	for (int j = 1; j <= MaxClients; j++)
 		if( IsValidClient(j) )
 			OnClientPostAdminCheck(j);
+	
+	
+	char classname[64];
+	for (int i = MaxClients; i <= 2048; i++) {
+		if( !IsValidEdict(i) )
+			continue;
+		if( !IsValidEntity(i) )
+			continue;
+		
+		GetEdictClassname(i, classname, sizeof(classname));
+		if( StrEqual(classname, "rp_microwave") ) {
+			
+			rp_SetBuildingData(i, BD_started, GetTime());
+			rp_SetBuildingData(i, BD_owner, GetEntPropEnt(i, Prop_Send, "m_hOwnerEntity") );
+			
+			CreateTimer(Math_GetRandomFloat(0.25, 5.0), BuildingMicrowave_post, i);
+		}
+	}
 }
 
 public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbose) {
@@ -172,6 +190,13 @@ public Action BuildingMicrowave_post(Handle timer, any entity) {
 		default: time = 40;
 	}
 	
+	int delta = (GetTime() - 1598177559) / (24 * 60 * 60);
+	time += delta;
+
+	if( rp_GetBuildingData(entity, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(entity), zone_type_type) != 21 ) {
+		time *= 2;
+	}
+	
 	rp_SetBuildingData(entity, BD_max, time);
 	rp_SetBuildingData(entity, BD_count, 0);
 
@@ -211,8 +236,6 @@ public Action fwdOnPlayerUse(int client) {
 	static float vecOrigin[3],vecOrigin2[3];
 	GetClientAbsOrigin(client, vecOrigin);
 
-	if( rp_GetClientJobID(client) != 21 )
-		return Plugin_Continue;
 
 	Format(tmp2, sizeof(tmp2), "rp_microwave");
 
@@ -222,7 +245,7 @@ public Action fwdOnPlayerUse(int client) {
 		if( !IsValidEntity(i) )
 			continue;
 		
-		GetEdictClassname(i, tmp, 63);
+		GetEdictClassname(i, tmp, sizeof(tmp));
 		if(g_eMwAct[i])
 			continue;
 		
@@ -233,7 +256,13 @@ public Action fwdOnPlayerUse(int client) {
 				int maxtime = rp_GetBuildingData(i, BD_max);
 				if( time >= maxtime &&  rp_GetBuildingData( i, BD_owner )) {
 					rp_SetBuildingData(i, BD_count, 0);
-					giveHamburger(client);
+					
+					if( rp_GetBuildingData(i, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type) == 21)
+						giveHamburger(client, 2);
+					else if( rp_GetPlayerZoneAppart(i) > 0 )
+						giveHamburger(client, 1);
+					else
+						giveHamburger(client, 1);
 				}
 				g_eMwAct[i] = true;
 				CreateTimer(1.0, Frame_Microwave, i);
@@ -262,7 +291,7 @@ public Action Frame_Microwave(Handle timer, any ent) {
 	CreateTimer(1.0, Frame_Microwave, ent);
 	return Plugin_Handled;
 }
-public void giveHamburger(int client){
+void giveHamburger(int client, int amount){
 	int mci = Math_GetRandomInt(0, g_nbMdItems);
 	int j = 0, jobID;	
 	for(int i = 0; i < MAX_ITEMS; i++){
@@ -275,7 +304,7 @@ public void giveHamburger(int client){
 			continue;
 
 		if(mci == j){
-			rp_ClientGiveItem(client, i, 2);
+			rp_ClientGiveItem(client, i, amount);
 			break;
 		}
 		j++;
