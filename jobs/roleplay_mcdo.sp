@@ -345,6 +345,12 @@ public Action Cmd_ItemHamburger(int args) {
 	if( StrEqual(arg1, "fat") ) {
 		float size = rp_GetClientFloat(client, fl_Size);
 		
+		if( size >= 1.65 && rp_GetClientInt(client, i_Kevlar) == 100 ) {
+			ITEM_CANCEL(client, item_id);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous êtes trop gros.");
+			return Plugin_Handled;
+		}
+		
 		rp_SetClientInt(client, i_Kevlar, 100);
 		
 		if( size < 1.6 ) {
