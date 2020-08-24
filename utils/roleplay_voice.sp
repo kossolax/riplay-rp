@@ -114,12 +114,12 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 				if( !rp_GetClientKeyAppartement(j, i) )
 					continue;
 					
-				clientChat[i] = true,
+				clientChat[i] = true;
 			}
 		}
 		for( int i = 0; i<sizeof(clientChat); i++ ){
 			if(clientChat[i])
-				CPrintToChatEx(j, client, "{lightblue}%N{default} ({purple}COLOC{default}): %s", client, arg);
+				CPrintToChatEx(i, client, "{lightblue}%N{default} ({purple}COLOC{default}): %s", client, arg);
 		}
 		
 		LogToGame("[TSX-RP] [CHAT-COLLOC] %L: %s", client, arg);
@@ -312,7 +312,7 @@ public int MenuJobs(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_
 			int amount = 0;
 			char tmp[128], tmp2[128];
 
-			for(int i=1; i<⁼MAXPLAYERS;i++){
+			for(int i=1; i<=MAXPLAYERS;i++){
 				if(!IsValidClient(i))
 					continue;
 
