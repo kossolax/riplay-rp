@@ -1193,7 +1193,7 @@ public int Native_rp_IsClientLucky(Handle plugin, int numParams) {
 	return 0;
 }
 public int Native_rp_AddSaveSlot(Handle plugin, int numParams) {
-	return ItemSave_AddSave(GetNativeCell(1));
+	return view_as<int>(ItemSave_AddSave(GetNativeCell(1)));
 }
 public int Native_rp_GetItemData(Handle plugin, int numParams) {
 	

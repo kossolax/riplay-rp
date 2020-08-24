@@ -1337,7 +1337,7 @@ public void CheckMute_2(Handle owner, Handle handle, const char[] error, any dat
 	}
 }
 
-public void ItemSave_SetItems(int client, int saveid){
+void ItemSave_SetItems(int client, int saveid){
 	char SteamID[32];
 	int max = g_iUserData[client][i_ItemCount];
 	int size = max * 18 + 128;
@@ -1354,7 +1354,7 @@ public void ItemSave_SetItems(int client, int saveid){
 	SQL_TQuery(g_hBDD, SQL_QueryCallBack, query, client);
 }
 
-public void ItemSave_SetName(int client, int saveid, char[] name){
+void ItemSave_SetName(int client, int saveid, char[] name){
 	strcopy(g_szItems_SAVE[client][saveid], sizeof(g_szItems_SAVE[][]), name);
 	char query[128];
 	GetClientAuthId(client, AUTH_TYPE, query, sizeof(query), false);
@@ -1363,7 +1363,7 @@ public void ItemSave_SetName(int client, int saveid, char[] name){
 	SQL_TQuery(g_hBDD, SQL_QueryCallBack, query, client);
 }
 
-public bool ItemSave_AddSave(int client){
+bool ItemSave_AddSave(int client){
 	char query[128];
 	for(int i=0; i<sizeof(g_szItems_SAVE[]); i++){
 		if(StrEqual(g_szItems_SAVE[client][i], "")){
@@ -1379,7 +1379,7 @@ public bool ItemSave_AddSave(int client){
 	return false;
 }
 
-public void ItemSave_Withdraw(int client, int saveid){
+void ItemSave_Withdraw(int client, int saveid){
 	char query[128];
 	GetClientAuthId(client, AUTH_TYPE, query, sizeof(query), false);
 	Format(query, sizeof(query), "SELECT name, save FROM rp_itemsaves WHERE steamid='%s' AND slot=%d", query, saveid);
@@ -1442,7 +1442,7 @@ public void itemSave_Withdraw_2(Handle owner, Handle hQuery, const char[] error,
 	CloseHandle(hQuery);
 }
 
-public void ItemSave_LoadNames(int client){
+void ItemSave_LoadNames(int client){
 	char query[128];
 	GetClientAuthId(client, AUTH_TYPE, query, sizeof(query), false);
 	Format(query, sizeof(query), "SELECT slot, name FROM rp_itemsaves WHERE steamid='%s'", query);
