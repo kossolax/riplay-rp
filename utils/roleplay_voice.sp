@@ -114,7 +114,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 				if( !rp_GetClientKeyAppartement(j, i) )
 					continue;
 					
-				clientChat[i] = true;
+				clientChat[j] = true;
 			}
 		}
 		for( int i = 0; i<sizeof(clientChat); i++ ){
