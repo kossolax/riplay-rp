@@ -1765,7 +1765,7 @@ public void SQL_LoadEvent(Handle owner, Handle row, const char[] error, any clie
 	}
 	CloseHandle(row);
 	if(countLine > 0)
-		DisplayMenu(menu, client, 60);
+		DisplayMenu(menu, client, 60*10);
 	else
 		ReplyToCommand(client, "ERREUR, Aucun event trouvé.");
 		
