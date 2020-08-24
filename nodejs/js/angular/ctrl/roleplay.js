@@ -449,7 +449,7 @@ app.controller('rpTribunal', function($scope, $location, $filter, $http, $routeP
     }
 
     $scope.nowDate = $filter('date')(new Date(), "le d/M à HH:mm");
-    $scope.reasonT=['Insultes, Irrespect', 'Meurtre', 'Freekill massif', 'Attitude négative', 'Menaces', 'Abus de ses fonctions', 'Autre, préciser:' ];
+    $scope.reasonT=['Insultes, Irrespect, Menace', 'Vol', 'Meurtre', 'Freekill massif', 'Autre, préciser:' ];
     $scope.reasonCT=['Jail dans une propriétée privée', 'Abus de /jail', 'Jail par déduction', 'Freekill en fonction', 'Abus de perquisition', 'Autre, préciser:' ];
     $scope.reason = $scope.reasonT;
     $scope.typePolice = 0;
