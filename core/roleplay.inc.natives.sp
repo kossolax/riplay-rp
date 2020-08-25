@@ -922,17 +922,12 @@ public int Native_rp_SetClientVehicle(Handle plugin, int numParams) {
 }
 public int Native_rp_ClientGiveHands(Handle plugin, int numParams) {
 	int client = GetNativeCell(1);
-	bool zeus = view_as<bool>(Client_HasWeapon(client, "weapon_taser"));
 	
 	Client_RemoveWeapon(client, "weapon_fists");
-	Client_RemoveWeapon(client, "weapon_taser");
 	
 	int tmp = GivePlayerItem(client, "weapon_fists");
 	EquipPlayerWeapon(client, tmp);
 	FakeClientCommand(client, "use weapon_fists");
-	
-	if( zeus )
-		GivePlayerItem(client, "weapon_taser");
 	
 }
 public int Native_rp_ClientVehicleExit(Handle plugin, int numParams ) {
