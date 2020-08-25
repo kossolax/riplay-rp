@@ -296,10 +296,17 @@ void AFK_Check(int client) {
 	if( !wasTalking[client] && g_hClientMicTimers[client] != INVALID_HANDLE ) {
 		same = false;
 		wasTalking[client] = true;
+		if( IsAdmin(client) ) {
+			PrintToConsole(client, "DEBUG: Vous parlez");
+		}
 	}
 	if( wasTalking[client] && g_hClientMicTimers[client] == INVALID_HANDLE ) {
 		same = false;
-		wasTalking[client] = false;
+		wasTalking[client] = false;	
+		
+		if( IsAdmin(client) ) {
+			PrintToConsole(client, "DEBUG: Vous palez plus");
+		}
 	}
 	
 	
