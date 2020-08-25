@@ -793,6 +793,24 @@ public Action Frame_BigCashMachine(Handle timer, any ent) {
 	}
 
 	float time = GetMachineTime(client);
+	if( rp_GetBuildingData(ent, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(ent), zone_type_type) != 221 ){
+		time *= 2.0;
+	}
+
+	
+	if( rp_GetServerRules(rules_Productions, rules_Enabled) == 1 ) {
+		int target = rp_GetServerRules(rules_Productions, rules_Target);
+		
+		if( rp_GetClientJobID(client) == target || rp_GetClientGroupID(client) == (target-1000) ) {
+			
+			if( rp_GetServerRules(rules_Productions, rules_Arg) == 1 ) {
+				time -= 1.0;
+			}
+			else {
+				time += 1.0;
+			}
+		}
+	}
 	
 	CreateTimer(time/7.5, Frame_BigCashMachine, EntIndexToEntRef(ent));
 	return Plugin_Handled;
