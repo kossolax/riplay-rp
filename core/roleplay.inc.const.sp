@@ -290,6 +290,7 @@ float g_flLubrifian[MAX_PLAYERS+1];
 // AFK-Manager
 //
 float g_Position[MAX_PLAYERS+1][3];
+Handle g_hClientMicTimers[MAXPLAYERS + 1];
 // ------------------------------
 // Weapon-Manager
 //

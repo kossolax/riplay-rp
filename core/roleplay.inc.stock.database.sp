@@ -750,6 +750,11 @@ void ResetUserData(int client) {
 	g_iClientQuests[client][stepID] = -1;
 	g_iCurrentKill[client] = 0;
 	
+	if( g_hClientMicTimers[client] != INVALID_HANDLE ) {
+		delete g_hClientMicTimers[client];
+		g_hClientMicTimers[client] = INVALID_HANDLE;
+	}
+	
 	
 	for(int i=0; i<MAX_KEYSELL; i++) {
 		g_iDoorOwner_v2[client][i] = 0;
@@ -1114,7 +1119,8 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 	#if defined USING_VEHICLE
 	SDKHook(Client, SDKHook_PreThinkPost,	vehicle_OnPreThinkPost);
 	#endif
-	DHookEntity(g_hTeleport, false, Client);	
+	DHookEntity(g_hTeleport, false, Client);
+	DHookEntity(g_hOnVoiceTransmit, true, Client);
 	
 	CS_SwitchTeam(Client, CS_TEAM_T);
 

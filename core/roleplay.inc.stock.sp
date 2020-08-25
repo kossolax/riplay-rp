@@ -279,14 +279,27 @@ void incrementJobPlayTime(int client, int time) {
 	}
 }
 void AFK_Check(int client) {
+	static bool wasTalking[MAX_PLAYERS + 1];
 	
-	float vecAngles[3];
+	float vecAngles[3], vecAngles2[3], vecAngles3[3], vecAngles4[3], vecAngles5[3];
 	GetClientEyeAngles(client, vecAngles);
 	
 	bool same = true;
 	for(int i=0; i<1; i++) {
-		if( RoundToFloor(vecAngles[i]/10.0) != RoundToFloor(g_Position[client][i]/10.0) )
+		if( FloatAbs(vecAngles[i] - g_Position[client][i]) > 2.0 )
 			same = false;
+	}
+	int vehicle = rp_GetClientVehiclePassager(client);
+	if( vehicle > 0 )
+		same = true;
+	
+	if( !wasTalking[client] && g_hClientMicTimers[client] != INVALID_HANDLE ) {
+		same = false;
+		wasTalking[client] = true;
+	}
+	if( wasTalking[client] && g_hClientMicTimers[client] == INVALID_HANDLE ) {
+		same = false;
+		wasTalking[client] = false;
 	}
 	
 	
@@ -307,7 +320,7 @@ void AFK_Check(int client) {
 		
 		g_iUserData[client][i_TimeAFK]++;
 		
-		if( g_iUserData[client][i_TimeAFK] > 180 ) {
+		if( g_iUserData[client][i_TimeAFK] > 18 ) {
 			
 			if( !g_bUserData[client][b_IsAFK] ) {
 				g_bUserData[client][b_IsAFK] = true;
@@ -356,7 +369,8 @@ void AFK_Check(int client) {
 			g_bUserData[client][b_IsFirstSpawn] = false;
 		}
 	}
-	GetClientEyeAngles(client, g_Position[client]);
+	
+	g_Position[client] = vecAngles;
 }
 
 void SQL_Reconnect() {

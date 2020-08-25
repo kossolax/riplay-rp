@@ -10,6 +10,30 @@
 	#include "roleplay.sp"
 #endif 
 
+public MRESReturn DHooks_OnVoicePost(int client, Handle hReturn, Handle hParams) {
+	if( g_hClientMicTimers[client] != INVALID_HANDLE ) {
+		delete g_hClientMicTimers[client];
+	}
+	
+	g_hClientMicTimers[client] = CreateTimer(0.5, Timer_ClientMicUsage, GetClientUserId(client));
+	return MRES_Ignored;
+}  
+public Action Timer_ClientMicUsage(Handle hTimer, int iUserid) {
+	int client = GetClientOfUserId(iUserid);
+	
+	if( !IsValidClient(client) ) {
+		g_hClientMicTimers[client] = INVALID_HANDLE;
+		return Plugin_Handled;
+	}
+	
+	if( g_hClientMicTimers[client] != hTimer ) {
+		return Plugin_Handled;
+	}
+	
+	g_hClientMicTimers[client] = INVALID_HANDLE;
+	return Plugin_Handled;
+}
+
 public Action EventFlashPlayer(Handle event, const char[] name, bool dontBroadcast) {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	

@@ -46,7 +46,7 @@
 
 int g_cSnow;
 bool g_bPreventLoadConfig = false;
-Handle g_hTeleport, g_hLookupAttachment, g_hForward_RP_OnPlayerGotPay;
+Handle g_hTeleport, g_hLookupAttachment, g_hForward_RP_OnPlayerGotPay, g_hOnVoiceTransmit;
 
 
 #if defined ROLEPLAY_SUB
@@ -293,7 +293,8 @@ public void OnPluginStart() {
 	if(hGameData == INVALID_HANDLE)
 		return;
 	
-	int iOffset = GameConfGetOffset(hGameData, "Teleport");
+	int iOffset;
+	iOffset = GameConfGetOffset(hGameData, "Teleport");
 	
 	if(iOffset != -1) {
 		g_hTeleport = DHookCreate(iOffset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, DHooks_OnTeleport);
@@ -303,6 +304,12 @@ public void OnPluginStart() {
 			DHookAddParam(g_hTeleport, HookParamType_VectorPtr);
 			DHookAddParam(g_hTeleport, HookParamType_Bool);
 		}
+	}
+	
+	iOffset = GameConfGetOffset(hGameData, "PlayerRunCmd") + 46;
+	
+	if(iOffset != -1) {
+		g_hOnVoiceTransmit = DHookCreate(iOffset, HookType_Entity, ReturnType_Int, ThisPointer_CBaseEntity, DHooks_OnVoicePost);
 	}
 	
 	CloseHandle(hGameData);
