@@ -72,10 +72,10 @@ public void Q1_Start(int objectiveID, int client) {
 	
 	menu.SetTitle("Quète: %s", QUEST_NAME);
 	menu.AddItem("", "Interlocuteur anonyme :", ITEMDRAW_DISABLED);
-	menu.AddItem("", "Mon frère, Nous avons une mission de toi.", ITEMDRAW_DISABLED);
+	menu.AddItem("", "Mon frère, Nous avons une mission pour toi.", ITEMDRAW_DISABLED);
 	menu.AddItem("", "Nous voulons faire plier les banquiers", ITEMDRAW_DISABLED);
-	menu.AddItem("", "Pour ça, vol l'argent des distributeurs", ITEMDRAW_DISABLED);
-	menu.AddItem("", "présent dans les métros de la ville.", ITEMDRAW_DISABLED);
+	menu.AddItem("", "Pour ça, vole l'argent des distributeurs", ITEMDRAW_DISABLED);
+	menu.AddItem("", "présents dans les métros de la ville.", ITEMDRAW_DISABLED);
 	
 	menu.ExitButton = false;
 	menu.Display(client, 60);
