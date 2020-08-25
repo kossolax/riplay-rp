@@ -320,7 +320,7 @@ void AFK_Check(int client) {
 		
 		g_iUserData[client][i_TimeAFK]++;
 		
-		if( g_iUserData[client][i_TimeAFK] > 18 ) {
+		if( g_iUserData[client][i_TimeAFK] > 180 ) {
 			
 			if( !g_bUserData[client][b_IsAFK] ) {
 				g_bUserData[client][b_IsAFK] = true;
