@@ -582,7 +582,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 
 				if( StrEqual(szMenuItem, "save", false) ){
 					menu = CreateMenu(DrawBankTransfer_2);
-					SetMenuTitle(menu, "Quelle registre voulez-vous editer?\n ");
+					SetMenuTitle(menu, "Quel registre voulez-vous editer?\n ");
 
 
 					for( int i=0; i<sizeof(g_szItems_SAVE[]); i++ ){
@@ -623,7 +623,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 
 				if( StrEqual(szMenuItem, "load", false) ){
 					menu = CreateMenu(DrawBankTransfer_2);
-					SetMenuTitle(menu, "Quelle registre voulez-vous récupérer?\n ");
+					SetMenuTitle(menu, "Quel registre voulez-vous récupérer?\n ");
 
 
 					for( int i=0; i<sizeof(g_szItems_SAVE[]); i++ ){
