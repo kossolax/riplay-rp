@@ -197,8 +197,10 @@ void Q_Clean() {
 	g_bDoingQuest = false;
 	g_stkTeamCount[TEAM_HOSTAGE] = 0;
 	for (int i = 1; i <= MaxClients; i++) {
-		if( IsValidClient(i) )
+		if( IsValidClient(i) ) {
+			SetEntProp(i, Prop_Send, "m_bIsGrabbingHostage", 0);
 			removeClientTeam(i);
+		}
 	}
 	CreateTimer(60.0 * 60.0, braquageNewAttempt);
 	SetConVarInt(g_hActive, 0);
