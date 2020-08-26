@@ -879,8 +879,9 @@ int GetAssurence(int client, bool forced = false) {
 			float ratio = (1.0 - float(GetTime() - rp_GetBuildingData(i, BD_started)) / (5.0 * 60.0 * 60.0)) * 0.75;
 			
 			if( g_bUserData[client][b_FreeAssurance] == 1 ) {
+				ratio = ratio * 0.66;
 				if( (nextReboot - rp_GetBuildingData(i, BD_started)) < 30*60 ) {
-					ratio = ratio * 0.25;
+					ratio = ratio * 0.66;
 				}
 				if( g_iUserData[client][i_TimeAFK] > (1*60*60) ) {
 					ratio = ratio * 0.1;
