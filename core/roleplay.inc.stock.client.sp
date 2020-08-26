@@ -863,64 +863,72 @@ int GetAssurence(int client, bool forced = false) {
 	Call_Finish();
     
 	bool hasCas = false;
+	int nextReboot = getNextReboot();
 	
 	for(int i=1; i<MAX_ENTITIES; i++) {
 		if( !IsValidEdict(i) )
 			continue;
 		if( !IsValidEntity(i) )
 			continue;
+		if( rp_GetBuildingData(i, BD_FromBuild) == 1 )
+			continue;
 		
-		GetEdictClassname(i, tmp, 63);
+		GetEdictClassname(i, tmp, sizeof(tmp));
+		
 		if( rp_GetBuildingData(i, BD_owner) == client ) {
-			if( StrEqual(tmp, "rp_cashmachine") ) {
-				if( !rp_GetBuildingData(i, BD_FromBuild) ) {
-					amount += 75;
+			float ratio = (1.0 - float(GetTime() - rp_GetBuildingData(i, BD_started)) / (5.0 * 60.0 * 60.0)) * 0.75;
+			
+			if( g_bUserData[client][b_FreeAssurance] == 1 ) {
+				if( (nextReboot - rp_GetBuildingData(i, BD_started)) < 30*60 ) {
+					ratio = ratio * 0.25;
 				}
+				if( g_iUserData[client][i_TimeAFK] > (1*60*60) ) {
+					ratio = ratio * 0.1;
+				}
+			}
+			
+			if( ratio <= 0.0 || ratio >= 1.0 )
+				continue;
+			
+			
+			if( StrEqual(tmp, "rp_cashmachine") ) {
+				amount += RoundFloat(100.0 * ratio);
 			}
 			else if( StrEqual(tmp, "rp_bigcashmachine") ) {
-				if( !rp_GetBuildingData(i, BD_FromBuild) ) {
-					amount += (4000 - (150*14) ); // i_Machine est déjà compté dedans, ce qui ne devrait pas.
-				}
+				amount += RoundFloat((5250.0 - (150.0*14.0)) * ratio);
 			}
 			else if( StrEqual(tmp, "rp_plant") ) {
-				if( !rp_GetBuildingData(i, BD_FromBuild) ) {
-					int item_id = rp_GetBuildingData(i, BD_original_id);
-					if( item_id > 0 ) {
-						amount += (StringToInt(g_szItemList[BD_original_id][item_type_prix]) * 3 / 4);					
-						if( rp_GetBuildingData(i, BD_max) > 3 )
-							amount += ((rp_GetBuildingData(i, BD_max) - 3) * 75);
+				int item_id = rp_GetBuildingData(i, BD_original_id);
+				if( item_id > 0 ) {
+					amount += (StringToInt(g_szItemList[BD_original_id][item_type_prix]) * 3 / 4);					
+					if( rp_GetBuildingData(i, BD_max) > 3 ) {
+						amount += RoundFloat( float(rp_GetBuildingData(i, BD_max) - 3) * ratio);
 					}
 				}
 			}
 			else if( StrEqual(tmp, "rp_kevlarbox") ) {
-				if( !rp_GetBuildingData(i, BD_FromBuild) ) {
-					amount += 1250;
-				}
+				amount += RoundFloat(1500.0 * ratio);
 			}
 			else if( StrEqual(tmp, "rp_healbox") ) {
-				if( !rp_GetBuildingData(i, BD_FromBuild) ) {
-					amount += 1250;
-				}
+				amount += RoundFloat(100.0 * ratio);
 			}
 			else if( StrEqual(tmp, "rp_microwave") ) {
-				if( !rp_GetBuildingData(i, BD_FromBuild) ) {
-					amount += 1250;
-				}
+				amount += RoundFloat(8000.0 * ratio);
 			}
 			else if( StrEqual(tmp, "rp_table") ) {
-				if( !rp_GetBuildingData(i, BD_FromBuild) ) {
-					amount += 2000;
-				}
+				amount += RoundFloat(2500.0 * ratio);
 			}
 			else if( StrEqual(tmp, "rp_bank") ) {
-				if( !rp_GetBuildingData(i, BD_FromBuild) ) {
-					amount += 2000;
-				}
+				amount += RoundFloat(2500.0 * ratio);
 			}
 			else if( StrEqual(tmp, "rp_sign") ) {
-				if( !rp_GetBuildingData(i, BD_FromBuild) ) {
-					amount += 750;
-				}
+				amount += RoundFloat(1000.0 * ratio);
+			}
+			else if( StrEqual(tmp, "rp_discoball") ) {
+				amount += RoundFloat(2000.0 * ratio);
+			}
+			else if( StrEqual(tmp, "rp_discosmoke") ) {
+				amount += RoundFloat(1000.0 * ratio);
 			}
 		}
 		else if( !hasCas && StrContains(tmp, "prop_vehicle_") == 0 && g_iVehicleData[i][car_owner] == client ) {
@@ -933,23 +941,25 @@ int GetAssurence(int client, bool forced = false) {
 		amount += 200;
 	}
 	
-	char wepname[64];
-	int wepIdx;
-	
-	for( int i = 0; i < 5; i++ ) {
+	if( !(g_bUserData[client][b_FreeAssurance] == 1 && (nextReboot - GetTime()) < 30*60) ) {
+		char wepname[64];
+		int wepIdx;
 		
-		if( i == CS_SLOT_KNIFE )
-			continue;
-		
-		wepIdx = GetPlayerWeaponSlot( client, i );
-		
-		if( wepIdx <= 0 || !IsValidEdict(wepIdx) || !IsValidEntity(wepIdx) )
-			continue;
-		
-		if( IsPolice(client) && rp_GetWeaponStorage(wepIdx) )
-			continue;
-		
-		amount += RoundFloat( float(rp_GetWeaponPrice(wepIdx)) * 0.5);
+		for( int i = 0; i < 5; i++ ) {
+			
+			if( i == CS_SLOT_KNIFE )
+				continue;
+			
+			wepIdx = GetPlayerWeaponSlot( client, i );
+			
+			if( wepIdx <= 0 || !IsValidEdict(wepIdx) || !IsValidEntity(wepIdx) )
+				continue;
+			
+			if( IsPolice(client) && rp_GetWeaponStorage(wepIdx) )
+				continue;
+			
+			amount += RoundFloat( float(rp_GetWeaponPrice(wepIdx)) * 0.5);
+		}
 	}
 	
 	amount += GivePlayerPay(client, true);

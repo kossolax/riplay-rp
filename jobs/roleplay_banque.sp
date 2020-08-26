@@ -235,7 +235,10 @@ public Action Cmd_ItemAssurance(int args) {
 	int item_id = GetCmdArgInt(args);
 	int client = GetCmdArgInt(1);
 	
-	if( !rp_GetClientBool(client, b_Assurance) ) {
+	if( rp_GetClientBool(client, b_FreeAssurance) ) {
+		rp_IncrementSuccess(client, success_list_assurance);
+	}
+	else if( !rp_GetClientBool(client, b_Assurance) ) {
 		rp_IncrementSuccess(client, success_list_assurance);
 	}
 	else{
@@ -245,6 +248,8 @@ public Action Cmd_ItemAssurance(int args) {
 	}
 	
 	rp_SetClientBool(client, b_Assurance, true);
+	rp_SetClientBool(client, b_FreeAssurance, false);
+	
 	FakeClientCommand(client, "say /assu");
 	
 	rp_ClientSave(client);

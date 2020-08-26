@@ -427,6 +427,10 @@ public Action cmd_GiveAssurance(int client, int args) {
 	for(int i=1; i<=GetMaxClients(); i++) {
 		if( !IsValidClient(i) )
 			continue;
+		
+		if( g_bUserData[i][b_Assurance] == 0 ) {
+			g_bUserData[i][b_FreeAssurance] = 1;
+		}
 		g_bUserData[i][b_Assurance] = 1;
 		
 		CPrintToChat(i, "" ...MOD_TAG... " Votre assurance vous couvre pour %i$.", GetAssurence(i));

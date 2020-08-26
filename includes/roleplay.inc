@@ -644,6 +644,7 @@ enum bool_user_data {
 	b_Blind,
 	b_KeyReverse,
 	b_Assurance,
+	b_FreeAssurance,
 	b_Beacon,
 	b_Crayon,
 	b_Lube,
