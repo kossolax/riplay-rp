@@ -1062,7 +1062,7 @@ enum car_data {
 	car_light_g,
 	car_light_b,
 	car_boost,
-	car_thirdperson_id,
+	car_can_jump,
 	car_klaxon,
 	car_owner,
 	car_item_id,
