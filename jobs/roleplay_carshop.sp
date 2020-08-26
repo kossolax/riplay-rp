@@ -25,11 +25,10 @@ public Plugin myinfo = {
 	version = __LAST_REV__, url = "https://www.ts-x.eu"
 };
 
-Handle g_hMAX_CAR, g_hCarJump, g_hCarUnstuck, g_hCarHeal;
+Handle g_hMAX_CAR, g_hCarUnstuck, g_hCarHeal;
 int g_cExplode;
 int g_iBlockedTime[65][65];
 float g_lastpos[2049][3];
-bool g_bVehicleCanJump;
 
 char g_szParticles[][][32] =  {
 	{ "Trail",		"Propulseur" },
@@ -84,12 +83,8 @@ public void OnPluginStart() {
 	RegAdminCmd("rp_vehiclexit",		Cmd_VehicleExit,		ADMFLAG_KICK);
 	
 	g_hMAX_CAR = CreateConVar("rp_max_car",	"10", "Nombre de voiture maximum sur le serveur", 0, true, 0.0, true, GetConVarInt(FindConVar("hostport")) == 27015 ? 10.0 : 500.0 );
-	g_hCarJump = CreateConVar("rp_car_jump", GetConVarInt(FindConVar("hostport")) == 27015 ? "0" : "1", "Les voitures peuvent-être sauter?", 0, true, 0.0, true, 1.0);
 	g_hCarUnstuck = CreateConVar("rp_car_unstuck", "1", "Les voitures peuvent-elle s'auto-débloquer?", 0, true, 0.0, true, 1.0);
 	g_hCarHeal = CreateConVar("rp_car_heal", "1000", "La vie des voitures", 0, true, 100.0, true, 100000.0);
-	
-	HookConVarChange(g_hCarJump, OnConVarChanged);
-	g_bVehicleCanJump = GetConVarBool(g_hCarJump);
 	
 	// Reload:
 	for (int i = 1; i <= MaxClients; i++) {
@@ -103,10 +98,6 @@ public void OnPluginStart() {
 			CreateTimer(3.5, Timer_VehicleRemoveCheck, EntIndexToEntRef(i));
 		}
 	}
-}
-public void OnConVarChanged(Handle cvar, const char[] oldVal, const char[] newVal) {
-	if( cvar == g_hCarJump )
-		g_bVehicleCanJump = GetConVarBool(cvar);
 }
 public Action Cmd_VehicleExit(int client, int args) {
 	for (int i = 1; i <= MaxClients; i++) {
@@ -466,6 +457,15 @@ public Action Cmd_ItemVehicleStuff(int args) {
 		rp_SetVehicleInt(target, car_battery, 0);
 		CPrintToChat(client, "" ...MOD_TAG... " Votre voiture est maintenant équipée d'une batterie secondaire.");
 	}
+	else if( StrEqual(arg1, "jump") ){
+		if( rp_GetVehicleInt(target, car_can_jump) == 1 ){
+			CPrintToChat(client, "" ...MOD_TAG... " Votre voiture est déjà équipée de suspensions hydrauliques.");
+			ITEM_CANCEL(client, item_id);
+			return Plugin_Handled;
+		}
+		rp_SetVehicleInt(target, car_can_jump, 1);
+		CPrintToChat(client, "" ...MOD_TAG... " Votre voiture est maintenant équipée de suspensions hydrauliques.");
+	}
 	else if( StrEqual(arg1, "boost") ){
 		if( rp_GetVehicleInt(target, car_boost) != -1){
 			CPrintToChat(client, "" ...MOD_TAG... " Votre voiture est déjà équipée d'un boost.");
@@ -473,6 +473,7 @@ public Action Cmd_ItemVehicleStuff(int args) {
 			return Plugin_Handled;
 		}
 		
+		rp_SetVehicleInt(target, car_boost, 1);
 		char ScriptPath[PLATFORM_MAX_PATH], buffer[8][64];
 		Entity_GetModel(target, ScriptPath, sizeof(ScriptPath));
 		int amount = ExplodeString(ScriptPath, "/", buffer, sizeof(buffer), sizeof(buffer[]));
@@ -610,6 +611,7 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	rp_SetVehicleInt(ent, car_particle, -1);	
 	rp_SetVehicleInt(ent, car_health, GetConVarInt(g_hCarHeal));
 	rp_SetVehicleInt(ent, car_klaxon, Math_GetRandomInt(1, 6));
+	rp_SetVehicleInt(ent, car_can_jump, -1);
 	
 	SetEntProp(ent, Prop_Data, "m_takedamage", DAMAGE_NO); // Nope
 	//SetEntProp(ent, Prop_Data, "m_nNextThinkTick", -1);
@@ -650,7 +652,7 @@ public void OnThink(int ent) {
 	SetEntPropFloat(ent, Prop_Data, "m_flTurnOffKeepUpright", 1.0);
 	SetEntProp(ent, Prop_Send, "m_bEnterAnimOn", 0);
 	
-	if( g_bVehicleCanJump ) {
+	if( rp_GetVehicleInt(ent, car_can_jump) == 1 ) {
 		int player = Vehicle_GetDriver(ent);
 		if( player > 0 && IsValidClient(player) && (GetClientButtons(player) & IN_DUCK) ) {
 			Handle trace;
