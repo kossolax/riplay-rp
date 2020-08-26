@@ -140,7 +140,7 @@ void DisplayBankMenu(int client, int target) {
 		}
 		
 		AddMenuItem(menu, "weaponAdd", "Déposer une arme");
-		if( rp_WeaponMenu_GetMax(g_iCustomBank[target]) >= view_as<DataPackPos>( view_as<int>(BM_Max)) )
+		if( rp_WeaponMenu_GetMax(g_iCustomBank[target]) > view_as<DataPackPos>(1) )
 			AddMenuItem(menu, "weaponGet", "Retirer une arme");
 	}
 	

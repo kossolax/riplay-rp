@@ -57,7 +57,7 @@ public int Native_rp_WeaponMenu_Add(Handle plugin, int numParams) {
 		}
 	}
 	
-	char weapon[65];
+	char weapon[BM_WeaponNameSize];
 	int index = GetEntProp(weaponID, Prop_Send, "m_iItemDefinitionIndex");
 	CSGO_GetItemDefinitionNameByIndex(index, weapon, sizeof(weapon));
 	if( StrEqual(weapon, "weapon_default") ) {
@@ -70,12 +70,12 @@ public int Native_rp_WeaponMenu_Add(Handle plugin, int numParams) {
 	
 	int[] data = new int[view_as<int>(BM_Max)];
 	
-	data[view_as<int>(BM_PvP)] = rp_GetWeaponGroupID(weaponID);
+	data[view_as<int>(BM_Owner)] = owner;
+	data[view_as<int>(BM_Prix)] = 50 + rp_GetWeaponPrice(weaponID) / 4;
 	data[view_as<int>(BM_Munition)] = Weapon_GetPrimaryClip(weaponID);
 	data[view_as<int>(BM_Chargeur)] = GetEntProp(weaponID, Prop_Send, "m_iPrimaryReserveAmmoCount");
+	data[view_as<int>(BM_PvP)] = rp_GetWeaponGroupID(weaponID);
 	data[view_as<int>(BM_Type)] = view_as<int>(rp_GetWeaponBallType(weaponID));
-	data[view_as<int>(BM_Prix)] = 50 + rp_GetWeaponPrice(weaponID) / 4;
-	data[view_as<int>(BM_Owner)] = owner;
 
 	if(rp_GetWeaponStorage(weaponID)){
 		data[view_as<int>(BM_Prix)] = 0;
@@ -105,7 +105,7 @@ public int Native_rp_WeaponMenu_Delete(Handle plugin, int numParams) {
 	DataPack clone = new DataPack();
 	clone.WriteCell(0);
 	
-	char weapon[65];
+	char weapon[BM_WeaponNameSize];
 	int[] data = new int[view_as<int>(BM_Max)];
 	 
 	while( position < max ) {
@@ -135,7 +135,7 @@ public int Native_rp_WeaponMenu_Get(Handle plugin, int numParams) {
 	DataPack hBuyMenu = view_as<DataPack>(GetNativeCell(1));
 	DataPackPos pos = GetNativeCell(2);
 	
-	char weapon[65];
+	char weapon[BM_WeaponNameSize];
 	int[] data = new int[view_as<int>(BM_Max)];
 	hBuyMenu.Position = pos;
 	hBuyMenu.ReadString(weapon, sizeof(weapon));
