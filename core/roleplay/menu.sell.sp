@@ -816,7 +816,9 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			g_iUserData[vendeur][i_Reduction] = reduction;
 			g_iUserStat[client][i_MoneySpent_Shop] += RoundFloat(prixItem - reduc);
 
-			if( StrContains(g_szItemList[item_id][item_type_extra_cmd], "rp_item_contrat") == 0 ) {
+			if(
+				StrContains(g_szItemList[item_id][item_type_extra_cmd], "rp_item_contrat") == 0 ||
+				StrContains(g_szItemList[item_id][item_type_extra_cmd], "rp_give_appart_door") == 0 ) {
 				g_iUserData[vendeur][i_ContratPay] = RoundFloat(prixItem);
 			}
 			

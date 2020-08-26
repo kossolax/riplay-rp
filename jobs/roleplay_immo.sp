@@ -154,6 +154,24 @@ public Action Cmd_ItemGiveAppart(int args) {
 	int client = StringToInt(arg1);
 	int appart = StringToInt(arg2);
 	int vendeur = StringToInt(arg3);
+	
+	if( rp_GetAppartementInt(appart, appart_proprio) > 0 ) {
+		int prix = rp_GetClientInt(vendeur, i_ContratPay);
+		
+		float reduc = float(prix) / 100.0 * float(rp_GetClientInt(client, i_Reduction));
+		int partmercenaire = RoundFloat(((float(prix) * 0.2) - reduc));
+		int partcapital = RoundFloat(float(prix) * 0.8);
+		
+		
+		rp_ClientMoney(client, i_Bank, prix-RoundFloat(reduc));
+		rp_ClientMoney(vendeur, i_AddToPay, -partmercenaire);
+		
+		rp_SetJobCapital(rp_GetClientJobID(vendeur), rp_GetJobCapital(rp_GetClientJobID(vendeur)) - partcapital);
+		
+		CPrintToChat(client, "" ...MOD_TAG... " L'appartement était déjà vendu, il a été remboursé.");
+		CPrintToChat(vendeur, "" ...MOD_TAG... " L'appartement était déjà vendu, il a été remboursé.");
+		return Plugin_Continue;
+	}
 
 	rp_SetClientFloat(vendeur, fl_LastVente, GetGameTime() + 17.0);
 
@@ -172,6 +190,8 @@ public Action Cmd_ItemGiveAppart(int args) {
 		else
 			CPrintToChat(client, "" ...MOD_TAG... " Vous êtes maintenant le propriétaire de l'appartement n°%d", appart);
 	}
+	
+	return Plugin_Continue;
 }
 public Action Cmd_ItemAppartSerrure(int args) {
 
