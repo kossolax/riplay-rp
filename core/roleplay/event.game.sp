@@ -233,7 +233,6 @@ public void OnEntityDestroyed(int entity) {
 	if( entity > 0 ) {
 		g_iEntityCount--;
 		g_iWeaponsGroup[entity] = 0;
-		rp_SetBuildingData(entity, BD_owner, 0);
 		g_iWeapons[entity] = 0;
 		g_iWeaponStolen[entity] = 0;
 		g_iWeaponFromStore[entity] = 0;
@@ -255,6 +254,7 @@ public void OnEntityCreated(int entity, const char[] classname)  {
 	g_iWeaponsBallType[entity] = ball_type_none;
 	g_iWeaponFromStore[entity] = 0;
 	rp_SetBuildingData(entity, BD_Trapped, 0);
+	rp_SetBuildingData(entity, BD_owner, 0);
 	//g_iWeaponsBallType
 }
 public void THINK_Grenade(int entity) {
@@ -331,9 +331,9 @@ public Action GameLogHook(const char[] message) {
 		int client = GetClientOfUserId(StringToInt(arg));
 				
 		GetRegexSubString(rgxProp, 3, arg, sizeof(arg));
-		int target = GetClientOfUserId(StringToInt(arg));
+		int target = StringToInt(arg);
 		
-		if( IsValidEdict(target) && IsValidEntity(target) ) {
+		if( target > 0 && target <= 2048 ) {
 			target = rp_GetBuildingData(target, BD_owner);
 		}
 		
@@ -341,12 +341,20 @@ public Action GameLogHook(const char[] message) {
 			GetRegexSubString(rgxProp, 2, arg, sizeof(arg));
 			ReplaceStringEx(log, sizeof(log), arg, g_szZoneList[GetPlayerZone(client)][zone_type_name]);
 			
+			float pos[3];
+			char zone[3][12];
 			GetRegexSubString(rgxProp, 4, arg, sizeof(arg));
-			ReplaceStringEx(log, sizeof(log), arg, g_szZoneList[GetPlayerZone(target)][zone_type_name]);
+			ExplodeString(arg, " ", zone, sizeof(zone), sizeof(zone[]));
+			pos[0] = StringToFloat(zone[0]);
+			pos[1] = StringToFloat(zone[1]);
+			pos[2] = StringToFloat(zone[2]);
+			ReplaceStringEx(log, sizeof(log), arg, g_szZoneList[ GetPointZone(pos) ][zone_type_name]);
 			
 			GetRegexSubString(rgxProp, 3, arg, sizeof(arg));
-			Format(tmp, sizeof(tmp), "%L", target);
-			Format(arg, sizeof(arg), "<%s>", arg);
+
+			GetClientAuthId(target, AuthId_Engine, tmp, sizeof(tmp));
+			Format(tmp, sizeof(tmp), " of %N\"<%d><%s><>", target, GetClientUserId(target), tmp);
+			Format(arg, sizeof(arg), "<%s>\"", arg);
 			ReplaceStringEx(log, sizeof(log), arg, tmp);
 
 			LogToGame(log);
