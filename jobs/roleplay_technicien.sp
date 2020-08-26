@@ -676,18 +676,8 @@ int BuildingBigCashMachine(int client) {
 	GetClientAbsOrigin(client, vecOrigin);
 	vecOrigin[2] += 12.0;
 	
-	int count, max = 15;
-	
-	switch( rp_GetClientInt(client, i_Job) ) {
-		case 221: max = 15; 
-		case 222: max = 15;
-		case 223: max = 13;
-		case 224: max = 12;
-		case 225: max = 11;
-		case 226: max = 10;		
-	}
-	
-	count = CountMachine(client);
+	int max = 15;
+	int count = CountMachine(client);
 	if( count == -1 )
 		return 0;
 	
