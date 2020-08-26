@@ -26,22 +26,6 @@ public Plugin myinfo = {
 
 WebResponse defaultResponse;
 public void OnPluginStart() {
-	char szDate05[64], szDate16[64];
-	
-	int now = GetTime();
-	FormatTime(szDate05, sizeof(szDate05), "%e/%m/%Y/05/00/00", now);
-	FormatTime(szDate16, sizeof(szDate16), "%e/%m/%Y/16/30/00", now);
-	
-	int iDate05 = DateToTimestamp(szDate05);
-	if( iDate05 < now )
-		iDate05 += (24 * 60 * 60);
-	int iDate16 = DateToTimestamp(szDate16);
-	if( iDate16 < now )
-		iDate16 += (24 * 60 * 60);
-	
-	int next = iDate05 > iDate16 ? iDate16 : iDate05;
-	PrintToChat(36, " ---> %f ", (next-now)/ (60*60.0));
-
 	AddGameLogHook(	GameLogHook );
 	
 	if (!Web_RegisterRequestHandler("njs", OnWebRequest, "nodejs", "nodejs backend")) {
