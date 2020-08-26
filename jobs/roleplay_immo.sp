@@ -459,7 +459,7 @@ public int MenuPropAppart(Handle menu, MenuAction action, int client, int param2
 		rp_SetBuildingData(ent, BD_item_id, item_id);
 		rp_Effect_BeamBox(client, ent, NULL_VECTOR, 0, 64, 255);
 		
-		HookSingleEntityOutput(ent, "OnBreak", PropBuilt_break);
+		SDKHook(ent, SDKHook_OnTakeDamage, OnPropDamage);
 		rp_ClientGiveItem(client,item_id,-1);
 	}
 	else if( action == MenuAction_End ) {
@@ -555,25 +555,34 @@ public int MenuPropOutdoor(Handle menu, MenuAction action, int client, int param
 		rp_SetBuildingData(ent, BD_item_id, item_id);
 		rp_Effect_BeamBox(client, ent, NULL_VECTOR, 0, 64, 255);
 		
-		HookSingleEntityOutput(ent, "OnBreak", PropBuilt_break);
+		SDKHook(ent, SDKHook_OnTakeDamage, OnPropDamage);
 		rp_ClientGiveItem(client,item_id,-1);
 	}
 	else if( action == MenuAction_End ) {
 		CloseHandle(menu);
 	}
 }
-public void PropBuilt_break(const char[] output, int caller, int activator, float delay) {
+public Action OnPropDamage(int caller, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom) {
 	
-	int owner = rp_GetBuildingData(caller, BD_owner);
-	rp_SetBuildingData(caller, BD_owner, 0);
+	int heal = Entity_GetHealth(caller);
 	
-	if( IsValidClient(activator) && IsValidClient(owner) ) {
-		rp_ClientAggroIncrement(activator, owner, 1000);
+	if( heal-RoundFloat(damage) <= 0 ) {
+		int owner = rp_GetBuildingData(caller, BD_owner);
+		rp_SetBuildingData(caller, BD_owner, 0);
+		
+		if( IsValidClient(attacker) && IsValidClient(owner) ) {
+			rp_ClientAggroIncrement(attacker, owner, 1000);
+	
+			if( owner == attacker ) {
+				rp_IncrementSuccess(owner, success_list_ikea_fail);
+			}
+		}
+		
+		Entity_SetHealth(caller, 1);
+		SDKHooks_TakeDamage(caller, attacker, attacker, damage*10.0);
 	}
-
-	if( owner == activator ) {
-		rp_IncrementSuccess(owner, success_list_ikea_fail);
-	}
+	
+	return Plugin_Continue;
 }
 // ----------------------------------------------------------------------------
 public Action Cmd_ItemPropTrap(int args) {
