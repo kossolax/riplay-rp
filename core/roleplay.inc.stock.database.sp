@@ -750,11 +750,6 @@ void ResetUserData(int client) {
 	g_iClientQuests[client][stepID] = -1;
 	g_iCurrentKill[client] = 0;
 	
-	if( g_hClientMicTimers[client] != INVALID_HANDLE ) {
-		g_hClientMicTimers[client] = INVALID_HANDLE;
-	}
-	
-	
 	for(int i=0; i<MAX_KEYSELL; i++) {
 		g_iDoorOwner_v2[client][i] = 0;
 	}
