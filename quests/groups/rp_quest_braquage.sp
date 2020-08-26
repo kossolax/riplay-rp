@@ -743,7 +743,7 @@ public void OnClientPostAdminCheck(int client) {
 public Action fwdCommand(int client, char[] command, char[] arg) {
 	if( StrEqual(command, "q") || StrEqual(command, "quest") ) {
 		
-		if( g_iPlayerTeam[client] != TEAM_BRAQUEUR )
+		if( !(g_iPlayerTeam[client] == TEAM_BRAQUEUR || g_iPlayerTeam[client] == TEAM_BRAQUEUR_DEAD) )
 			return Plugin_Continue;
 		
 		if( !rp_GetClientBool(client, b_Crayon)) {
@@ -753,7 +753,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 		for (int i = 1; i <= MaxClients; i++) {
 			if( !IsValidClient(i) )
 				continue;
-			if( g_iPlayerTeam[i] != TEAM_BRAQUEUR )
+			if( !(g_iPlayerTeam[i] == TEAM_BRAQUEUR || g_iPlayerTeam[i] == TEAM_BRAQUEUR_DEAD) )
 				continue;
 			
 			CPrintToChat(i, "{lightblue}%N{default} ({lime}QUÊTES{default}): %s", client, arg);
@@ -1323,7 +1323,8 @@ void updateTeamPolice() {
 bool policeMatch(int client) {
 	int jobID = rp_GetClientJobID(client);
 	
-	if( jobID == 101 && GetClientTeam(client) == CS_TEAM_CT && (rp_GetPlayerZone(client) == TRIBUNAL_1 || rp_GetPlayerZone(client) == TRIBUNAL_2) )
+	
+	if( jobID == 101 && rp_GetClientBool(client, b_IsInAudiance) )
 		return false;
 	
 	if( jobID == 1 || jobID == 101 ) {

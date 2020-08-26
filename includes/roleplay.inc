@@ -669,6 +669,7 @@ enum bool_user_data {
 	b_HasProtImmu,
 	b_HasQuest,
 	b_IsSearchByTribunal,
+	b_IsInAudiance,
 	b_SpawnToMetro,
 	b_SpawnToTribunal,
 	b_SpawnToTueur,

@@ -344,6 +344,7 @@ Menu AUDIENCE_Start(int client, int type, int plaignant, int suspect) {
 		g_iTribunalData[type][td_Suspect] = suspect;
 		g_iTribunalData[type][td_Plaignant] = plaignant;		
 		g_iTribunalData[type][td_Owner] = client;
+		rp_SetClientBool(client, b_IsInAudiance, true);
 		
 		if( GetClientTeam(client) == CS_TEAM_T ) {
 			FakeClientCommand(client, "say /cop");
@@ -377,6 +378,10 @@ Menu AUDIENCE_Stop(int type, int needConfirmation = 0) {
 		return subMenu;
 	}
 	
+	if( IsValidClient(g_iTribunalData[type][td_Owner]) ) {
+		rp_SetClientBool(g_iTribunalData[type][td_Owner], b_IsInAudiance, false);
+	}
+	
 	if( IsValidClient(g_iTribunalData[type][td_Suspect]) ) {
 		rp_SetClientInt(g_iTribunalData[type][td_Suspect], i_SearchLVL, 0);
 		rp_SetClientBool(g_iTribunalData[type][td_Suspect], b_IsSearchByTribunal, false);
@@ -387,6 +392,7 @@ Menu AUDIENCE_Stop(int type, int needConfirmation = 0) {
 	
 	for (int i = 0; i < sizeof(g_iArticles[]); i++)
 		g_iArticles[type][i] = 0;
+	
 	
 	for (int i = 1; i <= MaxClients; i++) {
 		if( !IsValidClient(i) )
@@ -698,7 +704,11 @@ Menu AUDIENCE_Forward(int type, int a) {
 	}
 	else {
 		CPrintToChatSearch(type, "" ...MOD_TAG... " %N{default} cède sa place de juge à %N{default}.", g_iTribunalData[type][td_Owner], a);
+		
+		rp_SetClientBool(g_iTribunalData[type][td_Owner], b_IsInAudiance, false);
 		g_iTribunalData[type][td_Owner] = a;
+		rp_SetClientBool(g_iTribunalData[type][td_Owner], b_IsInAudiance, true);
+		
 	}
 	return subMenu;
 }
