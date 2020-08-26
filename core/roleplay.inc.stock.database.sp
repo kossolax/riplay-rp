@@ -751,7 +751,6 @@ void ResetUserData(int client) {
 	g_iCurrentKill[client] = 0;
 	
 	if( g_hClientMicTimers[client] != INVALID_HANDLE ) {
-		delete g_hClientMicTimers[client];
 		g_hClientMicTimers[client] = INVALID_HANDLE;
 	}
 	

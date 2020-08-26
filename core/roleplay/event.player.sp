@@ -15,17 +15,10 @@ public MRESReturn DHooks_OnVoicePost(int client, Handle hReturn, Handle hParams)
 		delete g_hClientMicTimers[client];
 	}
 	
-	g_hClientMicTimers[client] = CreateTimer(0.5, Timer_ClientMicUsage, GetClientUserId(client));
+	g_hClientMicTimers[client] = CreateTimer(0.5, Timer_ClientMicUsage, client);
 	return MRES_Ignored;
 }  
-public Action Timer_ClientMicUsage(Handle hTimer, int iUserid) {
-	int client = GetClientOfUserId(iUserid);
-	
-	if( !IsValidClient(client) ) {
-		g_hClientMicTimers[client] = INVALID_HANDLE;
-		return Plugin_Handled;
-	}
-	
+public Action Timer_ClientMicUsage(Handle hTimer, int client) {	
 	if( g_hClientMicTimers[client] != hTimer ) {
 		return Plugin_Handled;
 	}
