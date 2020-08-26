@@ -588,15 +588,20 @@ public void SQL_GetLoteryWiner(Handle owner, Handle hQuery, const char[] error, 
 		}
 		LogToGame("[LOTO-%d] %s %s %d", place, szName, szSteamID, iGain);
 		
-		if( place == 1 ) {
-			for (int client = 1; client <= MaxClients; client++) {
-				if( !IsValidClient(client) )
-					continue;
-				GetClientAuthId(client, AUTH_TYPE, szName, sizeof(szName));
-				
-				if( StrEqual(szSteamID, szName) ) {
+		
+		for (int client = 1; client <= MaxClients; client++) {
+			if( !IsValidClient(client) )
+				continue;
+			GetClientAuthId(client, AUTH_TYPE, szName, sizeof(szName));
+			
+			if( StrEqual(szSteamID, szName) ) {
+				if( place == 1 ) {
 					rp_IncrementSuccess(client, success_list_lotto);
 				}
+				
+				rp_Effect_Particle(client, "weapon_confetti_balloons", float(4-place) * 10.0);
+				rp_Effect_Particle(client, "weapon_confetti_balloons", float(4-place) * 10.0);
+				rp_Effect_Particle(client, "weapon_confetti_balloons", float(4-place) * 10.0);
 			}
 		}
 		
