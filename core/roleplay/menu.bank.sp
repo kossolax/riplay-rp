@@ -404,7 +404,7 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 				if( position >= max )
 					return;
 				
-				char name[65], tmp[32], tmp2[128];
+				char name[BM_WeaponNameSize], tmp[32], tmp2[128];
 				int[] data = new int[view_as<int>(BM_Max)];
 				int count = 0;
 				bool permValid = false;
@@ -474,7 +474,7 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 					return;
 				}
 				
-				char name[65];
+				char name[BM_WeaponNameSize];
 				int[] data = new int[view_as<int>(BM_Max)];
 				rp_WeaponMenu_Get(g_iCustomBank[target], view_as<DataPackPos>(StringToInt(expl[1])), name, data);
 				
@@ -510,9 +510,8 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 					rp_SetWeaponGroupID(wepid, rp_GetClientGroupID(client));
 				
 				if( data[BM_Munition] != -1 ) {
-					Weapon_SetPrimaryClip(wepid, data[BM_Munition]);
-					Weapon_SetPrimaryAmmoCount(wepid, data[BM_Chargeur]);
-					Client_SetWeaponPlayerAmmoEx(client, wepid, data[BM_Chargeur]);
+					SetEntProp(wepid, Prop_Send, "m_iClip1", data[BM_Munition]);
+					SetEntProp(wepid, Prop_Send, "m_iPrimaryReserveAmmoCount", data[BM_Chargeur]);
 				}
 
 				if( data[BM_Prix] == 0 ){

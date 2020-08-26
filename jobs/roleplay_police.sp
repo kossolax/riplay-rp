@@ -1826,7 +1826,7 @@ public Action fwdOnPlayerUse(int client) {
 void Cmd_BuyWeapon(int client, bool free) {
 	DataPackPos max = rp_WeaponMenu_GetMax(g_hBuyMenu);
 	DataPackPos position = rp_WeaponMenu_GetPosition(g_hBuyMenu);
-	char name[65], tmp[8], tmp2[129];
+	char name[BM_WeaponNameSize], tmp[8], tmp2[129];
 	int[] data = new int[BM_Max];
 	
 	if (position >= max) {
@@ -1881,7 +1881,7 @@ public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int 
 		if (GetMenuItem(p_hMenu, p_iParam2, szMenu, sizeof(szMenu))) {
 			ExplodeString(szMenu, " ", buffer, sizeof(buffer), sizeof(buffer[]));
 			
-			char name[65];
+			char name[BM_WeaponNameSize];
 			int[] data = new int[BM_Max];
 			DataPackPos position = view_as<DataPackPos>(StringToInt(buffer[0]));
 			rp_WeaponMenu_Get(g_hBuyMenu, position, name, data);
@@ -1913,9 +1913,8 @@ public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int 
 				rp_SetWeaponGroupID(wepid, rp_GetClientGroupID(client));
 			
 			if (data[BM_Munition] != -1) {
-				Weapon_SetPrimaryClip(wepid, data[BM_Munition]);
-				Weapon_SetPrimaryAmmoCount(wepid, data[BM_Chargeur]);
-				Client_SetWeaponPlayerAmmoEx(client, wepid, data[BM_Chargeur]);
+				SetEntProp(wepid, Prop_Send, "m_iClip1", data[BM_Munition]);
+				SetEntProp(wepid, Prop_Send, "m_iPrimaryReserveAmmoCount", data[BM_Chargeur]);
 			}
 			
 			rp_WeaponMenu_Delete(g_hBuyMenu, position);
@@ -2000,6 +1999,9 @@ bool canWeaponBeAddedInPoliceStore(int weaponID) {
 		return false;
 	owner = rp_WeaponMenu_GetOwner(weaponID);
 	if (IsValidClient(owner) && (rp_GetClientJobID(owner) == 1 || rp_GetClientJobID(owner) == 101))
+		return false;
+	
+	if( rp_GetWeaponStorage(weaponID) )
 		return false;
 	
 	return true;

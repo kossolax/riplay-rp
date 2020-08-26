@@ -182,7 +182,7 @@ public void OnEntityDestroyed(int entity) {
 					int active = Client_GetActiveWeapon(player);
 					
 					float vec[3], rnd[3];
-					char name[65];
+					char name[BM_WeaponNameSize];
 					int[] data = new int[view_as<int>(BM_Max)];
 					DataPackPos max = rp_WeaponMenu_GetMax(g_iCustomBank[entity]);
 					DataPackPos position = rp_WeaponMenu_GetPosition(g_iCustomBank[entity]);
@@ -192,7 +192,7 @@ public void OnEntityDestroyed(int entity) {
 					while( position < max ) {
 						rp_WeaponMenu_Get(g_iCustomBank[entity], position, name, data);
 						
-						if( g_iEntityCount < 2000 ) {
+						if( g_iEntityCount < 2000 && data[BM_Prix] > 0 ) {
 							Format(name, sizeof(name), "weapon_%s", name);
 							
 							rnd[0] = Math_GetRandomFloat(-250.0, 250.0);
@@ -209,10 +209,8 @@ public void OnEntityDestroyed(int entity) {
 							
 							rp_SetWeaponBallType(wepid, view_as<enum_ball_type>(data[BM_Type]));
 							
-							if( data[BM_Munition] != -1 ) {
-								Weapon_SetPrimaryClip(wepid, data[BM_Munition]);
-								Weapon_SetPrimaryAmmoCount(wepid, data[BM_Chargeur]);
-							}
+							SetEntProp(wepid, Prop_Send, "m_iClip1", data[BM_Munition]);
+							SetEntProp(wepid, Prop_Send, "m_iPrimaryReserveAmmoCount", data[BM_Chargeur]);
 						}
 						position = rp_WeaponMenu_GetPosition(g_iCustomBank[entity]);
 					}
