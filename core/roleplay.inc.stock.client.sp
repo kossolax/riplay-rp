@@ -900,12 +900,7 @@ int GetAssurence(int client, bool forced = false) {
 			}
 			else if( StrEqual(tmp, "rp_plant") ) {
 				int item_id = rp_GetBuildingData(i, BD_original_id);
-				if( item_id > 0 ) {
-					amount += RoundFloat( StringToFloat(g_szItemList[item_id][item_type_prix]) * ratio);					
-					if( rp_GetBuildingData(i, BD_max) > 3 ) {
-						amount += RoundFloat( float(rp_GetBuildingData(i, BD_max) - 3) * ratio);
-					}
-				}
+				amount += RoundFloat(StringToFloat(g_szItemList[item_id][item_type_prix]) * ratio);
 			}
 			else if( StrEqual(tmp, "rp_kevlarbox") ) {
 				amount += RoundFloat(1500.0 * ratio);
