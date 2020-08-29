@@ -335,7 +335,7 @@ void showPlayerHintBox(int client, int target) {
 		
 		PrintHintText(client, "Voiture de %s\nHP: %d%s", clientname, rp_GetVehicleInt(target, car_health), fmt);
 	}
-	else if( StrContains(classname, "vehicle") >= 0 g_iVehicleData[target][car_owner] < 0 ) {
+	else if( StrContains(classname, "vehicle") >= 0 && g_iVehicleData[target][car_owner] < 0 ) {
 		
 		int target3 = GetEntPropEnt(target, Prop_Send, "m_hPlayer");
 		char fmt[128];
