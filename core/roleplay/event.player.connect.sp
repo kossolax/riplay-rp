@@ -110,7 +110,7 @@ public void OnClientDisconnect(int Client) {
 		g_iUserData[Client][i_AddToPay] = 0;
 
 		if( g_bUserData[Client][b_Assurance] && !g_bUserData[Client][b_FreeAssurance] )
-			g_iClient_OLD[client] = 0; // hack foireux
+			g_iClient_OLD[Client] = 0; // hack foireux
 		
 		g_bUserData[Client][b_Assurance] = false;
 		g_bUserData[Client][b_FreeAssurance] = false;
