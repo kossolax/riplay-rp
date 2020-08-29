@@ -32,12 +32,16 @@ float _Entity_GetDistance(int client, int id) {
 	}
 	
 	int source = GetEntPropEnt(client, Prop_Send, "m_hVehicle");
-	if( source == -1 )
+	if( source <= 0 )
 		source = rp_GetClientVehiclePassager(client);
+	if( source <= 0 )
+		source = Entity_GetParent(client);
 	
 	int target = GetEntPropEnt(id, Prop_Send, "m_hVehicle");
-	if( target == -1 )
+	if( target <= 0 )
 		target = rp_GetClientVehiclePassager(id);
+	if( target <= 0 )
+		target = Entity_GetParent(target);
 	
 	if( source <= 0 )
 		source = client;
