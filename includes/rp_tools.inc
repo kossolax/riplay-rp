@@ -17,17 +17,23 @@
 #include <cstrike>
 
 stock float rp_GetDistance(int client, int id) {
-	int source = GetEntPropEnt(client, Prop_Send, "m_hVehicle");
-	if( source <= 0 )
-		source = rp_GetClientVehiclePassager(client);
-	if( source <= 0 )
-		source = Entity_GetParent(client);
+	int source, target;
 	
-	int target = GetEntPropEnt(id, Prop_Send, "m_hVehicle");
-	if( target <= 0 )
-		target = rp_GetClientVehiclePassager(id);
-	if( target <= 0 )
-		target = Entity_GetParent(id);
+	if( client > 0 && client <= MaxClients ) {
+		source = GetEntPropEnt(client, Prop_Send, "m_hVehicle");
+		if( source <= 0 )
+			source = rp_GetClientVehiclePassager(client);
+		if( source <= 0 )
+			source = Entity_GetParent(client);
+	}
+	
+	if( id > 0 && id <= MaxClients ) {
+		target = GetEntPropEnt(id, Prop_Send, "m_hVehicle");
+		if( target <= 0 )
+			target = rp_GetClientVehiclePassager(id);
+		if( target <= 0 )
+			target = Entity_GetParent(id);
+	}
 	
 	if( source <= 0 )
 		source = client;
