@@ -1294,7 +1294,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 			amendeCalculation(target, amende);
 		}
 		
-		if ( amende <= 1800 && (rp_GetClientInt(target, i_Money) >= amende || ((rp_GetClientInt(target, i_Money) + rp_GetClientInt(target, i_Bank)) >= amende * 250)) ) {
+		if ( amende <= 1800 && (rp_GetClientInt(target, i_Money) >= amende || ((rp_GetClientInt(target, i_Money) + rp_GetClientInt(target, i_Bank)) >= amende * 20)) ) {
 			rp_SetClientStat(target, i_MoneySpent_Fines, rp_GetClientStat(target, i_MoneySpent_Fines) + amende);
 			rp_ClientMoney(target, i_Money, -amende);
 			
