@@ -108,6 +108,8 @@ public void OnClientDisconnect(int Client) {
 		QuestClean(Client);
 		rp_ClientMoney(Client, i_Money, g_iUserData[Client][i_AddToPay]);
 		g_iUserData[Client][i_AddToPay] = 0;
+		g_bUserData[Client][b_Assurance] = false;
+		g_bUserData[Client][b_FreeAssurance] = false;
 		StoreUserData(Client);
 
 		g_bUserData[Client][b_isConnected]  = 0;
