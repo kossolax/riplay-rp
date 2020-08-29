@@ -1225,16 +1225,6 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 		switch(type) {
 			case 1: { // Voiture
 			
-				int count = rp_CountPoliceNear(client), rand = 4 + Math_GetRandomPow(0, 4), i;
-				
-				for (i = 0; i < count; i++)
-					rand += (4 + Math_GetRandomPow(0, 12));
-				for (i = 0; i < rand; i++)
-					CreateTimer(i / 5.0, SpawnMoney, EntIndexToEntRef(target));
-				
-				stealAMount = 25*rand + 500;
-				
-				CPrintToChat(client, "" ...MOD_TAG... " %d billets ont été sorti de la boite à gant.", rand);
 				CPrintToChat(client, "" ...MOD_TAG... " Vous avez maintenant les clés de cette voiture.");
 				
 				rp_SetClientKeyVehicle(client, target, true);
@@ -1248,6 +1238,18 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 					
 					rp_ClientMoney(owner, i_Money, -stealAMount);
 					rp_ClientAggroIncrement(client, owner, 1000);
+					
+					
+					int count = rp_CountPoliceNear(client), rand = 4 + Math_GetRandomPow(0, 4), i;
+				
+					for (i = 0; i < count; i++)
+						rand += (4 + Math_GetRandomPow(0, 12));
+					for (i = 0; i < rand; i++)
+						CreateTimer(i / 5.0, SpawnMoney, EntIndexToEntRef(target));
+					
+					stealAMount = 25*rand + 500;
+					
+					CPrintToChat(client, "" ...MOD_TAG... " %d billets ont été sorti de la boite à gant.", rand);
 				}
 			}
 			case 2: {
@@ -1681,7 +1683,7 @@ bool CanTP(float pos[3], int client) {
 bool CanStealVehicle(int client, int target) {	
 	if( (rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PARKING) )
 		return false;
-	if( !IsValidClient(rp_GetVehicleInt(target, car_owner)) )
+	if( !(rp_GetVehicleInt(target, car_owner) < 0 || IsValidClient(rp_GetVehicleInt(target, car_owner))) )
 		return false;
 	if( client == rp_GetVehicleInt(target, car_owner) )
 		return false;
@@ -1689,9 +1691,11 @@ bool CanStealVehicle(int client, int target) {
 		return false;
 		
 	int owner = rp_GetVehicleInt(target, car_owner);
-	int appart = rp_GetPlayerZoneAppart(owner);
-	if( appart > 0 && ( rp_GetAppartementInt(appart, appart_bonus_garage) || (rp_GetClientJobID(owner) == 61 && !rp_GetClientBool(owner, b_GameModePassive)) ) )
-		return false;
+	if( owner > 0 ) {
+		int appart = rp_GetPlayerZoneAppart(owner);
+		if( appart > 0 && ( rp_GetAppartementInt(appart, appart_bonus_garage) || (rp_GetClientJobID(owner) == 61 && !rp_GetClientBool(owner, b_GameModePassive)) ) )
+			return false;
+	}
 	if( rp_GetVehicleInt(target, car_health) > 5000 && GetConVarInt(FindConVar("rp_braquage")) == 1 )
 		return false;
 	return true;

@@ -57,7 +57,10 @@ char g_szColor[][][32] = {
 	{ "128 0 255", 	"Mauve" },  	{ "255 0 255", 	"Rose" },  		{ "255 0 128", 	"Fushia" }, 
 	{ "255 255 255","Blanc" },  	{ "128 128 128","Gris" },  		{ "0 0 0", 		"Noir" }
 };
-	
+
+int g_iVehiclePolice = -1;
+int g_iVehicleJustice = -1;
+
 // ----------------------------------------------------------------------------
 public Action Cmd_Reload(int args) {
 	char name[64];
@@ -86,6 +89,8 @@ public void OnPluginStart() {
 	g_hCarUnstuck = CreateConVar("rp_car_unstuck", "1", "Les voitures peuvent-elle s'auto-débloquer?", 0, true, 0.0, true, 1.0);
 	g_hCarHeal = CreateConVar("rp_car_heal", "1000", "La vie des voitures", 0, true, 100.0, true, 100000.0);
 	
+	char model[PLATFORM_MAX_PATH];
+	
 	// Reload:
 	for (int i = 1; i <= MaxClients; i++) {
 		if( IsValidClient(i) )
@@ -96,8 +101,68 @@ public void OnPluginStart() {
 //			SDKHook(i, SDKHook_Touch, VehicleTouch);
 			SDKHook(i, SDKHook_Think, OnThink);	
 			CreateTimer(3.5, Timer_VehicleRemoveCheck, EntIndexToEntRef(i));
+			
+			Entity_GetModel(i, model, sizeof(model));
+			if( StrContains(model, "police_crown_victoria_csgo") >= 0 ) {
+				int skin = GetEntProp(i, Prop_Send, "m_nSkin");
+				if( skin == 6 )
+					g_iVehiclePolice = EntIndexToEntRef(i);
+				if( skin == 1 )
+					g_iVehicleJustice = EntIndexToEntRef(i);			
+			}
 		}
 	}
+	
+	CreateTimer(1.0, Check_VehiclePolice);
+}
+public Action Check_VehiclePolice(Handle timer, any none) {
+	float spawn[][3] = {
+		{1477.0, 1818.0, -2143.0},
+		{1332.0, 1818.0, -2143.0}
+	};
+	
+	if( EntRefToEntIndex(g_iVehiclePolice) <= 0 ) {
+		int rnd = GetRandomInt(0, sizeof(spawn)-1);
+		
+		int car = rp_CreateVehicle(spawn[rnd], view_as<float>({0.0, 180.0, 0.0}), "models/natalya/vehicles/police_crown_victoria_csgo_v2.mdl", 6);
+		if( rp_IsValidVehicle(car) ) {
+			SetEntProp(car, Prop_Data, "m_bLocked", 1);
+			rp_SetVehicleInt(car, car_owner, -1);
+			rp_SetVehicleInt(car, car_maxPassager, 3);
+			SetEntProp(car, Prop_Send, "m_nBody", 3);
+			
+			g_iVehiclePolice = EntIndexToEntRef(car);
+		}
+	}
+	
+	if( EntRefToEntIndex(g_iVehicleJustice) <= 0 ) {
+		int rnd = GetRandomInt(0, sizeof(spawn)-1);
+		
+		int car = rp_CreateVehicle(spawn[rnd], view_as<float>({0.0, 180.0, 0.0}), "models/natalya/vehicles/police_crown_victoria_csgo_v2.mdl", 1);
+		if( rp_IsValidVehicle(car) ) {
+			SetEntProp(car, Prop_Data, "m_bLocked", 1);
+			rp_SetVehicleInt(car, car_owner, -101);
+			rp_SetVehicleInt(car, car_maxPassager, 3);
+			SetEntProp(car, Prop_Send, "m_nBody", 3);
+			
+			g_iVehicleJustice = EntIndexToEntRef(car);
+		}
+	}
+	
+	for (int i = 1; i <= MaxClients; i++) {
+		if( !IsValidClient(i) )
+			continue;
+		
+		if( rp_GetClientJobID(i) == 1 && EntRefToEntIndex(g_iVehiclePolice) > 0 ) {
+			rp_SetClientKeyVehicle(i, EntRefToEntIndex(g_iVehiclePolice), true);
+		}
+			
+		if( rp_GetClientJobID(i) == 101 && EntRefToEntIndex(g_iVehicleJustice) > 0 )
+			rp_SetClientKeyVehicle(i, EntRefToEntIndex(g_iVehicleJustice), true);
+		
+	}
+	
+	CreateTimer(1.0, Check_VehiclePolice);
 }
 public Action Cmd_VehicleExit(int client, int args) {
 	for (int i = 1; i <= MaxClients; i++) {
@@ -152,7 +217,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	SetMenuTitle(menu, "Une voiture pour 6 minutes");
 
 	AddMenuItem(menu, "mustang",	"Mustang");
-	AddMenuItem(menu, "victoria",	"Victoria [BIENTOT]", ITEMDRAW_DISABLED);
+	AddMenuItem(menu, "victoria",	"Victoria");
 	AddMenuItem(menu, "moto", 		"Moto");
 
 	DisplayMenu(menu, client, 60);
@@ -458,6 +523,13 @@ public Action Cmd_ItemVehicleStuff(int args) {
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
+		
+		if( target == EntRefToEntIndex(g_iVehiclePolice) || target == EntRefToEntIndex(g_iVehicleJustice) ) {
+			CPrintToChat(client, "" ...MOD_TAG... " Il n'est pas possible d'équiper une voiture de fonctiond d'une batterie.");
+			ITEM_CANCEL(client, item_id);
+			return Plugin_Handled;
+		}
+		
 		rp_SetVehicleInt(target, car_battery, 0);
 		CPrintToChat(client, "" ...MOD_TAG... " Votre voiture est maintenant équipée d'une batterie secondaire.");
 	}
@@ -1353,6 +1425,8 @@ public int SpawnVehicle(Handle menu, MenuAction action, int client, int param) {
 			char model[128];
 			int max = 0;
 			
+			int skinid = 1;
+			
 			if( StrEqual(arg1, "mustang") ) {
 				Format(model, sizeof(model), "models/natalya/vehicles/natalya_mustang_csgo_2016.mdl");
 				max = 3;
@@ -1360,12 +1434,13 @@ public int SpawnVehicle(Handle menu, MenuAction action, int client, int param) {
 			if( StrEqual(arg1, "victoria") ) {
 				Format(model, sizeof(model), "models/natalya/vehicles/police_crown_victoria_csgo_v2.mdl");
 				max = 3;
+				skinid = 0;
 			}
 			else if( StrEqual(arg1, "moto") ) {
 				Format(model, sizeof(model), "models/natalya/vehicles/dirtbike.mdl");
 			}
 			
-			int skinid = 1;
+			
 			
 			if( rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PEACEFULL ) {
 				CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
