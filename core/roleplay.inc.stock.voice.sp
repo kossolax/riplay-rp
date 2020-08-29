@@ -41,7 +41,7 @@ float _Entity_GetDistance(int client, int id) {
 	if( target <= 0 )
 		target = rp_GetClientVehiclePassager(id);
 	if( target <= 0 )
-		target = Entity_GetParent(target);
+		target = Entity_GetParent(id);
 	
 	if( source <= 0 )
 		source = client;
