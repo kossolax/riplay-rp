@@ -16,6 +16,7 @@ int g_iEmoteClient[2049];
 #define EF_NOSHADOW 			(1 << 4)
 #define	EF_BONEMERGE_FASTCULL	(1 << 7)
 #define EF_PARENT_ANIMATES		(1 << 9)
+Handle g_hTeleport;
 
 char g_szEmote[][][] = {
 	{"Emote_Fonzie_Pistol",	"Fonzie Pistol", 	"0"},
@@ -57,14 +58,65 @@ char g_szEmote[][][] = {
 };
 
 public void OnPluginStart() {
-	RegAdminCmd("sm_emote",	Cmd_Hdv, ADMFLAG_KICK);
+	Handle hGameData = LoadGameConfigFile("sdktools.games");
+	if(hGameData == INVALID_HANDLE)
+		return;
+	
+	int iOffset;
+	iOffset = GameConfGetOffset(hGameData, "Teleport");
+	
+	if(iOffset != -1) {
+		g_hTeleport = DHookCreate(iOffset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, DHooks_OnTeleport);
+		if(g_hTeleport != INVALID_HANDLE) {
+			DHookAddParam(g_hTeleport, HookParamType_VectorPtr);
+			DHookAddParam(g_hTeleport, HookParamType_VectorPtr);
+			DHookAddParam(g_hTeleport, HookParamType_VectorPtr);
+			DHookAddParam(g_hTeleport, HookParamType_Bool);
+		}
+	}
+	
+	for (int i = 1; i <= MaxClients; i++)
+		if( IsValidClient(i) )
+			OnClientPostAdminCheck(i);
 }
-public Action Cmd_Hdv(int client, int args) {
-	MainEmote(client, 0);
+public MRESReturn DHooks_OnTeleport(int client, Handle hParams) {
+ 	
+	if( EntRefToEntIndex(g_iEmoteEnt[client]) > 0 ) {
+		stopEmote(client);
+	}
+ 
+ 	return MRES_Ignored;
+ }
+ 
+public void OnClientPostAdminCheck(int client) {
+	DHookEntity(g_hTeleport, false, client);
+	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 }
-void MainEmote(int client, int id) {
+
+public Action fwdCommand(int client, char[] command, char[] arg) {
+	if( StrEqual(command, "emote") || StrEqual(command, "émote") || StrEqual(command, "emotes") || StrEqual(command, "émotes") ) {
+		if( !canAccess(client) ) {
+			return Plugin_Handled;
+		}
+		
+		MainEmote(client);
+		return Plugin_Handled;
+	}
+	return Plugin_Continue;
+}
+bool canAccess(int client) {
+	
+	if( rp_GetClientInt(client, i_Donateur) >= 1 && rp_GetClientInt(client, i_Donateur) <= 10 )
+		return true;
+	
+	if( GetUserFlagBits(client) & ADMFLAG_KICK )
+		return true;
+	
+	return false;
+}
+void MainEmote(int client, int id=0) {
 	Menu menu = CreateMenu(Handler_MainEmote);
-	menu.SetTitle("Emote\n ");
+	menu.SetTitle("Emote (100$/utilisation)\n ");
 	
 	for (int i = 0; i < sizeof(g_szEmote); i++ ) {
 		if( StringToInt(g_szEmote[i][2]) == 0 )
@@ -79,8 +131,9 @@ public int Handler_MainEmote(Handle hItem, MenuAction oAction, int client, int p
 		
 		MainEmote(client, 6* (param/6) );
 		
-		if( g_iEmoteEnt[client] == 0 )
+		if( g_iEmoteEnt[client] == 0 && rp_IsBuildingAllowed(client) ) {
 			startEmote(client, options);
+		}
 	}
 	else if (oAction == MenuAction_End ) {
 		CloseHandle(hItem);
@@ -90,8 +143,19 @@ public int Handler_MainEmote(Handle hItem, MenuAction oAction, int client, int p
 public void OnMapStart() {
 	PrecacheModel("models/player/custom_player/kodua/fortnite_emotes_v2.mdl");
 }
+public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3], float ang[3], int& weapon, int& subtype, int& cmdnum, int& tickcount, int& seed, int mouse[2]) {
+
+	if( buttons & (IN_FORWARD|IN_BACK|IN_LEFT|IN_RIGHT|IN_DUCK|IN_SPEED|IN_JUMP|IN_MOVELEFT|IN_MOVERIGHT) ) {
+		if( EntRefToEntIndex(g_iEmoteEnt[client]) > 0 ) {
+			stopEmote(client);
+		}
+	}
+}
 
 bool startEmote(int client, const char[] anim) {
+	if( rp_GetClientInt(client, i_Bank) > 100 )
+		rp_ClientMoney(client, i_Money, -100);
+	
 	float vec[3], ang[3];
 	Entity_GetAbsOrigin(client, vec);
 	Entity_GetAbsAngles(client, ang);
@@ -149,23 +213,25 @@ public Action Frame_Animation(Handle timer, any userid) {
 public void EndAnimation(const char[] output, int caller, int activator, float delay)  {
 	int client = GetClientOfUserId(g_iEmoteClient[caller]);
 	
-	if( client > 0 ) {
-		int EntEffects = GetEntProp(client, Prop_Send, "m_fEffects") & (~EF_NODRAW) & (~EF_BONEMERGE) & (~EF_NOSHADOW) & (~EF_NOINTERP) & (~EF_BONEMERGE_FASTCULL) & (~EF_PARENT_ANIMATES);
-		SetEntProp(client, Prop_Send, "m_fEffects", EntEffects);
-		AcceptEntityInput(client, "ClearParent", caller);
+	if( client > 0 )
+		stopEmote(client);
+}
+
+
+void stopEmote(int client) {
+	
+	int caller = EntRefToEntIndex(g_iEmoteEnt[client]);
+	int EntEffects = GetEntProp(client, Prop_Send, "m_fEffects") & (~EF_NODRAW) & (~EF_BONEMERGE) & (~EF_NOSHADOW) & (~EF_NOINTERP) & (~EF_BONEMERGE_FASTCULL) & (~EF_PARENT_ANIMATES);
+	SetEntProp(client, Prop_Send, "m_fEffects", EntEffects);
+	AcceptEntityInput(client, "ClearParent", caller);
 		
-		SetEntityMoveType(client, MOVETYPE_WALK);
-		if( rp_GetClientInt(client, i_ThirdPerson) == 0 ) {
-			ClientCommand(client, "firstperson");
-		}
-		
-		
+	SetEntityMoveType(client, MOVETYPE_WALK);
+	if( rp_GetClientInt(client, i_ThirdPerson) == 0 ) {
+		ClientCommand(client, "firstperson");
 	}
 	
 	AcceptEntityInput(caller, "Kill");
 	
 	g_iEmoteEnt[client] = 0;
 	g_iEmoteClient[caller] = 0;
-	
-	
 }
