@@ -158,7 +158,7 @@ public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3
 }
 
 bool startEmote(int client, const char[] anim) {
-	if( rp_GetClientInt(client, i_Bank) > 100 )
+	if( !(GetUserFlagBits(client) & ADMFLAG_KICK) && rp_GetClientInt(client, i_Bank) > 100 )
 		rp_ClientMoney(client, i_Money, -100);
 	
 	float vec[3], ang[3];
