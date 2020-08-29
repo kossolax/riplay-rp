@@ -104,6 +104,11 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 	}
 	return Plugin_Continue;
 }
+bool isMoving(int buttons) {
+	if( buttons & (IN_FORWARD | IN_BACK | IN_LEFT | IN_RIGHT | IN_DUCK | IN_SPEED | IN_JUMP | IN_MOVELEFT | IN_MOVERIGHT) )
+		return true;
+	return false;
+}
 bool canAccess(int client) {
 	
 	if( rp_GetClientInt(client, i_Donateur) >= 1 && rp_GetClientInt(client, i_Donateur) <= 10 )
@@ -131,7 +136,7 @@ public int Handler_MainEmote(Handle hItem, MenuAction oAction, int client, int p
 		
 		MainEmote(client, 6* (param/6) );
 		
-		if( g_iEmoteEnt[client] == 0 && rp_IsBuildingAllowed(client) ) {
+		if( g_iEmoteEnt[client] == 0 && rp_IsBuildingAllowed(client) && !isMoving(GetClientButtons(client)) ) {
 			startEmote(client, options);
 		}
 	}
@@ -145,7 +150,7 @@ public void OnMapStart() {
 }
 public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3], float ang[3], int& weapon, int& subtype, int& cmdnum, int& tickcount, int& seed, int mouse[2]) {
 
-	if( buttons & (IN_FORWARD|IN_BACK|IN_LEFT|IN_RIGHT|IN_DUCK|IN_SPEED|IN_JUMP|IN_MOVELEFT|IN_MOVERIGHT) ) {
+	if( isMoving(buttons) ) {
 		if( EntRefToEntIndex(g_iEmoteEnt[client]) > 0 ) {
 			stopEmote(client);
 		}
