@@ -18,42 +18,42 @@ int g_iEmoteClient[2049];
 #define EF_PARENT_ANIMATES		(1 << 9)
 
 char g_szEmote[][][] = {
-	{"Emote_Fonzie_Pistol", "", "0"},
-	{"Emote_Bring_It_On", "", "0"},
-	{"Emote_ThumbsDown", "", "0"},
-	{"Emote_ThumbsUp", "", "0"},
-//	{"Emote_Celebration_Loop", "", "1"},
-	{"Emote_BlowKiss", "", "0"},
-	{"Emote_Calculated", "", "0"},
-	{"Emote_Confused", "", "0"},
-//	{"Emote_Chug", "", "1"},
-	{"Emote_Cry", "", "0"},
-	{"Emote_DustingOffHands", "", "0"},
-	{"Emote_DustOffShoulders", "", "0"},
-	{"Emote_Facepalm", "", "0"},
-	{"Emote_Fishing", "", "0"},
-	{"Emote_Flex", "", "0"},
-//	{"Emote_golfclap", "", "1"},
-	{"Emote_HandSignals", "", "0"},
-	{"Emote_HeelClick", "", "0"},
-	{"Emote_Hotstuff", "", "0"},
-	{"Emote_IBreakYou", "", "0"},
-	{"Emote_IHeartYou", "", "0"},
-	{"Emote_Kung-Fu_Salute", "", "0"},
-	{"Emote_Laugh", "", "0"},
-	{"Emote_Luchador", "", "0"},
-	{"Emote_Make_It_Rain", "", "0"},
-	{"Emote_NotToday", "", "0"},
-	{"Emote_RockPaperScissor_Paper", "", "0"},
-	{"Emote_RockPaperScissor_Rock", "", "0"},
-	{"Emote_RockPaperScissor_Scissor", "", "0"},
-	{"Emote_Salt", "", "0"},
-	{"Emote_Salute", "", "0"},
-//	{"Emote_SmoothDrive", "", "1"},
-	{"Emote_Snap", "", "0"},
-	{"Emote_StageBow", "", "0"},
-	{"Emote_Wave2", "", "0"},
-	{"Emote_Yeet", "", "0"}
+	{"Emote_Fonzie_Pistol",	"Fonzie Pistol", 	"0"},
+	{"Emote_Bring_It_On",	"Bring it On",		"0"},
+	{"Emote_ThumbsDown", 	"Thumbs Down", 		"0"},
+	{"Emote_ThumbsUp",		"Thumbs Up", 		"0"},
+	{"Emote_Celebration_Loop", "Celebration", "1"},
+	{"Emote_BlowKiss", 		"Blow Kiss", 		"0"},
+	{"Emote_Calculated", 	"Calculated", 	"0"},
+	{"Emote_Confused",		"Confused", "0"},
+	{"Emote_Chug", 			"Chug", "1"},
+	{"Emote_Cry", 			"Cry", "0"},
+	{"Emote_DustingOffHands", "Dusting Off Hands", "0"},
+	{"Emote_DustOffShoulders", "Dust Off Shoulders", "0"},
+	{"Emote_Facepalm", 		"Facepalm", "0"},
+	{"Emote_Fishing", 		"Fishing", "0"},
+	{"Emote_Flex", 			"Flex", "0"},
+	{"Emote_golfclap", 		"golfclap", "1"},
+	{"Emote_HandSignals", 	"Hand Signals", "0"},
+	{"Emote_HeelClick", 	"Heel Click", "0"},
+	{"Emote_Hotstuff", 		"Hotstuff", "0"},
+	{"Emote_IBreakYou", 	"I Break You", "0"},
+	{"Emote_IHeartYou", 	"I Heart You", "0"},
+	{"Emote_Kung-Fu_Salute", "Kung-Fu Salute", "0"},
+	{"Emote_Laugh", 		"Laugh", "0"},
+	{"Emote_Luchador", 		"Luchador", "0"},
+	{"Emote_Make_It_Rain", 	"Make It Rain", "0"},
+	{"Emote_NotToday", 		"Not Today", "0"},
+	{"Emote_RockPaperScissor_Paper", "Paper", "0"},
+	{"Emote_RockPaperScissor_Rock", "Rock", "0"},
+	{"Emote_RockPaperScissor_Scissor", "Scissor", "0"},
+	{"Emote_Salt",			 "Salt", "0"},
+	{"Emote_Salute", 		"Salute", "0"},
+	{"Emote_SmoothDrive", 	"Smooth Drive", "1"},
+	{"Emote_Snap", 			"Snap", "0"},
+	{"Emote_StageBow", 		"Stage Bow", "0"},
+	{"Emote_Wave2", 		"Wave", "0"},
+	{"Emote_Yeet",			"Yeet", "0"}
 };
 
 public void OnPluginStart() {
@@ -65,7 +65,8 @@ public Action Cmd_Hdv(int client, int args) {
 	menu.SetTitle("Emote\n ");
 	
 	for (int i = 0; i < sizeof(g_szEmote); i++ ) {
-		menu.AddItem(g_szEmote[i][0], g_szEmote[i][0]);
+		if( StringToInt(g_szEmote[i][2]) == 0 )
+			menu.AddItem(g_szEmote[i][0], g_szEmote[i][1]);
 	}
 	menu.Display(client, MENU_TIME_FOREVER);
 }
