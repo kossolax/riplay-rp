@@ -73,7 +73,7 @@ public void OnPluginStart() {
 		GetEdictClassname(i, classname, sizeof(classname));
 		if( StrEqual(classname, "rp_plant") ) {
 			
-			rp_SetBuildingData(i, BD_started, GetTime());
+			//rp_SetBuildingData(i, BD_started, GetTime());
 			rp_SetBuildingData(i, BD_owner, GetEntPropEnt(i, Prop_Send, "m_hOwnerEntity") );
 			rp_SetBuildingData(i, BD_max, rp_GetBuildingData(i, BD_FromBuild) == 0 ? 3 : 30 );
 			
@@ -525,12 +525,14 @@ public Action ItemPiluleOver(Handle timer, Handle dp) {
 		CPrintToChat(client, "" ...MOD_TAG... " Impossible d'utiliser cet objet dans une voiture.");
 		rp_ClientColorize(client);
 		ITEM_CANCEL(client, item_id);
+		return Plugin_Handled;
 	}
 	
 	if( GetClientButtons(client) & IN_DUCK ) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez annulé la téléportation en restant accroupi.");
 		rp_ClientColorize(client);
 		ITEM_CANCEL(client, item_id);
+		return Plugin_Handled;
 	}
 	
 	float zonemin[3], zonemax[3], tppos[3];
