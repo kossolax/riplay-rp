@@ -152,6 +152,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	SetMenuTitle(menu, "Une voiture pour 6 minutes");
 
 	AddMenuItem(menu, "mustang",	"Mustang");
+	AddMenuItem(menu, "victoria",	"Victoria [BIENTOT]", ITEMDRAW_DISABLED);
 	AddMenuItem(menu, "moto", 		"Moto");
 
 	DisplayMenu(menu, client, 60);
@@ -258,6 +259,9 @@ public Action Cmd_ItemVehicle(int args) {
 	int max = 0;
 	
 	if( StrEqual(arg1, "models/natalya/vehicles/natalya_mustang_csgo_2016.mdl") ) {
+		max = 3;
+	}
+	if( StrEqual(arg1, "models/natalya/vehicles/police_crown_victoria_csgo_v2.mdl") ) {
 		max = 3;
 	}
 	
@@ -570,6 +574,7 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 
 	IntToString(skin, szSkin, sizeof(szSkin));
 	DispatchKeyValue(ent, "skin", szSkin);
+	DispatchKeyValue(ent, "body", "0");
 	DispatchSpawn(ent);
 	
 	LogToFile("vehicules.txt", "after dispatch");
@@ -1350,6 +1355,10 @@ public int SpawnVehicle(Handle menu, MenuAction action, int client, int param) {
 			
 			if( StrEqual(arg1, "mustang") ) {
 				Format(model, sizeof(model), "models/natalya/vehicles/natalya_mustang_csgo_2016.mdl");
+				max = 3;
+			}
+			if( StrEqual(arg1, "victoria") ) {
+				Format(model, sizeof(model), "models/natalya/vehicles/police_crown_victoria_csgo_v2.mdl");
 				max = 3;
 			}
 			else if( StrEqual(arg1, "moto") ) {
