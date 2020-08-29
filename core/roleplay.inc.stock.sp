@@ -782,13 +782,9 @@ bool IsEntitiesNear(int ent1, int ent2, bool tres_proche = false, float cache = 
 	static float g_flLastCheck[MAX_PLAYERS+1][MAX_ENTITIES];
 	static bool g_bLastData[MAX_PLAYERS+1][MAX_ENTITIES];
 	
-	float f_Origin_1[3];
-	float f_Origin_2[3];
+	float f_Origin_1[3], f_Origin_2[3];
 	
-	GetEntPropVector(ent1, Prop_Send, "m_vecOrigin", f_Origin_1);
-	GetEntPropVector(ent2, Prop_Send, "m_vecOrigin", f_Origin_2);
-	
-	float distance = GetVectorDistance(f_Origin_1, f_Origin_2);
+	float distance = rp_GetDistance(ent1, ent2);
 	
 	if( tres_proche ) {
 		if( (distance*0.5) <= CONTACT_DIST) {
