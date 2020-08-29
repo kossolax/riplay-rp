@@ -44,10 +44,10 @@ char g_szEmote[][][] = {
 	{"Emote_Luchador", 		"Luchador", "0"},
 	{"Emote_Make_It_Rain", 	"Make It Rain", "0"},
 	{"Emote_NotToday", 		"Not Today", "0"},
-	{"Emote_RockPaperScissor_Paper", "Paper", "0"},
-	{"Emote_RockPaperScissor_Rock", "Rock", "0"},
-	{"Emote_RockPaperScissor_Scissor", "Scissor", "0"},
 	{"Emote_Salt",			 "Salt", "0"},
+	{"Emote_RockPaperScissor_Rock", "Rock", "0"},
+	{"Emote_RockPaperScissor_Paper", "Paper", "0"},
+	{"Emote_RockPaperScissor_Scissor", "Scissor", "0"},
 	{"Emote_Salute", 		"Salute", "0"},
 	{"Emote_SmoothDrive", 	"Smooth Drive", "1"},
 	{"Emote_Snap", 			"Snap", "0"},
@@ -57,10 +57,12 @@ char g_szEmote[][][] = {
 };
 
 public void OnPluginStart() {
-	RegAdminCmd("sm_emote",	Cmd_Hdv, ADMFLAG_ROOT);
+	RegAdminCmd("sm_emote",	Cmd_Hdv, ADMFLAG_KICK);
 }
 public Action Cmd_Hdv(int client, int args) {
-	
+	MainEmote(client, 0);
+}
+void MainEmote(int client, int id) {
 	Menu menu = CreateMenu(Handler_MainEmote);
 	menu.SetTitle("Emote\n ");
 	
@@ -68,12 +70,14 @@ public Action Cmd_Hdv(int client, int args) {
 		if( StringToInt(g_szEmote[i][2]) == 0 )
 			menu.AddItem(g_szEmote[i][0], g_szEmote[i][1]);
 	}
-	menu.Display(client, MENU_TIME_FOREVER);
+	menu.DisplayAt(client, id, MENU_TIME_FOREVER);
 }
 public int Handler_MainEmote(Handle hItem, MenuAction oAction, int client, int param) {
 	if (oAction == MenuAction_Select) {
 		char options[64];
 		GetMenuItem(hItem, param, options, sizeof(options));
+		
+		MainEmote(client, 6* (param/6) );
 		
 		if( g_iEmoteEnt[client] == 0 )
 			startEmote(client, options);
