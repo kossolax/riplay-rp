@@ -16,7 +16,28 @@
 #include <sdkhooks>
 #include <cstrike>
 
-bool rp_AcceptEntityInput(int dest, const char[] input, int activator=-1, int caller=-1, int outputid=0) {
+stock float rp_GetDistance(int client, int id) {
+	int source = GetEntPropEnt(client, Prop_Send, "m_hVehicle");
+	if( source <= 0 )
+		source = rp_GetClientVehiclePassager(client);
+	if( source <= 0 )
+		source = Entity_GetParent(client);
+	
+	int target = GetEntPropEnt(id, Prop_Send, "m_hVehicle");
+	if( target <= 0 )
+		target = rp_GetClientVehiclePassager(id);
+	if( target <= 0 )
+		target = Entity_GetParent(id);
+	
+	if( source <= 0 )
+		source = client;
+	if( target <= 0 )
+		target = id;
+	
+	return Entity_GetDistance(source, target);
+}
+
+stock bool rp_AcceptEntityInput(int dest, const char[] input, int activator=-1, int caller=-1, int outputid=0) {
 	static char tmp[64];
 	if( dest > 0 && IsValidEdict(dest) && IsValidEntity(dest) ) {
 		GetEdictClassname(dest, tmp, sizeof(tmp));
@@ -587,7 +608,7 @@ stock int rp_CountPoliceNear(int client) {
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_name, tmp, sizeof(tmp));
 		
 		if (GetClientTeam(i) == CS_TEAM_CT || (job >= 1 && job <= 7)) {
-			if (Entity_GetDistance(client, i) < MAX_AREA_DIST && !rp_GetClientBool(i, b_IsAFK) && StrContains(tmp, "Prison") == -1 && StrContains(tmp, "Tribunal") == -1 ) {
+			if (rp_GetDistance(client, i) < MAX_AREA_DIST && !rp_GetClientBool(i, b_IsAFK) && StrContains(tmp, "Prison") == -1 && StrContains(tmp, "Tribunal") == -1 ) {
 				count++;
 			}
 		}

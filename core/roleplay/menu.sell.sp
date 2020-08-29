@@ -103,7 +103,8 @@ void DrawVendreMenu(int client) {
 				continue;
 			if( !IsClientConnected(i) )
 				continue;
-			if( !(Entity_GetDistance(client, i) < MAX_AREA_DIST.0) )
+			
+			if( !(rp_GetDistance(client, i) < MAX_AREA_DIST.0) )
 				continue;
 			if(client == i) 
 				continue;

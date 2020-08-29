@@ -522,7 +522,7 @@ public void DoBeacon(int client) {
 		
 		int target = g_iUserData[client][i_Protect_From];
 		
-		if( Entity_GetDistance(client, target) < 500.0 ) {
+		if( rp_GetDistance(client, target) < 500.0 ) {
 			
 			float pos[3], top[3];
 			top[2] = 1.0;

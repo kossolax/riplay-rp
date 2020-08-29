@@ -1468,7 +1468,7 @@ public Action Cmd_ItemFouet(int args) {
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
-	if( Entity_GetDistance(client, target) > MAX_AREA_DIST ) {
+	if( rp_GetDistance(client, target) > MAX_AREA_DIST ) {
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}

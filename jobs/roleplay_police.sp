@@ -251,7 +251,7 @@ public Action Cmd_Verif(int client) {
 	}
 
 	// too far
-	if (Entity_GetDistance(client, target) > 128.0) {
+	if (rp_GetDistance(client, target) > 128.0) {
 		CPrintToChat(client, "" ...MOD_TAG... " Le joueur est trop éloigné, commande inaccessible");
 		return Plugin_Handled;
 	}
@@ -551,7 +551,7 @@ public Action Cmd_Tazer(int client) {
 			maxDist = maxDist - (15 * maxDist) / 100;
 		}
 		
-		if (Entity_GetDistance(client, target) > maxDist) {
+		if (rp_GetDistance(client, target) > maxDist) {
 			//ACCESS_DENIED(client);
 			CPrintToChat(client, "" ...MOD_TAG... " Le joueur est trop éloigné, commande inaccessible");
 			return Plugin_Handled;
@@ -806,7 +806,7 @@ public Action Cmd_Jail(int client) {
 		if (!IsValidClient(i) || IsClientSourceTV(i))
 			continue;
 		
-		if (Entity_GetDistance(client, i) < MAX_AREA_DIST) {
+		if (rp_GetDistance(client, i) < MAX_AREA_DIST) {
 			if (!IsPlayerAlive(i) && rp_GetClientFloat(i, fl_RespawnTime) < time)
 				CS_RespawnPlayer(i);
 		}
@@ -851,7 +851,7 @@ public Action Cmd_Jail(int client) {
 	}
 	
 	// too far
-	if (Entity_GetDistance(client, target) > maxDist) {
+	if (rp_GetDistance(client, target) > maxDist) {
 		CPrintToChat(client, "" ...MOD_TAG... " Le joueur est trop éloigné, commande inaccessible");
 		return Plugin_Handled;
 		//ACCESS_DENIED(client);
@@ -962,7 +962,7 @@ public Action Cmd_Push(int client) {
 		ACCESS_DENIED(client);
 	}
 	
-	if (Entity_GetDistance(client, target) > MAX_AREA_DIST * 3) {
+	if (rp_GetDistance(client, target) > MAX_AREA_DIST * 3) {
 		ACCESS_DENIED(client);
 	}
 	
