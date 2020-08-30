@@ -592,7 +592,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 			g_iUserData[Attacker][i_LastKilled_Reverse] = Client;
 
 			if( g_iHideNextLog[Attacker][Client] == 0 ) {
-				if( !(GetZoneBit( GetPlayerZone(Attacker) ) & BITZONE_EVENT || GetZoneBit( GetPlayerZone(Attacker) ) & BITZONE_PVP) ) {
+				if( !(GetZoneBit( GetPlayerZone(Client) ) & BITZONE_EVENT || GetZoneBit( GetPlayerZone(Client) ) & BITZONE_PVP) ) {
 					g_iUserData[Attacker][i_KillJailDuration] += killDuration;
 					g_iUserData[Attacker][i_LastKillTime] = GetTime();
 					g_iUserData[Attacker][i_KillingSpread] += (killDuration > 1 ? 1:0);
