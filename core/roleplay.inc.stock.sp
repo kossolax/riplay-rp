@@ -292,9 +292,15 @@ void AFK_Check(int client) {
 		if( FloatAbs(vecAngles[i] - g_Position[client][i]) > 2.0 )
 			same = false;
 	}
-	int vehicle = rp_GetClientVehiclePassager(client);
-	if( vehicle > 0 )
+
+	int vehicle = rp_GetClientVehicle(client);
+	if( vehicle > 0 ) {
 		same = true;
+	}
+	int passager = rp_GetClientVehiclePassager(client);
+	if( passager > 0 ) {
+		same = true;
+	}
 	
 	if( !wasTalking[client] && g_hClientMicTimers[client] != INVALID_HANDLE ) {
 		same = false;
