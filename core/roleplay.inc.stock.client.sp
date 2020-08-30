@@ -887,17 +887,15 @@ int GetAssurence(int client, bool forced = false) {
 		
 		if( rp_GetBuildingData(i, BD_owner) == client ) {
 			float ratio = (1.0 - float(GetTime() - rp_GetBuildingData(i, BD_started)) / (5.0 * 60.0 * 60.0)) * 0.75;
-			
+			float reboot = Math_Clamp((float(nextReboot - rp_GetBuildingData(i, BD_started)) / (2.5 * 60.0 * 60.0)), 0.1, 1.0);
+
+			ratio = ratio * reboot;
 			ratio = ratio * (1.0 - float(g_iUserData[client][i_ArtisanLevel]));
-			
-			if( (nextReboot - rp_GetBuildingData(i, BD_started)) < 60*60 ) {
-				ratio = ratio * 0.66;
-			}
 			
 			if( g_bUserData[client][b_FreeAssurance] == 1 ) {
 				ratio = ratio * 0.66;
 				
-				if( (nextReboot - rp_GetBuildingData(i, BD_started)) < 30*60 )
+				if( (nextReboot - rp_GetBuildingData(i, BD_started)) < 60*60 )
 					continue;
 				
 				if( g_iUserData[client][i_TimeAFK] > (1*60*60) ) {

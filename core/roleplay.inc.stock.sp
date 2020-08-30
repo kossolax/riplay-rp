@@ -17,7 +17,7 @@ int getNextReboot() {
 	static char szDate05[64], szDate16[64];
 	
 	int now = GetTime();
-	FormatTime(szDate05, sizeof(szDate05), "%e/%m/%Y/05/00/05", now);
+	FormatTime(szDate05, sizeof(szDate05), "%e/%m/%Y/5/00/05", now);
 	FormatTime(szDate16, sizeof(szDate16), "%e/%m/%Y/16/30/05", now);
 	
 	int iDate05 = DateToTimestamp(szDate05);
