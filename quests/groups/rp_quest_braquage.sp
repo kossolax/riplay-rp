@@ -1214,6 +1214,7 @@ bool findAreaInRoom(int jobID, float pos[3]) {
 }
 void OnBraqueurKilled(int client) {
 	rp_SetClientBool(client, b_SpawnToGrave, false);
+	rp_SetClientKeyVehicle(client, g_iVehicle, false);
 	
 	addClientToTeam(client, TEAM_BRAQUEUR_DEAD);
 	
@@ -1230,6 +1231,8 @@ void OnBraqueurKilled(int client) {
 }
 void OnBraqueurRespawn(int client) {
 	addClientToTeam(client, TEAM_BRAQUEUR);
+	rp_SetClientKeyVehicle(client, g_iVehicle, true);
+	
 	if( g_bHasHelmet ) {
 		LogToGame("[BRAQUAGE] [MORT] %L est un braqueur et a été respawn.", client);
 		
