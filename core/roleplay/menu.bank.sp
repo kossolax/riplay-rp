@@ -415,6 +415,7 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 				while( position < max ) {
 					
 					rp_WeaponMenu_Get(g_iCustomBank[target], position, name, data);
+					permValid = false;
 					
 					if( data[BM_Owner] == 0 )
 						permValid = true;
