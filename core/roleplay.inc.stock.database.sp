@@ -410,7 +410,7 @@ void updateBlackFriday(int day, int reduction) {
 	int date = g_iBlackFriday[0] + ((7 - index) * (24*60*60)) + ((24*60*60) * day) + (12*60*60);
 
 	FormatTime(szDate, sizeof(szDate), "%e/%m/%Y/00/00/01", date);
-	int timestamp = DateToTimestamp(szDate) - (13*60*60) - (7200); // delete 13 hours + 2 hours
+	int timestamp = DateToTimestamp(szDate);
 
 	g_iBlackFriday[0] = timestamp;
 	g_iBlackFriday[1] = reduction;

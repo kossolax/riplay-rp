@@ -888,6 +888,8 @@ int GetAssurence(int client, bool forced = false) {
 		if( rp_GetBuildingData(i, BD_owner) == client ) {
 			float ratio = (1.0 - float(GetTime() - rp_GetBuildingData(i, BD_started)) / (5.0 * 60.0 * 60.0)) * 0.75;
 			
+			ratio = ratio * (1.0 - float(g_iUserData[client][i_ArtisanLevel]));
+			
 			if( (nextReboot - rp_GetBuildingData(i, BD_started)) < 60*60 ) {
 				ratio = ratio * 0.66;
 			}

@@ -210,8 +210,8 @@ stock int TimeToUnix( const int iYear, const int iMonth, const int iDay, const i
 
 	if( iTimeZone == UT_TIMEZONE_SERVER )
 		iTimeZone = GetTimeZone( );
-		
-	return ( iTimeStamp + g_iTimeZoneOffset[ iTimeZone ] );
+	
+	return ( iTimeStamp - g_iTimeZoneOffset[ iTimeZone ] );
 }
 
 stock int GetTimeZone( ) {
@@ -221,9 +221,9 @@ stock int GetTimeZone( ) {
 	int iZone, iOffset, iTime, iYear, iMonth, iDay, iHour, iMinute, iSecond;
 	
 	char szTime[ 64 ];
-	FormatTime( szTime, sizeof( szTime ), "%m~%d~%y~%H~%M~%S", GetTime( ) );
+	FormatTime( szTime, sizeof( szTime ), "%m~%d~%Y~%H~%M~%S", GetTime( ) );
 	
-	char szTimeParts[ 6 ][ 4 ];
+	char szTimeParts[ 6 ][ 8 ];
 	ExplodeString( szTime, "~", szTimeParts, sizeof( szTimeParts ), sizeof( szTimeParts[ ] ) );
 	
 	iYear = StringToInt( szTimeParts[ 2 ] );
