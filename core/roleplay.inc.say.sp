@@ -1439,19 +1439,18 @@ public Action Command_Say(int client, int args) {
 	if( !IsAdmin(client) ) {
 		if( strlen(szSayText) > 0 ) {
 			if( StrEqual(g_szLastMessage[client][0], szSayText, false) ||
-			StrEqual(g_szLastMessage[client][1], szSayText, false) ||
-			StrEqual(g_szLastMessage[client][2], szSayText, false) ||
-			StrEqual(g_szLastMessage[client][3], szSayText, false) ||
-			StrEqual(g_szLastMessage[client][4], szSayText, false)
+				StrEqual(g_szLastMessage[client][1], szSayText, false) ||
+				StrEqual(g_szLastMessage[client][2], szSayText, false) ||
+				StrEqual(g_szLastMessage[client][3], szSayText, false) ||
+				StrEqual(g_szLastMessage[client][4], szSayText, false)
 			) {
 				CPrintToChat(client, "" ...MOD_TAG... " Votre message a été bloqué afin d'éviter d'éventuel spam.");
 				return Plugin_Handled;
 			}
-	
-			strcopy(g_szLastMessage[client][4], sizeof(g_szLastMessage[][]), g_szLastMessage[client][3]);
-			strcopy(g_szLastMessage[client][3], sizeof(g_szLastMessage[][]), g_szLastMessage[client][2]);
-			strcopy(g_szLastMessage[client][2], sizeof(g_szLastMessage[][]), g_szLastMessage[client][1]);
-			strcopy(g_szLastMessage[client][1], sizeof(g_szLastMessage[][]), g_szLastMessage[client][0]);
+			
+			for (int i = sizeof(g_szLastMessage[])-1; i >= 1; i--) {
+				strcopy(g_szLastMessage[client][i], sizeof(g_szLastMessage[][]), g_szLastMessage[client][i-1]);
+			}
 			strcopy(g_szLastMessage[client][0], sizeof(g_szLastMessage[][]), szSayText);
 		}
 	}
@@ -1497,19 +1496,12 @@ public Action Command_Say(int client, int args) {
 	return Plugin_Handled;
 }
 public Action Command_SayTeam(int client, int args) {
-
-
-
 	if( !IsPlayerAlive(client) ) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous devez être en vie pour parler.");
 		return Plugin_Handled;
 	}
-
-	g_Position[client][0] = GetRandomFloat(0.000, 360.000);
-	g_Position[client][1] = GetRandomFloat(0.000, 360.000);
-
+	
 	char szSayText[256];
-
 	GetCmdArgString(szSayText, sizeof(szSayText) );
 	StripQuotes(szSayText);
 
@@ -1525,6 +1517,27 @@ public Action Command_SayTeam(int client, int args) {
 	Call_Finish(act);
 	if( act == Plugin_Handled || act == Plugin_Stop )
 		return Plugin_Handled;
+	
+	for (int i = sizeof(g_szLastLocal[])-1; i >= 1; i--) {
+		strcopy(g_szLastLocal[client][i], sizeof(g_szLastLocal[][]), g_szLastLocal[client][i-1]);
+	}
+	strcopy(g_szLastLocal[client][0], sizeof(g_szLastLocal[][]), szSayText);
+
+	bool same = true;
+	for (int i = 0; i < sizeof(g_szLastLocal[])-1; i++) {
+		if( !StrEqual(g_szLastLocal[client][i], g_szLastLocal[client][i+1]) ) {
+			same = false;
+			break;
+		}
+	}
+	
+	if( !same ) {
+		g_Position[client][0] = GetRandomFloat(0.000, 360.000);
+		g_Position[client][1] = GetRandomFloat(0.000, 360.000);
+	}
+	else {
+		LogToGame("[CHEAT] [AFK] %L: %s", client, szSayText);
+	}
 	
 	int flags = GetUserFlagBits(client);
 	if (flags & ADMFLAG_GENERIC || flags & ADMFLAG_ROOT) {

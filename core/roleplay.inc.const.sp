@@ -254,6 +254,8 @@ char g_szError[1024];
 // Sprites
 int g_cShockWave, g_cGlow, g_cBeam, g_cExplode, g_cScorch, g_cHacked;
 char g_szLastMessage[MAX_PLAYERS+1][5][256];
+char g_szLastLocal[MAX_PLAYERS+1][5][256];
+
 // ------------------------------
 // Vehicle
 //
