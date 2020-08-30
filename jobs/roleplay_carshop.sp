@@ -587,8 +587,6 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	char[] model = new char[ l_model + 2];
 	GetNativeString(3, model, l_model + 1);
 
-	LogToFile("vehicules.txt", "%s", model);
-
 	// Thanks blodia: https://forums.alliedmods.net/showthread.php?p=1268368#post1268368
 	
 	int ent = CreateEntityByName("prop_vehicle_driveable");
@@ -601,28 +599,13 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	if( amount > 0 ) {
 		ReplaceString(buffer[amount-1], sizeof(buffer[]), ".mdl", "");
 		Format(ScriptPath, sizeof(ScriptPath), "scripts/vehicles/%s.txt", buffer[amount-1]);
-		
-		LogToFile("vehicules.txt", "need to found %s", ScriptPath);
-
 		if(FileExists(ScriptPath)) {
-			LogToFile("vehicules.txt", "yeah, %s exist", ScriptPath);
 			valid = true;
 		}
 	}
 
 	if(!valid) {
-		LogToFile("vehicules.txt", "%s not exist, need to load jeep", ScriptPath);
 		Format(ScriptPath, sizeof(ScriptPath), "scripts/vehicles/jeep.txt");
-
-		LogToFile("vehicules.txt", "now script is %s", ScriptPath);
-	}
-
-	LogToFile("vehicules.txt", "final check for %s", ScriptPath);
-
-	if(FileExists(ScriptPath)) {
-		LogToFile("vehicules.txt", "%s exist", ScriptPath);
-	} else {
-		LogToFile("vehicules.txt", "%s not exist", ScriptPath);
 	}
 	
 	DispatchKeyValue(ent, "model", 				model);
@@ -641,15 +624,11 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	DispatchKeyValueFloat(ent, "MaxPitch", 		360.00);
 	DispatchKeyValueFloat(ent, "MinPitch", 		-360.00);
 	DispatchKeyValueFloat(ent, "MaxYaw", 		90.00);
-	
-	LogToFile("vehicules.txt", "before dispatch");
 
 	IntToString(skin, szSkin, sizeof(szSkin));
 	DispatchKeyValue(ent, "skin", szSkin);
 	DispatchKeyValue(ent, "body", "0");
 	DispatchSpawn(ent);
-	
-	LogToFile("vehicules.txt", "after dispatch");
 
 	// check if theres space to spawn the vehicle.
 	float MinHull[3],  MaxHull[3];
@@ -662,12 +641,8 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 		trace = TR_TraceHullEx(origin, origin, MinHull, MaxHull, MASK_SOLID);
 	else
 		trace = TR_TraceHullFilterEx(origin, origin, MinHull, MaxHull, MASK_SOLID, FilterToOne, client);
-	
-	LogToFile("vehicules.txt", "tr");
 
 	if( TR_DidHit(trace) ) { 
-		LogToFile("vehicules.txt", "no space to spawn the vehicle");
-
 		delete trace; 
 		rp_AcceptEntityInput(ent, "Kill");	
 		
@@ -675,8 +650,6 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	}
 
 	delete trace;
-
-	LogToFile("vehicules.txt", "no tr delete trace");
 
 	TeleportEntity(ent, origin, angle, NULL_VECTOR);
 	rp_SetVehicleInt(ent, car_light, -1);
@@ -696,7 +669,6 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	
 	SDKHook(ent, SDKHook_Think, OnThink);	
 	
-	LogToFile("vehicules.txt", "after TeleportEntity");
 
 	//rp_AcceptEntityInput(ent, "HandBrakeOn");
 	rp_AcceptEntityInput(ent, "TurnOff");
@@ -719,7 +691,6 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	CreateTimer(3.5, Timer_VehicleRemoveCheck, EntIndexToEntRef(ent));
 	CreateTimer(0.5, Timer_Flush);
 
-	LogToFile("vehicules.txt", "end");
 	return ent;
 }
 public Action Timer_Flush(Handle timer, any none) {
