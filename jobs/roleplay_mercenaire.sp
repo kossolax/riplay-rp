@@ -805,6 +805,9 @@ public Action FreeKidnapping(Handle timer, any client) {
 public int eventKidnapping(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_iParam2) {
 	if (p_oAction == MenuAction_Select) {
 		
+		if( rp_GetClientInt(client, i_KidnappedBy) <= 0 )
+			return;
+		
 		char options[64];
 		GetMenuItem(p_hItemMenu, p_iParam2, options, 63);
 		
