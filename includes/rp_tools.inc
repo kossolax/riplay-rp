@@ -16,7 +16,7 @@
 #include <sdkhooks>
 #include <cstrike>
 
-void GetClientName2(int client, char[] str, int length, bool hideColor=true) {
+stock void GetClientName2(int client, char[] str, int length, bool hideColor=true) {
 	
 	GetClientName(client, str, length);
 	if( hideColor || !rp_GetClientBool(client, b_Crayon) ) {

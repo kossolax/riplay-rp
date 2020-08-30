@@ -802,6 +802,8 @@ bool hasCopInZone(int zone) {
 			continue;
 		if( GetClientTeam(i) == CS_TEAM_T )
 			continue;
+		if( rp_GetClientInt(i, i_KidnappedBy) > 0 )
+			continue;
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
 		if( StrEqual(tmp, tmp2) )
 			return true;
