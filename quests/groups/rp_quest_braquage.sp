@@ -741,14 +741,14 @@ public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 }
 public Action fwdCommand(int client, char[] command, char[] arg) {
+	static char name[64];
+	
 	if( StrEqual(command, "q") || StrEqual(command, "quest") ) {
 		
 		if( !(g_iPlayerTeam[client] == TEAM_BRAQUEUR || g_iPlayerTeam[client] == TEAM_BRAQUEUR_DEAD) )
 			return Plugin_Continue;
 		
-		if( !rp_GetClientBool(client, b_Crayon)) {
-			CRemoveTags(arg, strlen(arg)+1);
-		}
+		GetClientName2(client, name, sizeof(name), false);
 		
 		for (int i = 1; i <= MaxClients; i++) {
 			if( !IsValidClient(i) )
@@ -756,7 +756,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 			if( !(g_iPlayerTeam[i] == TEAM_BRAQUEUR || g_iPlayerTeam[i] == TEAM_BRAQUEUR_DEAD) )
 				continue;
 			
-			CPrintToChat(i, "{lightblue}%N{default} ({lime}QUÊTES{default}): %s", client, arg);
+			CPrintToChat(i, "{lightblue}%s{default} ({lime}QUÊTES{default}): %s", name, arg);
 		}
 		return Plugin_Handled;
 	}

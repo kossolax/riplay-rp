@@ -16,6 +16,22 @@
 #include <sdkhooks>
 #include <cstrike>
 
+void GetClientName2(int client, char[] str, int length, bool hideColor=true) {
+	
+	GetClientName(client, str, length);
+	if( hideColor || !rp_GetClientBool(client, b_Crayon) ) {
+		CRemoveTags(str, length);
+	}
+	
+	if( StrContains(str, "{green}", false) > 0 && (StrContains(str, "VIP") > 0 || StrContains(str, "ADMIN") > 0) ) {
+		if( StrContains(str, "{green}", false) < StrContains(str, "VIP") )
+			ReplaceString(str, length, "VIP", "");
+		if( StrContains(str, "{green}", false) < StrContains(str, "ADMIN") )
+			ReplaceString(str, length, "ADMIN", "");
+		
+	}
+}
+
 stock float rp_GetDistance(int client, int id) {
 	int source, target;
 	

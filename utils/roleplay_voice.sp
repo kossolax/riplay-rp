@@ -53,9 +53,12 @@ public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 }
 public Action fwdCommand(int client, char[] command, char[] arg) {
+	static char name[64];
 	#if defined DEBUG
 	PrintToServer("fwdCommand");
 	#endif
+	
+	GetClientName2(client, name, sizeof(name), false);
 	
 	if( StrEqual(command, "job") || StrEqual(command, "jobs") ) {
 		Cmd_job(client);
@@ -78,14 +81,6 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 			
 			g_bMayTalk[client] = false;
 			CreateTimer(10.0, AllowTalking, client);
-		}
-		
-		char name[64];
-		GetClientName(client, name, sizeof(name));
-		
-		if( !rp_GetClientBool(client, b_Crayon)) {
-			CRemoveTags(arg, strlen(arg));
-			CRemoveTags(name, sizeof(name));
 		}
 		
 		CPrintToChatAll("{lightblue}%s{default} ({olive}ANNONCE{default}): %s", name, arg);
@@ -119,7 +114,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 		}
 		for( int i = 0; i<sizeof(clientChat); i++ ){
 			if(clientChat[i])
-				CPrintToChatEx(i, client, "{lightblue}%N{default} ({purple}COLOC{default}): %s", client, arg);
+				CPrintToChatEx(i, client, "{lightblue}%s{default} ({purple}COLOC{default}): %s", name, arg);
 		}
 		
 		LogToGame("[TSX-RP] [CHAT-COLLOC] %L: %s", client, arg);
@@ -149,7 +144,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 				j2 = 1;
 
 			if( j == j2 ) {
-				CPrintToChatEx(i, client, "{lightblue}%N{default} ({orange}TEAM{default}): %s", client, arg);
+				CPrintToChatEx(i, client, "{lightblue}%s{default} ({orange}TEAM{default}): %s", name, arg);
 			}
 		}
 		
@@ -163,8 +158,8 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 			ACCESS_DENIED(client);
 		}
 		
-		CPrintToChatEx(mari, client, "{lightblue}%N{default} ({red}MARIÉ{default}): %s", client, arg);
-		CPrintToChatEx(client, client, "{lightblue}%N{default} ({red}MARIÉ{default}): %s", client, arg);
+		CPrintToChatEx(mari, client, "{lightblue}%s{default} ({red}MARIÉ{default}): %s", name, arg);
+		CPrintToChatEx(client, client, "{lightblue}%s{default} ({red}MARIÉ{default}): %s", name, arg);
 		
 		LogToGame("[TSX-RP] [CHAT-MARIE] %L: %s", client, arg);
 		return Plugin_Handled;
@@ -179,7 +174,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 				continue;
 
 			if( rp_GetClientGroupID(i) == rp_GetClientGroupID(client) ) {
-				CPrintToChatEx(i, client, "{lightblue}%N{default} ({red}GROUP{default}): %s", client, arg);
+				CPrintToChatEx(i, client, "{lightblue}%s{default} ({red}GROUP{default}): %s", name, arg);
 			}
 		}
 		
