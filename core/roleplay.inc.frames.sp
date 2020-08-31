@@ -734,6 +734,9 @@ void OnGameFrame_10(float time) {
 					if( StringToInt(g_szZoneList[GetPlayerZone(i)][zone_type_bit]) & BITZONE_HAUTESECU && !g_bUserData[i][b_IsAFK] ) {
 						g_iUserData[i][i_JailTime]--;
 					}
+					if( g_iUserData[i][i_JailTime] <= 0 ){
+						g_bUserData[i][b_JailQHS] = false;
+					}
 					
 					g_iSuccess_last_jail[i] = GetTime();
 					
@@ -763,6 +766,7 @@ void OnGameFrame_10(float time) {
 						}
 
 						g_bUserData[i][b_IsFreekiller] = false;
+						g_bUserData[i][b_JailQHS] = false;
 							
 						rp_ClientResetSkin(i);
 						rp_ClientSendToSpawn(i, true);

@@ -1002,16 +1002,32 @@ void SendPlayerToJail(int target, int client = 0) {
 	
 	int MaxJail = 0;
 	
-	for (int i = 0; i < MAX_LOCATIONS; i++) {
-		rp_GetLocationData(i, location_type_base, tmp, sizeof(tmp));
-		if (StrEqual(tmp, "jail", false)) {
-			
-			fLocation[MaxJail][0] = float(rp_GetLocationInt(i, location_type_origin_x));
-			fLocation[MaxJail][1] = float(rp_GetLocationInt(i, location_type_origin_y));
-			fLocation[MaxJail][2] = float(rp_GetLocationInt(i, location_type_origin_z)) + 5.0;
-			
-			MaxJail++;
+	if(rp_GetClientBool(client, b_JailQHS)){
+
+		for (int i = 0; i < MAX_LOCATIONS; i++) {
+			rp_GetLocationData(i, location_type_base, tmp, sizeof(tmp));
+			if (StrEqual(tmp, "jail", false)) {
+				
+				fLocation[MaxJail][0] = float(rp_GetLocationInt(i, location_type_origin_x));
+				fLocation[MaxJail][1] = float(rp_GetLocationInt(i, location_type_origin_y));
+				fLocation[MaxJail][2] = float(rp_GetLocationInt(i, location_type_origin_z)) + 5.0;
+				
+				MaxJail++;
+			}
 		}
+	}
+	else{
+
+		for( int i=1; i<MAX_ZONES; i++ ) {	
+			if( rp_GetZoneBit(i) & BITZONE_HAUTESECU ) {
+				fLocation[MaxJail][0] = float(rp_GetLocationInt(i, location_type_origin_x));
+				fLocation[MaxJail][1] = float(rp_GetLocationInt(i, location_type_origin_y));
+				fLocation[MaxJail][2] = float(rp_GetLocationInt(i, location_type_origin_z)) + 5.0;
+			
+				MaxJail++;
+			}
+		}
+
 	}
 	
 	if (GetClientTeam(target) == CS_TEAM_CT) {

@@ -226,6 +226,8 @@ public int eventPayForLeaving_2(Handle menu, MenuAction action, int iTarget, int
 						
 						rp_ClientMoney(iTarget, i_Money, -qhsPrice);
 						SetJobCapital(1, (GetJobCapital(1) + qhsPrice));
+
+						rp_SetClientBool(iTarget, b_JailQHS, 1);
 						return;
 					}
 				}
