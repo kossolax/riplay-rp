@@ -346,6 +346,7 @@ public Action fwdTueurDead(int client, int attacker, float& respawn, int& tdm) {
 	int target = rp_GetClientInt(client, i_ToKill);
 	if( target > 0  && attacker == target) { // Double check.
 		SetContratFail(client);
+		return Plugin_Handled;
 	}
 	
 	return Plugin_Continue;
