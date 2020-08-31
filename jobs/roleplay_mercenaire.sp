@@ -70,7 +70,7 @@ public void OnPluginStart() {
 	
 	g_vConfigTueur = CreateConVar("rp_config_kidnapping", "225,226,227,228,236,237-238");
 	
-	g_hActive 		= CreateConVar("rp_braquage", "0");
+	g_hActive 		= CreateConVar("rp_kidnapping", "0");
 	
 	for (int i = 1; i <= MaxClients; i++)
 		if( IsValidClient(i) )
