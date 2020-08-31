@@ -1360,8 +1360,14 @@ public Action Cmd_ItemEnquete(int args) {
 		LogToGame("[TSX-RP] [ENQUETE] Une enquête effectuée sur %L a révélé qu'il n'a été tué par personne.", target, killed);
 	}
 	
-	if( IsValidClient(rp_GetClientInt(target, i_LastVol)) && rp_GetClientInt(rp_GetClientInt(target, i_LastVol), i_LastVolAmount) > 25 ) 
-		AddMenu_Blank(client, menu, "%N, l'a volé %d$", rp_GetClientInt(target, i_LastVol), rp_GetClientInt(rp_GetClientInt(target, i_LastVol), i_LastVolAmount) );
+	if( IsValidClient(rp_GetClientInt(target, i_LastVol)) && rp_GetClientInt(rp_GetClientInt(target, i_LastVol), i_LastVolAmount) > 25 ) {
+		if( rp_GetClientInt(rp_GetClientInt(target, i_LastVol), i_LastVolTarget) == client ) {
+			AddMenu_Blank(client, menu, "%N, l'a volé %d$", rp_GetClientInt(target, i_LastVol), rp_GetClientInt(rp_GetClientInt(target, i_LastVol), i_LastVolAmount) );
+		}
+		else {
+			AddMenu_Blank(client, menu, "%N, l'a volé.", rp_GetClientInt(target, i_LastVol));
+		}
+	}
 	
 	AddMenu_Blank(client, menu, "--------------------------------");
 	
