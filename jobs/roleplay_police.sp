@@ -1879,6 +1879,7 @@ void Cmd_BuyWeapon(int client, bool free) {
 			case ball_type_revitalisante : Format(tmp2, sizeof(tmp2), "%s Revitalisante", tmp2);
 			case ball_type_nosteal : Format(tmp2, sizeof(tmp2), "%s Anti-Vol", tmp2);
 			case ball_type_notk : Format(tmp2, sizeof(tmp2), "%s Anti-TK", tmp2);
+			case ball_type_braquage : Format(tmp2, sizeof(tmp2), "%s Braquage", tmp2);
 		}
 		
 		Format(tmp2, sizeof(tmp2), "%s pour %d$", tmp2, (free ? 0:data[BM_Prix]));
