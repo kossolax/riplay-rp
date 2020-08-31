@@ -49,8 +49,9 @@ void SelectingAmmunition(int client, int ent, bool crochettage = false) {
 		AddMenuItem(hBuyMenu, "remove", "Supprimer mes armes");
 		
 		int braquage = GetConVarInt(FindConVar("rp_braquage"));
+		int kidnapping = GetConVarInt(FindConVar("rp_kidnapping"));
 		
-		if( braquage >= 1 ) {
+		if( braquage >= 1 || kidnapping >= 1 ) {
 			char tmp[128];
 			int cpt = 0;
 			int owner;
