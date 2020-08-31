@@ -1002,7 +1002,7 @@ void SendPlayerToJail(int target, int client = 0) {
 	
 	int MaxJail = 0;
 	
-	if(rp_GetClientBool(client, b_JailQHS)){
+	if(rp_GetClientBool(client, b_JailQHS) == false){
 
 		for (int i = 0; i < MAX_LOCATIONS; i++) {
 			rp_GetLocationData(i, location_type_base, tmp, sizeof(tmp));
