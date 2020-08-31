@@ -33,6 +33,8 @@ exports = module.exports = function (server) {
 
     var parainnageCash = 30000;
     var parainnageExp = 18000;
+    var filleulCash = 30000;
+    var filleulExp = 0;
 
     /**
    * @api {post} /parrain/:steamidfilleul/validate ValideParainnage
