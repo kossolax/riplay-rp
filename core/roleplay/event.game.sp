@@ -39,6 +39,7 @@ public void OnMapStart() {
 	PrecacheSoundAny("physics/glass/glass_impact_bullet4.wav");
 	PrecacheSoundAny("buttons/blip1.wav");
 	g_cSnow = PrecacheDecal("DeadlyDesire/maps/snow.vmt");
+	if( g_cSnow ) { }
 
 	char tmp[128];
 	for(int rand=0; rand<11; rand++) {

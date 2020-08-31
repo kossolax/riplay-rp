@@ -291,11 +291,8 @@ public Action Command_LAW2(int client, const char[] command, int argc) {
 }
 
 
-public Action EventPlayerTeam(Handle ev, const char[] name, bool broadcast) {
-	int client = GetClientOfUserId(GetEventInt(ev, "userid"));
-	
+public Action EventPlayerTeam(Handle ev, const char[] name, bool broadcast) {	
 	SetEventBool(ev, "silent", true);
-//	SetEventBroadcast(ev, true);
 
 	return Plugin_Changed;
 }
@@ -305,7 +302,6 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	if( IsFakeClient(Client) )
 		return Plugin_Continue;
 	
-	bool test = false;
 	g_iCarPassager2[Client] = 0;
 	SetClientViewEntity(Client, Client);
 	

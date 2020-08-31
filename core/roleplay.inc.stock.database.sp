@@ -115,7 +115,7 @@ void LoadServerDatabase() {
 		g_bIsBlackFriday = false;
 	}
 	else {
-		if(SQL_FetchRow(hQuery) > 0) {
+		if( SQL_FetchRow(hQuery) ) {
 			g_iBlackFriday[0] = SQL_FetchInt(hQuery, 0);
 			g_iBlackFriday[1] = SQL_FetchInt(hQuery, 1);
 
@@ -609,7 +609,7 @@ void SynFromWeb() {
 	SQL_TQuery(g_hBDD, SynFromWeb_call, query, 0, DBPrio_Low);
 }
 
-public void SynFromWeb_call(Handle owner, Handle hQuery, const char[] error, any Client) {
+public void SynFromWeb_call(Handle owner, Handle hQuery, const char[] error, any none) {
 	static char query[1024];
 	static char szPseudo[64], szSteamID[64], szSteamID2[64], szRaison[256], SteamID[64];
 	
@@ -626,13 +626,13 @@ public void SynFromWeb_call(Handle owner, Handle hQuery, const char[] error, any
 		int jail = SQL_FetchInt(hQuery, 7);
 		SQL_FetchString(hQuery, 8, szRaison, sizeof(szRaison));
 		int id = SQL_FetchInt(hQuery, 9);
-		int timestamp = SQL_FetchInt(hQuery, 10);
+		//int timestamp = SQL_FetchInt(hQuery, 10);
 		int itemID = SQL_FetchInt(hQuery, 11);
 		int itemAmount = SQL_FetchInt(hQuery, 12);
 		int itemToBank = SQL_FetchInt(hQuery, 13);
 		int xp = SQL_FetchInt(hQuery, 14);
 		
-        char szId[8];
+		char szId[8];
 		Format(szId, sizeof(szId), "%d", id);
 
 		if( g_hSynProcessed.GetValue(szId, id) ) continue; // On execute pas 2 fois une syn

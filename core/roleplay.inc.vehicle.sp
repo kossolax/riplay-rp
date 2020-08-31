@@ -43,19 +43,6 @@ int LookupAttachment(int entity, char[] point) {
 	
 	return SDKCall(g_hLookupAttachment, entity, point);
 }
-bool IsCompatibleWithPlayerSkin(int vehicleID) {
-	
-	return false;
-	
-	char mdl[128];
-	Entity_GetModel(vehicleID, mdl, sizeof(mdl));
-	if( StrEqual(mdl, "models/natalya/vehicles/natalya_mustang_csgo_2016.mdl") )
-		return true;
-	if( StrEqual(mdl, "models/natalya/vehicles/dirtbike.mdl") )
-		return true;
-	
-	return false;
-}
 
 void rp__SetClientVehicle(int client, int vehicleID, bool force=false) {
 	

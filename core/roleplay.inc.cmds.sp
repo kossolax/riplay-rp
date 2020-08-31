@@ -424,7 +424,7 @@ public Action Cmd_ReloadSQL(int client, int args) {
 }
 
 public Action cmd_GiveAssurance(int client, int args) {
-	for(int i=1; i<=GetMaxClients(); i++) {
+	for(int i=1; i<=MaxClients; i++) {
 		if( !IsValidClient(i) )
 			continue;
 		
@@ -442,7 +442,7 @@ public Action cmd_GiveAssurance(int client, int args) {
 	return Plugin_Handled;
 }
 public Action Cmd_Save(int client, int args) {
-	for(int i=1; i<=GetMaxClients(); i++) {
+	for(int i=1; i<=MaxClients; i++) {
 		if( !IsValidClient(i) )
 			continue;
 		

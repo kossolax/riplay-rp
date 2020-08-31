@@ -324,8 +324,7 @@ void CheckNoWonSuccess(int client) {
 }
 
 void CheckDeadSuccess(int Client, int Attacker) {
-	int time = GetTime() - (31*24*60*60);
-	
+	//int time = GetTime() - (31*24*60*60);
 	
 	if( Attacker == 0  ) {
 		if( g_iSuccess_last_shot[Client][1]+(5) > GetTime() ) {

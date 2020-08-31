@@ -958,7 +958,6 @@ int GetAssurence(int client, bool forced = false) {
 	}
 	
 	if( !(g_bUserData[client][b_FreeAssurance] == 1 && (nextReboot - GetTime()) < 30*60) ) {
-		char wepname[64];
 		int wepIdx;
 		
 		for( int i = 0; i < 5; i++ ) {
@@ -1032,9 +1031,7 @@ void CopSetInvisible(int client) {
 	
 	CPrintToChat(client, "" ...MOD_TAG... " Vous êtes maintenant invisible.");
 }
-void CheckLiscence(int client) {
-	int time = GetTime();
-	
+void CheckLiscence(int client) {	
 	if(g_bUserData[client][b_License1]) {
 		if(GetTime() > g_iUserData[client][i_StartLicense1] + (24*60*60)*14) {
 			CPrintToChat(client, "" ...MOD_TAG... " Attention, ton permis de port d'arme léger vient d'expirer. Pense à racheter tes permis auprès d'un banquier.");

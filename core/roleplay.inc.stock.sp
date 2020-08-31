@@ -33,7 +33,6 @@ int getNextReboot() {
 	return next;
 }
 int getKillContext(int attack, int victim) {
-	char ZoneName[32];
 	int zoneID, attackID, victimID;
 	
 	// ---- dans le comico	
@@ -88,7 +87,6 @@ int getKillContext(int attack, int victim) {
 		return 29;
 		
 	return 29;
-	
 }
 
 
@@ -284,7 +282,7 @@ void incrementJobPlayTime(int client, int time) {
 void AFK_Check(int client) {
 	static bool wasTalking[MAX_PLAYERS + 1];
 	
-	float vecAngles[3], vecAngles2[3], vecAngles3[3], vecAngles4[3], vecAngles5[3];
+	float vecAngles[3];
 	GetClientEyeAngles(client, vecAngles);
 	
 	bool same = true;
@@ -305,16 +303,10 @@ void AFK_Check(int client) {
 	if( !wasTalking[client] && g_hClientMicTimers[client] != INVALID_HANDLE ) {
 		same = false;
 		wasTalking[client] = true;
-		//if( IsAdmin(client) ) {
-		//	PrintToConsole(client, "DEBUG: Vous parlez");
-		//}
 	}
 	if( wasTalking[client] && g_hClientMicTimers[client] == INVALID_HANDLE ) {
 		same = false;
 		wasTalking[client] = false;	
-		//if( IsAdmin(client) ) {
-		//	PrintToConsole(client, "DEBUG: Vous palez plus");
-		//}
 	}
 	
 	
