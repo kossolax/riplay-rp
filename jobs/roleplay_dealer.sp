@@ -1704,6 +1704,10 @@ bool CanStealVehicle(int client, int target) {
 int getDistrib(int client, int& type) {
 	if( !IsPlayerAlive(client) )
 		return 0;
+	
+	if( rp_GetClientVehiclePassager(client) > 0 || Client_GetVehicle(client) > 0 ) {
+		return 0;
+	}
 		
 	char classname[64];
 	int target = rp_GetClientTarget(client);

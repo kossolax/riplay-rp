@@ -746,7 +746,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 
 				if( IsValidClient(owner) ) {
 
-					stealAmount = Math_GetRandomInt(1, stealAmount);
+					stealAmount = Math_GetRandomPow(1, stealAmount);
 
 					if(vol_max < stealAmount){
 						CPrintToChat(client, "" ...MOD_TAG... " Ce distributeur est vide !");
