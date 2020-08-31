@@ -790,7 +790,7 @@ void getRulesName(serverRules rulesID, int target, int arg, char[] tmp, int leng
 	char tmp2[64], optionsBuff[4][32];
 	if( arg == 1 ) {
 		switch(rulesID) {
-			case rules_Amendes:			{	Format(tmp, length, "Les amendes sont augmentee de 5 pourcent");				}
+			case rules_Amendes:			{	Format(tmp, length, "Les amendes sont augmentees de 5 pourcent");				}
 			case rules_ItemsPrice:		{	Format(tmp, length, "Les prix des items sont augmentés de 10 pourcent");		}
 			case rules_reductions:		{	Format(tmp, length, "Les reductions sont interdites");							}
 			case rules_Productions:		{	Format(tmp, length, "La production des machines et plants est acceleree");		}
