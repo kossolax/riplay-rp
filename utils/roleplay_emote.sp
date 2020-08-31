@@ -121,7 +121,7 @@ bool canAccess(int client) {
 }
 void MainEmote(int client, int id=0) {
 	Menu menu = CreateMenu(Handler_MainEmote);
-	menu.SetTitle("Emote (100$/utilisation)\n ");
+	menu.SetTitle("Emote\n ");
 	
 	for (int i = 0; i < sizeof(g_szEmote); i++ ) {
 		if( StringToInt(g_szEmote[i][2]) == 0 )
@@ -158,8 +158,6 @@ public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3
 }
 
 bool startEmote(int client, const char[] anim) {
-	if( !(GetUserFlagBits(client) & ADMFLAG_KICK) && rp_GetClientInt(client, i_Bank) > 100 )
-		rp_ClientMoney(client, i_Money, -100);
 	
 	float vec[3], ang[3];
 	Entity_GetAbsOrigin(client, vec);

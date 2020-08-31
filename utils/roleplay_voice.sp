@@ -455,7 +455,7 @@ public int MenuJobs3(Handle p_hItemMenu, MenuAction p_oAction, int client, int p
 					LogToGame("[TSX-RP] [CALL] %L a demandé %s à %L", client, tmp, target);
 				}
 			}
-			CPrintToChat(client, "" ...MOD_TAG... " La demande à été envoyée à la personne.");
+			CPrintToChat(client, "" ...MOD_TAG... " La demande a été envoyée à %N{default}.", target);
 			ClientCommand(target, "play buttons/blip1.wav");
 			rp_Effect_BeamBox(target, client, NULL_VECTOR, 122, 122, 0);
 			Handle dp;

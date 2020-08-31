@@ -537,7 +537,7 @@ public Action Cmd_ItemPermiTir(int args) {
 	
 	float train = rp_GetClientFloat(client, fl_WeaponTrain);
 	if( train >= 8.0 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Votre entrainenment est déjà maximale.");
+		CPrintToChat(client, "" ...MOD_TAG... " Votre entraînement est déjà maximal.");
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
@@ -829,7 +829,7 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 				price = (100 - rp_GetClientInt(client, i_KnifeTrain))*10;
 				if((rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money)) >= price){
 					rp_ClientMoney(client, i_Money, -price);
-					CPrintToChat(client, "" ...MOD_TAG... " Votre entrainement au couteau est maintenant maximal.");
+					CPrintToChat(client, "" ...MOD_TAG... " Votre entraînement au couteau est maintenant maximal.");
 					rp_SetClientInt(client, i_KnifeTrain, 100);
 				}
 				else{

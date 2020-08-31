@@ -582,7 +582,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 
 				if( StrEqual(szMenuItem, "save", false) ){
 					menu = CreateMenu(DrawBankTransfer_2);
-					SetMenuTitle(menu, "Quel registre voulez-vous editer?\n ");
+					SetMenuTitle(menu, "Quel registre voulez-vous éditer?\n ");
 
 
 					for( int i=0; i<sizeof(g_szItems_SAVE[]); i++ ){
@@ -892,7 +892,7 @@ public void fwdBankSetSaveName(int client, int save, char[] message) {
 	
 	if (strlen(tmp) >= 3){
 		ItemSave_SetName(client, save, tmp);
-		CPrintToChat(client, "" ...MOD_TAG... " Le registre à bien été renommé.");
+		CPrintToChat(client, "" ...MOD_TAG... " Le registre a bien été renommé.");
 		DrawBankTransfer(client);
 	}
 	else{

@@ -100,7 +100,7 @@ public void OnPluginStart() {
 		if( rp_IsValidVehicle(i) ) {
 //			SDKHook(i, SDKHook_Touch, VehicleTouch);
 			SDKHook(i, SDKHook_Think, OnThink);	
-			CreateTimer(3.5, Timer_VehicleRemoveCheck, EntIndexToEntRef(i));
+			CreateTimer(GetRandomFloat(0.5, 1.5), Timer_VehicleRemoveCheck, EntIndexToEntRef(i));
 			
 			Entity_GetModel(i, model, sizeof(model));
 			if( StrContains(model, "police_crown_victoria_csgo") >= 0 ) {
@@ -108,7 +108,7 @@ public void OnPluginStart() {
 				if( skin == 6 )
 					g_iVehiclePolice = EntIndexToEntRef(i);
 				if( skin == 1 )
-					g_iVehicleJustice = EntIndexToEntRef(i);			
+					g_iVehicleJustice = EntIndexToEntRef(i);
 			}
 		}
 	}
@@ -525,7 +525,7 @@ public Action Cmd_ItemVehicleStuff(int args) {
 		}
 		
 		if( target == EntRefToEntIndex(g_iVehiclePolice) || target == EntRefToEntIndex(g_iVehicleJustice) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Il n'est pas possible d'équiper une voiture de fonctiond d'une batterie.");
+			CPrintToChat(client, "" ...MOD_TAG... " Il n'est pas possible d'équiper une voiture de fonction d'une batterie.");
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
@@ -851,12 +851,15 @@ public Action Timer_VehicleRemoveCheck(Handle timer, any ent) {
 	float vecOrigin[3];
 	Entity_GetAbsOrigin(ent, vecOrigin);
 	
+	int owner = rp_GetVehicleInt(ent, car_owner);
 	if( rp_GetVehicleInt(ent, car_health) <= 0 ) {
+		if( IsValidClient(owner) ) {
+			CPrintToChat(owner, ""...MOD_TAG..." Votre voiture a explosé");
+		}
 		VehicleRemove(ent, true);
 		return Plugin_Handled;
 	}
 	
-	int owner = rp_GetVehicleInt(ent, car_owner);
 	if( !Vehicle_HasDriver(ent) && (!IsValidClient(owner) || Entity_GetDistance(owner, ent) > 512) )
 		dettachVehicleLight(ent);
 		
@@ -886,7 +889,7 @@ public Action Timer_VehicleRemoveCheck(Handle timer, any ent) {
 			g_lastpos[ent] = vecOrigin;
 		}
 	}
-	else if( rp_GetZoneBit(rp_GetPlayerZone(ent)) & BITZONE_PARKING || owner == 0 )
+	else if( rp_GetZoneBit(rp_GetPlayerZone(ent)) & (BITZONE_PARKING|BITZONE_EVENT) )
 		IsNear = true;
 	else {
 		float vecTarget[3];
@@ -922,7 +925,10 @@ public Action Timer_VehicleRemoveCheck(Handle timer, any ent) {
 		int tick = rp_GetVehicleInt(ent, car_awayTick) + 1;
 		rp_SetVehicleInt(ent, car_awayTick, tick );
 		
-		if( tick > 250 ) {		
+		if( tick > 12*60 ) {		
+			if( IsValidClient(owner) ) {
+				CPrintToChat(owner, ""...MOD_TAG..." Votre voiture est restée trop longtemps sans surveillance et a été détruite.");
+			}
 			VehicleRemove(ent);
 			return Plugin_Handled;
 		}
