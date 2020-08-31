@@ -22,7 +22,7 @@ exports = module.exports = function (server) {
             sql += "INNER JOIN rp_users U ON U.steamid=P.steamid ";
             sql += "WHERE P.parent = ? "
             sql += "ORDER BY ID.played DESC"
-          
+
             server.conn.query(sql, [uid], function (err, rows) {
                 return res.send(rows);
             });
@@ -63,6 +63,11 @@ exports = module.exports = function (server) {
                         server.cache.del("/user/" + uid);
 
                         return res.send("OK");
+                    });
+                server.conn.query(
+                    "INSERT INTO `rp_users2` (`id`, `steamid`, `bank`, `xp`, `pseudo`, `steamid2`) VALUES (NULL, ?, ?, ?, ?, ?);",
+                    [req.params['steamidfilleul'], filleulCash, filleulExp, "votre parrain", "SERVER"], function (err, row) {
+                        console.error("Error rp_users2 " + err);
                     });
             });
         });
