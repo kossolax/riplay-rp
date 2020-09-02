@@ -662,6 +662,8 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	rp_SetVehicleInt(ent, car_health, GetConVarInt(g_hCarHeal));
 	rp_SetVehicleInt(ent, car_klaxon, Math_GetRandomInt(1, 6));
 	rp_SetVehicleInt(ent, car_can_jump, -1);
+	rp_SetVehicleInt(ent, car_item_id, 0);
+	rp_SetVehicleInt(ent, car_owner, 0);
 	
 	SetEntProp(ent, Prop_Data, "m_takedamage", DAMAGE_NO); // Nope
 	//SetEntProp(ent, Prop_Data, "m_nNextThinkTick", -1);
@@ -1313,6 +1315,11 @@ public int eventGarageMenu(Handle menu, MenuAction action, int client, int param
 						
 					if( rp_GetVehicleInt(target, car_health) < 1000 ) {
 						CPrintToChat(client, "" ...MOD_TAG... " Votre véhicule est endommagé.");
+						continue;
+					}
+					
+					if( rp_GetVehicleInt(target, car_item_id) <= 0 ) {
+						CPrintToChat(client, "" ...MOD_TAG... " Impossible de ranger ce véhicule.");
 						continue;
 					}
 					
