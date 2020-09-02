@@ -23,18 +23,17 @@ char g_szEmote[][][] = {
 	{"Emote_Bring_It_On",	"Bring it On",		"0"},
 	{"Emote_ThumbsDown", 	"Thumbs Down", 		"0"},
 	{"Emote_ThumbsUp",		"Thumbs Up", 		"0"},
-	{"Emote_Celebration_Loop", "Celebration", "1"},
 	{"Emote_BlowKiss", 		"Blow Kiss", 		"0"},
 	{"Emote_Calculated", 	"Calculated", 	"0"},
 	{"Emote_Confused",		"Confused", "0"},
-	{"Emote_Chug", 			"Chug", "1"},
+	{"Emote_Chug", 			"Chug", "0"},
 	{"Emote_Cry", 			"Cry", "0"},
 	{"Emote_DustingOffHands", "Dusting Off Hands", "0"},
 	{"Emote_DustOffShoulders", "Dust Off Shoulders", "0"},
 	{"Emote_Facepalm", 		"Facepalm", "0"},
 	{"Emote_Fishing", 		"Fishing", "0"},
 	{"Emote_Flex", 			"Flex", "0"},
-	{"Emote_golfclap", 		"golfclap", "1"},
+	{"Emote_golfclap", 		"golfclap", "0"},
 	{"Emote_HandSignals", 	"Hand Signals", "0"},
 	{"Emote_HeelClick", 	"Heel Click", "0"},
 	{"Emote_Hotstuff", 		"Hotstuff", "0"},
@@ -50,11 +49,63 @@ char g_szEmote[][][] = {
 	{"Emote_RockPaperScissor_Paper", "Paper", "0"},
 	{"Emote_RockPaperScissor_Scissor", "Scissor", "0"},
 	{"Emote_Salute", 		"Salute", "0"},
-	{"Emote_SmoothDrive", 	"Smooth Drive", "1"},
 	{"Emote_Snap", 			"Snap", "0"},
 	{"Emote_StageBow", 		"Stage Bow", "0"},
 	{"Emote_Wave2", 		"Wave", "0"},
-	{"Emote_Yeet",			"Yeet", "0"}
+	{"Emote_Yeet",			"Yeet", "0"},
+	
+	{"Emote_Mask_Off_Loop", "Mask Off", "1"},
+	{"Emote_Dab", 		"Dab", "0"},
+	{"Emote_FlippnSexy", "FlippnSexy", "0"},
+	{"Emote_guitar", "Guitar", "0"},
+	{"Emote_T-Rex", "T-Rex", "0"},	
+	{"Emote_Youre_Awesome", "Youre Awesome", "0"},
+	
+	
+	{"DanceMoves", 			"Dance Moves", "1"},
+	{"Emote_SmoothDrive", 	"Smooth Drive", "1"},
+	{"Emote_Celebration_Loop", "Celebration", "1"},
+	
+	{"Emote_Zippy_Dance", "Zippy Dance", "1"},
+	
+	{"ElectroShuffle", "Electro Shuffle", "1"},
+	{"Emote_AerobicChamp", "Aerobic Champ", "1"},
+	{"Emote_Bendy", "Bendy", "1"},
+	{"Emote_BandOfTheFort", "Band Of The Fort", "1"},
+	{"Emote_Boogie_Down", "Boogie Down", "1"},	
+	{"Emote_Capoeira", "Capoeira", "1"},
+	{"Emote_Charleston", "Charleston", "1"},
+	{"Emote_Chicken", "Chicken", "1"},
+	{"Emote_Dance_NoBones", "No Bones", "1"},	
+	{"Emote_Dance_Shoot", "Shoot", "1"},
+	{"Emote_Dance_SwipeIt", "Swipe It", "1"},
+	{"Emote_Dance_Disco_T3", "Disco T3", "1"},
+	{"Emote_DG_Disco", "DG Disco", "1"},	
+	{"Emote_Dance_Worm", "Worm", "1"},
+	{"Emote_Dance_Loser", "Loser", "1"},
+	{"Emote_Dance_Breakdance", "Breakdance", "1"},
+	{"Emote_Dance_Pump", "Pump", "1"},	
+	{"Emote_Dance_RideThePony", "Ride The Pony", "1"},
+	{"Emote_EasternBloc", "Eastern Bloc", "1"},
+	{"Emote_FancyFeet", "Fancy Feet", "1"},	
+	{"Emote_FlossDance", "Floss Dance", "1"},
+	{"Emote_Fresh", "Fresh", "1"},
+	{"Emote_GrooveJam", "Groove Jam", "1"},	
+	{"Emote_Hiphop_01", "Hiphop_01", "1"},
+	{"Emote_Hula", "Hula", "1"},	
+	{"Emote_KoreanEagle", "Korean Eagle", "1"},	
+	{"Emote_Kpop_02", "Kpop", "1"},
+	{"Emote_LivingLarge", "Living Large", "1"},
+	{"Emote_Maracas", "Maracas", "1"},
+	{"Emote_PopLock", "Pop Lock", "1"},
+	{"Emote_PopRock", "Pop Rock", "1"},
+	{"Emote_RobotDance", "Robot Dance", "1"},
+	{"Emote_TechnoZombie", "Techno Zombie", "1"},
+	{"Emote_Twist", "Twist", "1"},
+	{"Emote_WarehouseDance_Loop", "Warehouse", "1"},
+	{"Emote_Wiggle", "Wiggle", "1"},
+	{"Emote_Hillbilly_Shuffle", "Hillbilly Shuffle", "1"},
+	{"Emote_IrishJig", "Irish Jig", "1"},
 };
 
 public void OnPluginStart() {
@@ -99,7 +150,15 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 			return Plugin_Handled;
 		}
 		
-		MainEmote(client);
+		MainEmote(client, 0);
+		return Plugin_Handled;
+	}
+	if( StrEqual(command, "dance") || StrEqual(command, "dances") ) {
+		if( !canAccess(client) ) {
+			return Plugin_Handled;
+		}
+		
+		MainEmote(client, 1);
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
@@ -114,30 +173,34 @@ bool canAccess(int client) {
 	if( rp_GetClientInt(client, i_Donateur) >= 1 && rp_GetClientInt(client, i_Donateur) <= 10 )
 		return true;
 	
-	if( GetUserFlagBits(client) & ADMFLAG_KICK )
+	if( GetUserFlagBits(client) & ADMFLAG_ROOT )
 		return true;
 	
 	return false;
 }
-void MainEmote(int client, int id=0) {
+void MainEmote(int client, int type, int id=0) {
+	char tmp[64];
 	Menu menu = CreateMenu(Handler_MainEmote);
-	menu.SetTitle("Emote\n ");
+	menu.SetTitle(type == 0 ? "Emotes: \n " : "Dances: \n ");
 	
 	for (int i = 0; i < sizeof(g_szEmote); i++ ) {
-		if( StringToInt(g_szEmote[i][2]) == 0 )
-			menu.AddItem(g_szEmote[i][0], g_szEmote[i][1]);
+		if( StringToInt(g_szEmote[i][2]) == type ) {
+			Format(tmp, sizeof(tmp), "%d@%s", type, g_szEmote[i][0]);
+			menu.AddItem(tmp, g_szEmote[i][1]);
+		}
 	}
 	menu.DisplayAt(client, id, MENU_TIME_FOREVER);
 }
 public int Handler_MainEmote(Handle hItem, MenuAction oAction, int client, int param) {
 	if (oAction == MenuAction_Select) {
-		char options[64];
+		char options[64], tmp[2][64];
 		GetMenuItem(hItem, param, options, sizeof(options));
+		ExplodeString(options, "@", tmp, sizeof(tmp), sizeof(tmp[]));
 		
-		MainEmote(client, 6* (param/6) );
+		MainEmote(client, StringToInt(tmp[0]), 6* (param/6) );
 		
 		if( g_iEmoteEnt[client] == 0 && rp_IsBuildingAllowed(client) && !isMoving(GetClientButtons(client)) ) {
-			startEmote(client, options);
+			startEmote(client, tmp[1]);
 		}
 	}
 	else if (oAction == MenuAction_End ) {
