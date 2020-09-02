@@ -153,7 +153,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 		MainEmote(client, 0);
 		return Plugin_Handled;
 	}
-	if( StrEqual(command, "dance") || StrEqual(command, "dances") ) {
+	if( StrEqual(command, "dance") || StrEqual(command, "dances") || StrEqual(command, "danse") || StrEqual(command, "danses") ) {
 		if( !canAccess(client) ) {
 			return Plugin_Handled;
 		}
@@ -173,7 +173,7 @@ bool canAccess(int client) {
 	if( rp_GetClientInt(client, i_Donateur) >= 1 && rp_GetClientInt(client, i_Donateur) <= 10 )
 		return true;
 	
-	if( GetUserFlagBits(client) & ADMFLAG_ROOT )
+	if( GetUserFlagBits(client) & ADMFLAG_KICK )
 		return true;
 	
 	return false;
