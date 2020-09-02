@@ -318,8 +318,16 @@ public int MenuJobs(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_
 					continue;
 
 				Format(tmp2, sizeof(tmp2), "%i", i);
-				int ijob = rp_GetClientJobID(i)== 1 && GetClientTeam(i) == 2 ? 0 : rp_GetClientInt(i, i_Job);
+				int ijob = rp_GetClientInt(i, i_Job);
 				rp_GetJobData(ijob, job_type_name, tmp, sizeof(tmp));
+				
+				if( rp_GetClientJobID(i) == 1 && CS_TEAM_T ) {
+					if( rp_GetClientInt(client, i_KillJailDuration) > 1) {
+						Format(tmp, sizeof(tmp), "Criminel");
+					} else {
+						Format(tmp, sizeof(tmp), "Gendarmerie");
+					}
+				}
 
 				if(rp_GetClientBool(i, b_IsAFK))
 					Format(tmp, sizeof(tmp), "[AFK] %N - %s", i, tmp);
