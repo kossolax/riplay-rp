@@ -770,7 +770,9 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 					CreateTimer(time, AllowStealingCB, client);
 					time = 0.0;
 				} else {
+					CreateTimer(0.1, AllowStealingCB, client);
 					CPrintToChat(client, "" ...MOD_TAG... " Le vol a été annulé.");
+					return Plugin_Stop;
 				}
 			}
 		}
@@ -779,7 +781,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 		rp_SetClientInt(client, i_LastVolTarget, -1);
 		rp_SetClientInt(client, i_LastVolAmount, stealAmount); 
 		
-		if(time >= 0.0)
+		if(time >= 0.0 && type != 8 )
 			CreateTimer(time, AllowStealing, client);
 		
 		return Plugin_Stop;
