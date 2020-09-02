@@ -216,6 +216,7 @@ public Action braquageNewAttempt(Handle timer, any attempt) {
 public void Q1_Start(int objectiveID, int client) {
 	g_bDoingQuest = true;
 	g_bCanMakeQuest = false;
+	g_iVehicle = 0;
 	addClientToTeam(client, TEAM_BRAQUEUR);
 	LogToGame("[BRAQUAGE] %L a lancé un braquage", client);
 }
@@ -915,7 +916,7 @@ public int MenuRespawnBraqueur(Handle menu, MenuAction action, int client, int p
 		int hostage = StringToInt(tmp[0]);
 		int target = StringToInt(tmp[1]);
 		
-		if( IsValidClient(target) && IsValidEdict(hostage) && IsValidEntity(hostage) ) {			
+		if( IsValidClient(target) && IsValidEdict(hostage) && IsValidEntity(hostage) && g_iPlayerTeam[target] != TEAM_BRAQUEUR ) {			
 			float pos[3];
 			Entity_GetAbsOrigin(hostage, pos);
 			removeClientTeam(hostage);
@@ -956,6 +957,9 @@ public int MenuInviterBraqueur(Handle menu, MenuAction action, int client, int p
 		
 		if( StrEqual(options, "refresh") )
 			return;
+		if( g_iVehicle > 0 )
+			return;
+		
 		else if( StrEqual(options, "oui") ) {
 			if( g_stkTeamCount[TEAM_BRAQUEUR] < requiredTForCT() && g_iPlayerTeam[client] == TEAM_INVITATION ) {
 				addClientToTeam(client, TEAM_BRAQUEUR);
