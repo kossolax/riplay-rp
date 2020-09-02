@@ -281,6 +281,7 @@ void incrementJobPlayTime(int client, int time) {
 }
 void AFK_Check(int client) {
 	static bool wasTalking[MAX_PLAYERS + 1];
+	static int lastBatterie[MAX_ENTITIES+1];
 	
 	float vecAngles[3];
 	GetClientEyeAngles(client, vecAngles);
@@ -294,6 +295,11 @@ void AFK_Check(int client) {
 	int vehicle = rp_GetClientVehicle(client);
 	if( vehicle > 0 ) {
 		same = true;
+		
+		if( lastBatterie[vehicle] != g_iVehicleData[vehicle][car_battery] ) {
+			same = false;
+		}
+		lastBatterie[vehicle] = g_iVehicleData[vehicle][car_battery];
 	}
 	int passager = rp_GetClientVehiclePassager(client);
 	if( passager > 0 ) {
