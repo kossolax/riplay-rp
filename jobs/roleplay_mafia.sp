@@ -736,19 +736,18 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 			case 8: { // Distrib Perso
 				time *= 4.0;
 				int owner = rp_GetBuildingData(target, BD_owner);
-				int vol_max = rp_GetClientInt(owner, i_Money)+rp_GetClientInt(owner, i_Bank);
-				
 				stealAmount = 150;
 
-				if(vol_max/2000 > stealAmount){
-					stealAmount = vol_max/2000;
-				}
-
 				if( IsValidClient(owner) ) {
+					
+					int vol_max = rp_GetClientInt(owner, i_Money)+rp_GetClientInt(owner, i_Bank);
+					if(vol_max/2000 > stealAmount){
+						stealAmount = vol_max/2000;
+					}
 
 					stealAmount = Math_GetRandomPow(1, stealAmount);
 
-					if(vol_max < stealAmount){
+					if(vol_max < stealAmount || rp_GetClientFloat(owner, fl_LastStolen)+60.0 > GetGameTime() ){
 						CPrintToChat(client, "" ...MOD_TAG... " Ce distributeur est vide !");
 
 						MENU_ShowPickLock(client, percent, -1, type);
