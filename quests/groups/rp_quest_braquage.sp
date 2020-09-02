@@ -1331,8 +1331,9 @@ bool policeMatch(int client) {
 	int jobID = rp_GetClientJobID(client);
 	
 	
-	if( jobID == 101 && rp_GetClientBool(client, b_IsInAudiance) )
+	if( jobID == 101 && rp_GetClientBool(client, b_IsInAudiance) && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 101 ) {
 		return false;
+	}
 	
 	if( jobID == 1 || jobID == 101 ) {
 		if(rp_GetClientInt(client, i_KillJailDuration) > 1) {
