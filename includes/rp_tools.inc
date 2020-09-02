@@ -191,6 +191,9 @@ stock void String_NumberFormat(int value, char[] buffer, int size) {
 	}
 }
 stock void String_ColorsToHTML(char[] text, int length) {
+	ReplaceString(text, length, "<", "");
+	ReplaceString(text, length, ">", "");
+	
 	ReplaceString(text, length, "{darkred}", "<font color='#bb0000'>");
 	ReplaceString(text, length, "{red}", "<font color='#ff0000'>");
 	ReplaceString(text, length, "{pink}", "<font color='#ffc0cc'>");

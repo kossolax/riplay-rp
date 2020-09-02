@@ -215,7 +215,7 @@ public Action AllowBuild(Handle timer, any client) {
 	g_bUserData[client][b_MayBuild] = true;
 }
 void showPlayerHintBox(int client, int target) {
-	static char clientname[64], clientname2[64], classname[64];
+	static char clientname[64], clientname2[128], classname[64];
 	
 	if( target <= 0 )
 		return;
@@ -245,16 +245,12 @@ void showPlayerHintBox(int client, int target) {
 		char szJail[128];
 		PrintJail(target, szJail, sizeof(szJail));
 		
-		GetClientName(target, clientname2, sizeof(clientname2));
-		strcopy(clientname, 20, clientname2);
+		GetClientName2(target, clientname, sizeof(clientname));
+		String_ColorsToHTML(clientname, sizeof(clientname));
 		
 		if( g_bUserData[target][b_CAPSLOCK] )  {
 			String_ToLower(clientname, clientname, strlen(clientname));
 		}
-		
-		ReplaceString(clientname, sizeof(clientname), "<3", "");
-		ReplaceString(clientname, sizeof(clientname), "<", "");
-		ReplaceString(clientname, sizeof(clientname), ">", "");
 		
 		if( EVENT_HIDE == 1 ) {
 			return;
@@ -299,16 +295,12 @@ void showPlayerHintBox(int client, int target) {
 		
 		int target2 = rp_GetBuildingData(target, BD_owner);
 		
-		GetClientName(target2, clientname2, sizeof(clientname2));
-		strcopy(clientname, 20, clientname2);
+		GetClientName2(target2, clientname, sizeof(clientname));
+		String_ColorsToHTML(clientname, sizeof(clientname));
 		
 		if( g_bUserData[target2][b_CAPSLOCK] )  {
 			String_ToLower(clientname, clientname, strlen(clientname));
 		}
-		
-		ReplaceString(clientname, sizeof(clientname), "<3", "");
-		ReplaceString(clientname, sizeof(clientname), "<", "");
-		ReplaceString(clientname, sizeof(clientname), ">", "");
 		
 		PrintHintText(client, "Props de %s\nHP: %d", clientname, Entity_GetHealth(target));
 	}
@@ -316,21 +308,17 @@ void showPlayerHintBox(int client, int target) {
 		
 		int target2 = g_iVehicleData[target][car_owner];
 		
-		GetClientName(target2, clientname2, sizeof(clientname2));
-		strcopy(clientname, 20, clientname2);
+		GetClientName2(target2, clientname, sizeof(clientname));
+		String_ColorsToHTML(clientname, sizeof(clientname));
 		
 		if( g_bUserData[target2][b_CAPSLOCK] )  {
 			String_ToLower(clientname, clientname, strlen(clientname));
 		}
 		
-		ReplaceString(clientname, sizeof(clientname), "<3", "");
-		ReplaceString(clientname, sizeof(clientname), "<", "");
-		ReplaceString(clientname, sizeof(clientname), ">", "");
-		
 		int target3 = GetEntPropEnt(target, Prop_Send, "m_hPlayer");
 		char fmt[128];
 		if( IsValidClient(target3) ) {
-			Format(fmt, sizeof(fmt), "\n%N conduit.", target3);
+			Format(fmt, sizeof(fmt), "\n%s conduit.", clientname);
 		}
 		
 		PrintHintText(client, "Voiture de %s\nHP: %d%s", clientname, rp_GetVehicleInt(target, car_health), fmt);
@@ -340,7 +328,15 @@ void showPlayerHintBox(int client, int target) {
 		int target3 = GetEntPropEnt(target, Prop_Send, "m_hPlayer");
 		char fmt[128];
 		if( IsValidClient(target3) ) {
-			Format(fmt, sizeof(fmt), "\n%N conduit.", target3);
+			
+			GetClientName2(target3, clientname, sizeof(clientname));
+			String_ColorsToHTML(clientname, sizeof(clientname));
+			
+			if( g_bUserData[target3][b_CAPSLOCK] )  {
+				String_ToLower(clientname, clientname, strlen(clientname));
+			}
+			
+			Format(fmt, sizeof(fmt), "\n%s conduit.", clientname);
 		}
 		
 		PrintHintText(client, "Voiture de fonction\nHP: %d%s", rp_GetVehicleInt(target, car_health), fmt);
@@ -351,16 +347,12 @@ void showPlayerHintBox(int client, int target) {
 			int owner = g_iAppartBonus[appart][appart_proprio];
 			if( IsValidClient(owner) ) {
 				
-				GetClientName(owner, clientname2, sizeof(clientname2));
-				strcopy(clientname, 20, clientname2);
+				GetClientName2(owner, clientname, sizeof(clientname));
+				String_ColorsToHTML(clientname, sizeof(clientname));
 				
 				if( g_bUserData[owner][b_CAPSLOCK] )  {
 					String_ToLower(clientname, clientname, strlen(clientname));
 				}
-				
-				ReplaceString(clientname, sizeof(clientname), "<3", "");
-				ReplaceString(clientname, sizeof(clientname), "<", "");
-				ReplaceString(clientname, sizeof(clientname), ">", "");
 				
 				PrintHintText(client, "%s de:\n %s", (appart<100?"Appartement":"Garage"), clientname);
 			}
@@ -919,7 +911,7 @@ int GetAssurence(int client, bool forced = false) {
 				if( item_id > 0 ) {
 					amount += RoundFloat( StringToFloat(g_szItemList[item_id][item_type_prix]) * ratio);					
 					if( rp_GetBuildingData(i, BD_max) > 3 ) {
-						amount += rp_GetBuildingData(i, BD_max) - 3) * 100;
+						amount += (rp_GetBuildingData(i, BD_max) - 3) * 100;
 					}
 				}
 			}
