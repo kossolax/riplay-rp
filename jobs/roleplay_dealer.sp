@@ -499,6 +499,7 @@ public Action ItemDrugStop(Handle time, any client) {
 
 	rp_SetClientBool(client, b_Drugged, false);
 	rp_SetClientBool(client, b_KeyReverse, false);
+	g_hDrugTimer[client] = null;
 	
 	return Plugin_Continue;
 }

@@ -1149,7 +1149,7 @@ public int Native_rpClientColorize(Handle plugin, int numParams) {
 	GetNativeArray(2, color, sizeof(color));
 	
 	if( color[0] == -1 ) {
-		if( g_bUserData[client][b_Invisible] == false ) {
+		if( client > MaxClients || g_bUserData[client][b_Invisible] == false ) {
 			if( IsInPVP(client) )
 				GroupColor(client);
 			else
