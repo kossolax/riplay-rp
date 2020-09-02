@@ -886,11 +886,12 @@ int GetAssurence(int client, bool forced = false) {
 		GetEdictClassname(i, tmp, sizeof(tmp));
 		
 		if( rp_GetBuildingData(i, BD_owner) == client ) {
-			float ratio = (1.0 - float(GetTime() - rp_GetBuildingData(i, BD_started)) / (5.0 * 60.0 * 60.0)) * 0.75;
-			float reboot = Math_Clamp((float(nextReboot - rp_GetBuildingData(i, BD_started)) / (2.5 * 60.0 * 60.0)), 0.1, 1.0);
-
+			float ratio = (1.0 - float(GetTime() - rp_GetBuildingData(i, BD_started)) / (5.0 * 60.0 * 60.0)) * 0.8;
+			float reboot = Math_Clamp((float(nextReboot - rp_GetBuildingData(i, BD_started)) / (2.0 * 60.0 * 60.0)), 0.2, 1.0);
+			float artisan = Math_Clamp((1.0 - float(g_iUserData[client][i_ArtisanLevel])*0.75), 0.1, 1.0);
+			
 			ratio = ratio * reboot;
-			ratio = ratio * (1.0 - float(g_iUserData[client][i_ArtisanLevel]));
+			ratio = ratio * artisan;
 			
 			if( g_bUserData[client][b_FreeAssurance] == 1 ) {
 				ratio = ratio * 0.66;
@@ -918,7 +919,7 @@ int GetAssurence(int client, bool forced = false) {
 				if( item_id > 0 ) {
 					amount += RoundFloat( StringToFloat(g_szItemList[item_id][item_type_prix]) * ratio);					
 					if( rp_GetBuildingData(i, BD_max) > 3 ) {
-						amount += RoundFloat( float(rp_GetBuildingData(i, BD_max) - 3) * 100.0 * ratio);
+						amount += rp_GetBuildingData(i, BD_max) - 3) * 100;
 					}
 				}
 			}
