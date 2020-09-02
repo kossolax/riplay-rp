@@ -239,9 +239,12 @@ public Action CmdGps(int args) {
 		
 		client = (client <= MaxClients && rp_GetClientVehicle(client) > 0 ? rp_GetClientVehicle(client) : client);
 		client = (client <= MaxClients && rp_GetClientVehiclePassager(client) > 0 ? rp_GetClientVehiclePassager(client) : client);
+		client = (client <= MaxClients && Entity_GetParent(client) > 0 ? Entity_GetParent(client) : client);
+		
 		
 		target = (target <= MaxClients && rp_GetClientVehicle(target) > 0 ? rp_GetClientVehicle(target) : target);
 		target = (target <= MaxClients && rp_GetClientVehiclePassager(target) > 0 ? rp_GetClientVehiclePassager(target) : target);
+		target = (target <= MaxClients && Entity_GetParent(target) > 0 ? Entity_GetParent(target) : target);
 		
 		Entity_GetAbsOrigin(target, dst);
 		
