@@ -57,19 +57,14 @@ exports = module.exports = function (server) {
                 }
                 // On a réussi a set approuvé à true, pour le parainnage en question et il est valide, on donne l'argent & xp
                 server.conn.query(
-                    "INSERT INTO `rp_users2` (`id`, `steamid`, `bank`, `xp`, `pseudo`, `steamid2`) VALUES (NULL, ?, ?, ?, ?, ?);",
-                    [uid, parainnageCash, parainnageExp, "Parrainage", "SERVER"], function (err, row) {
-
+                    "INSERT INTO `rp_users2` (`id`, `steamid`, `bank`, `xp`, `pseudo`, `steamid2`) VALUES (NULL, ?, ?, ?, ?, ?),(NULL, ?, ?, ?, ?, ?);",
+                    [req.params['steamidfilleul'], filleulCash, filleulExp, "votre parrain", "SERVER", uid, parainnageCash, parainnageExp, "Parrainage", "SERVER"], function (err, row) {
                         if (err) return res.send(new ERR.InternalServerError("Error rp_users2 " + err));
 
                         server.cache.del("/user/" + uid);
+                        server.cache.del("/user/" + req.params['steamidfilleul']);
 
                         return res.send("OK");
-                    });
-                server.conn.query(
-                    "INSERT INTO `rp_users2` (`id`, `steamid`, `bank`, `xp`, `pseudo`, `steamid2`) VALUES (NULL, ?, ?, ?, ?, ?);",
-                    [req.params['steamidfilleul'], filleulCash, filleulExp, "votre parrain", "SERVER"], function (err, row) {
-                        console.error("Error rp_users2 " + err);
                     });
             });
         });
