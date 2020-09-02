@@ -138,12 +138,16 @@ void PrintSick(int client, char[] szReturn, int size) {
 	if( g_iUserData[client][i_Sick] <= 0 ) {
 		Format(szReturn, size, "");
 	}
+	else {
+		Format(szReturn, size, "\n /!\\ Maladie /!\\");
+	}
+	/*
 	else if( HasDoctor(client) ) {
 		Format(szReturn, size, "\n /!\\ Maladie /!\\");
 	}
 	else {
 		Format(szReturn, size, "");
-	}
+	}*/
 }
 void PrintAdmin( int i, char[] szAdmin, int size) {	
 	int flags = GetUserFlagBits(i);
