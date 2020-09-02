@@ -750,7 +750,6 @@ public Action Command_Say(int client, int args) {
 		SendPlayerToSpawn(target, true);
 		rp_ClientColorize(target);
 		
-		Colorize(target, 255, 255, 255, 255);
 		g_bUserData[client][b_MaySteal] = false;
 		if( GetClientTeam(target) == CS_TEAM_CT )
 			CreateTimer(10.0, AllowStealing, client);
