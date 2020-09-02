@@ -246,8 +246,8 @@ public Action CmdGps(int args) {
 		target = (target <= MaxClients && rp_GetClientVehiclePassager(target) > 0 ? rp_GetClientVehiclePassager(target) : target);
 		target = (target <= MaxClients && Entity_GetParent(target) > 0 ? Entity_GetParent(target) : target);
 		
+		Entity_GetAbsOrigin(client, src);
 		Entity_GetAbsOrigin(target, dst);
-		
 	}
 	else if( args == 4 ) {
 		dst[0] = GetCmdArgFloat(2);
