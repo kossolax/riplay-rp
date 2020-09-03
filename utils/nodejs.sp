@@ -58,7 +58,7 @@ public void OnWebsocketReceive(WebsocketHandle websocket, WebsocketSendType iTyp
 	if(iType == SendType_Text) {
 		
 		if( String_StartsWith(url, "/location") ) {
-			char buffer[65 * 3 * 8];
+			char buffer[2048];
 			Handle hArray = json_array(), tmp = INVALID_HANDLE;
 			float pos[3];
 			
@@ -76,6 +76,8 @@ public void OnWebsocketReceive(WebsocketHandle websocket, WebsocketSendType iTyp
 			}
 	
 			json_dump(hArray, buffer, sizeof(buffer), 0, false);
+
+			Format(buffer, sizeof(buffer), "{\"req\":\"%s\",\"data\":%s}", url, buffer);
 			
 			Websocket_Send(websocket, SendType_Text, buffer);
 		}
@@ -96,10 +98,12 @@ public void OnWebsocketReceive(WebsocketHandle websocket, WebsocketSendType iTyp
 				}
 			}
 			
-			Websocket_Send(websocket, SendType_Text, found ? "1" : "0");
+			Format(arg, sizeof(arg), "{\"req\":\"%s\",\"data\":%s}", url, found ? "1" : "0");
+
+			Websocket_Send(websocket, SendType_Text, arg);
 		}
 		else if( String_StartsWith(url, "/report/") ) {
-			char options[4][256], arg[32];
+			char options[4][256], arg[1024];
 			ExplodeString(url, "/", options, sizeof(options), sizeof(options[]));
 			
 			bool found = false;
@@ -115,11 +119,13 @@ public void OnWebsocketReceive(WebsocketHandle websocket, WebsocketSendType iTyp
 				}
 			}
 			
-			Websocket_Send(websocket, SendType_Text, found ? "1" : "0");
+			Format(arg, sizeof(arg), "{\"req\":\"%s\",\"data\":%s}", url, found ? "1" : "0");
+
+			Websocket_Send(websocket, SendType_Text, arg);
 			
 		}
 		else if( String_StartsWith(url, "/msgto/") ) {
-			char options[4][256], arg[32];
+			char options[4][256], arg[1024];
 			ExplodeString(url, "/", options, sizeof(options), sizeof(options[]));
 			
 			bool found = false;
@@ -135,7 +141,9 @@ public void OnWebsocketReceive(WebsocketHandle websocket, WebsocketSendType iTyp
 				}
 			}
 			
-			Websocket_Send(websocket, SendType_Text, found ? "1" : "0");
+			Format(arg, sizeof(arg), "{\"req\":\"%s\",\"data\":%s}", url, found ? "1" : "0");
+
+			Websocket_Send(websocket, SendType_Text, arg);
 		}
 		else if( String_StartsWith(url, "/msg/") ) {
 			char options[3][256];
@@ -147,19 +155,21 @@ public void OnWebsocketReceive(WebsocketHandle websocket, WebsocketSendType iTyp
 			Websocket_Send(websocket, SendType_Text, "1");
 		}
 		else if( String_StartsWith(url, "/time") ) {       
-	        int hour, minutes, timestamp;
-	        rp_GetTime(hour, minutes);
-	        timestamp = GetTime();
-	        
-	        char buffer[255];
-	        Handle hObj = json_object();
-	        json_object_set(hObj, "h", json_integer(hour));
-	        json_object_set(hObj, "m", json_integer(minutes));
-	        json_object_set(hObj, "t", json_integer(timestamp));
-	        json_dump(hObj, buffer, sizeof(buffer), 0, false);
-	        
-	        Websocket_Send(websocket, SendType_Text, buffer);
-	    }
+			int hour, minutes, timestamp;
+			rp_GetTime(hour, minutes);
+			timestamp = GetTime();
+
+			char buffer[255];
+			Handle hObj = json_object();
+			json_object_set(hObj, "h", json_integer(hour));
+			json_object_set(hObj, "m", json_integer(minutes));
+			json_object_set(hObj, "t", json_integer(timestamp));
+			json_dump(hObj, buffer, sizeof(buffer), 0, false);
+			Format(buffer, sizeof(buffer), "{\"req\":\"%s\",\"data\":%s}", url, buffer);
+			
+			Websocket_Send(websocket, SendType_Text, buffer);
+
+		}
 		else {
 			Websocket_Send(websocket, SendType_Text, "error");
 		}
