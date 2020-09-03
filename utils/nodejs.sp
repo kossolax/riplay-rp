@@ -31,13 +31,13 @@ public void OnPluginStart() {
 	
 	if(g_hListenSocket == INVALID_WEBSOCKET_HANDLE)
 		g_hListenSocket = Websocket_Open("0.0.0.0", 27020, OnWebsocketIncoming, OnWebsocketMasterError, OnWebsocketMasterClose);
-	
-	
-	PrintToChatAll("ready");
+}
+public void OnPluginEnd() {
+	if(g_hListenSocket != INVALID_WEBSOCKET_HANDLE)
+		Websocket_Close(g_hListenSocket);
 }
 
 public Action OnWebsocketIncoming(WebsocketHandle websocket, WebsocketHandle newWebsocket, const char[] remoteIP, int remotePort, char protocols[256]) {
-	PrintToChatAll("OnWebsocketIncoming: %s", protocols);
 	Websocket_HookChild(newWebsocket, OnWebsocketReceive, OnWebsocketDisconnect, OnChildWebsocketError);
 	
 	return Plugin_Continue;
