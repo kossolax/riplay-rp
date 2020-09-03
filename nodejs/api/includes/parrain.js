@@ -22,7 +22,7 @@ exports = module.exports = function (server) {
             sql += "INNER JOIN rp_users U ON U.steamid=P.steamid ";
             sql += "WHERE P.parent = ? "
             sql += "ORDER BY ID.played DESC"
-          
+
             server.conn.query(sql, [uid], function (err, rows) {
                 return res.send(rows);
             });
@@ -33,6 +33,8 @@ exports = module.exports = function (server) {
 
     var parainnageCash = 30000;
     var parainnageExp = 18000;
+    var filleulCash = 30000;
+    var filleulExp = 0;
 
     /**
    * @api {post} /parrain/:steamidfilleul/validate ValideParainnage
@@ -55,12 +57,12 @@ exports = module.exports = function (server) {
                 }
                 // On a réussi a set approuvé à true, pour le parainnage en question et il est valide, on donne l'argent & xp
                 server.conn.query(
-                    "INSERT INTO `rp_users2` (`id`, `steamid`, `bank`, `xp`, `pseudo`, `steamid2`) VALUES (NULL, ?, ?, ?, ?, ?);",
-                    [uid, parainnageCash, parainnageExp, "Parrainage", "SERVER"], function (err, row) {
-
+                    "INSERT INTO `rp_users2` (`id`, `steamid`, `bank`, `xp`, `pseudo`, `steamid2`) VALUES (NULL, ?, ?, ?, ?, ?),(NULL, ?, ?, ?, ?, ?);",
+                    [req.params['steamidfilleul'], filleulCash, filleulExp, "votre parrain", "SERVER", uid, parainnageCash, parainnageExp, "Parrainage", "SERVER"], function (err, row) {
                         if (err) return res.send(new ERR.InternalServerError("Error rp_users2 " + err));
 
                         server.cache.del("/user/" + uid);
+                        server.cache.del("/user/" + req.params['steamidfilleul']);
 
                         return res.send("OK");
                     });

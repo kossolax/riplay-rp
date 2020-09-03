@@ -1021,6 +1021,13 @@ void SendPlayerToJail(int target, int client = 0) {
 	GetClientAbsOrigin(target, g_flLastPos[target]);
 	Entity_GetModel(target, tmp, sizeof(tmp));
 	Entity_SetModel(target, MODEL_PRISONNIER);
+
+	int rand = Math_GetRandomInt(0, (MaxJail - 1));
+	rp_ClientTeleport(target, fLocation[rand]);
+	
+	g_bBlockJail[target] = true;
+	CreateTimer(MENU_TIME_DURATION.0, AllowWeaponDrop, target);
+
 	rp_ClientColorize(target); // Remet la couleur normale au prisonnier si jamais il est coloré
 	if (!StrEqual(tmp, MODEL_PRISONNIER))
 		SetEntProp(target, Prop_Send, "m_nSkin", Math_GetRandomInt(0, 14));
@@ -1040,11 +1047,6 @@ void SendPlayerToJail(int target, int client = 0) {
 	
 	
 	
-	int rand = Math_GetRandomInt(0, (MaxJail - 1));
-	rp_ClientTeleport(target, fLocation[rand]);
-	
-	g_bBlockJail[target] = true;
-	CreateTimer(MENU_TIME_DURATION.0, AllowWeaponDrop, target);
 	
 	int tmp2 = rp_GetClientInt(target, i_LastVolCashFlowTime);
 	
@@ -1148,6 +1150,19 @@ public int eventAskJail2Time(Handle menu, MenuAction action, int client, int par
 		CloseHandle(menu);
 	}
 }
+
+void tpOutOfJail(int target){
+	int zonec = rp_GetZoneFromPoint(g_flLastPos[target]);
+	int bit = rp_GetZoneBit(zonec);
+	
+	if (bit & (BITZONE_JAIL | BITZONE_HAUTESECU | BITZONE_LACOURS) || rp_GetZoneInt(zonec, zone_type_type) == 101) {
+		rp_ClientSendToSpawn(target, true);
+	}
+	else {
+		rp_ClientTeleport(target, g_flLastPos[target]);
+	}
+}
+
 public int eventSetJailTime(Handle menu, MenuAction action, int client, int param2) {
 	char options[64], data[2][32], szQuery[1024];
 	
@@ -1175,17 +1190,9 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 
 			LogToGame("[TSX-RP] [JAIL] [LIBERATION] %L a liberé %L", client, target);
 			
-			int zonec = rp_GetZoneFromPoint(g_flLastPos[target]);
-			int bit = rp_GetZoneBit(zonec);
-			
-			if (bit & (BITZONE_JAIL | BITZONE_HAUTESECU | BITZONE_LACOURS) || rp_GetZoneInt(zonec, zone_type_type) == 101) {
-				rp_ClientSendToSpawn(target, true);
-			}
-			else {
-				rp_ClientTeleport(target, g_flLastPos[target]);
-			}
-			
+			tpOutOfJail(target);
 			rp_ClientResetSkin(target);
+			
 			return;
 		}
 		if (type == -2 || type == -3) {
@@ -1216,7 +1223,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 				
 				LogToGame("[TSX-RP] [JAIL] %L a été libéré car il n'avait pas commis d'agression", target);
 				
-				rp_ClientTeleport(target, g_flLastPos[target]);
+				tpOutOfJail(target);
 				rp_ClientResetSkin(target);
 				return;
 			}
@@ -1233,7 +1240,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 				
 				LogToGame("[TSX-RP] [JAIL] %L a été libéré car il n'avait pas effectué de tir dangereux", target);
 				
-				rp_ClientTeleport(target, g_flLastPos[target]);
+				tpOutOfJail(target);
 				rp_ClientResetSkin(target);
 				return;
 			}
@@ -1267,8 +1274,8 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 				
 				LogToGame("[TSX-RP] [JAIL] %L a été libéré car il n'avait pas commis de vol", target);
 				
+				tpOutOfJail(target);
 				rp_ClientResetSkin(target);
-				rp_ClientTeleport(target, g_flLastPos[target]);
 				return;
 			}
 			if (IsValidClient(rp_GetClientInt(target, i_LastVolTarget))) {
