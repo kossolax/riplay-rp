@@ -1226,7 +1226,7 @@ void loadItem_Item(int Client, Handle hQuery) {
 public int OnSteamWorksHTTPComplete(Handle HTTPRequest, bool fail, bool success, EHTTPStatusCode statusCode, any client) {
 	static Handle regex;
 	if( regex == INVALID_HANDLE )
-		regex = CompileRegex("\"(\d+)\"");
+		regex = CompileRegex("\"(\\d+)\"");
 	
 	if (success && statusCode == k_EHTTPStatusCode200OK )  { 
 		int size;

@@ -45,6 +45,7 @@ public OnMapEnd() {
 }
 public OnClientPostAdminCheck(int client) {
 	if( !IsFakeClient(client) ) {
+		CreateTimer(1.0, CheckBanned, GetClientUserId(client));
 		CreateTimer(30.0, CheckBanned, GetClientUserId(client));
 	}
 }
