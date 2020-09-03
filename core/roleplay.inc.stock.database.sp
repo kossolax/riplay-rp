@@ -1119,13 +1119,13 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 	
 	CS_SwitchTeam(Client, CS_TEAM_T);
 
-	//char URL[128];
-	//Format(URL, sizeof(URL), "https://www.ts-x.eu/api/user/double/steamid/%s", SteamID);
+	char URL[128];
+	Format(URL, sizeof(URL), "https://riplay.fr/api/user/double/steamid/%s", SteamID);
 	
-	//Handle req = SteamWorks_CreateHTTPRequest(k_EHTTPMethodGET, URL);
-	//SteamWorks_SetHTTPCallbacks(req, OnSteamWorksHTTPComplete);
-	//SteamWorks_SetHTTPRequestContextValue(req, Client);
-	//SteamWorks_SendHTTPRequest(req);
+	Handle req = SteamWorks_CreateHTTPRequest(k_EHTTPMethodGET, URL);
+	SteamWorks_SetHTTPCallbacks(req, OnSteamWorksHTTPComplete);
+	SteamWorks_SetHTTPRequestContextValue(req, Client);
+	SteamWorks_SendHTTPRequest(req);
 	
 	Call_StartForward( view_as<Handle>(g_hRPNative[Client][RP_OnPlayerDataLoaded]));
 	Call_PushCell(Client);
@@ -1226,7 +1226,7 @@ void loadItem_Item(int Client, Handle hQuery) {
 public int OnSteamWorksHTTPComplete(Handle HTTPRequest, bool fail, bool success, EHTTPStatusCode statusCode, any client) {
 	static Handle regex;
 	if( regex == INVALID_HANDLE )
-		regex = CompileRegex("(STEAM_1:[0-1]:[0-9]{1,14})");
+		regex = CompileRegex("\"(\d+)\"");
 	
 	if (success && statusCode == k_EHTTPStatusCode200OK )  { 
 		int size;
