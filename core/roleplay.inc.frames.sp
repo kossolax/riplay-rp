@@ -770,15 +770,12 @@ void OnGameFrame_10(float time) {
 					}
 				}
 				
-				if( g_bUserData[i][b_Invisible] ) {
-					
+				if( g_bUserData[i][b_Invisible] ) {	
 					ClientCommand(i, "r_screenoverlay effects/hsv.vmt");
-					
-					if( g_iUserData[i][i_Job] != 1 && g_iUserData[i][i_Job] != 2 && g_iUserData[i][i_Job] != 4 && g_iUserData[i][i_Job] != 5 ) {	
-						if( GetClientSpeed(i) > 200 || g_flUserData[i][fl_invisibleTime] < time ) {
-							CopSetVisible(i);
-						}
+					if( GetClientSpeed(i) > 200 || g_flUserData[i][fl_invisibleTime] < time ) {
+						CopSetVisible(i);
 					}
+
 				}				
 				else if( g_flUserData[i][fl_invisibleTime] > time && g_flUserData[i][fl_invisibleTimeLeft] < time ) {
 					if( GetClientSpeed(i) < 200  && (GetClientButtons(i) & IN_DUCK) && CheckBuild(i, false) ) {

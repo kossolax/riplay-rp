@@ -24,7 +24,7 @@ void setRecoil(int client) {
 		SetEntPropVector(client, Prop_Send, "m_aimPunchAngle", vecAngles);
 	}
 }
-
+/*
 public Action OnSetTransmit(int entity, int client) {
 	if( entity == client )
 		return Plugin_Continue;
@@ -36,6 +36,7 @@ public Action OnSetTransmit(int entity, int client) {
 	}
 	return Plugin_Continue;
 }
+*/
 public void OnPreThink(int client) {
 	setRecoil(client);
 }
