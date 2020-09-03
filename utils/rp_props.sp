@@ -103,7 +103,8 @@ enum block_type {
 	BLOCK_GRAVITY,
 	BLOCK_BREAKABLE,
 	BLOCK_COLORIZE,
-	BLOCK_FAKE
+	BLOCK_FAKE,
+	BLOCK_REMOVER
 }
 char g_szType[block_type][32] = {
 	"Normal",
@@ -123,7 +124,8 @@ char g_szType[block_type][32] = {
 	"Gravite",
 	"Cassable",
 	"Colorisant",
-	"Fake"
+	"Fake",
+	"Trou noir"
 };
 
 int tpTypeExit = 0;
@@ -146,7 +148,6 @@ float g_fPending_MIRROR[65];
 float g_fPending_FALL[65];
 float g_fPending_GRAVITY[65];
 
-Handle g_hSDKGetSmoothedVelocity = INVALID_HANDLE;
 Handle g_cMaxHealth = INVALID_HANDLE;
 Handle g_cMaxSnap = INVALID_HANDLE;
 
@@ -176,7 +177,7 @@ public void OnPluginStart() {
 	
 	RegAdminCmd("db_create_physics",Command_create, 		ADMFLAG_SLAY,	"Creates an Entity");
 	RegAdminCmd("db_create_dynamic",Command_create,		 	ADMFLAG_SLAY,	"Creates an Entity");
-	RegAdminCmd("db_create_throw",	Command_create,			ADMFLAG_ROOT,	"Creates and Throw an entity");
+	RegAdminCmd("db_create_throw",	Command_create,			ADMFLAG_SLAY,	"Creates and Throw an entity");
 	RegAdminCmd("db_create_ball",	Command_create,			ADMFLAG_ROOT,	"Creates and Throw an entity");
 	
 	RegAdminCmd("db_create", 		Cmd_CreateMenuc, 		ADMFLAG_SLAY, "Create an Entity");
@@ -646,6 +647,11 @@ public Action Command_create(int client,int args) {
 	}
 	if( StrEqual(arg0, "db_create_throw") ) {
 		isInFront = true;
+		
+		int flags = GetUserFlagBits(client);
+		if( !(flags & ADMFLAG_ROOT) && !(rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_EVENT ) ) {
+			return Plugin_Handled;
+		}
 	}
 	if( StrEqual(arg0, "db_create_ball") ) {
 		isInFront = true;
@@ -662,7 +668,10 @@ public Action Command_create(int client,int args) {
 	}
 	
 	int index = -1;
-	if ( isPhysics ) {
+	if( StrEqual(arg0, "db_create_ball" ) ) {
+		index = CreateEntityByName("prop_sphere");
+	}
+	else if ( isPhysics ) {
 		index = CreateEntityByName("prop_physics_override");
 	}
 	else {
@@ -788,10 +797,9 @@ public Action Command_create(int client,int args) {
 		TeleportEntity(index, NULL_VECTOR, NULL_VECTOR, Push);
 	}
 	else if( StrEqual(arg0, "db_create_ball" ) ) {
-		SetEntityGravity(index, 0.5);
-		Entity_SetTakeDamage(index, DAMAGE_YES);
+		SetEntityGravity(index, 2.8);
+		
 		Entity_SetHealth(index, 100000, true);
-		SDKHook(index, SDKHook_OnTakeDamagePost, OnTakeDamageBall);
 	}
 
 	PrintToConsole(client, "RP_PROPS: Props %d créé", index);
@@ -911,19 +919,6 @@ public Action EventReset(Handle Evt, const char[] Name, bool Broadcast) {
 	SetEntityGravity(cli, 1.0);
 	
 	OnClientPutInServer(cli);
-}
-public Action OnTakeDamageBall(int victim, int &attacker, int &inflictor, float& damage, int& damagetype) {
-	float vecPos[3];
-	SDKCall(g_hSDKGetSmoothedVelocity, victim, vecPos);
-	PrintToChat(6, "%f %f %f", vecPos[0], vecPos[1], vecPos[2]);
-	
-	vecPos[0] *= 50.0;
-	vecPos[1] *= 50.0;
-	vecPos[2] *= 50.0;
-	int flags = GetEntityFlags(victim);
-	SetEntityFlags(victim, (flags&~FL_ONGROUND) );
-	TeleportEntity(victim, NULL_VECTOR, NULL_VECTOR, vecPos);
-	Entity_SetHealth(victim, 100000, true);
 }
 void Menu_BlockSpawn_Base(int client) {
 	
@@ -1303,9 +1298,32 @@ void BlockType(int client, int index) {
 			SetEntityRenderColor(index, r, g, b, 250);
 			SetEntProp( index, Prop_Send, "m_nSolidType", 0);		
 		}
+		case BLOCK_REMOVER: {
+			
+			SetEntityRenderColor(index, 0, 0, 0, 255);
+			Entity_SetSolidFlags(index, FSOLID_TRIGGER|FSOLID_TRIGGER_TOUCH_DEBRIS|FSOLID_USE_TRIGGER_BOUNDS|FSOLID_VOLUME_CONTENTS);
+			
+			SDKHook(index, SDKHook_Touch, Block_REMOVER);
+		}
 	}
 	
 	SetEntProp(index, Prop_Send, "m_nSkin", 0); 
+}
+public Action Block_REMOVER(int index, int entity) {
+	char classname[64];
+	GetEdictClassname(entity, classname, sizeof(classname));
+	
+	if( StrContains(classname, "prop_physics", false) == 0 || StrContains(classname, "prop_sphere", false) == 0 || StrContains(classname, "player", false) == 0 || StrContains(classname, "weapon_", false) == 0 ) {
+		if( IsValidClient(entity) ) {
+			int heal = GetClientHealth(entity) * 10;
+			SDKHooks_TakeDamage(entity, index, entity, float(heal));
+		}
+		else {
+			Desyntegrate(entity);
+		}
+	}
+	return Plugin_Continue;
+	
 }
 public Action Block_Colorize(int index, int client) {
 	if( IsValidClient(client) ) {
