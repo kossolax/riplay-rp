@@ -4,7 +4,7 @@ exports = module.exports = function (server) {
   var ERR = require('node-restify-errors');
   var moment = require('moment');
   var WebSocket = require('websocket').w3cwebsocket;
-
+  
   /*var TwitchClient = require("node-twitchtv");
   var client = new TwitchClient({ client_id: "egfk3bhshu398at0nyjh34ehhzoxk19", scope: "user_read, channel_read_"});*/
 
@@ -55,11 +55,11 @@ exports = module.exports = function (server) {
         if (msg && msg.req) {
           let wsR = wsRequests[msg.req];
           if(wsR){
-            clearTimeout(wsR);
             for(var i=0; i<wsR.cb; i++){
-              cb(null, null, wsR.data);
+              wsR.cb[i](null, null, msg.data);
             }
             delete wsRequests[msg.req];
+            clearTimeout(wsR.timeout);
           }
         }
 
