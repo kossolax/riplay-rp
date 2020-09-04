@@ -80,6 +80,7 @@ public void OnPluginStart() {
 	HookEvent("player_team", 		EventPlayerTeam,	EventHookMode_Pre);
 	HookEvent("player_blind", 		EventFlashPlayer,	EventHookMode_Pre);
 	HookEvent("bullet_impact",		EventPlayerShot,	EventHookMode_Pre);
+	HookEvent("weapon_fire",		EventPlayerFire,	EventHookMode_Post);
 	HookEvent("weapon_zoom",		EventZoom,			EventHookMode_Post);
 	HookEvent("player_falldamage",	EventPlayerFallDamage,	EventHookMode_Pre);
 	HookEvent("player_changename",	EventBlockMessage,	EventHookMode_Pre);

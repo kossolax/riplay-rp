@@ -16,6 +16,36 @@
 #include <sdkhooks>
 #include <cstrike>
 
+stock int rp_GetTargetHull(int client, float hit[3], float size=10.0) {
+	float src[3], ang[3], dst[3], min[3], max[3];
+	
+	GetClientEyePosition(client, src);
+	GetClientEyeAngles(client, ang);
+	GetAngleVectors(ang, dst, NULL_VECTOR, NULL_VECTOR);
+	ScaleVector(dst, 10000.0);
+	AddVectors(src, dst, dst);
+	
+	for (int i = 0; i < 3; i++) {
+		min[i] = -size;
+		max[i] =  size;
+	}
+	
+	int target;
+	Handle trace = TR_TraceHullFilterEx(src, dst, min, max, MASK_SHOT, FilterToOne, client);
+
+	if (TR_DidHit(trace)) {
+		TR_GetEndPosition(hit, trace);
+		target = TR_GetEntityIndex(trace);
+
+		if (GetVectorDistance(src, hit) > size) {
+			target = -1;
+		}
+	}
+	
+	CloseHandle(trace);
+	
+	return target;
+}
 stock bool rp_IsClientSafe(int client) {
 	if( rp_IsClientNew(client) )
 		return true;

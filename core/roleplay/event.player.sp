@@ -733,6 +733,25 @@ public Action EventBlockMessage(Handle ev, const char[] name, bool  bd) {
 
 	return Plugin_Continue;
 }
+public Action EventPlayerFire(Handle ev, const char[] name, bool  bd) {
+	int client = GetClientOfUserId(GetEventInt(ev, "userid"));
+	char weapon[64];
+	GetEventString(ev, "weapon", weapon, sizeof(weapon));
+	
+	if( !IsPlayerAlive(client) )
+		return Plugin_Continue;
+	
+	if( g_bUserData[client][b_WeaponIsMelee] ) {
+		if( StrContains(weapon, "weapon_hammer") == 0 || StrContains(weapon, "weapon_spanner") == 0 || StrContains(weapon, "weapon_axe") == 0 ) {
+			float hit[3];
+			if( rp_GetTargetHull(client, hit, 32.0) >= 0 || rp_GetTargetHull(client, hit, 16.0) >= 0 || rp_GetTargetHull(client, hit, 8.0) >= 0  ) {
+				PrintToChatAll("hit");
+			}
+		}
+	}
+	
+	return Plugin_Continue;	
+}
 public Action EventPlayerShot(Handle ev, const char[] name, bool  bd) {
 
 	int client = GetClientOfUserId(GetEventInt(ev, "userid"));

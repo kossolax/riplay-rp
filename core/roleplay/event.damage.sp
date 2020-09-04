@@ -10,7 +10,6 @@
 	#include "roleplay.sp"
 #endif
 
-
 public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& weapon, float damageForce[3], float damagePosition[3]) {
 	bool changed = false;
 	int victim_zone = GetPlayerZone(victim);
