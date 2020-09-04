@@ -744,8 +744,8 @@ public Action EventPlayerFire(Handle ev, const char[] name, bool  bd) {
 	if( g_bUserData[client][b_WeaponIsMelee] ) {
 		if( StrContains(weapon, "weapon_hammer") == 0 || StrContains(weapon, "weapon_spanner") == 0 || StrContains(weapon, "weapon_axe") == 0 ) {
 			float hit[3];
-			if( rp_GetTargetHull(client, hit, 32.0) >= 0 || rp_GetTargetHull(client, hit, 16.0) >= 0 || rp_GetTargetHull(client, hit, 8.0) >= 0  ) {
-				PrintToChatAll("hit");
+			if( rp_GetTargetHull(client, hit, 56.0) >= 0 ) {
+				// TBD
 			}
 		}
 	}

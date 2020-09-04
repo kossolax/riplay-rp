@@ -16,7 +16,7 @@
 #include <sdkhooks>
 #include <cstrike>
 
-stock int rp_GetTargetHull(int client, float hit[3], float size=10.0) {
+stock int rp_GetTargetHull(int client, float hit[3], float size=8.0) {
 	float src[3], ang[3], dst[3], min[3], max[3];
 	
 	GetClientEyePosition(client, src);
@@ -26,8 +26,8 @@ stock int rp_GetTargetHull(int client, float hit[3], float size=10.0) {
 	AddVectors(src, dst, dst);
 	
 	for (int i = 0; i < 3; i++) {
-		min[i] = -size;
-		max[i] =  size;
+		min[i] = -8.0;
+		max[i] =  8.0;
 	}
 	
 	int target;
@@ -37,7 +37,7 @@ stock int rp_GetTargetHull(int client, float hit[3], float size=10.0) {
 		TR_GetEndPosition(hit, trace);
 		target = TR_GetEntityIndex(trace);
 
-		if (GetVectorDistance(src, hit) > size) {
+		if (GetVectorDistance(src, hit) > size+0.01) {
 			target = -1;
 		}
 	}
