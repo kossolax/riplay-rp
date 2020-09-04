@@ -57,7 +57,7 @@ public Action Cmd_GiveItem(int args) {
 	GetCmdArg(1, Arg1, sizeof(Arg1));
 	int client = GetCmdArgInt(2);
 	int item_id = GetCmdArgInt(args);
-	
+		
 	if( StrEqual(Arg1, "weapon_usp") || StrEqual(Arg1, "weapon_p228") || StrEqual(Arg1, "weapon_m3") || StrEqual(Arg1, "weapon_galil") || StrEqual(Arg1, "weapon_scout") ) {
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
@@ -72,7 +72,10 @@ public Action Cmd_GiveItem(int args) {
 		return Plugin_Handled;
 	}
 	
-	
+	if( (StrContains(Arg1, "weapon_knife") == 0 || StrContains(Arg1, "weapon_bayonet") == 0) && Client_HasWeapon(client, "weapon_knife") ) {
+		ITEM_CANCEL(client, item_id);
+		return Plugin_Handled;
+	}	
 	
 	int ent = GivePlayerItem(client, Arg1);
 	
