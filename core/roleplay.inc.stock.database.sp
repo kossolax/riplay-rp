@@ -559,7 +559,7 @@ void StoreUserData(int client) {
 		MysqlQuery, fname, lname, g_bUserData[client][b_PassedRulesTest], jobplaytime, g_iUserData[client][i_GiveXP], g_iUserData[client][i_Dette]);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
-		"%s `jail_qhs`='%i' `amende_permi_lege`='%i',`amende_permi_lourd`='%i' WHERE `steamid`='%s';",
+		"%s `jail_qhs`='%i', `amende_permi_lege`='%i',`amende_permi_lourd`='%i' WHERE `steamid`='%s';",
 		MysqlQuery, g_bUserData[client][b_JailQHS], g_iUserData[client][i_AmendeLiscence2], g_iUserData[client][i_AmendeLiscence1], SteamID);
 
 	SQL_TQuery(g_hBDD, SQL_QueryCallBack, MysqlQuery);
