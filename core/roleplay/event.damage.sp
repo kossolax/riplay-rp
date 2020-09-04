@@ -16,6 +16,20 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 	int victim_zone = GetPlayerZone(victim);
 	int attacker_zone = GetPlayerZone(attacker);
 	
+	if( IsValidClient(victim) && attacker > MaxClients && attacker == inflictor && weapon == -1 && damagetype == DMG_NEVERGIB|DMG_CLUB ) {
+		char tmp[64];
+		GetEdictClassname(inflictor, tmp, sizeof(tmp));
+		
+		if( StrContains(tmp, "weapon_melee") == 0 ) {
+			int prev = GetEntPropEnt(inflictor, Prop_Send, "m_hPrevOwner");
+			if( IsValidClient(prev) ) {
+				attacker = prev;
+				changed = true;
+			}
+		}
+	}
+	
+	
 	if( IsValidClient(victim) ) {
 		if( attacker == inflictor && inflictor > MaxClients && damagetype == 1 ) {
 			float pos[3], min[3], max[3];

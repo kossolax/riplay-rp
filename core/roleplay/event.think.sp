@@ -120,10 +120,8 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 			changed = true;
 		}
 		
-		int item = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-		if(item > 0 ) {
-			GetEntityClassname(item, buffer, sizeof(buffer));
-			if (StrEqual(buffer, "weapon_fists", false) || StrEqual(buffer, "weapon_melee", false)) {
+		if( g_bUserData[client][b_WeaponIsMelee] ) {
+			if( !(rp_GetZoneBit(rp_GetPlayerZone(client)) & (BITZONE_EVENT|BITZONE_PVP) )) {
 				buttons &= ~IN_ATTACK2;
 				changed = true;
 			}
