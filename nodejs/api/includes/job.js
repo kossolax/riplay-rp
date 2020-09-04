@@ -121,7 +121,7 @@ server.put('/job/:jobid/:steamid', function (req, res, next) {
     if( err ) return res.send(new ERR.InternalServerError(err));
     if( row.length == 0 ) return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
     var SteamID = row[0].steamid.replace("STEAM_0", "STEAM_1");
-    var UserName = row[0].username_clean;
+    var UserName = row[0].name;
     req.params['steamid'] = req.params['steamid'].replace("STEAM_0", "STEAM_1");
 
     if( SteamID == req.params["steamid"] )
