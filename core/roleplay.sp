@@ -357,6 +357,7 @@ public void OnConfigsExecuted() {
 	ServerCommand("mp_radar_showall 1");
 	ServerCommand("weapon_recoil_scale 1");
 	ServerCommand("ammo_grenade_limit_snowballs 1");
+	ServerCommand("sv_shield_hitpoints 5000");
 	
 	//g_hWeaponScale = FindConVar("weapon_recoil_scale");
 }
