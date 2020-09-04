@@ -559,8 +559,8 @@ void StoreUserData(int client) {
 		MysqlQuery, fname, lname, g_bUserData[client][b_PassedRulesTest], jobplaytime, g_iUserData[client][i_GiveXP], g_iUserData[client][i_Dette]);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
-		"%s `amende_permi_lege`='%i',`amende_permi_lourd`='%i' WHERE `steamid`='%s';",
-		MysqlQuery, g_iUserData[client][i_AmendeLiscence2], g_iUserData[client][i_AmendeLiscence1], SteamID);
+		"%s `jail_qhs`='%i' `amende_permi_lege`='%i',`amende_permi_lourd`='%i' WHERE `steamid`='%s';",
+		MysqlQuery, g_bUserData[client][b_JailQHS], g_iUserData[client][i_AmendeLiscence2], g_iUserData[client][i_AmendeLiscence1], SteamID);
 
 	SQL_TQuery(g_hBDD, SQL_QueryCallBack, MysqlQuery);
 	
@@ -826,7 +826,7 @@ void LoadUserData(int Client) {
 		Format(query, sizeof(query), 
 			"SELECT `money`, `bank`, `job_id`, `jailled`, `skin`, `train`, `permi_lege`, `permi_lourd`, `permi_vente`, `passive`, `train_weapon`,");
 		Format(query, sizeof(query),
-			"%s `group_id`, `vitality`, UNIX_TIMESTAMP(`last_connected`), `pay_to_bank`, `have_card`, `in_bank`, `in_item`, `in_save`, `have_account`,", query);
+			"%s `group_id`, `vitality`, UNIX_TIMESTAMP(`last_connected`), `pay_to_bank`, `have_card`, `in_bank`, `in_item`, `jail_qhs`, `have_account`,", query);
 		Format(query, sizeof(query),
 			"%s `malus`, `tuto`, `donateur`, `donateur`, `freekill`, `TimePlayedJob`, `assurance`, `train_esquive`, `sick`, `avocat`, `hasVilla`,", query);
 		Format(query, sizeof(query),
@@ -954,6 +954,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		g_iUserData[Client][i_LastTime] = SQL_FetchInt(hQuery, 13);
 		g_bUserData[Client][b_PayToBank] = SQL_FetchInt(hQuery, 14);
 		g_bUserData[Client][b_HaveCard] = SQL_FetchInt(hQuery, 15);
+		g_bUserData[Client][b_JailQHS] = SQL_FetchInt(hQuery, 18);
 		g_bUserData[Client][b_HaveAccount] = SQL_FetchInt(hQuery, 19);
 		g_iUserData[Client][i_Malus] = SQL_FetchInt(hQuery, 20);
 		g_iUserData[Client][i_Tutorial] = SQL_FetchInt(hQuery, 21);

@@ -451,6 +451,7 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 							case ball_type_revitalisante : Format(tmp2, sizeof(tmp2), "%s Revitalisante", tmp2);
 							case ball_type_nosteal       : Format(tmp2, sizeof(tmp2), "%s Anti-Vol", tmp2);
 							case ball_type_notk          : Format(tmp2, sizeof(tmp2), "%s Anti-TK", tmp2);
+							case ball_type_braquage      : Format(tmp2, sizeof(tmp2), "%s Braquage", tmp2);
 						}
 						AddMenuItem(menu2, tmp, tmp2);
 						count++;
