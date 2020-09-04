@@ -1088,20 +1088,20 @@ int getDistrib(int client, int& type) {
 	
 	if( StrEqual(classname, "rp_bank") && owner == 0 && !rp_GetBuildingData(target, BD_Trapped) )
 		type = 2;
-	if( StrEqual(classname, "rp_weaponbox") )
+	else if( StrEqual(classname, "rp_weaponbox") )
 		type = 3;
-	if( (StrEqual(classname, "rp_cashmachine") ) && rp_GetClientJobID(owner) != 91 &&
-		!rp_IsClientNew(owner) && !rp_GetClientBool(owner, b_IsAFK) && Entity_GetHealth(target) >= 500)
+	else if( (StrEqual(classname, "rp_cashmachine") ) && rp_GetClientJobID(owner) != 91 &&
+		!rp_IsClientSafe(owner) && Entity_GetHealth(target) >= 500)
 		type = 4;
-	if( (StrEqual(classname, "rp_bigcashmachine") ) && rp_GetClientJobID(owner) != 91 &&
-		!rp_IsClientNew(owner) && !rp_GetClientBool(owner, b_IsAFK) && Entity_GetHealth(target) >= 5000 )
+	else if( (StrEqual(classname, "rp_bigcashmachine") ) && rp_GetClientJobID(owner) != 91 &&
+		!rp_IsClientSafe(owner) && Entity_GetHealth(target) >= 5000 )
 		type = 5;
-	if( StrEqual(classname, "rp_phone") )
+	else if( StrEqual(classname, "rp_phone") )
 		type = 6;
-	if( (StrEqual(classname, "rp_plant") ) && rp_GetClientJobID(owner) != 91 && Entity_GetHealth(target) >= 2500 && 
-		!rp_IsClientNew(owner) && !rp_GetClientBool(owner, b_IsAFK) && rp_GetBuildingData(target, BD_count) > 0 )
+	else if( (StrEqual(classname, "rp_plant") ) && rp_GetClientJobID(owner) != 91 && Entity_GetHealth(target) >= 2500 && 
+		!rp_IsClientSafe(owner) && rp_GetBuildingData(target, BD_count) > 0 )
 		type = 7;
-	if( StrEqual(classname, "rp_bank") && owner > 0 && IsValidClient(owner))
+	else if( StrEqual(classname, "rp_bank") && owner > 0 && IsValidClient(owner) && !rp_IsClientSafe(owner) )
 		type = 8;
 		
 	return (type > 0 ? target : 0);

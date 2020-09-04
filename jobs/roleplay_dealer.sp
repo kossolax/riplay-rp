@@ -1704,6 +1704,9 @@ bool CanStealVehicle(int client, int target) {
 		
 	int owner = rp_GetVehicleInt(target, car_owner);
 	if( owner > 0 ) {
+		if( rp_IsClientSafe(owner) )
+			return false;
+		
 		int appart = rp_GetPlayerZoneAppart(owner);
 		if( appart > 0 && ( rp_GetAppartementInt(appart, appart_bonus_garage) || (rp_GetClientJobID(owner) == 61 && !rp_GetClientBool(owner, b_GameModePassive)) ) )
 			return false;

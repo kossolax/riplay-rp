@@ -16,6 +16,16 @@
 #include <sdkhooks>
 #include <cstrike>
 
+stock bool rp_IsClientSafe(int client) {
+	if( rp_IsClientNew(client) )
+		return true;
+	if( rp_GetClientBool(client, b_IsAFK) )
+		return true;
+	if( rp_GetZoneBit(client) & BITZONE_EVENT )
+		return true;
+	
+	return false;
+}
 stock void GetClientName2(int client, char[] str, int length, bool hideColor=true) {
 	
 	GetClientName(client, str, length);
