@@ -1814,6 +1814,7 @@ void StripWeapons(int client) {
 	
 	rp_SetClientBool(client, b_WeaponIsKnife, false);
 	rp_SetClientBool(client, b_WeaponIsHands, true);
+	rp_SetClientBool(client, b_WeaponIsMelee, false);
 	
 	int tmp = GivePlayerItem(client, "weapon_fists");
 	EquipPlayerWeapon(client, tmp);

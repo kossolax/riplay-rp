@@ -106,6 +106,7 @@ public void OnPostThink(int client) {
 }
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon) {
 	static int lastButtons[MAXPLAYERS + 1];
+	static char buffer[128];
 	
 	if( !g_bUserData[client][b_isConnected] || !g_bUserData[client][b_isConnected2] )
 		return Plugin_Continue;
@@ -117,7 +118,16 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		if( g_bUserData[client][b_WeaponIsHands] ) {
 			buttons &= ~IN_ATTACK2;
 			changed = true;
-		}	
+		}
+		
+		int item = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+		if(item > 0 ) {
+			GetEntityClassname(item, buffer, sizeof(buffer));
+			if (StrEqual(buffer, "weapon_fists", false) || StrEqual(buffer, "weapon_melee", false)) {
+				buttons &= ~IN_ATTACK2;
+				changed = true;
+			}
+		}
 	}
 	
 	if( g_bUserData[client][b_KeyReverse] ) {

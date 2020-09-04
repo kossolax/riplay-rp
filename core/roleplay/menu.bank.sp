@@ -662,6 +662,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 						
 						g_bUserData[client][b_WeaponIsKnife] = false;
 						g_bUserData[client][b_WeaponIsHands] = true;
+						g_bUserData[client][b_WeaponIsMelee] = false;
 						FakeClientCommand(client, "use weapon_fists");
 						
 						g_iUserData[client][i_Disposed]--;

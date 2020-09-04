@@ -385,6 +385,7 @@ public Action Timer_CheckWeapon(Handle timer, any wepId) {
 			FakeClientCommand(owner, "use weapon_fists");
 			g_bUserData[owner][b_WeaponIsKnife] = false;
 			g_bUserData[owner][b_WeaponIsHands] = true;
+			g_bUserData[owner][b_WeaponIsMelee] = false;
 			return Plugin_Stop;
 		}
 		

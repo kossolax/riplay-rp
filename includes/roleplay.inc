@@ -684,6 +684,7 @@ enum bool_user_data {
 	ch_Yeux,
 	b_WeaponIsHands,
 	b_WeaponIsKnife,
+	b_WeaponIsMelee,
 	b_GameModePassive,
 	b_IsFirstSpawn,
 	b_Debuging,

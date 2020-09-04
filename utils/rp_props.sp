@@ -1429,6 +1429,8 @@ public Action Block_STRIP(int index, int client) {
 		
 		rp_SetClientBool(client, b_WeaponIsKnife, false);
 		rp_SetClientBool(client, b_WeaponIsHands, true);
+		rp_SetClientBool(client, b_WeaponIsMelee, false);
+		
 		rp_ClientGiveHands(client);
 	}
 }

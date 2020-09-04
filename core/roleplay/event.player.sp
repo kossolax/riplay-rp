@@ -104,6 +104,7 @@ public Action OnWeaponCanSwitchTo(int Client, int weapon) {
 	
 	g_bUserData[Client][b_WeaponIsKnife] = (StrContains(szWeapon, "weapon_knife") == 0 || StrContains(szWeapon, "weapon_bayonet") == 0);
 	g_bUserData[Client][b_WeaponIsHands] = (StrContains(szWeapon, "weapon_fists") == 0);
+	g_bUserData[Client][b_WeaponIsMelee] = (StrContains(szWeapon, "weapon_melee") == 0);
 	
 	return Plugin_Continue;
 }
@@ -316,6 +317,7 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	FakeClientCommand(Client, "use weapon_fists");
 	g_bUserData[Client][b_WeaponIsKnife] = false;
 	g_bUserData[Client][b_WeaponIsHands] = true;
+	g_bUserData[Client][b_WeaponIsMelee] = false;
 	
 	if( g_iUserData[Client][i_ThirdPerson] == 1 )
 		ClientCommand(Client, "thirdperson");
