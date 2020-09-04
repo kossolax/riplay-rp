@@ -36,7 +36,8 @@ public Action Cmd_Reload(int args) {
 public void OnPluginStart() {
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	AddGameLogHook(	GameLogHook );
-	
+}
+public void OnAllPluginsLoaded() {
 	if(g_hListenSocket == INVALID_WEBSOCKET_HANDLE)
 		g_hListenSocket = Websocket_Open("0.0.0.0", 27020, OnWebsocketIncoming, OnWebsocketMasterError, OnWebsocketMasterClose);
 }
