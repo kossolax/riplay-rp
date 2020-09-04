@@ -27,6 +27,30 @@ public Plugin myinfo = {
 
 int g_cBeam, g_cGlow, g_nbMdItems;
 bool g_eMwAct[2048];
+
+char g_szKnife[][][] = {
+	{"weapon_knife", "Couteau classique"},
+	{"weapon_knife_css", "Couteau CSS"},
+	{"weapon_bayonet", "Baïonnette"},
+	{"weapon_knife_flip", "Couteau Pliant"},
+	{"weapon_knife_gut", "Couteau à Éviscérer"},
+	{"weapon_knife_karambit", "Karambit"},
+	{"weapon_knife_m9_bayonet", "Baïonnette M9"},
+	{"weapon_knife_tactical", "Couteau de Chasseur"},
+	{"weapon_knife_butterfly", "Couteau Papillon"},
+	{"weapon_knife_falchion", "Couteau Fauchon"},
+	{"weapon_knife_push", "Shadow Dagger"},
+	{"weapon_knife_survival_bowie", "Couteau bowie"},
+	{"weapon_knife_ursus", "Couteau ursus"}, 
+	{"weapon_knife_gypsy_jackknife", "Couteau Navaja"},
+	{"weapon_knife_stiletto", "Couteau Stileto"},
+	{"weapon_knife_widowmaker", "Couteau talon"},
+	{"weapon_knife_canis", "Couteau Canif"},
+	{"weapon_knife_cord", "Couteau en Paracorde"},
+	{"weapon_knife_skeleton", "Couteau Squelettique "},
+	{"weapon_knife_outdoor", "Couteau de Survie"}
+};
+
 // ----------------------------------------------------------------------------
 public Action Cmd_Reload(int args) {
 	char name[64];
@@ -38,6 +62,8 @@ public void OnPluginStart() {
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	RegServerCmd("rp_item_hamburger",	Cmd_ItemHamburger,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_banane",		Cmd_ItemBanane,			"RP-ITEM",	FCVAR_UNREGISTERED);
+	RegServerCmd("rp_item_knife",		Cmd_ItemKnife,			"RP-ITEM",	FCVAR_UNREGISTERED);
+	
 	g_nbMdItems = -1;
 	for (int j = 1; j <= MaxClients; j++)
 		if( IsValidClient(j) )
@@ -61,7 +87,48 @@ public void OnPluginStart() {
 		}
 	}
 }
+public Action Cmd_ItemKnife(int args) {
+	int client = GetCmdArgInt(1);
+	rp_ClientGiveItem(client, ITEM_KNIFE);
+	CreateTimer(0.25, task_KNIFE, client);
+}
 
+public Action task_KNIFE(Handle timer, any client) {
+	Handle menu = CreateMenu(MenuKnife);
+	SetMenuTitle(menu, "Couteau \n ");
+	
+	for (int i = 0; i < sizeof(g_szKnife); i++) {
+		AddMenuItem(menu, g_szKnife[i][0], g_szKnife[i][1]);
+	}
+	
+	SetMenuExitButton(menu, true);
+	DisplayMenu(menu, client, MENU_TIME_DURATION);
+}
+public int MenuKnife(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_iParam2) {
+	
+	if (p_oAction == MenuAction_Select && client != 0) {
+		char option[64];
+		GetMenuItem(p_hItemMenu, p_iParam2, option, sizeof(option));
+		
+		if (rp_GetClientItem(client, ITEM_KNIFE) <= 0) {
+			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez plus de Couteau de cuisine.");
+			return;
+		}
+		
+		if( Client_HasWeapon(client, "weapon_knife") ) {
+			Client_RemoveWeapon(client, "weapon_knife");
+		}
+		
+		int wpn = GivePlayerItem(client, option);
+		EquipPlayerWeapon(client, wpn);
+		Client_SetActiveWeapon(client, wpn);
+		
+		rp_ClientGiveItem(client, ITEM_KNIFE, -1);
+	}
+	else if (p_oAction == MenuAction_End) {
+		CloseHandle(p_hItemMenu);
+	}
+}
 public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbose) {
 	
 	int vit_level = GetLevelFromVita(rp_GetClientFloat(client, fl_Vitality));

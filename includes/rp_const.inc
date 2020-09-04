@@ -77,6 +77,7 @@
 #define ITEM_KITCROCHTAGE	2
 #define ITEM_KITEXPLOSIF	3
 #define ITEM_MANDAT			4
+#define	ITEM_KNIFE			17
 #define ITEM_FITNESS		30
 #define ITEM_TICKETID		76
 #define ITEM_CADEAU			132
