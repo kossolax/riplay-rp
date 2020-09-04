@@ -3,6 +3,8 @@ exports = module.exports = function (server) {
   var request = require('request');
   var ERR = require('node-restify-errors');
   var moment = require('moment');
+  var WebSocket = require('websocket').w3cwebsocket;
+
   /*var TwitchClient = require("node-twitchtv");
   var client = new TwitchClient({ client_id: "egfk3bhshu398at0nyjh34ehhzoxk19", scope: "user_read, channel_read_"});*/
 
@@ -107,7 +109,7 @@ exports = module.exports = function (server) {
       serverWs = null;
     }
     console.log("Connecting to server websocket");
-    serverWs = new WebSocket("ws://5.196.39.50:27015");
+    serverWs = new WebSocket("ws://5.196.39.50:27020");
     serverWs.onopen = wsOpen;
     serverWs.onerror = () => { setTimeout(reconnect, 4000) };
     serverWs.onmessage = wsMessage;
