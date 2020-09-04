@@ -189,9 +189,8 @@ exports = module.exports = function (server) {
 
     var obj = new Object();
     wsRequest("/time", function (error, response, body) {
-      obj.time = new Object();
-      obj.time.m = obj.time.h = obj.time.t = 0;
-      cb(obj);
+        obj.time = body;
+        cb(obj);
     });
 
     server.conn.query("SELECT `type`, R.`steamid`, `name` FROM `rp_rank` R INNER JOIN `rp_users` U ON U.`steamid`=R.`steamid` WHERE `rank`=1", function (err, rows) {
