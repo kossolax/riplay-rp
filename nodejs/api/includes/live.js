@@ -52,14 +52,14 @@ exports = module.exports = function (server) {
       try {
         var msg = JSON.parse(evt.data);
 
-        if (msg && msg.path) {
-          let wsR = wsRequests[msg.path];
+        if (msg && msg.req) {
+          let wsR = wsRequests[msg.req];
           if(wsR){
             clearTimeout(wsR);
             for(var i=0; i<wsR.cb; i++){
               cb(null, null, wsR.data);
             }
-            delete wsRequests[msg.path];
+            delete wsRequests[msg.req];
           }
         }
 
@@ -94,7 +94,7 @@ exports = module.exports = function (server) {
     }
     var cbs = wsRequests[path].cb;
     for (var i = 0; i < cbs.length; i++) {
-      cbs("timeout");
+      cbs[i]("timeout");
     }
     delete wsRequests[path];
   }
