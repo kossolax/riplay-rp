@@ -22,13 +22,13 @@
                         <input type="hidden" name="receiver_email" value="donations@riplay.fr">
                         <input type="hidden" name="business" value="donations@riplay.fr">
                         <input type="hidden" name="quantity" value="1">
-                        <input type="hidden" name="item_name" value="Achat de {{(ppAmount*0.966-0.35)*1000}}$RP">
+                        <input type="hidden" name="item_name" value="Achat de {{(ppAmount*0.966-0.35)*5000}}$RP">
 
                         <div class="row">
                                 <div class="form-inline text-center">
                                         <input autocomplete="off" class="form-control" type="number" name="amount" value="{{ppAmount}}" ng-model="ppAmount" min="1" ng-min="1"/>
                                        
-                                        <input class="form-control" type="submit" value="Envoyer {{ppAmount}}€ pour recevoir {{(ppAmount*0.966-0.35)*1000}} $RP" />
+                                        <input class="form-control" type="submit" value="Envoyer {{ppAmount}}€ pour recevoir {{(ppAmount*0.966-0.35)*5000}} $RP" />
                                 </div>
                         </div>
                         <input type="hidden" name="return" value="https://rpweb.riplay.fr/index.php?page=money&paypal_done=1">

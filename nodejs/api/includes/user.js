@@ -101,7 +101,7 @@ server.get('/user/admin', function (req, res, next) {
 
     var sql = "SELECT U.`name`, `money` as `cash_money`, `bank` as `cash_bank`, `money`+`bank` as `cash`, U.`job_id`, `job_name`, U.`group_id`, G.`name` as `group_name`, `time_played` as `timeplayed`, ";
     sql += "`permi_lege`, `permi_lourd`, `permi_vente`, `train` as `train_knife`, `train_weapon`, `train_esquive`, ";
-    sql += "`pay_to_bank`, `have_card`, `have_account`, `kill`, `death`, `refere`, `timePlayedJob`, U.`skin`, UNIX_TIMESTAMP(`last_connected`) as `last_connected`, `vitality`, `level` as `rang`, `prestige`, F.`member_id` as `forum_id`, "
+    sql += "`pay_to_bank`, `have_card`, `have_account`, `kill`, `death`, `refere`, `timePlayedJob`, U.`skin`, UNIX_TIMESTAMP(`last_connected`) as `last_connected`, `vitality`, `level` as `rang`, `prestige`, F.`member_id` as `forum_id`, F.`member_group_id` as `forum_primary_goup`, "
     sql += "(U.job_id - (U.job_id%10))+1 as job_boss_id, `no_pyj`";
     sql += " FROM `rp_csgo`.`rp_users` U INNER JOIN `rp_csgo`.`rp_jobs` J ON J.`job_id`=U.`job_id` INNER JOIN `rp_csgo`.`rp_groups` G ON G.`id`=U.`group_id` LEFT JOIN `forum`.`ipb_core_members` F ON REPLACE(F.`steamid`, 'STEAM_0', 'STEAM_1')=U.`steamid` WHERE U.`steamid`=? ORDER BY F.`last_visit` DESC LIMIT 1;";
 
@@ -427,7 +427,7 @@ server.get('/user/admin', function (req, res, next) {
       if( err ) return res.send(new ERR.InternalServerError(err));
       if( row.length == 0 ) return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
       var SteamID = row[0].steamid.replace("STEAM_0", "STEAM_1");
-      var UserName = row[0].username_clean;
+      var UserName = row[0].name;
 
       var mail = "<input type='text' value='"+ SteamID + "'/> conteste <input type='text' value='" + req.params['target'] + "'/> <br />"+ req.params['reason'];
       server.conn.query("INSERT INTO `rp_double_contest` (`steamid`, `target`, `approuved`) VALUES (?, ?, ?);", [SteamID, req.params['target'], parseInt(req.params['reason'])], function(err, rows) {
@@ -901,6 +901,13 @@ server.get('/user/:id/playtime/:type', function (req, res, next) {
             afkTime += (lastRow.stop - lastDate)/1000 + (3*60);
           else {
             connexionTime += (lastRow.stop - lastDate)/1000;
+
+            if( type == "31days" ) {
+              server.conn.query("INSERT INTO `rp_csgo`.`rp_stats` (`steamid`, `timestamp`, `temps`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `temps`=?;", [
+		req.params['id'], lastRow.stop/1000, (lastRow.stop - lastDate)/1000, (lastRow.stop - lastDate)/1000
+              ]);
+	    }
+
           }
         }
 
@@ -914,6 +921,12 @@ server.get('/user/:id/playtime/:type', function (req, res, next) {
           connexionTime += (rows[i].date - lastDate)/1000 - (3*60);
           lastDate = rows[i].date;
           connected = 2;
+
+            if( type == "31days" ) {
+              server.conn.query("INSERT INTO `rp_csgo`.`rp_stats` (`steamid`, `timestamp`, `temps`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `temps`=?;", [
+                req.params['id'], lastRow.stop/1000, (lastRow.stop - lastDate)/1000, (lastRow.stop - lastDate)/1000
+              ]);
+            }
         }
         if( connected > 0 && rows[i].type == "noafk" ) {
           afkTime += (rows[i].date - lastDate)/1000 + (3*60);
@@ -925,6 +938,12 @@ server.get('/user/:id/playtime/:type', function (req, res, next) {
             afkTime += (rows[i].date - lastDate)/1000 + (3*60);
           else {
             connexionTime += (rows[i].date - lastDate)/1000;
+
+            if( type == "31days" ) {
+              server.conn.query("INSERT INTO `rp_csgo`.`rp_stats` (`steamid`, `timestamp`, `temps`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `temps`=?;", [
+                req.params['id'], lastRow.stop/1000, (lastRow.stop - lastDate)/1000, (lastRow.stop - lastDate)/1000
+              ]);
+            }
           }
           connected = 0;
         }
@@ -938,6 +957,12 @@ server.get('/user/:id/playtime/:type', function (req, res, next) {
       if( connected ==  1 ) {
         var tmp = (lastRow.stop  - lastDate)/1000
         connexionTime += tmp;
+
+            if( type == "31days" ) {
+              server.conn.query("INSERT INTO `rp_csgo`.`rp_stats` (`steamid`, `timestamp`, `temps`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `temps`=?;", [
+                req.params['id'], lastRow.stop/1000, (lastRow.stop - lastDate)/1000, (lastRow.stop - lastDate)/1000
+              ]);
+            }
       }
       if( connected ==  2 ) {
         var tmp = (lastRow.stop - lastDate)/1000 + (3*60);

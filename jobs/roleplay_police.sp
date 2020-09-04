@@ -1002,7 +1002,7 @@ void SendPlayerToJail(int target, int client = 0) {
 	
 	int MaxJail = 0;
 	
-	if(rp_GetClientBool(client, b_JailQHS) == false){
+	if(rp_GetClientBool(target, b_JailQHS) == false){
 
 		for (int i = 0; i < MAX_LOCATIONS; i++) {
 			rp_GetLocationData(i, location_type_base, tmp, sizeof(tmp));
@@ -1020,9 +1020,17 @@ void SendPlayerToJail(int target, int client = 0) {
 
 		for( int i=1; i<MAX_ZONES; i++ ) {	
 			if( rp_GetZoneBit(i) & BITZONE_HAUTESECU ) {
-				fLocation[MaxJail][0] = float(rp_GetLocationInt(i, location_type_origin_x));
-				fLocation[MaxJail][1] = float(rp_GetLocationInt(i, location_type_origin_y));
-				fLocation[MaxJail][2] = float(rp_GetLocationInt(i, location_type_origin_z)) + 5.0;
+				fLocation[MaxJail][0] = rp_GetZoneFloat(i, zone_type_min_x);
+				fLocation[MaxJail][1] = rp_GetZoneFloat(i, zone_type_min_y);
+				fLocation[MaxJail][2] = rp_GetZoneFloat(i, zone_type_min_z);
+				
+				fLocation[MaxJail+1][0] = rp_GetZoneFloat(i, zone_type_max_x);
+				fLocation[MaxJail+1][1] = rp_GetZoneFloat(i, zone_type_max_y);
+				fLocation[MaxJail][2] = rp_GetZoneFloat(i, zone_type_min_z);
+				
+				fLocation[MaxJail][0] = (fLocation[MaxJail][0]+fLocation[MaxJail+1][0])/2.0;
+				fLocation[MaxJail][1] = (fLocation[MaxJail][1]+fLocation[MaxJail+1][1])/2.0;
+				fLocation[MaxJail][2] += 20.0;
 			
 				MaxJail++;
 			}
@@ -1200,6 +1208,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 			rp_SetClientInt(target, i_jailTime_Last, 0);
 			rp_SetClientInt(target, i_JailledBy, 0);
 			rp_SetClientBool(target, b_IsFreekiller, false);
+			rp_SetClientBool(target, b_JailQHS, false);
 
 			CPrintToChat(client, "" ...MOD_TAG... " Vous avez libéré %N{default}.", target);
 			CPrintToChat(target, "" ...MOD_TAG... " %N{default} vous a libéré.", client);

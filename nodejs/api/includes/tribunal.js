@@ -60,12 +60,13 @@ exports = module.exports = function(server){
                     var dEnd = moment().add(1, 'hour').toDate();
                     var target = tokken.replace("STEAM_0", "STEAM_1").trim();
 
-                    request("http://5.196.39.48:8080/live/connected/"+target, function (error, response, body) {
+                    callback(null, target, dStart, dEnd);
+                    /*request("http://5.196.39.48:8080/live/connected/"+target, function (error, response, body) {
                       if( body == '"1"' )
                         callback(null, target, dStart, dEnd);
                       else
                         callback("InvalidParam" + target);
-                    });
+                    });*/
 
                   }
                   else {
