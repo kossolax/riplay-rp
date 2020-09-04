@@ -51,11 +51,12 @@ exports = module.exports = function (server) {
     if (evt.data.length > 0) {
       try {
         var msg = JSON.parse(evt.data);
+        msg.data = typeof msg.data == 'number' ? msg.data+"" : msg.data;
 
         if (msg && msg.req) {
           let wsR = wsRequests[msg.req];
           if(wsR){
-            for(var i=0; i<wsR.cb; i++){
+            for(var i=0; i<wsR.cb.length; i++){
               wsR.cb[i](null, null, msg.data);
             }
             delete wsRequests[msg.req];
