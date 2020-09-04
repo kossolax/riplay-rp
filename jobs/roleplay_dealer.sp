@@ -198,12 +198,23 @@ public Action Cmd_ItemDrugs(int args) {
 			return Plugin_Handled;
 		}
 		dur = 60.0;
+		
 		rp_SetClientBool(client, b_MayUseUltimate, false);
-		CreateTimer(35.0, AllowUltimate, client);
+		CreateTimer(dur + 5.0, AllowUltimate, client);
 		rp_HookEvent(client, RP_PreTakeDamage, fwdCrack, dur);
 		rp_Effect_ShakingVision(client);
 	}
 	else if( StrEqual(arg0, "cannabis2") ) {
+		
+		if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
+			ITEM_CANCEL(client, item_id);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
+			return Plugin_Handled;
+		}
+		
+		rp_SetClientBool(client, b_MayUseUltimate, false);
+		CreateTimer(dur+5.0, AllowUltimate, client);
+		
 		rp_SetClientFloat(client, fl_invisibleTime, GetGameTime() + dur);
 	}
 	else if( StrEqual(arg0, "heroine") ) {
