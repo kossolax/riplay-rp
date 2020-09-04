@@ -15,6 +15,7 @@
 #include <colors_csgo>	// https://forums.alliedmods.net/showthread.php?p=2205447#post2205447
 #include <smlib>		// https://github.com/bcserv/smlib
 #include <emitsoundany> // https://forums.alliedmods.net/showthread.php?t=237045
+#include <csgo_items>
 
 #pragma newdecls required
 #include <roleplay.inc>	// https://www.ts-x.eu
@@ -120,6 +121,7 @@ public int MenuKnife(Handle p_hItemMenu, MenuAction p_oAction, int client, int p
 		}
 		
 		int wpn = GivePlayerItem(client, option);
+		SetEntProp(wpn, Prop_Send, "m_iItemDefinitionIndex", CSGO_GetItemDefinitionIndexByName(option));
 		EquipPlayerWeapon(client, wpn);
 		Client_SetActiveWeapon(client, wpn);
 		
