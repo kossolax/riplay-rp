@@ -42,11 +42,6 @@ exports = module.exports = function (server) {
     }
     next();
   });*/
-  /**
-   * @api {get} /live/positions GetLivePosition
-   * @apiName GetLivePosition
-   * @apiGroup Live
-   */
 
   var serverWs;
 
@@ -119,6 +114,11 @@ exports = module.exports = function (server) {
   })();
 
 
+  /**
+   * @api {get} /live/positions GetLivePosition
+   * @apiName GetLivePosition
+   * @apiGroup Live
+   */
   server.get('/live/positions', function (req, res, next) {
     var cache = server.cache.get(req._url.pathname);
     if (cache != undefined) return res.send(cache);
