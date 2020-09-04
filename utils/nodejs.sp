@@ -26,7 +26,15 @@ public Plugin myinfo = {
 
 WebsocketHandle g_hListenSocket = INVALID_WEBSOCKET_HANDLE;
 
+// ----------------------------------------------------------------------------
+public Action Cmd_Reload(int args) {
+	char name[64];
+	GetPluginFilename(INVALID_HANDLE, name, sizeof(name));
+	ServerCommand("sm plugins reload %s", name);
+	return Plugin_Continue;
+}
 public void OnPluginStart() {
+	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	AddGameLogHook(	GameLogHook );
 	
 	if(g_hListenSocket == INVALID_WEBSOCKET_HANDLE)
