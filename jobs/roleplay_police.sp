@@ -1739,7 +1739,7 @@ public int MenuTribunal_GPS(Handle p_hItemMenu, MenuAction p_oAction, int client
 		
 		
 		if (rp_GetClientItem(client, ITEM_GPS) <= 0) {
-			CPrintToChat(target, "" ...MOD_TAG... " Vous n'avez plus de GPS.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez plus de GPS.");
 			return;
 		}
 		
