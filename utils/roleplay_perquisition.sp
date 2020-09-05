@@ -23,6 +23,7 @@ enum perquiz_data { PQ_client, PQ_zone, PQ_target, PQ_resp, PQ_type, PQ_timeout,
 int g_cBeam;
 float g_flLastPos[65][3];
 bool g_bCanPerquiz[65];
+Handle g_hActive;
 
 public Plugin myinfo = {
 	name = "Utils: Perquisition", author = "KoSSoLaX",
@@ -31,7 +32,9 @@ public Plugin myinfo = {
 };
 public void OnPluginStart() {
 	
+	g_hActive 		= CreateConVar("rp_perquisition", "0");
 	g_hPerquisition = new StringMap();
+	
 	for (int i = 1; i <= MaxClients; i++)
 		if( IsValidClient(i) )
 			OnClientPostAdminCheck(i);
@@ -224,6 +227,7 @@ public void VERIF_PERQUIZ(Handle owner, Handle row, const char[] error, any zone
 		}
 	}
 	
+	SetConVarInt(g_hActive, GetConVarInt(g_hActive) + 1);
 	changeZoneState(zone, true);
 	
 	if( array[PQ_target] == 0 ) {
@@ -282,6 +286,7 @@ void END_PERQUIZ(int zone, bool abort) {
 	CreateTimer(10.0, ChangeZoneSafe, zone);
 	TeleportCT(zone);
 	DoorLock(zone);
+	SetConVarInt(g_hActive, GetConVarInt(g_hActive) - 1);
 	
 	if( IsValidClient(array[PQ_target]) ) {
 		rp_UnhookEvent(array[PQ_target], RP_OnPlayerDead, fwdHookDead);
