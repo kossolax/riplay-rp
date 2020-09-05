@@ -54,7 +54,11 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 	}
 	if( g_flVehicleDamage > 0.001 && victim == attacker && IsValidClient(victim) && IsValidVehicle(inflictor) && damagetype == 17 ) {
 		
-		if( g_bUserData[victim][b_GameModePassive] && !(rp_GetZoneBit(rp_GetPlayerZone(victim)) & BITZONE_ROAD) ) {
+		if( GetVectorLength(damageForce) > 8192.0 ) {
+			return Plugin_Stop;
+		}
+		
+		if( Vehicle_GetDriver(inflictor) != victim && g_bUserData[victim][b_GameModePassive] && !(rp_GetZoneBit(rp_GetPlayerZone(victim)) & BITZONE_ROAD) ) {
 			damage = 0.0;
 			return Plugin_Changed;
 		}
@@ -66,7 +70,6 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 		
 		float min[3] =  { -16.0, -16.0, -16.0 };
 		float max[3] =  { 16.0, 16.0, 16.0 };
-		
 		
 		Handle tr = TR_TraceHullFilterEx(damagePosition, damagePosition, min, max, MASK_ALL, FilterToVehicle, inflictor);
 		if( TR_DidHit(tr) ) {
@@ -94,10 +97,14 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 		return Plugin_Continue;
 	}
 	if( IsValidVehicle(attacker) && IsValidVehicle(inflictor) ) {
-		
+
 		if( g_flVehicleDamage > 0.001 ) {
 			
-			if( g_bUserData[victim][b_GameModePassive] && !(rp_GetZoneBit(rp_GetPlayerZone(victim)) & BITZONE_ROAD) ) {
+			if( GetVectorLength(damageForce) > 8192.0 ) {
+				return Plugin_Stop;
+			}
+			
+			if( Vehicle_GetDriver(inflictor) != victim && g_bUserData[victim][b_GameModePassive] && !(rp_GetZoneBit(rp_GetPlayerZone(victim)) & BITZONE_ROAD) ) {
 				damage = 0.0;
 				return Plugin_Changed;
 			}
