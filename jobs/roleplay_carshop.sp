@@ -27,7 +27,6 @@ public Plugin myinfo = {
 
 bool g_bEntityManaged[2049] =  { false, ... };
 float g_flEntity[2049];
-int g_iCarGyro[2049][2];
 
 Handle g_hMAX_CAR, g_hCarUnstuck, g_hCarHeal;
 int g_cExplode;
@@ -200,11 +199,13 @@ void removePoliceLight(int car) {
 	if( car <= 0 )
 		return;
 	
-	if( EntRefToEntIndex(g_iCarGyro[car][0]) > 0 ) {
-		AcceptEntityInput(EntRefToEntIndex(g_iCarGyro[car][0]), "Kill");
+	
+	
+	if( EntRefToEntIndex(rp_GetVehicleInt(car, car_gyro_left)) > 0 ) {
+		AcceptEntityInput(EntRefToEntIndex(rp_GetVehicleInt(car, car_gyro_left)), "Kill");
 	}
-	if( EntRefToEntIndex(g_iCarGyro[car][1]) > 0 ) {
-		AcceptEntityInput(EntRefToEntIndex(g_iCarGyro[car][1]), "Kill");
+	if( EntRefToEntIndex(rp_GetVehicleInt(car, car_gyro_right)) > 0 ) {
+		AcceptEntityInput(EntRefToEntIndex(rp_GetVehicleInt(car, car_gyro_right)), "Kill");
 	}
 }
 void updatePoliceLight(int car) {
@@ -217,7 +218,7 @@ void updatePoliceLight(int car) {
 	float src[3];
 	Entity_GetAbsOrigin(car, src);
 	
-	bool first = (EntRefToEntIndex(g_iCarGyro[car][0]) <= 0 || EntRefToEntIndex(g_iCarGyro[car][0]) <= 1);
+	bool first = (EntRefToEntIndex(rp_GetVehicleInt(car, car_gyro_left)) <= 0 || EntRefToEntIndex(rp_GetVehicleInt(car, car_gyro_right)) <= 1);
 	
 	if( GetVectorDistance(src, lastpos[car]) > 2048.0 || first ) {
 		attachPoliceLight(car);
@@ -450,7 +451,6 @@ public Action Cmd_ItemVehicle(int args) {
 }
 public void VehicleTouch(int car, int entity) {
 	static int lastTouch[2049];
-	static int lastTouchEntity[2049];
 	static int touchCount[2049];
 	
 	if( rp_IsValidDoor(entity) ) {
@@ -908,10 +908,12 @@ void attachPoliceLight(int target) {
 		
 		g_bEntityManaged[parent] = true;
 		
-		if( EntRefToEntIndex(g_iCarGyro[target][j-1]) > 0 ) {
-			AcceptEntityInput(EntRefToEntIndex(g_iCarGyro[target][j - 1]), "Kill");
+		
+		
+		if( EntRefToEntIndex(rp_GetVehicleInt(target, j == 1 ? car_gyro_right : car_gyro_left)) > 0 ) {
+			AcceptEntityInput(EntRefToEntIndex(rp_GetVehicleInt(target, j == 1 ? car_gyro_right : car_gyro_left)), "Kill");
 		}
-		g_iCarGyro[target][j - 1] = EntIndexToEntRef(parent);
+		rp_SetVehicleInt(target, j == 1 ? car_gyro_right : car_gyro_left, EntIndexToEntRef(parent));
 		
 		for (int i = 0; i < cpt; i++) {
 			ang[0] += (360.0 / float(cpt));
@@ -1691,11 +1693,13 @@ public void OnEntityDestroyed(int entity) {
 			if (!IsValidEdict(i) || !IsValidEntity(i))
 				continue;
 			
-			if( EntRefToEntIndex(g_iCarGyro[i][0]) == entity ) {
-				g_iCarGyro[i][0] = 0;
+			
+			
+			if( EntRefToEntIndex(rp_GetVehicleInt(i, car_gyro_right)) == entity ) {
+				rp_SetVehicleInt(i, car_gyro_right, 0);
 			}
-			if( EntRefToEntIndex(g_iCarGyro[i][1]) == entity ) {
-				g_iCarGyro[i][1] = 0;
+			if( EntRefToEntIndex(rp_GetVehicleInt(i, car_gyro_left)) == entity ) {
+				rp_SetVehicleInt(i, car_gyro_left, 0);
 			}
 			
 			GetEdictClassname(i, tmp, sizeof(tmp));

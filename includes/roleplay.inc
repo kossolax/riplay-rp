@@ -1075,6 +1075,8 @@ enum car_data {
 	car_battery,
 	car_particle,
 	car_donateur,
+	car_gyro_left,
+	car_gyro_right,
 	
 	car_data_max,
 };
