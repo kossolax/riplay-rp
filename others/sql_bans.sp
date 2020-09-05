@@ -247,6 +247,7 @@ public Action CheckBanned(Handle timer, any userid) {
 		ArrayList dbl = rp_GetClientDouble(client);
 		for (int i = 0; i < dbl.Length; i++) {
 			dbl.GetString(i, tmp2, sizeof(tmp2));
+			PrintToConsole(client, tmp2);
 			
 			Format(g_szQuery, sizeof(g_szQuery), "SELECT `BanReason`, `SteamID` FROM `srv_bans` WHERE `SteamID`='%s' AND (`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0' AND (`game`='%s' OR `game`='ALL');", tmp2, game);
 			SQL_TQuery(g_hBDD, CheckBanned_2, g_szQuery, userid);

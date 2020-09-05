@@ -1121,7 +1121,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 	CS_SwitchTeam(Client, CS_TEAM_T);
 
 	char URL[128];
-	Format(URL, sizeof(URL), "https://riplay.fr/api/user/double/steamid/%s", SteamID);
+	Format(URL, sizeof(URL), "http://5.196.39.48:8080/user/double/steamid/%s", SteamID);
 	
 	Handle req = SteamWorks_CreateHTTPRequest(k_EHTTPMethodGET, URL);
 	SteamWorks_SetHTTPCallbacks(req, OnSteamWorksHTTPComplete);
@@ -1240,8 +1240,9 @@ public int OnSteamWorksHTTPComplete(Handle HTTPRequest, bool fail, bool success,
 		
 		while( MatchRegex(regex, tmp) >= 2 ) {
 			
-			GetRegexSubString(regex, 0, tmp2, sizeof(tmp2));
+			GetRegexSubString(regex, 1, tmp2, sizeof(tmp2));
 			g_iDoubleCompte[client].PushString(tmp2);
+			
 			ReplaceString(tmp, size, tmp2, "");
 		}
 		
