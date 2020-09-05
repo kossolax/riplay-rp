@@ -622,16 +622,9 @@ void MakeRadiusPush2( float center[3], float lenght, float damage, int ignore = 
 	lastExpl[2] = center[2];
 }
 int SpawnMoney( float origin[3], bool away = false, bool high = false) {
-	int id = CreateEntityByName("prop_physics");
+	int id = CreateEntityByName("item_cash");
 	if(id == -1)
 		return -1;
-	
-	if( !IsModelPrecached( "models/props/cs_assault/money.mdl" ) ) {
-		PrecacheModel( "models/props/cs_assault/money.mdl" );
-	}
-	
-	SetEntityModel( id, "models/props/cs_assault/money.mdl" );
-	SetEntityMoveType( id, MOVETYPE_VPHYSICS);
 	
 	DispatchKeyValue(id, "classname", 	"money_entity");
 	DispatchKeyValueVector(id, "Origin", origin);
@@ -643,13 +636,10 @@ int SpawnMoney( float origin[3], bool away = false, bool high = false) {
 	
 	float vecVelocity[3];
 	
-	if( away ) {
-		vecVelocity[0] += GetRandomFloat(-50.0, 50.0);
-		vecVelocity[1] += GetRandomFloat(-50.0, 50.0);
-		vecVelocity[2] += GetRandomFloat(150.0, 250.0);
+	if( !away ) {
+		TeleportEntity(id, origin, NULL_VECTOR, vecVelocity);
 	}
 	
-	TeleportEntity(id, origin, NULL_VECTOR, vecVelocity);
 	if( high )
 		Entity_SetTargetName(id, "rp_money_high");
 	else
