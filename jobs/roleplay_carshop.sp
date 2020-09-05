@@ -101,7 +101,7 @@ public void OnPluginStart() {
 	}
 	for (int i = MaxClients; i <= 2048; i++) {
 		if( rp_IsValidVehicle(i) ) {
-//			SDKHook(i, SDKHook_Touch, VehicleTouch);
+			SDKHook(i, SDKHook_Touch, VehicleTouch);
 			SDKHook(i, SDKHook_Think, OnThink);	
 			CreateTimer(GetRandomFloat(0.5, 1.5), Timer_VehicleRemoveCheck, EntIndexToEntRef(i));
 			
@@ -449,16 +449,29 @@ public Action Cmd_ItemVehicle(int args) {
 	return Plugin_Handled;
 }
 public void VehicleTouch(int car, int entity) {
+	static int lastTouch[2049];
+	static int lastTouchEntity[2049];
+	static int touchCount[2049];
+	
 	if( rp_IsValidDoor(entity) ) {
-		int door = rp_GetDoorID(entity);
+		
 		int client = Vehicle_GetDriver(car);
+		int door = rp_GetDoorID(entity);
+		int tick = GetGameTickCount();
+		
 		if( client > 0 && rp_GetClientKeyDoor(client, door) ) {
-			rp_SetDoorLock(door, false);
-			rp_ClientOpenDoor(client, door, true);
+			if( lastTouch[car]+1 >= tick) {
+				touchCount[car]++;
+			}
+			else {
+				touchCount[car] = 0;
+			}
 			
-			rp_ScheduleEntityInput(entity, 3.0, "Close");
-			rp_ScheduleEntityInput(entity, 3.1, "Lock");
-			
+			if( touchCount[car] > 64 ) {
+				rp_SetDoorLock(door, false);
+				rp_ClientOpenDoor(client, door, true);
+			}
+			lastTouch[car] = GetGameTickCount();
 		}
 	}
 }
@@ -749,7 +762,7 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 		WritePackCell(dp, ent);
 	}
 	
-//	SDKHook(ent, SDKHook_Touch, VehicleTouch);
+	SDKHook(ent, SDKHook_Touch, VehicleTouch);
 	CreateTimer(3.5, Timer_VehicleRemoveCheck, EntIndexToEntRef(ent));
 	CreateTimer(0.5, Timer_Flush);
 
