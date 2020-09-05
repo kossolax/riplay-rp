@@ -25,6 +25,10 @@ public Plugin myinfo = {
 	version = __LAST_REV__, url = "https://www.ts-x.eu"
 };
 
+bool g_bEntityManaged[2049] =  { false, ... };
+float g_flEntity[2049];
+int g_iCarGyro[2049][2];
+
 Handle g_hMAX_CAR, g_hCarUnstuck, g_hCarHeal;
 int g_cExplode;
 int g_iBlockedTime[65][65];
@@ -70,7 +74,6 @@ public Action Cmd_Reload(int args) {
 }
 
 public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error, int err_max) {
-	
 	CreateNative("rp_CreateVehicle", 		Native_rp_CreateVehicle);
 	
 	return APLRes_Success;
@@ -115,6 +118,15 @@ public void OnPluginStart() {
 	
 	CreateTimer(1.0, Check_VehiclePolice);
 }
+public void OnPluginEnd() {
+	for (int i = MaxClients; i <= 2048; i++) {
+		if( !IsValidEdict(i) || !IsValidEntity(i) )
+			continue;
+		if( g_bEntityManaged[i] ) {
+			AcceptEntityInput(i, "Kill");
+		}
+	}
+}
 public Action Check_VehiclePolice(Handle timer, any none) {
 	float spawn[][3] = {
 		{1477.0, 1818.0, -2143.0},
@@ -149,6 +161,25 @@ public Action Check_VehiclePolice(Handle timer, any none) {
 		}
 	}
 	
+	bool light = (GetConVarInt(FindConVar("rp_braquage")) > 0 || GetConVarInt(FindConVar("rp_kidnapping")) > 0 || GetConVarInt(FindConVar("rp_braquage")) > 0);
+	if( light ) {
+		if( EntRefToEntIndex(g_iVehiclePolice) >= 0 ) {
+			updatePoliceLight(g_iVehiclePolice);
+		}
+		if( EntRefToEntIndex(g_iVehicleJustice) >= 0 ) {
+			updatePoliceLight(g_iVehicleJustice);
+		}
+	}
+	else {
+		if( EntRefToEntIndex(g_iVehiclePolice) >= 0 ) {
+			removePoliceLight(g_iVehiclePolice);
+		}
+		if( EntRefToEntIndex(g_iVehicleJustice) >= 0 ) {
+			removePoliceLight(g_iVehicleJustice);
+		}
+	}
+	
+	
 	for (int i = 1; i <= MaxClients; i++) {
 		if( !IsValidClient(i) )
 			continue;
@@ -163,6 +194,35 @@ public Action Check_VehiclePolice(Handle timer, any none) {
 	}
 	
 	CreateTimer(1.0, Check_VehiclePolice);
+}
+void removePoliceLight(int car) {
+	car = EntRefToEntIndex(car);
+	if( car <= 0 )
+		return;
+	
+	if( EntRefToEntIndex(g_iCarGyro[car][0]) > 0 ) {
+		AcceptEntityInput(EntRefToEntIndex(g_iCarGyro[car][0]), "Kill");
+	}
+	if( EntRefToEntIndex(g_iCarGyro[car][1]) > 0 ) {
+		AcceptEntityInput(EntRefToEntIndex(g_iCarGyro[car][1]), "Kill");
+	}
+}
+void updatePoliceLight(int car) {
+	static float lastpos[2049][3];
+	
+	car = EntRefToEntIndex(car);
+	if( car <= 0 )
+		return;
+	
+	float src[3];
+	Entity_GetAbsOrigin(car, src);
+	
+	bool first = (EntRefToEntIndex(g_iCarGyro[car][0]) <= 0 || EntRefToEntIndex(g_iCarGyro[car][0]) <= 1);
+	
+	if( GetVectorDistance(src, lastpos[car]) > 2048.0 || first ) {
+		attachPoliceLight(car);
+		Entity_GetAbsOrigin(car, lastpos[car]);
+	}
 }
 public Action Cmd_VehicleExit(int client, int args) {
 	for (int i = 1; i <= MaxClients; i++) {
@@ -771,6 +831,16 @@ void VehicleRemove(int vehicle, bool explode = false) {
 	}
 	dettachVehicleLight(vehicle);
 	
+	char class[64];
+	for (int i = MaxClients; i < 2049; i++) {
+		if( !IsValidEdict(i) || !IsValidEntity(i) )
+			continue;
+		
+		GetEdictClassname(i, class, sizeof(class));
+		if( StrEqual(class, "rp_gyrophare") && Entity_GetParent(i) == vehicle )
+			rp_AcceptEntityInput(i, "Kill");
+	}
+	
 	ServerCommand("sm_effect_fading %i 2.5 1", vehicle);
 	rp_ScheduleEntityInput(vehicle, 2.5, "Kill");
 }
@@ -798,6 +868,132 @@ public Action BatchLeave(Handle timer, any vehicle) {
 			rp_ClientVehicleExit(i, vehicle, true);
 		}
 	}
+}
+
+void attachPoliceLight(int target) {
+	float pos[3], ang[3];
+	char tmp[128];
+	
+	Entity_GetAbsOrigin(target, pos);
+	pos[2] += 76.0;
+	
+	int cpt = 2;
+	int color[3];
+	
+	if( rp_GetVehicleInt(target, car_health) <= 0 )
+		return;
+	
+	for (int j = 1; j <= 2; j++) {
+		int parent = CreateEntityByName("info_target");
+		DispatchKeyValue(parent, "classname", "rp_gyrophare");
+		SetVariantString("!activator");
+		AcceptEntityInput(parent, "SetParent", target);
+		
+		Format(tmp, sizeof(tmp), "light_bar%d", j);
+		SetVariantString(tmp);
+		AcceptEntityInput(parent, "SetParentAttachment", parent, parent, 0);
+		
+		g_bEntityManaged[parent] = true;
+		
+		if( EntRefToEntIndex(g_iCarGyro[target][j-1]) > 0 ) {
+			AcceptEntityInput(EntRefToEntIndex(g_iCarGyro[target][j - 1]), "Kill");
+		}
+		g_iCarGyro[target][j - 1] = EntIndexToEntRef(parent);
+		
+		for (int i = 0; i < cpt; i++) {
+			ang[0] += (360.0 / float(cpt));
+			
+			int ent = CreateEntityByName("point_spotlight");
+			
+			if( j%2 == 0 ) {
+				color[0] = 255;
+				color[1] = 0;
+				color[2] = 0;
+			}
+			else {
+				color[0] = 0;
+				color[1] = 0;
+				color[2] = 255;
+			}
+			
+			Format(tmp, sizeof(tmp), "%d %d %d", color[0], color[1], color[2]);
+			DispatchKeyValue(ent, "rendercolor", tmp);
+			DispatchKeyValue(ent, "renderamt", "255");
+			
+			DispatchKeyValue(ent, "spotlightwidth", "8");
+			DispatchKeyValue(ent, "spotlightlength", "64");
+			DispatchKeyValue(ent, "spawnflags", "3");
+			
+			DispatchSpawn(ent);
+			//
+			
+			SetVariantString("!activator");
+			AcceptEntityInput(ent, "SetParent", parent);
+			
+			TeleportEntity(ent, view_as<float>({0.0, 0.0, 0.0}), ang, NULL_VECTOR);
+			
+			g_flEntity[ent] = ang[0];
+			SDKHook(ent, SDKHook_Think, fwdThink2);
+		}
+		
+	}
+}
+#define FCT RoundFloat(GetTickedTime() * 5.0)
+public void fwdThink2(int ent) {
+	int p = GetEntPropEnt(ent, Prop_Data, "m_hEffectEntity");
+	
+	if (p == -1) {
+		char tmp[64];
+		for (int i = MaxClients; i <= 2048; i++) {
+			if (!IsValidEdict(i) || !IsValidEntity(i))
+				continue;
+			
+			GetEdictClassname(i, tmp, sizeof(tmp));
+			if (StrEqual(tmp, "beam")) {
+				int j = GetEntPropEnt(i, Prop_Data, "m_hAttachEntity");
+				if (j == ent) {
+					SetEntPropEnt(ent, Prop_Data, "m_hEffectEntity", i);
+					p = i;
+				}
+			}
+		}
+	}
+	
+	if (p > 0) {
+		float s = 8.0 + (32.0 * OctavePerlin(FCT, 8, 2, 8.0, 2.0));
+		SetEntPropFloat(p, Prop_Send, "m_fWidth", s);
+		
+		float ang[3];
+		Entity_GetAbsAngles(ent, ang);
+		ang[1] = 90.0;
+		ang[0] = g_flEntity[ent];
+		
+		g_flEntity[ent] += 2.0;
+		
+		TeleportEntity(p, NULL_VECTOR, ang, NULL_VECTOR);
+		TeleportEntity(ent, NULL_VECTOR, ang, NULL_VECTOR);
+	}
+}
+
+float perlin(int n) {
+	n = (n << 13) ^ n;
+	float r = (1.0 - ((n * ((n * n * 15731) + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0);
+	return (r + 1.0) / 2.0;
+}
+public float OctavePerlin(int x, int frequency, int octaves, float persistence, float amplitude) {
+	float total = 0.0;
+	float maxValue = 0.0;
+	
+	for (int i = 0; i < octaves; i++) {
+		total += perlin(x * frequency) * amplitude;
+		
+		maxValue += amplitude;
+		
+		amplitude *= persistence;
+		frequency *= 2;
+	}
+	
+	return total / maxValue;
 }
 void attachVehicleLight(int vehicle) {
 	if( rp_GetVehicleInt(vehicle, car_light) > 0 ||  rp_GetVehicleInt(vehicle, car_light_r) == -1 ||  rp_GetVehicleInt(vehicle, car_light_g) == -1 ||  rp_GetVehicleInt(vehicle, car_light_b) == -1 )
@@ -831,15 +1027,15 @@ void attachVehicleLight(int vehicle) {
 	rp_SetVehicleInt(vehicle, car_light, ent);
 }
 void dettachVehicleLight(int vehicle) {
-	if( rp_GetVehicleInt(vehicle, car_light) <= 0 )
-		return;
-		
 	char class[128];
+		
 	int ent = rp_GetVehicleInt(vehicle, car_light);
-	GetEdictClassname(ent, class, sizeof(class));
-	
-	if( StrEqual(class, "env_projectedtexture") && Entity_GetParent(ent) == vehicle )
-		rp_AcceptEntityInput(ent, "Kill");
+	if( ent > 0 ) {
+		GetEdictClassname(ent, class, sizeof(class));
+		
+		if( StrEqual(class, "env_projectedtexture") && Entity_GetParent(ent) == vehicle )
+			rp_AcceptEntityInput(ent, "Kill");
+	}
 	
 	rp_SetVehicleInt(vehicle, car_light, -1);
 }
@@ -1465,6 +1661,44 @@ public Action Timer_VehicleRemove(Handle timer, any ent) {
 	
 	VehicleRemove(ent, true);
 	return Plugin_Handled;
+}
+
+public void OnEntityDestroyed(int entity) {
+	if(entity <= 0 || entity > sizeof(g_bEntityManaged)) {
+		return;
+	}
+	
+	if (g_bEntityManaged[entity]) {
+		g_bEntityManaged[entity] = false;
+		
+		
+		int root = GetEntPropEnt(entity, Prop_Data, "m_hEffectEntity");
+		char tmp[64];
+		for (int i = MaxClients; i <= 2048; i++) {
+			if (!IsValidEdict(i) || !IsValidEntity(i))
+				continue;
+			
+			if( EntRefToEntIndex(g_iCarGyro[i][0]) == entity ) {
+				g_iCarGyro[i][0] = 0;
+			}
+			if( EntRefToEntIndex(g_iCarGyro[i][1]) == entity ) {
+				g_iCarGyro[i][1] = 0;
+			}
+			
+			GetEdictClassname(i, tmp, sizeof(tmp));
+			if ( (StrEqual(tmp, "point_spotlight") || StrEqual(tmp, "beam") ||  StrEqual(tmp, "spotlight_end") ) && Entity_GetParent(i) == root) {
+				int p = GetEntPropEnt(i, Prop_Data, "m_hEffectEntity");
+				if (p > 0) {
+					AcceptEntityInput(p, "KillHierarchy");
+					int k = GetEntPropEnt(p, Prop_Data, "m_hEndEntity");
+					if( k > 0 )
+						AcceptEntityInput(k, "KillHierarchy");
+				}
+				AcceptEntityInput(i, "KillHierarchy");
+			}
+		}
+		AcceptEntityInput(entity, "KillHierarchy");
+	}
 }
 // ----------------------------------------------------------------------------
 bool IsInGarage(int client) {

@@ -240,7 +240,7 @@ public void OnEntityDestroyed(int entity) {
 				continue;
 				
 			GetEdictClassname(i, tmp, sizeof(tmp));
-			if (StrEqual(tmp, "point_spotlight") && Entity_GetParent(i) == root) {
+			if ( (StrEqual(tmp, "point_spotlight") || StrEqual(tmp, "beam") ||  StrEqual(tmp, "spotlight_end") ) && Entity_GetParent(i) == root) {
 				int p = GetEntPropEnt(i, Prop_Data, "m_hEffectEntity");
 				if (p > 0) {
 					AcceptEntityInput(p, "KillHierarchy");
