@@ -161,7 +161,7 @@ public Action Check_VehiclePolice(Handle timer, any none) {
 		}
 	}
 	
-	bool light = (GetConVarInt(FindConVar("rp_braquage")) > 0 || GetConVarInt(FindConVar("rp_kidnapping")) > 0 || GetConVarInt(FindConVar("rp_braquage")) > 0);
+	bool light = (GetConVarInt(FindConVar("rp_braquage")) > 0 || GetConVarInt(FindConVar("rp_kidnapping")) > 0 || GetConVarInt(FindConVar("rp_perquisition")) > 0);
 	if( light ) {
 		if( EntRefToEntIndex(g_iVehiclePolice) >= 0 ) {
 			updatePoliceLight(g_iVehiclePolice);
