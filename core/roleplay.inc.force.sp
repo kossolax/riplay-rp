@@ -466,8 +466,8 @@ public Action OnForceTouch(int entity, int touched) {
 	if( rp_GetVehicleInt(touched, car_owner) ==  client )
 		return Plugin_Continue;
 	
-	if(GetUserFlagBits(client) & ADMFLAG_GENERIC)
-		return Plugin_Continue;
+	//if(GetUserFlagBits(client) & ADMFLAG_GENERIC)
+	//	return Plugin_Continue;
 	
 	if( rp_GetZoneBit(rp_GetPlayerZone(touched)) & BITZONE_PARKING ) {
 		int zone = getZoneAppart(client);
