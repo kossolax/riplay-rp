@@ -288,7 +288,7 @@ void CheckNoWonSuccess(int client) {
 			char query[4096], steamID[64];
 			GetClientAuthId(client, AUTH_TYPE, steamID, sizeof(steamID));
 			
-			Format(query, sizeof(query), "SELECT COUNT(*) `rp_quest_book` WHERE `completed`='1' AND `steamid`='%s';", steamID);
+			Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_quest_book` WHERE `completed`='1' AND `steamid`='%s';", steamID);
 			SQL_TQuery(g_hBDD, SQL_CheckQuestCount, query, client);
 		}
 	}
