@@ -877,8 +877,8 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 				SQL_EscapeString(g_hBDD, g_szItemList[ item_id ][item_type_name], buffer, sizeof(buffer));
 				
 				char szQuery[1024];
-				Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`, `to_steamid`) VALUES (NULL, '%s', '%i', '%i', '0', '%i', '%s', '%i', '%s');",
-				SteamID, GetJobPrimaryID(vendeur), GetTime(), item_id, buffer, amount, targetSteamID);
+				Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`, `to_steamid`, `reduction`) VALUES (NULL, '%s', '%i', '%i', '0', '%i', '%s', '%i', '%s', '%i');",
+				SteamID, GetJobPrimaryID(vendeur), GetTime(), item_id, buffer, amount, targetSteamID, reduction+g_iBlackFriday[1]);
 				SQL_TQuery(g_hBDD, SQL_QueryCallBack, szQuery);
 				
 				
