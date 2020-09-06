@@ -79,7 +79,7 @@ char g_szSuccessData[view_as<int>(success_list_all)][view_as<int>(success_type_a
 	{ "kidnapping", "Kidnapping", "Enlever un joueur, et obtenir la rancon.", "1" , "0" },
 	{ "killpvp2", "Tuerie !", "Tuer 7 membres d'un autre gang en PvP lors d'une capture, sans mourir.", "7" , "0" },
 	{ "alcool_abuse", "L'alcoolique anonyme", "Boire plus de 1000 boissons alcoolisées.", "1000" , "0" },
-	{ "tel", "Dring dring…", "Atteindre le niveau 5 sur chacune des missions téléphoniques.", "10" , "0" },
+	{ "tel", "En quête de sens", "Réussir 100 quêtes.", "100" , "0" },
 	{ "w_friends", "Entre amis", "Parrainer 5 joueurs.", "5" , "0" },
 	{ "w_friends2", "Entre amis II", "Parrainer 10 joueurs.", "10" , "0" },
 	{ "w_friends3", "Entre amis III", "Parrainer 15 joueurs.", "15" , "0" },
@@ -283,6 +283,14 @@ void CheckNoWonSuccess(int client) {
 			}
 		}
 		g_iUserSuccess[client][success_list_cpt][sd_count] = amount2;
+		
+		if( CanMakeSuccess(client, success_list_tel) ) {
+			char query[4096], steamID[64];
+			GetClientAuthId(client, AUTH_TYPE, steamID, sizeof(steamID));
+			
+			Format(query, sizeof(query), "SELECT COUNT(*) `rp_quest_book` WHERE `completed`='1' AND `steamid`='%s';", steamID);
+			SQL_TQuery(g_hBDD, SQL_CheckQuestCount, query, client);
+		}
 	}
 	
 	if( g_iGroundEntity[client] > 0 && Math_GetRandomInt(1, 7) == 5 ) {
@@ -320,6 +328,20 @@ void CheckNoWonSuccess(int client) {
 			}
 		}
 			
+	}
+}
+public void SQL_CheckQuestCount(Handle owner, Handle hQuery, const char[] error, any client) {
+	if( SQL_FetchRow(hQuery) ) {
+		
+		
+		int ldr = SQL_FetchInt(hQuery, 0);
+		if( CanMakeSuccess(client, success_list_tel) ) {
+			g_iUserSuccess[client][success_list_tel][sd_count] = ldr - (100 * g_iUserSuccess[client][success_list_tel][sd_achieved]);
+			
+			if( g_iUserSuccess[client][success_list_tel][sd_count] >= StringToInt(g_szSuccessData[success_list_tel][success_type_max_objective]) ) {
+				WonSuccess(client, success_list_tel);
+			}
+		}
 	}
 }
 
