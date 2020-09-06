@@ -370,8 +370,10 @@ server.get('/user/admin', function (req, res, next) {
         if( err ) return res.send(new ERR.InternalServerError(err));
         if( rows.length == 0 ) return res.send(new ERR.NotFoundError("UserNotFound"));
         var data = new Array();
-        for(var i=0; i<rows.length; i++)
-          data.push(rows[i].steamid);
+        for(var i=0; i<rows.length; i++) {
+          if( rows[i].steamid != req.params['id'] )
+            data.push(rows[i].steamid);
+        }
 
         server.cache.set( req._url.pathname, data);
         return res.send( data );
@@ -957,12 +959,6 @@ server.get('/user/:id/playtime/:type', function (req, res, next) {
       if( connected ==  1 ) {
         var tmp = (lastRow.stop  - lastDate)/1000
         connexionTime += tmp;
-
-            if( type == "31days" ) {
-              server.conn.query("INSERT INTO `rp_csgo`.`rp_stats` (`steamid`, `timestamp`, `temps`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `temps`=?;", [
-                req.params['id'], lastRow.stop/1000, (lastRow.stop - lastDate)/1000, (lastRow.stop - lastDate)/1000
-              ]);
-            }
       }
       if( connected ==  2 ) {
         var tmp = (lastRow.stop - lastDate)/1000 + (3*60);

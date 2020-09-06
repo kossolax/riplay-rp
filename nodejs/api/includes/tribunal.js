@@ -40,33 +40,32 @@ exports = module.exports = function(server){
 
     if( pattern.test(tokken) ) {
       server.conn.query(server.getAuthAdminID, [req.headers.auth], function(err, row) {
-        if( err ) return res.send(new ERR.InternalServerError(err));
+        if( err ) return callback("NotAuthorized");
         if( row[0] == null ) {
           server.conn.query(server.getAuthSteamID, [req.headers.auth], function(err, row) {
-            if( err ) return res.send(new ERR.InternalServerError(err));
-            if( row[0] == null ) return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
+            if( err ) return callback("NotAuthorized");
+            if( row[0] == null ) return callback("NotAuthorized");
 
             var SteamID = row[0].steamid.replace("STEAM_0", "STEAM_1");
 
             server.conn.query("SELECT * FROM `rp_csgo`.`rp_tribunal` WHERE `steamid`=? AND `uniqID`=? AND `timestamp`+(30*60*60)>=UNIX_TIMESTAMP()", [tokken.replace("STEAM_0", "STEAM_1").trim(), SteamID], function(err, row) {
-              if( err ) return res.send(new ERR.InternalServerError(err));
+              if( err ) return callback("NotAuthorized");
 
               if( row[0] == null ) {
                 server.conn.query("SELECT `job_id` FROM `rp_users` WHERE `steamid`=?", [SteamID], function(err, row) {
-                  if( err ) return res.send(new ERR.InternalServerError(err));
-                  if( row[0] == null ) return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
+                  if( err ) return callback("NotAuthorized");
+                  if( row[0] == null ) return callback("NotAuthorized");
                   if( row[0].job_id >= 101 && row[0].job_id <= 109 ) {
                     var dStart = moment().subtract(2, 'hour').toDate();
                     var dEnd = moment().add(1, 'hour').toDate();
                     var target = tokken.replace("STEAM_0", "STEAM_1").trim();
 
-                    callback(null, target, dStart, dEnd);
-                    /*request("http://5.196.39.48:8080/live/connected/"+target, function (error, response, body) {
+                    request("http://5.196.39.48:8080/live/connected/"+target, function (error, response, body) {
                       if( body == '"1"' )
                         callback(null, target, dStart, dEnd);
                       else
                         callback("InvalidParam" + target);
-                    });*/
+                    });
 
                   }
                   else {
@@ -92,8 +91,8 @@ exports = module.exports = function(server){
     }
     else if( !isNaN(parseInt(tokken)) && parseInt(tokken) > 0 ) {
       server.conn.query("SELECT * FROM `rp_report`.`site_report` WHERE `id`=?", [parseInt(tokken)], function(err, row) {
-        if( err ) return res.send(new ERR.InternalServerError(err));
-        if( row[0] == null ) return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
+        if( err ) return callback("NotAuthorized");
+        if( row[0] == null ) return callback("NotAuthorized");
 
         var dStart = moment.unix(row[0].timestamp).subtract(1, 'hour').toDate();
         var dEnd = moment.unix(row[0].timestamp).add(1, 'hour').toDate();

@@ -342,7 +342,7 @@ exports = module.exports = function (server) {
 
     function output() {
       subRequestDone++;
-      if (done == 2 && subRequestDone == subRequest) {
+      if (done == 5 && subRequestDone == subRequest) {
         data.sort(function (a, b) { return new Date(b.date) - new Date(a.date); });
         server.cache.set(req._url.pathname, data, 300);
         return res.send(data);
@@ -381,9 +381,11 @@ exports = module.exports = function (server) {
       }
     }
 
-    //request({url: "https://api.github.com/repos/TS-X/TSX-RP/commits?access_token="+tokken, headers: {'User-Agent': 'kossolax'}}, traitement);
-    //request({url: "https://api.github.com/repos/kossolax/tsx.eu/commits?access_token="+tokken, headers: {'User-Agent': 'kossolax'}}, traitement);
-    request({ url: "https://api.github.com/repos/kossolax/riplay-rp/commits?access_token=" + tokken, headers: { 'User-Agent': 'kossolax' } }, traitement);
+    request({ url: "https://api.github.com/repos/kossolax/riplay-rp/commits?page=1", headers: { 'User-Agent': 'kossolax', 'Authorization': 'token ' +tokken } }, traitement);
+    request({ url: "https://api.github.com/repos/kossolax/riplay-rp/commits?page=2", headers: { 'User-Agent': 'kossolax', 'Authorization': 'token ' +tokken } }, traitement);
+    request({ url: "https://api.github.com/repos/kossolax/riplay-rp/commits?page=3", headers: { 'User-Agent': 'kossolax', 'Authorization': 'token ' +tokken } }, traitement);
+    request({ url: "https://api.github.com/repos/kossolax/riplay-rp/commits?page=4", headers: { 'User-Agent': 'kossolax', 'Authorization': 'token ' +tokken } }, traitement);
+    request({ url: "https://api.github.com/repos/kossolax/riplay-rp/commits?page=5", headers: { 'User-Agent': 'kossolax', 'Authorization': 'token ' +tokken } }, traitement);
 
     next();
   });
