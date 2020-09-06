@@ -971,23 +971,43 @@ public Action Timer_AUDIENCE(Handle timer, any type) {
 	return Plugin_Continue;
 }
 public Action fwdHUD(int client, char[] szHUD, const int size) {
+	char tmp1[64], tmp2[64];
 	int type = GetTribunalType( rp_GetPlayerZone(client) );
 	
 	if( type > 0 && !isTribunalDisponible(type) ) {
 		int heure, amende;
-		Format(szHUD, size, "Tribunal de Princeton, affaire opposant\n%N   et   %N\nJuge: %N", g_iTribunalData[type][td_Plaignant], g_iTribunalData[type][td_Suspect], g_iTribunalData[type][td_Owner]);
+		GetClientName(g_iTribunalData[type][td_Plaignant], tmp1, sizeof(tmp1));		CRemoveTags(tmp1, sizeof(tmp1));
+		GetClientName(g_iTribunalData[type][td_Suspect]  , tmp2, sizeof(tmp2));		CRemoveTags(tmp2, sizeof(tmp2));
 		
-		if( g_iTribunalData[type][td_AvocatPlaignant] ) {
-			Format(szHUD, size, "%s\nAvocat de la victime: %N", szHUD, g_iTribunalData[type][td_AvocatPlaignant]);
+		if( g_iTribunalData[type][td_ArticlesCount] <= 10 ) {
+			Format(szHUD, size, "Tribunal de Princeton, affaire opposant");
 		}
-		if( g_iTribunalData[type][td_AvocatSuspect] ) {
-			Format(szHUD, size, "%s\nAvocat de la défense: %N", szHUD, g_iTribunalData[type][td_AvocatSuspect]);
+		else {
+			Format(szHUD, size, "");
+		}
+		
+		if( g_iTribunalData[type][td_AvocatPlaignant] && g_iTribunalData[type][td_ArticlesCount] <= 9 ) {
+			Format(szHUD, size, "%s\n%s   et   %s", szHUD, tmp1, tmp2);
+		}
+		
+		if( g_iTribunalData[type][td_ArticlesCount] <= 8 ) {
+			GetClientName(g_iTribunalData[type][td_Owner]    , tmp1, sizeof(tmp1));		CRemoveTags(tmp1, sizeof(tmp1));
+			Format(szHUD, size, "%s\nJuge: %s", szHUD, tmp1);
+		}
+		
+		if( g_iTribunalData[type][td_AvocatPlaignant] && g_iTribunalData[type][td_ArticlesCount] <= 7 ) {
+			GetClientName(g_iTribunalData[type][td_AvocatPlaignant], tmp1, sizeof(tmp1));		CRemoveTags(tmp1, sizeof(tmp1));
+			Format(szHUD, size, "%s\nAvocat de la victime: %s", szHUD, tmp1);
+		}
+		if( g_iTribunalData[type][td_AvocatSuspect] && g_iTribunalData[type][td_ArticlesCount] <= 6 ) {
+			GetClientName(g_iTribunalData[type][td_AvocatSuspect], tmp1, sizeof(tmp1));		CRemoveTags(tmp1, sizeof(tmp1));
+			Format(szHUD, size, "%s\nAvocat de la défense: %s", szHUD, tmp1);
 		}
 		
 		Format(szHUD, size, "%s\n ", szHUD);
 		
 		if( g_iTribunalData[type][td_ArticlesCount] > 0 ) {
-			Format(szHUD, size, "%s\n \nCharges:\n ", szHUD);
+			Format(szHUD, size, "%s\nCharges:\n ", szHUD);
 			for (int i = 0; i < sizeof(g_szArticles); i++) {
 				if( g_iArticles[type][i] <= 0 )
 					continue;
