@@ -541,6 +541,10 @@ public Action rp_ClientRemoveProp(int client, int target, int item_id) {
 				if (IsValidClient(owner)) {
 					CPrintToChat(client, "" ...MOD_TAG... " Vous avez detruit la machine de %N", owner);
 					CPrintToChat(owner, "" ...MOD_TAG... " Une de vos machines a faux billet a été detruite.");
+					
+					if( client != owner ) {
+						rp_ClientAggroIncrement(client, owner, 1000);
+					}
 				}
 				
 			}
@@ -550,6 +554,10 @@ public Action rp_ClientRemoveProp(int client, int target, int item_id) {
 				if (IsValidClient(owner)) {
 					CPrintToChat(client, "" ...MOD_TAG... " Vous avez detruit la grosse machine de %N", owner);
 					CPrintToChat(owner, "" ...MOD_TAG... " Votre grosse machine a faux billet a été detruite.");
+					
+					if( client != owner ) {
+						rp_ClientAggroIncrement(client, owner, 1000);
+					}
 				}
 			}
 			else if (StrEqual(name, "rp_plant")) {
@@ -557,6 +565,8 @@ public Action rp_ClientRemoveProp(int client, int target, int item_id) {
 				if (IsValidClient(owner) && owner != client) {
 					CPrintToChat(client, "" ...MOD_TAG... " Vous avez detruit un plant de drogue de %N", owner);
 					CPrintToChat(owner, "" ...MOD_TAG... " Une de vos plantations a été detruite.");
+					
+					rp_ClientAggroIncrement(client, owner, 1000);
 				}
 				else if (owner == client && rp_GetBuildingData(target, BD_FromBuild) == 0) {
 					int sub = rp_GetBuildingData(target, BD_item_id);
@@ -582,6 +592,7 @@ public Action rp_ClientRemoveProp(int client, int target, int item_id) {
 					else {
 						// DealDamage(target, 1000, client);
 						SDKHooks_TakeDamage(target, client, client, 1000.0);
+						rp_ClientAggroIncrement(client, owner, 1000);
 					}
 				}
 				else {
@@ -601,6 +612,9 @@ public Action rp_ClientRemoveProp(int client, int target, int item_id) {
 			
 			if (heal <= 0 && IsValidClient(owner)) {
 				CPrintToChat(owner, "" ...MOD_TAG... " Votre voiture a été détruite en PvP.");
+				if( client != owner ) {
+					rp_ClientAggroIncrement(client, owner, 1000);
+				}
 			}
 			rp_Effect_Tazer(client, target);
 		}
