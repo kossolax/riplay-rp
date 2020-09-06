@@ -30,26 +30,26 @@ int g_cBeam, g_cGlow, g_nbMdItems;
 bool g_eMwAct[2048];
 
 char g_szKnife[][][] = {
-	{"weapon_knife", "Couteau classique"},
-	{"weapon_knife_css", "Couteau CSS"},
+	{"weapon_knife", "Couteau"},
+	{"weapon_knife_css", "Couteau classique"},
 	{"weapon_bayonet", "Baïonnette"},
-	{"weapon_knife_flip", "Couteau Pliant"},
-	{"weapon_knife_gut", "Couteau à Éviscérer"},
+	{"weapon_knife_flip", "Couteau pliant"},
+	{"weapon_knife_gut", "Couteau à éviscérer"},
 	{"weapon_knife_karambit", "Karambit"},
 	{"weapon_knife_m9_bayonet", "Baïonnette M9"},
-	{"weapon_knife_tactical", "Couteau de Chasseur"},
-	{"weapon_knife_butterfly", "Couteau Papillon"},
-	{"weapon_knife_falchion", "Couteau Fauchon"},
-	{"weapon_knife_push", "Shadow Dagger"},
+	{"weapon_knife_tactical", "Couteau de chasseur"},
+	{"weapon_knife_butterfly", "Couteau papillon"},
+	{"weapon_knife_falchion", "Couteau fauchon"},
+	{"weapon_knife_push", "Dagues sombres"},
 	{"weapon_knife_survival_bowie", "Couteau bowie"},
 	{"weapon_knife_ursus", "Couteau ursus"}, 
-	{"weapon_knife_gypsy_jackknife", "Couteau Navaja"},
-	{"weapon_knife_stiletto", "Couteau Stileto"},
-	{"weapon_knife_widowmaker", "Couteau talon"},
-	{"weapon_knife_canis", "Couteau Canif"},
-	{"weapon_knife_cord", "Couteau en Paracorde"},
-	{"weapon_knife_skeleton", "Couteau Squelettique "},
-	{"weapon_knife_outdoor", "Couteau de Survie"}
+	{"weapon_knife_gypsy_jackknife", "Couteau navaja"},
+	{"weapon_knife_stiletto", "Couteau stileto"},
+	{"weapon_knife_widowmaker", "Couteau canif"},
+	{"weapon_knife_canis", "Couteau de survie"},
+	{"weapon_knife_cord", "Couteau en paracorde"},
+	{"weapon_knife_skeleton", "Couteau squelettique"},
+	{"weapon_knife_outdoor", "Couteau de nomade"}
 };
 
 // ----------------------------------------------------------------------------
