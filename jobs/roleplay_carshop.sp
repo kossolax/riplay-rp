@@ -33,6 +33,8 @@ int g_cExplode;
 int g_iBlockedTime[65][65];
 float g_lastpos[2049][3];
 
+int g_lastTouch[2049], g_touchCount[2049], g_damageCount[2049], g_lastDamage[2049];
+
 char g_szParticles[][][32] =  {
 	{ "Trail",		"Propulseur" },
 	{ "Trail2",		"Fusée n°1" },
@@ -253,9 +255,93 @@ public void OnClientPostAdminCheck(int client) {
 	for (int i = 1; i < 65; i++)
 		g_iBlockedTime[client][i] = 0;
 }
+public bool FilterToVehicle(int entity, int mask, any data) {
+	return rp_IsValidVehicle(entity);
+}
 public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& weapon, float damageForce[3], float damagePosition[3]) {
+	
+	if( damagetype == 1 && inflictor == 0 && attacker == 0 && weapon == -1 && damageForce[0] == 0.0 && damageForce[1] == 0.0 && damageForce[2] <= -8192.0 ) {
+		// Bug relou des voitures.
+		return Plugin_Stop;
+	}
+	
+	if( victim == attacker && IsValidClient(victim) && rp_IsValidVehicle(inflictor) && damagetype == 17 ) {
+		
+		if( GetVectorLength(damageForce) > 8192.0 ) {
+			int tick = GetGameTickCount();
+			
+			
+			if( g_lastDamage[inflictor]+1 >= tick) {
+				g_damageCount[inflictor]++;
+			}
+			else {
+				g_damageCount[inflictor] = 0;
+				
+				float g_flVehicleDamage = GetConVarFloat(FindConVar("rp_car_damages")) / 10.0;
+				int heal = RoundToCeil(damage * g_flVehicleDamage);
+				
+				if( heal > 0 ) {
+					rp_SetVehicleInt(inflictor, car_health, rp_GetVehicleInt(inflictor, car_health) - heal);
+				}
+			}
+			
+			g_lastDamage[inflictor] = tick;
+			
+			return Plugin_Stop;
+		}
+		else {
+			
+			float g_flVehicleDamage = GetConVarFloat(FindConVar("rp_car_damages")) / 10.0;
+			int heal = RoundToCeil(damage * g_flVehicleDamage);
+			
+			if( heal > 0 ) {
+				rp_SetVehicleInt(inflictor, car_health, rp_GetVehicleInt(inflictor, car_health) - heal);
+			}
+		}
+	}
+	
+	if( rp_IsValidVehicle(attacker) && rp_IsValidVehicle(inflictor) ) {
+		float g_flVehicleDamage = GetConVarFloat(FindConVar("rp_car_damages"));
+		float min[3] =  { -16.0, -16.0, -16.0 };
+		float max[3] =  { 16.0, 16.0, 16.0 };
+		Handle tr = TR_TraceHullFilterEx(damagePosition, damagePosition, min, max, MASK_ALL, FilterToVehicle, inflictor);
+		if( TR_DidHit(tr) ) {
+				
+			int InVehicle = TR_GetEntityIndex(tr);
+			if( rp_IsValidVehicle(InVehicle) ) {
+				
+				float delta = (SquareRoot(float(GetEntProp(inflictor, Prop_Send, "m_nSpeed"))) + 1.0) / (SquareRoot(float(GetEntProp(InVehicle, Prop_Send, "m_nSpeed"))) + 1.0);
+				
+				int heal = RoundToCeil(damage * g_flVehicleDamage * delta);
+				
+				if( heal > 0 ) {
+					rp_SetVehicleInt(InVehicle, car_health, rp_GetVehicleInt(InVehicle, car_health) - heal);
+				}
+				
+				heal = RoundToCeil(damage * g_flVehicleDamage * (1.0-delta));
+				
+				if( heal > 0 ) {
+					rp_SetVehicleInt(inflictor, car_health, rp_GetVehicleInt(inflictor, car_health) - heal);
+				}
+			}
+		}
+		CloseHandle(tr);
+	}
+	
+	if( IsValidClient(attacker) && rp_IsValidVehicle(inflictor) && IsValidClient(victim) ) {
+		float g_flVehicleDamage = GetConVarFloat(FindConVar("rp_car_damages")) / 5.0;
+		int heal = RoundToCeil(damage * g_flVehicleDamage);
+		
+		if( !(rp_GetZoneBit(rp_GetPlayerZone(victim)) & BITZONE_ROAD) ) {		
+			if( heal > 0 ) {
+				rp_SetVehicleInt(inflictor, car_health, rp_GetVehicleInt(inflictor, car_health) - heal);
+			}
+		}
+	}
+	
 	if( Client_GetVehicle(victim) > 0 )
 		return Plugin_Handled;
+		
 	return Plugin_Continue;
 }
 public void OnClientDisconnect(int client) {
@@ -450,8 +536,6 @@ public Action Cmd_ItemVehicle(int args) {
 	return Plugin_Handled;
 }
 public void VehicleTouch(int car, int entity) {
-	static int lastTouch[2049];
-	static int touchCount[2049];
 	
 	if( rp_IsValidDoor(entity) ) {
 		
@@ -460,18 +544,21 @@ public void VehicleTouch(int car, int entity) {
 		int tick = GetGameTickCount();
 		
 		if( client > 0 && rp_GetClientKeyDoor(client, door) ) {
-			if( lastTouch[car]+1 >= tick) {
-				touchCount[car]++;
+			if( g_lastTouch[car]+1 >= tick) {
+				g_touchCount[car]++;
 			}
 			else {
-				touchCount[car] = 0;
+				g_touchCount[car] = 0;
 			}
 			
-			if( touchCount[car] > 64 ) {
+			if( g_touchCount[car] > 64 && g_damageCount[car] > 64 ) {
 				rp_SetDoorLock(door, false);
 				rp_ClientOpenDoor(client, door, true);
+				
+				g_touchCount[car] = 0;
+				g_damageCount[car] = 0;
 			}
-			lastTouch[car] = GetGameTickCount();
+			g_lastTouch[car] = GetGameTickCount();
 		}
 	}
 }

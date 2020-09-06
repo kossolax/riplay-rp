@@ -48,14 +48,11 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 	}
 	
 #if defined USING_VEHICLE
-	if( damagetype == 1 && inflictor == 0 && attacker == 0 && weapon == -1 && damageForce[0] == 0.0 && damageForce[1] == 0.0 && damageForce[2] <= -8192.0 ) {
-		// Bug relou des voitures.
-		return Plugin_Stop;
-	}
+	
 	if( g_flVehicleDamage > 0.001 && victim == attacker && IsValidClient(victim) && IsValidVehicle(inflictor) && damagetype == 17 ) {
 		
 		if( GetVectorLength(damageForce) > 8192.0 ) {
-			return Plugin_Stop;
+			return Plugin_Continue;
 		}
 		
 		if( Vehicle_GetDriver(inflictor) != victim && g_bUserData[victim][b_GameModePassive] && !(rp_GetZoneBit(rp_GetPlayerZone(victim)) & BITZONE_ROAD) ) {
@@ -68,41 +65,11 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 			return Plugin_Changed;
 		}
 		
-		float min[3] =  { -16.0, -16.0, -16.0 };
-		float max[3] =  { 16.0, 16.0, 16.0 };
-		
-		Handle tr = TR_TraceHullFilterEx(damagePosition, damagePosition, min, max, MASK_ALL, FilterToVehicle, inflictor);
-		if( TR_DidHit(tr) ) {
-				
-			int InVehicle = TR_GetEntityIndex(tr);
-			if( IsValidVehicle(InVehicle) ) {
-				
-				float delta = (SquareRoot(float(GetEntProp(inflictor, Prop_Send, "m_nSpeed"))) + 1.0) / (SquareRoot(float(GetEntProp(InVehicle, Prop_Send, "m_nSpeed"))) + 1.0);
-				
-				int heal = RoundToCeil(damage * g_flVehicleDamage * delta);
-				
-				if( heal > 0 ) {
-					rp_SetVehicleInt(InVehicle, car_health, rp_GetVehicleInt(InVehicle, car_health) - heal);
-				}
-				
-				heal = RoundToCeil(damage * g_flVehicleDamage * (1.0-delta));
-				
-				if( heal > 0 ) {
-					rp_SetVehicleInt(inflictor, car_health, rp_GetVehicleInt(inflictor, car_health) - heal);
-				}
-			}
-		}
-		CloseHandle(tr);
-		
 		return Plugin_Continue;
 	}
 	if( IsValidVehicle(attacker) && IsValidVehicle(inflictor) ) {
 
 		if( g_flVehicleDamage > 0.001 ) {
-			
-			if( GetVectorLength(damageForce) > 8192.0 ) {
-				return Plugin_Stop;
-			}
 			
 			if( Vehicle_GetDriver(inflictor) != victim && g_bUserData[victim][b_GameModePassive] && !(rp_GetZoneBit(rp_GetPlayerZone(victim)) & BITZONE_ROAD) ) {
 				damage = 0.0;
@@ -113,33 +80,6 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 				damage = 0.0;
 				return Plugin_Changed;
 			}
-			
-			float min[3] =  { -16.0, -16.0, -16.0 };
-			float max[3] =  { 16.0, 16.0, 16.0 };
-			
-			
-			Handle tr = TR_TraceHullFilterEx(damagePosition, damagePosition, min, max, MASK_ALL, FilterToVehicle, inflictor);
-			if( TR_DidHit(tr) ) {
-					
-				int InVehicle = TR_GetEntityIndex(tr);
-				if( IsValidVehicle(InVehicle) ) {
-					
-					float delta = (SquareRoot(float(GetEntProp(inflictor, Prop_Send, "m_nSpeed"))) + 1.0) / (SquareRoot(float(GetEntProp(InVehicle, Prop_Send, "m_nSpeed"))) + 1.0);
-					
-					int heal = RoundToCeil(damage * g_flVehicleDamage * delta);
-					
-					if( heal > 0 ) {
-						rp_SetVehicleInt(InVehicle, car_health, rp_GetVehicleInt(InVehicle, car_health) - heal);
-					}
-					
-					heal = RoundToCeil(damage * g_flVehicleDamage * (1.0-delta));
-					
-					if( heal > 0 ) {
-						rp_SetVehicleInt(inflictor, car_health, rp_GetVehicleInt(inflictor, car_health) - heal);
-					}
-				}
-			}
-			CloseHandle(tr);
 		}
 		
 		if( IsValidClient(g_iGrabbedBy[inflictor]) ) {
