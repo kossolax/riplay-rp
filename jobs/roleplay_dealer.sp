@@ -964,8 +964,10 @@ int BuildingPlant(int client, int type) {
 		max = 14;
 		
 	int appart = rp_GetPlayerZoneAppart(client);
-	if( appart > 0 && ( rp_GetAppartementInt(appart, appart_bonus_coffre) || (rp_GetClientJobID(client) == 61 && !rp_GetClientBool(client, b_GameModePassive)) ) )
-		max += 1;
+	if( appart > 0 && ( rp_GetAppartementInt(appart, appart_bonus_coffre) || (rp_GetClientJobID(client) == 61 && !rp_GetClientBool(client, b_GameModePassive)) ) ) {
+		if( rp_GetClientKeyAppartement(client, appart) )
+			max += 1;
+	}
 	if( rp_GetClientInt(client, i_PlayerLVL) >= 110 )
 		max += 2;
 	if( rp_GetClientInt(client, i_PlayerLVL) >= 420 )
