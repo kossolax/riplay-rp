@@ -11,19 +11,19 @@
 
 stock bool HasDoctor(int client) {	
 	
-	static float g_flLastCheck = 0.0;
-	static bool g_bLastData = false;
+	static float g_flLastCheck[MAX_PLAYERS] = 0.0;
+	static bool g_bLastData[MAX_PLAYERS] = false;
 	
-	if( g_flLastCheck > GetGameTime() ) {
-		return g_bLastData;
+	if( g_flLastCheck[client] > GetGameTime() ) {
+		return g_bLastData[client];
 	}
-	g_flLastCheck = GetGameTime() + 5.0;
-	g_bLastData = false;
+	g_flLastCheck[client] = GetGameTime() + 5.0;
+	g_bLastData[client] = false;
 	
 	if( !(rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PVP) && !(rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_EVENT) )
-		return g_bLastData;
+		return g_bLastData[client];
 	if( GetConVarInt(g_hSick) == 0 )
-		return g_bLastData;
+		return g_bLastData[client];
 	
 	for(int i=1;i<=MaxClients;i++) {
 		if( !IsValidClient(i) )
@@ -39,10 +39,10 @@ stock bool HasDoctor(int client) {
 			if( g_iUserData[i][i_Job] == 14 )
 				continue;
 			
-			g_bLastData = true;
+			g_bLastData[client] = true;
 		}
 	}
-	return g_bLastData;
+	return g_bLastData[client];
 }
 //
 // Jobs:
