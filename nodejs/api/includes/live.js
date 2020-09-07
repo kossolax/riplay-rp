@@ -148,6 +148,18 @@ exports = module.exports = function (server) {
     next();
   });
 
+  server.get('/live/msg/:id', function (req, res, next) {
+    if( req.connection.remoteAddress != "5.196.39.48") return res.send(new ERR.NotFoundError("ServerNotFound"));
+
+    wsRequest("/msg/" + req.params["id"], function (error, response, body) {
+      if (error) return res.send(new ERR.NotFoundError("ServerNotFound"));
+      return res.send(body);
+    });
+
+    next();
+  });
+
+
   /**
    * @api {get} /live/connected/:steamid GetLiveConnexion
    * @apiName GetLiveConnexion

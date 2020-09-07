@@ -504,8 +504,12 @@ server.get('/user/admin', function (req, res, next) {
 
         var img = gd.createTrueColorSync(800, 200);
         gd.createFromJpeg("/home/www/rp/images/roleplay/"+req.params['type']+"/"+id+".jpg").then( bg => {
-	        bg.copyResampled(img, 0, 0, 0, 0, 800, 200, bg.width, bg.height );
-        	bg.destroy();
+		try {
+		        bg.copyResampled(img, 0, 0, 0, 0, 800, 200, bg.width, bg.height );
+        		bg.destroy();
+		} catch ( e ) {
+			
+		}
 
         	var black = img.colorAllocate(0,0,0);
         	var white = img.colorAllocate(255,255,255);
