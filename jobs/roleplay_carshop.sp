@@ -1808,24 +1808,9 @@ public void OnEntityDestroyed(int entity) {
 bool IsInGarage(int client) {
 	int app = rp_GetPlayerZoneAppart(client);
 	
-	if( app > 100 && app <= 300 || app == 50 ) {
-		if( rp_GetClientKeyAppartement(client, app) ) {
-			
-			if( app == 50 ) {
-				float min[3] = { -2291.0, -8095.0, -1816.0};
-				float max[3] =  { -1801.0, -7465.0, -1656.0};
-				float origin[3];
-				GetClientAbsOrigin(client, origin);
-				if( origin[0] > min[0] && origin[0] < max[0] &&
-					origin[1] > min[1] && origin[1] < max[1] &&
-					origin[2] > min[2] && origin[2] < max[2] ) {
-					return true;
-				}
-			}
-			else {
-				return true;
-			}
-		}
+	if( rp_GetZoneBit(rp_GetPlayerZone(client), BITZONE_PARKING) && app > 0 && rp_GetClientKeyAppartement(client, app) && ) {
+		return true;
 	}
+
 	return false;
 }
