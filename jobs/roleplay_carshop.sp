@@ -1808,7 +1808,7 @@ public void OnEntityDestroyed(int entity) {
 bool IsInGarage(int client) {
 	int app = rp_GetPlayerZoneAppart(client);
 	
-	if( rp_GetZoneBit(rp_GetPlayerZone(client), BITZONE_PARKING) && app > 0 && rp_GetClientKeyAppartement(client, app) && ) {
+	if( rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PARKING && app > 0 && rp_GetClientKeyAppartement(client, app) ) {
 		return true;
 	}
 
