@@ -155,13 +155,13 @@ public void OnWebsocketReceive(WebsocketHandle websocket, WebsocketSendType iTyp
 			Websocket_Send(websocket, SendType_Text, arg);
 		}
 		else if( String_StartsWith(url, "/msg/") ) {
-			char options[3][256];
+			char options[3][256], arg[1024];
 			ExplodeString(url, "/", options, sizeof(options), sizeof(options[]));
 			
 			CPrintToChatAll("" ...MOD_TAG... " %s", options[2]);
 			
-			
-			Websocket_Send(websocket, SendType_Text, "1");
+			Format(arg, sizeof(arg), "{\"req\":\"%s\",\"data\":%s}", url, "1");
+			Websocket_Send(websocket, SendType_Text, arg);
 		}
 		else if( String_StartsWith(url, "/time") ) {       
 			int hour, minutes, timestamp;
