@@ -1001,8 +1001,9 @@ public int Native_rp_SetClientVehiclePassager(Handle plugin, int numParams ) {
 	rp_AcceptEntityInput(client, "SetParent", ent, ent);
 	
 	int iFlags = GetEntProp(client, Prop_Send, "m_fEffects");
-	SetEntProp(client, Prop_Send, "m_fEffects", iFlags | EF_BONEMERGE | EF_NOSHADOW | EF_NOINTERP);
-	SetEntProp(client, Prop_Send, "m_CollisionGroup", COLLISION_GROUP_IN_VEHICLE);
+	SetEntProp(client, Prop_Send, "m_fEffects", iFlags | EF_BONEMERGE | EF_NOSHADOW | EF_NOINTERP | EF_BONEMERGE_FASTCULL | EF_PARENT_ANIMATES );
+//	SetEntProp(client, Prop_Send, "m_fEffects", iFlags | EF_BONEMERGE | EF_NOSHADOW | EF_NOINTERP);
+	SetEntProp(client, Prop_Send, "m_CollisionGroup", COLLISION_GROUP_NONE);
 	SetEntityMoveType(client, MOVETYPE_NONE);
 	
 	int hud = GetEntProp(client, Prop_Send, "m_iHideHUD");
