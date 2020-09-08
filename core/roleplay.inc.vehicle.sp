@@ -242,6 +242,10 @@ void LeaveVehiclePassager(int client, int vehicle=-1) {
 		rp_AcceptEntityInput(g_iCarPassager[car][client], "Kill");
 		SetEntProp(client, Prop_Send, "m_CollisionGroup", COLLISION_GROUP_PLAYER);
 		
+		int hud = GetEntProp(client, Prop_Send, "m_iHideHUD");
+		hud &= ~HIDEHUD_WEAPONSELECTION; hud &= ~HIDEHUD_CROSSHAIR; hud &= ~HIDEHUD_INVEHICLE;
+		SetEntProp(client, Prop_Send, "m_iHideHUD", hud);
+		
 		int EntEffects = GetEntProp(client, Prop_Send, "m_fEffects") & (~EF_NODRAW) & (~EF_BONEMERGE) & (~EF_NOSHADOW) & (~EF_NOINTERP) & (~EF_BONEMERGE_FASTCULL) & (~EF_PARENT_ANIMATES);
 		SetEntProp(client, Prop_Send, "m_fEffects", EntEffects);
 		 

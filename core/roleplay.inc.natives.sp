@@ -1002,12 +1002,12 @@ public int Native_rp_SetClientVehiclePassager(Handle plugin, int numParams ) {
 	
 	int iFlags = GetEntProp(client, Prop_Send, "m_fEffects");
 	SetEntProp(client, Prop_Send, "m_fEffects", iFlags | EF_BONEMERGE | EF_NOSHADOW | EF_NOINTERP);
-	SetEntProp(client, Prop_Send, "m_CollisionGroup", COLLISION_GROUP_NONE);
+	SetEntProp(client, Prop_Send, "m_CollisionGroup", COLLISION_GROUP_IN_VEHICLE);
 	SetEntityMoveType(client, MOVETYPE_NONE);
+	
 	int hud = GetEntProp(client, Prop_Send, "m_iHideHUD");
 	hud |= HIDEHUD_WEAPONSELECTION|HIDEHUD_INVEHICLE;
 	SetEntProp(client, Prop_Send, "m_iHideHUD", hud);
-	SetEntProp(client, Prop_Send, "m_bDrawViewmodel", 0);
 	
 	ClientCommand(client, "cam_idealpitch 65");	
 	ClientCommand(client, "thirdperson");

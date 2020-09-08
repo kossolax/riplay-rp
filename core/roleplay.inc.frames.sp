@@ -209,6 +209,9 @@ void OnGameFrame_01(float time) {
 			blockShot = true;
 		}
 		
+		if( g_iCarPassager2[Client] > 0 )
+			blockShot = true;
+		
 		if( g_bIsInCaptureMode && GetZoneBit( nowZone )  & BITZONE_PVP ) {
 			if( speed > 2.0 )
 				speed = 2.0;
