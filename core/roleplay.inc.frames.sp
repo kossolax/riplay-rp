@@ -149,7 +149,7 @@ void OnGameFrame_01(float time) {
 			if( !g_bUserData[Client][b_GameModePassive] && rp_GetClientJobID(Client) == 41 && g_iUserData[Client][i_ToKill] > 0 )
 				speed += 0.25;
 
-			if( HasDoctor(Client) ) {
+			if( g_iUserData[Client][i_Sick] > 0 && HasDoctor(Client) ) {
 				if( g_iUserData[Client][i_Sick] == view_as<int>(sick_type_grippe) )
 					speed = 0.66;
 				else if( g_iUserData[Client][i_Sick] == view_as<int>(sick_type_tourista) )
@@ -674,11 +674,10 @@ void OnGameFrame_10(float time) {
 					Call_Finish();
 				}
 				// TODO: Déplacer ça dans le job hopital
-				if( !(GetZoneBit(GetPlayerZone(i)) & (BITZONE_PVP|BITZONE_EVENT)) && !(g_iMinutes % 5) ) {
-					if( HasDoctor(i) 
-						&& !(rp_GetZoneBit( rp_GetPlayerZone(i) ) & BITZONE_PVP)
-						&& !(rp_GetZoneBit( rp_GetPlayerZone(i) ) & BITZONE_EVENT) ) {
-						if( g_iUserData[i][i_Sick] == view_as<int>(sick_type_hemoragie) ) {
+				if( g_iUserData[i][i_Sick] == view_as<int>(sick_type_hemoragie) ) {
+					if( !(GetZoneBit(GetPlayerZone(i)) & (BITZONE_PVP|BITZONE_EVENT)) && !(g_iMinutes % 5) ) {
+						if( HasDoctor(i) ) {
+						
 							int heal = GetClientHealth(i) - 5;
 							if( heal <= 0 )
 								heal = 1;

@@ -17,13 +17,18 @@ stock bool HasDoctor(int client) {
 	if( g_flLastCheck[client] > GetGameTime() ) {
 		return g_bLastData[client];
 	}
+
+
 	g_flLastCheck[client] = GetGameTime() + 5.0;
 	g_bLastData[client] = false;
 	
-	if( !(rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PVP) && !(rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_EVENT) )
+	if( !(rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PVP|BITZONE_EVENT) ) {
 		return g_bLastData[client];
-	if( GetConVarInt(g_hSick) == 0 )
+	}
+	
+	if( GetConVarInt(g_hSick) == 0 ) {
 		return g_bLastData[client];
+	}
 	
 	for(int i=1;i<=MaxClients;i++) {
 		if( !IsValidClient(i) )
@@ -42,6 +47,8 @@ stock bool HasDoctor(int client) {
 			g_bLastData[client] = true;
 		}
 	}
+	
+	
 	return g_bLastData[client];
 }
 //
