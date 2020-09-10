@@ -339,8 +339,16 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 		}
 	}
 	
-	if( Client_GetVehicle(victim) > 0 )
+	if( Client_GetVehicle(victim) > 0 ) {
+		if( attacker > 0 && inflictor == attacker ) {
+			char tmp[64];
+			GetEdictClassname(inflictor, tmp, sizeof(tmp));
+			if( StrEqual(tmp, "entityflame") )
+				return Plugin_Continue;
+		}
+		
 		return Plugin_Handled;
+	}
 		
 	return Plugin_Continue;
 }
