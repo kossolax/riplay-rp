@@ -364,7 +364,7 @@ public Action Command_Say(int client, int args) {
 		return Plugin_Handled;
 	}
 	else if( strcmp(szSayTrig, "!appart", false) == 0 || strcmp(szSayTrig, "/appart", false) == 0 ||
-			strcmp(szSayTrig, "!appart", false) == 0 || strcmp(szSayTrig, "/appart", false) == 0
+			strcmp(szSayTrig, "!garage", false) == 0 || strcmp(szSayTrig, "/garage", false) == 0
 	) {
 		
 		// Setup menu
@@ -379,10 +379,10 @@ public Action Command_Say(int client, int args) {
 				continue;
 			
 			if( g_iAppartBonus[i][appart_proprio] > 0 ) {
-				Format(tmp, sizeof(tmp), "Appart %s: %N", g_szSellingKeys[i][key_type_name], g_iAppartBonus[i][appart_proprio]);
+				Format(tmp, sizeof(tmp), "%s %s: %N", i >= 100 ? "Garage" : "Appart", g_szSellingKeys[i][key_type_name], g_iAppartBonus[i][appart_proprio]);
 			}
 			else {
-				Format(tmp, sizeof(tmp), "Appart %s: Disponible", g_szSellingKeys[i][key_type_name]);
+				Format(tmp, sizeof(tmp), "%s %s: Disponible", i >= 100 ? "Garage" : "Appart", g_szSellingKeys[i][key_type_name]);
 				count++;
 			}
 			
