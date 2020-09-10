@@ -488,6 +488,17 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 			killDuration = 0;
 	}
 	
+	if( Client_GetVehicle(Client) > 0 ) {
+		int vehicleID = Client_GetVehicle(Client);
+		
+		for(int i=1; i<=MaxClients; i++) {
+			if( !IsValidClient(i) )
+				continue;
+			if( g_iCarPassager[vehicleID][i] )
+				LeaveVehiclePassager(i, vehicleID);
+		}
+	}
+	
 	g_iUserStat[Client][i_Deaths]++;
 	showGraveMenu(Client);
 	
