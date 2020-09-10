@@ -45,7 +45,7 @@ exports = module.exports = function (server) {
     next();
   });*/
 
-  var lastReconnect;
+  var lastReconnect = 0;
 
   var serverWs;
 
