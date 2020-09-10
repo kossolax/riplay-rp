@@ -533,7 +533,7 @@ int GivePlayerPay(int i, bool calculator = false) {
 			float pc = float(g_iUserData[i][i_ItemBankPrice]) / float(getClientBankLimit(i)) * 100.0;
 			LogToGame("[CHEATING] [BANK] %L Coffre de la banque plein: %f%%", i, pc);
 			if( pc > 200.0 )
-				KickClient(i);
+				KickClient(i, "Votre coffre est beaucoup trop plein.");
 		}
 	}
 	else if( g_bUserData[i][b_IsAFK] ) {
