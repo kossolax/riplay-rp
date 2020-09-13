@@ -256,7 +256,7 @@ public void OnClientPostAdminCheck(int client) {
 		g_iBlockedTime[client][i] = 0;
 }
 public bool FilterToVehicle(int entity, int mask, any data) {
-	return rp_IsValidVehicle(entity);
+	return rp_IsValidVehicle(entity) && entity != data;
 }
 public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& weapon, float damageForce[3], float damagePosition[3]) {
 	
@@ -280,6 +280,9 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 				float g_flVehicleDamage = GetConVarFloat(FindConVar("rp_car_damages")) / 10.0;
 				int heal = RoundToCeil(damage * g_flVehicleDamage);
 				
+				if( heal > 250 )
+					heal = 250;
+				
 				if( heal > 0 ) {
 					rp_SetVehicleInt(inflictor, car_health, rp_GetVehicleInt(inflictor, car_health) - heal);
 				}
@@ -295,13 +298,13 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 			int heal = RoundToCeil(damage * g_flVehicleDamage);
 			
 			if( heal > 0 ) {
-				rp_SetVehicleInt(inflictor, car_health, rp_GetVehicleInt(inflictor, car_health) - heal);
+				rp_SetVehicleInt(inflictor, car_health, rp_GetVehicleInt(inflictor, car_health) - heal); 
 			}
 		}
 	}
 	
 	if( rp_IsValidVehicle(attacker) && rp_IsValidVehicle(inflictor) ) {
-		float g_flVehicleDamage = GetConVarFloat(FindConVar("rp_car_damages"));
+		float g_flVehicleDamage = GetConVarFloat(FindConVar("rp_car_damages")) / 2.0;
 		float min[3] =  { -16.0, -16.0, -16.0 };
 		float max[3] =  { 16.0, 16.0, 16.0 };
 		Handle tr = TR_TraceHullFilterEx(damagePosition, damagePosition, min, max, MASK_ALL, FilterToVehicle, inflictor);
@@ -309,6 +312,8 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 				
 			int InVehicle = TR_GetEntityIndex(tr);
 			if( rp_IsValidVehicle(InVehicle) ) {
+				if( damage > 50.0 )
+					damage = 50.0;
 				
 				float delta = (SquareRoot(float(GetEntProp(inflictor, Prop_Send, "m_nSpeed"))) + 1.0) / (SquareRoot(float(GetEntProp(InVehicle, Prop_Send, "m_nSpeed"))) + 1.0);
 				
@@ -331,6 +336,9 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 	if( IsValidClient(attacker) && rp_IsValidVehicle(inflictor) && IsValidClient(victim) ) {
 		float g_flVehicleDamage = GetConVarFloat(FindConVar("rp_car_damages")) / 5.0;
 		int heal = RoundToCeil(damage * g_flVehicleDamage);
+		if( heal > GetClientHealth(victim) ) {
+			heal = GetClientHealth(victim);
+		}
 		
 		if( !(rp_GetZoneBit(rp_GetPlayerZone(victim)) & BITZONE_ROAD) ) {		
 			if( heal > 0 ) {
