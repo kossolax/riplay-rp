@@ -14,7 +14,7 @@
       <table width="100%" class="table-hover table-condensed">
         <tr>
           <th class="pull-right">Joueurs:</th>
-          <th class="text-center" ng-class="(players.length-10)>=-2 ? 'text-success' : (players.length-10)>=-4 ? 'text-warning' : 'text-danger'">{{players.length}} / 10</th>
+          <th class="text-center" ng-class="(players.length-6)>=-2 ? 'text-success' : (players.length-6)>=-4 ? 'text-warning' : 'text-danger'">{{players.length}} / 6</th>
           <th>Rangs:</th>
           <th>Points:</th>
         </tr>
