@@ -21,6 +21,11 @@
 #pragma newdecls required
 #include <roleplay.inc>	// https://www.ts-x.eu
 
+#define		QUEST_TEAMS			2
+#define		TEAM_NONE			0
+#define		TEAM_DEF			1
+#define		TEAM_ATT			2
+
 // -----------------------------------------------------------------------------------------------------------------
 enum flag_data { data_group, data_skin, data_red, data_green, data_blue, data_time, data_owner, data_lastOwner, flag_data_max };
 int g_iClientFlag[65];
@@ -29,15 +34,14 @@ int g_iFlagData[MAX_ENTITIES+1][view_as<int>(flag_data_max)];
 // -----------------------------------------------------------------------------------------------------------------
 Handle g_hCapturable = INVALID_HANDLE;
 Handle g_hGodTimer[65], g_hKillTimer[65];
-int g_iCapture_POINT[MAX_GROUPS];
 int g_iCaptureStart;
 bool g_bIsInCaptureMode = false;
 int g_cBeam;
-int g_iLastGroup;
 StringMap g_hGlobalDamage, g_hGlobalSteamID;
 enum damage_data { gdm_shot, gdm_touch, gdm_damage, gdm_hitbox, gdm_elo, gdm_flag, gdm_kill, gdm_max };
 TopMenu g_hStatsMenu;
 TopMenuObject g_hStatsMenu_Shoot, g_hStatsMenu_Head, g_hStatsMenu_Damage, g_hStatsMenu_Flag, g_hStatsMenu_ELO, g_hStatsMenu_KILL;
+int g_iPlayerTeam[2049], g_stkTeam[QUEST_TEAMS + 1][MAXPLAYERS + 1], g_stkTeamCount[QUEST_TEAMS + 1], g_iTeamScore[QUEST_TEAMS + 1];
 // -----------------------------------------------------------------------------------------------------------------
 enum soundList {
 	snd_YouHaveTheFlag,
@@ -216,14 +220,14 @@ public Action Cmd_ItemFlag(int args) {
 	
 	int client = GetCmdArgInt(1);
 	int item_id = GetCmdArgInt(args);
-	int gID = rp_GetClientGroupID(client);
+	int gID = g_iPlayerTeam[client];
 	
-	if( gID == 0 ) {
+	if( gID == TEAM_NONE ) {
 		ITEM_CANCEL(client, item_id);
 		CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas de groupe.");
 		return;
 	}
-	if( rp_GetCaptureInt(cap_bunker) == gID ) {
+	if( gID == TEAM_DEF ) {
 		ITEM_CANCEL(client, item_id);
 		CPrintToChat(client, "" ...MOD_TAG... " Le gang défenseur ne peut pas utiliser de drapeau.");
 		return;
@@ -283,16 +287,9 @@ public Action Cmd_ItemFlag(int args) {
 	float vecOrigin[3];
 	GetClientAbsOrigin(client, vecOrigin); vecOrigin[2] += 10.0;
 	
-	int color[3];
-	char strBuffer[4][8];
-	rp_GetGroupData(gID, group_type_color, classname, sizeof(classname));
-	ExplodeString(classname, ",", strBuffer, sizeof(strBuffer), sizeof(strBuffer[]));
-	color[0] = StringToInt(strBuffer[0]);
-	color[1] = StringToInt(strBuffer[1]);
-	color[2] = StringToInt(strBuffer[2]);
-	
-	int flag = CTF_SpawnFlag(vecOrigin, Math_GetRandomInt(0, 1), color);
-	g_iFlagData[flag][data_group] = gID;
+	int flag = CTF_SpawnFlag(vecOrigin, Math_GetRandomInt(0, 1), {0, 0, 255});
+	g_iFlagData[flag][data_group] = rp_GetClientGroupID(client);
+	g_iPlayerTeam[flag] = gID;
 }
 public Action FlagDrop(int client, int args) {
 	if( g_iClientFlag[client] > 0 ) {
@@ -323,10 +320,10 @@ public Action FlagThink(Handle timer, any data) {
 	if( g_bIsInCaptureMode ) {
 		if( rp_GetPlayerZone(entity) == ZONE_BUNKER ) {
 			
-			if( rp_GetCaptureInt(cap_bunker) != g_iFlagData[entity][data_group] ) {
+			if( g_iPlayerTeam[ entity ] == TEAM_ATT ) {
 				int point = RoundFloat(FLAG_POINT_MAX - ((FLAG_POINT_MAX - FLAG_POINT_MIN) * float(GetTime() - g_iCaptureStart) / (30.0 * 60.0)));
 				
-				g_iCapture_POINT[g_iFlagData[entity][data_group]] += point;
+				g_iTeamScore[TEAM_ATT] += point;
 				// g_iCapture_POINT[rp_GetCaptureInt(cap_bunker)] -= point;
 				
 				GDM_RegisterFlag(g_iFlagData[entity][data_lastOwner]);
@@ -347,11 +344,11 @@ public Action FlagThink(Handle timer, any data) {
 	}
 	
 	if( g_iFlagData[entity][data_time]+60 < GetTime() ) {
-		int gID = g_iFlagData[entity][data_group];
+		int gID = g_iPlayerTeam[entity];
 		for(int i=1; i<=MaxClients; i++) {
 			if( !IsValidClient(i) )
 				continue;
-			if( gID == rp_GetClientGroupID(i) )
+			if( gID == g_iPlayerTeam[i] )
 				ClientCommand(i, "play common/warning");
 		}
 		rp_AcceptEntityInput(entity, "KillHierarchy");
@@ -382,18 +379,15 @@ void CAPTURE_Start() {
 	
 	
 	g_bIsInCaptureMode = true;
-	int gID;
 	bool botFound = false;
-			
-	for(int i=1; i<MAX_GROUPS; i++) {
-		g_iCapture_POINT[i] = 0;
-	}
+	
+	
+	g_iTeamScore[TEAM_DEF] = g_iTeamScore[TEAM_ATT] = 0;
 	
 	int rowPoint = 100 - ((rp_GetCaptureInt(cap_pvpRow) - 1) * 10);
 	if( rowPoint < 0 )
 		rowPoint = 0;
 	
-	g_iLastGroup = rp_GetCaptureInt(cap_bunker);
 	g_bFirstBlood = g_b5MinutesLeft = g_b1MinuteLeft = false;
 
 	for(int i=1; i<=MaxClients; i++) {
@@ -414,26 +408,23 @@ void CAPTURE_Start() {
 		rp_HookEvent(i, RP_OnPlayerZoneChange, fwdZoneChange);
 		rp_HookEvent(i, RP_PreClientStealItem, fwdStealItem);
 		
-		gID = rp_GetClientGroupID(i);
-		g_iCapture_POINT[gID] += 100;
-		if( gID == rp_GetCaptureInt(cap_bunker) ) {
-			g_iCapture_POINT[gID] += rowPoint;
+		if( g_iPlayerTeam[i] == TEAM_ATT ) {
 			EmitSoundToClientAny(i, g_szSoundList[snd_YouAreOnBlue], _, 6, _, _, 1.0);
 		}
-		else if( gID > 0 ) {
+		else if( g_iPlayerTeam[i] == TEAM_DEF ) {
 			EmitSoundToClientAny(i, g_szSoundList[snd_YouAreOnRed], _, 6, _, _, 1.0);
 		}
 		
 		if( !(rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_PVP) )
 			continue;
-		if( gID == rp_GetCaptureInt(cap_bunker) )
-			continue;
 		
-		int v = Client_GetVehicle(i);
-		if( v > 0 )
-			rp_ClientVehicleExit(i, v, true);
-		
-		rp_ClientSendToSpawn(i, true);
+		if( g_iPlayerTeam[i] == TEAM_ATT ) {
+			int v = Client_GetVehicle(i);
+			if( v > 0 )
+				rp_ClientVehicleExit(i, v, true);
+			
+			rp_ClientSendToSpawn(i, true);
+		}
 	}
 	for(int i=MaxClients; i<=2048; i++) {
 		if( rp_IsValidVehicle(i) && rp_GetVehicleInt(i, car_health) >= 2500 )
@@ -475,8 +466,6 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 	return Plugin_Continue;
 }
 void CAPTURE_Stop() {
-	int winner, maxPoint = 0;
-	char optionsBuff[4][32], tmp[256];
 	
 	CPrintToChatAll("{lightblue} =================================={default} ");
 	CPrintToChatAll("{lightblue} Le bunker ne peut plus être capturé.{default} ");
@@ -503,6 +492,8 @@ void CAPTURE_Stop() {
 			rp_ClientColorize(i);
 	}
 	
+	PrintToChatAll("Winner TBD");
+	/*
 	int totalPoints = 0;
 	for(int i=1; i<MAX_GROUPS; i++) {
 		if( maxPoint > g_iCapture_POINT[i] )
@@ -531,12 +522,14 @@ void CAPTURE_Stop() {
 			
 	CPrintToChatAll("{lightblue} Le bunker appartient maintenant à... %s !", optionsBuff[1]);
 	CPrintToChatAll("{lightblue} =================================={default} ");
+	*/
 	
 	UnhookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Post);
 	UnhookEvent("weapon_fire", Event_PlayerShoot, EventHookMode_Post);
 	UnhookEvent("player_hurt", fwdGod_PlayerHurt, EventHookMode_Pre);
 	UnhookEvent("weapon_fire", fwdGod_PlayerShoot, EventHookMode_Pre);	
 	
+	int totalPoints = 0;
 	CAPTURE_Reward(totalPoints);
 	GDM_Resume();
 	
@@ -568,6 +561,9 @@ void CAPTURE_UpdateLight() {
 	}
 }
 void CAPTURE_Reward(int totalPoints) {
+	PrintToChatAll("Reward TBD");
+	/*
+	return;
 	int amount;
 	char tmp[128], szSteamID[32], optionsBuff[4][32];
 	
@@ -621,68 +617,14 @@ void CAPTURE_Reward(int totalPoints) {
 			rp_GetItemData(215, item_type_name, tmp, sizeof(tmp));
 			CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu %d %s, en récompense de la capture.", amount+3+bonus, tmp);
 		}
-	}	
+	}
+	*/
 }
 public Action CAPTURE_Tick(Handle timer, any none) {
 	if( !g_bIsInCaptureMode )
 		return Plugin_Handled;
 	
-	char strBuffer[4][32], tmp[64];
-	int color[4], maxPoint, winner, defense = rp_GetCaptureInt(cap_bunker);
-	float mins[3], maxs[3];
-	mins[0] = rp_GetZoneFloat(ZONE_BUNKER, zone_type_min_x);
-	mins[1] = rp_GetZoneFloat(ZONE_BUNKER, zone_type_min_y);
-	mins[2] = rp_GetZoneFloat(ZONE_BUNKER, zone_type_min_z);
-	maxs[0] = rp_GetZoneFloat(ZONE_BUNKER, zone_type_max_x);
-	maxs[1] = rp_GetZoneFloat(ZONE_BUNKER, zone_type_max_y);
-	maxs[2] = rp_GetZoneFloat(ZONE_BUNKER, zone_type_max_z);
-	
-	for(int i=1; i<MAX_GROUPS; i+=10) {
-		if( maxPoint > g_iCapture_POINT[i] )
-			continue;
-
-		winner = i;
-		maxPoint = g_iCapture_POINT[i];
-	}
-
-	if( maxPoint-250 >= g_iCapture_POINT[defense] && winner != defense ) {
-		rp_GetGroupData(winner, group_type_name, tmp, sizeof(tmp));
-		ExplodeString(tmp, " - ", strBuffer, sizeof(strBuffer), sizeof(strBuffer[]));
-		CPrintToChatAll("{lightblue} =================================={default} ");
-		CPrintToChatAll("{lightblue} Le bunker est maintenant défendu par les %s!{default} ", strBuffer[1]);
-		CPrintToChatAll("{lightblue} =================================={default} ");
-		
-		for (int i = 1; i <= MaxClients; i++) {
-			if( !IsValidClient(i) )
-				continue;
-			if( rp_GetClientGroupID(i) != defense ) {
-				if( rp_GetClientGroupID(i) == winner )
-					EmitSoundToClientAny(i, g_szSoundList[snd_YouAreOnBlue], _, 6, _, _, 1.0);
-				continue;
-			}
-			
-			EmitSoundToClientAny(i, g_szSoundList[snd_YouAreOnRed], _, 6, _, _, 1.0);
-			if( rp_GetPlayerZone(i) != ZONE_RESPAWN )
-				continue;
-			rp_ClientSendToSpawn(i, true);
-		}
-		defense = winner;
-		rp_SetCaptureInt(cap_bunker, defense);
-		CAPTURE_UpdateLight();
-	}
-	
-	rp_GetGroupData(defense, group_type_color, tmp, sizeof(tmp));
-	ExplodeString(tmp, ",", strBuffer, sizeof(strBuffer), sizeof(strBuffer[]));
-	color[0] = StringToInt(strBuffer[0]);
-	color[1] = StringToInt(strBuffer[1]);
-	color[2] = StringToInt(strBuffer[2]);
-	color[3] = 255;
-	
-	Effect_DrawBeamBoxToAll(mins, maxs, g_cBeam, g_cBeam, 0, 30, 2.0, 5.0, 5.0, 2, 1.0, color, 0);
-	
-	if( winner != defense && GetTime() % 2 == 0 ) {
-		g_iCapture_POINT[defense]++;
-	}
+	g_iTeamScore[TEAM_DEF]++;
 	
 	if( GetTime() % 3 == 0 ) {
 		bool found = CyclAnnouncer_Empty();
@@ -725,13 +667,13 @@ public Action fwdSpawn(int client) {
 	rp_SetClientInt(client, i_Kevlar, 250);
 	rp_SetClientFloat(client, fl_CoolDown, 0.0);
 	
-	if( rp_GetClientGroupID(client) == rp_GetCaptureInt(cap_bunker) )
+	if( g_iPlayerTeam[client] == TEAM_DEF )
 		CreateTimer(0.01, fwdSpawn_ToRespawn, client);
 	
 	return Plugin_Continue;
 }
 public Action fwdSpawn_ToRespawn(Handle timer, any client) {
-	if( rp_GetClientGroupID(client) == rp_GetCaptureInt(cap_bunker) && IsValidClient(client) ) {
+	if( g_iPlayerTeam[client] == TEAM_DEF && IsValidClient(client) ) {
 		float mins[3], maxs[3], rand[3];
 		bool found = false;
 		mins[0] = rp_GetZoneFloat(ZONE_RESPAWN, zone_type_min_x);
@@ -793,7 +735,7 @@ public Action fwdDead(int victim, int attacker, float& respawn, int& tdm) {
 		dropped = true;
 	}
 	
-	if( rp_GetClientGroupID(attacker) == 0 || rp_GetClientGroupID(victim) == 0 )
+	if( g_iPlayerTeam[attacker] == TEAM_NONE || g_iPlayerTeam[victim] == TEAM_NONE )
 		return Plugin_Continue;
 	
 	g_iKillingSpree[victim] = 0;
@@ -805,13 +747,7 @@ public Action fwdDead(int victim, int attacker, float& respawn, int& tdm) {
 		if( dropped )
 			points += RoundFloat(float(points)*0.25);
 			
-		if( rp_GetCaptureInt(cap_bunker) == rp_GetClientGroupID(attacker) ) {
-			g_iCapture_POINT[rp_GetClientGroupID(attacker)] += RoundFloat(float(points)*0.4);
-			PrintHintText(attacker, "Kill !\n <font color='#33ff33'>+%d</span> points !", points+(points/2));
-		}
-		else {
-			PrintHintText(attacker, "Kill !\n <font color='#33ff33'>+%d</span> points !", points);
-		}
+		PrintHintText(attacker, "Kill !\n <font color='#33ff33'>+%d</span> points !", points);
 		g_flClientLastScore[attacker] = GetGameTime();
 		rp_IncrementSuccess(attacker, success_list_killpvp2);
 		
@@ -830,14 +766,12 @@ public Action fwdDead(int victim, int attacker, float& respawn, int& tdm) {
 		GDM_ELOSuicide(victim);
 	}
 	
-	if( rp_GetClientGroupID(victim) == rp_GetCaptureInt(cap_bunker) && rp_GetClientGroupID(victim) == g_iLastGroup ) {
-		respawn = 1.0 + (rp_GetCaptureInt(cap_pvpRow)-1);
-	}
+	respawn = 1.0;
 	return Plugin_Handled;
 }
 public Action fwdHUD(int client, char[] szHUD, const int size) {
-	int gID = rp_GetClientGroupID(client);
-	static char optionsBuff[4][32], tmp[128], loading[64], cache[512];
+	int gID = g_iPlayerTeam[client];
+	static char loading[64], cache[512];
 	static float lastGen;
 	
 	if( g_bIsInCaptureMode && gID > 0 ) {
@@ -854,15 +788,8 @@ public Action fwdHUD(int client, char[] szHUD, const int size) {
 			
 			Format(szHUD, size, "PvP: Capture du Bunker\n%s\n", loading);
 				
-			for(int i=1; i<MAX_GROUPS; i+=10) {
-				if( g_iCapture_POINT[i] == 0 )
-					continue;
-				
-				rp_GetGroupData(i, group_type_name, tmp, sizeof(tmp));
-				ExplodeString(tmp, " - ", optionsBuff, sizeof(optionsBuff), sizeof(optionsBuff[]));
-					
-				Format(szHUD, size, "%s %s: %d\n", szHUD, optionsBuff[1], g_iCapture_POINT[i]);
-			}
+			Format(szHUD, size, "%s Attaque: %d\n", szHUD, g_iTeamScore[TEAM_ATT]);
+			Format(szHUD, size, "%s Défense: %d\n", szHUD, g_iTeamScore[TEAM_DEF]);
 			
 			lastGen = GetGameTime() + 0.66;
 			strcopy(cache, sizeof(cache), szHUD);
@@ -872,13 +799,13 @@ public Action fwdHUD(int client, char[] szHUD, const int size) {
 	return Plugin_Continue;
 }
 public Action fwdStealItem(int client, int target) {
-	if( rp_GetClientGroupID(target) > 0 && rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PVP )
+	if( g_iPlayerTeam[client] != TEAM_NONE && rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PVP )
 		return Plugin_Handled;
 	return Plugin_Continue;
 }
 public Action fwdFrame(int client) {
 	
-	if( rp_GetClientGroupID(client) ) {
+	if( g_iPlayerTeam[client] != TEAM_NONE ) {
 		
 		if( rp_GetClientVehicle(client) <= 0 ) {
 			ClientCommand(client, "firstperson");
@@ -891,13 +818,13 @@ public Action fwdFrame(int client) {
 		else if( g_hGodTimer[client] != INVALID_HANDLE ) {
 			PrintHintText(client, "Vous êtes en spawn-protection");
 		}
-		else if( rp_GetCaptureInt(cap_bunker) == rp_GetClientGroupID(client) ) {
-			rp_ClientColorize(client, { 64, 64, 255, 255 } );
-			PrintHintText(client, "Vous êtes en défense.\n     <font color='#ff3333'>Tuez les ROUGES</font>");
+		else if( g_iPlayerTeam[client] == TEAM_DEF ) {
+			rp_ClientColorize(client, { 255, 64, 64, 255 } );
+			PrintHintText(client, "Vous êtes en défense.\n     <font color='#ff3333'>Tuez les BLEUS</font>");
 		}
 		else {
-			rp_ClientColorize(client, { 255, 64, 64, 255 } );
-			PrintHintText(client, "Vous êtes en attaque.\n     <font color='#3333ff'>Tuez les BLEUS</font>");
+			rp_ClientColorize(client, { 0, 64, 255, 255 } );
+			PrintHintText(client, "Vous êtes en attaque.\n     <font color='#3333ff'>Tuez les ROUGES</font>");
 		}
 	}
 	else {
@@ -990,12 +917,12 @@ public Action Event_PlayerHurt(Handle event, char[] name, bool dontBroadcast) {
 public Action fwdTakeDamage(int victim, int attacker, float& damage, int damagetype) {
 	
 	
-	if( rp_GetClientGroupID(attacker) > 0 && rp_GetClientGroupID(victim) > 0 ) {
+	if( g_iPlayerTeam[attacker] > 0 && g_iPlayerTeam[victim] > 0 ) {
 		
-		if( rp_GetClientGroupID(attacker) != rp_GetCaptureInt(cap_bunker) && rp_GetClientGroupID(victim) != rp_GetCaptureInt(cap_bunker) ) {
+		if( g_iPlayerTeam[attacker] == TEAM_ATT && g_iPlayerTeam[victim] == TEAM_ATT ) {
 			return Plugin_Handled;
 		}
-		if( rp_GetClientGroupID(attacker) == rp_GetCaptureInt(cap_bunker) && rp_GetClientGroupID(victim) == rp_GetCaptureInt(cap_bunker) ) {
+		if( g_iPlayerTeam[attacker] == TEAM_DEF && g_iPlayerTeam[victim] == TEAM_DEF ) {
 			return Plugin_Handled;
 		}
 		if( !(rp_GetZoneBit(rp_GetPlayerZone(victim)) & BITZONE_PVP || rp_GetZoneBit(rp_GetPlayerZone(attacker)) & BITZONE_PVP) ) {
@@ -1006,7 +933,7 @@ public Action fwdTakeDamage(int victim, int attacker, float& damage, int damaget
 	return Plugin_Continue;
 }
 public Action fwdZoneChange(int client, int newZone, int oldZone) {
-	if( newZone == ZONE_RESPAWN &&  rp_GetCaptureInt(cap_bunker) != rp_GetClientGroupID(client) ) {
+	if( newZone == ZONE_RESPAWN &&  g_iPlayerTeam[client] == TEAM_ATT ) {
 		rp_ClientDamage(client, 10000, client);
 		ForcePlayerSuicide(client);
 	}
@@ -1016,10 +943,10 @@ public Action fwdZoneChange(int client, int newZone, int oldZone) {
 	if( newZone == ZONE_VILLA && !rp_GetClientKeyAppartement(client, 50) ) {
 		rp_ClientSendToSpawn(client, true);
 	}
-	if( newZone == ZONE_VILLA2 && rp_GetClientGroupID(client) != rp_GetCaptureInt(cap_bunker) ) {
+	if( newZone == ZONE_VILLA2 && g_iPlayerTeam[client] == TEAM_NONE ) {
 		rp_ClientSendToSpawn(client, true);
 	}
-	if( rp_GetClientGroupID(client) == 0 && (rp_GetZoneBit(newZone) & BITZONE_PVP) ) {
+	if( g_iPlayerTeam[client] == TEAM_NONE && (rp_GetZoneBit(newZone) & BITZONE_PVP) ) {
 		rp_ClientSendToSpawn(client, true);
 	}
 	return Plugin_Continue;
@@ -1104,8 +1031,11 @@ public Action SDKTouch(int entity, int client) {
 		return Plugin_Continue;
 	if( g_iClientFlag[client] > 0 )
 		return Plugin_Continue;
-	if( g_iFlagData[entity][data_group] != rp_GetClientGroupID(client) )
+	if( g_iCaptureStart > 0 && g_iPlayerTeam[client] != TEAM_ATT )
 		return Plugin_Continue;
+	if( g_iCaptureStart == 0 && g_iFlagData[entity][data_group] != rp_GetClientGroupID(client) )
+		return Plugin_Continue;
+	
 	CTF_FlagTouched(client, entity);
 	return Plugin_Continue;
 }
@@ -1132,6 +1062,7 @@ void CTF_DropFlag(int client, int thrown) {
 	flag = CTF_SpawnFlag(vecOrigin, skin, color);
 	g_iFlagData[flag][data_group] = gID;
 	g_iFlagData[flag][data_lastOwner] = client;
+	g_iPlayerTeam[flag] = TEAM_ATT;
 	
 	if( thrown ) {		
 		Entity_GetAbsVelocity(client, vecPush);
@@ -1173,12 +1104,8 @@ void CTF_FlagTouched(int client, int flag) {
 	SetVariantString("grenade2");
 	rp_AcceptEntityInput(flag, "SetParentAttachment");
 	
-	char strBuffer[4][8], tmp[64];
 	float vecOrigin[3], ang[3], pos[3];
 	Entity_GetAbsOrigin(flag, vecOrigin);
-	
-	rp_GetGroupData(g_iFlagData[flag][data_group], group_type_color, tmp, sizeof(tmp));
-	ExplodeString(tmp, ",", strBuffer, sizeof(strBuffer), sizeof(strBuffer[]));
 	
 	
 	ang[0] = -90.0;
@@ -1282,16 +1209,17 @@ stock int GDM_ELOKill(int client, int target, bool flag = false) {
 	tDelta = 1.0/((Pow(10.0, - (victim[gdm_elo] - attacker[gdm_elo]) / 400.0)) + 1.0);
 	cElo = RoundFloat(float(attacker[gdm_elo]) + ELO_FACTEUR_K * (1.0 - cDelta));
 	tElo = RoundFloat(float(victim[gdm_elo]) + ELO_FACTEUR_K * (0.0 - tDelta));
-	cgID = rp_GetClientGroupID(client);
-	tgID = rp_GetClientGroupID(target);
+	
+	cgID = g_iPlayerTeam[client];
+	tgID = g_iPlayerTeam[target];
 	
 	int tmp = cElo - attacker[gdm_elo];
-	g_iCapture_POINT[ tgID ] += tElo - victim[gdm_elo];
-	g_iCapture_POINT[ cgID ] += cElo - attacker[gdm_elo];
+	g_iTeamScore[ tgID ] += tElo - victim[gdm_elo];
+	g_iTeamScore[ cgID ] += cElo - attacker[gdm_elo];
 	
-	if( g_iCapture_POINT[ tgID ] < 0 ) {
-		g_iCapture_POINT[ cgID ] += g_iCapture_POINT[tgID];
-		g_iCapture_POINT[ tgID ] = 0;
+	if( g_iTeamScore[ tgID ] < 0 ) {
+		g_iTeamScore[ cgID ] += g_iTeamScore[tgID];
+		g_iTeamScore[ tgID ] = 0;
 	}
 	
 	attacker[gdm_elo] = cElo;
@@ -1317,12 +1245,12 @@ int GDM_ELOSuicide(int client) {
 	
 	cDelta = 1.0/((Pow(10.0, - (1500 - attacker[gdm_elo]) / 400.0)) + 1.0);
 	cElo = RoundFloat(float(attacker[gdm_elo]) + ELO_FACTEUR_K * (0.0 - cDelta));
-	cgID = rp_GetClientGroupID(client);
+	cgID = g_iPlayerTeam[client];
 	
 	int tmp = cElo - attacker[gdm_elo];
-	g_iCapture_POINT[ cgID ] += cElo - attacker[gdm_elo];
-	if( g_iCapture_POINT[ cgID ] < 0 ) {
-		g_iCapture_POINT[ cgID ] = 0;
+	g_iTeamScore[ cgID ] += cElo - attacker[gdm_elo];
+	if( g_iTeamScore[ cgID ] < 0 ) {
+		g_iTeamScore[ cgID ] = 0;
 	}
 	
 	attacker[gdm_elo] = cElo;
@@ -1404,7 +1332,7 @@ void Client_SetSpawnProtect(int client, bool status) {
 		SDKHook(client, SDKHook_SetTransmit, fwdGodHideMe);
 		SDKHook(client, SDKHook_PreThink, fwdGodThink);
 		float duration = 10.0;
-		if( rp_GetCaptureInt(cap_bunker) == rp_GetClientGroupID(client) )
+		if( g_iPlayerTeam[client] == TEAM_DEF )
 			duration = 15.0;
 		if( g_hGodTimer[client] != INVALID_HANDLE )
 			delete g_hGodTimer[client];
@@ -1422,10 +1350,10 @@ void Client_SetSpawnProtect(int client, bool status) {
 		SetEntProp(client, Prop_Data, "m_takedamage", 2);
 		CPrintToChat(client, "" ...MOD_TAG... " Votre spawn-protection a expirée.");
 		
-		if( rp_GetCaptureInt(cap_bunker) == rp_GetClientGroupID(client) )
-			rp_ClientColorize(client, { 64, 64, 255, 255 } );
-		else if( rp_GetClientGroupID(client) != 0 )
+		if( g_iPlayerTeam[client] == TEAM_DEF )
 			rp_ClientColorize(client, { 255, 64, 64, 255 } );
+		else if( g_iPlayerTeam[client] == TEAM_ATT )
+			rp_ClientColorize(client, { 64, 64, 255, 255 } );
 		else
 			rp_ClientColorize(client);
 	}
@@ -1507,7 +1435,7 @@ void announceSound(int client, int sound) {
 	for (int i = 1; i <= MaxClients; i++) {
 		if( !IsValidClient(i) )
 			continue;
-		if( rp_GetClientGroupID(i) <= 0 )
+		if( g_iPlayerTeam[i] == TEAM_NONE )
 			continue;
 		
 		g_flClientLastScore[i] = GetGameTime();
@@ -1582,4 +1510,34 @@ public Action ResetKillCount(Handle timer, any client) {
 	if( g_hKillTimer[client] != INVALID_HANDLE )
 		g_iKilling[client] = 0;
 	g_hKillTimer[client] = INVALID_HANDLE;
+}
+// -----------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+void addClientToTeam(int client, int team) {
+	removeClientTeam(client);
+	
+	if( team != TEAM_NONE )
+		g_stkTeam[team][ g_stkTeamCount[team]++ ] = client;
+	
+	g_iPlayerTeam[client] = team;
+	
+	if( client <= MaxClients )
+		LogToGame("[DEBUG] [BRAQUAGE] %L was added to team: %d", client, team);
+}
+void removeClientTeam(int client) {
+	if( g_iPlayerTeam[client] != TEAM_NONE ) {
+		for (int i = 0; i < g_stkTeamCount[g_iPlayerTeam[client]]; i++) {
+			if( g_stkTeam[ g_iPlayerTeam[client] ][ i ] == client ) {
+				for (; i < g_stkTeamCount[g_iPlayerTeam[client]]; i++) {
+					g_stkTeam[g_iPlayerTeam[client]][i] = g_stkTeam[g_iPlayerTeam[client]][i + 1];
+				}
+				g_stkTeamCount[g_iPlayerTeam[client]]--;
+				break;
+			}
+		}
+		
+		if( client <= MaxClients )
+			LogToGame("[DEBUG] [BRAQUAGE] %L was removed from team %d", client, g_iPlayerTeam[client]);
+		g_iPlayerTeam[client] = TEAM_NONE;
+	}
 }
