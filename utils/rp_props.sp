@@ -248,6 +248,7 @@ public Action Command_GoTo(int client, int args) {
 		rp_ClientTeleport(client, vec);
 		
 		ShowActivity(client, "s'est Téléporté sur %N.", target);
+		LogToGame("[ADMIN] %L s'est téléporté sur %L.", client, target);
 	}
 	return Plugin_Handled;
 }
@@ -291,6 +292,7 @@ public Action Command_Bring(int client, int args) {
 		rp_ClientTeleport(target, vec);
 		
 		ShowActivity(client, "a Téléporté %N.", target);
+		LogToGame("[ADMIN] %L a téléporté %L.", client, target);
 	}
 	return Plugin_Handled;
 }
