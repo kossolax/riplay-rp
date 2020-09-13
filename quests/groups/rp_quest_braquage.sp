@@ -54,10 +54,15 @@ bool g_bDoingQuest, g_bByPassDoor, g_bHasHelmet, g_bCanMakeQuest;
 int g_iVehicle;
 #endif
 
-int g_iPlanque, g_iPlanqueZone, g_iQuestGain, g_iLastPlanque[3];
+int g_iPlanque, g_iPlanqueZone, g_iQuestGain, g_iLastPlanque[4];
 int g_iPlayerTeam[2049], g_stkTeam[QUEST_TEAMS + 1][MAXPLAYERS + 1], g_stkTeamCount[QUEST_TEAMS + 1], g_iJobs[MAX_JOBS], g_iMaskEntity[MAXPLAYERS + 1];
 
 public void OnPluginStart() {
+	g_iLastPlanque[0] = 71;
+	g_iLastPlanque[1] = 111;
+	g_iLastPlanque[2] = 131;
+	g_iLastPlanque[3] = 221;
+	
 	RegServerCmd("rp_quest_reload", Cmd_PluginReloadSelf);
 	
 	HookEvent("hostage_follows", EV_PickupHostage, EventHookMode_Post);
@@ -164,11 +169,8 @@ public void Q_Abort(int objectiveID, int client) {
 	Q_Clean();
 }
 void Q_Clean() {
-	for (int i = 0; i < g_stkTeamCount[TEAM_BRAQUEUR]; i++) {
-		OnBraqueurKilled(g_stkTeam[TEAM_BRAQUEUR][i]);
-	}
 	for (int i = 0; i < g_stkTeamCount[TEAM_HOSTAGE]; i++) {
-		rp_AcceptEntityInput(g_stkTeam[TEAM_HOSTAGE][i], "Kill");
+		rp_ScheduleEntityInput(g_stkTeam[TEAM_HOSTAGE][i], 0.1, "Kill");
 	}
 	
 	if( g_bHasHelmet ) {
@@ -182,6 +184,18 @@ void Q_Clean() {
 			rp_UnhookEvent(i, RP_OnPlayerZoneChange, fwdZoneChangeTUTO);
 			rp_UnhookEvent(i, RP_PlayerCanKill, fwdCanKill);
 			rp_UnhookEvent(i, RP_OnPlayerHear, fwdHear);
+			
+			
+			if( g_iPlayerTeam[i] == TEAM_BRAQUEUR ) {
+				LogToGame("[BRAQUAGE] [FIN] %L est un braqueur et a été clean.", i);
+				
+				SetEntProp(i, Prop_Send, "m_bHasHelmet", 0);
+				rp_UnhookEvent(i, RP_OnPlayerUse, fwdPressUse);
+				
+				if( g_iMaskEntity[i] > 0 && IsValidEdict(g_iMaskEntity[i]) && IsValidEntity(g_iMaskEntity[i]) )
+					rp_AcceptEntityInput(g_iMaskEntity[i], "Kill");
+				g_iMaskEntity[i] = 0;
+			}
 		}
 	}
 	if( g_bByPassDoor ) {
@@ -207,7 +221,8 @@ void Q_Clean() {
 	
 	g_iLastPlanque[0] = g_iLastPlanque[1];
 	g_iLastPlanque[1] = g_iLastPlanque[2];
-	g_iLastPlanque[2] = g_iPlanque;
+	g_iLastPlanque[2] = g_iLastPlanque[3];
+	g_iLastPlanque[3] = g_iPlanque;
 	g_iPlanque = 0;
 }
 public Action braquageNewAttempt(Handle timer, any attempt) {
@@ -327,7 +342,7 @@ public void Q3_Frame(int objectiveID, int client) {
 		for (int i = 1; i < MAX_JOBS; i+=10) {
 			if( g_iJobs[i] == 0 )
 				continue;
-			if( i == g_iLastPlanque[0] || i == g_iLastPlanque[1] || i == g_iLastPlanque[2] )
+			if( i == g_iLastPlanque[0] || i == g_iLastPlanque[1] || i == g_iLastPlanque[2] || i == g_iLastPlanque[3] )
 				continue;
 			if( i == jobToDeny )
 				continue;
