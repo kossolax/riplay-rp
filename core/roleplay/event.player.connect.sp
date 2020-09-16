@@ -112,7 +112,7 @@ public void OnClientDisconnect(int Client) {
 		if( g_bUserData[Client][b_Assurance] && !g_bUserData[Client][b_FreeAssurance] )
 			g_iClient_OLD[Client] = 0; // hack foireux
 		
-		if( GetTime()-getNextReboot() > 30 ) {
+		if( getNextReboot()-GetTime() > 30 ) {
 			g_bUserData[Client][b_Assurance] = false;
 			g_bUserData[Client][b_FreeAssurance] = false;
 		}
