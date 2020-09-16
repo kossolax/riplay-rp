@@ -51,7 +51,7 @@ char g_szArticles[][][512] = {
 	{"221-1-a-24",	"Meurtre",									"24",	"1250",		"2500",	"Toutes atteintes volontaires à la vie d’un citoyen sont condamnées à une peine maximale de 24h de prison et 1250$ d’amende." },
 	{"221-1-a-48",	"Meurtre avec circonstances aggravantes",					"48",	"2500",		"5000",	"Toutes atteintes volontaires et préméditée à la vie d’un citoyen sont condamnées à une peine maximale de 48h de prison et 2500$ d’amende." },
 
-	{"221-1-b",	"Meurtre d'un policier",							"24",	"5500",		"1500",	"Toutes atteintes volontaires à la vie d’un officier des forces de l’ordre sont condamnées à une peine maximale de 24h de prison et 5 500$ d’amende." },
+	{"221-1-b",	"Meurtre d'un policier",							"12",	"2000",		"1500",	"Toutes atteintes volontaires à la vie d’un officier des forces de l’ordre sont condamnées à une peine maximale de 12h de prison et 2 000$ d’amende." },
 	{"221-1-d",	"Agression physique",								"6",	"250",		"100",	"Les coups et blessures involontaires n’ayant pas provoqué des lésions corporelles sont condamnés à une peine maximale de 6h de prison et 250$ d’amende." },
 
 	{"221-2",	"Vol",										"6",	"450",		"-1",	"Le vol est un acte punis d’une peine maximale de 6h de prison et 450$ d’amende." },
