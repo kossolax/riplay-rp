@@ -22,7 +22,7 @@ stock bool HasDoctor(int client) {
 	g_flLastCheck[client] = GetGameTime() + 5.0;
 	g_bLastData[client] = false;
 	
-	if( !(rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PVP|BITZONE_EVENT) ) {
+	if( !(rp_GetZoneBit( rp_GetPlayerZone(client) ) & (BITZONE_PVP|BITZONE_EVENT)) ) {
 		return g_bLastData[client];
 	}
 	
@@ -36,6 +36,8 @@ stock bool HasDoctor(int client) {
 		if( i == client )
 			continue;
 		if( g_bUserData[i][b_IsAFK] ) 
+			continue;
+		if( rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_EVENT ) 
 			continue;
 		if( IsClientInJail(i) )
 			continue;
