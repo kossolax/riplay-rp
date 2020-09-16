@@ -260,7 +260,7 @@ void START_PERQUIZ(int zone) {
 	
 	PrintToChatPoliceSearch(array[PQ_resp], "{red} =================================={default} ");
 	if( IsValidClient(array[PQ_target]) )
-		PrintToChatPoliceSearch(array[PQ_resp], "{red}[TSX-RP] [POLICE]{default} La perquisition dans %s pour un recherché %N commence.", tmp, array[PQ_resp]);
+		PrintToChatPoliceSearch(array[PQ_resp], "{red}[TSX-RP] [POLICE]{default} La perquisition dans %s pour un recherché %N commence.", tmp, array[PQ_target]);
 	else
 		PrintToChatPoliceSearch(array[PQ_resp], "{red}[TSX-RP] [POLICE]{default} La perquisition dans %s pour du traffic illégal commence, %N est le responsable.", tmp, array[PQ_resp]);
 	PrintToChatPoliceSearch(array[PQ_resp], "{red} =================================={default} ");	
@@ -370,6 +370,8 @@ public Action TIMER_PERQUIZ(Handle timer, any zone) {
 	if( !g_hPerquisition.GetArray(tmp, array, PQ_Max) ) {
 		return Plugin_Stop;
 	}
+	
+	changeZoneState(zone, true);
 	
 	if( array[PQ_target] > 0 ) {
 		if( !IsValidClient(array[PQ_target]) ) {
@@ -669,6 +671,7 @@ bool isZoneInPerquiz(int zone) {
 }
 void changeZoneState(int zone, bool enabled) {
 	int bits;
+	bool changed = false;
 	char tmp[64], tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
@@ -679,15 +682,19 @@ void changeZoneState(int zone, bool enabled) {
 			continue;
 		
 		bits = rp_GetZoneBit(i);
+		changed = false;
 		
 		if( enabled && !(bits & BITZONE_PERQUIZ) ) {
 			bits |= BITZONE_PERQUIZ;
+			changed = true;
 		}
 		else if( !enabled && (bits & BITZONE_PERQUIZ) ) {
 			bits &= ~BITZONE_PERQUIZ;
+			changed = true;
 		}
 		
-		rp_SetZoneBit(i, bits);
+		if( changed )
+			rp_SetZoneBit(i, bits);
 	}
 	
 	float vecOrigin[3];
