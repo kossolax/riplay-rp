@@ -1837,7 +1837,7 @@ public int MenuLoadEvent(Handle menu, MenuAction action, int client, int param2)
 				CPrintToChat(client, "" ...MOD_TAG... " Un event est déjà entrain d'être respawn.");
 				return;
 			}
-			for(int i=0;i<310;i++){
+			for(int i=0;i<MAX_ZONES;i++){
 				if(rp_GetZoneBit(i) & BITZONE_EVENT)
 					ServerCommand("rp_force_clean %d full", i);
 			}
@@ -1935,7 +1935,7 @@ public void SQL_RespawnEvent(Handle owner, Handle row, const char[] error, any c
 		if( countEntity() >= max ) {
 			CPrintToChat(client, "ERREUR !!! Votre event à risquer de faire crash le serveur. Trop de props.");
 			
-			for(int i=0;i<310;i++){
+			for(int i=0;i<MAX_ZONES;i++){
 				if(rp_GetZoneBit(i) & BITZONE_EVENT)
 					ServerCommand("rp_force_clean %d full", i);
 			}
