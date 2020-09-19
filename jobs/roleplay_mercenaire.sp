@@ -1028,7 +1028,7 @@ void changeZoneState(int zone, bool enabled) {
 	char tmp[64], tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
-	for (int i = 0; i < 310; i++) {
+	for (int i = 0; i < MAX_ZONES; i++) {
 		
 		rp_GetZoneData(i, zone_type_type, tmp2, sizeof(tmp2));
 		if( !StrEqual(tmp, tmp2) )
