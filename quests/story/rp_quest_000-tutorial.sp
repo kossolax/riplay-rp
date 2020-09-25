@@ -34,7 +34,7 @@ public Plugin myinfo = {
 int g_iQuest;
 
 char qualif[][] =  	{ "Recommandé", "Amusant", "Difficile", "Métier de vente", "Non recommandé"};
-int g_iJob[] =  			{ 16,25, 35, 46, 56, 65, 76, 87, 96, 116, 135, 176, 216, 226 };
+int g_iJob[] =  			{ 16,25, 36, 46, 56, 65, 76, 87, 96, 116, 135, 176, 216, 226 };
 int g_iRecom[MAX_JOBS];
 int g_iDefaultJob[MAXPLAYERS];
 	
