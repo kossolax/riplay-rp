@@ -216,7 +216,7 @@ public Action CrateThink(Handle timer, any data) {
 					if( StrEqual(tmp, g_szCaseModels[i]) ) {
 						int parent = createCrate(src, 50.0, i, 500);
 						TeleportEntity(parent, src, dst, view_as<float>( { 0.0, 0.0, -200.0 }) );
-						rp_ScheduleEntityInput(parent, 10.0, "Kill");
+						rp_ScheduleEntityInput(parent, 25.0, "Kill");
 					}
 				}
 				return Plugin_Handled;
