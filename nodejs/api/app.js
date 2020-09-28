@@ -56,6 +56,7 @@ server.use(restify.bodyParser());
 server.use(redirect());
 server.use(restify.CORS({origins: ['*'], credentials: true, headers: ['auth']}));
 
+require('./includes/serverws.js')(server);
 require('./includes/user.js')(server);
 require('./includes/report.js')(server);
 require('./includes/items.js')(server);
