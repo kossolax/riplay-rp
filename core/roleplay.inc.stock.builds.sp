@@ -46,15 +46,22 @@ public int Native_rp_WeaponMenu_GetMax(Handle plugin, int numParams) {
 	hBuyMenu.Reset();
 	return hBuyMenu.ReadCell();
 }
+stock bool rp_WeaponMenu_CanBeAdded(int weaponID, int owner=0) {
+	if( rp_GetWeaponStorage(weaponID) == true ){
+		if(owner == 0 || owner > 2000){
+			return false;
+		}
+	}
+	
+	return true;
+}
 public int Native_rp_WeaponMenu_Add(Handle plugin, int numParams) {
 	DataPack hBuyMenu = view_as<DataPack>(GetNativeCell(1));
 	int weaponID = GetNativeCell(2);
 	int owner = GetNativeCell(3);
 	
-	if( rp_GetWeaponStorage(weaponID) == true ){
-		if(owner == 0 || owner > 1000+MAX_PLAYERS){
-			return view_as<bool>(false);
-		}
+	if( !rp_WeaponMenu_CanBeAdded(weaponID, owner) ){
+		return view_as<bool>(false);
 	}
 	
 	char weapon[BM_WeaponNameSize];

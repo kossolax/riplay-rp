@@ -19,7 +19,7 @@ void PrintEnergy(int client, char[] szReturn, int size) {
 	Format(szReturn, size, "");
 	
 	if( g_flUserData[client][fl_Energy] > 0.0 ) {
-		Format(szReturn, size, "\nEnergie: %.2f", g_flUserData[client][fl_Energy]);
+		Format(szReturn, size, "\nEnergie : %.2f", g_flUserData[client][fl_Energy]);
 	}
 }
 
@@ -44,15 +44,15 @@ void PrintHUD(int client, char[] szHUD, int size) {
 		Format(szHUD, size, "%sDette     : %s$\n", szHUD, szDette);
 	}
 	else {
-		Format(szHUD, size, "%sArgent   : %s$\n", szHUD, szMoney);
-		Format(szHUD, size, "%sBanque  : %s$\n", szHUD, szBank);
+		Format(szHUD, size, "%sArgent  : %s$\n", szHUD, szMoney);
+		Format(szHUD, size, "%sBanque : %s$\n", szHUD, szBank);
 	}
 	
 	#if defined EVENT_APRIL
-		Format(szHUD, size, "%sJob        : %s\n", szHUD, g_szJobList[ 0 ][job_type_name]);
+		Format(szHUD, size, "%sJob       : %s\n", szHUD, g_szJobList[ 0 ][job_type_name]);
 	#else
 		int job = g_iUserData[client][i_Job];
-		Format(szHUD, size, "%sJob        : %s\n", szHUD, g_szJobList[ job ][job_type_name]);
+		Format(szHUD, size, "%sJob       : %s\n", szHUD, g_szJobList[ job ][job_type_name]);
 	#endif
 	
 	

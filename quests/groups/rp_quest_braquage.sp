@@ -219,6 +219,8 @@ void Q_Clean() {
 	CreateTimer(60.0 * 60.0, braquageNewAttempt);
 	SetConVarInt(g_hActive, 0);
 	
+	changeZoneState(g_iPlanque, false);
+	
 	g_iLastPlanque[0] = g_iLastPlanque[1];
 	g_iLastPlanque[1] = g_iLastPlanque[2];
 	g_iLastPlanque[2] = g_iLastPlanque[3];
@@ -363,6 +365,7 @@ public void Q4_Start(int objectiveID, int client) {
 		if( IsValidClient(i) )
 			rp_HookEvent(i, RP_OnPlayerCheckKey, fwdGotKey);
 	
+	changeZoneState(g_iPlanque, true);
 	g_bByPassDoor = true;
 }
 public void Q4_Frame(int objectiveID, int client) {
@@ -1177,10 +1180,15 @@ bool findAreaInRoom(int jobID, float pos[3]) {
 	static float zoneMin[MAX_ZONES][3], zoneMax[MAX_ZONES][3];
 	static int iZonesCount[MAX_JOBS];
 	static bool loaded = false;
+	static char tmp[128];
 	
 	if( !loaded ) {
 		for (int i = 1; i < MAX_ZONES; i++) {
 			if (i == 181)
+				continue;
+			
+			rp_GetZoneData(i, zone_type_name, tmp, sizeof(tmp));
+			if( StrContains(tmp, "ascenseur", false) >= 0 )
 				continue;
 			
 			int job = rp_GetZoneInt(i, zone_type_type);
@@ -1376,4 +1384,33 @@ void EmitSoundToAllRangedAny(const char[] sound, float origin[3]) {
 			EmitSoundToAllAny(sound, SOUND_FROM_WORLD, 6, _, _, _, _, _, pos);
 		}
 	}
+}
+void changeZoneState(int zone, bool enabled) {
+	int bits;
+	bool changed = false;
+	char tmp[64], tmp2[64];
+	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	
+	for (int i = 0; i < MAX_ZONES; i++) {
+		
+		rp_GetZoneData(i, zone_type_type, tmp2, sizeof(tmp2));
+		if( !StrEqual(tmp, tmp2) )
+			continue;
+		
+		bits = rp_GetZoneBit(i);
+		changed = false;
+		
+		if( enabled && !(bits & BITZONE_BLOCKOUT) ) {
+			bits |= BITZONE_BLOCKOUT;
+			changed = true;
+		}
+		else if( !enabled && (bits & BITZONE_BLOCKOUT) ) {
+			bits &= ~BITZONE_BLOCKOUT;
+			changed = true;
+		}
+		
+		if( changed )
+			rp_SetZoneBit(i, bits);
+	}
+	
 }

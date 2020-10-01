@@ -15,6 +15,7 @@
 
 #include <sdkhooks>
 #include <cstrike>
+#include <csgo_items>
 
 stock int rp_GetTargetHull(int client, float hit[3], float size=8.0) {
 	float src[3], ang[3], dst[3], min[3], max[3];
@@ -631,6 +632,23 @@ public Action rp_ClientRemoveProp(int client, int target, int item_id) {
 }
 stock int rp_GetWeaponPrice(int weaponID) {
 	char classname[65], tmp[255], tmp2[255];
+	int index = GetEntProp(weaponID, Prop_Send, "m_iItemDefinitionIndex");
+	CSGO_GetItemDefinitionNameByIndex(index, classname, sizeof(classname));
+	
+	for (int i = 1; i < MAX_ITEMS; i++) {
+		rp_GetItemData(i, item_type_extra_cmd, tmp, sizeof(tmp));
+		Format(tmp2, sizeof(tmp2), "rp_giveitem %s", classname);
+		if (StrEqual(tmp, tmp2)) {
+			return rp_GetItemInt(i, item_type_prix) + rp_GetWeaponPriceCartouche(weaponID);
+		}
+	}
+	
+	
+	int owner = GetEntPropEnt(weaponID, Prop_Send, "m_hPrevOwner");
+	ReplaceString(classname, sizeof(classname), "weapon_", "");
+	if (owner > 0 && view_as<int>(CS_AliasToWeaponID(classname)) > 0)
+		return CS_GetWeaponPrice(owner, CS_AliasToWeaponID(classname)) + rp_GetWeaponPriceCartouche(weaponID);
+
 	GetEdictClassname(weaponID, classname, sizeof(classname));
 	
 	for (int i = 1; i < MAX_ITEMS; i++) {
@@ -642,7 +660,6 @@ stock int rp_GetWeaponPrice(int weaponID) {
 	}
 	
 	ReplaceString(classname, sizeof(classname), "weapon_", "");
-	int owner = GetEntPropEnt(weaponID, Prop_Send, "m_hPrevOwner");
 	
 	if (owner > 0 && view_as<int>(CS_AliasToWeaponID(classname)) > 0)
 		return CS_GetWeaponPrice(owner, CS_AliasToWeaponID(classname)) + rp_GetWeaponPriceCartouche(weaponID);

@@ -291,7 +291,7 @@ public Action CmdGps2(int client) {
 	menu.AddItem("226", "La planque des mercenaires");
 	menu.AddItem("95", "La planque des dealers");
 	menu.AddItem("222", "La planque des artificiers");
-	//menu.AddItem("236", "Le sexshop");
+	menu.AddItem("236", "Le sexshop");
 	
 	menu.AddItem("69", "Le mcdonald");
 	menu.AddItem("299", "Le casino");
@@ -347,6 +347,7 @@ public Action BASH_GPS(Handle timer, any client) {
 	Format(tmp, sizeof(tmp), "%d;%d,%d,%d;%d,%d,%d\n", client,
 		RoundFloat(src[0]), RoundFloat(src[1]), RoundFloat(src[2]),
 		RoundFloat(dst[0]), RoundFloat(dst[1]), RoundFloat(dst[2]));
+	
 	SocketSend(g_Socket, tmp);
 	return Plugin_Continue;
 }
