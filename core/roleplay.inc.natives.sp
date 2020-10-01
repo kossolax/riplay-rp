@@ -1252,9 +1252,15 @@ public int Native_rp_ClientDamage(Handle plugin, int numParams) {
 	int client = GetNativeCell(1);
 	int damage = GetNativeCell(2);
 	int target = GetNativeCell(3);
+	bool legit = view_as<bool>(GetNativeCell(6));
 	
-	DealDamage(client, damage, target, GetNativeCell(5), str);
-	rp_ClientAggroIncrement(target, client, damage);
+	if( legit )
+		rp_ClientAggroIncrement(client, target, damage*5);
+	
+	DealDamage(client, damage, target, GetNativeCell(5), str, legit);
+	
+	if( !legit )
+		rp_ClientAggroIncrement(target, client, damage);
 	
 	return 1;
 }
