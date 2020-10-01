@@ -348,6 +348,19 @@ public Action Cmd_ItemGiveBonus(int args) {
 		mnt = 150;
 	}
 	else if( StrEqual(arg1, "all") ) {
+		bool hasAll = true;
+		
+		for(int i=0; i<view_as<int>(appart_bonus_paye); i++) {
+			if( rp_GetAppartementInt(appartID, view_as<type_appart_bonus>(bonus)) == 0 ) {
+				hasAll = false;
+			}
+		}
+		
+		if( hasAll ) {
+			ITEM_CANCEL(client, itemID);
+			return Plugin_Handled;
+		}
+		
 		for(int i=0; i<view_as<int>(appart_bonus_paye); i++) {
 			rp_SetAppartementInt(appartID, view_as<type_appart_bonus>(i), 1);
 		}
@@ -358,7 +371,7 @@ public Action Cmd_ItemGiveBonus(int args) {
 		ITEM_CANCEL(client, itemID);
 		return Plugin_Handled;	
 	}
-	
+		
 	if( rp_GetAppartementInt(appartID, view_as<type_appart_bonus>(bonus)) >= mnt ) {
 		ITEM_CANCEL(client, itemID);
 		return Plugin_Handled;
