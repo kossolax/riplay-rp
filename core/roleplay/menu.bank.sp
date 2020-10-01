@@ -350,13 +350,15 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 				AddMenuItem(menu2, "weaponAddMe", "Pour moi");
 				if( rp_GetClientJobID(client) != 0 )
 					AddMenuItem(menu2, "weaponAddJob", "Pour mon job");
-				if( rp_GetClientGroupID(client) != 0 )
+				if (rp_GetClientGroupID(client) != 0 && rp_WeaponMenu_CanBeAdded(client) )
 					AddMenuItem(menu2, "weaponAddGang", "Pour mon gang");
 				
-				if( appartID > 0 && rp_GetPlayerZone(client) == rp_GetPlayerZone(target) && rp_GetClientKeyAppartement(client, appartID) )
+				if( appartID > 0 && rp_GetPlayerZone(client) == rp_GetPlayerZone(target) && rp_GetClientKeyAppartement(client, appartID) && rp_WeaponMenu_CanBeAdded(client) )
 					AddMenuItem(menu2, "weaponAddAppart", "Pour mes collocs");			
 				
-				AddMenuItem(menu2, "weaponAddAll", "Pour tous le monde");
+				if( rp_WeaponMenu_CanBeAdded(client) )
+					AddMenuItem(menu2, "weaponAddAll", "Pour tous le monde");
+				
 				SetMenuExitButton(menu2, true);
 				DisplayMenu(menu2, client, MENU_TIME_DURATION);
 			}
