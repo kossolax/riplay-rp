@@ -15,6 +15,7 @@
 
 #include <sdkhooks>
 #include <cstrike>
+#include <csgo_items>
 
 stock int rp_GetTargetHull(int client, float hit[3], float size=8.0) {
 	float src[3], ang[3], dst[3], min[3], max[3];
@@ -642,6 +643,9 @@ stock int rp_GetWeaponPrice(int weaponID) {
 		}
 	}
 	
+	
+	int owner = GetEntPropEnt(weaponID, Prop_Send, "m_hPrevOwner");
+	ReplaceString(classname, sizeof(classname), "weapon_", "");
 	if (owner > 0 && view_as<int>(CS_AliasToWeaponID(classname)) > 0)
 		return CS_GetWeaponPrice(owner, CS_AliasToWeaponID(classname)) + rp_GetWeaponPriceCartouche(weaponID);
 
@@ -656,7 +660,6 @@ stock int rp_GetWeaponPrice(int weaponID) {
 	}
 	
 	ReplaceString(classname, sizeof(classname), "weapon_", "");
-	int owner = GetEntPropEnt(weaponID, Prop_Send, "m_hPrevOwner");
 	
 	if (owner > 0 && view_as<int>(CS_AliasToWeaponID(classname)) > 0)
 		return CS_GetWeaponPrice(owner, CS_AliasToWeaponID(classname)) + rp_GetWeaponPriceCartouche(weaponID);

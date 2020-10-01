@@ -14,7 +14,7 @@
  *
  * @noreturn
  */
-native CSGO_GetItemDefinitionNameByIndex(ItemIndex, String:ItemName[], ItemName_Size);
+native void CSGO_GetItemDefinitionNameByIndex(int ItemIndex, char[] ItemName, int ItemName_Size);
 
 /**
  * Get CSGO weapon item index by weapon item name.
@@ -24,5 +24,5 @@ native CSGO_GetItemDefinitionNameByIndex(ItemIndex, String:ItemName[], ItemName_
  *
  * @return			Item index (from main plugin Kv).
  */
-native CSGO_GetItemDefinitionIndexByName(const String:ItemName[]);
+native int CSGO_GetItemDefinitionIndexByName(const char[] ItemName);
 
