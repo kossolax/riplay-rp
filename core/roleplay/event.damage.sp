@@ -368,10 +368,10 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 			if( g_flUserData[victim][fl_Reflect] >= GetGameTime() && !(g_flUserData[attacker][fl_Reflect] >= GetGameTime() ) ) {
 				if( IsInPVP(attacker) || IsInPVP(victim) ) {
 					damage *= 0.5;
-					rp_ClientDamage(attacker, RoundFloat(damage*0.5), victim, "bigmac");
+					rp_ClientDamage(attacker, RoundFloat(damage*0.5), victim, "bigmac", DMG_GENERIC, true);
 				}
 				else {
-					rp_ClientDamage(attacker, RoundFloat(damage * 0.9), victim, "bigmac");
+					rp_ClientDamage(attacker, RoundFloat(damage * 0.9), victim, "bigmac", DMG_GENERIC, true);
 					damage *= 0.1;
 				}
 				
