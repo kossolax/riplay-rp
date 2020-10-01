@@ -475,7 +475,7 @@ native void rp_ClientRespawn(int client, float time=0.1);							/* Respawn un jo
 native void rp_ClientSave(int client);										/* Sauvegarde les données d'un joueur */
 native void rp_ClientIgnite(int client, float time=10.0, int attacker=0);				/* Brule un joueur pour une certaine durée. */
 native void rp_ClientPoison(int client, float time=10.0, int attacker=0);				/* Empoisone un joueur pour une certaine durée. */
-native void rp_ClientDamage(int client, int damage, int attacker, char[] weapon = "point_hurt", int damageType = DMG_GENERIC);	/* Inflige des dégats à un autre joueur */
+native void rp_ClientDamage(int client, int damage, int attacker, char[] weapon = "point_hurt", int damageType = DMG_GENERIC, bool legit=false);	/* Inflige des dégats à un autre joueur */
 native void rp_ClientColorize(int client, int color[4]={-1,-1,-1,-1});					/* Colorie un joueur. Si 2ème param pas défini la couleur sera soit normal, soit couleur de PvP */
 native void rp_ClientSendToSpawn(int client, bool nearest = false);					/* Téléporte un joueur à un spawn aléatoire. Si "nearest" est vrai. Il s'agit du spawn le plus prêt d'ou le joueur se trouve */
 native void rp_ClientResetSkin(int client);									/* Remet le skin classique d'un joueur */
