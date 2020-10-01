@@ -3,14 +3,12 @@ exports = module.exports = function(server) {
 
 var Rcon = require('rcon');
 var proxy = require('dgram').createSocket('udp4');
-var fs = require('fs');
 var socket = require("socket.io");
-var https = require('https');
+var http = require('http');
 
 var io = socket.listen( http.createServer().listen("127.0.0.1:4080") ); // Reverse proxy par nginx
 
 io.sockets.on('connection', function (socket, msg) {
-	var ip = socket.handshake.address;
 
     socket.on('auth', function (data) {
 
