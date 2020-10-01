@@ -124,9 +124,12 @@ public void Q2_Frame(int objectiveID, int client) {
 	else if (g_iDuration[client] <= 0) {
 		rp_QuestStepFail(client, objectiveID);
 	}
-	else {
+	else if (wep > 0 && rp_GetWeaponStorage(wep) == true ) {
 		PrintHintText(client, "Quête: %s\nTemps restant: %dsec\nObjectif: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME2);
 		rp_Effect_BeamBox(client, -1, dst, 255, 255, 255);
+	}
+	else {
+		PrintHintText(client, "Quête: %s\nTemps restant: %dsec\nObjectif: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME1);	
 	}
 }
 
