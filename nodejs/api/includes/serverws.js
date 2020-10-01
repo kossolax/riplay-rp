@@ -48,7 +48,6 @@ exports = module.exports = function(server) {
       serverWs.send(path);
     }catch(e){
       console.error("Error websocket: ", e);
-      reconnect();
     }
   }
 
@@ -64,8 +63,8 @@ exports = module.exports = function(server) {
   }
 
 
-  (function reconnect() {
-    if((new Date() - lastReconnect)/1000 > 4){
+  function reconnect() {
+    if(lastReconnect && (new Date() - lastReconnect)/1000 > 4){
       return;
     }
     if (serverWs) {
@@ -75,13 +74,12 @@ exports = module.exports = function(server) {
     }
     lastReconnect = new Date();
     console.log("Connecting to server websocket");
-    let tmpWs = new WebSocket("ws://5.196.39.50:27020");
-    serverWs.onopen = ()=>{
-      serverWs = tmpWs;
-    };
-    tmpWs.onerror = () => { setTimeout(reconnect, 4000) };
-    tmpWs.onmessage = wsMessage;
-  })();
+    serverWs = new WebSocket("ws://5.196.39.50:27020");
+    serverWs.onerror = () => { setTimeout(reconnect, 4000) };
+    serverWs.onmessage = wsMessage;
+  };
+
+  reconnect();
 
   server.wsRequest = wsRequest;
 }
