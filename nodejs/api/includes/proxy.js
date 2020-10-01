@@ -29,7 +29,7 @@ proxy.on('message', function (message, from) {
     var chan = from.address+":"+from.port;
 
 	var msg = message.toString('utf-8').slice(5,-1);
-	if( msg.indexOf("[RIPLAY-RP] Loading userdata") == -1 ) {
+	if( msg.indexOf("[TSX-RP] Loading userdata") == -1 ) {
 		io.sockets.to("private_"+chan).emit("data", msg);
 	}
 });
