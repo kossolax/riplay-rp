@@ -623,7 +623,7 @@ public Action Delay_MenuVital(Handle timer, Handle dp) {
 	menu.AddItem(tmp, tmp2, cpt <= count ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
 	
 	Format(tmp, sizeof(tmp), "%d %d", itemID, count);
-	Format(tmp2, sizeof(tmp2), "Manger tout mes %d burgers", count);
+	Format(tmp2, sizeof(tmp2), "Manger mes %d burgers", count);
 	menu.AddItem(tmp, tmp2);
 	
 		
