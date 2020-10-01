@@ -34,7 +34,7 @@ public Plugin myinfo = {
 int g_iQuest;
 
 char qualif[][] =  	{ "Recommandé", "Amusant", "Difficile", "Métier de vente", "Non recommandé"};
-int g_iJob[] =  			{ 16,25, 36, 46, 56, 65, 76, 87, 96, 116, 135, 176, 216, 226 };
+int g_iJob[] =  			{ 16, 26, 36, 46, 56, 65, 76, 87, 96, 116, 135, 176, 216, 226};
 int g_iRecom[MAX_JOBS];
 int g_iDefaultJob[MAXPLAYERS];
 	
@@ -45,8 +45,8 @@ int g_iQ9, g_iQ12, g_iQ14;
 public void OnPluginStart() {
 	g_iRecom[116] = 0;
 	g_iRecom[87] = g_iRecom[96] = g_iRecom[226] = 1;
-	g_iRecom[46] = g_iRecom[35] = 2;
-	g_iRecom[16] = g_iRecom[25] = g_iRecom[56] = g_iRecom[65] = g_iRecom[76] = g_iRecom[135] = g_iRecom[176] = g_iRecom[216] = 3;
+	g_iRecom[46] = g_iRecom[36] = 2;
+	g_iRecom[16] = g_iRecom[26] = g_iRecom[56] = g_iRecom[65] = g_iRecom[76] = g_iRecom[135] = g_iRecom[176] = g_iRecom[216] = 3;
 	g_iRecom[195] = 4;
 	
 	RegServerCmd("rp_quest_reload", Cmd_PluginReloadSelf);
