@@ -1,0 +1,1 @@
+<li>{content}<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="index.php?page=news&amp;id={id}" class="ThemeColor">{titre}</a><br /></li>
