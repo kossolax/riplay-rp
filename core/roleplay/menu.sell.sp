@@ -419,6 +419,10 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 				type = 1003;
 			}
 			else if( StrContains(buffer, "justice") == 0 ) {
+				if( !(rp_GetClientJobID(target) == 101 && GetClientTeam(target) == CS_TEAM_CT) ) {
+					CPrintToChat(client, "" ...MOD_TAG... " %N{default} doit être un membre de la justice pour utiliser ce type de contrat.");
+					return;
+				}
 				type = 1004;
 			}
 			else if( StrContains(buffer, "kidnapping") == 0 ) {
