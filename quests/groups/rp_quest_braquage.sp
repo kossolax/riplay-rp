@@ -1180,10 +1180,15 @@ bool findAreaInRoom(int jobID, float pos[3]) {
 	static float zoneMin[MAX_ZONES][3], zoneMax[MAX_ZONES][3];
 	static int iZonesCount[MAX_JOBS];
 	static bool loaded = false;
+	static char tmp[128];
 	
 	if( !loaded ) {
 		for (int i = 1; i < MAX_ZONES; i++) {
 			if (i == 181)
+				continue;
+			
+			rp_GetZoneData(i, zone_type_name, tmp, sizeof(tmp));
+			if( StrContains(tmp, "ascenseur", false) >= 0 )
 				continue;
 			
 			int job = rp_GetZoneInt(i, zone_type_type);
