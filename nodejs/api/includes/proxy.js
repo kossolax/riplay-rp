@@ -7,7 +7,7 @@ var fs = require('fs');
 var socket = require("socket.io");
 var https = require('https');
 
-var io = socket.listen( https.createServer({  key: fs.readFileSync('/etc/letsencrypt/live/ts-x.eu/privkey.pem'), cert: fs.readFileSync('/etc/letsencrypt/live/ts-x.eu/fullchain.pem')}).listen(4433) );
+var io = socket.listen( http.createServer().listen("127.0.0.1:4080") ); // Reverse proxy par nginx
 
 io.sockets.on('connection', function (socket, msg) {
 	var ip = socket.handshake.address;
@@ -31,23 +31,19 @@ proxy.on('message', function (message, from) {
     var chan = from.address+":"+from.port;
 
 	var msg = message.toString('utf-8').slice(5,-1);
-	if( msg.indexOf("[TSX-RP] Loading userdata") == -1 ) {
+	if( msg.indexOf("[RIPLAY-RP] Loading userdata") == -1 ) {
 		io.sockets.to("private_"+chan).emit("data", msg);
 	}
 });
 proxy.bind(65000);
 
+gameServer("5.196.39.50", 27015, "s7t5dooz");
+gameServer("5.196.39.51", 27025, "8c8vli37");
 
-server.conn.query("SELECT `ip`, `port` FROM `ts-x`.`adm_serv`;", function(err, rows) {
-    for(var i=0; i<rows.length; i++) {
-        gameServer(rows[i].ip, rows[i].port);
-    }
-});
-
-function gameServer(ip, port) {
-    var myIP = '178.32.42.113';
+function gameServer(ip, port, pw) {
+    var myIP = '5.196.39.48';
     try {
-        var game = new Rcon(ip, port, '6Chx37T');
+        var game = new Rcon(ip, port, pw);
 
         game.on('auth', function() {
             game.send('logaddress_del "'+myIP+':65000"');

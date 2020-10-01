@@ -61,7 +61,7 @@ require('./includes/user.js')(server);
 require('./includes/report.js')(server);
 require('./includes/items.js')(server);
 require('./includes/zones.js')(server);
-//require('./includes/proxy.js')(server);
+require('./includes/proxy.js')(server);
 //require('./includes/panel.js')(server);
 require('./includes/job.js')(server);
 require('./includes/group.js')(server);
