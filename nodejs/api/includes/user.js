@@ -1142,7 +1142,7 @@ server.get('/user/:id/incomes/:scale', function (req, res, next) {
 
   var sqlTimeColumn = "(FLOOR(`timestamp`/("+scale+"*60*60))*"+scale+"*60*60) as `date` ";
   var sql = "";
-  sql += "SELECT SUM(I.`prix`*S.`amount`) AS `total`, " + sqlTimeColumn;
+  sql += "SELECT SUM(I.`prix`*S.`amount` - ROUND(I.`prix`*S.`amount`*S.`reduction`/100)) as total, " + sqlTimeColumn;
   sql += "	FROM `rp_csgo`.`rp_sell` S INNER JOIN `rp_csgo`.`rp_items` I ON S.`item_id`=I.`id` WHERE `steamid`=? AND `item_type`='0' GROUP BY `date` ORDER BY `date` ASC;"
 
   server.conn.query(sql, [req.params['id']], function(err, rows) {

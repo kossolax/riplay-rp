@@ -82,7 +82,7 @@ exports = module.exports = function(server){
           });
         }
         else {
-          var dStart = moment().subtract(7, 'days').toDate();
+          var dStart = moment().subtract(31, 'days').toDate();
           var dEnd = moment().add(1, 'hour').toDate();
 
           callback(null, tokken.replace("STEAM_0", "STEAM_1").trim(), dStart, dEnd);

@@ -1,7 +1,8 @@
 +"use strict";
 exports = module.exports = function(server) {
-  var lastReconnect = 0;
+  var WebSocket = require('websocket').w3cwebsocket;
 
+  var lastReconnect = 0;
   var serverWs;
 
   var wsMessage = (evt) => {
