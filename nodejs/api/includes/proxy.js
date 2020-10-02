@@ -3,14 +3,12 @@ exports = module.exports = function(server) {
 
 var Rcon = require('rcon');
 var proxy = require('dgram').createSocket('udp4');
-var fs = require('fs');
 var socket = require("socket.io");
-var https = require('https');
+var http = require('http');
 
-var io = socket.listen( https.createServer({  key: fs.readFileSync('/etc/letsencrypt/live/ts-x.eu/privkey.pem'), cert: fs.readFileSync('/etc/letsencrypt/live/ts-x.eu/fullchain.pem')}).listen(4433) );
+var io = socket.listen( http.createServer().listen("127.0.0.1:4080") ); // Reverse proxy par nginx
 
 io.sockets.on('connection', function (socket, msg) {
-	var ip = socket.handshake.address;
 
     socket.on('auth', function (data) {
 
@@ -37,17 +35,13 @@ proxy.on('message', function (message, from) {
 });
 proxy.bind(65000);
 
+gameServer("5.196.39.50", 27015, "s7t5dooz");
+gameServer("5.196.39.51", 27025, "8c8vli37");
 
-server.conn.query("SELECT `ip`, `port` FROM `ts-x`.`adm_serv`;", function(err, rows) {
-    for(var i=0; i<rows.length; i++) {
-        gameServer(rows[i].ip, rows[i].port);
-    }
-});
-
-function gameServer(ip, port) {
-    var myIP = '178.32.42.113';
+function gameServer(ip, port, pw) {
+    var myIP = '5.196.39.48';
     try {
-        var game = new Rcon(ip, port, '6Chx37T');
+        var game = new Rcon(ip, port, pw);
 
         game.on('auth', function() {
             game.send('logaddress_del "'+myIP+':65000"');
