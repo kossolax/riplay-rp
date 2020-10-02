@@ -2,7 +2,7 @@
 exports = module.exports = function(server) {
   var WebSocket = require('websocket').w3cwebsocket;
 
-  var lastReconnect = 0;
+  var lastReconnect = null;
   var serverWs;
 
   var wsMessage = (evt) => {

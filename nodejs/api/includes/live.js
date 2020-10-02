@@ -131,6 +131,9 @@ exports = module.exports = function (server) {
 
     var obj = new Object();
     wsRequest("/time", function (error, response, body) {
+        if (error){
+          console.error()
+        }
         obj.time = body;
         cb(obj);
     });
