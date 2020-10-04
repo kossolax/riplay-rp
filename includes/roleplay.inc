@@ -812,6 +812,7 @@ enum int_user_data {
 	i_AmendeLiscence2,
 	
 	i_SkinDonateur,
+	i_ELO,
 	
 	i_udata_max
 };

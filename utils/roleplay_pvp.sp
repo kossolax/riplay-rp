@@ -23,8 +23,8 @@
 
 #define		QUEST_TEAMS			2
 #define		TEAM_NONE			0
-#define		TEAM_DEF			1
-#define		TEAM_ATT			2
+#define		TEAM_RED			1
+#define		TEAM_BLUE			2
 
 // -----------------------------------------------------------------------------------------------------------------
 enum flag_data { data_group, data_skin, data_red, data_green, data_blue, data_time, data_owner, data_lastOwner, flag_data_max };
@@ -111,11 +111,14 @@ public void OnPluginStart() {
 		if( IsValidClient(i) )
 			OnClientPostAdminCheck(i);
 	
-	char szDayOfWeek[12];
-	FormatTime(szDayOfWeek, 11, "%w");
-	if( StringToInt(szDayOfWeek) == 3 || StringToInt(szDayOfWeek) == 5 ) { // Mercredi & Vendredi
-		ServerCommand("tv_enable 1");
-	}
+	//char szDayOfWeek[12];
+	//FormatTime(szDayOfWeek, 11, "%w");
+	//if( StringToInt(szDayOfWeek) == 3 || StringToInt(szDayOfWeek) == 5 ) { // Mercredi & Vendredi
+	//	ServerCommand("tv_enable 1");
+	//}
+	
+	shuffleTeams();
+	getWorstTeam();
 }
 public void OnConfigsExecuted() {
 	if( g_hCapturable == INVALID_HANDLE ) {
@@ -125,10 +128,10 @@ public void OnConfigsExecuted() {
 	char szDayOfWeek[12];
 	FormatTime(szDayOfWeek, 11, "%w");
 	if( StringToInt(szDayOfWeek) == 3 || StringToInt(szDayOfWeek) == 5 ) { // Mercredi & Vendredi
-		ServerCommand("tv_enable 1");
-		ServerCommand("mp_restartgame 1");
-		ServerCommand("spec_replay_enable 1");
-		ServerCommand("tv_snapshotrate 64");
+		//ServerCommand("tv_enable 1");
+		//ServerCommand("mp_restartgame 1");
+		//ServerCommand("spec_replay_enable 1");
+		//ServerCommand("tv_snapshotrate 64");
 		//ServerCommand("rp_wallhack 0");
 	}
 }
@@ -227,7 +230,7 @@ public Action Cmd_ItemFlag(int args) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas de groupe.");
 		return;
 	}
-	if( gID == TEAM_DEF ) {
+	if( gID == TEAM_RED ) {
 		ITEM_CANCEL(client, item_id);
 		CPrintToChat(client, "" ...MOD_TAG... " Le gang défenseur ne peut pas utiliser de drapeau.");
 		return;
@@ -320,10 +323,10 @@ public Action FlagThink(Handle timer, any data) {
 	if( g_bIsInCaptureMode ) {
 		if( rp_GetPlayerZone(entity) == ZONE_BUNKER ) {
 			
-			if( g_iPlayerTeam[ entity ] == TEAM_ATT ) {
+			if( g_iPlayerTeam[ entity ] == TEAM_BLUE ) {
 				int point = RoundFloat(FLAG_POINT_MAX - ((FLAG_POINT_MAX - FLAG_POINT_MIN) * float(GetTime() - g_iCaptureStart) / (30.0 * 60.0)));
 				
-				g_iTeamScore[TEAM_ATT] += point;
+				g_iTeamScore[TEAM_BLUE] += point;
 				// g_iCapture_POINT[rp_GetCaptureInt(cap_bunker)] -= point;
 				
 				GDM_RegisterFlag(g_iFlagData[entity][data_lastOwner]);
@@ -382,7 +385,7 @@ void CAPTURE_Start() {
 	bool botFound = false;
 	
 	
-	g_iTeamScore[TEAM_DEF] = g_iTeamScore[TEAM_ATT] = 0;
+	g_iTeamScore[TEAM_RED] = g_iTeamScore[TEAM_BLUE] = 0;
 	
 	int rowPoint = 100 - ((rp_GetCaptureInt(cap_pvpRow) - 1) * 10);
 	if( rowPoint < 0 )
@@ -408,17 +411,17 @@ void CAPTURE_Start() {
 		rp_HookEvent(i, RP_OnPlayerZoneChange, fwdZoneChange);
 		rp_HookEvent(i, RP_PreClientStealItem, fwdStealItem);
 		
-		if( g_iPlayerTeam[i] == TEAM_ATT ) {
+		if( g_iPlayerTeam[i] == TEAM_BLUE ) {
 			EmitSoundToClientAny(i, g_szSoundList[snd_YouAreOnBlue], _, 6, _, _, 1.0);
 		}
-		else if( g_iPlayerTeam[i] == TEAM_DEF ) {
+		else if( g_iPlayerTeam[i] == TEAM_RED ) {
 			EmitSoundToClientAny(i, g_szSoundList[snd_YouAreOnRed], _, 6, _, _, 1.0);
 		}
 		
 		if( !(rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_PVP) )
 			continue;
 		
-		if( g_iPlayerTeam[i] == TEAM_ATT ) {
+		if( g_iPlayerTeam[i] == TEAM_BLUE ) {
 			int v = Client_GetVehicle(i);
 			if( v > 0 )
 				rp_ClientVehicleExit(i, v, true);
@@ -624,7 +627,7 @@ public Action CAPTURE_Tick(Handle timer, any none) {
 	if( !g_bIsInCaptureMode )
 		return Plugin_Handled;
 	
-	g_iTeamScore[TEAM_DEF]++;
+	g_iTeamScore[TEAM_RED]++;
 	
 	if( GetTime() % 3 == 0 ) {
 		bool found = CyclAnnouncer_Empty();
@@ -667,13 +670,13 @@ public Action fwdSpawn(int client) {
 	rp_SetClientInt(client, i_Kevlar, 250);
 	rp_SetClientFloat(client, fl_CoolDown, 0.0);
 	
-	if( g_iPlayerTeam[client] == TEAM_DEF )
+	if( g_iPlayerTeam[client] == TEAM_RED )
 		CreateTimer(0.01, fwdSpawn_ToRespawn, client);
 	
 	return Plugin_Continue;
 }
 public Action fwdSpawn_ToRespawn(Handle timer, any client) {
-	if( g_iPlayerTeam[client] == TEAM_DEF && IsValidClient(client) ) {
+	if( g_iPlayerTeam[client] == TEAM_RED && IsValidClient(client) ) {
 		float mins[3], maxs[3], rand[3];
 		bool found = false;
 		mins[0] = rp_GetZoneFloat(ZONE_RESPAWN, zone_type_min_x);
@@ -788,8 +791,8 @@ public Action fwdHUD(int client, char[] szHUD, const int size) {
 			
 			Format(szHUD, size, "PvP: Capture du Bunker\n%s\n", loading);
 				
-			Format(szHUD, size, "%s Attaque: %d\n", szHUD, g_iTeamScore[TEAM_ATT]);
-			Format(szHUD, size, "%s Défense: %d\n", szHUD, g_iTeamScore[TEAM_DEF]);
+			Format(szHUD, size, "%s Attaque: %d\n", szHUD, g_iTeamScore[TEAM_BLUE]);
+			Format(szHUD, size, "%s Défense: %d\n", szHUD, g_iTeamScore[TEAM_RED]);
 			
 			lastGen = GetGameTime() + 0.66;
 			strcopy(cache, sizeof(cache), szHUD);
@@ -818,7 +821,7 @@ public Action fwdFrame(int client) {
 		else if( g_hGodTimer[client] != INVALID_HANDLE ) {
 			PrintHintText(client, "Vous êtes en spawn-protection");
 		}
-		else if( g_iPlayerTeam[client] == TEAM_DEF ) {
+		else if( g_iPlayerTeam[client] == TEAM_RED ) {
 			rp_ClientColorize(client, { 255, 64, 64, 255 } );
 			PrintHintText(client, "Vous êtes en défense.\n     <font color='#ff3333'>Tuez les BLEUS</font>");
 		}
@@ -919,10 +922,10 @@ public Action fwdTakeDamage(int victim, int attacker, float& damage, int damaget
 	
 	if( g_iPlayerTeam[attacker] > 0 && g_iPlayerTeam[victim] > 0 ) {
 		
-		if( g_iPlayerTeam[attacker] == TEAM_ATT && g_iPlayerTeam[victim] == TEAM_ATT ) {
+		if( g_iPlayerTeam[attacker] == TEAM_BLUE && g_iPlayerTeam[victim] == TEAM_BLUE ) {
 			return Plugin_Handled;
 		}
-		if( g_iPlayerTeam[attacker] == TEAM_DEF && g_iPlayerTeam[victim] == TEAM_DEF ) {
+		if( g_iPlayerTeam[attacker] == TEAM_RED && g_iPlayerTeam[victim] == TEAM_RED ) {
 			return Plugin_Handled;
 		}
 		if( !(rp_GetZoneBit(rp_GetPlayerZone(victim)) & BITZONE_PVP || rp_GetZoneBit(rp_GetPlayerZone(attacker)) & BITZONE_PVP) ) {
@@ -933,7 +936,7 @@ public Action fwdTakeDamage(int victim, int attacker, float& damage, int damaget
 	return Plugin_Continue;
 }
 public Action fwdZoneChange(int client, int newZone, int oldZone) {
-	if( newZone == ZONE_RESPAWN &&  g_iPlayerTeam[client] == TEAM_ATT ) {
+	if( newZone == ZONE_RESPAWN &&  g_iPlayerTeam[client] == TEAM_BLUE ) {
 		rp_ClientDamage(client, 10000, client);
 		ForcePlayerSuicide(client);
 	}
@@ -1031,7 +1034,7 @@ public Action SDKTouch(int entity, int client) {
 		return Plugin_Continue;
 	if( g_iClientFlag[client] > 0 )
 		return Plugin_Continue;
-	if( g_iCaptureStart > 0 && g_iPlayerTeam[client] != TEAM_ATT )
+	if( g_iCaptureStart > 0 && g_iPlayerTeam[client] != TEAM_BLUE )
 		return Plugin_Continue;
 	if( g_iCaptureStart == 0 && g_iFlagData[entity][data_group] != rp_GetClientGroupID(client) )
 		return Plugin_Continue;
@@ -1062,7 +1065,7 @@ void CTF_DropFlag(int client, int thrown) {
 	flag = CTF_SpawnFlag(vecOrigin, skin, color);
 	g_iFlagData[flag][data_group] = gID;
 	g_iFlagData[flag][data_lastOwner] = client;
-	g_iPlayerTeam[flag] = TEAM_ATT;
+	g_iPlayerTeam[flag] = TEAM_BLUE;
 	
 	if( thrown ) {		
 		Entity_GetAbsVelocity(client, vecPush);
@@ -1137,7 +1140,7 @@ void GDM_Init(int client) {
 	int[] array = new int[gdm_max];
 	
 	if( !g_hGlobalDamage.GetArray(szSteamID, array, gdm_max) ) {
-		array[gdm_elo] = 1500;
+		array[gdm_elo] = rp_GetClientInt(client, i_ELO);
 		g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
 	}
 	
@@ -1225,9 +1228,11 @@ stock int GDM_ELOKill(int client, int target, bool flag = false) {
 	attacker[gdm_elo] = cElo;
 	victim[gdm_elo] = tElo;
 	
+	rp_SetClientInt(client, i_ELO, cElo);
+	rp_SetClientInt(target, i_ELO, tElo);
+	
 	g_hGlobalDamage.SetArray(szSteamID, attacker, gdm_max);
 	g_hGlobalDamage.SetArray(szSteamID2, victim, gdm_max);
-	
 	
 	rp_ClientXPIncrement(client, tmp);
 	
@@ -1254,6 +1259,7 @@ int GDM_ELOSuicide(int client) {
 	}
 	
 	attacker[gdm_elo] = cElo;
+	rp_SetClientInt(client, i_ELO, cElo);
 	g_hGlobalDamage.SetArray(szSteamID, attacker, gdm_max);
 	
 	return tmp;
@@ -1332,7 +1338,7 @@ void Client_SetSpawnProtect(int client, bool status) {
 		SDKHook(client, SDKHook_SetTransmit, fwdGodHideMe);
 		SDKHook(client, SDKHook_PreThink, fwdGodThink);
 		float duration = 10.0;
-		if( g_iPlayerTeam[client] == TEAM_DEF )
+		if( g_iPlayerTeam[client] == TEAM_RED )
 			duration = 15.0;
 		if( g_hGodTimer[client] != INVALID_HANDLE )
 			delete g_hGodTimer[client];
@@ -1350,9 +1356,9 @@ void Client_SetSpawnProtect(int client, bool status) {
 		SetEntProp(client, Prop_Data, "m_takedamage", 2);
 		CPrintToChat(client, "" ...MOD_TAG... " Votre spawn-protection a expirée.");
 		
-		if( g_iPlayerTeam[client] == TEAM_DEF )
+		if( g_iPlayerTeam[client] == TEAM_RED )
 			rp_ClientColorize(client, { 255, 64, 64, 255 } );
-		else if( g_iPlayerTeam[client] == TEAM_ATT )
+		else if( g_iPlayerTeam[client] == TEAM_BLUE )
 			rp_ClientColorize(client, { 64, 64, 255, 255 } );
 		else
 			rp_ClientColorize(client);
@@ -1520,9 +1526,6 @@ void addClientToTeam(int client, int team) {
 		g_stkTeam[team][ g_stkTeamCount[team]++ ] = client;
 	
 	g_iPlayerTeam[client] = team;
-	
-	if( client <= MaxClients )
-		LogToGame("[DEBUG] [BRAQUAGE] %L was added to team: %d", client, team);
 }
 void removeClientTeam(int client) {
 	if( g_iPlayerTeam[client] != TEAM_NONE ) {
@@ -1535,9 +1538,51 @@ void removeClientTeam(int client) {
 				break;
 			}
 		}
-		
-		if( client <= MaxClients )
-			LogToGame("[DEBUG] [BRAQUAGE] %L was removed from team %d", client, g_iPlayerTeam[client]);
+
 		g_iPlayerTeam[client] = TEAM_NONE;
 	}
+}
+void shuffleTeams() {
+	int teams[] =  { TEAM_RED, TEAM_BLUE };
+	int lastTeam = GetRandomInt(0, sizeof(teams));
+	
+	int sPlayers[MAXPLAYERS][2];
+	int pCount = 0;
+	
+	for (int i = 1; i <= MaxClients; i++) {
+		if( !IsValidClient(i) )
+			continue;
+		
+		if( rp_GetClientGroupID(i) == 0 )
+			continue;
+		
+		sPlayers[pCount][0] = i;
+		sPlayers[pCount][1] = rp_GetClientInt(i, i_ELO) + GetRandomInt(-40, 40);
+		pCount++;
+	}
+	
+	SortCustom2D(sPlayers, pCount, Sort_ByELO);
+	
+	for (int i = 0; i < pCount; i++) {
+		addClientToTeam(sPlayers[i][0], teams[lastTeam++ % sizeof(teams)]);
+	}
+}
+int getWorstTeam() {
+	int teamForce[QUEST_TEAMS+1];
+	
+	for (int i = 1; i <= MaxClients; i++) {
+		if( !IsValidClient(i) )
+			continue;
+		
+		teamForce[g_iPlayerTeam[i]] += rp_GetClientInt(i, i_ELO);
+	}
+	
+	LogToGame("TEAM_RED: %d", teamForce[TEAM_RED]);
+	LogToGame("TEAM_BLUE: %d", teamForce[TEAM_BLUE]);
+	
+	
+	return teamForce[TEAM_RED] >= teamForce[TEAM_BLUE] ? TEAM_BLUE : TEAM_RED;
+}
+public int Sort_ByELO(int[] a, int[] b, const int[][] array, Handle hndl) {
+	return b[1] - a[1];
 }
