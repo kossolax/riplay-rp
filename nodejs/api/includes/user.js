@@ -1366,12 +1366,9 @@ server.put('/user/:SteamID/sendMoney/:cash', function (req, res, next) {
  */
 server.post('/user/:SteamID/giveitem', function (req, res, next) {
 
-  server.conn.query(server.getAuthSMAdmin, [req.headers.auth], function(err, row) {
+  server.conn.query(server.getAuthSMSuperAdmin, [req.headers.auth], function(err, row) {
     if( err ) return res.send(new ERR.InternalServerError(err));
     if( row.length == 0 ) return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
-    var SteamID = row[0].steamid.replace("STEAM_0", "STEAM_1");
-    if( SteamID != "STEAM_1:0:7490757" && SteamID != "STEAM_1:1:39278818" && SteamID != "STEAM_1:0:23617413" && SteamID != "STEAM_1:1:114134761" && SteamID != "STEAM_1:1:114134761" )
-	return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
 
     var UserName = row[0].username;
     var amount = parseInt(req.params['amount']);
@@ -1395,12 +1392,9 @@ server.post('/user/:SteamID/giveitem', function (req, res, next) {
  */
 server.post('/user/:SteamID/givemoney', function (req, res, next) {
 
-  server.conn.query(server.getAuthSMAdmin, [req.headers.auth], function(err, row) {
+  server.conn.query(server.getAuthSMSuperAdmin, [req.headers.auth], function(err, row) {
     if( err ) return res.send(new ERR.InternalServerError(err));
     if( row.length == 0 ) return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
-    var SteamID = row[0].steamid.replace("STEAM_0", "STEAM_1");
-    if( SteamID != "STEAM_1:0:7490757" && SteamID != "STEAM_1:1:39278818" && SteamID != "STEAM_1:0:23617413" && SteamID != "STEAM_1:1:114134761" && SteamID != "STEAM_1:1:114134761" )
-        return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
 
     var UserName = row[0].username;
     var amount = parseInt(req.params['amount']);
@@ -1424,12 +1418,9 @@ server.post('/user/:SteamID/givemoney', function (req, res, next) {
  */
 server.post('/user/:SteamID/givexp', function (req, res, next) {
 
-  server.conn.query(server.getAuthSMAdmin, [req.headers.auth], function(err, row) {
+  server.conn.query(server.getAuthSMSuperAdmin, [req.headers.auth], function(err, row) {
     if( err ) return res.send(new ERR.InternalServerError(err));
     if( row.length == 0 ) return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
-    var SteamID = row[0].steamid.replace("STEAM_0", "STEAM_1");
-    if( SteamID != "STEAM_1:0:7490757" && SteamID != "STEAM_1:1:39278818" && SteamID != "STEAM_1:0:23617413" && SteamID != "STEAM_1:1:114134761" && SteamID != "STEAM_1:1:114134761" )
-        return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
 
     var UserName = row[0].username;
     var amount = parseInt(req.params['amount']);
