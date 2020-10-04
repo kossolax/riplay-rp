@@ -260,8 +260,11 @@ public Action Cmd_ItemDrugs(int args) {
 					rp_IncrementSuccess(client, success_list_dealer);
 					rp_ClientOverlays(client, o_Action_Overdose, 10.0);
 					
-					CPrintToChat(client, "" ...MOD_TAG... " Vous êtes en état d'overdose.");			
-					rp_SetClientInt(client, i_Sick, Math_GetRandomInt((view_as<int>(sick_type_none))+1, (view_as<int>(sick_type_max))-1));
+					CPrintToChat(client, "" ...MOD_TAG... " Vous êtes en état d'overdose.");		
+
+					if( rp_GetClientInt(client, i_Sick) == 0 ) {
+						rp_SetClientInt(client, i_Sick, Math_GetRandomInt((view_as<int>(sick_type_none))+1, (view_as<int>(sick_type_max))-1));
+					}
 				}
 			}
 		}
@@ -791,7 +794,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		rp_SetClientBool(target, b_Stealing, true);
 		rp_SetClientInt(client, i_LastVolAmount, 0);
 
-		EmitSoundToClientAny(target, "UI/arm_bomb.wav", target);
+		EmitSoundToAllAny("UI/arm_bomb.wav", target);
 
 		g_bBlockDrop[target] = true;
 		

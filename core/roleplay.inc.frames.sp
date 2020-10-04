@@ -690,7 +690,7 @@ void OnGameFrame_10(float time) {
 								CreateTimer(f, bleeding, i);
 							
 							if( Math_GetRandomInt(1, 100) == 100 ) {
-								g_iUserData[i][i_Sick] = 0;
+								g_iUserData[i][i_Sick] = view_as<int>(sick_type_none);
 							}
 						}
 						if( IsMedic(i) ) {
