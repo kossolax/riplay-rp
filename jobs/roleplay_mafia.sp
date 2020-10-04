@@ -726,7 +726,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 						CPrintToChat(owner, "" ...MOD_TAG... " Quelqu'un vol votre drogue.");
 						if( rp_GetBuildingData(target, BD_FromBuild) ) {
 							stealAmount = rp_GetItemInt(sub, item_type_prix) * count;
-							rp_ClientMoney(owner, i_Bank, -stealAmount/2);
+							rp_ClientMoney(owner, i_Bank, -stealAmount/4);
 							LogToGame("[CHEAT] [MAFIA] %L vole %L %d %s (%d$)", client, owner, count, classname, stealAmount);
 						}
 					}
