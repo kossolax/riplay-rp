@@ -206,12 +206,16 @@ public Action Cmd_Fixes(int client, int args) {
 		if( StrContains("func_door_func_brush", classname) >= 0 ) {
 			GetEntPropString(i, Prop_Data, "m_iName", targetname, sizeof(targetname));
 			
-			if( StrEqual(classname, "func_door") && StrEqual(targetname, "night_skybox") )
+			if( StrEqual(classname, "func_door") && StrEqual(targetname, "night_skybox") ) {
 				TeleportEntity(i, view_as<float>({0.0, -2048.0, 255.5}), view_as<float>({0.0, 0.0, 0.0}), NULL_VECTOR);
-			else if( StrEqual(classname, "func_brush") && StrEqual(targetname, "night_skybox") )
+			}
+			else if( StrEqual(classname, "func_brush") && StrEqual(targetname, "night_skybox") ) {
 				TeleportEntity(i, view_as<float>({-9216.0, 10240.0, -2080.0}), view_as<float>({0.0, 0.0, 0.0}), NULL_VECTOR);
-			else if( StrEqual(classname, "func_brush") && StrEqual(targetname, "job=201__-pvp_wall") )
+			}
+			else if( StrEqual(classname, "func_brush") && StrEqual(targetname, "job=201__-pvp_wall") ) {
 				TeleportEntity(i, view_as<float>({-1640.0, -7780.0, -420.0}), view_as<float>({0.0, 0.0, 0.0}), NULL_VECTOR);
+				AcceptEntityInput(i, "Enable");
+			}
 		}
 	}
 	return Plugin_Handled;
