@@ -1169,6 +1169,10 @@ public Action Frame_BuildingPlant(Handle timer, any ent) {
 	}
 	
 	float time = Math_GetRandomFloat(80.0, 100.0);
+	if( rp_GetPlayerZoneAppart(ent) >= 50 && rp_GetClientKeyAppartement(client, rp_GetPlayerZoneAppart(ent)) == false ) {
+		time *= 1.25;
+	}
+	
 	if( rp_GetServerRules(rules_Productions, rules_Enabled) == 1 ) {
 		int target = rp_GetServerRules(rules_Productions, rules_Target);
 		

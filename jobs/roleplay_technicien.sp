@@ -551,9 +551,11 @@ public Action Frame_CashMachine(Handle timer, any ent) {
 	}
 	
 	float time = GetMachineTime(client);
-
 	if( rp_GetBuildingData(ent, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(ent), zone_type_type) != 221 ){
 		time *= 2.0;
+	}
+	if( rp_GetPlayerZoneAppart(ent) >= 50 && rp_GetClientKeyAppartement(client, rp_GetPlayerZoneAppart(ent)) == false ) {
+		time *= 1.25;
 	}
 
 	
@@ -785,6 +787,9 @@ public Action Frame_BigCashMachine(Handle timer, any ent) {
 	float time = GetMachineTime(client);
 	if( rp_GetBuildingData(ent, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(ent), zone_type_type) != 221 ){
 		time *= 2.0;
+	}
+	if( rp_GetPlayerZoneAppart(ent) >= 50 && rp_GetClientKeyAppartement(client, rp_GetPlayerZoneAppart(ent)) == false ) {
+		time *= 1.25;
 	}
 
 	
