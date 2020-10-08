@@ -934,7 +934,7 @@ public void CRON_TIMER() {
 		CreateTimer(0.1, RebootServer);
 	}
 	
-	
+	/*
 	if( StringToInt(szDayOfWeek) == 3 ) { // Mercredi
 		if( StringToInt(szHours) == 18 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 18h00m00s
 			ServerCommand("rp_capture active");
@@ -950,7 +950,7 @@ public void CRON_TIMER() {
 		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 30 && StringToInt(szSecondes) == 0 ) {	// 21h30m00s
 			ServerCommand("rp_capture none");
 		}
-	}
+	}*/
 }
 public Action RebootServer(Handle timer, any none) {
 	ServerCommand("quit");
