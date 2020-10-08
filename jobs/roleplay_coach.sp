@@ -1001,8 +1001,9 @@ public Action fwdTalkCrayon(int client, char[] szSayText, int length, bool local
 	rp_GetJobData(rp_GetClientInt(client, i_Job), job_type_name, tmp, sizeof(tmp));
 	ReplaceString(szSayText, length, "{job}", tmp);
 	
-	rp_GetJobData(rp_GetClientInt(client, i_Group), job_type_name, tmp, sizeof(tmp));
+	rp_GetGroupData(rp_GetClientInt(client, i_Group), job_type_name, tmp, sizeof(tmp));
 	ReplaceString(szSayText, length, "{gang}", tmp);
+	ReplaceString(szSayText, length, "{group}", tmp);
 	
 	rp_GetZoneData(rp_GetPlayerZone( client ), zone_type_name, tmp, sizeof(tmp));
 	ReplaceString(szSayText, length, "{zone}", tmp);
