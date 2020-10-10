@@ -89,6 +89,8 @@ public void OnWebsocketReceive(WebsocketHandle websocket, WebsocketSendType iTyp
 			Format(buffer, sizeof(buffer), "{\"req\":\"%s\",\"data\":%s}", url, buffer);
 			
 			Websocket_Send(websocket, SendType_Text, buffer);
+			
+			delete hArray;
 		}
 		else if( String_StartsWith(url, "/connected/") ) {
 			char arg[128], steamID[32];
@@ -177,7 +179,7 @@ public void OnWebsocketReceive(WebsocketHandle websocket, WebsocketSendType iTyp
 			Format(buffer, sizeof(buffer), "{\"req\":\"%s\",\"data\":%s}", url, buffer);
 			
 			Websocket_Send(websocket, SendType_Text, buffer);
-
+			delete hObj;
 		}
 		else {
 			Websocket_Send(websocket, SendType_Text, "error");
