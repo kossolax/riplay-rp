@@ -52,7 +52,7 @@ stock bool rp_IsClientSafe(int client) {
 		return true;
 	if( rp_GetClientBool(client, b_IsAFK) )
 		return true;
-	if( rp_GetZoneBit(client) & BITZONE_EVENT )
+	if( rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_EVENT )
 		return true;
 	
 	return false;
