@@ -222,14 +222,14 @@ void Game_StartStop(bool status) {
 					bestDefCount = g_iPlayerDamage[i];
 					bestDef = i;
 				}
-				LogToGame("[HG] %L - dégat: %d - victimes: %d", i, g_iPlayerDamage[i], g_iPlayerKill[i]);
+				LogToGame("[HG] [DEF] %L - dégat: %d - victimes: %d", i, g_iPlayerDamage[i], g_iPlayerKill[i]);
 			}
 			else if( g_iPlayerTeam[i] == TEAM_ATK ) {
 				if( g_iPlayerDamage[i] > bestAttackCount ) {
 					bestAttackCount = g_iPlayerDamage[i];
 					bestAttack = i;
 				}
-				LogToGame("[HG] %L - dégat: %d - victimes: %d", i, g_iPlayerDamage[i], g_iPlayerKill[i]);
+				LogToGame("[HG] [ATK] %L - dégat: %d - victimes: %d", i, g_iPlayerDamage[i], g_iPlayerKill[i]);
 			}
 			
 			removeClientTeam(i);
