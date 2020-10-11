@@ -39,7 +39,7 @@ int g_cBeam;
 StringMap g_hGlobalDamage, g_hGlobalSteamID;
 enum damage_data { gdm_shot, gdm_touch, gdm_damage, gdm_hitbox, gdm_elo, gdm_flag, gdm_kill, gdm_team, gdm_score, gdm_area, gdm_max };
 TopMenu g_hStatsMenu;
-TopMenuObject g_hStatsMenu_Shoot, g_hStatsMenu_Head, g_hStatsMenu_Damage, g_hStatsMenu_Flag, g_hStatsMenu_ELO, g_hStatsMenu_KILL;
+TopMenuObject g_hStatsMenu_Shoot, g_hStatsMenu_Head, g_hStatsMenu_Damage, g_hStatsMenu_Flag, g_hStatsMenu_ELO, g_hStatsMenu_SCORE, g_hStatsMenu_KILL;
 int g_iPlayerTeam[2049], g_stkTeam[QUEST_TEAMS + 1][MAXPLAYERS + 1], g_stkTeamCount[QUEST_TEAMS + 1], g_iTeamScore[QUEST_TEAMS + 1];
 int g_iScores[MAX_GROUPS];
 
@@ -60,6 +60,14 @@ int g_iRoundTime[view_as<int>(ps_max)] =  {
 	0,
 	3, 12, 1,
 	0
+};
+char g_szRoundName[view_as<int>(ps_max)][128] = {
+	"Aucun",
+	"Initialisation",
+	"ROUND - 1 (WARMUP)", "ROUND - 1", "ROUND - 1 (FIN)",
+	"SWITCH",
+	"ROUND - 2 (WARMUP)", "ROUND - 2", "ROUND - 2 (FIN)",
+	"FIN"
 };
 int g_iCurrentState = ps_none;
 int g_iCurrentTimer;
@@ -140,8 +148,6 @@ public void OnPluginStart() {
 	//	ServerCommand("tv_enable 1");
 	//}
 	
-	shuffleTeams();
-	getWorstTeam();
 }
 public void OnConfigsExecuted() {
 	if( g_hCapturable == INVALID_HANDLE ) {
@@ -248,9 +254,14 @@ public Action Cmd_ItemFlag(int args) {
 	int item_id = GetCmdArgInt(args);
 	int gID = g_iPlayerTeam[client];
 	
-	if( gID == TEAM_NONE ) {
+	if( rp_GetClientGroupID(client) == 0 ) {
 		ITEM_CANCEL(client, item_id);
 		CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas de groupe.");
+		return;
+	}
+	if( g_iCurrentState != view_as<int>(ps_none) && gID == TEAM_NONE ) {
+		ITEM_CANCEL(client, item_id);
+		CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas d'équipe.");
 		return;
 	}
 	if( gID == TEAM_RED ) {
@@ -293,7 +304,7 @@ public Action Cmd_ItemFlag(int args) {
 			stackDrapeau[stackCount++] = i;
 		}
 	}
-	if( stackCount >= 2 ) {
+	if( stackCount >= 3 ) {
 		bool can = false;
 		for (int i = 0; i < stackCount; i++) {
 			if( IsValidClient(g_iFlagData[ stackDrapeau[i] ][data_owner]) )
@@ -459,6 +470,7 @@ void STATE_TICK_MATCH() {
 			
 			if( rp_GetPlayerZone(client) == ZONE_BUNKER ) {
 				GDM_RegisterArea(client);
+				g_iTeamScore[TEAM_BLUE]++;
 			}
 		}
 	}
@@ -470,7 +482,7 @@ void STATE_TICK_MATCH() {
 
 void CAPTURE_CHANGE_STATE(int state) {
 	g_iCurrentState = state;
-	g_iCurrentTimer = g_iRoundTime[state] * 60;
+	g_iCurrentTimer = g_iRoundTime[state] * 60 / 10;
 	g_iCurrentStart = GetTime();
 	
 	CAPTURE_STATE_ENTER();
@@ -500,7 +512,6 @@ void CAPTURE_STATE_ENTER() {
 void STATE_ENTER_BEGIN() {
 	CPrintToChatAll("{lightblue} =================================={default} ");
 	CPrintToChatAll("{lightblue} Le bunker peut maintenant être capturé!{default} ");
-	CPrintToChatAll("{lightblue} =================================={default} ");
 	
 	//CAPTURE_UpdateLight();
 	
@@ -568,11 +579,16 @@ void STATE_ENTER_BEGIN() {
 		CPrintToChatAll("{lightblue} Cette capture est enregistrée à cette adresse: https://riplay.fr/tv/%s.dem", szDayOfWeek);
 	}
 	CPrintToChatAll("{lightblue} =================================={default} ");
+	
+	CAPTURE_CHANGE_STATE(ps_warmup1);
 }
 void STATE_ENTER_WARMUP() {
-	CPrintToChatAll("{lightblue} =================================={default} ");
-	CPrintToChatAll("{lightblue} Début du warmup!{default} ");
-	CPrintToChatAll("{lightblue} =================================={default} ");
+	for (int i = 0; i < g_stkTeamCount[TEAM_BLUE]; i++) {
+		int client = g_stkTeam[TEAM_BLUE][i];
+		if( rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PVP ) {
+			teleportToZone(client, METRO_BELMON);
+		}
+	}
 }
 void STATE_ENTER_MATCH() {
 	CPrintToChatAll("{lightblue} =================================={default} ");
@@ -596,6 +612,8 @@ void STATE_ENTER_SWITCH() {
 	}
 	
 	for (int i = 1; i <= MaxClients; i++) {
+		if( !IsValidClient(i) )
+			continue;
 		
 		GetClientAuthId(i, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 		g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
@@ -692,6 +710,7 @@ void STATE_ENTER_END() {
 	CAPTURE_UpdateLight();
 	
 	ServerCommand("tv_stoprecord");
+	ServerCommand("rp_capture none");
 	//ServerCommand("rp_wallhack 0");
 	
 	CAPTURE_CHANGE_STATE(ps_none);
@@ -875,9 +894,9 @@ public Action fwdHUD(int client, char[] szHUD, const int size) {
 			if( timeLeft > 10 )
 				rp_Effect_LoadingBar(loading, sizeof(loading), float(GetTime() - g_iCurrentStart) / float(g_iCurrentTimer));
 			else
-				Format(loading, sizeof(loading), "Il reste %d seconde%s", timeLeft, timeLeft >= 2 ? "s": "");
+				Format(loading, sizeof(loading), " Il reste %d seconde%s", timeLeft, timeLeft >= 2 ? "s": "");
 			
-			Format(szHUD, size, "PvP: Capture du Bunker\n%s\n", loading);
+			Format(szHUD, size, "PvP: Capture du Bunker\n%s\n%s\n \n", g_szRoundName[g_iCurrentState], loading);
 				
 			Format(szHUD, size, "%s Attaque: %d\n", szHUD, g_iTeamScore[TEAM_BLUE]);
 			Format(szHUD, size, "%s Défense: %d\n", szHUD, g_iTeamScore[TEAM_RED]);
@@ -910,21 +929,21 @@ public Action fwdFrame(int client) {
 			PrintHintText(client, "Vous êtes en spawn-protection");
 		}
 		else if( g_iPlayerTeam[client] == TEAM_RED ) {
-			rp_ClientColorize(client, { 255, 64, 64, 255 } );
+			rp_ClientColorize(client, { 255, 255, 0, 255 } );
 			if( g_iCurrentState == view_as<int>(ps_warmup1) || g_iCurrentState == view_as<int>(ps_warmup2) ) {
-				PrintHintText(client, "Vous êtes en défense.\n     <font color='#ff3333'>Préparez-vous à l'assaut</font>");
+				PrintHintText(client, "Vous êtes en défense.\n     <font color='#33ff33'>Préparez-vous à l'assaut</font>");
 			}
 			else {
-				PrintHintText(client, "Vous êtes en défense.\n     <font color='#ff3333'>Tuez les BLEUS</font>");
+				PrintHintText(client, "Vous êtes en défense.\n     <font color='#3333ff'>Tuez les BLEUS</font>");
 			}
 		}
 		else {
-			rp_ClientColorize(client, { 0, 64, 255, 255 } );
+			rp_ClientColorize(client, { 0, 255, 255, 255 } );
 			if( g_iCurrentState == view_as<int>(ps_warmup1) || g_iCurrentState == view_as<int>(ps_warmup2) ) {
-				PrintHintText(client, "Vous êtes en attaque.\n     <font color='#ff3333'>Préparez-vous à l'assaut</font>");
+				PrintHintText(client, "Vous êtes en attaque.\n     <font color='#33ff33'>Préparez-vous à l'assaut</font>");
 			}
 			else {
-				PrintHintText(client, "Vous êtes en attaque.\n     <font color='#3333ff'>Tuez les ROUGES</font>");
+				PrintHintText(client, "Vous êtes en attaque.\n     <font color='#ff3333'>Tuez les ROUGES</font>");
 			}
 		}
 	}
@@ -1268,7 +1287,7 @@ void CTF_FlagTouched(int client, int flag) {
 	
 	EmitSoundToClientAny(client, g_szSoundList[snd_YouHaveTheFlag], _, _, _, _, ANNONCES_VOLUME);
 	
-	SDKHook(flag, SDKHook_SetTransmit, SDKHideFlag);
+	//SDKHook(flag, SDKHook_SetTransmit, SDKHideFlag);
 }
 public Action CTF_SpawnFlag_Delay(Handle timer, any ent2) {
 	TeleportEntity(ent2, view_as<float>({30.0, 0.0, 0.0}), view_as<float>({0.0, 90.0, 0.0}), NULL_VECTOR);
@@ -1430,6 +1449,7 @@ void GDM_Resume() {
 	g_hStatsMenu_Damage = g_hStatsMenu.AddCategory("damage", MenuPvPResume);
 	g_hStatsMenu_Flag = g_hStatsMenu.AddCategory("flag", MenuPvPResume);
 	g_hStatsMenu_ELO = g_hStatsMenu.AddCategory("elo", MenuPvPResume);
+	g_hStatsMenu_SCORE = g_hStatsMenu.AddCategory("score", MenuPvPResume);
 	g_hStatsMenu_KILL = g_hStatsMenu.AddCategory("kill", MenuPvPResume);
 	
 	for (int i = 0; i < nbrParticipant; i++) {
@@ -1452,6 +1472,7 @@ void GDM_Resume() {
 			Format(key, sizeof(key), "e%06d_%s", 1000000 - delta, szSteamID); 
 			Format(tmp, sizeof(tmp), "%6d - %s", delta, name);
 			g_hStatsMenu.AddItem(key, MenuPvPResume, g_hStatsMenu_ELO, "", 0, tmp);
+			
 		}
 		if( array[gdm_touch] != 0 ) {
 			delta = array[gdm_damage];
@@ -1468,11 +1489,17 @@ void GDM_Resume() {
 		}
 		if( array[gdm_kill] != 0 ) {
 			delta = array[gdm_kill];
-			Format(key, sizeof(key), "f%06d_%s", 1000000 - delta, szSteamID); 
+			Format(key, sizeof(key), "k%06d_%s", 1000000 - delta, szSteamID); 
 			Format(tmp, sizeof(tmp), "%6d - %s", delta, name);
 			g_hStatsMenu.AddItem(key, MenuPvPResume, g_hStatsMenu_KILL, "", 0, tmp);
 		}
 		
+		if( array[gdm_score] != 0 ) {
+			delta = array[gdm_score];
+			Format(key, sizeof(key), "s%06d_%s", 1000000 - delta, szSteamID); 
+			Format(tmp, sizeof(tmp), "%6d - %s", delta, name);
+			g_hStatsMenu.AddItem(key, MenuPvPResume, g_hStatsMenu_SCORE, "", 0, tmp);
+		}		
 	}
 	
 	for (int client = 1; client <= MaxClients; client++) {
@@ -1564,6 +1591,8 @@ public void MenuPvPResume(Handle topmenu, TopMenuAction action, TopMenuObject to
 			Format(buffer, maxlength, "Le plus de drapeaux posés");
 		else if( topobj_id == g_hStatsMenu_ELO )
 			Format(buffer, maxlength, "Le meilleur en PvP");
+		else if( topobj_id == g_hStatsMenu_SCORE )
+			Format(buffer, maxlength, "Le plus de contribution");
 		else 
 			GetTopMenuInfoString(topmenu, topobj_id, buffer, maxlength);
 	}
