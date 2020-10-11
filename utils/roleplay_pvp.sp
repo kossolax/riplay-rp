@@ -38,10 +38,32 @@ int g_iCaptureStart;
 bool g_bIsInCaptureMode = false;
 int g_cBeam;
 StringMap g_hGlobalDamage, g_hGlobalSteamID;
-enum damage_data { gdm_shot, gdm_touch, gdm_damage, gdm_hitbox, gdm_elo, gdm_flag, gdm_kill, gdm_max };
+enum damage_data { gdm_shot, gdm_touch, gdm_damage, gdm_hitbox, gdm_elo, gdm_flag, gdm_kill, gdm_team, gdm_max };
 TopMenu g_hStatsMenu;
 TopMenuObject g_hStatsMenu_Shoot, g_hStatsMenu_Head, g_hStatsMenu_Damage, g_hStatsMenu_Flag, g_hStatsMenu_ELO, g_hStatsMenu_KILL;
 int g_iPlayerTeam[2049], g_stkTeam[QUEST_TEAMS + 1][MAXPLAYERS + 1], g_stkTeamCount[QUEST_TEAMS + 1], g_iTeamScore[QUEST_TEAMS + 1];
+// -----------------------------------------------------------------------------------------------------------------
+enum pvp_state {
+	ps_begin, 
+	
+	ps_warmup1,
+	ps_match1,
+	ps_end_of_round1,
+	
+	ps_switch,
+	
+	ps_warmup2,
+	ps_match2,
+	ps_end_of_round2,
+	
+	ps_end,
+	
+	pvp_statee_max
+};
+int g_iRoundTime[view_as<int>(pvp_statee_max)] =  { 0, 5, 12, 1, 0, 3, 12, 1, 0 };
+int g_iCurrentState;
+int g_iCurrentTimer;
+
 // -----------------------------------------------------------------------------------------------------------------
 enum soundList {
 	snd_YouHaveTheFlag,
@@ -150,9 +172,6 @@ public void OnCvarChange(Handle cvar, const char[] oldVal, const char[] newVal) 
 		if( !g_bIsInCaptureMode && StrEqual(oldVal, "none") && StrEqual(newVal, "active") ) {
 			CAPTURE_Start();
 		}
-		else if( g_bIsInCaptureMode && StrEqual(oldVal, "active") && StrEqual(newVal, "none") ) {
-			CAPTURE_Stop();
-		}
 	}
 }
 public void OnClientPostAdminCheck(int client) {
@@ -169,6 +188,9 @@ public void OnClientPostAdminCheck(int client) {
 		rp_HookEvent(client, RP_OnPlayerZoneChange, fwdZoneChange);
 		rp_HookEvent(client, RP_PreClientStealItem, fwdStealItem);
 	}
+}
+public void OnClientDisconnect(int client) {
+	removeClientTeam(client);
 }
 // -----------------------------------------------------------------------------------------------------------------
 public Action Cmd_SpawnTag(int args) {
@@ -369,9 +391,42 @@ public Action SDKHideFlag(int from, int to ) {
 }
 // -----------------------------------------------------------------------------------------------------------------
 void CAPTURE_Start() {
+	CAPTURE_CHANGE_STATE(ps_begin);
+	//CreateTimer(1.0, CAPTURE_Tick);
+}
+
+void CAPTURE_CHANGE_STATE(int state) {
+	g_iCurrentState = state;
+	g_iCurrentTimer = g_iRoundTime[state] * 60;
+	
+	CAPTURE_STATE_ENTER();
+}
+void CAPTURE_STATE_ENTER() {
+	switch(g_iCurrentState) {
+		case ps_begin: {
+			STATE_BEGIN();
+		}
+		case ps_warmup1, ps_warmup2: {
+			STATE_WARMUP();
+		}
+		case ps_match1, ps_match2: {
+			STATE_MATCH();
+		}
+		case ps_end_of_round1, ps_end_of_round2: {
+			STATE_END_OF_ROUND();
+		}
+		case ps_switch: {
+			STATE_SWITCH();
+		}
+		case ps_end: {
+			STATE_END();
+		}
+	}
+}
+void STATE_BEGIN() {
 	CPrintToChatAll("{lightblue} =================================={default} ");
 	CPrintToChatAll("{lightblue} Le bunker peut maintenant être capturé!{default} ");
-	
+	CPrintToChatAll("{lightblue} =================================={default} ");
 	
 	g_iCaptureStart = GetTime();
 	CAPTURE_UpdateLight();
@@ -384,14 +439,8 @@ void CAPTURE_Start() {
 	g_bIsInCaptureMode = true;
 	bool botFound = false;
 	
-	
-	g_iTeamScore[TEAM_RED] = g_iTeamScore[TEAM_BLUE] = 0;
-	
-	int rowPoint = 100 - ((rp_GetCaptureInt(cap_pvpRow) - 1) * 10);
-	if( rowPoint < 0 )
-		rowPoint = 0;
-	
-	g_bFirstBlood = g_b5MinutesLeft = g_b1MinuteLeft = false;
+	g_iTeamScore[TEAM_RED] = g_iTeamScore[TEAM_BLUE] = 0;		
+	shuffleTeams();
 
 	for(int i=1; i<=MaxClients; i++) {
 		if( !IsValidClient(i) )
@@ -417,17 +466,7 @@ void CAPTURE_Start() {
 		else if( g_iPlayerTeam[i] == TEAM_RED ) {
 			EmitSoundToClientAny(i, g_szSoundList[snd_YouAreOnRed], _, 6, _, _, 1.0);
 		}
-		
-		if( !(rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_PVP) )
-			continue;
-		
-		if( g_iPlayerTeam[i] == TEAM_BLUE ) {
-			int v = Client_GetVehicle(i);
-			if( v > 0 )
-				rp_ClientVehicleExit(i, v, true);
-			
-			rp_ClientSendToSpawn(i, true);
-		}
+
 	}
 	for(int i=MaxClients; i<=2048; i++) {
 		if( rp_IsValidVehicle(i) && rp_GetVehicleInt(i, car_health) >= 2500 )
@@ -440,8 +479,6 @@ void CAPTURE_Start() {
 		}
 	}
 	
-	CreateTimer(1.0, CAPTURE_Tick);
-	
 	HookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Post);
 	HookEvent("weapon_fire", Event_PlayerShoot, EventHookMode_Post);
 	HookEvent("player_hurt", fwdGod_PlayerHurt, EventHookMode_Pre);
@@ -452,10 +489,69 @@ void CAPTURE_Start() {
 	ServerCommand("tv_record %s", szDayOfWeek);
 	ServerCommand("rp_wallhack 1");
 	if( botFound ) {
-		CPrintToChatAll("{lightblue} Cette capture est enregistrée à cette adresse: https://www.ts-x.eu/tv/%s.dem", szDayOfWeek);
+		CPrintToChatAll("{lightblue} Cette capture est enregistrée à cette adresse: https://riplay.fr/tv/%s.dem", szDayOfWeek);
 	}
 	CPrintToChatAll("{lightblue} =================================={default} ");
 }
+void STATE_WARMUP() {
+	CPrintToChatAll("{lightblue} =================================={default} ");
+	CPrintToChatAll("{lightblue} Début du warmup!{default} ");
+	CPrintToChatAll("{lightblue} =================================={default} ");
+}
+void STATE_MATCH() {
+	CPrintToChatAll("{lightblue} =================================={default} ");
+	CPrintToChatAll("{lightblue} Début du round!{default} ");
+	CPrintToChatAll("{lightblue} =================================={default} ");
+	g_bFirstBlood = g_b5MinutesLeft = g_b1MinuteLeft = false;
+}
+void STATE_SWITCH() {
+	StringMapSnapshot KeyList = g_hGlobalDamage.Snapshot();
+	int[] array = new int[gdm_max];
+	int nbrParticipant = KeyList.Length;
+	char szSteamID[32];
+	
+	for (int i = 0; i < nbrParticipant; i++) {
+		KeyList.GetKey(i, szSteamID, sizeof(szSteamID));
+		g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
+		
+		int team = (array[gdm_team] == TEAM_RED) ? TEAM_BLUE : TEAM_RED;
+		array[gdm_team] = team;
+		g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
+	}
+	
+	for (int i = 1; i <= MaxClients; i++) {
+		
+		GetClientAuthId(i, AUTH_TYPE, szSteamID, sizeof(szSteamID));
+		g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
+		addClientToTeam(i, array[gdm_team]);
+		
+		if( g_iPlayerTeam[i] == TEAM_BLUE ) {
+			EmitSoundToClientAny(i, g_szSoundList[snd_YouAreOnBlue], _, 6, _, _, 1.0);
+		}
+		else if( g_iPlayerTeam[i] == TEAM_RED ) {
+			EmitSoundToClientAny(i, g_szSoundList[snd_YouAreOnRed], _, 6, _, _, 1.0);
+		}
+	}
+	
+	CAPTURE_CHANGE_STATE(ps_warmup2);
+}
+void STATE_END_OF_ROUND() {
+	
+	CPrintToChatAll("{lightblue} =================================={default} ");
+	CPrintToChatAll("{lightblue} Fin du round!{default} ");
+	CPrintToChatAll("{lightblue} =================================={default} ");
+	
+	if( g_iCurrentState == view_as<int>(ps_end_of_round1) ) {
+		CAPTURE_CHANGE_STATE(ps_switch);
+	}
+	else {
+		CAPTURE_CHANGE_STATE(ps_end);
+	}
+}
+void STATE_END() {
+	// TBD
+}
+//
 public Action fwdCommand(int client, char[] command, char[] arg) {
 	if( StrEqual(command, "pvp") ) {
 		if( g_hStatsMenu != INVALID_HANDLE )
@@ -468,7 +564,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 	}
 	return Plugin_Continue;
 }
-void CAPTURE_Stop() {
+/*void CAPTURE_Stop() {
 	
 	CPrintToChatAll("{lightblue} =================================={default} ");
 	CPrintToChatAll("{lightblue} Le bunker ne peut plus être capturé.{default} ");
@@ -496,7 +592,6 @@ void CAPTURE_Stop() {
 	}
 	
 	PrintToChatAll("Winner TBD");
-	/*
 	int totalPoints = 0;
 	for(int i=1; i<MAX_GROUPS; i++) {
 		if( maxPoint > g_iCapture_POINT[i] )
@@ -525,7 +620,6 @@ void CAPTURE_Stop() {
 			
 	CPrintToChatAll("{lightblue} Le bunker appartient maintenant à... %s !", optionsBuff[1]);
 	CPrintToChatAll("{lightblue} =================================={default} ");
-	*/
 	
 	UnhookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Post);
 	UnhookEvent("weapon_fire", Event_PlayerShoot, EventHookMode_Post);
@@ -538,7 +632,7 @@ void CAPTURE_Stop() {
 	
 	ServerCommand("tv_stoprecord");
 	//ServerCommand("rp_wallhack 0");
-}
+}*/
 void CAPTURE_UpdateLight() {
 	char strBuffer[4][32], tmp[64], tmp2[64];
 	int color[4],  defense = rp_GetCaptureInt(cap_bunker);
@@ -1141,6 +1235,12 @@ void GDM_Init(int client) {
 	
 	if( !g_hGlobalDamage.GetArray(szSteamID, array, gdm_max) ) {
 		array[gdm_elo] = rp_GetClientInt(client, i_ELO);
+		
+		if( g_iPlayerTeam[client] == TEAM_NONE ) {
+			addClientToTeam(client, getWorstTeam());
+		}
+		
+		array[gdm_team] = g_iPlayerTeam[client];
 		g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
 	}
 	
@@ -1576,10 +1676,6 @@ int getWorstTeam() {
 		
 		teamForce[g_iPlayerTeam[i]] += rp_GetClientInt(i, i_ELO);
 	}
-	
-	LogToGame("TEAM_RED: %d", teamForce[TEAM_RED]);
-	LogToGame("TEAM_BLUE: %d", teamForce[TEAM_BLUE]);
-	
 	
 	return teamForce[TEAM_RED] >= teamForce[TEAM_BLUE] ? TEAM_BLUE : TEAM_RED;
 }

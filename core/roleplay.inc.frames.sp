@@ -939,16 +939,10 @@ public void CRON_TIMER() {
 		if( StringToInt(szHours) == 18 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 18h00m00s
 			ServerCommand("rp_capture active");
 		}
-		if( StringToInt(szHours) == 18 && StringToInt(szMinutes) == 30 && StringToInt(szSecondes) == 0 ) {	// 18h30m00s
-			ServerCommand("rp_capture none");
-		}
 	}
 	if( StringToInt(szDayOfWeek) == 5 ) { // Vendredi
 		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
 			ServerCommand("rp_capture active");
-		}
-		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 30 && StringToInt(szSecondes) == 0 ) {	// 21h30m00s
-			ServerCommand("rp_capture none");
 		}
 	}*/
 }
