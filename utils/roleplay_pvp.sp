@@ -213,10 +213,10 @@ public void OnMapStart() {
 }
 public void OnCvarChange(Handle cvar, const char[] oldVal, const char[] newVal) {
 	if( cvar == g_hCapturable ) {
-		if( !g_bIsInCaptureMode && StrEqual(oldVal, "none") && StrEqual(newVal, "active") ) {
+		if( !g_bIsInCaptureMode && StrEqual(oldVal, "0") && StrEqual(newVal, "1") ) {
 			CAPTURE_Start();
 		}
-		if( g_bIsInCaptureMode && StrEqual(oldVal, "active") && StrEqual(newVal, "none") ) {
+		if( g_bIsInCaptureMode && StrEqual(oldVal, "1") && StrEqual(newVal, "0") ) {
 			CAPTURE_Stop();
 		}
 	}
@@ -1376,12 +1376,12 @@ void GDM_Init(int client) {
 	
 	if( !g_hGlobalDamage.GetArray(szSteamID, array, gdm_max) ) {
 		array[gdm_elo] = rp_GetClientInt(client, i_ELO);
-		
-		if( g_iPlayerTeam[client] == TEAM_NONE ) {
+			
+		if( g_iPlayerTeam[client] == TEAM_NONE && rp_GetClientGroupID(client) > 0 ) {
 			addClientToTeam(client, getWorstTeam());
+			array[gdm_team] = g_iPlayerTeam[client];
 		}
 		
-		array[gdm_team] = g_iPlayerTeam[client];
 		g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
 	}
 	else {
@@ -1538,44 +1538,44 @@ void GDM_Resume() {
 		
 		if( array[gdm_touch] != 0 && array[gdm_shot] != 0  ) {
 			delta = RoundFloat(float(array[gdm_touch]) / float(array[gdm_shot]+1) * 1000.0);
-			Format(key, sizeof(key), "s%06d_%s", 1000000-delta, szSteamID); 
+			Format(key, sizeof(key), "s%06d_%s", 1000000 + delta, szSteamID); 
 			Format(tmp, sizeof(tmp), "%4.1f - %s", float(delta)/10.0, name);
 			g_hStatsMenu.AddItem(key, MenuPvPResume, g_hStatsMenu_Shoot, "", 0, tmp);
 			
 			delta = RoundFloat(float(array[gdm_hitbox]) / float(array[gdm_touch]+1) * 1000.0);
-			Format(key, sizeof(key), "h%06d_%s", 1000000 - delta, szSteamID); 
+			Format(key, sizeof(key), "h%06d_%s", 1000000 + delta, szSteamID); 
 			Format(tmp, sizeof(tmp), "%4.1f - %s", float(delta)/10.0, name);
 			g_hStatsMenu.AddItem(key, MenuPvPResume, g_hStatsMenu_Head, "", 0, tmp);
 			
 			delta = array[gdm_elo];
-			Format(key, sizeof(key), "e%06d_%s", 1000000 - delta, szSteamID); 
+			Format(key, sizeof(key), "e%06d_%s", 1000000 + delta, szSteamID); 
 			Format(tmp, sizeof(tmp), "%6d - %s", delta, name);
 			g_hStatsMenu.AddItem(key, MenuPvPResume, g_hStatsMenu_ELO, "", 0, tmp);
 			
 		}
 		if( array[gdm_touch] != 0 ) {
 			delta = array[gdm_damage];
-			Format(key, sizeof(key), "d%06d_%s", 1000000 - delta, szSteamID); 
+			Format(key, sizeof(key), "d%06d_%s", 1000000 + delta, szSteamID); 
 			Format(tmp, sizeof(tmp), "%6d - %s", delta, name);
 			g_hStatsMenu.AddItem(key, MenuPvPResume, g_hStatsMenu_Damage, "", 0, tmp);
 			
 		}		
 		if( array[gdm_flag] != 0 ) {
 			delta = array[gdm_flag];
-			Format(key, sizeof(key), "f%06d_%s", 1000000 - delta, szSteamID); 
+			Format(key, sizeof(key), "f%06d_%s", 1000000 + delta, szSteamID); 
 			Format(tmp, sizeof(tmp), "%6d - %s", delta, name);
 			g_hStatsMenu.AddItem(key, MenuPvPResume, g_hStatsMenu_Flag, "", 0, tmp);
 		}
 		if( array[gdm_kill] != 0 ) {
 			delta = array[gdm_kill];
-			Format(key, sizeof(key), "k%06d_%s", 1000000 - delta, szSteamID); 
+			Format(key, sizeof(key), "k%06d_%s", 1000000 + delta, szSteamID); 
 			Format(tmp, sizeof(tmp), "%6d - %s", delta, name);
 			g_hStatsMenu.AddItem(key, MenuPvPResume, g_hStatsMenu_KILL, "", 0, tmp);
 		}
 		
 		if( array[gdm_score] != 0 ) {
 			delta = array[gdm_score];
-			Format(key, sizeof(key), "s%06d_%s", 1000000 - delta, szSteamID); 
+			Format(key, sizeof(key), "s%06d_%s", 1000000 + delta, szSteamID); 
 			Format(tmp, sizeof(tmp), "%6d - %s", delta, name);
 			g_hStatsMenu.AddItem(key, MenuPvPResume, g_hStatsMenu_SCORE, "", 0, tmp);
 		}		

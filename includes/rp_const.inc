@@ -113,8 +113,8 @@
 
 // PvP:
 #define	FLAG_SPEED		280.0
-#define	FLAG_POINT_MAX	150
-#define FLAG_POINT_MIN	50
+#define	FLAG_POINT_MAX	100
+#define FLAG_POINT_MIN	20
 #define FLAG_MAX		10
 
 #define ELO_FACTEUR_K	40.0

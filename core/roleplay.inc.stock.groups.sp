@@ -142,7 +142,7 @@ void GroupColor(int client) {
 	
 	int group = GetGroupPrimaryID(client);
 	if( group > 0 ) {		
-		if( strlen(g_szGroupList[group][group_type_skin]) > 10 && Client_GetVehicle(client) <= 0 ) {
+		if( strlen(g_szGroupList[group][group_type_skin]) > 10 && Client_GetVehicle(client) <= 0 && GetConVarInt(FindConVar("rp_capture")) == 0 ) {
 			SetEntityModel(client, g_szGroupList[group][group_type_skin]);
 		}
 	}
