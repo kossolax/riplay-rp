@@ -548,6 +548,9 @@ public int Native_rp_ClientAgroIncrement(Handle plugin, int numParams) {
 	if( client == target )
 		return 1;
 	
+	if( IsInPVP(client) && IsInPVP(target) )
+		return 1;
+	
 	if( !IsValidClient(client) ) {
 		client = Entity_GetOwner(client);
 		if( !IsValidClient(client) )
