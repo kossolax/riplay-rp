@@ -812,6 +812,7 @@ void ResetUserData(int client) {
 	g_iUserData[client][i_Disposed] = 10;
 	g_iUserData[client][i_PlayerLVL] = 1;
 	g_bUserData[client][b_GameModePassive] = true;
+	g_iUserData[client][i_ELO] = 1500;
 	g_iDoubleCompte[client].Clear();
 }
 void LoadUserData(int Client) {
