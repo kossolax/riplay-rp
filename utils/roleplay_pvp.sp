@@ -50,6 +50,7 @@ enum pvp_state {
 	ps_warmup1, ps_match1, ps_end_of_round1,
 	ps_switch,
 	ps_warmup2, ps_match2, ps_end_of_round2,
+	ps_reward,
 	ps_end,
 	ps_max
 };
@@ -67,6 +68,7 @@ char g_szRoundName[view_as<int>(ps_max)][128] = {
 	"ROUND - 1 (WARMUP)", "ROUND - 1", "ROUND - 1 (FIN)",
 	"SWITCH",
 	"ROUND - 2 (WARMUP)", "ROUND - 2", "ROUND - 2 (FIN)",
+	"Distribution",
 	"FIN"
 };
 int g_iCurrentState = ps_none;
@@ -77,13 +79,22 @@ int g_iCurrentStart;
 enum soundList {
 	snd_YouHaveTheFlag,
 	snd_YouAreOnBlue, snd_YouAreOnRed,
-	snd_1MinuteRemain, snd_5MinutesRemain,
-	snd_EndOfRound,
+	snd_30SecondsRemain, snd_1MinuteRemain, snd_5MinutesRemain,
+	snd_NewRoundIn, snd_EndOfRound, snd_FinalRound, snd_Play,
 	snd_Congratulations, snd_YouHaveLostTheMatch, snd_FlawlessVictory, snd_HumiliatingDefeat,
 	snd_YouAreLeavingTheBattlefield,
 	snd_FirstBlood,
 	snd_DoubleKill, snd_MultiKill, snd_MegaKill, snd_UltraKill, snd_MonsterKill,
-	snd_KillingSpree, snd_Unstopppable, snd_Dominating, snd_Godlike
+	snd_KillingSpree, snd_Unstopppable, snd_Dominating, snd_Godlike,
+	
+	snd_CountDown10, snd_CountDown09, snd_CountDown08, snd_CountDown07, snd_CountDown06,
+	snd_CountDown05, snd_CountDown04, snd_CountDown03, snd_CountDown02, snd_CountDown01,
+	
+	snd_TenKillsRemain, snd_FiveKillsRemain, snd_OneKillRemains,
+	
+	snd_RedCoreIsUnderAttack, 
+	snd_BarricadeDestroyed, snd_InnerBarricadeDestroyed, snd_OuterBarricadeDestroyed,
+	
 };
 enum announcerData {
 	ann_Client,
@@ -96,10 +107,15 @@ char g_szSoundList[soundList][] = {
 	"DeadlyDesire/announce/YouAreOnBlue.mp3",
 	"DeadlyDesire/announce/YouAreOnRed.mp3",
 
+	"DeadlyDesire/announce/30SecondsLeft.mp3",
 	"DeadlyDesire/announce/1MinutesRemain.mp3",
 	"DeadlyDesire/announce/5MinutesRemain.mp3",
 	
+	"DeadlyDesire/announce/NewRoundIn.mp3",
 	"DeadlyDesire/announce/EndOfRound.mp3",
+	"DeadlyDesire/announce/FinalRound.mp3",
+	"DeadlyDesire/announce/Play.mp3",
+	
 	"DeadlyDesire/announce/Congratulations.mp3",
 	"DeadlyDesire/announce/YouHaveLostTheMatch.mp3",
 	"DeadlyDesire/announce/FlawlessVictory.mp3",
@@ -118,12 +134,33 @@ char g_szSoundList[soundList][] = {
 	"DeadlyDesire/announce/KillingSpree.mp3",
 	"DeadlyDesire/announce/Unstopppable.mp3",
 	"DeadlyDesire/announce/Dominating.mp3",
-	"DeadlyDesire/announce/Godlike.mp3"
+	"DeadlyDesire/announce/Godlike.mp3",
+	
+	"DeadlyDesire/announce/Countdown_10.mp3",
+	"DeadlyDesire/announce/Countdown_09.mp3",
+	"DeadlyDesire/announce/Countdown_08.mp3",
+	"DeadlyDesire/announce/Countdown_07.mp3",
+	"DeadlyDesire/announce/Countdown_06.mp3",
+	"DeadlyDesire/announce/Countdown_05.mp3",
+	"DeadlyDesire/announce/Countdown_04.mp3",
+	"DeadlyDesire/announce/Countdown_03.mp3",
+	"DeadlyDesire/announce/Countdown_02.mp3",
+	"DeadlyDesire/announce/Countdown_01.mp3",
+	
+	"DeadlyDesire/announce/TenKillsRemain.mp3",
+	"DeadlyDesire/announce/FiveKillsRemain.mp3",
+	"DeadlyDesire/announce/OneKillRemains.mp3",
+	
+	"DeadlyDesire/announce/RedCoreIsUnderAttack.mp3",
+	
+	"DeadlyDesire/announce/BarricadeDestroyed.mp3",
+	"DeadlyDesire/announce/InnerBarricadeDestroyed.mp3",
+	"DeadlyDesire/announce/OuterBarricadeDestroyed.mp3"	
 };
 int g_CyclAnnouncer[MAX_ANNOUNCES][view_as<int>(announcerData)], g_CyclAnnouncer_start, g_CyclAnnouncer_end;
 int g_iKillingSpree[65], g_iKilling[65];
 bool g_bStopSound[65];
-bool g_bFirstBlood, g_b5MinutesLeft, g_b1MinuteLeft;
+bool g_bFirstBlood, g_b5MinutesLeft, g_b30SecondsLeft, g_b1MinuteLeft, g_bCountDown[11];
 // -----------------------------------------------------------------------------------------------------------------
 public Plugin myinfo = {
 	name = "Utils: PvP", author = "KoSSoLaX",
@@ -179,12 +216,16 @@ public void OnCvarChange(Handle cvar, const char[] oldVal, const char[] newVal) 
 		if( !g_bIsInCaptureMode && StrEqual(oldVal, "none") && StrEqual(newVal, "active") ) {
 			CAPTURE_Start();
 		}
+		if( g_bIsInCaptureMode && StrEqual(oldVal, "active") && StrEqual(newVal, "none") ) {
+			CAPTURE_Stop();
+		}
 	}
 }
 public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 	g_bStopSound[client] = false;
-	
+	rp_SetClientFloat(client, fl_WeaponTrain, 10.0);
+			
 	if( g_bIsInCaptureMode ) {
 		GDM_Init(client);
 		rp_HookEvent(client, RP_OnPlayerDead, fwdDead);
@@ -405,6 +446,9 @@ void CAPTURE_Start() {
 	CAPTURE_CHANGE_STATE(ps_begin);
 	CreateTimer(1.0, CAPTURE_STATE_TICK);
 }
+void CAPTURE_Stop() {
+	CAPTURE_CHANGE_STATE(ps_end);
+}
 
 public Action CAPTURE_STATE_TICK(Handle timer, any none) {
 	
@@ -447,6 +491,19 @@ public Action CAPTURE_STATE_TICK(Handle timer, any none) {
 void STATE_TICK_WARMUP() {
 	int timeLeft = g_iCurrentStart + (g_iCurrentTimer) - GetTime();
 	
+	if( !g_b30SecondsLeft && timeLeft <= 30 ) {
+		announceSound(0, snd_30SecondsRemain);
+		g_b30SecondsLeft = true;
+	}
+	
+	if( timeLeft <= 10 && timeLeft > 0 ) {
+		if( !g_bCountDown[timeLeft] ) {
+			int tmp = view_as<int>(snd_CountDown01) - timeLeft + 1;
+			
+			announceSound(0, tmp);
+			g_bCountDown[timeLeft] = true;
+		}
+	}
 	if( timeLeft <= 0 ) {
 		CAPTURE_CHANGE_STATE(g_iCurrentState == view_as<int>(ps_warmup1) ? ps_match1 : ps_match2);
 	}
@@ -455,11 +512,11 @@ void STATE_TICK_MATCH() {
 	int timeLeft = g_iCurrentStart + (g_iCurrentTimer) - GetTime();
 
 	if( !g_b5MinutesLeft && timeLeft <= 5*60 ) {
-		EmitSoundToAllAny(g_szSoundList[snd_5MinutesRemain], _, 6, _, _, 1.0);
+		announceSound(0, snd_5MinutesRemain);
 		g_b5MinutesLeft = true;
 	}
 	if( !g_b1MinuteLeft && timeLeft <= 1*60 ) {
-		EmitSoundToAllAny(g_szSoundList[snd_1MinuteRemain], _, 6, _, _, 1.0);
+		announceSound(0, snd_1MinuteRemain);
 		g_b1MinuteLeft = true;
 	}
 	
@@ -482,7 +539,7 @@ void STATE_TICK_MATCH() {
 
 void CAPTURE_CHANGE_STATE(int state) {
 	g_iCurrentState = state;
-	g_iCurrentTimer = g_iRoundTime[state] * 60 / 10;
+	g_iCurrentTimer = g_iRoundTime[state] * 60 / 2;
 	g_iCurrentStart = GetTime();
 	
 	CAPTURE_STATE_ENTER();
@@ -503,6 +560,9 @@ void CAPTURE_STATE_ENTER() {
 		}
 		case ps_switch: {
 			STATE_ENTER_SWITCH();
+		}
+		case ps_reward: {
+			STATE_ENTER_REWARD();
 		}
 		case ps_end: {
 			STATE_ENTER_END();
@@ -583,18 +643,33 @@ void STATE_ENTER_BEGIN() {
 	CAPTURE_CHANGE_STATE(ps_warmup1);
 }
 void STATE_ENTER_WARMUP() {
-	for (int i = 0; i < g_stkTeamCount[TEAM_BLUE]; i++) {
-		int client = g_stkTeam[TEAM_BLUE][i];
-		if( rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PVP ) {
-			teleportToZone(client, METRO_BELMON);
+	for (int i = 1; i <= MaxClients; i++) {
+		if( !IsValidClient(i) )
+			continue;
+		if( !IsPlayerAlive(i) )
+			continue;
+		
+		if( rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_PVP ) {
+			teleportToZone(i, g_iPlayerTeam[i] == TEAM_RED ? ZONE_RESPAWN : METRO_BELMON);
 		}
 	}
+	
+	g_b30SecondsLeft = false;
+	for (int i = 0; i < sizeof(g_bCountDown); i++)
+		g_bCountDown[i] = false;
 }
 void STATE_ENTER_MATCH() {
 	CPrintToChatAll("{lightblue} =================================={default} ");
 	CPrintToChatAll("{lightblue} Début du round!{default} ");
 	CPrintToChatAll("{lightblue} =================================={default} ");
 	g_bFirstBlood = g_b5MinutesLeft = g_b1MinuteLeft = false;
+	
+	if( g_iCurrentState == view_as<int>(ps_match1) ) {
+		announceSound(0, snd_Play);
+	}
+	else {
+		announceSound(0, snd_FinalRound);
+	}
 }
 void STATE_ENTER_SWITCH() {
 	StringMapSnapshot KeyList = g_hGlobalDamage.Snapshot();
@@ -618,18 +693,13 @@ void STATE_ENTER_SWITCH() {
 		GetClientAuthId(i, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 		g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
 		addClientToTeam(i, array[gdm_team]);
-		
-		if( g_iPlayerTeam[i] == TEAM_BLUE ) {
-			EmitSoundToClientAny(i, g_szSoundList[snd_YouAreOnBlue], _, 6, _, _, 1.0);
-		}
-		else if( g_iPlayerTeam[i] == TEAM_RED ) {
-			EmitSoundToClientAny(i, g_szSoundList[snd_YouAreOnRed], _, 6, _, _, 1.0);
-		}
 	}
 	
 	int tmp = g_iTeamScore[TEAM_BLUE];
 	g_iTeamScore[TEAM_BLUE] = g_iTeamScore[TEAM_RED];
 	g_iTeamScore[TEAM_RED] = tmp;
+	
+	announceSound(0, snd_EndOfRound);
 	
 	CAPTURE_CHANGE_STATE(ps_warmup2);
 }
@@ -643,32 +713,10 @@ void STATE_ENTER_END_OF_ROUND() {
 		CAPTURE_CHANGE_STATE(ps_switch);
 	}
 	else {
-		CAPTURE_CHANGE_STATE(ps_end);
+		CAPTURE_CHANGE_STATE(ps_reward);
 	}
 }
-void STATE_ENTER_END() {
-	
-	int wall = Entity_FindByName("job=201__-pvp_wall", "func_brush");
-	if( wall > 0 )
-		rp_AcceptEntityInput(wall, "Enable");
-	
-	g_bIsInCaptureMode = false;
-	
-	for(int i=1; i<=MaxClients; i++) {
-		if( !IsValidClient(i) )
-			continue;
-		rp_UnhookEvent(i, RP_OnPlayerDead, fwdDead);
-		rp_UnhookEvent(i, RP_OnPlayerHUD, fwdHUD);
-		rp_UnhookEvent(i, RP_OnPlayerSpawn, fwdSpawn);
-		rp_UnhookEvent(i, RP_OnFrameSeconde, fwdFrame);
-		rp_UnhookEvent(i, RP_PreTakeDamage, fwdTakeDamage);
-		rp_UnhookEvent(i, RP_OnPlayerZoneChange, fwdZoneChange);
-		rp_UnhookEvent(i, RP_PreClientStealItem, fwdStealItem);
-
-		if( IsPlayerAlive(i) )
-			rp_ClientColorize(i);
-	}
-	
+void STATE_ENTER_REWARD() {
 	char tmp[64], optionsBuff[2][64];
 	int winner, maxPoint, totalPoints;
 	for(int i=1; i<MAX_GROUPS; i++) {
@@ -696,17 +744,45 @@ void STATE_ENTER_END() {
 	rp_SetCaptureInt(cap_bunker, winner);
 	rp_SetCaptureInt(cap_villa, winner);
 	
-			
+	CPrintToChatAll("{lightblue} =================================={default} ");
 	CPrintToChatAll("{lightblue} Le bunker appartient maintenant à... %s !", optionsBuff[1]);
 	CPrintToChatAll("{lightblue} =================================={default} ");
+	
+	CAPTURE_Reward();
+	GDM_Resume();
+	
+	CAPTURE_CHANGE_STATE(ps_end);
+}
+void STATE_ENTER_END() {
+	
+	int wall = Entity_FindByName("job=201__-pvp_wall", "func_brush");
+	if( wall > 0 )
+		rp_AcceptEntityInput(wall, "Enable");
+	
+	g_bIsInCaptureMode = false;
+	
+	for(int i=1; i<=MaxClients; i++) {
+		if( !IsValidClient(i) )
+			continue;
+		rp_UnhookEvent(i, RP_OnPlayerDead, fwdDead);
+		rp_UnhookEvent(i, RP_OnPlayerHUD, fwdHUD);
+		rp_UnhookEvent(i, RP_OnPlayerSpawn, fwdSpawn);
+		rp_UnhookEvent(i, RP_OnFrameSeconde, fwdFrame);
+		rp_UnhookEvent(i, RP_PreTakeDamage, fwdTakeDamage);
+		rp_UnhookEvent(i, RP_OnPlayerZoneChange, fwdZoneChange);
+		rp_UnhookEvent(i, RP_PreClientStealItem, fwdStealItem);
+
+		if( IsPlayerAlive(i) )
+			rp_ClientColorize(i);
+	}
+	
 	
 	UnhookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Post);
 	UnhookEvent("weapon_fire", Event_PlayerShoot, EventHookMode_Post);
 	UnhookEvent("player_hurt", fwdGod_PlayerHurt, EventHookMode_Pre);
 	UnhookEvent("weapon_fire", fwdGod_PlayerShoot, EventHookMode_Pre);	
 	
-	CAPTURE_Reward();
-	GDM_Resume();
+	
 	CAPTURE_UpdateLight();
 	
 	ServerCommand("tv_stoprecord");
@@ -753,7 +829,6 @@ void CAPTURE_UpdateLight() {
 	}
 }
 void CAPTURE_Reward() {
-	/*
 	int amount;
 	char tmp[128], szSteamID[32];
 	
@@ -788,14 +863,13 @@ void CAPTURE_Reward() {
 		}
 		
 		amount = RoundFloat( float(array[gdm_elo]) / 1000.0 * float(amount) );
-		
+		/*
 		if( array[gdm_flag] >= 1 || array[gdm_kill] >= 1 ) {
 			rp_ClientGiveItem(client, 215, amount + 3, true);
 			rp_GetItemData(215, item_type_name, tmp, sizeof(tmp));
 			CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu %d %s, en récompense de la capture.", amount+3, tmp);
-		}
+		}*/
 	}
-	*/
 }
 // -----------------------------------------------------------------------------------------------------------------
 public Action fwdSpawn(int client) {
@@ -929,21 +1003,21 @@ public Action fwdFrame(int client) {
 			PrintHintText(client, "Vous êtes en spawn-protection");
 		}
 		else if( g_iPlayerTeam[client] == TEAM_RED ) {
-			rp_ClientColorize(client, { 255, 255, 0, 255 } );
+			rp_ClientColorize(client, { 255, 64, 0, 255 } );
 			if( g_iCurrentState == view_as<int>(ps_warmup1) || g_iCurrentState == view_as<int>(ps_warmup2) ) {
-				PrintHintText(client, "Vous êtes en défense.\n     <font color='#33ff33'>Préparez-vous à l'assaut</font>");
+				PrintHintText(client, "Vous êtes en <font color='#ff3333'>défense</font>.\n     <font color='#33ff33'>Préparez-vous à l'assaut</font>");
 			}
 			else {
-				PrintHintText(client, "Vous êtes en défense.\n     <font color='#3333ff'>Tuez les BLEUS</font>");
+				PrintHintText(client, "Vous êtes en <font color='#ff3333'>défense</font>.\n     Tuez les BLEUS</font>");
 			}
 		}
 		else {
-			rp_ClientColorize(client, { 0, 255, 255, 255 } );
+			rp_ClientColorize(client, { 0, 64, 255, 255 } );
 			if( g_iCurrentState == view_as<int>(ps_warmup1) || g_iCurrentState == view_as<int>(ps_warmup2) ) {
-				PrintHintText(client, "Vous êtes en attaque.\n     <font color='#33ff33'>Préparez-vous à l'assaut</font>");
+				PrintHintText(client, "Vous êtes en <font color='#3333ff'>attaque</font>.\n     <font color='#33ff33'>Préparez-vous à l'assaut</font>");
 			}
 			else {
-				PrintHintText(client, "Vous êtes en attaque.\n     <font color='#ff3333'>Tuez les ROUGES</font>");
+				PrintHintText(client, "Vous êtes en <font color='#3333ff'>attaque</font>.\n     Tuez les ROUGES</font>");
 			}
 		}
 	}
@@ -1310,6 +1384,11 @@ void GDM_Init(int client) {
 		array[gdm_team] = g_iPlayerTeam[client];
 		g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
 	}
+	else {
+		if( g_iPlayerTeam[client] == TEAM_NONE ) {
+			addClientToTeam(client, array[gdm_team]);
+		}
+	}
 	
 	g_hGlobalSteamID.SetString(szSteamID, tmp, true);
 }
@@ -1505,7 +1584,9 @@ void GDM_Resume() {
 	for (int client = 1; client <= MaxClients; client++) {
 		if( !IsValidClient(client) )
 			continue;
-		g_hStatsMenu.Display(client, TopMenuPosition_Start);
+		
+		if( g_iPlayerTeam[client] != TEAM_NONE )
+			g_hStatsMenu.Display(client, TopMenuPosition_Start);
 	}
 }
 // -----------------------------------------------------------------------------------------------------------------
@@ -1626,7 +1707,7 @@ void announceSound(int client, int sound) {
 		g_flClientLastScore[i] = GetGameTime();
 		PrintHintText(i, msg);
 		
-		if( !g_bStopSound[client] )
+		if( !g_bStopSound[i] )
 			clients[clientCount++] = i;
 	}
 	EmitSoundAny(clients, clientCount, g_szSoundList[sound], _, _, _, _, ANNONCES_VOLUME);
