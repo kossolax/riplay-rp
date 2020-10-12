@@ -786,7 +786,7 @@ void STATE_ENTER_END() {
 	CAPTURE_UpdateLight();
 	
 	ServerCommand("tv_stoprecord");
-	ServerCommand("rp_capture none");
+	ServerCommand("rp_capture 0");
 	//ServerCommand("rp_wallhack 0");
 	
 	CAPTURE_CHANGE_STATE(ps_none);
