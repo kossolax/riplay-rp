@@ -527,7 +527,7 @@ public void Q6_Frame(int objectiveID, int client) {
 	
 	for (int i = 0; i < g_stkTeamCount[TEAM_BRAQUEUR]; i++) {
 		int heal = GetClientHealth(g_stkTeam[TEAM_BRAQUEUR][i]) + Math_GetRandomInt(5, 10);
-		int kevlar = rp_GetClientInt(client, i_Kevlar) + Math_GetRandomInt(2, 5);
+		int kevlar = rp_GetClientInt(g_stkTeam[TEAM_BRAQUEUR][i], i_Kevlar) + Math_GetRandomInt(2, 5);
 #if defined USING_VEHICLE
 		if( allInVehicle ) allInVehicle = isInVehicle(g_stkTeam[TEAM_BRAQUEUR][i]);
 #else
