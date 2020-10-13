@@ -246,8 +246,6 @@ void START_PERQUIZ(int zone) {
 		return;
 	}
 	
-	
-	
 	if( array[PQ_resp] == 0 && IsValidClient(array[PQ_target]) )
 		array[PQ_resp] = array[PQ_target];
 		
@@ -259,10 +257,10 @@ void START_PERQUIZ(int zone) {
 	LogToGame("[PERQUIZ] Une perquisition est lancée dans %s.", tmp);
 	
 	PrintToChatPoliceSearch(array[PQ_resp], "{red} =================================={default} ");
-	if( IsValidClient(array[PQ_target]) )
-		PrintToChatPoliceSearch(array[PQ_resp], "{red}[TSX-RP] [POLICE]{default} La perquisition dans %s pour un recherché %N commence.", tmp, array[PQ_target]);
-	else
-		PrintToChatPoliceSearch(array[PQ_resp], "{red}[TSX-RP] [POLICE]{default} La perquisition dans %s pour du traffic illégal commence, %N est le responsable.", tmp, array[PQ_resp]);
+	if( array[PQ_target] > 0 && IsValidClient(array[PQ_target]) )
+		PrintToChatPoliceSearch(array[PQ_resp], ""... MOD_TAG ..." {red}[POLICE]{default} La perquisition dans %s pour un recherché %N commence.", tmp, array[PQ_target]);
+	if( array[PQ_target] == 0 )
+		PrintToChatPoliceSearch(array[PQ_resp], ""... MOD_TAG ..." {red}[POLICE]{default} La perquisition dans %s pour du traffic illégal commence, %N est le responsable.", tmp, array[PQ_resp]);
 	PrintToChatPoliceSearch(array[PQ_resp], "{red} =================================={default} ");	
 	
 	if( IsValidClient(array[PQ_target]) ) {
