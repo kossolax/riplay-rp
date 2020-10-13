@@ -138,15 +138,7 @@ public Action Cmd_ItemDoorProtect(int args) {
 		CPrintToChat(client, "" ...MOD_TAG... " La protection est activée pour %d minutes", RoundFloat((g_flAppartProtection[appartID] - GetGameTime()) / 60.0));
 	}
 	else {
-		float prix = float(rp_GetItemInt(item_id, item_type_prix));
-		float reduc = prix / 100.0 * float(rp_GetClientInt(vendeur, i_Reduction));
-		float taxe = rp_GetItemFloat(item_id, item_type_taxes);
-		
-		rp_ClientMoney(vendeur, i_AddToPay, -RoundFloat((prix * taxe) - reduc));
-		rp_ClientMoney(client, i_Bank, RoundFloat(prix - reduc));
-		rp_SetJobCapital(91, rp_GetJobCapital(91) - RoundFloat(prix * (1.0 - taxe)));
-		
-		rp_SetClientStat(vendeur, i_MoneyEarned_Sales, rp_GetClientStat(vendeur, i_MoneyEarned_Sales) - RoundFloat((prix * taxe) - reduc));
+		rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
 		CPrintToChat(client, "" ...MOD_TAG... " Vous devez être dans votre appartement pour acheter cet objet.");
 	}
 }

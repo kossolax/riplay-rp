@@ -115,9 +115,42 @@ public Action Cmd_ItemChirurgie(int args) {
 	
 	int client = GetCmdArgInt(2);
 	int vendeur = GetCmdArgInt(3);
+	int item_id = GetCmdArgInt(args);
+	
+	if( StrEqual(arg1, "full") ) {
+		if( rp_GetClientBool(client, ch_Force) &&
+			rp_GetClientBool(client, ch_Speed) &&
+			rp_GetClientBool(client, ch_Jump) &&
+			rp_GetClientBool(client, ch_Regen) &&
+			rp_GetClientBool(client, ch_Heal) &&
+			rp_GetClientBool(client, ch_Heal) ) {
+			rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+			return Plugin_Handled;
+		}
+	}
+	
+	if( StrEqual(arg1, "force") && rp_GetClientBool(client, ch_Force) ) {
+		rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+		return Plugin_Handled;
+	}
+	if( StrEqual(arg1, "speed") && rp_GetClientBool(client, ch_Speed) ) {
+		rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+		return Plugin_Handled;
+	}
+	if( StrEqual(arg1, "jump") && rp_GetClientBool(client, ch_Jump) ) {
+		rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+		return Plugin_Handled;
+	}
+	if( StrEqual(arg1, "regen") && rp_GetClientBool(client, ch_Regen) ) {
+		rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+		return Plugin_Handled;
+	}
+	if( StrEqual(arg1, "heal") && rp_GetClientBool(client, ch_Heal) ) {
+		rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+		return Plugin_Handled;
+	}
+	
 	float time = rp_GetClientInt(vendeur, i_Job) == 13 ? 30.0 : 5.0;
-
-
 
 	for (float i = 0.0; i < time; i+= 5.0) {
 		Handle dp = CreateDataPack();
@@ -165,11 +198,9 @@ public Action Cmd_ItemChirurgie(int args) {
 		rp_SetClientBool(client, ch_Regen, true);
 	}
 	if( StrEqual(arg1, "heal") || StrEqual(arg1, "full") ) {
-		
 		SetEntityHealth(client, 500);
 		if( !rp_GetClientBool(client, ch_Heal))
 			rp_HookEvent(client, RP_OnPlayerSpawn, fwdSpawn);
-		
 		rp_SetClientBool(client, ch_Heal, true);
 	}
 	

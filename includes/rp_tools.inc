@@ -17,6 +17,19 @@
 #include <cstrike>
 #include <csgo_items>
 
+stock void rp_CANCEL_AUTO_ITEM(int client, int vendeur, int item_id) {
+	float prix = float(rp_GetItemInt(item_id, item_type_prix));
+	float reduc = prix / 100.0 * float(rp_GetClientInt(vendeur, i_Reduction));
+	float taxe = rp_GetItemFloat(item_id, item_type_taxes);
+	int jobID = rp_GetClientJobID(vendeur);
+	
+	rp_ClientMoney(vendeur, i_AddToPay, -RoundFloat((prix * taxe) - reduc));
+	rp_ClientMoney(client, i_Bank, RoundFloat(prix - reduc));
+	rp_SetJobCapital(jobID, rp_GetJobCapital(jobID) - RoundFloat(prix * (1.0 - taxe)));
+	
+	rp_SetClientStat(vendeur, i_MoneyEarned_Sales, rp_GetClientStat(vendeur, i_MoneyEarned_Sales) - RoundFloat((prix * taxe) - reduc));
+}
+
 stock int rp_GetTargetHull(int client, float hit[3], float size=8.0) {
 	float src[3], ang[3], dst[3], min[3], max[3];
 	
