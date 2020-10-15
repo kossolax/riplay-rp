@@ -26,6 +26,8 @@
 #define		TEAM_RED			1
 #define		TEAM_BLUE			2
 
+#define		ACCELERATION_FACTOR	1
+
 // -----------------------------------------------------------------------------------------------------------------
 enum flag_data { data_group, data_skin, data_red, data_green, data_blue, data_time, data_owner, data_lastOwner, flag_data_max };
 int g_iClientFlag[65];
@@ -224,7 +226,6 @@ public void OnCvarChange(Handle cvar, const char[] oldVal, const char[] newVal) 
 public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 	g_bStopSound[client] = false;
-	rp_SetClientFloat(client, fl_WeaponTrain, 10.0);
 			
 	if( g_bIsInCaptureMode ) {
 		GDM_Init(client);
@@ -345,7 +346,7 @@ public Action Cmd_ItemFlag(int args) {
 			stackDrapeau[stackCount++] = i;
 		}
 	}
-	if( stackCount >= 3 ) {
+	if( stackCount >= 2 ) {
 		bool can = false;
 		for (int i = 0; i < stackCount; i++) {
 			if( IsValidClient(g_iFlagData[ stackDrapeau[i] ][data_owner]) )
@@ -510,15 +511,6 @@ void STATE_TICK_WARMUP() {
 }
 void STATE_TICK_MATCH() {
 	int timeLeft = g_iCurrentStart + (g_iCurrentTimer) - GetTime();
-
-	if( !g_b5MinutesLeft && timeLeft <= 5*60 ) {
-		announceSound(0, snd_5MinutesRemain);
-		g_b5MinutesLeft = true;
-	}
-	if( !g_b1MinuteLeft && timeLeft <= 1*60 ) {
-		announceSound(0, snd_1MinuteRemain);
-		g_b1MinuteLeft = true;
-	}
 	
 	if( GetTime() % 5 == 0 ) {
 		
@@ -531,7 +523,28 @@ void STATE_TICK_MATCH() {
 			}
 		}
 	}
-	
+
+	if( !g_b5MinutesLeft && timeLeft <= 5*60 ) {
+		announceSound(0, snd_5MinutesRemain);
+		g_b5MinutesLeft = true;
+	}
+	if( !g_b1MinuteLeft && timeLeft <= 1*60 ) {
+		announceSound(0, snd_1MinuteRemain);
+		g_b1MinuteLeft = true;
+	}
+	if( !g_b30SecondsLeft && timeLeft <= 30 ) {
+		announceSound(0, snd_30SecondsRemain);
+		g_b30SecondsLeft = true;
+	}
+		
+	if( timeLeft <= 10 && timeLeft > 0 ) {
+		if( !g_bCountDown[timeLeft] ) {
+			int tmp = view_as<int>(snd_CountDown01) - timeLeft + 1;
+			
+			announceSound(0, tmp);
+			g_bCountDown[timeLeft] = true;
+		}
+	}
 	if( timeLeft <= 0 ) {
 		CAPTURE_CHANGE_STATE(g_iCurrentState == view_as<int>(ps_match1) ? ps_end_of_round1 : ps_end_of_round2);
 	}
@@ -539,7 +552,7 @@ void STATE_TICK_MATCH() {
 
 void CAPTURE_CHANGE_STATE(int state) {
 	g_iCurrentState = state;
-	g_iCurrentTimer = g_iRoundTime[state] * 60 / 2;
+	g_iCurrentTimer = g_iRoundTime[state] * 60 / ACCELERATION_FACTOR;
 	g_iCurrentStart = GetTime();
 	
 	CAPTURE_STATE_ENTER();
@@ -662,7 +675,32 @@ void STATE_ENTER_MATCH() {
 	CPrintToChatAll("{lightblue} =================================={default} ");
 	CPrintToChatAll("{lightblue} Début du round!{default} ");
 	CPrintToChatAll("{lightblue} =================================={default} ");
-	g_bFirstBlood = g_b5MinutesLeft = g_b1MinuteLeft = false;
+	g_bFirstBlood = g_b5MinutesLeft = g_b1MinuteLeft = g_b30SecondsLeft = false;
+	for (int i = 0; i < sizeof(g_bCountDown); i++)
+		g_bCountDown[i] = false;
+	
+	char classname[64];
+	for(int i=MaxClients; i<MAX_ENTITIES; i++) {
+		if( !IsValidEdict(i) )
+			continue;
+		if( !IsValidEntity(i) )
+			continue;
+		
+		GetEdictClassname(i, classname, sizeof(classname));
+		if( !StrEqual(classname, "ctf_flag") )
+			continue;
+
+		int owner = g_iFlagData[i][data_owner];
+
+		if( owner == 0 || !IsValidClient(owner) ) {
+			rp_AcceptEntityInput(i, "KillHierarchy");
+			continue;
+		}
+		if( owner > 0 && g_iPlayerTeam[i] != TEAM_BLUE ) {
+			rp_AcceptEntityInput(i, "KillHierarchy");
+			continue;
+		}		
+	}
 	
 	if( g_iCurrentState == view_as<int>(ps_match1) ) {
 		announceSound(0, snd_Play);
@@ -680,10 +718,11 @@ void STATE_ENTER_SWITCH() {
 	for (int i = 0; i < nbrParticipant; i++) {
 		KeyList.GetKey(i, szSteamID, sizeof(szSteamID));
 		g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
-		
-		int team = (array[gdm_team] == TEAM_RED) ? TEAM_BLUE : TEAM_RED;
-		array[gdm_team] = team;
-		g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
+		if( array[gdm_team] != TEAM_NONE ) {
+			int team = (array[gdm_team] == TEAM_RED) ? TEAM_BLUE : TEAM_RED;
+			array[gdm_team] = team;
+			g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
+		}
 	}
 	
 	for (int i = 1; i <= MaxClients; i++) {
@@ -774,6 +813,8 @@ void STATE_ENTER_END() {
 
 		if( IsPlayerAlive(i) )
 			rp_ClientColorize(i);
+
+		removeClientTeam(i);
 	}
 	
 	
@@ -830,7 +871,7 @@ void CAPTURE_UpdateLight() {
 }
 void CAPTURE_Reward() {
 	int amount;
-	char tmp[128], szSteamID[32];
+	char szSteamID[32];
 	
 	for(int client=1; client<=MaxClients; client++) {
 		if( !IsValidClient(client) || rp_GetClientGroupID(client) == 0 )
@@ -1379,8 +1420,8 @@ void GDM_Init(int client) {
 			
 		if( g_iPlayerTeam[client] == TEAM_NONE && rp_GetClientGroupID(client) > 0 ) {
 			addClientToTeam(client, getWorstTeam());
-			array[gdm_team] = g_iPlayerTeam[client];
 		}
+		array[gdm_team] = g_iPlayerTeam[client];
 		
 		g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
 	}
@@ -1538,17 +1579,17 @@ void GDM_Resume() {
 		
 		if( array[gdm_touch] != 0 && array[gdm_shot] != 0  ) {
 			delta = RoundFloat(float(array[gdm_touch]) / float(array[gdm_shot]+1) * 1000.0);
-			Format(key, sizeof(key), "s%06d_%s", 1000000 + delta, szSteamID); 
+			Format(key, sizeof(key), "s%08d_%s", GetRandomInt(1, 100), szSteamID); 
 			Format(tmp, sizeof(tmp), "%4.1f - %s", float(delta)/10.0, name);
 			g_hStatsMenu.AddItem(key, MenuPvPResume, g_hStatsMenu_Shoot, "", 0, tmp);
 			
 			delta = RoundFloat(float(array[gdm_hitbox]) / float(array[gdm_touch]+1) * 1000.0);
-			Format(key, sizeof(key), "h%06d_%s", 1000000 + delta, szSteamID); 
+			Format(key, sizeof(key), "h%08d_%s", GetRandomInt(1, 100), szSteamID); 
 			Format(tmp, sizeof(tmp), "%4.1f - %s", float(delta)/10.0, name);
 			g_hStatsMenu.AddItem(key, MenuPvPResume, g_hStatsMenu_Head, "", 0, tmp);
 			
 			delta = array[gdm_elo];
-			Format(key, sizeof(key), "e%06d_%s", 1000000 + delta, szSteamID); 
+			Format(key, sizeof(key), "e%08d_%s", GetRandomInt(1, 100), szSteamID); 
 			Format(tmp, sizeof(tmp), "%6d - %s", delta, name);
 			g_hStatsMenu.AddItem(key, MenuPvPResume, g_hStatsMenu_ELO, "", 0, tmp);
 			
@@ -1671,7 +1712,7 @@ public void MenuPvPResume(Handle topmenu, TopMenuAction action, TopMenuObject to
 		else if( topobj_id == g_hStatsMenu_Flag )
 			Format(buffer, maxlength, "Le plus de drapeaux posés");
 		else if( topobj_id == g_hStatsMenu_ELO )
-			Format(buffer, maxlength, "Le meilleur en PvP");
+			Format(buffer, maxlength, "Le plus fort aux armes");
 		else if( topobj_id == g_hStatsMenu_SCORE )
 			Format(buffer, maxlength, "Le plus de contribution");
 		else 

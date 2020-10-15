@@ -251,16 +251,14 @@ public Action BuildingMicrowave_post(Handle timer, any entity) {
 	int time;
 	int job = rp_GetClientInt(client, i_Job);
 	switch(job){
-		case 21: time = 20;
-		case 22: time = 25;
-		case 23: time = 30;
-		case 24: time = 35;
-		case 25: time = 40;
-		default: time = 40;
+		case 21: time = 60;
+		case 22: time = 65;
+		case 23: time = 70;
+		case 24: time = 75;
+		case 25: time = 80;
+		case 25: time = 85;
+		default: time = 90;
 	}
-	
-	int delta = (GetTime() - 1598177559) / (24 * 60 * 60);
-	time += delta;
 
 	if( rp_GetBuildingData(entity, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(entity), zone_type_type) != 21 ) {
 		time *= 2;
