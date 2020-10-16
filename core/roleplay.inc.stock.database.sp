@@ -998,7 +998,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		g_iUserData[Client][i_AmendeLiscence1] = SQL_FetchInt(hQuery, 58);
 		g_iUserData[Client][i_SkinDonateur] = SQL_FetchInt(hQuery, 59);
 		g_iUserData[Client][i_ELO] = SQL_FetchInt(hQuery, 61);
-		g_iUserData[client][i_PVPBannedUntil] = SQL_FetchInt(hQuery, 62);
+		g_iUserData[Client][i_PVPBannedUntil] = SQL_FetchInt(hQuery, 62);
 		int freeassu = SQL_FetchInt(hQuery, 60);
 
 		SQL_FetchString(hQuery, 47, g_szUserData[Client][sz_LastName], sizeof(g_szUserData[][]));
