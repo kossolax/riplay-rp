@@ -30,8 +30,8 @@ enum quest_teams {
 	
 	TEAM_MAX
 };
-#define		ACCELERATION_FACTOR	1
-#define		LEAVING_TIME		30
+#define		ACCELERATION_FACTOR	4
+#define		LEAVING_TIME		(30/ACCELERATION_FACTOR)
 
 // -----------------------------------------------------------------------------------------------------------------
 enum flag_data { data_group, data_skin, data_red, data_green, data_blue, data_time, data_owner, data_lastOwner, flag_data_max };
