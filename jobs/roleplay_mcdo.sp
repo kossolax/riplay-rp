@@ -252,11 +252,11 @@ public Action BuildingMicrowave_post(Handle timer, any entity) {
 	int job = rp_GetClientInt(client, i_Job);
 	switch(job){
 		case 21: time = 60;
-		case 22: time = 65;
-		case 23: time = 70;
-		case 24: time = 75;
-		case 25: time = 80;
-		case 25: time = 85;
+		case 22: time = 60;
+		case 23: time = 65;
+		case 24: time = 65;
+		case 25: time = 70;
+		case 26: time = 70;
 		default: time = 90;
 	}
 
