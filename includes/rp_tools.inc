@@ -17,11 +17,49 @@
 #include <cstrike>
 #include <csgo_items>
 
+
+stock void String_TimeFormat(int time, char[] str, int len, bool full = true) {
+	str[0] = 0;
+	int t, d, s;
+	t = time;
+	
+	
+	s = 60 * 60;
+	if( t >= s ) {
+		d = t / s;
+		Format(str, len, "%s%d heure%s", str, d, d > 1 ? "s" : "");
+		t -= (d * s);
+		
+		if( !full ) return;
+		if( t > 0 ) Format(str, len, "%s, ", str);
+	}
+	
+	s = 60;
+	if( t >= s) {
+		d = t / s;
+		Format(str, len, "%s%d minute%s", str, d, d > 1 ? "s" : "");
+		t -= (d * s);
+		
+		if( !full ) return;
+		if( t > 0 ) Format(str, len, "%s et ", str);
+	}
+	
+	s = 1;
+	if( t >= s ) {
+		d = t / s;
+		Format(str, len, "%s%d seconde%s", str, d, d > 1 ? "s" : "");
+		t -= (d * s);
+	}
+}
 stock void rp_CANCEL_AUTO_ITEM(int client, int vendeur, int item_id) {
 	float prix = float(rp_GetItemInt(item_id, item_type_prix));
 	float reduc = prix / 100.0 * float(rp_GetClientInt(vendeur, i_Reduction));
 	float taxe = rp_GetItemFloat(item_id, item_type_taxes);
 	int jobID = rp_GetClientJobID(vendeur);
+	
+	PrintToConsole(client, "DEBUG pour kosso: prix: %f reduc: %f taxe: %f", prix, reduc, taxe);
+	PrintToConsole(client, "DEBUG pour kosso: argent à prendre au vendeur %N: %d", vendeur, -RoundFloat((prix * taxe) - reduc));
+	PrintToConsole(client, "DEBUG pour kosso: argent rendre au client %N: %d", client, RoundFloat(prix - reduc));
 	
 	rp_ClientMoney(vendeur, i_AddToPay, -RoundFloat((prix * taxe) - reduc));
 	rp_ClientMoney(client, i_Bank, RoundFloat(prix - reduc));

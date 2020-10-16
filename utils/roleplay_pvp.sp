@@ -26,10 +26,12 @@ enum quest_teams {
 	TEAM_RED,
 	TEAM_BLUE,
 	TEAM_PENDING,
+	TEAM_BANNED,
 	
 	TEAM_MAX
 };
 #define		ACCELERATION_FACTOR	1
+#define		LEAVING_TIME		30
 
 // -----------------------------------------------------------------------------------------------------------------
 enum flag_data { data_group, data_skin, data_red, data_green, data_blue, data_time, data_owner, data_lastOwner, flag_data_max };
@@ -47,12 +49,13 @@ TopMenu g_hStatsMenu;
 TopMenuObject g_hStatsMenu_Shoot, g_hStatsMenu_Head, g_hStatsMenu_Damage, g_hStatsMenu_Flag, g_hStatsMenu_ELO, g_hStatsMenu_SCORE, g_hStatsMenu_KILL;
 int g_iPlayerTeam[2049], g_stkTeam[view_as<int>(TEAM_MAX)][MAXPLAYERS + 1], g_stkTeamCount[view_as<int>(TEAM_MAX)], g_iTeamScore[view_as<int>(TEAM_MAX)];
 int g_iScores[MAX_GROUPS];
+int g_iLeaving[65];
 
 // -----------------------------------------------------------------------------------------------------------------
 enum pvp_state {
 	ps_none,
-	ps_invite,
 	ps_begin,
+	ps_team,
 	ps_warmup1, ps_match1, ps_end_of_round1,
 	ps_switch,
 	ps_warmup2, ps_match2, ps_end_of_round2,
@@ -62,7 +65,7 @@ enum pvp_state {
 };
 int g_iRoundTime[view_as<int>(ps_max)] =  {
 	0,
-	5, 
+	5,
 	0,
 	3, 12, 0,
 	0,
@@ -71,8 +74,8 @@ int g_iRoundTime[view_as<int>(ps_max)] =  {
 };
 char g_szRoundName[view_as<int>(ps_max)][128] = {
 	"Aucun",
-	"Invitation",
-	"Initialisation",
+	"Invitation des joueurs",
+	"TEAM",
 	"ROUND - 1 (WARMUP)", "ROUND - 1", "ROUND - 1 (FIN)",
 	"SWITCH",
 	"ROUND - 2 (WARMUP)", "ROUND - 2", "ROUND - 2 (FIN)",
@@ -411,7 +414,6 @@ public Action FlagThink(Handle timer, any data) {
 				g_iTeamScore[TEAM_BLUE] += point;
 				
 				GDM_RegisterFlag(g_iFlagData[entity][data_lastOwner], point);
-				rp_ClientXPIncrement(g_iFlagData[entity][data_lastOwner], point);
 				
 				PrintHintText(g_iFlagData[entity][data_lastOwner], "Drapeau posé !\n <font color='#33ff33'>+%d</span> points !", point);
 				g_flClientLastScore[g_iFlagData[entity][data_lastOwner]] = GetGameTime();
@@ -484,8 +486,8 @@ public Action CAPTURE_STATE_TICK(Handle timer, any none) {
 	int timeLeft = g_iCurrentStart + (g_iCurrentTimer) - GetTime();
 
 	switch(g_iCurrentState) {
-		case ps_invite: {
-			STATE_TICK_INVITE(timeLeft);
+		case ps_begin: {
+			STATE_TICK_BEGIN(timeLeft);
 		}
 		case ps_warmup1, ps_warmup2: {
 			STATE_TICK_WARMUP(timeLeft);
@@ -498,57 +500,101 @@ public Action CAPTURE_STATE_TICK(Handle timer, any none) {
 	if( g_iCurrentState != view_as<int>(ps_none) )
 		CreateTimer(1.0, CAPTURE_STATE_TICK);
 }
-void STATE_TICK_INVITE(int timeLeft) {
+void STATE_TICK_BEGIN(int timeLeft) {	
+	if( timeLeft <= 0 ) {
+		CAPTURE_CHANGE_STATE(ps_team);
+	}
+}
+void warnLeaving(int client) {
+	Menu menu = new Menu(MenuLeft);
+	menu.SetTitle("=== Event PvP===\n\n ");
 	
-	for(int client=1; client<=MaxClients; client++) {
-		if( !IsValidClient(client) )
-			continue;
+	// Page 1:
+	menu.AddItem("", " Vous êtes entrain de quitter le champ de", ITEMDRAW_DISABLED);
+	menu.AddItem("", "de bataille, alors que vous vous êtes engagé", ITEMDRAW_DISABLED);
+	menu.AddItem("", "pour celui-ci.\n ", ITEMDRAW_DISABLED);
+	
+	menu.AddItem("", "Si vous n'y retournez pas rapidement, vous", ITEMDRAW_DISABLED);
+	menu.AddItem("", "n'aurez pas de récompenses et vous ne pourrez pas", ITEMDRAW_DISABLED);
+	menu.AddItem("", "participer à ce genre d'évènement pendant 7 jours\n ", ITEMDRAW_DISABLED);
+	
+	menu.AddItem("oui", "Je souhaite y retourner");
+	menu.AddItem("non", "J'accepte d'être pénalisé.");
+	menu.ExitButton = true;
+	
+	menu.Display(client, MENU_TIME_FOREVER);	
+}
+public int MenuLeft(Handle menu, MenuAction action, int client, int param2) {
+	if( action == MenuAction_Select ) {
+		char options[64];
+		GetMenuItem(menu, param2, options, sizeof(options));
 		
-		int zone = rp_GetPlayerZone(client);
-		if ( g_iPlayerTeam[client] == view_as<int>(TEAM_NONE) ) {
-			PrintHintText(client, "Un event PVP est sur le point de commencer.\n Rendez-vous au métro Belmont pour y participer.");
-			
-			if( zone == METRO_BELMON || zone == METRO_BELMON-1 ) {
-				if( rp_ClientCanDrawPanel(client) ) {
-					inviteToTeam(client);
-				}
-			}
+		if( !(g_iPlayerTeam[client] == view_as<int>(TEAM_RED) || g_iPlayerTeam[client] == view_as<int>(TEAM_BLUE)) ) {
+			return;
 		}
 		
+		if( StrEqual(options, "oui") ) {
+			teleportToZone(client, g_iPlayerTeam[client] == view_as<int>(TEAM_RED) ? ZONE_RESPAWN : METRO_BELMON);
+		}
+		else if( StrEqual(options, "non") ) {
+			g_iLeaving[client] = 99999;
+		}
 	}
-	
-	if( timeLeft <= 0 ) {
-		CAPTURE_CHANGE_STATE(ps_begin);
+	else if( action == MenuAction_End ) {
+		CloseHandle(menu);
 	}
 }
 void inviteToTeam(int client) {
+	if( rp_GetClientInt(client, i_PVPBannedUntil) > GetTime() )
+		return;
+	
 	Menu menu = new Menu(MenuInvite);
-	menu.SetTitle("=== Event PvP===\n\
-	L'évènement dur environs 30 minutes, vous serrez\n\
-	amené à dépenser beaucoup d'objet pour remporter\n\
-	la victoire. Il faudra également collaborer avec\n\
-	votre équipe pour être éfficace.\n\
-	 \n\
-	Si vous acceptez, vous serrez assigner dans l'une\n\
-	des deux équipes. Vous obtiendrez une récompense\n\
-	à la fin de la partie en fonction de vos contributions.\n\
-	 \n\
-	Si vous désertez, vous n'aurez pas de récompenses et vous\n\
-	ne pourrez pas jouer à la partie suivante.\n\
-	 \n\
-	Le groupe des joueurs ayant le plus de contribution\n\
-	remporte également des bonus exclusifs pour la semaine.\n ");
+	menu.SetTitle("=== Event PvP===\n\n ");
+	
+	// Page 1:
+	menu.AddItem("", " L'évènement se déroule en deux phases,", ITEMDRAW_DISABLED);
+	menu.AddItem("", "de 15 minutes chacune. Il faudra", ITEMDRAW_DISABLED);
+	menu.AddItem("", "collaborer avec vos coéquipiers pour", ITEMDRAW_DISABLED);
+	menu.AddItem("", "remporter la victoire.\n ", ITEMDRAW_DISABLED);
+	
+	menu.AddItem("", "Vous serez amenés à utiliser de nombreux", ITEMDRAW_DISABLED);
+	menu.AddItem("", "objets couteux pour être efficace.\n ", ITEMDRAW_DISABLED);
+	
+	// Page 2:
+	menu.AddItem("", " Si vous acceptez l'invitation, vous ", ITEMDRAW_DISABLED);
+	menu.AddItem("", "serrez assigné dans l'une des deux", ITEMDRAW_DISABLED);
+	menu.AddItem("", "équipes où vous devrez défendre ou", ITEMDRAW_DISABLED);
+	menu.AddItem("", "attaquer la base.\n ", ITEMDRAW_DISABLED);
+	
+	menu.AddItem("", " Si vous désertez, vous ne pourrez", ITEMDRAW_DISABLED);
+	menu.AddItem("", "pas participer à la partie suivante.\n ", ITEMDRAW_DISABLED);
+	
+	// Page 3:
+	menu.AddItem("", "A la fin de la partie, vous obtiendrez", ITEMDRAW_DISABLED);
+	menu.AddItem("", "une récompense en fonction de vos.", ITEMDRAW_DISABLED);
+	menu.AddItem("", "contributions personnelles.\n ", ITEMDRAW_DISABLED);
+	
+	menu.AddItem("", "Le gang ayant le plus de contributions", ITEMDRAW_DISABLED);
+	menu.AddItem("", "remporte également des bonus exclusif", ITEMDRAW_DISABLED);
+	menu.AddItem("", "pour la semaine.\n ", ITEMDRAW_DISABLED);
+
+	// Page 4:
 	
 	menu.AddItem("oui", "J'accepte l'invitation");
-	menu.AddItem("non", "Je refuse l'invitation");
-	menu.ExitButton = false;
+	menu.AddItem("non", "Je refuse");
+	menu.ExitButton = true;
 	
-	menu.Display(client, 10);
+	menu.Display(client, MENU_TIME_FOREVER);
 }
 public int MenuInvite(Handle menu, MenuAction action, int client, int param2) {
 	if( action == MenuAction_Select ) {
 		char options[64];
 		GetMenuItem(menu, param2, options, sizeof(options));
+		
+		if( g_iPlayerTeam[client] != view_as<int>(TEAM_NONE) ) {
+			return;
+		}
+		
 		if( StrEqual(options, "oui") ) {
 			addClientToTeam(client, TEAM_PENDING);
 		}
@@ -561,6 +607,13 @@ public int MenuInvite(Handle menu, MenuAction action, int client, int param2) {
 	}
 }
 void STATE_TICK_WARMUP(int timeLeft) {
+	if( timeLeft % 5 == 0 ) {
+		
+		if( g_stkTeamCount[TEAM_PENDING] > 0 ) {
+			addClientToTeam(g_stkTeam[TEAM_PENDING][0], getWorstTeam());
+		}
+	}
+	
 	if( !g_b30SecondsLeft && timeLeft <= 30 ) {
 		announceSound(0, snd_30SecondsRemain);
 		g_b30SecondsLeft = true;
@@ -579,7 +632,7 @@ void STATE_TICK_WARMUP(int timeLeft) {
 	}
 }
 void STATE_TICK_MATCH(int timeLeft) {
-	if( GetTime() % 5 == 0 ) {
+	if( timeLeft % 5 == 0 ) {
 		
 		for (int i = 0; i < g_stkTeamCount[TEAM_BLUE]; i++) {
 			int client = g_stkTeam[TEAM_BLUE][i];
@@ -588,6 +641,10 @@ void STATE_TICK_MATCH(int timeLeft) {
 				GDM_RegisterArea(client);
 				g_iTeamScore[TEAM_BLUE]++;
 			}
+		}
+		
+		if( g_stkTeamCount[TEAM_PENDING] > 0 ) {
+			addClientToTeam(g_stkTeam[TEAM_PENDING][0], getWorstTeam());
 		}
 	}
 
@@ -626,11 +683,11 @@ void CAPTURE_CHANGE_STATE(int state) {
 }
 void CAPTURE_STATE_ENTER() {
 	switch(g_iCurrentState) {
-		case ps_invite: {
-			STATE_ENTER_INVITE();
-		}
 		case ps_begin: {
 			STATE_ENTER_BEGIN();
+		}
+		case ps_team: {
+			STATE_ENTER_TEAM();
 		}
 		case ps_warmup1, ps_warmup2: {
 			STATE_ENTER_WARMUP();
@@ -652,16 +709,9 @@ void CAPTURE_STATE_ENTER() {
 		}
 	}
 }
-void STATE_ENTER_INVITE() {
-	CPrintToChatAll("{lightblue} =================================={default} ");
-	CPrintToChatAll("{lightblue} La phase d'invitation à l'event PvP a commencé!{default} ");
-	CPrintToChatAll("{lightblue} =================================={default} ");
-}
 void STATE_ENTER_BEGIN() {
 	CPrintToChatAll("{lightblue} =================================={default} ");
-	CPrintToChatAll("{lightblue} Le bunker peut maintenant être capturé!{default} ");
-	
-	//CAPTURE_UpdateLight();
+	CPrintToChatAll("{lightblue} La capture du bunker est sur le point de commencer!{default} ");
 	
 	int wall = Entity_FindByName("job=201__-pvp_wall", "func_brush");
 	if( wall > 0 )
@@ -674,8 +724,7 @@ void STATE_ENTER_BEGIN() {
 	for(int i=0; i<MAX_GROUPS; i++)
 		g_iScores[i] = 0;
 	
-	g_iTeamScore[TEAM_RED] = g_iTeamScore[TEAM_BLUE] = 0;		
-	shuffleTeams();
+	g_iTeamScore[TEAM_RED] = g_iTeamScore[TEAM_BLUE] = 0;
 
 	for(int i=1; i<=MaxClients; i++) {
 		if( !IsValidClient(i) )
@@ -727,10 +776,12 @@ void STATE_ENTER_BEGIN() {
 		CPrintToChatAll("{lightblue} Cette capture est enregistrée à cette adresse: https://riplay.fr/tv/%s.dem", szDayOfWeek);
 	}
 	CPrintToChatAll("{lightblue} =================================={default} ");
-	
+}
+void STATE_ENTER_TEAM() {
+	shuffleTeams();
 	CAPTURE_CHANGE_STATE(ps_warmup1);
 }
-void STATE_ENTER_WARMUP() {
+void STATE_ENTER_WARMUP() {	
 	for (int i = 1; i <= MaxClients; i++) {
 		if( !IsValidClient(i) )
 			continue;
@@ -876,31 +927,31 @@ void STATE_ENTER_END() {
 	if( wall > 0 )
 		rp_AcceptEntityInput(wall, "Enable");
 	
-	g_bIsInCaptureMode = false;
+	if( g_bIsInCaptureMode ) {
+		for(int i=1; i<=MaxClients; i++) {
+			if( !IsValidClient(i) )
+				continue;
+			rp_UnhookEvent(i, RP_OnPlayerDead, fwdDead);
+			rp_UnhookEvent(i, RP_OnPlayerHUD, fwdHUD);
+			rp_UnhookEvent(i, RP_OnPlayerSpawn, fwdSpawn);
+			rp_UnhookEvent(i, RP_OnFrameSeconde, fwdFrame);
+			rp_UnhookEvent(i, RP_PreTakeDamage, fwdTakeDamage);
+			rp_UnhookEvent(i, RP_OnPlayerZoneChange, fwdZoneChange);
+			rp_UnhookEvent(i, RP_PreClientStealItem, fwdStealItem);
 	
-	for(int i=1; i<=MaxClients; i++) {
-		if( !IsValidClient(i) )
-			continue;
-		rp_UnhookEvent(i, RP_OnPlayerDead, fwdDead);
-		rp_UnhookEvent(i, RP_OnPlayerHUD, fwdHUD);
-		rp_UnhookEvent(i, RP_OnPlayerSpawn, fwdSpawn);
-		rp_UnhookEvent(i, RP_OnFrameSeconde, fwdFrame);
-		rp_UnhookEvent(i, RP_PreTakeDamage, fwdTakeDamage);
-		rp_UnhookEvent(i, RP_OnPlayerZoneChange, fwdZoneChange);
-		rp_UnhookEvent(i, RP_PreClientStealItem, fwdStealItem);
-
-		if( IsPlayerAlive(i) )
-			rp_ClientColorize(i);
-
-		removeClientTeam(i);
+			if( IsPlayerAlive(i) )
+				rp_ClientColorize(i);
+	
+			removeClientTeam(i);
+		}
+		
+		
+		UnhookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Post);
+		UnhookEvent("weapon_fire", Event_PlayerShoot, EventHookMode_Post);
+		UnhookEvent("player_hurt", fwdGod_PlayerHurt, EventHookMode_Pre);
+		UnhookEvent("weapon_fire", fwdGod_PlayerShoot, EventHookMode_Pre);
 	}
-	
-	
-	UnhookEvent("player_hurt", Event_PlayerHurt, EventHookMode_Post);
-	UnhookEvent("weapon_fire", Event_PlayerShoot, EventHookMode_Post);
-	UnhookEvent("player_hurt", fwdGod_PlayerHurt, EventHookMode_Pre);
-	UnhookEvent("weapon_fire", fwdGod_PlayerShoot, EventHookMode_Pre);	
-	
+	g_bIsInCaptureMode = false;
 	
 	CAPTURE_UpdateLight();
 	
@@ -951,43 +1002,49 @@ void CAPTURE_Reward() {
 	int amount;
 	char szSteamID[32];
 	
+	int bestTeam = g_iTeamScore[TEAM_RED] > g_iTeamScore[TEAM_BLUE] ? TEAM_RED : TEAM_BLUE;
+	
 	for(int client=1; client<=MaxClients; client++) {
 		if( !IsValidClient(client) )
 			continue;
 		
-		int gID = rp_GetClientGroupID(client);
-		
-		GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
-		int[] array = new int[gdm_max];
-		g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
-		
-		if( gID == rp_GetCaptureInt(cap_bunker) ) {
-			amount = 10;
-			rp_IncrementSuccess(client, success_list_pvpkill, 100);
+		if( g_iPlayerTeam[client] == view_as<int>(TEAM_RED) || g_iPlayerTeam[client] == view_as<int>(TEAM_BLUE) ) {
+			int gID = rp_GetClientGroupID(client);
 			
-			if( array[gdm_elo] >= 1600 )
+			GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
+			int[] array = new int[gdm_max];
+			g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
+			
+			if( gID == rp_GetCaptureInt(cap_bunker) && g_iPlayerTeam[client] == bestTeam ) {
+				amount = 10;
+				rp_IncrementSuccess(client, success_list_pvpkill, 50);
 				EmitSoundToClientAny(client, g_szSoundList[snd_FlawlessVictory], _, 6, _, _, 1.0);
-			else
+			}
+			else if( gID == rp_GetCaptureInt(cap_bunker) || g_iPlayerTeam[client] == bestTeam ) {
+				amount = 5;
+				rp_IncrementSuccess(client, success_list_pvpkill, 25);
 				EmitSoundToClientAny(client, g_szSoundList[snd_Congratulations], _, 6, _, _, 1.0);
-		}
-		else {
-			amount = 1;
-			
-			if( array[gdm_flag] >= 1 || array[gdm_kill] >= 1 ) {
-				EmitSoundToClientAny(client, g_szSoundList[snd_YouHaveLostTheMatch], _, 6, _, _, 1.0);
 			}
 			else {
-				EmitSoundToClientAny(client, g_szSoundList[snd_HumiliatingDefeat], _, 6, _, _, 1.0);
+				if( array[gdm_score] >= 100 && (array[gdm_flag] >= 1 || array[gdm_kill] >= 1) ) {
+					amount = 1;
+					EmitSoundToClientAny(client, g_szSoundList[snd_YouHaveLostTheMatch], _, 6, _, _, 1.0);
+				}
+				else {
+					amount = 0;
+					EmitSoundToClientAny(client, g_szSoundList[snd_HumiliatingDefeat], _, 6, _, _, 1.0);
+				}
 			}
+			
+			if( amount > 0 ) {
+				char tmp[128];
+				rp_ClientGiveItem(client, 215, amount, true);
+				rp_GetItemData(215, item_type_name, tmp, sizeof(tmp));
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu %d %s, en récompense de la capture.", amount, tmp);
+			}
+			
+			rp_ClientXPIncrement(client, array[gdm_score]);
 		}
-		
-		amount = RoundFloat( float(array[gdm_elo]) / 1000.0 * float(amount) );
-		/*
-		if( array[gdm_flag] >= 1 || array[gdm_kill] >= 1 ) {
-			rp_ClientGiveItem(client, 215, amount + 3, true);
-			rp_GetItemData(215, item_type_name, tmp, sizeof(tmp));
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu %d %s, en récompense de la capture.", amount+3, tmp);
-		}*/
 	}
 }
 // -----------------------------------------------------------------------------------------------------------------
@@ -1074,25 +1131,21 @@ public Action fwdDead(int victim, int attacker, float& respawn, int& tdm) {
 }
 public Action fwdHUD(int client, char[] szHUD, const int size) {
 	int gID = g_iPlayerTeam[client];
-	static char loading[64], cache[512];
+	static char loading[128], cache[512];
 	static float lastGen;
 	
-	if( g_bIsInCaptureMode && gID > 0 ) {
+	if( g_bIsInCaptureMode && gID != view_as<int>(TEAM_NONE) && gID != view_as<int>(TEAM_BANNED) ) {
 		if( lastGen > GetGameTime() ) {
 			strcopy(szHUD, size, cache);
 		}
 		else {	
 			int timeLeft = g_iCurrentStart + g_iCurrentTimer - GetTime();
+			String_TimeFormat(timeLeft, loading, sizeof(loading), true);
 			
-			if( timeLeft > 10 )
-				rp_Effect_LoadingBar(loading, sizeof(loading), float(GetTime() - g_iCurrentStart) / float(g_iCurrentTimer));
-			else
-				Format(loading, sizeof(loading), " Il reste %d seconde%s", timeLeft, timeLeft >= 2 ? "s": "");
-			
-			Format(szHUD, size, "PvP: Capture du Bunker\n%s\n%s\n \n", g_szRoundName[g_iCurrentState], loading);
+			Format(szHUD, size, "PvP: Capture du Bunker\n%s\n%s%s\n \n", g_szRoundName[g_iCurrentState], timeLeft > 0 ? "Il reste " : " ", loading);
 				
-			Format(szHUD, size, "%s Attaque: %d\n", szHUD, g_iTeamScore[TEAM_BLUE]);
-			Format(szHUD, size, "%s Défense: %d\n", szHUD, g_iTeamScore[TEAM_RED]);
+			Format(szHUD, size, "%s - Attaque: %d\n", szHUD, g_iTeamScore[TEAM_BLUE]);
+			Format(szHUD, size, "%s - Défense: %d\n", szHUD, g_iTeamScore[TEAM_RED]);
 			
 			lastGen = GetGameTime() + 0.66;
 			strcopy(cache, sizeof(cache), szHUD);
@@ -1108,7 +1161,47 @@ public Action fwdStealItem(int client, int target) {
 }
 public Action fwdFrame(int client) {
 	
-	if( g_iPlayerTeam[client] == view_as<int>(TEAM_RED) || g_iPlayerTeam[client] == view_as<int>(TEAM_BLUE) ) {
+	if( g_iCurrentState == view_as<int>(ps_begin) ) {
+		
+		int timeLeft = g_iCurrentStart + (g_iCurrentTimer) - GetTime();
+		char tmp[128];
+		String_TimeFormat(timeLeft, tmp, sizeof(tmp), false);
+		
+		if( g_iPlayerTeam[client] == view_as<int>(TEAM_NONE) ) {
+			PrintHintText(client, "Un event PVP va commencer dans <font color='#bbffbb'>%s</font>.\nRendez-vous au métro Belmont pour y participer.", tmp);
+			
+			if( IsInEventArea(client) == true && rp_ClientCanDrawPanel(client) ) {
+				inviteToTeam(client);
+			}
+		}
+		else {
+			
+			if( IsInEventArea(client) == false ) {
+				removeClientTeam(client);
+			}
+			
+			PrintHintText(client, "Un event PVP va commencer dans <font color='#bbffbb'>%s</font>.\nEn attente des autres participants.", tmp);
+		}
+	}
+	else if( g_iPlayerTeam[client] == view_as<int>(TEAM_RED) || g_iPlayerTeam[client] == view_as<int>(TEAM_BLUE) ) {
+		if( IsInEventArea(client) ) {
+			g_iLeaving[client] = 0;
+		}
+		else if( IsPlayerAlive(client) ) {
+			g_iLeaving[client]++;
+			
+			if( g_iLeaving[client] >= LEAVING_TIME+30 ) {
+				addClientToTeam(client, TEAM_BANNED);
+				rp_SetClientInt(client, i_PVPBannedUntil, GetTime() + 8 * 24 * 60 * 60);
+			}
+			else if( g_iLeaving[client] == LEAVING_TIME ) {
+				EmitSoundToClientAny(client, g_szSoundList[snd_YouAreLeavingTheBattlefield], _, _, _, _, ANNONCES_VOLUME);
+				warnLeaving(client);
+			}
+			else if( g_iLeaving[client] >= LEAVING_TIME && rp_ClientCanDrawPanel(client) ) {
+				warnLeaving(client);
+			}
+		}
 		
 		if( rp_GetClientVehicle(client) <= 0 ) {
 			ClientCommand(client, "firstperson");
@@ -1141,10 +1234,19 @@ public Action fwdFrame(int client) {
 		}
 	}
 	else if ( g_iPlayerTeam[client] == view_as<int>(TEAM_PENDING) ) {
-		PrintHintText(client, "Un event PVP est en cours.\n Vous êtes en attente d'une équipe.");
+		if( IsInEventArea(client) == false ) {
+			removeClientTeam(client);
+		}
+		
+		
+		PrintHintText(client, "Un event PVP est en cours.\nVous êtes en attente d'une équipe.");
 	}
-	else {
-		PrintHintText(client, "Un event PVP est en cours.\n Rendez-vous au métro Belmont pour y participer.");
+	else if ( g_iPlayerTeam[client] == view_as<int>(TEAM_NONE) ) {
+		PrintHintText(client, "Un event PVP est en cours.\nRendez-vous au métro Belmont pour y participer.");
+		
+		if( IsInEventArea(client) == true && rp_ClientCanDrawPanel(client) ) {
+			inviteToTeam(client);
+		}
 	}
 	
 	int vehicle = Client_GetVehicle(client);
@@ -1498,10 +1600,6 @@ void GDM_Init(int client) {
 	
 	if( !g_hGlobalDamage.GetArray(szSteamID, array, gdm_max) ) {
 		array[gdm_elo] = rp_GetClientInt(client, i_ELO);
-			
-		if( g_iPlayerTeam[client] == view_as<int>(TEAM_NONE) && rp_GetClientGroupID(client) > 0 ) {
-			addClientToTeam(client, getWorstTeam());
-		}
 		array[gdm_team] = g_iPlayerTeam[client];
 		
 		g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
@@ -1608,8 +1706,6 @@ stock int GDM_ELOKill(int client, int target, bool flag = false) {
 	
 	g_hGlobalDamage.SetArray(szSteamID, attacker, gdm_max);
 	g_hGlobalDamage.SetArray(szSteamID2, victim, gdm_max);
-	
-	rp_ClientXPIncrement(client, tmp);
 	
 	return tmp;
 }
@@ -1900,6 +1996,20 @@ public Action ResetKillCount(Handle timer, any client) {
 	g_hKillTimer[client] = INVALID_HANDLE;
 }
 // -----------------------------------------------------------------------------------------------------------------
+bool IsInEventArea(int client) {
+	if( rp_GetClientBool(client, b_IsAFK) )
+		return false;
+	
+	int zone = rp_GetPlayerZone(client);
+	if( zone >= BUNKER_ZONE_MIN && zone <= BUNKER_ZONE_MAX )
+		return true;
+	if( zone == METRO_BELMON || zone == METRO_BELMON-1 )
+		return true;	
+	if( zone == 261 )
+		return true;
+	
+	return false;
+}
 // ----------------------------------------------------------------------------
 void addClientToTeam(int client, int team) {
 	removeClientTeam(client);
