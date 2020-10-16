@@ -813,6 +813,7 @@ enum int_user_data {
 	
 	i_SkinDonateur,
 	i_ELO,
+	i_PVPBannedUntil,
 	
 	i_udata_max
 };

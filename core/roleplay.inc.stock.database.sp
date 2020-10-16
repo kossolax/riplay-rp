@@ -559,8 +559,8 @@ void StoreUserData(int client) {
 		MysqlQuery, fname, lname, g_bUserData[client][b_PassedRulesTest], jobplaytime, g_iUserData[client][i_GiveXP], g_iUserData[client][i_Dette]);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
-		"%s `jail_qhs`='%i', `amende_permi_lege`='%i',`amende_permi_lourd`='%i', `points`='%i' WHERE `steamid`='%s';",
-		MysqlQuery, g_bUserData[client][b_JailQHS], g_iUserData[client][i_AmendeLiscence2], g_iUserData[client][i_AmendeLiscence1], g_iUserData[client][i_ELO], SteamID);
+		"%s `jail_qhs`='%i', `amende_permi_lege`='%i',`amende_permi_lourd`='%i', `points`='%i', `pvp_banned`='%i' WHERE `steamid`='%s';",
+		MysqlQuery, g_bUserData[client][b_JailQHS], g_iUserData[client][i_AmendeLiscence2], g_iUserData[client][i_AmendeLiscence1], g_iUserData[client][i_ELO], g_iUserData[client][i_PVPBannedUntil], SteamID);
 
 	SQL_TQuery(g_hBDD, SQL_QueryCallBack, MysqlQuery);
 	
@@ -835,7 +835,7 @@ void LoadUserData(int Client) {
 		Format(query, sizeof(query),
 			"%s `level`, `prestige`, `female`, `birthday`, `birthmonth`, `lastname`, `firstname`, `rules`, `jobplaytime`, `adminxp`, `dette`, `time_played`, ", query, SteamID); 
 		Format(query, sizeof(query),
-			"%s `permi_lege_start`, `permi_lourd_start`, `freekiller`, `amende_permi_lege`, `amende_permi_lourd`, `skin_id`, `freeassu`, `points` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
+			"%s `permi_lege_start`, `permi_lourd_start`, `freekiller`, `amende_permi_lege`, `amende_permi_lourd`, `skin_id`, `freeassu`, `points`, `pvp_banned` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
 
 		SQL_TQuery(g_hBDD, LoadUserData_2, query, Client, DBPrio_High);
 		
@@ -998,6 +998,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		g_iUserData[Client][i_AmendeLiscence1] = SQL_FetchInt(hQuery, 58);
 		g_iUserData[Client][i_SkinDonateur] = SQL_FetchInt(hQuery, 59);
 		g_iUserData[Client][i_ELO] = SQL_FetchInt(hQuery, 61);
+		g_iUserData[client][i_PVPBannedUntil] = SQL_FetchInt(hQuery, 62);
 		int freeassu = SQL_FetchInt(hQuery, 60);
 
 		SQL_FetchString(hQuery, 47, g_szUserData[Client][sz_LastName], sizeof(g_szUserData[][]));
