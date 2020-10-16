@@ -176,7 +176,7 @@ public void OnPluginStart() {
 	#endif
 	g_hItemBackup		= CreateConVar("rp_item_backup", "1");
 	g_hAllowSteal		= CreateConVar("rp_allow_steal", "1");
-	g_hCapturable 		= CreateConVar("rp_capture", "none");
+	g_hCapturable 		= CreateConVar("rp_capture", "0");
 	g_hAllowDamage		= CreateConVar("rp_car_damages", "20");
 	
 	SetConVarInt(g_hItemBackup, 1);
