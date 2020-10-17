@@ -61,6 +61,9 @@ public Plugin myinfo = {
 };
 
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("roleplay.phrases");
+	
 	CreateTimer(120.0, saveStats, _, TIMER_REPEAT);
 	
 	for (int i = 1; i <= MaxClients; i++) {

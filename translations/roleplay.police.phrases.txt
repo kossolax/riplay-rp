@@ -1,0 +1,18 @@
+"Phrases"
+{
+	"Tazer_removed_own"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez retiré {1} vous appartenant."
+	}
+	"Tazer_removed_target"
+	{
+		"#format"	"{1:s},{2:s}"
+		"fr"		"Vous avez retiré {1} de {2}."
+	}
+	"Tazer_removed_by"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} a été retirée par un agent de police."
+	}
+}

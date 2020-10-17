@@ -31,6 +31,8 @@ public Plugin myinfo = {
 	version = __LAST_REV__, url = "https://www.ts-x.eu"
 };
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("roleplay.phrases");
 	
 	g_hActive 		= CreateConVar("rp_perquisition", "0");
 	g_hPerquisition = new StringMap();

@@ -80,6 +80,9 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 	return APLRes_Success;
 }
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("roleplay.phrases");
+	
 	RegServerCmd("rp_quest_reload", 	Cmd_Reload);
 	RegServerCmd("rp_item_vehicle", 	Cmd_ItemVehicle,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_vehicle2", 	Cmd_ItemVehicle,		"RP-ITEM",	FCVAR_UNREGISTERED);

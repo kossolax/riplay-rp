@@ -32,6 +32,9 @@ public Plugin myinfo =  {
 	version = __LAST_REV__, url = "https://www.ts-x.eu"
 };
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("roleplay.phrases");
+	
 	RegAdminCmd("rp_force_maire", 		CmdForceMaire, 			ADMFLAG_ROOT);
 	
 	CreateTimer(HUD_FRAMERATE, Timer_HUD, _, TIMER_REPEAT);

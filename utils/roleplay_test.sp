@@ -68,6 +68,9 @@ public Action sound_hook(int clients[64], int &numClients, char sample[PLATFORM_
 	return Plugin_Continue;
 }
 public OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("roleplay.phrases");
+	
 	
 	RegAdminCmd("sm_effect_copter", Cmd_Copter, ADMFLAG_ROOT);
 	RegAdminCmd("sm_effect_copter2", Cmd_Copter, ADMFLAG_ROOT);

@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"build_rp_barriere"
+	{
+		"fr"	"une barrière"
+	}
+}

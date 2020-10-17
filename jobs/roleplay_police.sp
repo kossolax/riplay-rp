@@ -95,6 +95,10 @@ public Action Cmd_Reload(int args) {
 	return Plugin_Continue;
 }
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.police.phrases");
+	
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	
 	RegServerCmd("rp_item_ratio", Cmd_ItemRatio, "RP-ITEM", FCVAR_UNREGISTERED);
@@ -501,7 +505,7 @@ public Action Cmd_Vis(int client) {
 	return Plugin_Handled;
 }
 public Action Cmd_Tazer(int client) {
-	char tmp[128], tmp2[128], szQuery[1024];
+	char tmp[128], tmp1[128], tmp2[128], szQuery[1024];
 	int job = rp_GetClientInt(client, i_Job);
 	int Czone = rp_GetPlayerZone(client);
 	
@@ -713,12 +717,17 @@ public Action Cmd_Tazer(int client) {
 			
 			reward = 0;
 			
+			
+			
 			if (owner > 0) {
+				Format(tmp1, sizeof(tmp1), "%T", "build_rp_barriere", owner);
+				Format(tmp2, sizeof(tmp2), "%T", "build_rp_barriere", client);
+				
 				if (client == owner)
-					CPrintToChat(client, "" ...MOD_TAG... " Vous avez retiré votre propre barrière.");
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Tazer_removed_own", client, tmp2);
 				else {
-					CPrintToChat(client, "" ...MOD_TAG... " Vous avez retiré la barrière de %N.", owner);
-					CPrintToChat(owner, "" ...MOD_TAG... " Une de vos barrières a été retirée par un agent de police.");
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Tazer_removed_target", client, tmp2, owner);
+					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Tazer_removed_by", owner, tmp1);
 				}
 			}
 		}
@@ -727,7 +736,6 @@ public Action Cmd_Tazer(int client) {
 			LogToGame("[TSX-RP] [TAZER] %L a retiré %s de %L dans %s", client, tmp2, owner, tmp);
 			
 			reward = 0;
-			
 			if (owner > 0) {
 				if (client == owner)
 					CPrintToChat(client, "" ...MOD_TAG... " Vous avez retiré votre propre %s.", tmp2);

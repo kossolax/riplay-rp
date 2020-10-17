@@ -71,6 +71,9 @@ public void OnPluginStart() {
 
 	Format(szGeneralMenu, sizeof(szGeneralMenu), "   RolePlay - INFO: (%s)   ", __LAST_REV__);
 	LoadTranslations("common.phrases");
+	LoadTranslations("core.phrases");
+	LoadTranslations("roleplay.phrases");
+	
 	//
 	// Events:
 	HookEvent("player_death", 		EventDeath, 		EventHookMode_Pre);

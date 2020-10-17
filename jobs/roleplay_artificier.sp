@@ -35,6 +35,9 @@ public Action Cmd_Reload(int args) {
 	return Plugin_Continue;
 }
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("roleplay.phrases");
+	
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	RegServerCmd("rp_item_firework",	Cmd_ItemFireWork,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_highjump",	Cmd_ItemHighJump,		"RP-ITEM",	FCVAR_UNREGISTERED);

@@ -25,6 +25,9 @@ public Plugin myinfo = {
 	version = __LAST_REV__, url = "https://www.ts-x.eu"
 };
 public void OnPluginStart() {	
+	LoadTranslations("core.phrases");
+	LoadTranslations("roleplay.phrases");
+	
 	RegConsoleCmd("rp_hdv",	Cmd_Hdv);
 }
 public Action Cmd_Hdv(int client, int args) {

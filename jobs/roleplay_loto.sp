@@ -65,6 +65,9 @@ public Action Cmd_Reload(int args) {
 	return Plugin_Continue;
 }
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("roleplay.phrases");
+	
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	// Loto
 	RegServerCmd("rp_item_loto",		Cmd_ItemLoto,			"RP-ITEM",	FCVAR_UNREGISTERED);

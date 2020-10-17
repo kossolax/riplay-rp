@@ -92,6 +92,8 @@ int g_iXpAudience[] = { 10, 20, 30, 40, 50, 60, 80, 100, 120, 150, 180, 220, 250
 #define GetTribunalJail(%1) (%1==1?TRIBUJAIL_1:TRIBUJAIL_2)
 
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("roleplay.phrases");
 	
 	g_flCoords[1][0] = view_as<float>( { -508.0, -818.0, -1870.0 } );
 	g_flCoords[1][1] = view_as<float>( { -508.0, -712.0, -1870.0 } );

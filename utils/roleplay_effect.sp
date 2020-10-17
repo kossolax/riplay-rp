@@ -70,6 +70,9 @@ public Plugin myinfo = {
 }
 
 public void OnMapStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("roleplay.phrases");
+	
 	g_cModel = PrecacheModel("materials/sprites/water_drop.vmt");
 	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt");
 	g_cSnow = PrecacheDecal("DeadlyDesire/maps/snow.vmt");	

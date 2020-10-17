@@ -109,6 +109,9 @@ char g_szEmote[][][] = {
 };
 
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("roleplay.phrases");
+	
 	Handle hGameData = LoadGameConfigFile("sdktools.games");
 	if(hGameData == INVALID_HANDLE)
 		return;

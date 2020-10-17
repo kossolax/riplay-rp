@@ -179,6 +179,9 @@ public Plugin myinfo = {
 	version = __LAST_REV__, url = "https://www.ts-x.eu"
 };
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("roleplay.phrases");
+	
 	RegConsoleCmd("drop", FlagDrop);
 	RegServerCmd("rp_item_spawnflag", 	Cmd_ItemFlag,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_spawntag",	Cmd_SpawnTag,			"RP-ITEM",	FCVAR_UNREGISTERED);
