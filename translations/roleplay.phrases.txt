@@ -1,7 +1,92 @@
-"Phrases"
+﻿"Phrases"
 {
-	"build_rp_barriere"
+	"rp_banana"
+	{
+		"fr"	"une banane"
+	}
+	"rp_bank"
+	{
+		"fr"	"un distributeur"
+	}
+	"rp_barriere"
 	{
 		"fr"	"une barrière"
 	}
+	"rp_bigcashmachine"
+	{
+		"fr"	"une photocopieuse"
+	}
+	"rp_braquage_mask"
+	{
+		"fr"	"un masque"
+	}
+	"rp_cashmachine"
+	{
+		"fr"	"une imprimante à faux-billet"
+	}
+	"rp_copter"
+	{
+		"fr"	"un hélicoptère"
+	}
+	"rp_crate"
+	{
+		"fr"	"une caisse"
+	}
+	"rp_discoball"
+	{
+		"fr"	"une boule disco"
+	}
+	"rp_discosmoke"
+	{
+		"fr"	"un fumigène"
+	}
+	"rp_emote"
+	{
+		"fr"	"une dance"
+	}
+	"rp_grave"
+	{
+		"fr"	"une pière tombale"
+	}
+	"rp_gyrophare"
+	{
+		"fr"	"un gyrophrase"
+	}
+	"rp_healbox"
+	{
+		"fr"	"une healbox"
+	}
+	"rp_kevlarbox"
+	{
+		"fr"	"une kevlarbox"
+	}
+	"rp_microwave"
+	{
+		"fr"	"un microonde"
+	}
+	"rp_mine"
+	{
+		"fr"	"une mine"
+	}
+	"rp_phone"
+	{
+		"fr"	"un téléphone"
+	}
+	"rp_plant"
+	{
+		"fr"	"un plant de drogue"
+	}
+	"rp_sign"
+	{
+		"fr"	"un panneau"
+	}
+	"rp_table"
+	{
+		"fr"	"une table de craft"
+	}
+	"rp_weaponbox"
+	{
+		"fr"	"une caisse d'armes"
+	}
+
 }

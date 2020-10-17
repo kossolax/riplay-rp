@@ -1,4 +1,4 @@
-"Phrases"
+﻿"Phrases"
 {
 	"Tazer_removed_own"
 	{
@@ -14,5 +14,14 @@
 	{
 		"#format"	"{1:s}"
 		"fr"		"{1} a été retirée par un agent de police."
+	}
+	
+	"Jail_IsAllowed"
+	{
+		"fr"		"/jail autorisé"
+	}
+	"Jail_IsDenied"
+	{
+		"fr"		"/jail non autorisé"
 	}
 }

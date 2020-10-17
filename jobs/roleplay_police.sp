@@ -159,11 +159,11 @@ public Action fwdOnFrame(int client) {
 			Handle hud = CreateHudSynchronizer();
 			if( jugeCanJail() ) {
 				SetHudTextParams(0.0125, 0.0125, 1.1, 19, 213, 45, 255, 2, 0.0, 0.0, 0.0);
-				ShowSyncHudText(client, hud, "/jail autorisé");
+				ShowSyncHudText(client, hud, "%T", "Jail_IsAllowed", client);
 			}
 			else {
 				SetHudTextParams(0.0125, 0.0125, 1.1, 213, 19, 45, 255, 2, 0.0, 0.0, 0.0);
-				ShowSyncHudText(client, hud, "/jail non autorisé");
+				ShowSyncHudText(client, hud, "%T", "Jail_IsDenied", client);
 			}
 			CloseHandle(hud);
 		}
@@ -653,7 +653,7 @@ public Action Cmd_Tazer(int client) {
 		else if (StrEqual(tmp2, "rp_cashmachine")) {
 			
 			rp_GetZoneData(Tzone, zone_type_name, tmp, sizeof(tmp));
-			LogToGame("[TSX-RP] [TAZER] %L a supprimé une machine de %L dans %s", client, owner, tmp);
+			LogToGame("[TSX-RP] [TAZER] %L a retiré %T de %L dans %s", client, tmp2, LANG_SERVER, owner, tmp);
 			
 			reward = 16;
 			if (rp_GetBuildingData(target, BD_started) + 120 < GetTime()) {
@@ -663,15 +663,22 @@ public Action Cmd_Tazer(int client) {
 			}
 			
 			if (owner > 0) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous avez détruit la machine de %N", owner);
-				CPrintToChat(owner, "" ...MOD_TAG... " Une de vos machines à faux-billets a été détruite par un agent de police.");
+				Format(tmp1, sizeof(tmp1), "%T", tmp2, owner);
+				Format(tmp2, sizeof(tmp2), "%T", tmp2, client);
+				
+				if (client == owner)
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Tazer_removed_own", client, tmp2);
+				else {
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Tazer_removed_target", client, tmp2, owner);
+					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Tazer_removed_by", owner, tmp1);
+				}
 			}
 			SDKHooks_TakeDamage(target, client, client, 1000.0);
 		}
 		else if (StrEqual(tmp2, "rp_bigcashmachine")) {
 			
 			rp_GetZoneData(Tzone, zone_type_name, tmp, sizeof(tmp));
-			LogToGame("[TSX-RP] [TAZER] %L a supprimé une photocopieuse de %L dans %s", client, owner, tmp);
+			LogToGame("[TSX-RP] [TAZER] %L a retiré %T de %L dans %s", client, tmp2, LANG_SERVER, owner, tmp);
 			
 			reward = 17;
 			if (rp_GetBuildingData(target, BD_started) + 120 < GetTime()) {
@@ -681,14 +688,21 @@ public Action Cmd_Tazer(int client) {
 			}
 			
 			if (owner > 0) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous avez détruit la photocopieuse de %N", owner);
-				CPrintToChat(owner, "" ...MOD_TAG... " Votre photocopieuse a été détruite par un agent de police.");
+				Format(tmp1, sizeof(tmp1), "%T", tmp2, owner);
+				Format(tmp2, sizeof(tmp2), "%T", tmp2, client);
+				
+				if (client == owner)
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Tazer_removed_own", client, tmp2);
+				else {
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Tazer_removed_target", client, tmp2, owner);
+					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Tazer_removed_by", owner, tmp1);
+				}
 			}
 		}
 		else if (StrEqual(tmp2, "rp_plant")) {
 			
 			rp_GetZoneData(Tzone, zone_type_name, tmp, sizeof(tmp));
-			LogToGame("[TSX-RP] [TAZER] %L a supprimé un plant de %L dans %s", client, owner, tmp);
+			LogToGame("[TSX-RP] [TAZER] %L a retiré %T de %L dans %s", client, tmp2, LANG_SERVER, owner, tmp);
 			
 			reward = 55;
 			if ((rp_GetBuildingData(target, BD_started) + 120 < GetTime() && rp_GetBuildingData(target, BD_FromBuild) == 0) || 
@@ -704,8 +718,15 @@ public Action Cmd_Tazer(int client) {
 			}
 			
 			if (owner > 0) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous avez détruit le plant de drogue de %N", owner);
-				CPrintToChat(owner, "" ...MOD_TAG... " Un de vos plants de drogue a été détruit par un agent de police.");
+				Format(tmp1, sizeof(tmp1), "%T", tmp2, owner);
+				Format(tmp2, sizeof(tmp2), "%T", tmp2, client);
+				
+				if (client == owner)
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Tazer_removed_own", client, tmp2);
+				else {
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Tazer_removed_target", client, tmp2, owner);
+					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Tazer_removed_by", owner, tmp1);
+				}
 			}
 			
 			if (owner == client)
@@ -713,15 +734,15 @@ public Action Cmd_Tazer(int client) {
 		}
 		else if (StrContains(tmp2, "rp_barriere") == 0) {
 			rp_GetZoneData(Tzone, zone_type_name, tmp, sizeof(tmp));
-			LogToGame("[TSX-RP] [TAZER] %L a retiré une barrière de %L dans %s", client, owner, tmp);
+			LogToGame("[TSX-RP] [TAZER] %L a retiré %T de %L dans %s", client, tmp2, LANG_SERVER, owner, tmp);
 			
 			reward = 0;
 			
 			
 			
 			if (owner > 0) {
-				Format(tmp1, sizeof(tmp1), "%T", "build_rp_barriere", owner);
-				Format(tmp2, sizeof(tmp2), "%T", "build_rp_barriere", client);
+				Format(tmp1, sizeof(tmp1), "%T", tmp2, owner);
+				Format(tmp2, sizeof(tmp2), "%T", tmp2, client);
 				
 				if (client == owner)
 					CPrintToChat(client, "" ...MOD_TAG... " %T", "Tazer_removed_own", client, tmp2);
@@ -733,15 +754,18 @@ public Action Cmd_Tazer(int client) {
 		}
 		else if (StrContains(tmp2, "rp_") == 0 && rp_GetZoneBit(Tzone, 1.0) & BITZONE_PERQUIZ ) {
 			rp_GetZoneData(Tzone, zone_type_name, tmp, sizeof(tmp));
-			LogToGame("[TSX-RP] [TAZER] %L a retiré %s de %L dans %s", client, tmp2, owner, tmp);
+			LogToGame("[TSX-RP] [TAZER] %L a retiré %T de %L dans %s", client, tmp2, LANG_SERVER, owner, tmp);
 			
 			reward = 0;
 			if (owner > 0) {
+				Format(tmp1, sizeof(tmp1), "%T", tmp2, owner);
+				Format(tmp2, sizeof(tmp2), "%T", tmp2, client);
+				
 				if (client == owner)
-					CPrintToChat(client, "" ...MOD_TAG... " Vous avez retiré votre propre %s.", tmp2);
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Tazer_removed_own", client, tmp2);
 				else {
-					CPrintToChat(client, "" ...MOD_TAG... " Vous avez retiré %s de %N.", tmp2, owner);
-					CPrintToChat(owner, "" ...MOD_TAG... " Une de vos %s a été retirée par un agent de police.", tmp2);
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Tazer_removed_target", client, tmp2, owner);
+					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Tazer_removed_by", owner, tmp1);
 				}
 			}
 		}
