@@ -377,9 +377,9 @@ public void OnCvarChange(Handle cvar, const char[] oldVal, const char[] newVal) 
 		g_iEntityLimit = StringToInt(newVal);
 	}
 	else if( cvar == g_hCapturable ) {
-		if( StrEqual(oldVal, "none") && StrEqual(newVal, "active") )
+		if( StrEqual(oldVal, "0") && StrEqual(newVal, "1") )
 			g_bIsInCaptureMode = true;
-		else if( StrEqual(oldVal, "active") && StrEqual(newVal, "none") )
+		else if( StrEqual(oldVal, "1") && StrEqual(newVal, "0") )
 			g_bIsInCaptureMode = false;
 	}
 	else if( cvar == g_hAllowDamage ) {
