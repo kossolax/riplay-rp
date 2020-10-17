@@ -13,7 +13,7 @@
 	"Tazer_removed_by"
 	{
 		"#format"	"{1:s}"
-		"fr"		"{1} a été retirée par un agent de police."
+		"fr"		"{1} a été retiré(e) par un agent de police."
 	}
 	
 	"Jail_IsAllowed"

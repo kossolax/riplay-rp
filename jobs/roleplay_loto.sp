@@ -256,9 +256,9 @@ public Action Cmd_de(int client, char[] arg) {
 	tmp[strlen(tmp) - 2] = 0;
 	
 	if( count == 1 )
-		PrintToChatClientArea(client, "%N{défault} lance un dé et fait {green}%d{default}!", client, k);
+		PrintToChatClientArea(client, "%N{default} lance un dé et fait {green}%d{default}!", client, k);
 	else
-		PrintToChatClientArea(client, "%N{défault} lance %d dé%s et fait %s ... soit un total de {green}%d{default}!", client, count, count>1 ? "s" : "", tmp, k);
+		PrintToChatClientArea(client, "%N{default} lance %d dé%s et fait %s ... soit un total de {green}%d{default}!", client, count, count>1 ? "s" : "", tmp, k);
 	
 	return Plugin_Handled;
 }
