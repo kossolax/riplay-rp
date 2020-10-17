@@ -155,7 +155,7 @@ void DrawVendreMenu(int client) {
 				continue;
 			
 			// Chirurgie
-			if( g_iUserData[client][i_Job] == 13) {
+			if( g_iUserData[client][i_Job] == 14) {
 				if( StrContains(g_szItemListOrdered[i][item_type_extra_cmd], "rp_chirurgie full", false) == 0 )
 					continue;
 			}
@@ -169,12 +169,12 @@ void DrawVendreMenu(int client) {
 					continue;
 			}
 			// Tueur & PvP
-			if( g_iUserData[client][i_Job] == 46 || g_iUserData[client][i_Job] == 45 || g_iUserData[client][i_Job] == 44 ) {
+			if( g_iUserData[client][i_Job] == 44 || g_iUserData[client][i_Job] == 45 || g_iUserData[client][i_Job] == 46 ) {
 				if( StrContains(g_szItemListOrdered[i][item_type_extra_cmd], "rp_giveitem_pvp", false) == 0 )
 					continue;
 			}
 			// Technicien & Photocopieuse
-			if( g_iUserData[client][i_Job] == 226 || g_iUserData[client][i_Job] == 225 || g_iUserData[client][i_Job] == 224 ) {
+			if( g_iUserData[client][i_Job] == 224 || g_iUserData[client][i_Job] == 225 || g_iUserData[client][i_Job] == 226 ) {
 				if( StrContains(g_szItemListOrdered[i][item_type_extra_cmd], "rp_item_cashbig", false) == 0 )
 					continue;
 			}
@@ -758,6 +758,12 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 					if( GetJobPrimaryID(i) != jobID)
 						continue;
 					if( i == client )
+						continue;
+					
+					// les items des haut-gradés
+					if( StrContains(g_szItemList[item_id][item_type_extra_cmd], "rp_item_cashbig", false) == 0 && (g_iUserData[i][i_Job]-jobID) > 2 )
+						continue;
+					if( StrContains(g_szItemList[item_id][item_type_extra_cmd], "rp_giveitem_pvp", false) == 0 && (g_iUserData[i][i_Job]-jobID) > 2 )
 						continue;
 					
 					jobList[mnt] = i;

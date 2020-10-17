@@ -378,6 +378,20 @@ public Action task_cheque(Handle timer, any client) {
 		DisplayMenu(menu, client, MENU_TIME_DURATION);
 	}
 }
+bool HasHighGrade(int client, int jobID) {
+	for(int i = 1; i <= MaxClients; i++) {
+		if( !IsValidClient(i) )
+			continue;
+		if( i == client )
+			continue;
+		if( rp_GetClientJobID(i) != jobID )
+			continue;
+		if( (rp_GetClientInt(i, i_Job)-jobID) <= 2 )
+			return true;
+	}
+	
+	return false;
+}
 // ----------------------------------------------------------------------------
 public int MenuCheque(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_iParam2) {
 	
@@ -406,6 +420,12 @@ public int MenuCheque(Handle p_hItemMenu, MenuAction p_oAction, int client, int 
 				if( StrContains(tmp, "rp_item_contrat", false) == 0 )
 					continue;
 				if( StrContains(tmp, "rp_item_conprotect", false) == 0 )
+					continue;
+				
+				// les items des haut-gradés
+				if( StrContains(tmp, "rp_item_cashbig", false) == 0 && HasHighGrade(client, jobID) )
+					continue;
+				if( StrContains(tmp, "rp_giveitem_pvp", false) == 0 && HasHighGrade(client, jobID) )
 					continue;
 				
 				rp_GetItemData(i, item_type_name, tmp, sizeof(tmp));
