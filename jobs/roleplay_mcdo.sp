@@ -679,13 +679,13 @@ public Action Cmd_ItemBanane(int args) {
 	int count;
 	
 	char classname[64], classname2[64];
-	Format(classname, sizeof(classname), "rp_banana_%i", client);
+	Format(classname, sizeof(classname), "rp_banana");
 	
 	for (int i = MaxClients; i <= 2048; i++) {
 		if( !IsValidEdict(i) )
 			continue;
 		GetEdictClassname(i, classname2, sizeof(classname2));
-		if( StrEqual(classname, classname2) ) {
+		if( StrEqual(classname, classname2) && Entity_GetOwner(i) == client) {
 			count++;
 			if( count >= 10 ) {
 				CPrintToChat(client, "" ...MOD_TAG... " Vous avez posé trop de bananes.");
