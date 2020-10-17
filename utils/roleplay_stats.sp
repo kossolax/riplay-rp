@@ -108,7 +108,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 
 public Action fwdDataLoaded(int client){
 	rp_SetClientStat(client, i_Money_OnConnection, ( rp_GetClientInt(client, i_Money) + rp_GetClientInt(client, i_Bank) ));
-	rp_SetClientStat(client, i_PVP_OnConnection, rp_GetClientInt(client, i_PVP));
+	rp_SetClientStat(client, i_PVP_OnConnection, rp_GetClientInt(client, i_ELO));
 	rp_SetClientStat(client, i_Vitality_OnConnection, RoundToNearest(rp_GetClientFloat(client, fl_Vitality)) );
 	char steamID[32], query[256];
 	GetClientAuthId(client, AUTH_TYPE, steamID, sizeof(steamID), false);
@@ -248,10 +248,10 @@ public void DisplayStats(int client, bool full){
 		AddMenuItem(menu, "", tmp, ITEMDRAW_DISABLED);
 		Format(tmp, sizeof(tmp), "Argent gagné au loto: %d", rp_GetClientStat(client, i_LotoWon));
 		AddMenuItem(menu, "", tmp, ITEMDRAW_DISABLED);
-		if(rp_GetClientInt(client, i_PVP)-rp_GetClientStat(client, i_PVP_OnConnection) > 0)
-			Format(tmp, sizeof(tmp), "Evolution des points PVP: +%d", rp_GetClientInt(client, i_PVP)-rp_GetClientStat(client, i_PVP_OnConnection));
+		if(rp_GetClientInt(client, i_ELO)-rp_GetClientStat(client, i_PVP_OnConnection) > 0)
+			Format(tmp, sizeof(tmp), "Evolution des points PVP: +%d", rp_GetClientInt(client, i_ELO)-rp_GetClientStat(client, i_PVP_OnConnection));
 		else
-			Format(tmp, sizeof(tmp), "Evolution des points PVP: %d", rp_GetClientInt(client, i_PVP)-rp_GetClientStat(client, i_PVP_OnConnection));
+			Format(tmp, sizeof(tmp), "Evolution des points PVP: %d", rp_GetClientInt(client, i_ELO)-rp_GetClientStat(client, i_PVP_OnConnection));
 		AddMenuItem(menu, "", tmp, ITEMDRAW_DISABLED);
 		Format(tmp, sizeof(tmp), "Nombre de build: %d", rp_GetClientStat(client, i_TotalBuild));
 		AddMenuItem(menu, "", tmp, ITEMDRAW_DISABLED);
