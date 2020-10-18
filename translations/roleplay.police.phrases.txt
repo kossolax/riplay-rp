@@ -3,17 +3,17 @@
 	"Tazer_removed_own"
 	{
 		"#format"	"{1:s}"
-		"fr"		"Vous avez retiré {1} vous appartenant."
+		"fr"		"Vous avez retiré {red}{1}{default} vous appartenant."
 	}
 	"Tazer_removed_target"
 	{
 		"#format"	"{1:s},{2:s}"
-		"fr"		"Vous avez retiré {1} de {2}."
+		"fr"		"Vous avez retiré {red}{1}{default} de {2}."
 	}
 	"Tazer_removed_by"
 	{
 		"#format"	"{1:s}"
-		"fr"		"{1} a été retiré(e) par un agent de police."
+		"fr"		"{red}{1}{default} a été retiré(e) par un agent de police."
 	}
 	
 	"Jail_IsAllowed"
