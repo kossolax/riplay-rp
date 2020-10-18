@@ -2008,7 +2008,7 @@ bool IsInEventArea(int client) {
 		return true;
 	if( zone == METRO_BELMON || zone == METRO_BELMON-1 )
 		return true;	
-	if( zone == 261 )
+	if( zone == 261 || zone == 315 ) // Route victoire & "rue du bunker"
 		return true;
 	
 	return false;
