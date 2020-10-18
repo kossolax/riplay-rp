@@ -78,12 +78,18 @@ public Action Cmd_GiveItem(int args) {
 	if( (StrContains(Arg1, "weapon_knife") == 0 || StrContains(Arg1, "weapon_bayonet") == 0) && Client_HasWeapon(client, "weapon_knife") ) {
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
-	}	
+	}
 	
 	int ent = GivePlayerItem(client, Arg1);
 	
 	if( Weapon_ShouldBeEquip(Arg1) )
 		EquipPlayerWeapon(client, ent);
+	
+	
+	if( StrContains(Arg1, "weapon_taser") == 0 ) {
+		Weapon_SetPrimaryClip(ent, 1000);
+		SDKHook(ent, SDKHook_Reload, OnWeaponReload);
+	}
 	
 	return Plugin_Handled;
 }
