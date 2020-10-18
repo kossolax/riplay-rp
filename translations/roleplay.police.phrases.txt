@@ -99,10 +99,20 @@
 		"fr"		"Mutinerie, évasion"
 	}
 	// ----------------------------------------------------------------------------------------------
+	"JailSend_Target"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} a été envoyé en prison."
+	}
+	"JailSend_By"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez jeté en prison par {1}."
+	}
 	"JailArrest_Target"
 	{
 		"#format"	"{1:s},{2:d},{3:t}"
-		"fr"		"{1} restera en prison {2} heure(s) pour {red}{3}{default} LOL."
+		"fr"		"{1} restera en prison {2} heure(s) pour {red}{3}{default}."
 	}
 	"JailArrest_By"
 	{
@@ -128,6 +138,16 @@
 	{
 		"#format"	"{1:s}"
 		"fr"		"Vous avez été libéré de prison par {1}."
+	}
+	"JailAutoFree"
+	{
+		"#format"	"{1:s},{2:t}"
+		"fr"		"{1} a été libéré de prison, car il n'a pas commis: {2}."
+	}
+	"JailQuest"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} ne peut pas être arrêté pour le moment à cause d'une quête."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Police_NoPay"
@@ -189,5 +209,19 @@
 	{
 		"#format"	"{1:d},{2:s},{3:t}"
 		"fr"		"Une amende de {1}$ vient d'être prélevée auprès de {2} pour défaut de: {3}"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"PlayerInJail"
+	{
+		"fr"		"Liste des joueurs en prison"
+	}
+	"PlayerInJail_Player"
+	{
+		"#format"	"{1:s},{2:.1f}"
+		"fr"		"{1} - {2} heure(s)"
+	}
+	"PlayerInJail_None"
+	{
+		"fr"		"Il n'y a personne en prison."
 	}
 }

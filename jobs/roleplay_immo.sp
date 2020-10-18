@@ -426,7 +426,7 @@ public int MenuPropAppart(Handle menu, MenuAction action, int client, int param2
 		if( !IsModelPrecached(model) ) {
 			PrecacheModel(model);
 		}
-		
+		DispatchKeyValue(ent, "classname", "rp_props");
 		DispatchKeyValue(ent, "physdamagescale", "0.0");
 		DispatchKeyValue(ent, "model", model);
 		DispatchSpawn(ent);
@@ -523,6 +523,7 @@ public int MenuPropOutdoor(Handle menu, MenuAction action, int client, int param
 			CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
 			return;
 		}
+		DispatchKeyValue(ent, "classname", "rp_props");
 		DispatchKeyValue(ent, "physdamagescale", "0.0");
 		DispatchKeyValue(ent, "model", model);
 		DispatchSpawn(ent);

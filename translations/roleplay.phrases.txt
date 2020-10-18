@@ -9,6 +9,11 @@
 		"fr"	"Cette personne vous a glissé des mains."
 	}
 	// ----------------------------------------------------------------------------------------------
+	"Cmd_OutOf_Car_By"
+	{
+		"fr"	"{1} vous a sorti de votre voiture."
+	}
+	// ----------------------------------------------------------------------------------------------
 	"rp_banana"
 	{
 		"fr"	"une banane"
@@ -84,6 +89,10 @@
 	"rp_plant"
 	{
 		"fr"	"un plant de drogue"
+	}
+	"rp_props"
+	{
+		"fr"	"un prop"
 	}
 	"rp_sign"
 	{
