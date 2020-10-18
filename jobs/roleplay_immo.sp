@@ -449,7 +449,7 @@ public int MenuPropAppart(Handle menu, MenuAction action, int client, int param2
 		GetVectorAngles( normal, ang_ent );
 		
 		float volume = (max[0]-min[0]) * (max[1]-min[1]) * (max[2]-min[2]);
-		int heal = RoundToCeil(volume/500.0)+10;
+		int heal = RoundToCeil(volume/50.0)+10;
 		position[2] += max[2];
 		Handle trace = TR_TraceHullEx(position, position, min, max, MASK_SOLID);
 		if( TR_DidHit(trace) ) {
@@ -545,7 +545,7 @@ public int MenuPropOutdoor(Handle menu, MenuAction action, int client, int param
 		GetVectorAngles( normal, ang_ent );
 		
 		float volume = (max[0]-min[0]) * (max[1]-min[1]) * (max[2]-min[2]);
-		int heal = RoundToCeil(volume/250.0)+10;
+		int heal = RoundToCeil(volume/50.0)+10;
 		position[2] += max[2];
 		Handle trace = TR_TraceHullEx(position, position, min, max, MASK_SOLID);
 		if( TR_DidHit(trace) ) {
