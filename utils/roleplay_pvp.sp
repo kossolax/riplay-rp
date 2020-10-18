@@ -193,11 +193,11 @@ public void OnPluginStart() {
 		if( IsValidClient(i) )
 			OnClientPostAdminCheck(i);
 	
-	//char szDayOfWeek[12];
-	//FormatTime(szDayOfWeek, 11, "%w");
-	//if( StringToInt(szDayOfWeek) == 3 || StringToInt(szDayOfWeek) == 5 ) { // Mercredi & Vendredi
-	//	ServerCommand("tv_enable 1");
-	//}
+	char szDayOfWeek[12];
+	FormatTime(szDayOfWeek, 11, "%w");
+	if( StringToInt(szDayOfWeek) == 5 ) { // Vendredi
+		ServerCommand("tv_enable 1");
+	}
 	
 }
 public void OnConfigsExecuted() {
@@ -207,12 +207,12 @@ public void OnConfigsExecuted() {
 	}
 	char szDayOfWeek[12];
 	FormatTime(szDayOfWeek, 11, "%w");
-	if( StringToInt(szDayOfWeek) == 3 || StringToInt(szDayOfWeek) == 5 ) { // Mercredi & Vendredi
-		//ServerCommand("tv_enable 1");
-		//ServerCommand("mp_restartgame 1");
-		//ServerCommand("spec_replay_enable 1");
-		//ServerCommand("tv_snapshotrate 64");
-		//ServerCommand("rp_wallhack 0");
+	if( StringToInt(szDayOfWeek) == 5 ) { // Vendredi
+		ServerCommand("tv_enable 1");
+		ServerCommand("mp_restartgame 1");
+		ServerCommand("spec_replay_enable 1");
+		ServerCommand("tv_snapshotrate 64");
+		ServerCommand("rp_wallhack 0");
 	}
 }
 public void OnMapStart() {
@@ -1173,13 +1173,13 @@ public Action fwdFrame(int client) {
 		if( g_iPlayerTeam[client] == view_as<int>(TEAM_NONE) ) {
 			PrintHintText(client, "Un event PVP va commencer dans <font color='#bbffbb'>%s</font>.\nRendez-vous au métro Belmont pour y participer.", tmp);
 			
-			if( IsInEventArea(client) == true && rp_ClientCanDrawPanel(client) ) {
+			if( rp_IsInBunkerArea(client) == true && rp_ClientCanDrawPanel(client) ) {
 				inviteToTeam(client);
 			}
 		}
 		else {
 			
-			if( IsInEventArea(client) == false ) {
+			if( rp_IsInBunkerArea(client) == false ) {
 				removeClientTeam(client);
 			}
 			
@@ -1187,7 +1187,7 @@ public Action fwdFrame(int client) {
 		}
 	}
 	else if( g_iPlayerTeam[client] == view_as<int>(TEAM_RED) || g_iPlayerTeam[client] == view_as<int>(TEAM_BLUE) ) {
-		if( IsInEventArea(client) ) {
+		if( rp_IsInBunkerArea(client) ) {
 			g_iLeaving[client] = 0;
 		}
 		else if( IsPlayerAlive(client) ) {
@@ -1237,7 +1237,7 @@ public Action fwdFrame(int client) {
 		}
 	}
 	else if ( g_iPlayerTeam[client] == view_as<int>(TEAM_PENDING) ) {
-		if( IsInEventArea(client) == false ) {
+		if( rp_IsInBunkerArea(client) == false ) {
 			removeClientTeam(client);
 		}
 		
@@ -1247,7 +1247,7 @@ public Action fwdFrame(int client) {
 	else if ( g_iPlayerTeam[client] == view_as<int>(TEAM_NONE) ) {
 		PrintHintText(client, "Un event PVP est en cours.\nRendez-vous au métro Belmont pour y participer.");
 		
-		if( IsInEventArea(client) == true && rp_ClientCanDrawPanel(client) ) {
+		if( rp_IsInBunkerArea(client) == true && rp_ClientCanDrawPanel(client) ) {
 			inviteToTeam(client);
 		}
 	}
@@ -1998,21 +1998,7 @@ public Action ResetKillCount(Handle timer, any client) {
 		g_iKilling[client] = 0;
 	g_hKillTimer[client] = INVALID_HANDLE;
 }
-// -----------------------------------------------------------------------------------------------------------------
-bool IsInEventArea(int client) {
-	if( rp_GetClientBool(client, b_IsAFK) )
-		return false;
-	
-	int zone = rp_GetPlayerZone(client);
-	if( zone >= BUNKER_ZONE_MIN && zone <= BUNKER_ZONE_MAX )
-		return true;
-	if( zone == METRO_BELMON || zone == METRO_BELMON-1 )
-		return true;	
-	if( zone == 261 || zone == 315 ) // Route victoire & "rue du bunker"
-		return true;
-	
-	return false;
-}
+
 // ----------------------------------------------------------------------------
 void addClientToTeam(int client, int team) {
 	removeClientTeam(client);

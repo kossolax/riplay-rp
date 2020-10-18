@@ -98,12 +98,29 @@ stock int rp_GetTargetHull(int client, float hit[3], float size=8.0) {
 	
 	return target;
 }
+// -----------------------------------------------------------------------------------------------------------------
+bool rp_IsInBunkerArea(int client) {
+	if( rp_GetClientBool(client, b_IsAFK) )
+		return false;
+	
+	int zone = rp_GetPlayerZone(client);
+	if( zone >= BUNKER_ZONE_MIN && zone <= BUNKER_ZONE_MAX )
+		return true;
+	if( zone == METRO_BELMON || zone == METRO_BELMON-1 )
+		return true;	
+	if( zone == 261 || zone == 315 ) // Route victoire & "rue du bunker"
+		return true;
+	
+	return false;
+}
 stock bool rp_IsClientSafe(int client) {
 	if( rp_IsClientNew(client) )
 		return true;
 	if( rp_GetClientBool(client, b_IsAFK) )
 		return true;
 	if( rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_EVENT )
+		return true;
+	if( GetConVarInt(FindConVar("rp_capture")) == 1 && rp_IsInBunkerArea(client) )
 		return true;
 	
 	return false;
