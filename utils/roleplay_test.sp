@@ -241,7 +241,6 @@ public Action Cmd_AddBot(int client, int args) {
 	CS_SwitchTeam(entity, GetClientTeam(client));
 	CS_RespawnPlayer(entity);
 	SetEntProp(entity, Prop_Data, "m_takedamage", 2);
-	SetEntPropFloat(entity, Prop_Data, "m_flLaggedMovementValue", 1.75);
 	
 	float pos[3];
 	Entity_GetAbsOrigin(client, pos);
