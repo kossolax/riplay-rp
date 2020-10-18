@@ -44,18 +44,18 @@ enum jail_raison_type {
 	jail_type_max
 };
 char g_szJailRaison[][][128] =  {
-	{ "Garde à vue", 					"12",	"12",	"0", 	"1" }, 
-	{ "Meurtre", 						"-1",	"-1",	"-1",	"1" }, 
-	{ "Agression physique", 			"1",	"6",	"250",	"1" }, 
-	{ "Intrusion propriété privée", 	"0",	"3",	"100",	"0" }, 
-	{ "Vol, tentative de vol", 			"0",	"3",	"50",	"1" }, 
-	{ "Fuite, refus d'obtempérer", 		"0",	"6",	"200",	"0" }, 
-	{ "Insultes, Irrespect", 			"1",	"6",	"250",	"1" }, 
-	{ "Trafic illégal", 				"0",	"6",	"100",	"0" }, 
-	{ "Nuisance sonore", 				"0",	"6",	"100",	"0" }, 
-	{ "Tir dans la rue", 				"0",	"6",	"100",	"1" }, 
-	{ "Conduite dangereuse", 			"0",	"6",	"150",	"0" }, 
-	{ "Mutinerie, évasion", 			"-2",	"-2",	"50",	"1" }
+	{ "JailReason_Custody",				"12",	"12",	"0", 	"1" }, 
+	{ "JailReason_Kill", 				"-1",	"-1",	"-1",	"1" }, 
+	{ "JailReason_Aggression",			"1",	"6",	"250",	"1" }, 
+	{ "JailReason_Intrusion",		 	"0",	"3",	"100",	"0" }, 
+	{ "JailReason_Steal",	 			"0",	"3",	"50",	"1" }, 
+	{ "JailReason_Escape",		 		"0",	"6",	"200",	"0" }, 
+	{ "JailReason_Disrespect", 			"1",	"6",	"250",	"1" }, 
+	{ "JailReason_IllegalStuff",		"0",	"6",	"100",	"0" }, 
+	{ "JailReason_Noisy", 				"0",	"6",	"100",	"0" }, 
+	{ "JailReason_Shotting",			"0",	"6",	"100",	"1" }, 
+	{ "JailReason_Driving", 			"0",	"6",	"150",	"0" }, 
+	{ "JailReason_Evasion", 			"-2",	"-2",	"50",	"1" }
 };
 char g_szWeaponList[][] = { 
 	"ak47", "aug", "famas", "galilar", "sg556", "m4a1",  "g3sg1", "scar20", "ssg08", "awp", "bizon", "mac10", "mp7", "mp9", "p90", "ump45", "xm1014", "sawedoff", "nova", "mag7", "m249", "negev", "deagle", "elite", "fiveseven", "glock", "hkp2000", "p250", "tec9" 
@@ -96,6 +96,7 @@ public Action Cmd_Reload(int args) {
 }
 public void OnPluginStart() {
 	LoadTranslations("core.phrases");
+	LoadTranslations("common.phrases");
 	LoadTranslations("roleplay.phrases");
 	LoadTranslations("roleplay.police.phrases");
 	
@@ -192,7 +193,7 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 	if ((jobID == 1 || jobID == 101) && rp_GetClientInt(client, i_KillJailDuration) > 0) {
 		
 		if (verbose)
-			CPrintToChat(client, "" ...MOD_TAG... " La police ne paye pas ses membres tuant la population.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Police_NoPay", client);
 		
 		topay = 0;
 		return Plugin_Stop;
@@ -256,21 +257,23 @@ public Action Cmd_Verif(int client) {
 
 	// too far
 	if (rp_GetDistance(client, target) > 128.0) {
-		CPrintToChat(client, "" ...MOD_TAG... " Le joueur est trop éloigné, commande inaccessible");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_TargetIsToFar", client);
 		return Plugin_Handled;
 	}
 
-	char szTitle[2048];
-	Format(szTitle, sizeof(szTitle), "Informations sur le joueur %N:\n\n", target);
+	char szTitle[2048], target_name[128];
+	GetClientName2(target, target_name, sizeof(target_name), true);
+	Format(szTitle, sizeof(szTitle), "%T\n \n", "Enquete_On", client, target_name);
 
 	Menu menu = CreateMenu(MenuHandler_Verif);
 
-	Format(szTitle, sizeof(szTitle), "%s Permis léger: %s\n", szTitle, rp_GetClientBool(target, b_License1) ? "OUI":"NON");
+	Format(szTitle, sizeof(szTitle), "%s%T: %T\n", szTitle, "Enquete_PermisLeger", client, rp_GetClientBool(target, b_License1) ? "Yes" : "No", client);
 
-	Format(szTitle, sizeof(szTitle), "%s Permis lourd: %s\n", szTitle, rp_GetClientBool(target, b_License2) ? "OUI":"NON");
+	Format(szTitle, sizeof(szTitle), "%s%T: %T\n", szTitle, "Enquete_PermisLourd", client, rp_GetClientBool(target, b_License2) ? "Yes" : "No", client);
 
-	Format(szTitle, sizeof(szTitle), "%s Permis vente: %s\n", szTitle, rp_GetClientBool(target, b_LicenseSell) ? "OUI":"NON");
+	Format(szTitle, sizeof(szTitle), "%s%T: %T\n", szTitle, "Enquete_PermisVente", client, rp_GetClientBool(target, b_LicenseSell) ? "Yes" : "No", client);
 
+	Format(szTitle, sizeof(szTitle), "%s\n \n", szTitle);
 	int wepIdx;
 	char classname[32];
 	bool amendeLicense1, amendeLicense2 = false;
@@ -283,7 +286,7 @@ public Action Cmd_Verif(int client) {
 		ReplaceString(classname, 31, "weapon_", "", false);
 
 		if(StrContains(lastWeapon[0], classname) == -1) {
-			ReplaceString(lastWeapon[0], 31, "AUCUNE", "", false);
+			ReplaceString(lastWeapon[0], 31, "Enquete_NoWeapon", "", false);
 			Format(lastWeapon[0], 256, "%s %s", lastWeapon[0], classname);
 		}
 	}
@@ -293,26 +296,35 @@ public Action Cmd_Verif(int client) {
 		ReplaceString(classname, 31, "weapon_", "", false);
 
 		if(StrContains(lastWeapon[1], classname) == -1) {
-			ReplaceString(lastWeapon[1], 31, "AUCUNE", "", false);
+			ReplaceString(lastWeapon[1], 31, "Enquete_NoWeapon", "", false);
 			Format(lastWeapon[1], 256, "%s %s", lastWeapon[1], classname);
 		}
 	}
 
-	if(!StrEqual(lastWeapon[0], "AUCUNE")) { // primary
+	if(!StrEqual(lastWeapon[0], "Enquete_NoWeapon")) { // primary
 		if(rp_GetClientBool(target, b_License2) == false) {
 			amendeLicense2 = true;
 		}
 	}
+	else {
+		Format(lastWeapon[0], sizeof(lastWeapon[]), "%T", "Enquete_NoWeapon", client);
+	}
 
-	if(!StrEqual(lastWeapon[1], "AUCUNE")) { // secondary
+	if(!StrEqual(lastWeapon[1], "Enquete_NoWeapon")) { // secondary
 		if(rp_GetClientBool(target, b_License1) == false) {
 			amendeLicense1 = true;
 		}
 	}
+	else {
+		Format(lastWeapon[1], sizeof(lastWeapon[]), "%T", "Enquete_NoWeapon", client);
+	}
+	
 
-	Format(szTitle, sizeof(szTitle), "%s Arme Primaire (Permis lourd): %s\n", szTitle, lastWeapon[0]);
-	Format(szTitle, sizeof(szTitle), "%s Arme Secondaire (Permis léger): %s\n", szTitle, lastWeapon[1]);
+	Format(szTitle, sizeof(szTitle), "%s%T: %s\n", szTitle, "Enquete_PrimaryWeapon", client, lastWeapon[0]);
+	Format(szTitle, sizeof(szTitle), "%s%T: %s\n", szTitle, "Enquete_SecondaryWeapon", client, lastWeapon[1]);
 
+	Format(szTitle, sizeof(szTitle), "%s\n ", szTitle);
+	
 	menu.SetTitle(szTitle);
 
 	char item[256];
@@ -330,20 +342,17 @@ public Action Cmd_Verif(int client) {
 	if(numb <= 0 || rp_IsClientNew(target) || (rp_GetClientInt(target, i_Money) + rp_GetClientInt(target, i_Bank)) < 5000 ) {
 		forcehidden = true;
 	}
-
+	
 	bool applyLiscence1 = GetTime() > rp_GetClientInt(target, i_AmendeLiscence1) + (60 * 24) ? true:false;
 	bool applyLiscence2 = GetTime() > rp_GetClientInt(target, i_AmendeLiscence2) + (60 * 24) ? true:false;
 
-	if(amendeLicense1 && amendeLicense2 && applyLiscence1 && applyLiscence2) {
-		Format(item, 255, "%d_permilegerlourd", target);
-		menu.AddItem(item, "Amende 4000$ - Permis lourd & léger", forcehidden ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
-	} else {
-		Format(item, 255, "%d_permileger", target);
-		menu.AddItem(item, "Amende 1600$ - Permis léger", !amendeLicense1 || forcehidden || !applyLiscence1 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
-
-		Format(item, 255, "%d_permilourd", target);
-		menu.AddItem(item, "Amende 2400$ - Permis lourd", !amendeLicense2 || forcehidden || !applyLiscence2 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
-	}
+	Format(item, sizeof(item), "%d_permileger", target);
+	Format(szTitle, sizeof(szTitle), "%T", "Enquete_Amende_Leger", client, 1600);
+	menu.AddItem(item, szTitle, !amendeLicense1 || forcehidden || !applyLiscence1 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
+	
+	Format(item, sizeof(item), "%d_permilourd", target);
+	Format(szTitle, sizeof(szTitle), "%T", "Enquete_Amende_Lourd", client, 2400);
+	menu.AddItem(item, szTitle, !amendeLicense2 || forcehidden || !applyLiscence2 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
 	
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, MENU_TIME_DURATION);
@@ -355,15 +364,18 @@ public int MenuHandler_Verif(Handle menu, MenuAction action, int client, int par
 	char options[64], data[2][32];
 	
 	if (action == MenuAction_Select) {
-		GetMenuItem(menu, param2, options, 63);
+		GetMenuItem(menu, param2, options, sizeof(options));
 		ExplodeString(options, "_", data, sizeof(data), sizeof(data[]));
 
 		int target = StringToInt(data[0]);
 		int job = rp_GetClientJobID(client);
+		
+		char target_name[128];
+		GetClientName2(target, target_name, sizeof(target_name), false);
 
 		if(StrEqual(data[1], "permileger")) {
-			CPrintToChat(target, "" ...MOD_TAG... " Vous avez été contrôlé en possession d'arme(s) légère(s) sans permis valide, vous devez vous acquitter d'une amande de 1600$");
-			CPrintToChat(client, "" ...MOD_TAG... " Une amende de 1600$ vient d'être prélevée auprès de %N{default} pour défaut de permis de port d'arme légère", target);
+			CPrintToChat(target, "" ...MOD_TAG... " %T", "Enquete_Amende_Leger_Sanction", target, 1600);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Enquete_Amende_SanctionTo", client, 1600, target_name, "Enquete_Amende_Leger");
 	
 			rp_ClientMoney(target, i_Money, -1600);
 			
@@ -373,8 +385,8 @@ public int MenuHandler_Verif(Handle menu, MenuAction action, int client, int par
 			rp_SetClientInt(target, i_AmendeLiscence2, GetTime());
 		}
 		if(StrEqual(data[1], "permilourd")) {
-			CPrintToChat(target, "" ...MOD_TAG... " Vous avez été contrôlé en possession d'arme(s) lourde(s) sans permis valide, vous devez vous acquitter d'une amande de 2400$");
-			CPrintToChat(client, "" ...MOD_TAG... " Une amende de 2400$ vient d'être prélevée auprès de %N{default} pour défaut de permis de port d'arme lourde", target);
+			CPrintToChat(target, "" ...MOD_TAG... " %T", "Enquete_Amende_Lourd_Sanction", target, 2400);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Enquete_Amende_SanctionTo", client, 2400, target_name, "Enquete_Amende_Lourd");
 
 			rp_ClientMoney(target, i_Money, -2400);
 			
@@ -383,17 +395,8 @@ public int MenuHandler_Verif(Handle menu, MenuAction action, int client, int par
 			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 2000));
 			rp_SetClientInt(target, i_AmendeLiscence1, GetTime());
 		}
-		if(StrEqual(data[1], "permilegerlourd")) {
-			CPrintToChat(target, "" ...MOD_TAG... " Vous avez été contrôlé en possession d'arme(s) lourde(s) et légère(s) sans permis valide, vous devez vous acquitter d'une amende de 4000$");
-			CPrintToChat(client, "" ...MOD_TAG... " Une amende de 4000$ vient d'être prélevée auprès de %N{default} pour défaut de permis de port d'arme légere et lourde", target);
-			rp_ClientMoney(target, i_Money, -4000);
-			
-			rp_ClientMoney(client, i_AddToPay, 600);
-			rp_ClientMoney(client, i_Money, 300);
-			rp_SetJobCapital(job, (rp_GetJobCapital(job) + 3200));
-			rp_SetClientInt(target, i_AmendeLiscence2, GetTime());
-			rp_SetClientInt(target, i_AmendeLiscence1, GetTime());
-		}
+		
+		Cmd_Verif(client);
 	}
 }
 
@@ -497,7 +500,6 @@ public Action Cmd_Vis(int client) {
 			rp_SetClientBool(client, b_MaySteal, true);
 		}
 		
-		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes maintenant invisible.");
 	}
 	else {
 		rp_ClientReveal(client);
@@ -557,17 +559,17 @@ public Action Cmd_Tazer(int client) {
 		
 		if (rp_GetDistance(client, target) > maxDist) {
 			//ACCESS_DENIED(client);
-			CPrintToChat(client, "" ...MOD_TAG... " Le joueur est trop éloigné, commande inaccessible");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_TargetIsToFar", client);
 			return Plugin_Handled;
 		}
 		
 		if (!(rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PERQUIZ || rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PERQUIZ) && rp_GetClientBool(target, b_Lube) && Math_GetRandomInt(1, 5) != 5) {
-			CPrintToChat(client, "" ...MOD_TAG... " %N{default} vous glisse entre les mains.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_TargetIsToFar", client);
 			return Plugin_Handled;
 		}
 		
 		if (!(rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PERQUIZ || rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PERQUIZ) && !CanSendToJail(client, target)) {
-			CPrintToChat(client, "" ...MOD_TAG... " %N{default} vous glisse entre les mains.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_TargetIsToFar", client);
 			return Plugin_Handled;
 		}
 		
@@ -581,9 +583,12 @@ public Action Cmd_Tazer(int client) {
 		
 		FakeClientCommand(target, "use weapon_fists");
 		
+		char client_name[128], target_name[128];
+		GetClientName2(client, client_name, sizeof(client_name), false);
+		GetClientName2(target, target_name, sizeof(target_name), false);
 		
-		CPrintToChat(target, "" ...MOD_TAG... " Vous avez été tazé par %N", client);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez tazé %N", target);
+		CPrintToChat(target, ""...MOD_TAG..." %T", "Tazer_player_by", target, client_name);
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Tazer_player_target", client, target_name);
 		LogToGame("[TSX-RP] [TAZER] %L a tazé %N dans %d.", client, target, rp_GetPlayerZone(target));
 		
 		rp_SetClientBool(client, b_MaySteal, false);
@@ -663,15 +668,13 @@ public Action Cmd_Tazer(int client) {
 			}
 			
 			if (owner > 0) {
-				Format(tmp1, sizeof(tmp1), "%T", tmp2, owner);
-				Format(tmp2, sizeof(tmp2), "%T", tmp2, client);
 				GetClientName2(owner, tmp3, sizeof(tmp3), false);
 				
 				if (client == owner)
 					CPrintToChat(client, "" ...MOD_TAG... " %T", "Tazer_removed_own", client, tmp2);
 				else {
 					CPrintToChat(client, "" ...MOD_TAG... " %T", "Tazer_removed_target", client, tmp2, tmp3);
-					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Tazer_removed_by", owner, tmp1);
+					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Tazer_removed_by", owner, tmp2);
 				}
 			}
 			SDKHooks_TakeDamage(target, client, client, 1000.0);
@@ -689,8 +692,6 @@ public Action Cmd_Tazer(int client) {
 			}
 			
 			if (owner > 0) {
-				Format(tmp1, sizeof(tmp1), "%T", tmp2, owner);
-				Format(tmp2, sizeof(tmp2), "%T", tmp2, client);
 				GetClientName2(owner, tmp3, sizeof(tmp3), false);
 				
 				if (client == owner)
@@ -720,8 +721,6 @@ public Action Cmd_Tazer(int client) {
 			}
 			
 			if (owner > 0) {
-				Format(tmp1, sizeof(tmp1), "%T", tmp2, owner);
-				Format(tmp2, sizeof(tmp2), "%T", tmp2, client);
 				GetClientName2(owner, tmp3, sizeof(tmp3), false);
 				
 				if (client == owner)
@@ -741,11 +740,7 @@ public Action Cmd_Tazer(int client) {
 			
 			reward = 0;
 			
-			
-			
 			if (owner > 0) {
-				Format(tmp1, sizeof(tmp1), "%T", tmp2, owner);
-				Format(tmp2, sizeof(tmp2), "%T", tmp2, client);
 				GetClientName2(owner, tmp3, sizeof(tmp3), false);
 				
 				if (client == owner)
@@ -762,8 +757,6 @@ public Action Cmd_Tazer(int client) {
 			
 			reward = 0;
 			if (owner > 0) {
-				Format(tmp1, sizeof(tmp1), "%T", tmp2, owner);
-				Format(tmp2, sizeof(tmp2), "%T", tmp2, client);
 				GetClientName2(owner, tmp3, sizeof(tmp3), false);
 				
 				if (client == owner)
@@ -855,7 +848,7 @@ public Action Cmd_Jail(int client) {
 	if (rp_GetClientFloat(client, fl_Invincible) > GetGameTime()) {  //le flic utilise une poupée gonflable
 		ACCESS_DENIED(client);
 	}
-
+	
 	// joueur en tuto
 	if (IsValidClient(target) && !rp_IsTutorialOver(target)) {
 		ACCESS_DENIED(client);
@@ -1137,22 +1130,26 @@ public Action CS_OnCSWeaponDrop(int client, int weapon) {
 }
 // ----------------------------------------------------------------------------
 void AskJailTime(int client, int target) {
-	char tmp[256], tmp2[12];
-	
+	char tmp1[12], tmp2[256];
 	GetClientAuthId(target, AUTH_TYPE, g_szTribunal[client], sizeof(g_szTribunal[]), false);
 	
+
 	Handle menu = CreateMenu(eventSetJailTime);
-	Format(tmp, 255, "Combien de temps doit rester %N?\n ", target);
-	SetMenuTitle(menu, tmp);
+	GetClientName2(target, tmp2, sizeof(tmp2), true);
+	SetMenuTitle(menu, "%T\n ", "JailReason", target, tmp2);
 	
-	Format(tmp, 255, "%d_-1", target);
-	AddMenuItem(menu, tmp, "Annuler la peine / Libérer");
+	Format(tmp1, sizeof(tmp1), "%d_-1", target);
+	Format(tmp2, sizeof(tmp2), "%T", "JailReason_Free", client);
+	AddMenuItem(menu, tmp1, tmp2);
 	
 	if (rp_GetClientJobID(client) == 101 || rp_GetClientBool(target, b_IsSearchByTribunal)) {
-		Format(tmp, 255, "%d_-3", target);
-		AddMenuItem(menu, tmp, "Jail Tribunal N°1");
-		Format(tmp, 255, "%d_-2", target);
-		AddMenuItem(menu, tmp, "Jail Tribunal N°2");
+		Format(tmp1, sizeof(tmp1), "%d_-3", target);
+		Format(tmp2, sizeof(tmp2), "%T", "JailReason_TB", client, 1);
+		AddMenuItem(menu, tmp1, "Jail Tribunal N°1");
+		
+		Format(tmp1, sizeof(tmp1), "%d_-2", target);
+		Format(tmp2, sizeof(tmp2), "%T", "JailReason_TB", client, 2);
+		AddMenuItem(menu, tmp1, "Jail Tribunal N°2");
 	}
 	
 	
@@ -1162,13 +1159,17 @@ void AskJailTime(int client, int target) {
 			if (rp_GetClientJobID(client) == 101 && StringToInt(g_szJailRaison[i][jail_simple]) == 0 && rp_GetClientBool(target, b_IsSearchByTribunal) == false && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 101)
 				continue;
 			
-			Format(tmp2, sizeof(tmp2), "%d_%d", target, i);
-			AddMenuItem(menu, tmp2, g_szJailRaison[i][jail_raison]);
+			Format(tmp1, sizeof(tmp1), "%d_%d", target, i);
+			Format(tmp2, sizeof(tmp2), "%T", g_szJailRaison[i][jail_raison], client);
+			AddMenuItem(menu, tmp1, tmp2);
 		}
 	}
 	else {
-		Format(tmp2, sizeof(tmp2), "%d_%d", target, sizeof(g_szJailRaison) - 1);
-		AddMenuItem(menu, tmp2, g_szJailRaison[sizeof(g_szJailRaison) - 1][jail_raison]);
+		
+		int i = sizeof(g_szJailRaison) - 1;
+		Format(tmp1, sizeof(tmp1), "%d_%d", target, i);
+		Format(tmp2, sizeof(tmp2), "%T", g_szJailRaison[i][jail_raison], client);
+		AddMenuItem(menu, tmp1, tmp2);
 	}
 	
 	SetMenuExitButton(menu, true);
@@ -1246,9 +1247,13 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 			rp_SetClientInt(target, i_JailledBy, 0);
 			rp_SetClientBool(target, b_IsFreekiller, false);
 			rp_SetClientBool(target, b_JailQHS, false);
+			
+			char client_name[128], target_name[128];
+			GetClientName2(client, client_name, sizeof(client_name), false);
+			GetClientName2(target, target_name, sizeof(target_name), false);
 
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez libéré %N{default}.", target);
-			CPrintToChat(target, "" ...MOD_TAG... " %N{default} vous a libéré.", client);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "JailFree_Target", client, target_name);
+			CPrintToChat(target, "" ...MOD_TAG... " %T", "JailFree_By", target, client_name);
 
 			LogToGame("[TSX-RP] [JAIL] [LIBERATION] %L a liberé %L", client, target);
 			
@@ -1264,8 +1269,12 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 			else
 				rp_ClientTeleport(target, view_as<float>( { 473.7, -1979.5, -2007.9 } ));
 			
-			CPrintToChat(target, "" ...MOD_TAG... " Vous avez été mis en prison, en attente de jugement par: %N", client);
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez mis: %N{default} dans la prison du Tribunal.", target);
+			char client_name[128], target_name[128];
+			GetClientName2(client, client_name, sizeof(client_name), false);
+			GetClientName2(target, target_name, sizeof(target_name), false);
+			
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "JailWait_Target", client, target_name);
+			CPrintToChat(target, "" ...MOD_TAG... " %T", "JailWait_By", target, client_name);
 			
 			LogToGame("[TSX-RP] [TRIBUNAL] %L a mis %L dans la prison du Tribunal.", client, target);
 			return;
@@ -1273,7 +1282,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 		
 		
 		
-		if (StrEqual(g_szJailRaison[type][jail_raison], "Agression physique")) {  // Agression physique
+		if (StrEqual(g_szJailRaison[type][jail_raison], "JailReason_Aggression")) {  // Agression physique
 			if (rp_GetClientInt(target, i_LastAgression) + 30 < GetTime()) {
 				rp_SetClientInt(target, i_JailTime, 0);
 				rp_SetClientInt(target, i_jailTime_Last, 0);
@@ -1290,7 +1299,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 				return;
 			}
 		}
-		if (StrEqual(g_szJailRaison[type][jail_raison], "Tir dans la rue")) {  // Tir dans la rue
+		if (StrEqual(g_szJailRaison[type][jail_raison], "JailReason_Shotting")) {  // Tir dans la rue
 			if (rp_GetClientInt(target, i_LastDangerousShot) + 30 < GetTime()) {
 				rp_SetClientInt(target, i_JailTime, 0);
 				rp_SetClientInt(target, i_jailTime_Last, 0);
@@ -1317,7 +1326,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 				amende = StringToInt(g_szJailRaison[3][jail_amende]);
 		}
 		
-		if (String_StartsWith(g_szJailRaison[type][jail_raison], "Vol")) {
+		if (String_StartsWith(g_szJailRaison[type][jail_raison], "JailReason_Steal")) {
 			if (rp_GetClientInt(target, i_LastVolVehicleTime) + 300 > GetTime()) {
 				if (rp_IsValidVehicle(rp_GetClientInt(target, i_LastVolVehicle))) {
 					rp_SetClientKeyVehicle(target, rp_GetClientInt(target, i_LastVolVehicle), false);
@@ -1445,14 +1454,19 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 		rp_SetClientInt(target, i_jailTime_Last, time_to_spend);
 		
 		if (IsValidClient(client) && IsValidClient(target)) {
-			CPrintToChat(client, "" ...MOD_TAG... " %N{default} restera en prison %.1f heures pour \"%s\"", target, time_to_spend / 60.0, g_szJailRaison[type][jail_raison]);
-			CPrintToChat(target, "" ...MOD_TAG... " %N{default} vous a mis %.1f heures de prison pour \"%s\"", client, time_to_spend / 60.0, g_szJailRaison[type][jail_raison]);
+			
+			char client_name[128], target_name[128];
+			GetClientName2(client, client_name, sizeof(client_name), false);
+			GetClientName2(target, target_name, sizeof(target_name), false);
+			
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "JailArrest_Target", client, target_name, time_to_spend/60, g_szJailRaison[type][jail_raison]);
+			CPrintToChat(target, "" ...MOD_TAG... " %T", "JailArrest_By", target, client_name, time_to_spend/60, g_szJailRaison[type][jail_raison]);
 			
 			if( time_to_spend > 0 || amende > 0 )
 				explainJail(target, type);
 		}
 		else {
-			CPrintToChat(client, "" ...MOD_TAG... " Le joueur s'est déconnecté mais il fera %.1f heures de prison", time_to_spend / 60.0);
+			CPrintToChat(client, "" ...MOD_TAG... " Le joueur s'est déconnecté, mais il fera %d heure(s) de prison", time_to_spend / 60);
 			
 			Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_users2` (`id`, `steamid`, `jail` ) VALUES", szQuery);
 			Format(szQuery, sizeof(szQuery), "%s (NULL, '%s', '%i' );", szQuery, g_szTribunal[client], time_to_spend);
@@ -1460,7 +1474,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 			SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery);
 		}
 		
-		LogToGame("[TSX-RP] [JAIL-1] %L (%d) a mis %L (%d) en prison: Raison %s.", client, rp_GetPlayerZone(client, 1.0), target, rp_GetPlayerZone(target, 1.0), g_szJailRaison[type][jail_raison]);
+		LogToGame("[TSX-RP] [JAIL-1] %L (%d) a mis %L (%d) en prison: Raison %T.", client, rp_GetPlayerZone(client, 1.0), target, rp_GetPlayerZone(target, 1.0), g_szJailRaison[type][jail_raison], LANG_SERVER);
 		
 		if (time_to_spend <= 1) {
 			rp_ClientResetSkin(target);
@@ -2016,40 +2030,40 @@ public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int 
 
 void explainJail(int client, int jailReason) {
 	
-	if (StrContains(g_szJailRaison[jailReason][jail_raison], "Garde ") == 0) {
+	if (StrContains(g_szJailRaison[jailReason][jail_raison], "JailReason_Custody") == 0) {
 		rp_ClientOverlays(client, o_Jail_GAV, 10.0);
 	}
-	else if (StrContains(g_szJailRaison[jailReason][jail_raison], "Meurtre") == 0) {
+	else if (StrContains(g_szJailRaison[jailReason][jail_raison], "JailReason_Kill") == 0) {
 		rp_ClientOverlays(client, o_Jail_Meurtre, 10.0);
 	}
-	else if (StrContains(g_szJailRaison[jailReason][jail_raison], "Agression ") == 0) {
+	else if (StrContains(g_szJailRaison[jailReason][jail_raison], "JailReason_Aggression") == 0) {
 		rp_ClientOverlays(client, o_Jail_Agression, 10.0);
 	}
-	else if (StrContains(g_szJailRaison[jailReason][jail_raison], "Intrusion ") == 0) {
+	else if (StrContains(g_szJailRaison[jailReason][jail_raison], "JailReason_Intrusion") == 0) {
 		rp_ClientOverlays(client, o_Jail_Intrusion, 10.0);
 	}
-	else if (StrContains(g_szJailRaison[jailReason][jail_raison], "Vol, ") == 0) {
+	else if (StrContains(g_szJailRaison[jailReason][jail_raison], "JailReason_Steal") == 0) {
 		rp_ClientOverlays(client, o_Jail_Vol, 10.0);
 	}
-	else if (StrContains(g_szJailRaison[jailReason][jail_raison], "Fuite, ") == 0) {
+	else if (StrContains(g_szJailRaison[jailReason][jail_raison], "JailReason_Escape") == 0) {
 		rp_ClientOverlays(client, o_Jail_Refus, 10.0);
 	}
-	else if (StrContains(g_szJailRaison[jailReason][jail_raison], "Insultes, ") == 0) {
+	else if (StrContains(g_szJailRaison[jailReason][jail_raison], "JailReason_Disrespect") == 0) {
 		rp_ClientOverlays(client, o_Jail_Insultes, 10.0);
 	}
-	else if (StrContains(g_szJailRaison[jailReason][jail_raison], "Trafique ") == 0) {
+	else if (StrContains(g_szJailRaison[jailReason][jail_raison], "JailReason_IllegalStuff") == 0) {
 		rp_ClientOverlays(client, o_Jail_Traffic, 10.0);
 	}
-	else if (StrContains(g_szJailRaison[jailReason][jail_raison], "Nuisance ") == 0) {
+	else if (StrContains(g_szJailRaison[jailReason][jail_raison], "JailReason_Noisy") == 0) {
 		rp_ClientOverlays(client, o_Jail_Nuisance, 10.0);
 	}
-	else if (StrContains(g_szJailRaison[jailReason][jail_raison], "Tir dans ") == 0) {
+	else if (StrContains(g_szJailRaison[jailReason][jail_raison], "JailReason_Shotting") == 0) {
 		rp_ClientOverlays(client, o_Jail_Tir, 10.0);
 	}
-	else if (StrContains(g_szJailRaison[jailReason][jail_raison], "Conduite ") == 0) {
+	else if (StrContains(g_szJailRaison[jailReason][jail_raison], "JailReason_Driving") == 0) {
 		rp_ClientOverlays(client, o_Jail_Conduite, 10.0);
 	}
-	else if (StrContains(g_szJailRaison[jailReason][jail_raison], "Mutinerie, ") == 0) {
+	else if (StrContains(g_szJailRaison[jailReason][jail_raison], "JailReason_Evasion") == 0) {
 		rp_ClientOverlays(client, o_Jail_Evasion, 10.0);
 	}
 }
@@ -2109,8 +2123,8 @@ void putUsedWeapon(int client, char weapon[32]) {
 	g_UsedWeapon[client].PushString(item); 
 }
 void getUsedWeapon(int client, char[] primary, int maxlenprimary, char[] secondary, int maxlensecondary) {
-	Format(primary, maxlenprimary, "AUCUNE");
-	Format(secondary, maxlensecondary, "AUCUNE");
+	Format(primary, maxlenprimary, "Enquete_NoWeapon");
+	Format(secondary, maxlensecondary, "Enquete_NoWeapon");
 
 	char item[64];
 	char split[2][32];
@@ -2125,10 +2139,10 @@ void getUsedWeapon(int client, char[] primary, int maxlenprimary, char[] seconda
 		}
 		
 		if(getWeaponSlot(split[0]) == CS_SLOT_PRIMARY) {
-			ReplaceString(primary, 31, "AUCUNE", "", false);
+			ReplaceString(primary, 31, "Enquete_NoWeapon", "", false);
 			Format(primary, maxlenprimary, "%s %s ", primary, split[0]);
 		} else if (getWeaponSlot(split[0]) == CS_SLOT_SECONDARY) {
-			ReplaceString(secondary, 31, "AUCUNE", "", false);
+			ReplaceString(secondary, 31, "Enquete_NoWeapon", "", false);
 			Format(secondary, maxlensecondary, "%s %s ", secondary, split[0]);
 		}
 	}

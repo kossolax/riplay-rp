@@ -1,21 +1,32 @@
-﻿"Phrases"
+"Phrases"
 {
+	// ----------------------------------------------------------------------------------------------
 	"Tazer_removed_own"
 	{
-		"#format"	"{1:s}"
+		"#format"	"{1:t}"
 		"fr"		"Vous avez retiré {red}{1}{default} vous appartenant."
 	}
 	"Tazer_removed_target"
 	{
-		"#format"	"{1:s},{2:s}"
+		"#format"	"{1:t},{2:s}"
 		"fr"		"Vous avez retiré {red}{1}{default} de {2}."
 	}
 	"Tazer_removed_by"
 	{
-		"#format"	"{1:s}"
+		"#format"	"{1:t}"
 		"fr"		"{red}{1}{default} a été retiré(e) par un agent de police."
 	}
-	
+	"Tazer_player_by"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez été tazé par {red}{1}{default}."
+	}
+	"Tazer_player_target"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez tazé {red}{1}{default}."
+	}
+	// ----------------------------------------------------------------------------------------------
 	"Jail_IsAllowed"
 	{
 		"fr"		"/jail autorisé"
@@ -23,5 +34,160 @@
 	"Jail_IsDenied"
 	{
 		"fr"		"/jail non autorisé"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"JailReason"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Pour quel motif voulez-vous arrêter {1}?"
+	}
+	"JailReason_Free"
+	{
+		"fr"		"Annuler la peine / Libérer"
+	}
+	"JailReason_TB"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Jail du Tribunal n°{1}"
+	}
+	"JailReason_Custody"
+	{
+		"fr"		"Garde à vue"
+	}
+	"JailReason_Kill"
+	{
+		"fr"		"Meurtre"
+	}
+	"JailReason_Aggression"
+	{
+		"fr"		"Agression physique"
+	}
+	"JailReason_Intrusion"
+	{
+		"fr"		"Intrusion propriété privée"
+	}
+	"JailReason_Steal"
+	{
+		"fr"		"Vol, tentative de vol"
+	}
+	"JailReason_Escape"
+	{
+		"fr"		"Fuite, refus d'obtempérer"
+	}
+	"JailReason_Disrespect"
+	{
+		"fr"		"Insultes, Irrespect"
+	}
+	"JailReason_IllegalStuff"
+	{
+		"fr"		"Trafic illégal"
+	}
+	"JailReason_Noisy"
+	{
+		"fr"		"Nuisance sonore"
+	}
+	"JailReason_Shotting"
+	{
+		"fr"		"Tir dans la rue"
+	}
+	"JailReason_Driving"
+	{
+		"fr"		"Conduite dangereuse"
+	}
+	"JailReason_Evasion"
+	{
+		"fr"		"Mutinerie, évasion"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"JailArrest_Target"
+	{
+		"#format"	"{1:s},{2:d},{3:t}"
+		"fr"		"{1} restera en prison {2} heure(s) pour {red}{3}{default} LOL."
+	}
+	"JailArrest_By"
+	{
+		"#format"	"{1:s},{2:d},{3:t}"
+		"fr"		"Vous avez été arreté {1} heure(s) par {2} pour {red}{3}{default}."
+	}
+	"JailWait_Target"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} a été envoyé au Tribunal en attente d'un jugement."
+	}
+	"JailWait_By"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez été envoyé au Tribunal par {1}."
+	}
+	"JailFree_Target"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez libéré {1} de prison."
+	}
+	"JailFree_By"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez été libéré de prison par {1}."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Police_NoPay"
+	{
+		"fr"		"La police {red}ne{default} paye {red}pas{default} ses membres tuant la population."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Enquete_On"
+	{
+		"#format"	"{1:s}"
+		"fr"	"Informations sur {1}."
+	}
+	"Enquete_PermisLeger"
+	{
+		"fr"		"Permis de port d'armes légère"
+	}
+	"Enquete_PermisLourd"
+	{
+		"fr"		"Permis de port d'armes lourdes"
+	}
+	"Enquete_PermisVente"
+	{
+		"fr"		"Permis de vente"
+	}
+	"Enquete_PrimaryWeapon"
+	{
+		"fr"		"Arme lourde"
+	}
+	"Enquete_SecondaryWeapon"
+	{
+		"fr"		"Arme légère"
+	}
+	"Enquete_NoWeapon"
+	{
+		"fr"		"Aucune"
+	}
+	"Enquete_Amende_Lourd"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Amende {1}$ - Permis lourd"
+	}
+	"Enquete_Amende_Leger"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Amende {1}$ - Permis léger"
+	}
+	
+	"Enquete_Amende_Lourd_Sanction"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Vous avez été contrôlé en possession {red}d'arme(s) lourde(s) sans permis{default} valide, vous devez vous acquitter d'une amende de {1}$"
+	}
+	"Enquete_Amende_Leger_Sanction"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Vous avez été contrôlé en possession {red}d'arme(s) légère(s) sans permis{default} valide, vous devez vous acquitter d'une amende de {1}$"
+	}
+	"Enquete_Amende_SanctionTo"
+	{
+		"#format"	"{1:d},{2:s},{3:t}"
+		"fr"		"Une amende de {1}$ vient d'être prélevée auprès de {2} pour défaut de: {3}"
 	}
 }

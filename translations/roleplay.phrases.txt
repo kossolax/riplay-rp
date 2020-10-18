@@ -1,5 +1,14 @@
-﻿"Phrases"
+"Phrases"
 {
+	"Cmd_TargetIsToFar"
+	{
+		"fr"	"Cette personne est beaucoup trop éloignée."
+	}
+	"Cmd_TargetIsSlippy"
+	{
+		"fr"	"Cette personne vous a glissé des mains."
+	}
+	// ----------------------------------------------------------------------------------------------
 	"rp_banana"
 	{
 		"fr"	"une banane"
@@ -88,5 +97,7 @@
 	{
 		"fr"	"une caisse d'armes"
 	}
+	// ----------------------------------------------------------------------------------------------
+
 
 }
