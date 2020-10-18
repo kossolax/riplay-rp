@@ -557,6 +557,8 @@ stock bool rp_IsMoveAble(int ent) {
 		return true;
 	if (StrContains(classname, "prop_p", false) == 0)
 		return true;
+	if (StrContains(classname, "rp_props", false) == 0)
+		return true;
 	if (StrContains(classname, "func_phys", false) == 0)
 		return true;
 	if (StrContains(classname, "weapon_", false) == 0)
