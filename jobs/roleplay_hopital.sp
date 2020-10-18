@@ -153,7 +153,7 @@ public Action Cmd_ItemChirurgie(int args) {
 		return Plugin_Handled;
 	}
 	
-	float time = rp_GetClientInt(vendeur, i_Job) == 13 ? 5.0 : 30.0;
+	float time = rp_GetClientInt(vendeur, i_Job) == 14 ? 30.0 : 5.0;
 
 	for (float i = 0.0; i < time; i+= 5.0) {
 		Handle dp = CreateDataPack();
