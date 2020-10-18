@@ -1348,6 +1348,10 @@ void updateTeamPolice() {
 		else if( g_iPlayerTeam[i] == TEAM_POLICE && !policeMatch(i) ) {
 			removeClientTeam(i);
 		}
+		
+		if( g_iPlayerTeam[i] == TEAM_POLICE && GetClientTeam(i) == CS_TEAM_T ) {
+			CS_SwitchTeam(i, CS_TEAM_CT);
+		}
 	}
 }
 bool policeMatch(int client) {
