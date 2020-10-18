@@ -1087,14 +1087,14 @@ int getDistrib(int client, int& type) {
 	else if( StrEqual(classname, "rp_weaponbox") )
 		type = 3;
 	else if( (StrEqual(classname, "rp_cashmachine") ) && rp_GetClientJobID(owner) != 91 &&
-		!rp_IsClientSafe(owner) && Entity_GetHealth(target) >= 500)
+		!rp_IsClientSafe(owner) && Entity_GetHealth(target) >= 5000)
 		type = 4;
 	else if( (StrEqual(classname, "rp_bigcashmachine") ) && rp_GetClientJobID(owner) != 91 &&
-		!rp_IsClientSafe(owner) && Entity_GetHealth(target) >= 5000 )
+		!rp_IsClientSafe(owner) && Entity_GetHealth(target) >= 30000 )
 		type = 5;
 	else if( StrEqual(classname, "rp_phone") )
 		type = 6;
-	else if( (StrEqual(classname, "rp_plant") ) && rp_GetClientJobID(owner) != 91 && Entity_GetHealth(target) >= 2500 && 
+	else if( (StrEqual(classname, "rp_plant") ) && rp_GetClientJobID(owner) != 91 && Entity_GetHealth(target) >= 12500 && 
 		!rp_IsClientSafe(owner) && rp_GetBuildingData(target, BD_count) > 0 )
 		type = 7;
 	else if( StrEqual(classname, "rp_bank") && owner > 0 && IsValidClient(owner) && !rp_IsClientSafe(owner) )

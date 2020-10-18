@@ -537,6 +537,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown) {
 	
 	int ent = BuidlingATM(client);
 	rp_SetBuildingData(ent, BD_FromBuild, 1);
+	SetEntProp(ent, Prop_Data, "m_iHealth", GetEntProp(ent, Prop_Data, "m_iHealth")/5);
 	
 	if( ent > 0 ) {
 		rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
@@ -602,7 +603,7 @@ int BuidlingATM(int client) {
 	
 	SetEntityModel(ent, MODEL_ATM);
 	
-	SetEntProp( ent, Prop_Data, "m_iHealth", 10000);
+	SetEntProp( ent, Prop_Data, "m_iHealth", 50000);
 	SetEntProp( ent, Prop_Data, "m_takedamage", 0);
 	
 	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
@@ -863,7 +864,7 @@ int BuidlingSIGN(int client) {
 	DispatchSpawn(ent);
 	ActivateEntity(ent);
 	
-	SetEntProp( ent, Prop_Data, "m_iHealth", 2500);
+	SetEntProp( ent, Prop_Data, "m_iHealth", 50000);
 	SetEntProp( ent, Prop_Data, "m_takedamage", 0);
 	
 	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);

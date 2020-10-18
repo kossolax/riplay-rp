@@ -374,11 +374,13 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	
 	if(max >= 10000){
 		ent = BuildingCashMachine(client, true);
+		SetEntProp(ent, Prop_Data, "m_iHealth", GetEntProp(ent, Prop_Data, "m_iHealth")/5);
 		cooldown = 3.0;
 		return Plugin_Stop;
 	}
 	
 	ent = (job == 221 || job == 222) ? BuildingBigCashMachine(client) : BuildingCashMachine(client, false);
+	SetEntProp(ent, Prop_Data, "m_iHealth", GetEntProp(ent, Prop_Data, "m_iHealth")/5);
 	rp_SetBuildingData(ent, BD_FromBuild, 1);
 	
 	if( ent > 0 ) {
@@ -460,7 +462,7 @@ int BuildingCashMachine(int client, bool force=false) {
 	SetEntityModel(ent, MODEL_CASH);
 	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
 	SetEntProp( ent, Prop_Data, "m_takedamage", 2);
-	SetEntProp( ent, Prop_Data, "m_iHealth", 1000);
+	SetEntProp( ent, Prop_Data, "m_iHealth", 10000);
 	
 	
 	
@@ -489,7 +491,6 @@ public Action BuildingCashMachine_post(Handle timer, any entity) {
 	CreateTimer(20.0, Frame_CashMachine, EntIndexToEntRef(entity));
 	
 	SetEntProp( entity, Prop_Data, "m_takedamage", 2);
-	SetEntProp( entity, Prop_Data, "m_iHealth", 1000);
 	
 	HookSingleEntityOutput(entity, "OnBreak", BuildingCashMachine_break);
 	
@@ -716,7 +717,7 @@ int BuildingBigCashMachine(int client) {
 	SetEntityModel(ent, MODEL_CASHBIG);
 	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
 	SetEntProp( ent, Prop_Data, "m_takedamage", 2);
-	SetEntProp( ent, Prop_Data, "m_iHealth", 10000);	
+	SetEntProp( ent, Prop_Data, "m_iHealth", 35000);	
 	
 	vecOrigin[2] -= 16.0;
 	TeleportEntity(ent, vecOrigin, NULL_VECTOR, NULL_VECTOR);
@@ -743,7 +744,6 @@ public Action BuildingBigCashMachine_post(Handle timer, any entity) {
 	CreateTimer(2.0, Frame_BigCashMachine, EntIndexToEntRef(entity));
 	
 	SetEntProp( entity, Prop_Data, "m_takedamage", 2);
-	SetEntProp( entity, Prop_Data, "m_iHealth", 10000);
 	
 	HookSingleEntityOutput(entity, "OnBreak", BuildingCashMachine_break);
 	

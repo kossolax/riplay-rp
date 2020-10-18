@@ -739,6 +739,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 
 	int ent = BuildingKevlarBox(client);
 	rp_SetBuildingData(ent, BD_FromBuild, 1);
+	SetEntProp(ent, Prop_Data, "m_iHealth", GetEntProp(ent, Prop_Data, "m_iHealth")/5);
 	
 	if( ent > 0 ) {
 		rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
@@ -1605,7 +1606,7 @@ int BuildingKevlarBox(int client) {
 	SetEntityModel(ent, MODEL_KEVLARBOX);
 	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
 	SetEntProp( ent, Prop_Data, "m_takedamage", 2);
-	SetEntProp( ent, Prop_Data, "m_iHealth", 1000);
+	SetEntProp( ent, Prop_Data, "m_iHealth", 50000);
 	
 	TeleportEntity(ent, vecOrigin, NULL_VECTOR, NULL_VECTOR);
 	
@@ -1634,7 +1635,6 @@ public Action BuildingKevlarBox_post(Handle timer, any entity) {
 	}
 	
 	SetEntProp( entity, Prop_Data, "m_takedamage", 2);
-	SetEntProp( entity, Prop_Data, "m_iHealth", 1000);
 	HookSingleEntityOutput(entity, "OnBreak", BuildingKevlarBox_break);
 	
 	CreateTimer(1.0, Frame_KevlarBox, EntIndexToEntRef(entity));
@@ -1727,10 +1727,10 @@ public Action Frame_KevlarBox(Handle timer, any ent) {
 		rp_SetClientInt(client, i_Kevlar, kevlar);
 	}
 	boxHeal += 5;
-	if( boxHeal > 1500 )
-		boxHeal = 1500;
 	if( !inPvP )
 		boxHeal += Math_GetRandomInt(5, 20);
+	if( boxHeal > 50000 )
+		boxHeal = 50000;
 	
 	SetEntProp(ent, Prop_Data, "m_iHealth", boxHeal);
 	

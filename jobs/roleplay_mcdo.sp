@@ -181,6 +181,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	
 	int ent = BuildingMicrowave(client);
 	rp_SetBuildingData(ent, BD_FromBuild, 1);
+	SetEntProp(ent, Prop_Data, "m_iHealth", GetEntProp(ent, Prop_Data, "m_iHealth")/5);
 	
 	if( ent > 0 )
 		rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
@@ -227,7 +228,7 @@ int BuildingMicrowave(int client) {
 	SetEntityModel(ent,"models/props/cs_office/microwave.mdl");
 	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
 	SetEntProp( ent, Prop_Data, "m_takedamage", 2);
-	SetEntProp( ent, Prop_Data, "m_iHealth", 2000);
+	SetEntProp( ent, Prop_Data, "m_iHealth", 25000);
 	
 	
 	TeleportEntity(ent, vecOrigin, NULL_VECTOR, NULL_VECTOR);
@@ -277,7 +278,6 @@ public Action BuildingMicrowave_post(Handle timer, any entity) {
 	}
 	
 	SetEntProp( entity, Prop_Data, "m_takedamage", 2);
-	SetEntProp( entity, Prop_Data, "m_iHealth", 2000);
 	HookSingleEntityOutput(entity, "OnBreak", BuildingMicrowave_break);
 	
 	CreateTimer(1.0, Frame_Microwave, entity);

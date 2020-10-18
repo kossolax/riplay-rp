@@ -218,6 +218,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown) {
 	
 	int ent = BuidlingTABLE(client);
 	rp_SetBuildingData(ent, BD_FromBuild, 1);
+	SetEntProp(ent, Prop_Data, "m_iHealth", GetEntProp(ent, Prop_Data, "m_iHealth")/5);
 	
 	if( ent > 0 ) {
 		rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
@@ -880,7 +881,7 @@ int BuidlingTABLE(int client) {
 	else
 		DispatchKeyValue(ent, "model", MODEL_TABLE2);
 	
-	SetEntProp( ent, Prop_Data, "m_iHealth", 10000);
+	SetEntProp( ent, Prop_Data, "m_iHealth", 50000);
 	SetEntProp( ent, Prop_Data, "m_takedamage", 0);
 	
 	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);

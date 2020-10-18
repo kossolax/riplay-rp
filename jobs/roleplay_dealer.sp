@@ -1004,7 +1004,7 @@ int BuildingPlant(int client, int type) {
 	
 	SetEntityModel(ent, MODEL_PLANT_0);
 	
-	SetEntProp( ent, Prop_Data, "m_iHealth", 5000);
+	SetEntProp( ent, Prop_Data, "m_iHealth", 15000);
 	SetEntProp( ent, Prop_Data, "m_takedamage", 0);
 	
 	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
@@ -1202,7 +1202,7 @@ public Action Frame_BuildingPlant(Handle timer, any ent) {
 	}
 	
 	int heal = Entity_GetHealth(ent) + RoundFloat(time) * 10;
-	if (heal > 5000) heal = 5000;
+	if (heal > 15000) heal = 15000;
 	Entity_SetHealth(ent, heal, true);
 	
 	CreateTimer(time, Frame_BuildingPlant, EntIndexToEntRef(ent));
