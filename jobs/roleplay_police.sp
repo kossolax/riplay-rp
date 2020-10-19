@@ -701,7 +701,7 @@ public Action Cmd_Tazer(int client) {
 					CPrintToChat(client, "" ...MOD_TAG... " %T", "Tazer_removed_own", client, tmp2);
 				else {
 					CPrintToChat(client, "" ...MOD_TAG... " %T", "Tazer_removed_target", client, tmp2, tmp3);
-					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Tazer_removed_by", owner, tmp1);
+					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Tazer_removed_by", owner, tmp2);
 				}
 			}
 		}
@@ -730,7 +730,7 @@ public Action Cmd_Tazer(int client) {
 					CPrintToChat(client, "" ...MOD_TAG... " %T", "Tazer_removed_own", client, tmp2);
 				else {
 					CPrintToChat(client, "" ...MOD_TAG... " %T", "Tazer_removed_target", client, tmp2, tmp3);
-					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Tazer_removed_by", owner, tmp1);
+					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Tazer_removed_by", owner, tmp2);
 				}
 			}
 			
@@ -750,7 +750,7 @@ public Action Cmd_Tazer(int client) {
 					CPrintToChat(client, "" ...MOD_TAG... " %T", "Tazer_removed_own", client, tmp2);
 				else {
 					CPrintToChat(client, "" ...MOD_TAG... " %T", "Tazer_removed_target", client, tmp2, tmp3);
-					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Tazer_removed_by", owner, tmp1);
+					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Tazer_removed_by", owner, tmp2);
 				}
 			}
 		}
@@ -766,7 +766,7 @@ public Action Cmd_Tazer(int client) {
 					CPrintToChat(client, "" ...MOD_TAG... " %T", "Tazer_removed_own", client, tmp2);
 				else {
 					CPrintToChat(client, "" ...MOD_TAG... " %T", "Tazer_removed_target", client, tmp2, tmp3);
-					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Tazer_removed_by", owner, tmp1);
+					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Tazer_removed_by", owner, tmp2);
 				}
 			}
 		}
