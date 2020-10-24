@@ -1,0 +1,118 @@
+"Phrases"
+{
+	"Artisan_Menu"
+	{
+		"#format"	"{1:t}"
+		"fr"	"L'artisanat: {1}"
+	}
+	"Artisan_Status"
+	{
+		"#format"	"{1:d},{2:d},{3:d}"
+		"fr"		"{1} / {2} réussi(s), {3} échec(s)"
+	}
+	"Artisan_Level"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Niveau: {1}"
+	}
+	"Artisan_XP"
+	{
+		"#format"	"{1:s}{2:.1f}"
+		"fr"		"Expérience: {1} {2}%"
+	}
+	"Artisan_SLEEP"
+	{
+		"#format"	"{1:s}{2:.1f}"
+		"fr"		"Fatigue: {1} {2}%"
+	}
+	"Artisan_POINTS"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Point(s) de compétence: {1}"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Artisan_Build"
+	{
+		"fr"	"Construire"
+	}
+	"Artisan_Build_All"
+	{
+		"#format"	"{1:d},{2:.1f}"
+		"fr"	"Tout construire ({1}) ({2}sec)"
+	}
+	"Artisan_Build_Count"
+	{
+		"#format"	"{1:d},{2:.1f}"
+		"fr"	"Construire {1} ({2}sec)"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Artisan_Recycl"
+	{
+		"fr"	"Recycler"
+	}
+	"Artisan_Recycl_None"
+	{
+		"fr"	"Vous n'avez aucun item à recycler."
+	}
+	"Artisan_Recycl_All"
+	{
+		"#format"	"{1:d},{2:.1f}"
+		"fr"	"Tout recycler ({1}) ({2}sec)"
+	}
+	"Artisan_Recycl_Count"
+	{
+		"#format"	"{1:d},{2:.1f}"
+		"fr"	"Recycler {1} ({2}sec)"
+	}
+	// ----------------------------------------------------------------------------------------------	
+	"Artisan_Learn"
+	{
+		"fr"	"Apprendre"
+	}
+	"Artisan_Learn_None"
+	{
+		"fr"	"Vous n'avez aucun point d'apprentissage. Pour en avoir vous pouvez gagner un niveau d'artisanat ou acheter et lire un livre de sagesse."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Artisan_Books"
+	{
+		"fr"	"Livre des recettes"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Artisan_Infos"
+	{
+		"fr"	"Vos informations"
+	}
+	"Artisan_Infos_Bonus_XP"
+	{
+		"#format"	"{1:.1f}"
+		"fr"	"Bonus: +50% d'expérience: {1} minute(s)."
+	}
+	"Artisan_Infos_Bonus_SLEEP"
+	{
+		"#format"	"{1:.1f}"
+		"fr"	"Bonus: -50% de fatigue: {1} minute(s)."
+	}
+	"Artisan_Infos_Bonus_FOCUS"
+	{
+		"#format"	"{1:.1f}"
+		"fr"	"Bonus: +50% de concentration: {1} minute(s)."
+	}
+	"Artisan_Infos_Bonus_SPEED"
+	{
+		"#format"	"{1:.1f}"
+		"fr"	"Bonus: +100% de vitesse: {1} minute(s)."
+	}
+	"Artisan_Infos_Bonus_LUCK"
+	{
+		"#format"	"{1:.1f}"
+		"fr"	"Bonus: +5% de chance: {1} minute(s)."
+	}
+	"Artisan_Infos_Bonus_STEAL"
+	{
+		"#format"	"{1:.1f}"
+		"fr"	"Protection vol d'inventaire: {1} minute(s)."
+	}
+	// ----------------------------------------------------------------------------------------------
+	
+}

@@ -66,7 +66,10 @@ public Action Cmd_Reload(int args) {
 }
 public void OnPluginStart() {
 	LoadTranslations("core.phrases");
+	LoadTranslations("common.phrases");
 	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.items.phrases");
+	LoadTranslations("roleplay.artisan.phrases");
 	
 	RegServerCmd("rp_quest_reload", Cmd_Reload);	
 	RegServerCmd("rp_item_crafttable",		Cmd_ItemCraftTable,		"RP-ITEM", 	FCVAR_UNREGISTERED);
@@ -242,14 +245,24 @@ void displayArtisanMenu(int client) {
 		rp_SetClientInt(client, i_ArtisanLevel, 1);
 	}
 	
+	char tmp[128];
 	Handle menu = CreateMenu(eventArtisanMenu);
-	SetMenuTitle(menu, "== Artisanat ==\n ");
+	SetMenuTitle(menu, "%T\n ", "Artisan_Menu", client, "Empty_String");
 	
-	AddMenuItem(menu, "build", 	"Construire");
-	AddMenuItem(menu, "recycl", "Recycler");
-	AddMenuItem(menu, "learn", 	"Apprendre");
-	AddMenuItem(menu, "book", 	"Livre des recettes");
-	AddMenuItem(menu, "stats", 	"Vos informations"); // Niveau, XP, fatigue, ... 
+	Format(tmp, sizeof(tmp), "%T", "Artisan_Build", client);
+	AddMenuItem(menu, "build", tmp);
+	
+	Format(tmp, sizeof(tmp), "%T", "Artisan_Recycl", client);
+	AddMenuItem(menu, "recycl", tmp);
+	
+	Format(tmp, sizeof(tmp), "%T", "Artisan_Learn", client);
+	AddMenuItem(menu, "learn", tmp);
+	
+	Format(tmp, sizeof(tmp), "%T", "Artisan_Books", client);
+	AddMenuItem(menu, "book", tmp);
+	
+	Format(tmp, sizeof(tmp), "%T", "Artisan_Infos", client);
+	AddMenuItem(menu, "stats", tmp);
 	
 	DisplayMenu(menu, client, 30);
 }
@@ -284,8 +297,9 @@ void displayBuildMenu(int client, int jobID, int itemID) {
 	
 	Handle menu = CreateMenu(eventArtisanMenu);
 	if( jobID == 0 ) {
-		SetMenuTitle(menu, "== Artisanat: Construire\n ");
-		AddMenuItem(menu, "build -1", "Tous les jobs");
+		SetMenuTitle(menu, "%T\n ", "Artisan_Menu", client, "Artisan_Build");
+		Format(tmp, sizeof(tmp), "%T", "Jobs_All", client);
+		AddMenuItem(menu, "build -1", tmp);
 		
 		for (int i = 0; i < sizeof(lstJOB); i++) {
 			int count = getNumberOfCraftInJob(client, lstJOB[i]);
@@ -301,7 +315,7 @@ void displayBuildMenu(int client, int jobID, int itemID) {
 		}
 	}
 	else if( itemID == 0 ) {
-		SetMenuTitle(menu, "== Artisanat: Construire\n ");
+		SetMenuTitle(menu, "%T\n ", "Artisan_Menu", client, "Artisan_Build");
 		
 		for(int i = 0; i < MAX_ITEMS; i++) {
 			if( !g_bCanCraft[client][i] && !doRP_CanClientCraftForFree(client, i) )
@@ -339,8 +353,7 @@ void displayBuildMenu(int client, int jobID, int itemID) {
 	else {
 		
 		rp_GetItemData(itemID, item_type_name, tmp2, sizeof(tmp2));
-		Format(tmp2, sizeof(tmp2), "== Artisanat: Construire: %s\n ", tmp2);
-		SetMenuTitle(menu, tmp2);
+		SetMenuTitle(menu, "%T: %s\n ", "Artisan_Menu", client, "Artisan_Build", tmp2);
 		
 		Format(tmp, sizeof(tmp), "%d", itemID);
 		if( !g_hReceipe.GetValue(tmp, magic) )
@@ -360,12 +373,12 @@ void displayBuildMenu(int client, int jobID, int itemID) {
 		min += doRP_CanClientCraftForFree(client, itemID);
 		
 		Format(tmp, sizeof(tmp), "build %d %d %d", jobID, itemID, min);
-		Format(tmp2, sizeof(tmp2), "Tout Construire (%d) (%.1fsec)", min, duration*min + (min*GetTickInterval()));
+		Format(tmp2, sizeof(tmp2), "%T", "Artisan_Build_All", client, min, duration*min + (min*GetTickInterval()));
 		AddMenuItem(menu, tmp, tmp2);
 			
 		for (int i = 1; i <= min; i++) {
 			Format(tmp, sizeof(tmp), "build %d %d %d", jobID, itemID, i);
-			Format(tmp2, sizeof(tmp2), "Construire %d (%.1fsec)", i, duration*i + (i*GetTickInterval()));
+			Format(tmp2, sizeof(tmp2), "%T", "Artisan_Build_Count", client, i, duration*i + (i*GetTickInterval()));
 			AddMenuItem(menu, tmp, tmp2);
 		}
 	}
@@ -375,7 +388,7 @@ void displayBuildMenu(int client, int jobID, int itemID) {
 void displayRecyclingMenu(int client, int itemID) {
 	
 	if( rp_GetClientInt(client, i_ItemCount) == 0 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez aucun item à recycler.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Artisan_Recycl_None", client);
 		return;
 	}
 	
@@ -383,7 +396,7 @@ void displayRecyclingMenu(int client, int itemID) {
 	char tmp[64], tmp2[64];
 	
 	if( itemID == 0 ) {
-		SetMenuTitle(menu, "== Artisanat: Recycler\n ");
+		SetMenuTitle(menu, "%T\n ", "Artisan_Menu", client, "Artisan_Recycl");
 		
 		for(int i = 0; i < MAX_ITEMS; i++) {
 			if( rp_GetClientItem(client, i) <= 0 )
@@ -399,18 +412,16 @@ void displayRecyclingMenu(int client, int itemID) {
 	}
 	else {
 		rp_GetItemData(itemID, item_type_name, tmp2, sizeof(tmp2));
-		Format(tmp2, sizeof(tmp2), "== Artisanat: Recycler: %s\n ", tmp2);
-		SetMenuTitle(menu, tmp2);
+		SetMenuTitle(menu, "%T: %s\n ", "Artisan_Menu", client, "Artisan_Recycl", tmp2);
 		
 		float duration = getDuration(client, itemID);
 		Format(tmp, sizeof(tmp), "recycle %d %d", itemID, rp_GetClientItem(client, itemID));
-		Format(tmp2, sizeof(tmp2), "Tout recycler (%d) (%.1fsec)", rp_GetClientItem(client, itemID), duration*rp_GetClientItem(client, itemID) + (rp_GetClientItem(client, itemID)*GetTickInterval()));
+		Format(tmp2, sizeof(tmp2), "%T", "Artisan_Recycl_All", client, rp_GetClientItem(client, itemID), duration*rp_GetClientItem(client, itemID) + (rp_GetClientItem(client, itemID)*GetTickInterval()));
 		AddMenuItem(menu, tmp, tmp2);
 		
 		for(int i = 1; i <= rp_GetClientItem(client, itemID); i++) {
-			
 			Format(tmp, sizeof(tmp), "recycle %d %d", itemID, i);
-			Format(tmp2, sizeof(tmp2), "Recycler %d (%.1fsec)", i, duration*i + (i*GetTickInterval()));
+			Format(tmp2, sizeof(tmp2), "%T", "Artisan_Recycl_Count", client, i, duration*i + (i*GetTickInterval()));
 			
 			AddMenuItem(menu, tmp, tmp2);
 		}
@@ -428,14 +439,11 @@ void displayLearngMenu(char[] type, int client, int jobID, int itemID) {
 	int[] data = new int[craft_type_max];
 	bool can, skip = StrEqual(type, "learn") ? false : true;
 	if( !skip && count == 0 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez aucun point d'apprentissage. Pour en avoir vous pouvez gagner un niveau d'artisanat ou acheter et lire un livre de sagesse.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Artisan_Learn_None", client);
 		return;
 	}
 	
-	if( !skip )
-		SetMenuTitle(menu, "== Artisanat: Apprendre (%d)\n ", count);
-	else
-		SetMenuTitle(menu, "== Artisanat: Livre des recettes\n ");
+	SetMenuTitle(menu, "%T\n", "Artisan_Menu", client, skip ? "Artisan_Books" : "Artisan_Learn");
 	
 	if( jobID == 0 ) {
 		for (int i = 0; i < sizeof(lstJOB); i++) {
@@ -472,7 +480,7 @@ void displayLearngMenu(char[] type, int client, int jobID, int itemID) {
 	}
 	else {
 		rp_GetItemData(itemID, item_type_name, tmp, sizeof(tmp));
-		SetMenuTitle(menu, "== Artisanat: Livre: %s\n ", tmp);
+		SetMenuTitle(menu, "%T: %s\n ", "Artisan_Menu", client, "Artisan_Books", tmp);
 		
 		Format(tmp, sizeof(tmp), "%d", itemID);
 		g_hReceipe.GetValue(tmp, magic);
@@ -486,7 +494,8 @@ void displayLearngMenu(char[] type, int client, int jobID, int itemID) {
 		}
 		if( !skip )  {
 			Format(tmp, sizeof(tmp), "%s %d %d 1", type, jobID, itemID);
-			AddMenuItem(menu, tmp, "Apprendre");
+			Format(tmp2, sizeof(tmp2), "%T", "Artisan_Learn", client);
+			AddMenuItem(menu, tmp, tmp2);
 		}
 	}
 	
@@ -494,34 +503,34 @@ void displayLearngMenu(char[] type, int client, int jobID, int itemID) {
 }
 void displayStatsMenu(int client) {
 	Handle menu = CreateMenu(eventArtisanMenu);
-	SetMenuTitle(menu, "== Artisanat: Votre profil\n ");
+	SetMenuTitle(menu, "%T:\n ", "Artisan_Menu", client, "Artisan_Infos");
 	
 	addStatsToMenu(client, menu);
 	
 	char tmp[64];
 	
 	if( g_flClientBook[client][book_xp] > GetTickedTime() ) {
-		Format(tmp, sizeof(tmp), "Bonus: +50%% d'expérience: %.1f minute(s).", (g_flClientBook[client][book_xp] - GetTickedTime())/60.0);
+		Format(tmp, sizeof(tmp), "%T", "Artisan_Infos_Bonus_XP", (g_flClientBook[client][book_xp] - GetTickedTime())/60.0);
 		AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	}
 	if( g_flClientBook[client][book_sleep] > GetTickedTime() ) {
-		Format(tmp, sizeof(tmp), "Bonus: -50%% de fatigue: %.1f minute(s).", (g_flClientBook[client][book_sleep] - GetTickedTime()) / 60.0);
+		Format(tmp, sizeof(tmp), "%T", "Artisan_Infos_Bonus_SLEEP", (g_flClientBook[client][book_sleep] - GetTickedTime()) / 60.0);
 		AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	}
 	if( g_flClientBook[client][book_focus] > GetTickedTime() ) {
-		Format(tmp, sizeof(tmp), "Bonus: +50%% de concentration: %.1f minute(s).", (g_flClientBook[client][book_focus] - GetTickedTime()) / 60.0);
+		Format(tmp, sizeof(tmp), "%T", "Artisan_Infos_Bonus_FOCUS", (g_flClientBook[client][book_focus] - GetTickedTime()) / 60.0);
 		AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	}
 	if( g_flClientBook[client][book_speed] > GetTickedTime() ) {
-		Format(tmp, sizeof(tmp), "Bonus: +100%% de vitesse: %.1f minute(s).", (g_flClientBook[client][book_speed] - GetTickedTime()) / 60.0);
+		Format(tmp, sizeof(tmp), "%T", "Artisan_Infos_Bonus_SPEED", (g_flClientBook[client][book_speed] - GetTickedTime()) / 60.0);
 		AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	}
 	if( g_flClientBook[client][book_luck] > GetTickedTime() ) {
-		Format(tmp, sizeof(tmp), "Bonus: +5%% de chance: %.1f minute(s).", (g_flClientBook[client][book_luck] - GetTickedTime()) / 60.0);
+		Format(tmp, sizeof(tmp), "%T", "Artisan_Infos_Bonus_LUCK", (g_flClientBook[client][book_luck] - GetTickedTime()) / 60.0);
 		AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	}
 	if( g_flClientBook[client][book_steal] > GetTickedTime() ) {
-		Format(tmp, sizeof(tmp), "Protection vol d'inventaire: %.1f minute(s).", (g_flClientBook[client][book_steal] - GetTickedTime()) / 60.0);
+		Format(tmp, sizeof(tmp), "%T", "Artisan_Infos_Bonus_STEAL", (g_flClientBook[client][book_steal] - GetTickedTime()) / 60.0);
 		AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	}
 	
@@ -614,7 +623,7 @@ public Action stopBuilding(Handle timer, Handle dp) {
 		return Plugin_Stop;
 	}
 	if( !isNearTable(client) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes plus à coté d'une table de craft.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
 		g_bInCraft[client] = false;
 		return Plugin_Stop;
 	}
@@ -739,17 +748,15 @@ public Action stopBuilding(Handle timer, Handle dp) {
 void MENU_ShowCraftin(int client, int total, int amount, int positive, int fatigue) {
 	char tmp[64];
 	Handle menu = CreateMenu(eventArtisanMenu);
-	if( positive > 0 )
-		SetMenuTitle(menu, "== Artisanat: Construction\n ");
-	else
-		SetMenuTitle(menu, "== Artisanat: Recyclage\n ");
+	
+	SetMenuTitle(menu, "%T:\n ", "Artisan_Menu", client, positive > 0 ? "Artisan_Build" : "Artisan_Recycl");
 	
 	float percent = (float(total) - float(amount)) / float(total);
 	
 	rp_Effect_LoadingBar(tmp, sizeof(tmp), percent );
 	AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	
-	Format(tmp, sizeof(tmp), "%d / %d réussi%s, %d échec%s", total-amount-fatigue, total, total-amount-fatigue>1?"s":"", fatigue, fatigue > 1 ? "s":"");
+	Format(tmp, sizeof(tmp), "%T", "Artisan_Status", client, total-amount-fatigue, total, fatigue);
 	AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	
 	addStatsToMenu(client, menu);
@@ -822,15 +829,15 @@ void addStatsToMenu(int client, Handle menu) {
 		pc = 0.0;
 	
 	rp_Effect_LoadingBar(tmp2, sizeof(tmp2),  pc );
-	Format(tmp, sizeof(tmp), "Expérience: %s %.1f%%", tmp2, pc*100.0 );
+	Format(tmp, sizeof(tmp), "%T", "Artisan_XP", client, tmp2, pc*100.0 );
 	AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	
 	tmp2[0] = 0; pc = rp_GetClientFloat(client, fl_ArtisanFatigue);
 	rp_Effect_LoadingBar(tmp2, sizeof(tmp2),  pc );
-	Format(tmp, sizeof(tmp), "Fatigue: %s %.1f%%", tmp2, pc*100.0 );
+	Format(tmp, sizeof(tmp), "%T", "Artisan_SLEEP", client, tmp2, pc*100.0 );
 	AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	
-	Format(tmp, sizeof(tmp), "Points de compétence: %d", rp_GetClientInt(client, i_ArtisanPoints));
+	Format(tmp, sizeof(tmp), "%T", "Artisan_POINTS", client, rp_GetClientInt(client, i_ArtisanPoints));
 	AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 }
 // ----------------------------------------------------------------------------
@@ -856,13 +863,11 @@ int BuidlingTABLE(int client) {
 		if( StrEqual(classname, tmp) && rp_GetBuildingData(i, BD_owner) == client ) {
 			count++;
 			if( count >= 1 ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà une table de placée.");
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
 				return 0;
 			}
 		}
 	}
-	
-	CPrintToChat(client, "" ...MOD_TAG... " Construction en cours...");
 
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client);
 	
@@ -915,6 +920,6 @@ public void BuildingTABLE_break(const char[] output, int caller, int activator, 
 		rp_ClientAggroIncrement(activator, owner, 1000);
 	}
 	if( IsValidClient(owner) ) {
-		CPrintToChat(owner, "" ...MOD_TAG... " Votre table de craft a été détruite.");
+		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Build_Destroyed", owner, "rp_table");
 	}
 }
