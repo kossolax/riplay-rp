@@ -564,7 +564,7 @@ void CheckLotery() {
 	float src[3] =  { 1761.0, -4902.0, -2015.0 };
 	float dst[3] =  { 2310.0, -4902.0, -2015.0 };
 	
-	for (float i = 0.0; i <= 1.0; i+=0.1) {
+	for (float i = 0.0; i <= 1.0; i += 0.1) {
 		float pos[3];
 		for (int j = 0; j < 3; j++)
 			pos[j] = Math_Lerp(src[j], dst[j], i);
@@ -584,7 +584,11 @@ public void SQL_GetLoteryWiner(Handle owner, Handle hQuery, const char[] error, 
 	
 	float pos[3] = { 2196.0, -4926.0, -1846.0 };
 	float ang[3] = { 0.0, 270.0, 0.0 };
-	int color[3] = { 255, 255, 255 };
+	int color[3][3] = {
+		{ 0, 255, 0 },
+		{ 255, 255, 0 },
+		{ 255, 0, 0 },
+	};
 	int size = 12;
 	
 	
@@ -607,7 +611,7 @@ public void SQL_GetLoteryWiner(Handle owner, Handle hQuery, const char[] error, 
 			CPrintToChatAll("" ...MOD_TAG... " %s {default}remporte le lot de consolation de %d$!", szName, iGain);
 		}
 		LogToGame("[LOTO-%d] %s %s %d", place, szName, szSteamID, iGain);
-		ServerCommand("sm_effect_text %f %f %f %f %d %d %d %d \"%d - %s\" %f", pos[0], pos[1], pos[2] - float(size*place*2), ang[1], color[0], color[1], color[2], size * 2, place, szName, 180.0);
+		ServerCommand("sm_effect_text %f %f %f %f %d %d %d %d \"%d - %s\" %f", pos[0], pos[1], pos[2] - float(size*place*2), ang[1], color[place-1][0], color[place-1][1], color[place-1][2], size * 2, place, szName, 180.0);
 		
 		
 		for (int client = 1; client <= MaxClients; client++) {
