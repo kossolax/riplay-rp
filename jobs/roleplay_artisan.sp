@@ -489,7 +489,7 @@ void displayLearngMenu(char[] type, int client, int jobID, int itemID) {
 			magic.GetArray(j, data);
 			
 			rp_GetItemData(data[craft_raw], item_type_name, tmp, sizeof(tmp));
-			Format(tmp2, sizeof(tmp2), "%dx%s (%d%%)", data[craft_amount], tmp, data[craft_rate]);
+			Format(tmp2, sizeof(tmp2), "%dx %s (%d%%)", data[craft_amount], tmp, data[craft_rate]);
 			AddMenuItem(menu, tmp2, tmp2, ITEMDRAW_DISABLED);
 		}
 		if( !skip )  {
