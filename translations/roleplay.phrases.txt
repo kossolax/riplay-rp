@@ -3,11 +3,11 @@
 	"Error_ItemMissing"
 	{
 		"#format"	"{1:t}"
-		"fr"		"Vous n'avez plus de {1}."
+		"fr"		"Vous n'avez plus de {red}{1}{default}."
 	}
 	"Error_NotEnoughtMoney"
 	{
-		"fr"	"Vous n'avez pas assez d'argent"
+		"fr"	"Vous n'avez pas assez d'argent."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Cmd_TargetIsToFar"
@@ -132,6 +132,80 @@
 		"fr"	"une caisse d'armes"
 	}
 	// ----------------------------------------------------------------------------------------------
-
-
+	"Trail"
+	{
+		"fr"	"Propulseur"
+	}
+	"Trail2"
+	{
+		"fr"	"Fusée n°1"
+	}
+	"Trail_01"
+	{
+		"fr"	"Fusée n°2"
+	}
+	"Trail3"
+	{
+		"fr"	"Petit cube bleu"
+	}
+	"Trail4"
+	{
+		"fr"	"Fumée verte n°1"
+	}
+	"Trail_03"
+	{
+		"fr"	"Fumée verte n°2"
+	}
+	"Trail7"
+	{
+		"fr"	"Fumée verte n°3"
+	}
+	"Trail5"
+	{
+		"fr"	"Seringue"
+	}
+	"Trail8"
+	{
+		"fr"	"Fumée blanche et bleue"
+	}
+	"Trail10"
+	{
+		"fr"	"Bulle bleue n°1"
+	}
+	"Trail13"
+	{
+		"fr"	"Bulle bleue n°2"
+	}
+	"Trail11"
+	{
+		"fr"	"Fumée Or"
+	}
+	"Trail12"
+	{
+		"fr"	"Fumée bleue n°1"
+	}
+	"Trail_02"
+	{
+		"fr"	"Fumée bleue n°2"
+	}
+	"Trail15"
+	{
+		"fr"	"Trait jaune et vert"
+	}
+	"Trail_04"
+	{
+		"fr"	"Fumée bleue et rose"
+	}
+	"trail_money"
+	{
+		"fr"	"Billets"
+	}
+	"trail_heart"
+	{
+		"fr"	"Coeurs"
+	}
+	"confetti_balloons"
+	{
+		"fr"	"Ballons"
+	}
 }
