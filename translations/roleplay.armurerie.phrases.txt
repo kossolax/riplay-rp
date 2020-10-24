@@ -1,0 +1,83 @@
+"Phrases"
+{
+	"Armu_WeaponInHands"
+	{
+		"fr"	"Vous devez prendre une arme en main."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"edit_weapon"
+	{
+		"fr"		"Modifier votre arme:"
+	}
+	"edit_weapon_done"
+	{
+		"fr"		"La modification a été apportée à votre arme."
+	}
+	"edit_weapon_gang"
+	{
+		"fr"		"A quel groupe attribuer l'arme?"
+	}
+	"edit_weapon_sanAndreas"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Votre arme a déjà un San Andreas, il vous reste {1} balles dans le chargeur."
+	}
+	"weapon_sanAndreas"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Votre arme a un San Andreas, il vous reste {1} balles dans le chargeur."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"add_bullet_sanAndreas"
+	{
+		"fr"		"Ajouter un san-andreas"
+	}
+	"add_bullet_pvp"
+	{
+		"fr"		"Transformer en arme PvP"
+	}
+	"add_ball_type_fire"
+	{
+		"fr"		"Ajouter des cartouches incendiaire"
+	}
+	"add_ball_type_caoutchouc"
+	{
+		"fr"		"Ajouter des cartouches en caoutchouc"
+	}
+	"add_ball_type_poison"
+	{
+		"fr"		"Ajouter des cartouches empoisonante"
+	}
+	"add_ball_type_vampire"
+	{
+		"fr"		"Ajouter des cartouches vampiriques"
+	}
+	"add_ball_type_paintball"
+	{
+		"fr"		"Ajouter des cartouches de paintBall"
+	}
+	"add_ball_type_reflexive"
+	{
+		"fr"		"Ajouter des cartouches rebondissantes"
+	}
+	"add_ball_type_explode"
+	{
+		"fr"		"Ajouter des cartouches explosives"
+	}
+	"add_ball_type_revitalisante"
+	{
+		"fr"		"Ajouter des cartouches revitalisantes"
+	}
+	"add_ball_type_nosteal"
+	{
+		"fr"		"Ajouter des cartouches anti-vol"
+	}
+	"add_ball_type_notk"
+	{
+		"fr"		"Ajouter des cartouches Anti-TK"
+	}
+	"add_ball_type_braquage"
+	{
+		"fr"		"Ajouter des cartouches braquages"
+	}
+}

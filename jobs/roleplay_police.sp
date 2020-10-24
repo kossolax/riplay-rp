@@ -1783,7 +1783,7 @@ public int MenuTribunal_GPS(Handle p_hItemMenu, MenuAction p_oAction, int client
 		
 		
 		if (rp_GetClientItem(client, ITEM_GPS) <= 0) {
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Missing", client, "rp_item_ratio gps");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemMissing", client, "rp_item_ratio gps");
 			return;
 		}
 		
@@ -1930,17 +1930,17 @@ void Cmd_BuyWeapon(int client, bool free) {
 			Format(tmp2, sizeof(tmp2), "%s %s (%d/%d) ", tmp2, name, data[BM_Munition], data[BM_Chargeur]);
 		
 		switch (view_as<enum_ball_type>(data[BM_Type])) {
-			case ball_type_fire: 			Format(tmp2, sizeof(tmp2), "%T", "ball_type_fire", client, tmp2);
-			case ball_type_caoutchouc:		Format(tmp2, sizeof(tmp2), "%T", "ball_type_caoutchouc", client, tmp2);
-			case ball_type_poison:			Format(tmp2, sizeof(tmp2), "%T", "ball_type_poison", client, tmp2);
-			case ball_type_vampire:			Format(tmp2, sizeof(tmp2), "%T", "ball_type_vampire", client, tmp2);
-			case ball_type_paintball:		Format(tmp2, sizeof(tmp2), "%T", "ball_type_paintball", client, tmp2);
-			case ball_type_reflexive:		Format(tmp2, sizeof(tmp2), "%T", "ball_type_reflexive", client, tmp2);
-			case ball_type_explode:			Format(tmp2, sizeof(tmp2), "%T", "ball_type_explode", client, tmp2);
-			case ball_type_revitalisante:	Format(tmp2, sizeof(tmp2), "%T", "ball_type_revitalisante", client, tmp2);
-			case ball_type_nosteal:			Format(tmp2, sizeof(tmp2), "%T", "ball_type_nosteal", client, tmp2);
-			case ball_type_notk:			Format(tmp2, sizeof(tmp2), "%T", "ball_type_notk", client, tmp2);
-			case ball_type_braquage:		Format(tmp2, sizeof(tmp2), "%T", "ball_type_braquage", client, tmp2);
+			case ball_type_fire: 			Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_fire", client, tmp2);
+			case ball_type_caoutchouc:		Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_caoutchouc", client, tmp2);
+			case ball_type_poison:			Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_poison", client, tmp2);
+			case ball_type_vampire:			Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_vampire", client, tmp2);
+			case ball_type_paintball:		Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_paintball", client, tmp2);
+			case ball_type_reflexive:		Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_reflexive", client, tmp2);
+			case ball_type_explode:			Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_explode", client, tmp2);
+			case ball_type_revitalisante:	Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_revitalisante", client, tmp2);
+			case ball_type_nosteal:			Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_nosteal", client, tmp2);
+			case ball_type_notk:			Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_notk", client, tmp2);
+			case ball_type_braquage:		Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_braquage", client, tmp2);
 		}
 		
 		Format(tmp2, sizeof(tmp2), "%s - %d$", tmp2, (free ? 0:data[BM_Prix]));

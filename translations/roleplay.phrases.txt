@@ -1,5 +1,15 @@
 "Phrases"
 {
+	"Error_ItemMissing"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Vous n'avez plus de {1}."
+	}
+	"Error_NotEnoughtMoney"
+	{
+		"fr"	"Vous n'avez pas assez d'argent"
+	}
+	// ----------------------------------------------------------------------------------------------
 	"Cmd_TargetIsToFar"
 	{
 		"fr"	"Cette personne est beaucoup trop éloignée."

@@ -157,7 +157,7 @@
 	// ----------------------------------------------------------------------------------------------
 	"Police_NoPay"
 	{
-		"fr"		"La police {red}ne{default} paye {red}pas{default} ses membres tuant la population."
+		"fr"		"La police a décidé de {red}ne pas verser votre salaire{default} en raison de votre mauvais comportement envers la population."
 	}
 	"Police_RefundVictim"
 	{
