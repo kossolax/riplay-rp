@@ -582,6 +582,12 @@ public void SQL_GetLoteryWiner(Handle owner, Handle hQuery, const char[] error, 
 	
 	int g_iLOTO = rp_GetServerInt(lotoCagnotte);
 	
+	float pos[3] = { 2196.0, -4926.0, -1846.0 };
+	float ang[3] = { 0.0, 270.0, 0.0 };
+	int color[3] = { 255, 255, 255 };
+	int size = 12;
+	
+	
 	while( SQL_FetchRow(hQuery) ) {
 		place++;
 		
@@ -601,6 +607,7 @@ public void SQL_GetLoteryWiner(Handle owner, Handle hQuery, const char[] error, 
 			CPrintToChatAll("" ...MOD_TAG... " %s {default}remporte le lot de consolation de %d$!", szName, iGain);
 		}
 		LogToGame("[LOTO-%d] %s %s %d", place, szName, szSteamID, iGain);
+		ServerCommand("sm_effect_text %f %f %f %f %d %d %d %d \"%d - %s\" %f", pos[0], pos[1], pos[2] - float(size*place*2), ang[1], color[0], color[1], color[2], size * 2, place, szName, 180.0);
 		
 		
 		for (int client = 1; client <= MaxClients; client++) {
