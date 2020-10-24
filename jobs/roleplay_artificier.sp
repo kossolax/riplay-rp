@@ -608,7 +608,7 @@ public Action Cmd_ItemBomb(int args) {
 	WritePackCell(dp, EntIndexToEntRef(target) );
 	WritePackCell(dp, client);
 	
-	CPrintToChat(client, "" ...MOD_TAG... " %T", "Bomb_WillExplodeIn", client);
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Bomb_WillExplodeIn", client, 15.0);
 	rp_Effect_BeamBox(client, target);
 	
 	float vecTarget[3];
