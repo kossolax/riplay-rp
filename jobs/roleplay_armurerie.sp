@@ -183,14 +183,14 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	
 	if( Weapon_ShouldBeEquip(wep_name) ) {
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
-		return Plugin_Handled;
+		return Plugin_Stop;
 	}
 
 	Handle menu = CreateMenu(ModifyWeapon);
 	SetMenuTitle(menu, "%T\n ", "edit_weapon", client);
 	
 	char szMenu[][][] = {
-		{"sanandreas",		"150",	"add_sanAndreas"},
+		{"sanandreas",		"150",	"add_bullet_sanAndreas"},
 		{"pvp",				"250",	"add_bullet_pvp"},
 		{"fire",			"250",	"add_ball_type_fire"},
 		{"caoutchouc",		"200",	"add_ball_type_caoutchouc"},
@@ -212,7 +212,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	}
 	
 	DisplayMenu(menu, client, 60);
-	cooldown = 5.0;
+	cooldown = 0.1;
 	
 	return Plugin_Stop;
 }
@@ -257,12 +257,7 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 				DisplayMenu(menupvp, client, 60);
 			}
 			else{
-				if((rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money)) >= price){
-					rp_ClientMoney(client, i_Money, -price);
-					CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
-					rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
-				}
-				else{
+				if((rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money)) < price){
 					CPrintToChat(client, ""...MOD_TAG..." %T", "Error_NotEnoughtMoney", client);
 					return;
 				}
@@ -310,6 +305,11 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 					Weapon_SetPrimaryClip(wep_id, ammo);
 					SDKHook(wep_id, SDKHook_Reload, OnWeaponReload);
 				}
+				
+				
+				rp_ClientMoney(client, i_Money, -price);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
+				rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
 				rp_SetJobCapital( 111, rp_GetJobCapital(111)+price );
 				FakeClientCommand(client, "say /build");
 
