@@ -82,7 +82,7 @@ public void OnPluginStart() {
 			OnClientPostAdminCheck(i);
 }
 public void OnAllPluginsLoaded() {
-	SQL_TQuery(rp_GetDatabase(), SQL_LoadReceipe, "SELECT `itemid`, `raw`, `amount`, REPLACE(`extra_cmd`, 'rp_item_primal ', '') `rate` FROM `rp_csgo`.`rp_craft` C INNER JOIN `rp_items` I ON C.`raw`=I.`id` ORDER BY `itemid`, `raw`", 0, DBPrio_Low);
+	SQL_TQuery(rp_GetDatabase(), SQL_LoadReceipe, "SELECT `itemid`, `raw`, `amount`, REPLACE(`extra_cmd`, 'rp_item_primal ', '') `rate` FROM `rp_craft` C INNER JOIN `rp_items` I ON C.`raw`=I.`id` ORDER BY `itemid`, `raw`", 0, DBPrio_Low);
 }
 public Action CmdSetFatigue(int client, int args) {
 	float f = GetCmdArgFloat(2);
