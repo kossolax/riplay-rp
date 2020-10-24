@@ -15,6 +15,7 @@
 
 #define __LAST_REV__			"8.2 - REBORN"
 #define	MOD_TAG					"{lightblue}[RIPLAY.FR]{default}"
+#define MOD_URL					"https://rpweb.riplay.fr/index.php"
 
 //#define DEBUG
 #define MAX_LOCATIONS			150
@@ -35,6 +36,7 @@
 #define MAIRIE_BUR_ZONE			308
 #define MAIRIE_POS				{522.0, 2002.0, -2135.0}
 #define	LEGIT_KILL_TIME			15
+
 
 // DO NOT EDIT BELLOW.
 #define WORLDINDEX				0				

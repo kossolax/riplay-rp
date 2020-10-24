@@ -159,6 +159,49 @@
 	{
 		"fr"		"La police {red}ne{default} paye {red}pas{default} ses membres tuant la population."
 	}
+	"Police_RefundVictim"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Votre voleur a été arrêté, la police vous a remboursé {red}{1}{default}$."
+	}
+	"Police_RefundThief"
+	{
+		"#format"	"{1:d}"
+		"fr"		"La police a confisqué votre butin de {red}{1}{default}$."
+	}
+	"Police_MurderVictim"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Votre meurtrier a été arrêté, la police l'a condamné à {1} heures de prison."
+	}
+	"Police_Jail_Amende"
+	{
+		"#format"	"{1:d},{2:t}"
+		"fr"		"Une amende de {1}$ vous a été prélevée pour {2}."
+	}
+	"Police_Jail_AmendeTo"
+	{
+		"#format"	"{1:d},{2:s}{3:t}"
+		"fr"		"Une amende de {1}$ a été prélevée à {2} pour {3}."
+	}
+	"Police_Jail_Caution"
+	{
+		"#format"	"{1:t},{2:d}"
+		"fr"		"Vous avez été arrêté pour {1}, une caution de {2}$ vous est demandé."
+	}
+	"Police_Jail_CautionYes"
+	{
+		"fr"		"Oui, je veux payer ma caution."
+	}
+	"Police_Jail_CautionNo"
+	{
+		"fr"		"Non, je souhaite moisir en taule."
+	}
+	"Police_Jail_Disconnect"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Cette personne a quitté la ville, mais il sera condamné à {1} heures de prison."
+	}
 	// ----------------------------------------------------------------------------------------------
 	"Enquete_On"
 	{
@@ -216,6 +259,16 @@
 		"fr"		"Une amende de {1}$ vient d'être prélevée auprès de {2} pour défaut de: {3}"
 	}
 	// ----------------------------------------------------------------------------------------------
+	"PotDeVin_Own"
+	{
+		"fr"		"Votre pot de vin vient de réussir à bloquer votre localisation."
+	}
+	"PotDeVin_To"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous n'arrivez pas à localiser {1}, les signaux GPS semblent avoir été brouillés."
+	}
+	// ----------------------------------------------------------------------------------------------
 	"PlayerInJail"
 	{
 		"fr"		"Liste des joueurs en prison"
@@ -228,5 +281,14 @@
 	"PlayerInJail_None"
 	{
 		"fr"		"Il n'y a personne en prison."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Police_NoWeaponInStore"
+	{
+		"fr"		"Aucune arme n'est disponible pour le moment."
+	}
+	"Police_WeaponInStore"
+	{
+		"fr"		"Armées trouvées par la police:"
 	}
 }

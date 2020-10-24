@@ -1,0 +1,70 @@
+"Phrases"
+{
+	"Item_Missing"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Vous n'avez plus de {1}."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"rp_item_ratio gps"
+	{
+		"fr"	"GPS"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"ball_type_fire"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} Incendiaire"
+	}
+	"ball_type_caoutchouc"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} Caoutchouc"
+	}
+	"ball_type_poison"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} Poison"
+	}
+	"ball_type_vampire"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} Vampirique"
+	}
+	"ball_type_paintball"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} PaintBall"
+	}
+	"ball_type_reflexive"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} Rebondissante"
+	}
+	"ball_type_explode"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} Explosive"
+	}
+	"ball_type_revitalisante"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} Revitalisante"
+	}
+	"ball_type_nosteal"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} Anti-Vol"
+	}
+	"ball_type_notk"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} Anti-TK"
+	}
+	"ball_type_braquage"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} Braquage"
+	}
+	
+}

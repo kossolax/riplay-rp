@@ -11,7 +11,22 @@
 	// ----------------------------------------------------------------------------------------------
 	"Cmd_OutOf_Car_By"
 	{
+		"#format"	"{1:s}"
 		"fr"	"{1} vous a sorti de votre voiture."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Build_CannotHere"
+	{
+		"fr"	"Vous ne pouvez pas construire ici."
+	}
+	"Build_TooMany"
+	{
+		"fr"	"Vous avez trop de props actif en ville."
+	}
+	"Build_Destroyed"
+	{
+		"#format"	"{1:t}"
+		"fr"	"{1} a été détruite."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"rp_banana"

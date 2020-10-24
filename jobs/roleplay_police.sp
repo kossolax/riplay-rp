@@ -98,6 +98,7 @@ public void OnPluginStart() {
 	LoadTranslations("core.phrases");
 	LoadTranslations("common.phrases");
 	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.items.phrases");
 	LoadTranslations("roleplay.police.phrases");
 	
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
@@ -1345,8 +1346,8 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 					rp_ClientMoney(tg, i_Money, rp_GetClientInt(target, i_LastVolAmount));
 					rp_ClientMoney(target, i_AddToPay, -rp_GetClientInt(target, i_LastVolAmount));
 					
-					CPrintToChat(target, "" ...MOD_TAG... " Vous avez remboursé votre victime de %d$.", rp_GetClientInt(target, i_LastVolAmount));
-					CPrintToChat(tg, "" ...MOD_TAG... " Le voleur a été mis en prison. Vous avez été remboursé de %d$.", rp_GetClientInt(target, i_LastVolAmount));
+					CPrintToChat(target, "" ...MOD_TAG... " %T", "Police_RefundThief", target, rp_GetClientInt(target, i_LastVolAmount));
+					CPrintToChat(tg, "" ...MOD_TAG... " %T", "Police_RefundThief", tg, rp_GetClientInt(target, i_LastVolAmount));
 				}
 			}
 			else {
@@ -1390,7 +1391,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 						continue;
 					if (rp_GetClientInt(i, i_LastKilled_Reverse) != target)
 						continue;
-					CPrintToChat(i, "" ...MOD_TAG... " Votre assassin a été mis en prison.");
+					CPrintToChat(i, ""...MOD_TAG..." %T", "Police_MurderVictim", i, time_to_spend);
 				}
 			}
 			
@@ -1398,8 +1399,11 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 			if (amende > 0) {
 				
 				if (IsValidClient(target)) {
-					CPrintToChat(client, "" ...MOD_TAG... " Une amende de %i$ a été prélevée à %N{default}.", amende, target);
-					CPrintToChat(target, "" ...MOD_TAG... " Une caution de %i$ vous a été prelevée.", amende);
+					char target_name[128];
+					GetClientName2(target, target_name, sizeof(target_name), false);
+					
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Police_Jail_AmendeTo", client, amende, target, g_szJailRaison[type][jail_raison]);
+					CPrintToChat(target, "" ...MOD_TAG... " %T", "Police_Jail_Amende", target, amende, g_szJailRaison[type][jail_raison]);
 				}
 			}
 		}
@@ -1415,7 +1419,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 						continue;
 					if (rp_GetClientInt(i, i_LastKilled_Reverse) != target)
 						continue;
-					CPrintToChat(i, "" ...MOD_TAG... " Votre assassin a été mis en prison.");
+					CPrintToChat(i, ""...MOD_TAG..." %T", "Police_MurderVictim", i, time_to_spend);
 				}
 			}
 			
@@ -1453,7 +1457,8 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 				explainJail(target, type);
 		}
 		else {
-			CPrintToChat(client, "" ...MOD_TAG... " Le joueur s'est déconnecté, mais il fera %d heure(s) de prison", time_to_spend / 60);
+			time_to_spend *= 2;
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Police_Jail_Disconnect", client, time_to_spend / 60);
 			
 			Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_users2` (`id`, `steamid`, `jail` ) VALUES", szQuery);
 			Format(szQuery, sizeof(szQuery), "%s (NULL, '%s', '%i' );", szQuery, g_szTribunal[client], time_to_spend);
@@ -1477,15 +1482,18 @@ void WantPayForLeaving(int client, int police, int type, int amende) {
 	
 	// Setup menu
 	Handle menu = CreateMenu(eventPayForLeaving);
-	char tmp[256];
-	Format(tmp, 255, "Vous avez été mis en prison pour \n %s\nUne caution de %i$ vous est demandé\n ", g_szJailRaison[type][jail_raison], amende);
-	SetMenuTitle(menu, tmp);
+	char tmp1[256], tmp2[128];
+	Format(tmp1, sizeof(tmp1), "%T\n ", "Police_Jail_Caution", client, g_szJailRaison[type][jail_raison], amende);
+	String_WordWrap(tmp1, 40);
+	SetMenuTitle(menu, tmp1);
 	
-	Format(tmp, 255, "%i_%i_%i", police, type, amende);
-	AddMenuItem(menu, tmp, "Oui, je souhaite payer ma caution");
+	Format(tmp1, sizeof(tmp1), "%i_%i_%i", police, type, amende);
+	Format(tmp2, sizeof(tmp2), "%T", "Police_Jail_CautionYes", client);
+	AddMenuItem(menu, tmp1, tmp2);
 	
-	Format(tmp, 255, "0_0_0");
-	AddMenuItem(menu, tmp, "Non, je veux rester plus longtemps");
+	Format(tmp1, sizeof(tmp1), "0_0_0");
+	Format(tmp2, sizeof(tmp2), "%T", "Police_Jail_CautionNo", client);
+	AddMenuItem(menu, tmp1, tmp2);
 	
 	
 	SetMenuExitButton(menu, false);
@@ -1531,8 +1539,8 @@ public int eventPayForLeaving(Handle menu, MenuAction action, int client, int pa
 		
 		
 		if (IsValidClient(target)) {
-			CPrintToChat(target, "" ...MOD_TAG... " Une amende de %i$ a été prélevée à %N.", amende, client);
-			CPrintToChat(client, "" ...MOD_TAG... " Une caution de %i$ vous a été prelevée.", amende);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Police_Jail_AmendeTo", client, amende, target, g_szJailRaison[type][jail_raison]);
+			CPrintToChat(target, "" ...MOD_TAG... " %T", "Police_Jail_Amende", target, amende, g_szJailRaison[type][jail_raison]);
 		}
 		
 		time_to_spend *= 60;
@@ -1606,13 +1614,13 @@ public Action fwdOnPlayerBuild(int client, float & cooldown) {
 	}
 
 	if (rp_IsInPVP(client)) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas poser une barrière en PVP.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
 		return Plugin_Continue;
 	}
 	
 	int Tzone = rp_GetPlayerZone(client);
 	if (Tzone == 24 || Tzone == 25) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas poser une barrière dans les conduits.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
 		return Plugin_Continue;
 	}
 	
@@ -1677,13 +1685,11 @@ int BuildingBarriere(int client) {
 		if (StrEqual(classname, tmp) && rp_GetBuildingData(i, BD_owner) == client) {
 			count++;
 			if (count >= max) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous avez posé trop de barrières.");
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
 				return 0;
 			}
 		}
 	}
-	
-	CPrintToChat(client, "" ...MOD_TAG... " Vous posez une barrière...");
 	
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client);
 	
@@ -1731,7 +1737,7 @@ public void BuildingBarriere_break(const char[] output, int caller, int activato
 	}
 	
 	if (IsValidClient(owner)) {
-		CPrintToChat(owner, "" ...MOD_TAG... " Votre barrière a été détruite.");
+		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Build_Destroyed", owner, "rp_barriere");
 	}
 }
 // ----------------------------------------------------------------------------
@@ -1752,17 +1758,17 @@ public Action Cmd_ItemRatio(int args) {
 }
 public Action task_GPS(Handle timer, any client) {
 	Handle menu = CreateMenu(MenuTribunal_GPS);
-	SetMenuTitle(menu, "  GPS\n ");
-	char tmp[255], tmp2[255];
+	SetMenuTitle(menu, "%T:\n ", "rp_item_ratio gps", client);
+	char tmp1[255], tmp2[255];
 	
 	for (int i = 1; i <= MaxClients; i++) {
 		if (!IsValidClient(i) || i == client)
 			continue;
 		
-		Format(tmp, sizeof(tmp), "%d", i);
-		Format(tmp2, sizeof(tmp2), "%N", i);
+		Format(tmp1, sizeof(tmp1), "%d", i);
+		GetClientName2(i, tmp2, sizeof(tmp2), true);
 		
-		AddMenuItem(menu, tmp, tmp2);
+		AddMenuItem(menu, tmp1, tmp2);
 	}
 	
 	SetMenuExitButton(menu, true);
@@ -1777,20 +1783,19 @@ public int MenuTribunal_GPS(Handle p_hItemMenu, MenuAction p_oAction, int client
 		
 		
 		if (rp_GetClientItem(client, ITEM_GPS) <= 0) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez plus de GPS.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Missing", client, "rp_item_ratio gps");
 			return;
 		}
 		
 		rp_ClientGiveItem(client, ITEM_GPS, -1);
 		
 		if (Math_GetRandomInt(1, 100) < rp_GetClientInt(target, i_Cryptage) * 20) {
-			
-			CPrintToChat(target, "" ...MOD_TAG... " Votre pot de vin envers un mercenaire vient de vous sauver.");
-			CPrintToChat(client, "" ...MOD_TAG... " Un pot de vin envers un mercenaire vient de le sauver...");
-			
+			char target_name[128];
+			GetClientName2(target, target_name, sizeof(target_name), false);
+			CPrintToChat(target, ""...MOD_TAG..." %T", "PotDeVin_Own", target);
+			CPrintToChat(client, ""...MOD_TAG..." %T", "PotDeVin_To", client, target_name);
 		}
 		else {
-			
 			if (rp_GetClientInt(client, i_GPS) <= 0)
 				CreateTimer(0.1, GPS_LOOP, client);
 			rp_SetClientInt(client, i_GPS, target);
@@ -1833,8 +1838,8 @@ void displayTribunal(int client, const char szSteamID[64]) {
 	SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery);
 	
 	
-	Format(szURL, sizeof(szURL), "https://rpweb.riplay.fr/index.php#/tribunal/case/%s", szSteamID);
-	PrintToConsole(client, "https://rpweb.riplay.fr/index.php#/tribunal/case/%s", szSteamID);
+	Format(szURL, sizeof(szURL), ""...MOD_URL..."#/tribunal/case/%s", szSteamID);
+	PrintToConsole(client, ""...MOD_URL..."#/tribunal/case/%s", szSteamID);
 	
 	RP_ShowMOTD(client, szURL);
 }
@@ -1901,12 +1906,13 @@ void Cmd_BuyWeapon(int client, bool free) {
 	int[] data = new int[BM_Max];
 	
 	if (position >= max) {
-		CPrintToChat(client, "" ...MOD_TAG... " Désolé, aucune arme n'est disponible pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Police_NoWeaponInStore", client);
 		return;
 	}
 	
 	Menu menu = new Menu(Menu_BuyWeapon);
-	menu.SetTitle("Armes trouvées par la police\n ");
+	Format(tmp2, sizeof(tmp2), "%T\n ", "Police_WeaponInStore", client);
+	menu.SetTitle(tmp2);
 	
 	while (position < max) {
 		
@@ -1924,20 +1930,20 @@ void Cmd_BuyWeapon(int client, bool free) {
 			Format(tmp2, sizeof(tmp2), "%s %s (%d/%d) ", tmp2, name, data[BM_Munition], data[BM_Chargeur]);
 		
 		switch (view_as<enum_ball_type>(data[BM_Type])) {
-			case ball_type_fire : Format(tmp2, sizeof(tmp2), "%s Incendiaire", tmp2);
-			case ball_type_caoutchouc : Format(tmp2, sizeof(tmp2), "%s Caoutchouc", tmp2);
-			case ball_type_poison : Format(tmp2, sizeof(tmp2), "%s Poison", tmp2);
-			case ball_type_vampire : Format(tmp2, sizeof(tmp2), "%s Vampirique", tmp2);
-			case ball_type_paintball : Format(tmp2, sizeof(tmp2), "%s PaintBall", tmp2);
-			case ball_type_reflexive : Format(tmp2, sizeof(tmp2), "%s Rebondissante", tmp2);
-			case ball_type_explode : Format(tmp2, sizeof(tmp2), "%s Explosive", tmp2);
-			case ball_type_revitalisante : Format(tmp2, sizeof(tmp2), "%s Revitalisante", tmp2);
-			case ball_type_nosteal : Format(tmp2, sizeof(tmp2), "%s Anti-Vol", tmp2);
-			case ball_type_notk : Format(tmp2, sizeof(tmp2), "%s Anti-TK", tmp2);
-			case ball_type_braquage : Format(tmp2, sizeof(tmp2), "%s Braquage", tmp2);
+			case ball_type_fire: 			Format(tmp2, sizeof(tmp2), "%T", "ball_type_fire", client, tmp2);
+			case ball_type_caoutchouc:		Format(tmp2, sizeof(tmp2), "%T", "ball_type_caoutchouc", client, tmp2);
+			case ball_type_poison:			Format(tmp2, sizeof(tmp2), "%T", "ball_type_poison", client, tmp2);
+			case ball_type_vampire:			Format(tmp2, sizeof(tmp2), "%T", "ball_type_vampire", client, tmp2);
+			case ball_type_paintball:		Format(tmp2, sizeof(tmp2), "%T", "ball_type_paintball", client, tmp2);
+			case ball_type_reflexive:		Format(tmp2, sizeof(tmp2), "%T", "ball_type_reflexive", client, tmp2);
+			case ball_type_explode:			Format(tmp2, sizeof(tmp2), "%T", "ball_type_explode", client, tmp2);
+			case ball_type_revitalisante:	Format(tmp2, sizeof(tmp2), "%T", "ball_type_revitalisante", client, tmp2);
+			case ball_type_nosteal:			Format(tmp2, sizeof(tmp2), "%T", "ball_type_nosteal", client, tmp2);
+			case ball_type_notk:			Format(tmp2, sizeof(tmp2), "%T", "ball_type_notk", client, tmp2);
+			case ball_type_braquage:		Format(tmp2, sizeof(tmp2), "%T", "ball_type_braquage", client, tmp2);
 		}
 		
-		Format(tmp2, sizeof(tmp2), "%s pour %d$", tmp2, (free ? 0:data[BM_Prix]));
+		Format(tmp2, sizeof(tmp2), "%s - %d$", tmp2, (free ? 0:data[BM_Prix]));
 		menu.AddItem(tmp, tmp2);
 		
 		position = rp_WeaponMenu_GetPosition(g_hBuyMenu);
