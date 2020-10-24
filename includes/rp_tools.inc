@@ -17,7 +17,9 @@
 #include <cstrike>
 #include <csgo_items>
 
-
+stock float Math_Lerp(float a, float b, float n) {
+	return (1 - n) * a + n * b;
+}
 stock void String_TimeFormat(int time, char[] str, int len, bool full = true) {
 	str[0] = 0;
 	int t, d, s;

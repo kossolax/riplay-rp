@@ -561,6 +561,16 @@ void CheckLotery() {
 	Vous n'avez certes que 5% de chance de tout perdre dans cet exemple, mais il n'y a pas que 4 joueurs qui jouent au loto RP.
 	Plus il y en a, plus vos chances de perdre augmentent.
 	*/
+	float src[3] =  { 1761.0, -4902.0, -2015.0 };
+	float dst[3] =  { 2310.0, -4902.0, -2015.0 };
+	
+	for (float i = 0.0; i <= 1.0; i+=0.1) {
+		float pos[3];
+		for (int j = 0; j < 3; j++)
+			pos[j] = Math_Lerp(src[j], dst[j], i);
+		
+		ServerCommand("sm_effect_fireworks %f %d %f %f %f", i, 0, pos[0], pos[1], pos[2]);
+	}
 	
 	SQL_TQuery( rp_GetDatabase() , SQL_GetLoteryWiner, "SELECT DISTINCT T.`steamid`,`name` FROM ( SELECT `steamid` FROM `rp_loto` ORDER BY RAND()  ) AS T LEFT JOIN `rp_users` U ON U.`steamid`=T.`steamid` LIMIT 3;");
 }

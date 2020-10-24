@@ -76,11 +76,34 @@ public void OnPluginStart() {
 	HookConVarChange(cvar, OnCvarChange);
 	g_iMaxFireworks = GetConVarInt(cvar);
 	
-	RegServerCmd("rp_quest_reload", Cmd_Reload);
+	RegServerCmd("rp_quest_reload", 	Cmd_Reload);
 	RegServerCmd("rp_item_firework",	Cmd_ItemFireWork,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_highjump",	Cmd_ItemHighJump,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_bomb",		Cmd_ItemBomb,			"RP-ITEM",  FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_nade",		Cmd_ItemNade,			"RP-ITEM",  FCVAR_UNREGISTERED);
+	
+	RegAdminCmd("sm_effect_fireworks", Cmd_Fireworks, 			ADMFLAG_RCON);
+}
+public Action Cmd_Fireworks(int client, int args) {
+	float delay = GetCmdArgFloat(1);
+	
+	Handle dp;
+	CreateDataTimer(delay, Delay_Fireworks, dp, TIMER_DATA_HNDL_CLOSE);
+	WritePackCell(dp, GetCmdArgInt(2));
+	WritePackCell(dp, GetCmdArgFloat(3));
+	WritePackCell(dp, GetCmdArgFloat(4));
+	WritePackCell(dp, GetCmdArgFloat(5));
+}
+public Action Delay_Fireworks(Handle timer, Handle dp) {
+	float pos[3];
+
+	ResetPack(dp);
+	int id = ReadPackCell(dp);
+	pos[0] = ReadPackCell(dp);
+	pos[1] = ReadPackCell(dp);
+	pos[2] = ReadPackCell(dp);
+	
+	FW_SpawnAtPosition(0, pos, id, 0, 0);
 }
 public void OnCvarChange(Handle cvar, const char[] oldVal, const char[] newVal) {
 	g_iMaxFireworks = StringToInt(newVal);
@@ -729,6 +752,11 @@ void FW_Spawn(int client) {
 	float pos[3];
 	GetClientAbsOrigin(client, pos);
 	
+	FW_SpawnAtPosition(client, pos, g_iParticleIndex[client], g_iTirsIndex[client], g_iPropultionIndex[client]);
+	g_iFireworksCount[client]++;
+	
+}
+void FW_SpawnAtPosition(int client, float pos[3], int particle, int tir, int propultion) {
 	int ent = CreateEntityByName("hegrenade_projectile");
 	DispatchKeyValue(ent, "classname", "fireworks");
 	DispatchSpawn(ent);
@@ -741,11 +769,11 @@ void FW_Spawn(int client) {
 	SetEntPropFloat(ent,  Prop_Send, "m_flModelScale", LAUNCHER_SCALE);
 	
 	g_iFireworkOwner[ent] = client;
-	g_iParticleIndex[ent] = g_iParticleIndex[client];
-	g_iTirsIndex[ent] = g_iTirsIndex[client];
-	g_iPropultionIndex[ent] = g_iPropultionIndex[client];
+	g_iParticleIndex[ent] = particle;
+	g_iTirsIndex[ent] = tir;
+	g_iPropultionIndex[ent] = propultion;
 	g_flLastDir[ent][0] = g_flLastDir[ent][1] = 0.0;
-	g_flLastDir[ent][1] = 1.0;	
+	g_flLastDir[ent][1] = 1.0;
 	
 	if( g_iTirsIndex[ent]  == 0 )
 		CreateTimer(0.0, FW_Launch, ent);
@@ -753,8 +781,6 @@ void FW_Spawn(int client) {
 		CreateTimer(3.0, FW_Launch, ent);
 	if( g_iTirsIndex[ent]  == 2 )
 		CreateTimer(10.0, FW_Launch, ent);
-	g_iFireworksCount[client]++;
-	
 }
 public Action FW_Launch(Handle timer, any ent) {
 	if( !IsValidEdict(ent) || !IsValidEntity(ent) )
@@ -798,15 +824,22 @@ public Action FW_Think(Handle timer, any ent) {
 		}
 		case 3: {
 			
-			Entity_GetAbsOrigin(ent, src);
-			rp_GetClientTarget(g_iFireworkOwner[ent], dst);
-			
-			for (int i = 0; i <= 2; i++)
-				dir[i] = dst[i] - src[i];
-			
-			
-			if( GetVectorDistance(src, dst, true) <= 64.0*64.0 )
-				FW_Touch(ent, 0);
+			if( g_iFireworkOwner[ent] > 0 ) {
+				Entity_GetAbsOrigin(ent, src); 
+				rp_GetClientTarget(g_iFireworkOwner[ent], dst);
+				
+				for (int i = 0; i <= 2; i++)
+					dir[i] = dst[i] - src[i];
+				
+				
+				if( GetVectorDistance(src, dst, true) <= 64.0*64.0 )
+					FW_Touch(ent, 0);
+			}
+			else {
+				dir[0] = g_flLastDir[ent][0] + Math_GetRandomFloat(-0.1, 0.1);
+				dir[1] = g_flLastDir[ent][1] + Math_GetRandomFloat(-0.1, 0.1);
+				dir[2] = 1.0;
+			}
 		}
 		case 4: {
 			float length = FLT_MAX, tmp;
@@ -872,13 +905,14 @@ void FW_Explode(int ent) {
 	SetEntityRenderMode(ent, RENDER_NONE);
 	SetEntityMoveType(ent, MOVETYPE_NONE);
 	
-	g_iFireworksCount[g_iFireworkOwner[ent]]--;
+	if( g_iFireworkOwner[ent] > 0 ) {
+		g_iFireworksCount[g_iFireworkOwner[ent]]--;
+		Menu_Main(g_iFireworkOwner[ent]);
+	
+		rp_IncrementSuccess(g_iFireworkOwner[ent], success_list_fireworks);
+		g_iFireworkOwner[ent] = 0;
+	}
 	AcceptEntityInput(ent, "Kill");
-	
-	Menu_Main(g_iFireworkOwner[ent]);
-	
-	rp_IncrementSuccess(g_iFireworkOwner[ent], success_list_fireworks);
-	g_iFireworkOwner[ent] = 0;
 }
 void FW_FIRE(int client) {
 	float timer = 0.0;
@@ -906,8 +940,7 @@ bool IsPointVisible(const float start[3], const float end[3]) {
 public bool TraceEntityFilterStuff(int entity, int mask) {
 	return (entity < 0);
 }
-
-
+// ----------------------------------------------------------------------------
 void TE_SetupParticle(const char[] name, int entity, int attachmentID) {
 	static int table = INVALID_STRING_TABLE;
 	static int effectIndex = -1;

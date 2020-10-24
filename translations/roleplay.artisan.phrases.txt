@@ -71,7 +71,7 @@
 	}
 	"Artisan_Learn_None"
 	{
-		"fr"	"Vous n'avez aucun point d'apprentissage. Pour en avoir vous pouvez gagner un niveau d'artisanat ou acheter et lire un livre de sagesse."
+		"fr"	"Vous n'avez aucun point d'apprentissage. Pour en avoir vous pouvez gagner un niveau d'artisanat ou acheter et lire une potion de sagesse."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Artisan_Books"
