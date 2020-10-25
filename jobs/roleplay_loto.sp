@@ -585,9 +585,9 @@ public void SQL_GetLoteryWiner(Handle owner, Handle hQuery, const char[] error, 
 	float pos[3] = { 2196.0, -4926.0, -1846.0 };
 	float ang[3] = { 0.0, 270.0, 0.0 };
 	int color[3][3] = {
-		{ 0, 255, 0 },
-		{ 255, 255, 0 },
-		{ 255, 0, 0 },
+		{ 128, 255, 128 },
+		{ 255, 255, 128 },
+		{ 255, 128, 128 },
 	};
 	int size = 12;
 	
