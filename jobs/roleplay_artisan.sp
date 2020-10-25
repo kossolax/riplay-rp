@@ -920,6 +920,8 @@ public void BuildingTABLE_break(const char[] output, int caller, int activator, 
 		rp_ClientAggroIncrement(activator, owner, 1000);
 	}
 	if( IsValidClient(owner) ) {
-		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Build_Destroyed", owner, "rp_table");
+		char tmp[128];
+		GetEdictClassname(caller, tmp, sizeof(tmp));
+		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Build_Destroyed", owner, tmp);
 	}
 }

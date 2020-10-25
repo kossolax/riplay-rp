@@ -741,7 +741,9 @@ void FW_Spawn(int client) {
 		return;
 	
 	if( rp_GetClientItem(client, ITEM_FEUARTIFICE) == 0 && !IsAdmin(client) ) {
-		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemMissing", client, "rp_item_firework");
+		char tmp[128];
+		rp_GetItemData(ITEM_GPS, item_type_name, tmp, sizeof(tmp));
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemMissing", client, tmp);
 		return;
 	}
 	
