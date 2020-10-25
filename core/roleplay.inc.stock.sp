@@ -844,7 +844,7 @@ void RP_SpawnBank() {
 			char classname[64];
 			GetEdictClassname(i, classname, 63);
 			
-			if( StrContains(classname, "rp_phone") == 0 || StrContains(classname, "rp_tree") == 0 || StrContains(classname, "rp_bank") == 0  || StrContains(classname, "rp_weaponbox") == 0 ) {
+			if( StrContains(classname, "rp_phone") == 0 || StrContains(classname, "rp_tree") == 0 || StrContains(classname, "rp_bank") == 0 || StrContains(classname, "rp_mail_") == 0  || StrContains(classname, "rp_weaponbox") == 0 ) {
 				if( StrContains(classname, "rp_bank") == 0 && rp_GetBuildingData(i, BD_owner) != 0 )
 					continue;
 				rp_AcceptEntityInput(i, "Kill");
@@ -892,6 +892,14 @@ void RP_SpawnBank() {
 				vecOrigin[2] += 0.0;
 				
 				vecAngles[1] += 90.0;
+			}
+			else if( StrContains(type, "mail_") == 0 ) {
+				Format(tmp, sizeof(tmp), "rp_%s", type);
+				
+				DispatchKeyValue(ent, "model", "models/props_street/mail_dropbox.mdl");
+				DispatchKeyValue(ent, "solid", "6");
+				
+				SetEntityModel(ent, "models/props_street/mail_dropbox.mdl");
 			}
 			else if( StrEqual(type, "weapon") ) {
 				Format(tmp, sizeof(tmp), "rp_weaponbox");
