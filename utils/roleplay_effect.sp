@@ -58,8 +58,6 @@ int g_iWeatherSpeed = 0;
 int g_cModel, g_cBeam;
 int SkyBoxID = -1;
 //
-Handle g_hDict;
-Handle g_hLocations;
 int g_cSnow;
 ArrayList g_iParentedParticle[65];
 
@@ -274,104 +272,6 @@ public void OnPluginStart() {
 		
 		SDKHook(i, SDKHook_PostThinkPost, think);		
 	}
-	{
-		g_hDict = CreateTrie();
-		g_hLocations = CreateArray();
-		
-		Handle hLocation;
-		int iIndex;
-		// ----------------------------------
-		// 1
-		hLocation = CreateArray(6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 0.0, 	0.0, 0.0, 100.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 100.0, 	50.0, 0.0, 50.0}), 6);
-		
-		iIndex = PushArrayCell(g_hLocations, hLocation);
-		SetTrieValue(g_hDict, "1", iIndex);
-		// ----------------------------------
-		// 2
-		hLocation = CreateArray(6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 0.0, 	50.0, 0.0, 0.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({50.0, 0.0, 0.0, 	50.0, 0.0, 50.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({50.0, 0.0, 50.0, 	0.0, 0.0, 50.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 50.0, 	0.0, 0.0, 100.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 100.0, 	50.0, 0.0, 100.0}), 6);
-		iIndex = PushArrayCell(g_hLocations, hLocation);
-		SetTrieValue(g_hDict, "2", iIndex);
-		// ----------------------------------
-		// 3
-		hLocation = CreateArray(6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 0.0, 	0.0, 0.0, 100.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 0.0, 	50.0, 0.0, 0.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 50.0, 	50.0, 0.0, 50.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 100.0, 	50.0, 0.0, 100.0}), 6);
-		iIndex = PushArrayCell(g_hLocations, hLocation);
-		SetTrieValue(g_hDict, "3", iIndex);
-		// ----------------------------------
-		// 4
-		hLocation = CreateArray(6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 0.0, 	0.0, 0.0, 100.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({50.0, 0.0, 50.0, 	50.0, 0.0, 100.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 50.0, 	50.0, 0.0, 50.0}), 6);
-		iIndex = PushArrayCell(g_hLocations, hLocation);
-		SetTrieValue(g_hDict, "4", iIndex);
-		// ----------------------------------
-		// 5
-		hLocation = CreateArray(6);
-		PushArrayArray(hLocation, view_as<float>({50.0, 0.0, 0.0, 	0.0, 0.0, 0.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 0.0, 	0.0, 0.0, 50.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 50.0, 	50.0, 0.0, 50.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({50.0, 0.0, 50.0, 	50.0, 0.0, 100.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({50.0, 0.0, 100.0, 	0.0, 0.0, 100.0}), 6);
-		iIndex = PushArrayCell(g_hLocations, hLocation);
-		SetTrieValue(g_hDict, "5", iIndex);
-		// ----------------------------------
-		// 6
-		hLocation = CreateArray(6);
-		PushArrayArray(hLocation, view_as<float>({50.0, 0.0, 0.0, 	50.0, 0.0, 100.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({50.0, 0.0, 0.0, 	0.0, 0.0, 0.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 0.0, 	0.0, 0.0, 50.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 50.0, 	50.0, 0.0, 50.0}), 6);
-		iIndex = PushArrayCell(g_hLocations, hLocation);
-		SetTrieValue(g_hDict, "6", iIndex);
-		// ----------------------------------
-		// 7
-		hLocation = CreateArray(6);
-		PushArrayArray(hLocation, view_as<float>({50.0, 0.0, 0.0, 	0.0, 0.0, 100.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 100.0, 	50.0, 0.0, 100.0}), 6);
-		iIndex = PushArrayCell(g_hLocations, hLocation);
-		SetTrieValue(g_hDict, "7", iIndex);
-		// ----------------------------------
-		// 8
-		hLocation = CreateArray(6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 0.0, 	0.0, 0.0, 100.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({50.0, 0.0, 0.0, 	50.0, 0.0, 100.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 100.0, 	50.0, 0.0, 100.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 0.0, 	50.0, 0.0, 0.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 50.0, 	50.0, 0.0, 50.0}), 6);
-		iIndex = PushArrayCell(g_hLocations, hLocation);
-		SetTrieValue(g_hDict, "8", iIndex);
-		// ----------------------------------
-		// 9
-		hLocation = CreateArray(6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 0.0, 	0.0, 0.0, 100.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 50.0, 	50.0, 0.0, 50.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 100.0, 	50.0, 0.0, 100.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({50.0, 0.0, 50.0, 	50.0, 0.0, 100.0}), 6);
-		
-		
-		iIndex = PushArrayCell(g_hLocations, hLocation);
-		SetTrieValue(g_hDict, "9", iIndex);	
-		// ----------------------------------
-		// 0
-		hLocation = CreateArray(6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 0.0, 	0.0, 0.0, 100.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({50.0, 0.0, 0.0, 	50.0, 0.0, 100.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 100.0, 	50.0, 0.0, 100.0}), 6);
-		PushArrayArray(hLocation, view_as<float>({0.0, 0.0, 0.0, 	50.0, 0.0, 0.0}), 6);
-		iIndex = PushArrayCell(g_hLocations, hLocation);
-		SetTrieValue(g_hDict, "0", iIndex);
-	}
 	
 	AddNormalSoundHook(sound_hook);
 }
@@ -398,8 +298,7 @@ public Action Cmd_Text(int args) {
 	int ent = Point_WorldText(pos, ang, text, s, r, g, b);
 	rp_ScheduleEntityInput(ent, time, "Kill");
 }
-stock int Point_WorldText(float fPos[3], float fAngles[3], char[] sText = "Source 2 Engine?", int iSize = 10,  int r = 255, int g = 255, int b = 255, any ...) 
-{ 
+stock int Point_WorldText(float fPos[3], float fAngles[3], char[] sText = "Source 2 Engine?", int iSize = 10,  int r = 255, int g = 255, int b = 255, any ...) { 
     int iEntity = CreateEntityByName("point_worldtext"); 
      
     if(iEntity == -1) 
@@ -677,94 +576,17 @@ void FormatNumberInt(int value, char[] buffer, int size) {
         n_helper += 3;
     }
 }
-public void DrawNumberLOTO(const char sText[512], float fOrigin[3], float scale, bool moving) {
-	
-	int a = 0;
-	float fIndentation = scale, fLastIndentation = scale;
-	
-	char sChar[2];
-	int iLength = strlen(sText), iIndex, iColor[4], iSize;
-	Handle hLocation;
-	bool bKnownChar = false;
-	float fLocation[3], fData[6], fStart[3], fEnd[3];
-	
-	fLocation = fOrigin;
-	fLocation[2] += 100.0;
-	
-	iColor[0] = 0;
-	iColor[1] = 255;
-	iColor[2] = 0;
-	iColor[3] = 255;
-	float ampl = 0.0;
-	if( moving ) {
-		ampl = 10.0;
+stock void DrawNumberLOTO(char text[512], float pos[3], float s, bool moving, int padding, int color[3]) {
+	for (int i = 0; i < padding; i++) {
+		Format(text, sizeof(text), " %s", text);
 	}
+	float ang[3] = { 0.0, 270.0, 0.0 };
 	
-	
-	while(a < iLength) {
-		fLastIndentation = fIndentation;
-		Format(sChar, sizeof(sChar), "%c", sText[iLength-a-1]);
-		a += 1;
-		
-		sChar[0] = CharToLower(sChar[0]);
-		
-		// Is this letter in our dictionary?
-		bKnownChar = GetTrieValue(g_hDict, sChar, iIndex);
-		
-		// Reset x value
-		fLocation[0] = fOrigin[0];
-		
-		if(bKnownChar) {
-			hLocation = GetArrayCell(g_hLocations, iIndex);
-			
-			iSize = GetArraySize(hLocation);
-			for(int i=0;i<iSize;i++) {
-				GetArrayArray(hLocation, i, fData, 6);
-				float vec1[3];
-				float vec2[3];
-				
-				vec1[0] = fData[0];
-				vec1[1] = fData[1];
-				vec1[2] = fData[2];
-				vec2[0] = fData[3];
-				vec2[1] = fData[4];
-				vec2[2] = fData[5];
-				
-				ScaleVector(vec1, scale);
-				ScaleVector(vec2, scale);
-				
-				
-				fStart[0] = vec1[0];
-				fStart[1] = vec1[1];
-				fStart[2] = vec1[2];
-				
-				fEnd[0] = vec2[0];
-				fEnd[1] = vec2[1];
-				fEnd[2] = vec2[2];
-				
-				fStart[0] += fLastIndentation;
-				fEnd[0] += fLastIndentation;
-				
-				
-				AddVectors(fLocation, fStart, fStart);
-				AddVectors(fLocation, fEnd, fEnd);
-				
-				TE_SetupBeamPoints(fStart, fEnd, g_cModel, 0, 0, 0, 10.1, 5.0 * scale, 5.0 * scale, 0, ampl, iColor, 12);
-				TE_SendToAll();
-			}
-			
-			fIndentation += (45.0 * scale);
-		}
-		
-		fIndentation += (30.0 * scale);
-		
-	}
+	int ent = Point_WorldText(pos, ang, text, RoundFloat(s), color[0], color[1], color[2]);
+	rp_ScheduleEntityInput(ent, 10.01, "Kill");
 }
 public Action Cmd_Loto(int client, int args) {
-	float fOrigin[3];
-	fOrigin[0] = 1750.0;
-	fOrigin[1] = -4925.0;
-	fOrigin[2] = -1750.0;
+	float fOrigin[3] = { 2440.0, -4926.0, -1600.0 };
 	
 	int amount = GetCmdArgInt(1);
 	bool moving = false;
@@ -780,23 +602,25 @@ public Action Cmd_Loto(int client, int args) {
 			moving = true;
 		}
 	}
-	
+
 	IntToString(amount/100*70, sText, sizeof(sText));
 	FormatNumberInt(StringToInt(sText),	sText,sizeof(sText));
-	DrawNumberLOTO(sText, fOrigin, 1.0, moving);
+	int padding = 10;
+	fOrigin[0] -= SquareRoot(96.0);
+	DrawNumberLOTO(sText, fOrigin, 96.0, moving, (padding - strlen(sText)), {128, 255, 128});
 	
-	fOrigin[2] -= 90.0;
+	fOrigin[0] -= SquareRoot(48.0);
+	fOrigin[2] -= 48.0;
 	IntToString(amount/100*20, sText, sizeof(sText));
 	FormatNumberInt(StringToInt(sText),	sText,sizeof(sText));
-	DrawNumberLOTO(sText, fOrigin, 0.66, moving);
+	DrawNumberLOTO(sText, fOrigin, 48.0, moving, (padding - strlen(sText))+10, {255, 255, 128});
 	
-	fOrigin[2] -= 60.0;
+	fOrigin[0] -= SquareRoot(24.0);
+	fOrigin[2] -= 32.0;
 	IntToString(amount/100*10, sText, sizeof(sText));
 	FormatNumberInt(StringToInt(sText),	sText,sizeof(sText));
-	DrawNumberLOTO(sText, fOrigin, 0.33, moving);
-	
-	
-	
+	DrawNumberLOTO(sText, fOrigin, 24.0, moving, (padding - strlen(sText))+30, {255, 128, 128});
+
 	return Plugin_Handled;
 }
 public Action cmd_SetColor(int client, int args) {
