@@ -232,7 +232,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 	else if (StrEqual(command, "push")) {
 		return Cmd_Push(client);
 	}
-	else if (StrEqual(command, "verif")) {
+	else if (StrEqual(command, "verif") || StrEqual(command, "search") || StrEqual(command, "lookup") ) {
 		return Cmd_Verif(client);
 	}
 	
@@ -240,7 +240,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 }
 // ----------------------------------------------------------------------------
 public Action Cmd_Verif(int client) {
-	if( rp_GetClientJobID(client) != 1 && rp_GetClientJobID(client) != 101 ) { // Police, tribunal
+	if (rp_GetClientJobID(client) != 1 && rp_GetClientJobID(client) != 41 && rp_GetClientJobID(client) != 101 && rp_GetClientJobID(client) != 211) {  // Police, merco, tribunal, banque
 		ACCESS_DENIED(client);
 	}
 
@@ -327,35 +327,39 @@ public Action Cmd_Verif(int client) {
 	Format(szTitle, sizeof(szTitle), "%s\n ", szTitle);
 	
 	menu.SetTitle(szTitle);
-
-	char item[256];
-	bool forcehidden = false;
-	int numb = 0;
-
-	for(int i = 0; i <= MaxClients; i++) {
-		if(IsValidClient(i)) {
-			if(rp_GetClientJobID(i) == 211 && rp_GetClientBool(i, b_IsAFK) == false) { // && rp_GetClientBool(i, b_IsAFK) == false
-				numb++;
+	
+	if( rp_GetClientJobID(client) == 1 || rp_GetClientJobID(client) == 101 ) {
+		char item[256];
+		bool forcehidden = false;
+		int numb = 0;
+	
+		for(int i = 0; i <= MaxClients; i++) {
+			if(IsValidClient(i)) {
+				if(rp_GetClientJobID(i) == 211 && rp_GetClientBool(i, b_IsAFK) == false) { // && rp_GetClientBool(i, b_IsAFK) == false
+					numb++;
+				}
 			}
 		}
+	
+		if(numb <= 0 || rp_IsClientNew(target) || (rp_GetClientInt(target, i_Money) + rp_GetClientInt(target, i_Bank)) < 5000 ) {
+			forcehidden = true;
+		}
+		
+		bool applyLiscence1 = GetTime() > rp_GetClientInt(target, i_AmendeLiscence1) + (60 * 24) ? true:false;
+		bool applyLiscence2 = GetTime() > rp_GetClientInt(target, i_AmendeLiscence2) + (60 * 24) ? true:false;
+	
+		Format(item, sizeof(item), "%d_permileger", target);
+		Format(szTitle, sizeof(szTitle), "%T", "Enquete_Amende_Leger", client, 1600);
+		menu.AddItem(item, szTitle, !amendeLicense1 || forcehidden || !applyLiscence1 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
+		
+		Format(item, sizeof(item), "%d_permilourd", target);
+		Format(szTitle, sizeof(szTitle), "%T", "Enquete_Amende_Lourd", client, 2400);
+		menu.AddItem(item, szTitle, !amendeLicense2 || forcehidden || !applyLiscence2 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
 	}
-
-	if(numb <= 0 || rp_IsClientNew(target) || (rp_GetClientInt(target, i_Money) + rp_GetClientInt(target, i_Bank)) < 5000 ) {
-		forcehidden = true;
-	}
 	
-	bool applyLiscence1 = GetTime() > rp_GetClientInt(target, i_AmendeLiscence1) + (60 * 24) ? true:false;
-	bool applyLiscence2 = GetTime() > rp_GetClientInt(target, i_AmendeLiscence2) + (60 * 24) ? true:false;
-
-	Format(item, sizeof(item), "%d_permileger", target);
-	Format(szTitle, sizeof(szTitle), "%T", "Enquete_Amende_Leger", client, 1600);
-	menu.AddItem(item, szTitle, !amendeLicense1 || forcehidden || !applyLiscence1 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
+	menu.AddItem("close", "", ITEMDRAW_NOTEXT);
+	menu.ExitButton = true;
 	
-	Format(item, sizeof(item), "%d_permilourd", target);
-	Format(szTitle, sizeof(szTitle), "%T", "Enquete_Amende_Lourd", client, 2400);
-	menu.AddItem(item, szTitle, !amendeLicense2 || forcehidden || !applyLiscence2 ? ITEMDRAW_DISABLED:ITEMDRAW_DEFAULT);
-	
-	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, MENU_TIME_DURATION);
 
 	return Plugin_Handled;
@@ -397,7 +401,9 @@ public int MenuHandler_Verif(Handle menu, MenuAction action, int client, int par
 			rp_SetClientInt(target, i_AmendeLiscence1, GetTime());
 		}
 		
-		Cmd_Verif(client);
+		if( StrEqual(options, "close") == false ) {		
+			Cmd_Verif(client);
+		}
 	}
 }
 
@@ -1737,7 +1743,9 @@ public void BuildingBarriere_break(const char[] output, int caller, int activato
 	}
 	
 	if (IsValidClient(owner)) {
-		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Build_Destroyed", owner, "rp_barriere");
+		char tmp[128];
+		GetEdictClassname(caller, tmp, sizeof(tmp));
+		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Build_Destroyed", owner, tmp);
 	}
 }
 // ----------------------------------------------------------------------------
@@ -1783,7 +1791,9 @@ public int MenuTribunal_GPS(Handle p_hItemMenu, MenuAction p_oAction, int client
 		
 		
 		if (rp_GetClientItem(client, ITEM_GPS) <= 0) {
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemMissing", client, "rp_item_ratio gps");
+			char tmp[128];
+			rp_GetItemData(ITEM_GPS, item_type_name, tmp, sizeof(tmp));
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemMissing", client, tmp);
 			return;
 		}
 		

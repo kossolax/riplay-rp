@@ -6,8 +6,13 @@
 	}
 	"Error_ItemMissing"
 	{
-		"#format"	"{1:t}"
+		"#format"	"{1:s}"
 		"fr"		"Vous n'avez plus de {red}{1}{default}."
+	}
+	"Error_ItemAlreadyEnable"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{red}{1}{default} est déjà activé."
 	}
 	"Error_NotEnoughtMoney"
 	{
@@ -17,6 +22,14 @@
 	"Jobs_All"
 	{
 		"fr"	"Tous les jobs"
+	}
+	"Jobs_List"
+	{
+		"fr"	"Liste des jobs:"
+	}
+	"Jobs_ListAvailable"
+	{
+		"fr"	"Liste des jobs disponibles:"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Cmd_TargetIsToFar"
@@ -33,7 +46,6 @@
 		"#format"	"{1:s}"
 		"fr"	"{1} vous a sorti de votre voiture."
 	}
-
 	// ----------------------------------------------------------------------------------------------
 	"Build_CannotHere"
 	{
@@ -47,6 +59,36 @@
 	{
 		"#format"	"{1:t}"
 		"fr"	"{1} a été détruite."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Banned_Event"
+	{
+		"fr"	"En raison de votre mauvais comportement, il vous est temporairement interdit de participer à un event."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Perm_Edit"
+	{
+		"fr"		"Modifier les permissions"
+	}
+	"Perm_Self"
+	{
+		"fr"		"Uniquement moi"
+	}
+	"Perm_Chef"
+	{
+		"fr"		"Tous les chefs de mon job"
+	}
+	"Perm_Job"
+	{
+		"fr"		"Toutes les personnes de mon job"
+	}
+	"Perm_Gang"
+	{
+		"fr"		"Toutes les personnes de mon gang"
+	}
+	"Perm_Everyone"
+	{
+		"fr"		"Tout le monde"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"rp_banana"

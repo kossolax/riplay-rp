@@ -1,13 +1,5 @@
 "Phrases"
 {
-	"rp_item_ratio gps"
-	{
-		"fr"	"GPS"
-	}
-	"rp_item_firework"
-	{
-		"fr"	"Feu d'artifice"
-	}
 	// ----------------------------------------------------------------------------------------------
 	"wpn_ball_type_fire"
 	{
