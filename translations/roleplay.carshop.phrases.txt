@@ -1,0 +1,140 @@
+"Phrases"
+{
+	"Build_SpawnCar"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Faire apparaitre un véhicule pour 6 minutes:"
+	}
+	"Vehicle_MayOut"
+	{
+		"fr"	"Vous pouvez éjecter le conducteur avec la commande {red}/out{default}."
+	}
+	"Vehicle_CantCustom"
+	{
+		"fr"		"Il n'est pas possible de personnaliser un véhicule de fonction."
+	}
+	"Vehicle_CantWithdraw"
+	{
+		"fr"		"Il n'est pas possible de ranger ce véhicule."
+	}
+	"Vehicle_CantWithdrawDamage"
+	{
+		"fr"		"Il n'est pas possible de ranger ce véhicule, car il est endommagé."
+	}
+	"Vehicle_CantWithdrawPerson"
+	{
+		"fr"		"Il n'est pas possible de ranger ce véhicule, car il y' a quelqu'un a l'intérieur."
+	}
+	"Vehicle_Disspawn"
+	{
+		"fr"		"Votre véhicule est restée trop longtemps sans surveillance et a été détruite."
+	}
+	"Vehicle_AskJoin"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} souhaite entrer dans votre véhicule.\n L'acceptez-vous ?"
+	}
+	"Vehicle_JoinRefuse"
+	{
+		"fr"		"Le conducteur a refusé votre demande."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Vehicle_TooManyCars"
+	{
+		"fr"		"Il y a trop de véhicules en circulation pour l'instant."
+	}
+	"Vehicle_YouMustBeInCar"
+	{
+		"fr"		"Vous devez utiliser cet objet dans votre véhicule."
+	}
+	"Vehicle_YouAreNotOwner"
+	{
+		"fr"		"Vous n'êtes pas le propriétaire de ce véhicule."
+	}
+	"Vehicle_NotEnoughtRoom"
+	{
+		"fr"		"Il n'y a plus de place dans ce véhicule.
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Vehicle_CarGiveKey"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} a {green}reçu{default} les clés de votre véhicule."
+	}
+	"Vehicle_CarReceiveKey"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez {green}reçu{default} les clés du véhicule de {1}."
+	}
+	"Vehicle_CarRemoveKey"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} a {red}perdu{default} les clés de votre véhicule."
+	}
+	"Vehicle_CarTakeKey"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez {red}perdu{default} les clés du véhicule de {1}."
+	}
+	"Vehicle_CarNone"
+	{
+		"fr"		"Il n'y a personne à qui donner ou retirer la clé."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Vehicle_Battery_Full"
+	{
+		"fr"		"Votre batterie est pleine vous pouvez maintenant aller au garage pour la revendre."
+	}
+	"Vehicle_Battery_Tick"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Votre batterie est chargée à {red}{1}%{default}."
+	}
+	"Vehicle_Battery_Sell"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Vous avez vendu votre batterie, un virement de {green}{1}${default} sera effectué en fin de journée."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Garage"
+	{
+		"fr"		"Votre garage:"
+	}
+	"Garage_Disposit"
+	{
+		"fr"		"Ranger votre véhicule"
+	}
+	"Garage_Withdraw"
+	{
+		"fr"		"Sortir un véhicule"
+	}
+	"Garage_Paint"
+	{
+		"fr"		"Peindre votre véhicule"
+	}
+	"Garage_PaintAdd"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Ajouter du {1}"
+	}
+	"Garage_Particle"
+	{
+		"fr"		"Ajouter des particules"
+	}
+	"Garage_Light"
+	{
+		"fr"		"Ajouter des néons"
+	}
+	"Garage_Klaxons"
+	{
+		"fr"		"Changer de klaxon"
+	}
+	"Garage_Repair"
+	{
+		"fr"		"Réparer votre véhicule"
+	}
+	"Garage_Sell"
+	{
+		"fr"		"Vendre votre batterie"
+	}
+}

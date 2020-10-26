@@ -628,14 +628,16 @@ public Action Command_Say(int client, int args) {
 			if( IsEntitiesNear(client, target)) {
 				if( car == -1 ) {
 					if( IsValidClient(driver) ) {
+						char client_name[128];
+						GetClientName2(client, client_name, sizeof(client_name), false);
 						if( g_iVehicleData[target][car_owner] == client && driver != client ) {
 							ExitVehicle(driver, target, true);
-							CPrintToChat(driver, "" ...MOD_TAG... " %N{default} vous a sorti de votre voiture.", client);
+							CPrintToChat(driver, ""...MOD_TAG..." %T", "Cmd_OutOf_Car_By", driver, client_name);
 						}
 						
 						if( g_iUserData[client][i_ToKill] == driver && driver != client ) {
 							ExitVehicle(driver, target, true);
-							CPrintToChat(driver, "" ...MOD_TAG... " %N{default} vous a sorti de votre voiture.", client);
+							CPrintToChat(driver, ""...MOD_TAG..." %T", "Cmd_OutOf_Car_By", driver, client_name);
 						}
 						
 						for(int i=1; i<=MaxClients; i++) {
@@ -643,6 +645,7 @@ public Action Command_Say(int client, int args) {
 								continue;
 							if( g_iCarPassager[target][i] && g_iUserData[client][i_ToKill] == i && i != client ) {
 								LeaveVehiclePassager(i, target);
+								CPrintToChat(i, ""...MOD_TAG..." %T", "Cmd_OutOf_Car_By", i, client_name);
 							}
 						}
 						

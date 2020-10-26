@@ -84,8 +84,8 @@ void DrawBankTransfer(int client) {
 		AddMenuItem(menu, "load", 	"Charger un registre", g_bUserData[client][b_HaveAccount] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
 	else
 		AddMenuItem(menu, "load", 	"Charger un registre - Coffre plein", ITEMDRAW_DISABLED );
-	if( rp_GetClientBool(client, b_CanSort) == true )		
- 		AddMenuItem(menu, "trier", 	"Trier ma banque");
+
+	AddMenuItem(menu, "trier", 	"Trier ma banque",  rp_GetClientBool(client, b_CanSort) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
  
 	if( rp_GetClientJobID(client) == 81 && g_iUserData[client][i_Disposed] > 0 ) {
 		AddMenuItem(menu, "to_resell", "Vendre mon arme au marché noir");
@@ -95,6 +95,7 @@ void DrawBankTransfer(int client) {
 		AddMenuItem(menu, "capital", "Dépot dans le capital");
 	}
 	
+	SetMenuPagination(menu, MENU_NO_PAGINATION);
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, MENU_TIME_DURATION);
 }
@@ -125,11 +126,7 @@ void DisplayBankMenu(int client, int target) {
 	AddMenuItem(menu, "depot", "Dépot");
 	AddMenuItem(menu, "item", "Gestion de l'inventaire");
 	AddMenuItem(menu, "aide", "Besoin d'aide?");
-	
-	#if defined EVENT_APRIL
-	AddMenuItem(menu, "admin", "Gestion du serveur");
-	#endif
-	
+		
 	char classname[128];
 	GetEdictClassname(target, classname, sizeof(classname));
 	if( StrContains(classname, "rp_bank") == 0 && rp_GetBuildingData(target, BD_owner) > 0 ) {
@@ -140,9 +137,13 @@ void DisplayBankMenu(int client, int target) {
 		}
 		
 		AddMenuItem(menu, "weaponAdd", "Déposer une arme");
-		if( rp_WeaponMenu_GetMax(g_iCustomBank[target]) > view_as<DataPackPos>(1) )
-			AddMenuItem(menu, "weaponGet", "Retirer une arme");
+		AddMenuItem(menu, "weaponGet", "Retirer une arme", rp_WeaponMenu_GetMax(g_iCustomBank[target]) > view_as<DataPackPos>(1) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 	}
+	
+	#if defined EVENT_APRIL
+	AddMenuItem(menu, "admin", "Gestion du serveur");
+	#endif
+
 	
 	SetMenuPagination(menu, false);
 	SetMenuExitButton(menu, true);

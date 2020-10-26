@@ -18,6 +18,10 @@
 	{
 		"fr"	"Vous n'avez pas assez d'argent."
 	}
+	"Error_FromServer"
+	{
+		"fr"		"Quelque chose s'est mal passé."
+	}
 	// ----------------------------------------------------------------------------------------------
 	"Jobs_All"
 	{
@@ -39,6 +43,10 @@
 	"Cmd_TargetIsSlippy"
 	{
 		"fr"	"Cette personne vous a glissé des mains."
+	}
+	"Cmd_TargetIgnore"
+	{
+		"fr"	"Cette personne vous ignore."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Cmd_OutOf_Car_By"
@@ -64,6 +72,15 @@
 	"Banned_Event"
 	{
 		"fr"	"En raison de votre mauvais comportement, il vous est temporairement interdit de participer à un event."
+	}
+	"Ignore"
+	{
+		"fr"	"Ignorer"
+	}
+	"Ignore_For"
+	{
+		"#format"	"{1:s},{2:d}"	
+		"fr"	"Vous ignorez les demandes de {1} pour {2} heures."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Perm_Edit"
@@ -183,6 +200,10 @@
 	{
 		"fr"	"une caisse d'armes"
 	}
+	"prop_vehicle_driveable"
+	{
+		"fr"	"un véhicule"
+	}
 	// ----------------------------------------------------------------------------------------------
 	"Trail"
 	{
@@ -260,4 +281,83 @@
 	{
 		"fr"	"Ballons"
 	}
+	// ----------------------------------------------------------------------------------------------
+	"-1 -1 -1"
+	{
+		"fr"	"Couleur personnalisé"
+	}
+	"128 0 0"
+	{
+		"fr"	"Rubis"
+	}
+	"255 0 0"
+	{
+		"fr"	"Rouge"
+	}
+	"255 128 0"
+	{
+		"fr"	"Orange"
+	}
+	"255 255 0"
+	{
+		"fr"	"Jaune"
+	} 
+	"128 255 0"
+	{
+		"fr"	"Vert-pomme"
+	}
+	"0 255 0"
+	{
+		"fr"	"Vert"
+	}
+	"0 128 0"
+	{
+		"fr"	"Vert-foncé"
+	}
+	"0 255 128"
+	{
+		"fr"	"Vert-émeraude"
+	}
+	"0 255 255"
+	{
+		"fr"	"Bleu-ciel" 
+	}
+	"0 128 255"
+	{
+		"fr"	"Bleu-clair"
+	}
+	"0 0 255"
+	{
+		"fr"	"Bleu"
+	}
+	"0 0 128"
+	{
+		"fr"	"Bleu-Foncé"
+	}
+	
+	"128 0 255"
+	{
+		"fr"	"Mauve"
+	}
+	"255 0 255"
+	{
+		"fr"	"Rose"
+	}
+	"255 0 128"
+	{
+		"fr"	"Fushia"
+	}
+	"255 255 255"
+	{
+		"fr"	"Blanc"
+	}
+	"128 128 128"
+	{
+		"fr"	"Gris"
+	}
+	"0 0 0"
+	{
+		"fr"	"Noir"
+	}
+
 }
