@@ -629,10 +629,10 @@ void DisplayMetroMenu(int client) {
 	int zone = rp_GetPlayerZone(client);
 	
 	Handle menu = CreateMenu(eventMetroMenu);
-	SetMenuTitle(menu, "== Station de métro ==\n ");
+	SetMenuTitle(menu, "%T\n ", "Metro_Menu", client);
 	
 	Format(tmp, sizeof(tmp), "%T", "Metro_Event", client);
-	AddMenuItem(menu, "metro_event", tmp, GetConVarInt(g_hEVENT) == 1 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+	AddMenuItem(menu, "metro_event", tmp, GetConVarInt(g_hEVENT) != 1 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 
 	rp_GetZoneData(60, zone_type_name, tmp, sizeof(tmp));
 	AddMenuItem(menu, "metro_paix", 	tmp, (zone == 57) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
@@ -647,7 +647,7 @@ void DisplayMetroMenu(int client) {
 	AddMenuItem(menu, "metro_pvp", 		tmp, (zone == 200) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	
 	Format(tmp, sizeof(tmp), "%T", "Metro_Hell", client);
-	AddMenuItem(menu, "metro_event", tmp, GetConVarInt(g_hEVENT) == 5? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+	AddMenuItem(menu, "metro_event", tmp, GetConVarInt(g_hEVENT) != 5? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	
 	if( rp_GetClientKeyAppartement(client, 50) ) {
 		Format(tmp, sizeof(tmp), "%T", "Metro_Event", client);
@@ -692,7 +692,7 @@ public int eventMetroMenu(Handle menu, MenuAction action, int client, int param2
 		min = 5 - (min % 5);
 		
 		rp_GetZoneData(rp_GetZoneFromPoint(pos), zone_type_name, tmp, sizeof(tmp));
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "Metro_Start", min);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Metro_Start", client, min);
 		rp_SetClientInt(client, i_TeleportTo, i);
 		CreateTimer(float(min) + Math_GetRandomFloat(0.01, 0.8), metroTeleport, client);
 	}

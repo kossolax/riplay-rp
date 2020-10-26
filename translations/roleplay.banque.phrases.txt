@@ -32,27 +32,31 @@
 		"fr"		"Votre carte bancaire, votre coffre, votre RIB et vos permis sont maintenant actifs."
 	}
 	// ----------------------------------------------------------------------------------------------
+	"Metro_Menu"
+	{
+		"fr"	"Station de métro:"
+	}
 	"Metro_Event"
 	{
-		"Métro: Station événementiel"
+		"fr"	"Métro: Station événementiel"
 	}
 	"Metro_Hell"
 	{
-		"Métro: Station inconnue"
+		"fr"	"Métro: Station inconnue"
 	}
 	"Metro_Villa"
 	{
-		"Métro: Station Villa"
+		"fr"	"Métro: Station Villa"
 	}
 	"Metro_Start"
 	{
 		"#format"	"{1:d}"
-		"fr"	"Restez assis à l'intérieur du métro, le prochain départ {red}{1}{default} seconde(s)."
+		"fr"	"Restez assis à l'intérieur du métro, le prochain départ est dans {red}{1}{default} seconde(s)."
 	}
 	"Metro_Paid"
 	{
 		"#format"	"{1:d}"
-		"fr"	"Le métro vous a couté {red}{1}${defaut}, pensez à acheter des tickets à un banquier pour que le trajet vous coûte moins chère."
+		"fr"	"Le métro vous a couté {red}{1}${default}, pensez à acheter des tickets à un banquier pour que le trajet vous coûte moins chère."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Sign_Press"
