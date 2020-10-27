@@ -1,0 +1,96 @@
+"Phrases"
+{
+	"Info_TrainTarget"
+	{
+		"#format"	"{1:s},{2:d},{3:d},{4:d}"
+		"fr"	"{1} a {red}{2}%{default} d'entraînement au couteau, {red}{3}%{default} d'ésquive et {red}{4}%{default} de précision de tir."
+	}
+	"Info_TrainSelf"
+	{
+		"#format"	"{1:d},{2:d},{3:d}"
+		"fr"	"Vous avez {red}{2}%{default} d'entraînement au couteau, {red}{3}%{default} d'ésquive et {red}{4}%{default} de précision de tir."
+	}
+	"Train_Knife"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Votre entraînement au couteau est maintenant de {red}{1}%{default}."
+	}
+	"Train_Weapon"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Votre entraînement aux armes est maintenant de {red}{1}%{default}."
+	}
+	"Train_Esquive"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Votre entraînement à l'auto-défense est maintenant de {red}{1}%{default}."
+	}
+	"Train_Max"
+	{
+		"fr"	"Votre entraînement est déjà maximal."
+	}
+	"Coach_KnifeGet"
+	{
+		"fr"	"Vous avez ramassé votre couteau de lancé."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Coach_KnifeInHands"
+	{
+		"fr"	"Vous devez prendre votre couteau en main."
+	}
+	"edit_knife_done"
+	{
+		"fr"		"La modification a été apportée à votre couteau."
+	}
+	"edit_knife_already"
+	{
+		"fr"		"Vous avez déjà un couteau de ce type."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Coach_BasketVitality"
+	{
+		"fr"	"Vous ressentez votre vitalité s'augmenter grâce à votre belle paire de baskets."
+	}
+	"Coach_MaskDisapear"
+	{
+		"fr"	"Vous avez perdu votre masque."
+	}
+	"Drink_TooMuchTarget"
+	{
+		"fr"	"Cette personne a visiblement trop bu, il n'est pas raisonable de lui servir un autre verre."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Ruban"
+	{
+		"fr"	"Sur qui voulez-vous placer ce ruban?"
+	}
+	"Ruban_Target"
+	{
+		"fr"	"Sur la personne en face de moi"
+	}
+	"Ruban_Myself"
+	{
+		"fr"	"Sur moi-même"
+	}
+	"Ruban_Color"
+	{
+		"fr"	"De quelle couleur doit être le ruban?"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Cabine"
+	{
+		"fr"	"Cabine d'essayage:"
+	}
+	"Cabine_Error_Left"
+	{
+		"fr"	"Vous êtes sorti des cabines d'essayage."
+	}
+	"Cabine_Error_CT"
+	{
+		"fr"	"Vous ne pouvez pas essayer cela en CT."
+	}
+	"Cabine_Error_Prisonner"
+	{
+		"fr"	"Vous ne pouvez pas essayer cela en tant qu'évadé."
+	}
+}

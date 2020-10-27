@@ -9,14 +9,48 @@
 		"#format"	"{1:s}"
 		"fr"		"Vous n'avez plus de {red}{1}{default}."
 	}
+	"Error_ItemNotEnought"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous n'avez pas assez de {red}{1}{default}."
+	}
 	"Error_ItemAlreadyEnable"
 	{
 		"#format"	"{1:s}"
 		"fr"		"{red}{1}{default} est déjà activé."
 	}
+	"Error_ItemCannotBeUsedForNow"
+	{
+		"#format"	"{1:s}"
+		"fr"	"{red}{1}{default} n'est pas disponible pour le moment."
+	}
 	"Error_NotEnoughtMoney"
 	{
 		"fr"	"Vous n'avez pas assez d'argent."
+	}
+	"Error_CannotUseItemInPvP"
+	{
+		"fr"	"Cet objet est interdit en PvP."
+	}
+	"Error_CannotUseItemInPeace"
+	{
+		"fr"	"Cet objet est interdit en peacefull."
+	}
+	"Error_CannotUseItemInCar"
+	{
+		"fr"	"Cet objet est interdit en voiture."
+	}
+	"Error_CannotUseItemPolice"
+	{
+		"fr"	"Cet objet est interdit aux forces de l'ordre."
+	}
+	"Error_CannotUseItemInPerquiz"
+	{
+		"fr"	"Cet objet est interdit lors d'une perquisition."
+	}
+	"Error_CannotUseItemInBraquage"
+	{
+		"fr"	"Cet objet est interdit lors de ce braquage."
 	}
 	"Error_FromServer"
 	{
@@ -34,6 +68,10 @@
 	"Jobs_ListAvailable"
 	{
 		"fr"	"Liste des jobs disponibles:"
+	}
+	"Jobs_Noone"
+	{
+		"fr"	"Personne"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Cmd_TargetIsToFar"

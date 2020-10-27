@@ -95,9 +95,30 @@ char g_szSkinsList[][][] = {
 	{"models/player/custom_player/legacy/tm_separatist_variantc.mdl", 	"Séparatist - C", 	"0", "1", "0"},
 	{"models/player/custom_player/legacy/tm_separatist_variantd.mdl", 	"Séparatist - D", 	"0", "1", "0"}
 };
-
+char g_szColor[][] = {
+	"128 0 0",
+	"255 0 0",
+	"255 128 0",
+	"255 255 0",
+	"128 255 0",
+	
+	"0 255 0",
+	"0 128 0",
+	"0 255 128",
+	"0 255 255",
+	"0 128 255",
+	
+	"0 0 255",
+	"0 0 128",
+	"128 0 255",
+	"255 0 255",
+	"255 0 128",
+	
+	"255 255 255",
+	"128 128 128",
+	"0 0 0"
+};
 int g_iKnifeThrowID = -1;
-int g_iRiotShield[65];
 int g_cBeam, g_cGlow, g_cExplode;
 Handle g_hCigarette[65];
 Handle g_vKnife, g_vWepaon;
@@ -123,7 +144,6 @@ public void OnPluginStart() {
 	RegServerCmd("rp_item_permi_tir",	Cmd_ItemPermiTir,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_shoes", 		Cmd_ItemShoes, 			"RP-ITEM", 	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_packequipement", Cmd_ItemPackEquipement, "RP-ITEM", FCVAR_UNREGISTERED);
-	RegServerCmd("rp_item_riotshield",	Cmd_ItemRiotShield,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_needforspeed",Cmd_ItemNeedForSpeed,	"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_lessive",		Cmd_ItemLessive,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_cafe",		Cmd_ItemCafe,			"RP-ITEM",	FCVAR_UNREGISTERED);
@@ -208,32 +228,34 @@ public void OnClientPostAdminCheck(int client) {
 		rp_HookEvent(client, RP_OnFrameSeconde, fwdVitalite);
 	}
 }
-public void OnClientDisconnect(int client) {
-	removeShield(client);
-}
 public Action fwdCommand(int client, char[] command, char[] arg) {
-	if( StrContains(command, "cutinfo") == 0 ) {
+	if( StrEqual(command, "cutinfo") || StrEqual(command, "infocut") ) {
 		return Cmd_CutInfo(client);
 	}
 	return Plugin_Continue;
 }
 public Action Cmd_CutInfo(int client) {
-	
-	if( rp_GetClientJobID(client) != 71 ) {
-		ACCESS_DENIED(client);
+	int target = -1;
+	if( rp_GetClientJobID(client) == 71 ) {
+		target = rp_GetClientTarget(client);
 	}
-	
-	int target = rp_GetClientTarget(client);
-	
 	if( !IsValidClient(target) )
 		target = client;
 
 	if( !IsPlayerAlive(target) )
 		return Plugin_Handled;
 	
-	CPrintToChat(client, "" ...MOD_TAG... " %N{default} a %i%% d'entraînement au couteau,  %i%% d'ésquive et %i%% de précision de tir.", target,
-	rp_GetClientInt(target, i_KnifeTrain), rp_GetClientInt(target, i_Esquive), RoundToFloor(rp_GetClientFloat(target, fl_WeaponTrain)/5.0*100.0));
+	char target_name[128];
+	GetClientName2(target, target_name, sizeof(target_name), false);
 	
+	if( client == target ) {
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Info_TrainSelf", client,
+			rp_GetClientInt(target, i_KnifeTrain), rp_GetClientInt(target, i_Esquive), RoundToFloor(rp_GetClientFloat(target, fl_WeaponTrain)/8.0*100.0));
+	}
+	else {
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Info_TrainTarget", client, target_name,
+			rp_GetClientInt(target, i_KnifeTrain), rp_GetClientInt(target, i_Esquive), RoundToFloor(rp_GetClientFloat(target, fl_WeaponTrain)/8.0*100.0));
+	}
 	return Plugin_Handled;
 }
 // ----------------------------------------------------------------------------
@@ -291,16 +313,12 @@ public Action Cmd_ItemCut(int args) {
 		
 		rp_IncrementSuccess(client, success_list_coach, amount-add);
 		rp_SetClientInt(client, i_KnifeTrain, 100);
-		if(add10 == 0 && add1 == 1)
-			CPrintToChat(client, "" ...MOD_TAG... " Votre entraînement est de 100/100, un niveau d'entrainement vous a été remboursé.");
-		else
-			CPrintToChat(client, "" ...MOD_TAG... " Votre entraînement est de 100/100, %i niveaux d'entrainement vous ont été remboursés.", add10 * 10 + add1);
-		
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Train_Knife", client, rp_GetClientInt(client, i_KnifeTrain));
 		return Plugin_Handled;
 	}
 
 	rp_IncrementSuccess(client, success_list_coach, amount);
-	CPrintToChat(client, "" ...MOD_TAG... " Votre entraînement est maintenent de %i/100.", rp_GetClientInt(client, i_KnifeTrain));
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Train_Knife", client, rp_GetClientInt(client, i_KnifeTrain));
 	return Plugin_Handled;
 }
 // ----------------------------------------------------------------------------
@@ -321,18 +339,37 @@ public Action Cmd_ItemCut_Esquive(int args) {
 			
 		rp_SetClientInt(client, i_Esquive, 100);
 		
-		CPrintToChat(client, "" ...MOD_TAG... " Votre entraînement est déjà maximal.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Train_Max", client);
 		return Plugin_Handled;
 	}
 	
-	CPrintToChat(client, "" ...MOD_TAG... " Votre entraînement est maintenent de %i/100.", rp_GetClientInt(client, i_Esquive));
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Train_Esquive", client, rp_GetClientInt(client, i_Esquive));
+	return Plugin_Handled;
+}
+public Action Cmd_ItemPermiTir(int args) {
+
+	int client = GetCmdArgInt(1);
+	int item_id = GetCmdArgInt(args);
+	
+	float train = rp_GetClientFloat(client, fl_WeaponTrain);
+	if( train >= 8.0 ) {
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Train_Max", client);
+		ITEM_CANCEL(client, item_id);
+		return Plugin_Handled;
+	}
+	
+	train += 4.0;
+	rp_SetClientFloat(client, fl_WeaponTrain, train < 8.0 ? train : 8.0);
+	
+	
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Train_Weapon", client, RoundFloat(rp_GetClientFloat(client, fl_WeaponTrain)/8.0*100.0));
 	return Plugin_Handled;
 }
 public Action Cmd_ItemCutRemove(int args) {
 
 	int client = GetCmdArgInt(1);
 	rp_SetClientInt(client, i_KnifeTrain, 5);
-	CPrintToChat(client, "" ...MOD_TAG... " Votre entraînement est maintenant à 5.");
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Train_Knife", client, rp_GetClientInt(client, i_KnifeTrain));
 }
 
 public Action Cmd_ItemCutThrow(int args) {	
@@ -392,7 +429,7 @@ public void Cmd_ItemCutThrow_TOUCH(int rocket, int entity) {
 	if( !touched) {
 		rp_GetItemData(g_iKnifeThrowID, item_type_name, classname, sizeof(classname));
 		rp_ClientGiveItem(attacker, g_iKnifeThrowID);
-		CPrintToChat(attacker, "" ...MOD_TAG... " Vous avez récupéré votre couteau.");
+		CPrintToChat(attacker, ""...MOD_TAG..." %T", "Coach_KnifeGet", attacker);
 	}
 	
 	SDKUnhook(rocket, SDKHook_Touch, Cmd_ItemCutThrow_TOUCH);	// Prevent TWICE touch.
@@ -410,14 +447,14 @@ public Action Cmd_ItemKnifeType(int args) {
 	int wepid = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 	if( !IsValidEntity(wepid) ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous devez porter votre couteau en main.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Coach_KnifeInHands", client);
 		return Plugin_Handled;
 	}
 	
 	GetEdictClassname(wepid, classname, sizeof(classname));
 	if( !Weapon_ShouldBeEquip(classname) ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous devez porter votre couteau en main.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Coach_KnifeInHands", client);
 		return Plugin_Handled;
 	}
 	
@@ -441,14 +478,17 @@ public Action Cmd_ItemKnifeType(int args) {
 	}
 	if( rp_GetClientKnifeType(client) == ball_type_type ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà un couteau de ce type.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_knife_already", client);
 		return Plugin_Handled;
 	}
 	
 	if( !rp_SetClientKnifeType(client, ball_type_type) ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Coach_KnifeInHands", client);
 		return Plugin_Handled;
+	}
+	else {
+		CPrintToChat(client, ""...MOD_TAG..." %T", "edit_knife_done", client);
 	}
 	
 	
@@ -533,146 +573,11 @@ bool wpnCutDamage(int victim, int attacker, float &damage) {
 	return changed;
 }
 // ----------------------------------------------------------------------------
-public Action Cmd_ItemPermiTir(int args) {
-
-	int client = GetCmdArgInt(1);
-	int item_id = GetCmdArgInt(args);
-	
-	float train = rp_GetClientFloat(client, fl_WeaponTrain);
-	if( train >= 8.0 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Votre entraînement est déjà maximal.");
-		ITEM_CANCEL(client, item_id);
-		return Plugin_Handled;
-	}
-	
-	train += 4.0;
-	rp_SetClientFloat(client, fl_WeaponTrain, train < 8.0 ? train : 8.0);
-	
-	
-	CPrintToChat(client, "" ...MOD_TAG... " Votre entraînement est maintenant de %.2f%%", (train/5.0*100.0));
-	return Plugin_Handled;
-}
 // ----------------------------------------------------------------------------
-public Action Cmd_ItemRiotShield(int args) {
-	
-	int client = GetCmdArgInt(1);
-	int item_id = GetCmdArgInt(args);
-	
-	if( g_iRiotShield[client] > 0 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà un bouclier anti-émeute.");
-		ITEM_CANCEL(client, item_id);
-		return Plugin_Handled;
-	}
-	
-	removeShield(client);
-	
-	int ent = CreateEntityByName("prop_physics_override");
-	DispatchKeyValue(ent, "classname", "notsolid");
-	DispatchKeyValue(ent, "model", "models/weapons/melee/w_riotshield.mdl");
-	DispatchSpawn(ent);
-	Entity_SetOwner(ent, client);
-	
-	SetEntityMoveType(ent, MOVETYPE_NONE);
-	SetEntProp(ent, Prop_Data, "m_CollisionGroup", 2);  
-	
-	
-	SetVariantString("!activator");
-	rp_AcceptEntityInput(ent, "SetParent", client, client);
-	
-	FakeClientCommand(client, "use weapon_fists");
-	FakeClientCommand(client, "use weapon_bayonet");
-	
-	SetVariantString("weapon_hand_L");
-	rp_AcceptEntityInput(ent, "SetParentAttachment");
-	TeleportEntity(ent, view_as<float>({ 2.0, 4.0, 0.0 }), g_vShieldPos[0], NULL_VECTOR);
-	rp_HookEvent(client, RP_OnAssurance,	fwdAssurance2);
-	rp_HookEvent(client, RP_PostTakeDamageWeapon, fwdTakeDamage);
-	rp_HookEvent(client, RP_OnPlayerDead, fwdPlayerDead);
-	
-	g_iRiotShield[client] = ent;
-	SDKHook(ent, SDKHook_SetTransmit, Hook_SetTransmit);
-	SDKHook(client, SDKHook_WeaponSwitch, Hook_WeaponSwitch);
-	
-	return Plugin_Handled;
-}
-public Action fwdAssurance2(int client, int& amount) {
-		amount += 250;
-}
-public Action Hook_WeaponSwitch(int client, int weapon) {
-	char wepname[64];
-	if (g_iRiotShield[client] > 0) {
-		GetEdictClassname(weapon, wepname, sizeof(wepname));
-		
-		if( StrContains(wepname, "weapon_knife") == 0 || StrContains(wepname, "weapon_bayonet") == 0 ) {
-			SetVariantString("weapon_hand_L");
-			rp_AcceptEntityInput(g_iRiotShield[client], "SetParentAttachment");
-			
-			TeleportEntity(g_iRiotShield[client], view_as<float>({ 2.0, 4.0, 0.0 }), g_vShieldPos[0], NULL_VECTOR);
-		}
-		else {
-			
-			SetVariantString("primary");
-			rp_AcceptEntityInput(g_iRiotShield[client], "SetParentAttachment");
-			
-			TeleportEntity(g_iRiotShield[client], view_as<float>({ 5.0, 10.0, 0.0 }), g_vShieldPos[1], NULL_VECTOR);
-		}
-	}
-}
-public Action fwdTakeDamage(int victim, int attacker, float& damage, int wepID, float pos[3]) {
-	float start[3];
-	GetClientEyePosition(attacker, start);
-	
-	Handle tr = TR_TraceRayFilterEx(start, pos, MASK_ALL, RayType_EndPoint, TEF_ExcludeEntity, victim);
-	
-	if( TR_DidHit(tr) ) {
-		TR_GetEndPosition(pos, tr);
-		
-		if( g_iRiotShield[victim] > 0 && TR_GetEntityIndex(tr) == g_iRiotShield[victim] ) {
-			damage = 0.0;
-			CloseHandle(tr);
-			
-			
-			return Plugin_Stop;
-		}
-		
-	}
-	CloseHandle(tr);
-	
-	return Plugin_Continue;
-}
-public Action fwdPlayerDead(int victim, int attacker, float& respawn, int& tdm) {
-	
-	removeShield(victim);
-}
 public Action Hook_SetTransmit(int entity, int client) {
 	if( Entity_GetOwner(entity) == client && rp_GetClientInt(client, i_ThirdPerson) == 0 ) 
 		return Plugin_Handled;
 	return Plugin_Continue;
-}
-public bool TEF_ExcludeEntity(int entity, int contentsMask, any data) {
-	if( entity == data )
-		return true;
-	if( entity == g_iRiotShield[data] )
-		return true;
-		
-	return false;
-}
-void removeShield(int client) {
-	
-	if( g_iRiotShield[client] > 0 ) {
-		
-		
-		rp_UnhookEvent(client, RP_OnPlayerDead, fwdPlayerDead);
-		rp_UnhookEvent(client, RP_PostTakeDamageWeapon, fwdTakeDamage);
-		rp_UnhookEvent(client, RP_OnAssurance,	fwdAssurance2);
-		SDKUnhook(g_iRiotShield[client], SDKHook_SetTransmit, Hook_SetTransmit);
-		SDKUnhook(client, SDKHook_WeaponSwitch, Hook_WeaponSwitch);
-		
-		rp_AcceptEntityInput( g_iRiotShield[client], "Kill");
-		g_iRiotShield[client] = 0;
-		
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez perdu votre bouclier anti-émeute.");
-	}
 }
 // ----------------------------------------------------------------------------
 public Action Cmd_ItemShoes(int args) {
@@ -682,7 +587,9 @@ public Action Cmd_ItemShoes(int args) {
 
 
 	if(	rp_GetClientBool(client, b_HasShoes) ){
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà des chaussures voyons!");
+		char tmp[128];
+		rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemAlreadyEnable", client, tmp);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
@@ -693,7 +600,6 @@ public Action Cmd_ItemShoes(int args) {
 	rp_HookEvent(client, RP_OnFrameSeconde, fwdVitalite);
 	SDKHook(client, SDKHook_OnTakeDamage, fwdNoFallDamage);
 	
-	CPrintToChat(client, "" ...MOD_TAG... " Vous avez maintenant la classe avec votre nouvelle paire de baskets!");
 	return Plugin_Handled;
 }
 public Action fwdAssuranceShoes(int client, int& amount) {
@@ -716,7 +622,7 @@ public Action fwdVitalite(int client) {
 			float vita = rp_GetClientFloat(client, fl_Vitality);
 			rp_SetClientFloat(client, fl_Vitality, vita + 5.0);
 			
-			CPrintToChat(client, "" ...MOD_TAG... " Vous ressentez votre vitalité s'augmenter grâce à vos baskets (%.1f -> %.1f).", vita, vita + 5.0);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Coach_BasketVitality", client);
 		}
 	}
 	
@@ -812,7 +718,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	DisplayMenu(menu, client, 60);
 	return Plugin_Handled;*/
 }
-
+/*
 public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_iParam2) {
 
 	if (p_oAction == MenuAction_Select) {
@@ -892,7 +798,7 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 		CloseHandle(p_hItemMenu);
 	}
 
-}
+}*/
 
 public Action Cmd_ItemNeedForSpeed(int args) {
 	
@@ -914,12 +820,12 @@ public Action Cmd_ItemLessive(int args) {
 	
 	if( rp_IsInPVP(client) ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit en PvP.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotUseItemInPvP", client);
 		return Plugin_Handled;
 	}
 	
 	if( rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PERQUIZ ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Une perquisition est en cours, impossible d'utiliser cet objet pour le moment.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotUseItemInPerquiz", client);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
@@ -996,7 +902,8 @@ public Action fwdTalkCrayon(int client, char[] szSayText, int length, bool local
 		ReplaceString(szSayText, length, "{target}", tmp);
 	}
 	else {
-		ReplaceString(szSayText, length, "{target}", "Personne");
+		Format(tmp, sizeof(tmp), "%T", "Jobs_Noone", LANG_SERVER);
+		ReplaceString(szSayText, length, "{target}", tmp);
 	}
 	
 	rp_GetZoneData(rp_GetPlayerZone( rp_IsValidDoor(target) ? target : client ), zone_type_name, tmp, sizeof(tmp));
@@ -1005,7 +912,7 @@ public Action fwdTalkCrayon(int client, char[] szSayText, int length, bool local
 	rp_GetJobData(rp_GetClientInt(client, i_Job), job_type_name, tmp, sizeof(tmp));
 	ReplaceString(szSayText, length, "{job}", tmp);
 	
-	rp_GetGroupData(rp_GetClientInt(client, i_Group), job_type_name, tmp, sizeof(tmp));
+	rp_GetGroupData(rp_GetClientInt(client, i_Group), group_type_name, tmp, sizeof(tmp));
 	ReplaceString(szSayText, length, "{gang}", tmp);
 	ReplaceString(szSayText, length, "{group}", tmp);
 	
@@ -1027,20 +934,23 @@ public Action CmdItemMask(int args) {
 	GetCmdArg(1, arg1, sizeof(arg1)); int client = StringToInt(arg1);
 	int item_id = GetCmdArgInt(args);
 	
-	
 	if( rp_GetClientInt(client, i_MaskCount) <= 0 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser de masque pour le moment.");
+		char item_name[64];
+		rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	
 	if (rp_GetClientInt(client, i_Mask) != 0) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous portez déjà un masque.");
+		char item_name[64];
+		rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemAlreadyEnable", client, item_name);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	if (rp_GetClientJobID(client) == 1 || rp_GetClientJobID(client) == 101) {
-		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit aux forces de l'ordre.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotUseItemPolice", client);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
@@ -1075,7 +985,6 @@ public Action CmdItemMask(int args) {
 	rp_HookEvent(client, RP_OnAssurance, fwdAssuranceMask);
 	rp_HookEvent(client, RP_OnPlayerKill, fwdKill);
 	rp_SetClientInt(client, i_Mask, ent);
-	CPrintToChat(client, "" ...MOD_TAG... " Vous portez maintenant un masque.");
 	
 	return Plugin_Handled;
 }
@@ -1087,7 +996,7 @@ public Action fwdKill(int client, int victim, char weapon[64], int& tdm) {
 			rp_AcceptEntityInput(maskID, "Kill");
 		
 		rp_SetClientInt(client, i_Mask, 0); 
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez perdu votre masque");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Coach_MaskDisapear", client);
 		
 		rp_ClientResetSkin(client);
 		
@@ -1188,7 +1097,7 @@ public Action Cmd_ItemDisco(int args) {
 	int item_id = GetCmdArgInt(args);
 	
 	if( !rp_IsBuildingAllowed(client) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas construire ici.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
 		ITEM_CANCEL(client, item_id);
 		return;
 	}
@@ -1206,12 +1115,12 @@ public Action Cmd_ItemDisco(int args) {
 			cpt++;
 			Entity_GetAbsOrigin(i, dst);
 			if( GetVectorDistance(src, dst) < 256.0 ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Il existe déjà un objet de ce type à proximité.");
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
 				ITEM_CANCEL(client, item_id);
 				return;
 			}
 			if( rp_GetBuildingData(i, BD_owner) == client) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous possédé déjà un objet de ce type.");
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
 				ITEM_CANCEL(client, item_id);
 				return;
 			}
@@ -1219,7 +1128,7 @@ public Action Cmd_ItemDisco(int args) {
 	}
 	
 	if( cpt >= 5 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Il existe déjà trop d'objet de ce type.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
 		ITEM_CANCEL(client, item_id);
 		return;
 	}
@@ -1245,8 +1154,10 @@ public Action Cmd_ItemPoupee(int args) {
 	int item_id = GetCmdArgInt(args);
 	
 	if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
+		char item_name[64];
+		rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
 		return Plugin_Handled;
 	}
 	
@@ -1294,7 +1205,7 @@ public Action Cmd_ItemMenottes(int args){
 	int client = GetCmdArgInt(1);
 	int item_id = GetCmdArgInt(args);
 	if( GetClientTeam(client) == CS_TEAM_CT ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit aux forces de l'ordre.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotUseItemPolice", client);
 		ITEM_CANCEL(client, item_id);
 		return;
 	}
@@ -1305,7 +1216,7 @@ public Action Cmd_ItemMenottes(int args){
 		return;
 	}
 	if( rp_GetZoneBit( rp_GetPlayerZone(target) ) & BITZONE_PEACEFULL || rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PEACEFULL) {
-		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
 		ITEM_CANCEL(client, item_id);
 		return;
 	}
@@ -1314,14 +1225,14 @@ public Action Cmd_ItemMenottes(int args){
 		return;
 	}
 	if( rp_GetClientBool(target, b_Lube) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " %N{default} vous glisse entre les mains.", target);
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Cmd_TargetIsSlippy", client);
 		ITEM_CANCEL(client, item_id);
 		return;
 	}
 	
 	if( rp_ClientFloodTriggered(client, target, fd_menotte) ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " %N{default} vous glisse entre les mains.", target);
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Cmd_TargetIsSlippy", client);
 		return;
 	}
 	rp_ClientFloodIncrement(client, target, fd_menotte, 11.0);
@@ -1347,14 +1258,14 @@ public Action Cmd_ItemSucette(int args) {
 	int client = GetCmdArgInt(1);
 		
 	if( Client_IsInVehicle(client) || rp_GetClientVehiclePassager(client) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Impossible d'utiliser cet objet dans une voiture.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotUseItemInCar", client);
 		int item_id = GetCmdArgInt(args);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	
 	if( rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PERQUIZ ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Une perquisition est en cours, impossible d'utiliser cet objet pour le moment.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotUseItemInPerquiz", client);
 		int item_id = GetCmdArgInt(args);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
@@ -1375,13 +1286,15 @@ public Action Cmd_ItemSucette2(int args) {
 	int item_id = GetCmdArgInt(args);
 	
 	if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
+		char item_name[64];
+		rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
 		return Plugin_Handled;
 	}
 	
 	if( Client_IsInVehicle(client) || rp_GetClientVehiclePassager(client) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Impossible d'utiliser cet objet dans une voiture.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotUseItemInCar", client);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
@@ -1401,7 +1314,7 @@ public Action Cmd_ItemSucette2(int args) {
 		
 		if( GetConVarInt(FindConVar("rp_braquage")) == 2 ) {
 			CreateTimer(0.1, AllowUltimate, client);
-			CPrintToChat(client, "" ...MOD_TAG... " Les sucettes sont désactivées pour ce braquage.");
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotUseItemInBraquage", client);
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
@@ -1487,8 +1400,8 @@ public Action Cmd_ItemFouet(int args) {
 	}
 	
 	if( rp_ClientFloodTriggered(client, target, fd_fouet) ) {
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Cmd_TargetIsSlippy", client);
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " %N{default} vous glisse entre les mains.", target);
 		return Plugin_Handled;
 	}
 	rp_ClientFloodIncrement(client, target, fd_fouet, 5.0);
@@ -1523,13 +1436,13 @@ public Action Cmd_ItemAlcool(int args) {
 			return Plugin_Handled;
 		}
 		if( rp_GetZoneBit( rp_GetPlayerZone(target) ) & BITZONE_PEACEFULL ) {
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotUseItemInPeace", client);
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
 			return Plugin_Handled;
 		}
 		if( rp_GetClientFloat(target, fl_Alcool) > 0.0 ) {
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Drink_TooMuchTarget", client);
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "" ...MOD_TAG... " %N{default} a trop bu, il n'est pas raisonable de lui donner à boire.", target);
 			return Plugin_Handled;
 		}
 		float vecTarget[3];
@@ -1561,7 +1474,7 @@ public Action Cmd_ItemKevlarBox(int args) {
 int BuildingKevlarBox(int client) {
 	
 	if( !rp_IsBuildingAllowed(client) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas construire ici.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
 		return 0;
 	}
 	
@@ -1580,19 +1493,17 @@ int BuildingKevlarBox(int client) {
 		GetEdictClassname(i, tmp, 63);
 		
 		if( StrEqual(classname, tmp) && rp_GetBuildingData(i, BD_owner) == client ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà une valise remplie de préservatifs.");
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
 			return 0;
 		}
 		if( StrEqual(tmp, "rp_kevlarbox") ) {
 			Entity_GetAbsOrigin(i, vecOrigin2);
 			if( GetVectorDistance(vecOrigin, vecOrigin2) < 600 ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Il existe une autre valise remplie de préservatifs à proximité.");
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
 				return 0;
 			}
 		}
 	}
-	
-	CPrintToChat(client, "" ...MOD_TAG... " Construction en cours...");
 	
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client, _, _, _, 0.66);
 	
@@ -1649,7 +1560,9 @@ public void BuildingKevlarBox_break(const char[] output, int caller, int activat
 		rp_ClientAggroIncrement(activator, owner, 1000);
 	}
 	
-	CPrintToChat(owner,"" ...MOD_TAG... " Votre valise remplie de préservatifs a été détruite.");
+	char tmp[128];
+	GetEdictClassname(caller, tmp, sizeof(tmp));
+	CPrintToChat(owner, "" ...MOD_TAG... " %T", "Build_Destroyed", owner, tmp);
 	
 	float vecOrigin[3];
 	Entity_GetAbsOrigin(caller,vecOrigin);
@@ -1773,8 +1686,10 @@ public Action Cmd_ItemCigarette(int args) {
 	
 	if( StrEqual(Arg1, "deg") ) {
 		if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
+			char item_name[128];
+			rp_GetItemData(ITEM_NEONS, item_type_name, item_name, sizeof(item_name));
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
 			return Plugin_Handled;
 		}
 		rp_SetClientBool(client, b_MayUseUltimate, false);
@@ -1847,13 +1762,18 @@ public Action Cmd_ItemRuban_Task(Handle timer, any dp) {
 	int client = ReadPackCell(dp);
 	int item_id = ReadPackCell(dp);
 	
-	char tmp[32];
+	char tmp[32], tmp2[64];
 	Handle menu = CreateMenu(MenuRubanWho);
-	SetMenuTitle(menu, "Sur qui mettre le ruban ?");
-	Format(tmp, 31, "%i_target", item_id);
-	AddMenuItem(menu, tmp, "Ce que je vise");
-	Format(tmp, 31, "%i_client", item_id);
-	AddMenuItem(menu, tmp, "Moi");
+	SetMenuTitle(menu, "%T\n ", "Ruban", client);
+	
+	Format(tmp, sizeof(tmp), "%i_target", item_id);
+	Format(tmp2, sizeof(tmp2), "%T", "Ruban_Target", client);
+	AddMenuItem(menu, tmp, tmp2);
+	
+	Format(tmp, sizeof(tmp), "%i_client", item_id);
+	Format(tmp2, sizeof(tmp2), "%T", "Ruban_Myself", client);
+	AddMenuItem(menu, tmp, tmp2);
+	
 	DisplayMenu(menu, client, 60);
 	
 	CloseHandle(dp);
@@ -1871,37 +1791,31 @@ public int MenuRubanWho(Handle menu, MenuAction action, int client, int param2) 
 		else{
 			target = GetClientAimTarget(client, false);
 			if( target == 0 || !IsValidEdict(target) || !IsValidEntity(target) ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Votre cible n'est pas valide.");
 				return;
 			}
 			char classname[64];
 			GetEdictClassname(target, classname, sizeof(classname));
 
 			if( StrContains("chicken|player|weapon|prop_physics|", classname) == -1 ){
-				CPrintToChat(client, "" ...MOD_TAG... " Votre cible n'est pas valide.");
 				return;
 			}
 
 			if( !rp_IsEntitiesNear(client, target) ){
-				CPrintToChat(client, "" ...MOD_TAG... " Votre cible est trop loin.");
 				return;
 			}
 		}
-		char tmp[64];
+		char tmp[64], tmp2[64], expl[3][12];
 		Handle menucolor = CreateMenu(MenuRubanColor);
-		SetMenuTitle(menucolor, "De quelle couleur ?\n ");
-		Format(tmp,63,"%s_%i_%i_%i_%i_%i", data[0], target, 255, 0  , 0  , 200);
-		AddMenuItem(menucolor, tmp, "Rouge");
-		Format(tmp,63,"%s_%i_%i_%i_%i_%i", data[0], target, 0  , 255, 0  , 200);
-		AddMenuItem(menucolor, tmp, "Vert");
-		Format(tmp,63,"%s_%i_%i_%i_%i_%i", data[0], target, 0  , 0  , 255, 200);
-		AddMenuItem(menucolor, tmp, "Bleu");
-		Format(tmp,63,"%s_%i_%i_%i_%i_%i", data[0], target, 255, 255, 255, 200);
-		AddMenuItem(menucolor, tmp, "Blanc");
-		Format(tmp,63,"%s_%i_%i_%i_%i_%i", data[0], target, 122, 122, 0  , 200);
-		AddMenuItem(menucolor, tmp, "Jaune");
-		Format(tmp,63,"%s_%i_%i_%i_%i_%i", data[0], target, 253, 108, 158, 200);
-		AddMenuItem(menucolor, tmp, "Rose");
+		SetMenuTitle(menucolor, "%T\n ", "Ruban_Color", client);
+		
+		for (int i = 0; i < sizeof(g_szColor); i++) {
+			ExplodeString(g_szColor[i], " ", expl, sizeof(expl), sizeof(expl[]));
+			
+			Format(tmp, sizeof(tmp),"%s_%i_%i_%i_%i_%i", data[0], target, StringToInt(expl[0]), StringToInt(expl[1]), StringToInt(expl[2]), 200);
+			Format(tmp2, sizeof(tmp2), "%T", g_szColor[i], client);
+			AddMenuItem(menucolor, tmp, tmp2);
+		}
+		
 		DisplayMenu(menucolor, client, 20);
 	}
 	else if( action == MenuAction_End ) {
@@ -1920,19 +1834,21 @@ public int MenuRubanColor(Handle menu, MenuAction action, int client, int param2
 		color[1] = StringToInt(data[3]);
 		color[2] = StringToInt(data[4]);
 		color[3] = StringToInt(data[5]);
+		
 		if( target == 0 || !IsValidEdict(target) || !IsValidEntity(target) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Votre cible a disparue.");
 			return;
 		}
 		
 		if( rp_ClientFloodTriggered(client, target, fd_ruban) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " %N{default} vous glisse entre les mains.", target);
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Cmd_TargetIsSlippy", client);
 			return;
 		}
 		rp_ClientFloodIncrement(client, target, fd_ruban, 31.0);
 		
 		if(rp_GetClientItem(client, item_id)==0){
-			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez plus l'item ruban.");
+			char item_name[128];
+			rp_GetItemData(ITEM_NEONS, item_type_name, item_name, sizeof(item_name));
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemMissing", client, item_name);
 			return;
 		}
 		else{
@@ -1968,16 +1884,16 @@ void Draw_SkinList(int client, int test, int skinID) {
 	char tmp[128], tmp2[128];
 	
 	if (rp_GetPlayerZone(client) != ZONE_CABINE) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes sorti des cabines d'essayage.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Cabine_Error_Left", client);
 		return;
 	}
 	if (GetClientTeam(client) == CS_TEAM_CT) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas essayer cela en CT.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Cabine_Error_CT", client);
 		return;
 	}
 	GetClientModel(client, tmp, sizeof(tmp));
 	if( StrEqual(tmp, "models/player/custom_player/legacy/sprisioner/sprisioner.mdl") ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas essayer cela en tant qu'évadé.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Cabine_Error_Prisonner", client);
 		return;
 	}
 	
@@ -1985,28 +1901,31 @@ void Draw_SkinList(int client, int test, int skinID) {
 	
 	if( test == -1 ) {
 		Menu menu = new Menu(MenuTrySkin);
-		menu.SetTitle("Cabine d'essayage\n ");
+		menu.SetTitle("%T\n ", "Cabine", client);
 		
-		menu.AddItem("1 -1", "Essayer un skin");
-		menu.AddItem("0 -1", "Acheter un skin");
+		Format(tmp, sizeof(tmp), "%T", "Cabine_Try", client);	menu.AddItem("1 -1", tmp);
+		Format(tmp, sizeof(tmp), "%T", "Cabine_Buy", client);	menu.AddItem("0 -1", tmp);
 		
 		menu.Display(client, 60);
 		return;
 	}
 	if( skinID == -1 ) {
 		Menu menu = new Menu(MenuTrySkin);
-		menu.SetTitle("Selection du skin à %s\n ", test ? "essayer" : "acheter");
+		menu.SetTitle("%T\n ", "Cabine_Choose", client);
+		
+		char item_name[128];
+		rp_GetItemData(ITEM_FITNESS, item_type_name, item_name, sizeof(item_name));
 		
 		for (int i = 0; i < sizeof(g_szSkinsList); i++) {
 			female = StringToInt(g_szSkinsList[i][2]);
 			
 			Format(tmp, sizeof(tmp), "%d %d", test, i);
 			if( test )
-				Format(tmp2, sizeof(tmp2), "%s", g_szSkinsList[i][1]);
+				Format(tmp2, sizeof(tmp2), "%T", "_s", client, g_szSkinsList[i][1]);
 			else if( StringToInt(g_szSkinsList[i][3]) == 0 )
-				Format(tmp2, sizeof(tmp2), "%s - Gratuit", g_szSkinsList[i][1]);
+				Format(tmp2, sizeof(tmp2), "%T", "Cabine_Line_Free", client, g_szSkinsList[i][1]);
 			else
-				Format(tmp2, sizeof(tmp2), "%s - %d pass de fitness", g_szSkinsList[i][1], StringToInt(g_szSkinsList[i][3]));
+				Format(tmp2, sizeof(tmp2), "%T", "Cabine_Line_Pass", client, g_szSkinsList[i][1], StringToInt(g_szSkinsList[i][3]), item_name);
 			
 			if( (female==2) && ((rp_GetClientInt(client, i_Donateur) >= 1&&rp_GetClientInt(client, i_Donateur) <=10)||test) ) 
 				menu.AddItem(tmp, tmp2);			
@@ -2022,7 +1941,7 @@ void Draw_SkinList(int client, int test, int skinID) {
 		
 		if( !IsModelPrecached(g_szSkinsList[skinID][0]) )  {
 			if( !PrecacheModel(g_szSkinsList[skinID][0]) ) {
-				PrintToChat(client, "le précache de %s a échoué.", g_szSkinsList[skinID][0]);
+				PrintToChat(client, "" ...MOD_TAG... " %T", "Error_FromServer", client);
 				return;
 			}
 		}
@@ -2031,7 +1950,7 @@ void Draw_SkinList(int client, int test, int skinID) {
 			rp_HookEvent(client, RP_OnPlayerZoneChange, fwdOnZoneChange);
 			
 			if( rp_GetPlayerZone(client) != ZONE_CABINE) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez quitté les cabines d'essayage.");
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Cabine_Error_Left", client);
 				return;
 			}
 		}
@@ -2039,7 +1958,9 @@ void Draw_SkinList(int client, int test, int skinID) {
 			prix = StringToInt(g_szSkinsList[skinID][3]);
 			
 			if( rp_GetClientItem(client, ITEM_FITNESS ) < prix ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez de pass de fitness pour ce skin.");
+				char item_name[128];
+				rp_GetItemData(ITEM_FITNESS, item_type_name, item_name, sizeof(item_name));
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemNotEnought", client, item_name);
 				return;
 			}
 			
