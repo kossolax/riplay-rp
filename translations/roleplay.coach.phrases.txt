@@ -81,6 +81,28 @@
 	{
 		"fr"	"Cabine d'essayage:"
 	}
+	"Cabine_Try"
+	{
+		"fr"	"Essayer une nouvelle tenue"
+	}
+	"Cabine_Buy"
+	{
+		"fr"	"Acheter une nouvelle tenue"
+	}
+	"Cabine_Choose"
+	{
+		"fr"	"Choisir une nouvelle tenue:"
+	}
+	"Cabine_Line_Free"
+	{
+		"#format"	"{1:s}"
+		"fr"	"{1} - Gratuit"
+	}
+	"Cabine_Line_Pass"
+	{
+		"#format"	"{1:s},{2:d},{3:s}"
+		"fr"	"{1} - {2}x {3}"
+	}
 	"Cabine_Error_Left"
 	{
 		"fr"	"Vous êtes sorti des cabines d'essayage."
