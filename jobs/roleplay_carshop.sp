@@ -618,9 +618,7 @@ public void CAR_CANCEL(int client, int item_id, int fromBank ){
 		}
 	}
 }
-public Action Cmd_ItemVehicleStuff(int args) {
-	static int offset = -1;	
-	
+public Action Cmd_ItemVehicleStuff(int args) {	
 	char arg1[12];
 	GetCmdArg(1, arg1, sizeof(arg1));
 	
@@ -633,14 +631,9 @@ public Action Cmd_ItemVehicleStuff(int args) {
 		return Plugin_Handled;
 	}
 	
-	
 	if( !rp_GetClientKeyVehicle(client, target) ) {
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
-	}
-	
-	if( offset == -1 ) {
-		offset = GetEntSendPropOffs(target, "m_clrRender", true);
 	}
 	
 	if( StrEqual(arg1, "key") ) {
@@ -704,69 +697,7 @@ public Action Cmd_ItemVehicleStuff(int args) {
 			return Plugin_Handled;
 		}
 	}
-	else if( StrEqual(arg1, "battery") ){
-		if(rp_GetVehicleInt(target, car_battery)!= -1){
-			char item_name[128];
-			rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemAlreadyEnable", client, item_name);
-			ITEM_CANCEL(client, item_id);
-			return Plugin_Handled;
-		}
-		
-		if( target == EntRefToEntIndex(g_iVehiclePolice) || target == EntRefToEntIndex(g_iVehicleJustice) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicle_CantCustom", client);
-			ITEM_CANCEL(client, item_id);
-			return Plugin_Handled;
-		}
-		
-		rp_SetVehicleInt(target, car_battery, 0);
-	}
-	else if( StrEqual(arg1, "jump") ){
-		if( rp_GetVehicleInt(target, car_can_jump) == 1 ){
-			char item_name[128];
-			rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemAlreadyEnable", client, item_name);
-			ITEM_CANCEL(client, item_id);
-			return Plugin_Handled;
-		}
-		if( target == EntRefToEntIndex(g_iVehiclePolice) || target == EntRefToEntIndex(g_iVehicleJustice) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicle_CantCustom", client);
-			ITEM_CANCEL(client, item_id);
-			return Plugin_Handled;
-		}
-		rp_SetVehicleInt(target, car_can_jump, 1);
-	}
-	else if( StrEqual(arg1, "boost") ){
-		if( rp_GetVehicleInt(target, car_boost) != -1){
-			char item_name[128];
-			rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemAlreadyEnable", client, item_name);
-			ITEM_CANCEL(client, item_id);
-			return Plugin_Handled;
-		}
-		if( target == EntRefToEntIndex(g_iVehiclePolice) || target == EntRefToEntIndex(g_iVehicleJustice) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicle_CantCustom", client);
-			ITEM_CANCEL(client, item_id);
-			return Plugin_Handled;
-		}
-		
-		rp_SetVehicleInt(target, car_boost, 1);
-		char ScriptPath[PLATFORM_MAX_PATH], buffer[8][64];
-		Entity_GetModel(target, ScriptPath, sizeof(ScriptPath));
-		int amount = ExplodeString(ScriptPath, "/", buffer, sizeof(buffer), sizeof(buffer[]));
-		if( amount > 0 ) {
-			ReplaceString(buffer[amount-1], sizeof(buffer[]), ".mdl", "");
-			Format(ScriptPath, sizeof(ScriptPath), "scripts/vehicles/%s2.txt", buffer[amount-1]);
-			
-			if( !FileExists(ScriptPath) ) {				
-				CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_FromServer", client);
-				ITEM_CANCEL(client, item_id);
-				return Plugin_Handled;
-			}
-			DispatchKeyValue(target, "vehiclescript", 		ScriptPath);
-			ServerCommand("vehicle_flushscript");
-		}				
-	}
+
 	
 	return Plugin_Handled;
 }
@@ -1406,11 +1337,11 @@ void DisplayGarageMenu(int client) {
 	SetMenuTitle(menu, "%T\n ", "Garage", client);
 	
 	char tmp[128];
-	Format(tmp, sizeof(tmp), "%T", "Garage_Disposit", client);
-	AddMenuItem(menu, "to_bank", 	tmp);
-
 	Format(tmp, sizeof(tmp), "%T", "Garage_Withdraw", client);
 	AddMenuItem(menu, "from_bank", 	tmp);
+	
+	Format(tmp, sizeof(tmp), "%T", "Garage_Disposit", client);
+	AddMenuItem(menu, "to_bank", 	tmp);
 	
 	Format(tmp, sizeof(tmp), "%T", "Garage_Paint", client);
 	AddMenuItem(menu, "colors", 	tmp);
@@ -1423,12 +1354,18 @@ void DisplayGarageMenu(int client) {
 	
 	Format(tmp, sizeof(tmp), "%T", "Garage_Klaxons", client);
 	AddMenuItem(menu, "klaxon", 	tmp);
+	
+	Format(tmp, sizeof(tmp), "%T", "Garage_Jump", client);
+	AddMenuItem(menu, "jump", 	tmp);
+	
+	Format(tmp, sizeof(tmp), "%T", "Garage_Boost", client);
+	AddMenuItem(menu, "boost", 	tmp);
 
+	Format(tmp, sizeof(tmp), "%T", "Garage_Battery", client);
+	AddMenuItem(menu, "battery", 	tmp);
+	
 	Format(tmp, sizeof(tmp), "%T", "Garage_Repair", client);
 	AddMenuItem(menu, "repair", 	tmp);
-
-	Format(tmp, sizeof(tmp), "%T", "Garage_Sell", client);
-	AddMenuItem(menu, "battery", 	tmp);
 	
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, MENU_TIME_DURATION);
@@ -1500,6 +1437,19 @@ void displayKlaxonMenu(int client){
 	}
 	DisplayMenu(menu2, client, MENU_TIME_DURATION);
 }
+void displayBatteryMenu(int client){
+	char tmp[32];
+	Handle menu2 = CreateMenu(eventGarageMenu);
+	SetMenuTitle(menu2, "%T\n ", "Garage", client);
+	
+	Format(tmp, sizeof(tmp), "%T", "Garage_Place", client);
+	AddMenuItem(menu2, "battery give", tmp);
+
+	Format(tmp, sizeof(tmp), "%T", "Garage_Sell", client);
+	AddMenuItem(menu2, "battery sell", tmp);
+
+	DisplayMenu(menu2, client, MENU_TIME_DURATION);
+}
 public int eventGarageMenu(Handle menu, MenuAction action, int client, int param) {
 	static int last[65], offset;
 	
@@ -1559,6 +1509,10 @@ public int eventGarageMenu(Handle menu, MenuAction action, int client, int param
 				displayKlaxonMenu(client);
 				return;
 			}
+			else if( StrEqual(arg1, "battery") ){
+				displayBatteryMenu(client);
+				return;
+			}
 			
 			for (int target = MaxClients; target <= 2048; target++) {
 				if( !rp_IsValidVehicle(target) )
@@ -1567,6 +1521,10 @@ public int eventGarageMenu(Handle menu, MenuAction action, int client, int param
 					continue;
 				if( rp_GetVehicleInt(target, car_owner) != client)
 					continue;
+				if( target == EntRefToEntIndex(g_iVehiclePolice) || target == EntRefToEntIndex(g_iVehicleJustice) ) {
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicle_CantCustom", client);
+					continue;
+				}
 				
 				if( StrEqual(arg1, "red") ||  StrEqual(arg1, "green") ||  StrEqual(arg1, "bleue") ||  StrEqual(arg1, "white") ||  StrEqual(arg1, "black") || StrContains(arg1, "color ") == 0 ) {
 
@@ -1726,9 +1684,73 @@ public int eventGarageMenu(Handle menu, MenuAction action, int client, int param
 					rp_SetVehicleInt(target, car_health, heal);
 					DisplayGarageMenu(client);
 				}
-				else if( StrEqual(arg1, "battery") ) {
-					if( rp_GetVehicleInt(target, car_owner) != client )
+				else if( StrEqual(arg1, "battery give") ) {
+					if( rp_GetVehicleInt(target, car_battery) != -1 )
 						continue;
+					
+					if( rp_GetClientItem(client, ITEM_BATTERIE, true) <= 0 ) {
+						char item_name[128];
+						rp_GetItemData(ITEM_BATTERIE, item_type_name, item_name, sizeof(item_name));
+						CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemMissing", client, item_name);
+						DisplayGarageMenu(client);
+						return;
+					}
+					rp_ClientGiveItem(client, ITEM_BATTERIE, -1, true);
+					
+					rp_SetVehicleInt(target, car_battery, 0);
+					
+					DisplayGarageMenu(client);
+				}
+				else if( StrEqual(arg1, "boost") ) {
+					if( rp_GetVehicleInt(target, car_boost) != -1 )
+						continue;
+					
+					if( rp_GetClientItem(client, ITEM_BOOST, true) <= 0 ) {
+						char item_name[128];
+						rp_GetItemData(ITEM_BOOST, item_type_name, item_name, sizeof(item_name));
+						CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemMissing", client, item_name);
+						DisplayGarageMenu(client);
+						return;
+					}
+					rp_ClientGiveItem(client, ITEM_BOOST, -1, true);
+
+					rp_SetVehicleInt(target, car_boost, 1);
+					char ScriptPath[PLATFORM_MAX_PATH], buffer[8][64];
+					Entity_GetModel(target, ScriptPath, sizeof(ScriptPath));
+					int amount = ExplodeString(ScriptPath, "/", buffer, sizeof(buffer), sizeof(buffer[]));
+					if( amount > 0 ) {
+						ReplaceString(buffer[amount-1], sizeof(buffer[]), ".mdl", "");
+						Format(ScriptPath, sizeof(ScriptPath), "scripts/vehicles/%s2.txt", buffer[amount-1]);
+						
+						if( !FileExists(ScriptPath) ) {				
+							CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_FromServer", client);
+							ITEM_CANCEL(client, ITEM_BOOST);
+							return;
+						}
+						DispatchKeyValue(target, "vehiclescript", 		ScriptPath);
+						ServerCommand("vehicle_flushscript");
+					}
+					
+					DisplayGarageMenu(client);
+				}
+				else if( StrEqual(arg1, "jump") ) {
+					if( rp_GetVehicleInt(target, car_can_jump) != -1 )
+						continue;
+					
+					
+					if( rp_GetClientItem(client, ITEM_SUSPENSION, true) <= 0 ) {
+						char item_name[128];
+						rp_GetItemData(ITEM_SUSPENSION, item_type_name, item_name, sizeof(item_name));
+						CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemMissing", client, item_name);
+						DisplayGarageMenu(client);
+						return;
+					}
+					rp_ClientGiveItem(client, ITEM_SUSPENSION, -1, true);
+
+					rp_SetVehicleInt(target, car_can_jump, 1);
+					DisplayGarageMenu(client);
+				}
+				else if( StrEqual(arg1, "battery sell") ) {
 
 					if(rp_GetVehicleInt(target, car_battery) >= 420){
 						int toPay = 1500;

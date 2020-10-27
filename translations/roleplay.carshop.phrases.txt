@@ -90,6 +90,10 @@
 		"#format"	"{1:d}"
 		"fr"		"Votre batterie est chargée à {red}{1}%{default}."
 	}
+	"Vehicle_Battery_Give"
+	{
+		"fr"		"Vous avez placé une batterie sur votre véhicule."
+	}
 	"Vehicle_Battery_Sell"
 	{
 		"#format"	"{1:d}"
@@ -133,8 +137,24 @@
 	{
 		"fr"		"Réparer votre véhicule"
 	}
+	"Garage_Battery"
+	{
+		"fr"		"Gestion de la batterie"
+	}
+	"Garage_Place"
+	{
+		"fr"		"Placer une batterie"
+	}
 	"Garage_Sell"
 	{
 		"fr"		"Vendre votre batterie"
+	}
+	"Garage_Jump"
+	{
+		"fr"		"Ajouter des suspensions hydrauliques"
+	}
+	"Garage_Boost"
+	{
+		"fr"		"Ajouter de la nitro"
 	}
 }
