@@ -116,20 +116,23 @@ public Action Cmd_ItemDrugs(int args) {
 	if( !IsValidClient(client) )
 		return Plugin_Handled;
 	
+	char item_name[128];
+	rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
+	
 	bool drugged = rp_GetClientBool(client, b_Drugged);
 	if (drugged && !rp_IsTutorialOver(client) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Attention vous allez tomber malade, terminer votre tutoriel avant de tenter le diable.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	if( StrEqual(arg0, "ghb") ) {
 		if( rp_GetClientInt(client, i_MaskCount) <= 0 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser de GHB pour le moment.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
 		if (rp_GetClientJobID(client) == 1 || rp_GetClientJobID(client) == 101) {
-			CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit aux forces de l'ordre.");
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotUseItemPolice", client);
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
@@ -140,7 +143,7 @@ public Action Cmd_ItemDrugs(int args) {
 	
 		if( rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PEACEFULL ) {
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotUseItemInPeace", client);
 			return Plugin_Handled;
 		}
 		
@@ -153,17 +156,17 @@ public Action Cmd_ItemDrugs(int args) {
 			return Plugin_Handled;
 		}
 		if( !rp_IsTutorialOver(target) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas terminé le tutoriel.", target);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
 		if( rp_IsClientNew(target) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " %N{default} est un nouveau joueur.", target);
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Cmd_TargetIsSlippy", client);
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
 		if( rp_GetClientBool(target, b_Lube) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " %N{default} vous glisse entre les mains.", target);
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Cmd_TargetIsSlippy", client);
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
@@ -187,8 +190,10 @@ public Action Cmd_ItemDrugs(int args) {
 		ServerCommand("sm_effect_particles %d Trail9 10", client);
 		
 		//Envoie de messages d'information
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez drogué %N.", target);
-		CPrintToChat(target, "" ...MOD_TAG... " Vous avez été drogué.");
+		char target_name[128];
+		GetClientName2(target, target_name, sizeof(target_name), false);
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Drug_Target", client, target_name);
+		CPrintToChat(target, ""...MOD_TAG..." %T", "Drug_By", client);
 		
 		rp_ClientOverlays(target, o_Action_Poison, 10.0);
 		rp_ClientAggroIncrement(client, target, 1000);
@@ -197,7 +202,7 @@ public Action Cmd_ItemDrugs(int args) {
 	else if( StrEqual(arg0, "crack2") ) {
 		if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 			return Plugin_Handled;
 		}
 		dur = 60.0;
@@ -211,7 +216,7 @@ public Action Cmd_ItemDrugs(int args) {
 		
 		if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 			return Plugin_Handled;
 		}
 		
@@ -252,24 +257,25 @@ public Action Cmd_ItemDrugs(int args) {
 	
 	
 	if( drugged ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Attention, vous étiez déjà drogué.");
+		bool sick = false;
 		
 		if( g_hDrugTimer[client] ) {
 			delete g_hDrugTimer[client];
 			
 			if( Math_GetRandomInt(1, 100) >= 85 && !rp_GetClientBool(client, b_HasProtImmu)) {
-				
-				if( !(rp_GetClientJobID(client) == 11 && rp_GetClientBool(client, b_GameModePassive) == false) ) {
+				if( !(rp_GetClientJobID(client) == 11 && rp_GetClientBool(client, b_GameModePassive) == false) && rp_GetClientInt(client, i_Sick) == 0 ) {
 					rp_IncrementSuccess(client, success_list_dealer);
 					rp_ClientOverlays(client, o_Action_Overdose, 10.0);
 					
-					CPrintToChat(client, "" ...MOD_TAG... " Vous êtes en état d'overdose.");		
-
-					if( rp_GetClientInt(client, i_Sick) == 0 ) {
-						rp_SetClientInt(client, i_Sick, Math_GetRandomInt((view_as<int>(sick_type_none))+1, (view_as<int>(sick_type_max))-1));
-					}
+					CPrintToChat(client, ""...MOD_TAG..." %T", "Drug_Fatal", client);
+					sick = true;
+					rp_SetClientInt(client, i_Sick, Math_GetRandomInt((view_as<int>(sick_type_none))+1, (view_as<int>(sick_type_max))-1));
 				}
 			}
+		}
+		
+		if( !sick ) {
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Drug_Warn", client);
 		}
 	}
 	
@@ -319,7 +325,7 @@ public Action Cmd_ItemEngrais(int args) {
 	cpt++;
 	rp_SetBuildingData(target, BD_max, cpt);
 	
-	CPrintToChat(client, "" ...MOD_TAG... " Ce plant peut maintenant contenir %d drogues", cpt );
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Plant_Engrai", client, cpt );
 	
 	return Plugin_Handled;
 }
@@ -331,7 +337,7 @@ public Action Cmd_ItemMorePlant(int args) {
 	if( amount >= 5 ) {
 		int item_id = GetCmdArgInt(args);
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas avoir de plant supplémentaire.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Plant_Max", client);
 	}
 	else
 		rp_SetClientInt(client, i_Plant, amount + 1);
@@ -361,14 +367,17 @@ public Action Cmd_ItemPiedBiche(int args) {
 		return Plugin_Continue;
 	}
 	
+	char item_name[128];
+	rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
+	
 	if( rp_GetClientBool(client, b_MaySteal) == false ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas voler pour le moment.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 		return Plugin_Handled;
 	}
 	
 	if( rp_GetClientVehiclePassager(client) > 0 || Client_GetVehicle(client) > 0 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Impossible d'utiliser cet objet dans une voiture.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotUseItemInCar", client);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
@@ -377,7 +386,7 @@ public Action Cmd_ItemPiedBiche(int args) {
 	int target = getDistrib(client, type);
 	if( target <= 0 ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous devez être sur la place, devant un distributeur.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Dealer_Crowbar", client);
 		return Plugin_Handled;
 	}
 	
@@ -420,9 +429,12 @@ public Action Cmd_ItemPilule(int args){
 	int item_id = GetCmdArgInt(args);
 	int tptozone = -1;
 
+	char item_name[128];
+	rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
+	
 	if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 		return Plugin_Handled;
 	}
 	
@@ -433,7 +445,7 @@ public Action Cmd_ItemPilule(int args){
 	Call_Finish(a);
 	if( a == Plugin_Handled || a == Plugin_Stop ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 		return Plugin_Handled;
 	}
 	
@@ -442,7 +454,7 @@ public Action Cmd_ItemPilule(int args){
 		int appartcount = rp_GetClientInt(client, i_AppartCount);
 		if(appartcount == 0){
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas vous téléporter à votre appartement si vous n'en avez pas.");
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 			return Plugin_Handled;
 		}
 		else{
@@ -458,7 +470,7 @@ public Action Cmd_ItemPilule(int args){
 		
 		if(rp_GetClientJobID(client)==0){
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas vous teleporter à votre planque puisque vous êtes sans-emploi.");
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 			return Plugin_Handled;
 		}
 		switch(rp_GetClientJobID(client)){
@@ -484,7 +496,7 @@ public Action Cmd_ItemPilule(int args){
 
 	if(tptozone == -1){
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Nous n'avons pas trouvé d'endroit où vous téléporter.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Teleport_Failed", client);
 		return Plugin_Handled;
 	}
 
@@ -498,7 +510,6 @@ public Action Cmd_ItemPilule(int args){
 	}
 	
 	rp_ClientReveal(client);
-	ServerCommand("sm_effect_panel %d %f \"Téléportation en cours...\"", client, TP_CHANNEL_DURATION);
 	rp_HookEvent(client, RP_PrePlayerPhysic, fwdFrozen, TP_CHANNEL_DURATION);
 	
 
@@ -540,14 +551,14 @@ public Action ItemPiluleOver(Handle timer, Handle dp) {
 		return Plugin_Handled;
 	}
 	if( rp_GetClientVehiclePassager(client) > 0 || Client_GetVehicle(client) > 0 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Impossible d'utiliser cet objet dans une voiture.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Teleport_FailedInCar", client);
 		rp_ClientColorize(client);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	
 	if( GetClientButtons(client) & IN_DUCK ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez annulé la téléportation en restant accroupi.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Teleport_Stopped", client);
 		rp_ClientColorize(client);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
@@ -579,7 +590,7 @@ public Action ItemPiluleOver(Handle timer, Handle dp) {
 		return Plugin_Handled;
 	}
 	ITEM_CANCEL(client, item_id);
-	CPrintToChat(client, "" ...MOD_TAG... " Nous n'avons pas trouvé d'endroit où vous téléporter.");
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Teleport_Failed", client);
 	rp_ClientColorize(client, { 255, 255, 255, 255} );
 	rp_SetClientBool(client, b_MayUseUltimate, true);
 	return Plugin_Handled;
@@ -590,9 +601,8 @@ public Action timerAlarm(Handle timer, any door) {
 	return Plugin_Handled;
 }
 public Action AllowStealing(Handle timer, any client) {
-	
 	rp_SetClientBool(client, b_MaySteal, true);
-	CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez à nouveau voler.");
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_NowSteal", client);
 }
 public Action RemoveStealAmount(Handle time, any client) {
 	g_iStolenAmountTime[client]--;
@@ -643,7 +653,8 @@ public Action fwdOnPlayerUse(int client) {
 		if( mnt <  max ) {
 			rp_ClientGiveItem(client, itemID, max - mnt);
 			rp_GetItemData(itemID, item_type_name, tmp, sizeof(tmp));
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez récupéré %i %s.", max - mnt, tmp);
+			
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Item_Take", client, max - mnt, tmp);
 			rp_SetClientStat(client, i_DrugPickedUp, rp_GetClientStat(client, i_DrugPickedUp) + (max - mnt));
 			FakeClientCommand(client, "say /item");
 		}
@@ -709,7 +720,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown) {
 	Handle menu = CreateMenu(MenuBuildingDealer);
 	char tmp[12], tmp2[64];
 			
-	SetMenuTitle(menu, " Menu des dealers");
+	SetMenuTitle(menu, "%T\n ", "Dealer_Menu", client);
 	
 	for(int i = 0; i < MAX_ITEMS; i++) {
 		rp_GetItemData(i, item_type_extra_cmd, tmp2, sizeof(tmp2));
@@ -743,12 +754,12 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		rp_GetClientFloat(target, fl_LastStolen)+60.0 > GetGameTime() ||
 		rp_ClientFloodTriggered(client, target, fd_vol) ||
 		( rp_IsClientNew(target) && rp_GetClientFloat(target, fl_LastStolen)+300.0 > GetGameTime() ) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas d'argent sur lui.", target);
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotSteal_Target_ForNow", client);
 		cooldown = 1.0;
 		return Plugin_Stop;
 	}
 	if( rp_GetZoneInt(rp_GetPlayerZone(target), zone_type_type) == 81 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas voler %N{default} ici.", target);
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotSteal_Target_ForNow", client);
 		return Plugin_Handled;
 	}
 	
@@ -765,7 +776,8 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 	
 	if( VOL_MAX > 0 && wepid != -1 && rp_GetClientInt(client, i_Job) <= 84 && !rp_IsClientNew(target) && CanClientStealItem(client, target) ) {
 				
-		CPrintToChat(target, "" ...MOD_TAG... " Quelqu'un essaye de vous voler.");
+		CPrintToChat(target, ""...MOD_TAG..." %T", "Steal_Starting", target);
+		PrintHintText(target, ""...MOD_TAG..." %T", "Steal_Starting", target);
 		LogToGame("[TSX-RP] [VOL] %L a commencé un vol d'arme sur %L.", client, target);
 		
 		char wepname[64];
@@ -827,8 +839,8 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		rp_SetClientInt(client, i_LastVolTarget, target);
 		rp_SetClientInt(target, i_LastVol, client);
 		
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez volé %d$ à %N.", amount, target);
-		CPrintToChat(target, "" ...MOD_TAG... " Quelqu'un vous a volé %d$.", amount);
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Steal_Money_Target", client, amount);
+		CPrintToChat(target, ""...MOD_TAG..." %T", "Steal_Money_By", target, amount);
 
 		//g_iSuccess_last_mafia[client][1] = GetTime();
 		//g_iSuccess_last_pas_vu_pas_pris[target] = GetTime();
@@ -877,10 +889,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		rp_ClientOverlays(target, o_Action_StealMoney, 10.0);
 	}
 	else {
-		if(rp_GetClientInt(client, i_Job) <= 84 && !rp_IsClientNew(target) && CanClientStealItem(client, target))
-			CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas d'argent, ni d'arme que vous pouvez lui voler.", target);
-		else 
-			CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas d'argent sur lui.", target);
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotSteal_Target_Broke", target);
 		cooldown = 1.0;
 	}
 	
@@ -900,7 +909,7 @@ public Action fwdDamage(int client, int attacker, float& damage, int damagetype)
 }
 public Action CS_OnCSWeaponDrop(int client, int weapon) {
 	if( g_bBlockDrop[client] ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas lâcher votre arme pendant qu'un dealer vous vol, tirez lui dessus ou fuyez !");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Dealer_CannotDrop", client);
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
@@ -958,7 +967,7 @@ int BuildingPlant(int client, int type) {
 			Entity_GetAbsOrigin(i, vecOrigin2);
 			
 			if( GetVectorDistance(vecOrigin, vecOrigin2) <= 24 ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas construire aussi proche d'une autre plante vous appartenant.");
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
 				return 0;
 			}
 		}
@@ -982,11 +991,9 @@ int BuildingPlant(int client, int type) {
 		max = 2;
 	
 	if( count >= max ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez trop de plants actifs.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
 		return 0;
 	}
-	
-	CPrintToChat(client, "" ...MOD_TAG... " Construction en cours...");
 	
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client, _, _, _, 0.66);
 	
@@ -1121,7 +1128,9 @@ void Plant_Destroy(int entity) {
 	
 	int owner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
 	if( IsValidClient(owner) ) {
-		CPrintToChat(owner, "" ...MOD_TAG... " Une de vos plantations a été detruite.");
+		char tmp[128];
+		GetEdictClassname(entity, tmp, sizeof(tmp));
+		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Build_Destroyed", owner, tmp);
 		rp_ClientOverlays(owner, o_Action_DestroyPlant, 10.0);
 		if( rp_GetBuildingData(entity, BD_started)+120 < GetTime() ) {
 			rp_ClientMoney(owner, i_Bank, -125);
@@ -1167,7 +1176,7 @@ public Action Frame_BuildingPlant(Handle timer, any ent) {
 			rp_GetItemData(sub, item_type_name, tmp, sizeof(tmp));
 			
 			if( rp_GetBuildingData(ent, BD_FromBuild) == 0 || cpt % 5 == 0 )
-				CPrintToChat(client, "" ...MOD_TAG... " Le plant %s est prêt pour %d utilisation%s.", tmp, cpt, (cpt>=2?"s":"") );
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Plant_Tick", client, tmp, cpt);
 		}
 	}
 	
@@ -1248,8 +1257,6 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 		
 		switch(type) {
 			case 1: { // Voiture
-			
-				CPrintToChat(client, "" ...MOD_TAG... " Vous avez maintenant les clés de cette voiture.");
 				
 				rp_SetClientKeyVehicle(client, target, true);
 				rp_SetClientInt(client, i_LastVolVehicle, target);
@@ -1258,7 +1265,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				if( IsValidClient(rp_GetVehicleInt(target, car_owner)) ) {
 					int owner = rp_GetVehicleInt(target, car_owner);
 					rp_ClientOverlays(owner, o_Action_StealVehicle, 10.0);
-					CPrintToChat(owner, "" ...MOD_TAG... " Quelqu'un vous a volé votre voiture. Pensez à la garer sur un parking.");
+					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Crowbar_CarStolen", owner);
 					
 					rp_ClientMoney(owner, i_Money, -stealAMount);
 					rp_ClientAggroIncrement(client, owner, 1000);
@@ -1272,8 +1279,6 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 						CreateTimer(i / 5.0, SpawnMoney, EntIndexToEntRef(target));
 					
 					stealAMount = 25*rand + 500;
-					
-					CPrintToChat(client, "" ...MOD_TAG... " %d billets ont été sorti de la boite à gant.", rand);
 				}
 			}
 			case 2: {
@@ -1304,7 +1309,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				char tmp[64];
 				rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
 			
-				CPrintToChat(client, "" ...MOD_TAG... " Vous avez trouvé %d %s", amount, tmp);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Take", client, amount, tmp);
 				rp_ClientGiveItem(client, item_id, amount);
 				
 				stealAMount = rp_GetItemInt(item_id, item_type_prix) * amount;
@@ -1368,12 +1373,12 @@ public Action ItemPickLockOver_18th(Handle timer, Handle dp) {
 	rp_SetClientBool(target, b_Stealing, false);
 	
 	if( couldSteal == false || !IsPlayerAlive(client) || !IsPlayerAlive(target) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " %N{default} s'est débattu, le vol a échoué.", target);
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Steal_Failed", client);
 		CreateTimer(10.0, AllowStealing, client);
 		return Plugin_Handled;
 	}
 	if( (rp_IsClientNew(target) || (rp_GetClientJobID(target)==41 && rp_GetClientInt(target, i_ToKill) > 0) || (rp_GetWeaponBallType(wepid) == ball_type_nosteal)) && Math_GetRandomInt(0,3) != 0 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " %N{default} est plus difficile à voler qu'un autre...", target);
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Steal_Failed", client);
 		CreateTimer(5.0, AllowStealing, client);
 		return Plugin_Handled;
 	}
@@ -1414,7 +1419,6 @@ public Action ItemPickLockOver_18th(Handle timer, Handle dp) {
 				if( button & IN_FORWARD || button & IN_BACK || button & IN_LEFT || button & IN_RIGHT ||
 					button & IN_MOVELEFT || button & IN_MOVERIGHT || button & IN_ATTACK || button & IN_JUMP || button & IN_DUCK	) {
 					price *= 2;
-					CPrintToChat(client, "" ...MOD_TAG... " Vol en action, argent doublé.");
 				}
 			
 				int amount = RoundFloat( (float(price)/100.0) * (25.0) );
@@ -1440,11 +1444,11 @@ public Action ItemPickLockOver_18th(Handle timer, Handle dp) {
 			Call_Finish();
 		}
 		else {
-			CPrintToChat(client, "" ...MOD_TAG... " L'arme %s de %N{default} s'est déjà faite voler il y a quelques instants.", wepname, target);
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Steal_Failed", client);
 		}
 	}
 	else {
-		CPrintToChat(client, "" ...MOD_TAG... " Le joueur n'avait plus son arme sur lui.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_CannotSteal_Target_Broke", client);
 		return Plugin_Handled;
 	}
 	
@@ -1527,7 +1531,7 @@ public int Menu_Market(Handle menu, MenuAction action, int client, int param2) {
 			rp_ClientGiveItem(client, itemID, amount);
 			
 			rp_GetItemData(itemID, item_type_name, options, sizeof(options));
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez acheté %d %s pour %d$.", amount, options, prix);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Dealer_Buy", client, amount, options, prix);
 			
 			FakeClientCommand(client, "say /item");
 		}
@@ -1612,7 +1616,7 @@ void openMarketMenu(int client, int itemID = 0) {
 	char tmp[128], tmp2[32], tmp3[64];
 	Menu menu = new Menu(Menu_Market);
 	if( itemID == 0 ) {
-		menu.SetTitle("Marché noir: Dealers\n ");
+		menu.SetTitle("%T\n ", "Dealer_BlackMarket", client);
 		
 		for(int i = 0; i < MAX_ITEMS; i++) {
 			if( g_iMarket[i] <= 0 )
@@ -1626,7 +1630,7 @@ void openMarketMenu(int client, int itemID = 0) {
 	}
 	else {
 		rp_GetItemData(itemID, item_type_name, tmp3, sizeof(tmp3));
-		menu.SetTitle("Dealers - %s\n ", tmp3);
+		menu.SetTitle("%T\n ", "Dealer_BlackMarketItem", client, tmp3);
 
 		float prix = float(rp_GetItemInt(itemID, item_type_prix)) * getReduction(itemID);
 		for(int i = 1; i <= g_iMarket[itemID]; i++) {
@@ -1771,12 +1775,12 @@ void MENU_ShowPickLock(int client, float percent, int difficulte, int type) {
 
 	Handle menu = CreateMenu(eventMenuNone);
 	switch( type ) {
-		case 1: SetMenuTitle(menu, "== Dealer: Vol d'une voiture");
-		case 2: SetMenuTitle(menu, "== Dealer: Vandalisme du distributeur");
+		case 1: SetMenuTitle(menu, "%T", "Dealer_Crowbar_Car", client);
+		case 2: SetMenuTitle(menu, "%T", "Dealer_Crowbar_Distrib", client);
 		
-		case 5: SetMenuTitle(menu, "== Dealer: Déracinage d'un plant");
-		case 6: SetMenuTitle(menu, "== Dealer: Vol de l'armurerie police");
-		case 7: SetMenuTitle(menu, "== Dealer: Vol du marché noire mafia");
+		case 5: SetMenuTitle(menu, "%T", "Dealer_Crowbar_Place", client);
+		case 6: SetMenuTitle(menu, "%T", "Dealer_Crowbar_Police", client);
+		case 7: SetMenuTitle(menu, "%T", "Dealer_Crowbar_Mafia", client);
 	}
 	
 	char tmp[64];
@@ -1784,14 +1788,16 @@ void MENU_ShowPickLock(int client, float percent, int difficulte, int type) {
 	AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	
 	switch( difficulte ) {
-		case -1: AddMenuItem(menu, ".", "Difficulté: Échec", ITEMDRAW_DISABLED);
-		case 1: AddMenuItem(menu, ".", "Difficulté: Facile", ITEMDRAW_DISABLED);
-		case 2: AddMenuItem(menu, ".", "Difficulté: Moyenne", ITEMDRAW_DISABLED);
-		case 3: AddMenuItem(menu, ".", "Difficulté: Difficile", ITEMDRAW_DISABLED);
-		case 4: AddMenuItem(menu, ".", "Difficulté: Très difficile", ITEMDRAW_DISABLED);
+		case  -1: Format(tmp, sizeof(tmp), "%T", "Difficulty_Failed", client);
+		case   1: Format(tmp, sizeof(tmp), "%T", "Difficulty_Easy", client);
+		case   2: Format(tmp, sizeof(tmp), "%T", "Difficulty_Average", client);
+		case   3: Format(tmp, sizeof(tmp), "%T", "Difficulty_Hard", client);
+		case   4: Format(tmp, sizeof(tmp), "%T", "Difficulty_VeryHard", client);
 	}
 	
-	Format(tmp, sizeof(tmp), "Policier proche: %d", rp_CountPoliceNear(client));
+	AddMenuItem(menu, ".", tmp, ITEMDRAW_DISABLED);
+	
+	Format(tmp, sizeof(tmp), "%T", "Steal_Nearby", client, rp_CountPoliceNear(client));
 	AddMenuItem(menu, ".", tmp, ITEMDRAW_DISABLED);
 	
 	SetMenuExitBackButton(menu, false);

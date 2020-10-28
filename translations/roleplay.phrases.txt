@@ -56,6 +56,53 @@
 	{
 		"fr"		"Quelque chose s'est mal passé."
 	}
+	"Error_CannotSteal_Target_ForNow"
+	{
+		"fr"		"Il n'est pas possible de voler cette personne pour le moment."
+	}
+	"Error_CannotSteal_Target_Broke"
+	{
+		"fr"		"Cette personne a les poches vides."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Steal_Starting"
+	{
+		"fr"		"<font color='#ff0000'>Attention!</font> Quelqu'un essaye de vous voler!"
+	}
+	"Steal_Money_Target"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Vous avez volé {red}{1}{default}$."
+	}
+	"Steal_Money_By"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Quelqu'un vous a volé {red}{1}{default}$."
+	}
+	"Steal_Failed"
+	{
+		"fr"		"Cette personne ne s'est pas laissée faire."
+	}
+	"Difficulty_Failed"
+	{
+		"fr"		"Difficulté: Échec"
+	}
+	"Difficulty_Easy"
+	{
+		"fr"		"Difficulté: Facile"
+	}
+	"Difficulty_Average"
+	{
+		"fr"		"Difficulté: Moyenne"
+	}
+	"Difficulty_Hard"
+	{
+		"fr"		"Difficulté: Difficile"
+	}
+	"Difficulty_VeryHard"
+	{
+		"fr"		"Difficulté: Très difficile"
+	}
 	// ----------------------------------------------------------------------------------------------
 	"Jobs_All"
 	{
@@ -86,11 +133,20 @@
 	{
 		"fr"	"Cette personne vous ignore."
 	}
-	// ----------------------------------------------------------------------------------------------
 	"Cmd_OutOf_Car_By"
 	{
 		"#format"	"{1:s}"
 		"fr"	"{1} vous a sorti de votre voiture."
+	}
+	"Cmd_NowSteal"
+	{
+		"fr"	"Vous pouvez à nouveau voler."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Item_Take"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"	"Vous avez récupéré: {1}x {red}{1}{default}."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Build_CannotHere"

@@ -1,0 +1,102 @@
+"Phrases"
+{
+	"Drug_Target"
+	{
+		"#format"	"{1:s}"
+		"fr"	"Vous avez drogué {1}."
+	}
+	"Drug_By"
+	{
+		"fr"		"Une personne vous a drogué."
+	}
+	"Drug_Warn"
+	{
+		"fr"		"Attention, la surconsommation de drogue est dangereux pour la santé."
+	}
+	"Drug_Fatal"
+	{
+		"fr"		"Attention, la surconsommation de drogue vous a rendu malade."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Plant_Engrai"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Ce plant peut maintenant contenir {red}{1}{default} drogues."
+	}
+	"Plant_Max"
+	{
+		"fr"		"Vous ne pouvez pas avoir de plant supplémentaire."
+	}
+	"Plant_Tick"
+	{
+		"#format"	"{1:s},{2:d}"
+		"fr"		"Le plant {red}{1}{default} est prêt pour {red}{2}{default} utilisations"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Dealer_Crowbar"
+	{
+		"fr"		"Le pied de biche est utilisable uniquement sur la {red}place{default} de la justice, sur un {red}distributeur{default}, {red}l'armurerie{default} police, {red}marché noire{default} mafia, ou une {red}voiture{default}."
+	}
+	"Dealer_Crowbar_Car"
+	{
+		"fr"		"== Dealer: Vol d'un véhicule"
+	}
+	"Dealer_Crowbar_Distrib"
+	{
+		"fr"		"== Dealer: Vandalisme d'un distributeur"
+	}
+	"Dealer_Crowbar_Place"
+	{
+		"fr"		"== Dealer: Déracinage d'un colis"
+	}
+	"Dealer_Crowbar_Police"
+	{
+		"fr"		"== Dealer: Vol de l'armurerie police"
+	}
+	"Dealer_Crowbar_Mafia"
+	{
+		"fr"		"== Dealer: Vol du marché noire"
+	}
+	
+	// ----------------------------------------------------------------------------------------------
+	"Dealer_Menu"
+	{
+		"fr"		"Que voulez-vous planter aujourd'hui?"
+	}
+	"Dealer_BlackMarket"
+	{
+		"fr"		"Marché noir des Dealer:"
+	}
+	"Dealer_BlackMarketItem"
+	{
+		"fr"		"Combien de {1} voulez-vous acheter?"
+	}
+	"Dealer_Buy"
+	{
+		"#format"	"{1:d},{2:s},{3:d}"
+		"fr"		"Vous avez acheté {red}{1} {2}{default}, pour {red}{3}{default}$."
+	}
+	"Dealer_CannotDrop"
+	{
+		"fr"		"Vous ne pouvez pas lâcher votre arme pendant qu'un dealer vous vol, tirez lui dessus ou fuyez !"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Crowbar_CarStolen"
+	{
+		"fr"		"Votre véhicule est resté sans surveillance et a été volé. Pensez à le garer sur un parking pour éviter ce problème."
+	}
+	
+	// ----------------------------------------------------------------------------------------------
+	"Teleport_Failed"
+	{
+		"fr"		"Vous n'avez trouvé aucun endroit sûre pour vous téléporter à cet endroit."
+	}
+	"Teleport_FailedInCar"
+	{
+		"fr"		"Il n'est pas possible de vous téléporter quand vous êtes dans un véhicule."
+	}
+	"Teleport_Stopped"
+	{
+		"fr"		"Vous avez annulé la téléportation en restant accroupi."
+	}
+}

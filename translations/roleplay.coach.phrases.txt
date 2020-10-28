@@ -8,7 +8,7 @@
 	"Info_TrainSelf"
 	{
 		"#format"	"{1:d},{2:d},{3:d}"
-		"fr"	"Vous avez {red}{2}%{default} d'entraînement au couteau, {red}{3}%{default} d'ésquive et {red}{4}%{default} de précision de tir."
+		"fr"	"Vous avez {red}{1}%{default} d'entraînement au couteau, {red}{2}%{default} d'ésquive et {red}{3}%{default} de précision de tir."
 	}
 	"Train_Knife"
 	{
