@@ -52,6 +52,10 @@
 	{
 		"fr"	"Cet objet est interdit lors de ce braquage."
 	}
+	"Error_CannotUseItemHere"
+	{
+		"fr"	"Cet objet est interdit où vous êtes."
+	}
 	"Error_FromServer"
 	{
 		"fr"		"Quelque chose s'est mal passé."
@@ -63,6 +67,24 @@
 	"Error_CannotSteal_Target_Broke"
 	{
 		"fr"		"Cette personne a les poches vides."
+	}
+	"Error_CannotFindTarget"
+	{
+		"fr"		"Vous devez viser une personne."
+	}
+	"Error_OnlyInside"
+	{
+		"fr"		"Vous devez être à l'intérieur pour utiliser cet objet."
+	}
+	"Error_Level"
+	{
+		"#format"	"{1:d},{1:s}"
+		"fr"		"Vous devez être au moins de niveau {1} ({red}{2}{default}), afin d'utiliser cette commande."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"LEVEL_42"
+	{
+		"fr"		"Propriétaire"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Steal_Starting"
@@ -458,5 +480,93 @@
 	{
 		"fr"	"Noir"
 	}
-
+	// ----------------------------------------------------------------------------------------------
+	"models/props_office/desk_01.mdl"
+	{
+		"fr"	"Bureau"
+	}
+	"models/props_interiors/tv.mdl"
+	{
+		"fr"	"Télévision"
+	}
+	"models/props_c17/furniturewashingmachine001a.mdl"
+	{
+		"fr"	"Machine à laver"
+	}
+	"models/props_c17/FurnitureDresser001a.mdl"
+	{
+		"fr"	"Armoire"
+	}
+	"models/props_interiors/chair_office2.mdl"
+	{
+		"fr"	"Chaise"
+	}
+	"models/props_interiors/couch.mdl"
+	{
+		"fr"	"Canapé"
+	}
+	"models/props_interiors/coffee_table_rectangular.mdl"
+	{
+		"fr"	"Table basse"
+	}
+	"models/props/cs_assault/box_stack1.mdl"
+	{
+		"fr"	"Pile de palettes"
+	}
+	"models/props/cs_militia/bar01.mdl"
+	{
+		"fr"	"Bar"
+	}
+	"models/props/de_house/bed_rustic.mdl"
+	{
+		"fr"	"Lit"
+	}
+	"models/props_interiors/tv_cabinet.mdl"
+	{
+		"fr"	"Etagère télévision"
+	}
+	"models/props/DeadlyDesire/blocks/32x32.mdl"
+	{
+		"fr"	"Cube"
+	}
+	"models/props_industrial/pallet_stack_96.mdl"
+	{
+		"fr"	"Palette"
+	}
+	"models/props_fortifications/concrete_block001_128_reference.mdl"
+	{
+		"fr"	"Mur de fortification"
+	}
+	"models/props/cs_office/vending_machine.mdl"
+	{
+		"fr"	"Distributeur de boisson"
+	}
+	"models/props_urban/boat002.mdl"
+	{
+		"fr"	"Bateau"
+	}
+	"models/props_urban/outhouse002.mdl"
+	{
+		"fr"	"Cabine de toilettes"
+	}
+	"models/props_pipes/concrete_pipe001b.mdl"
+	{
+		"fr"	"Conduit en béton"
+	}
+	"models/props_interiors/table_picnic.mdl"
+	{
+		"fr"	"Table de picnic"
+	}
+	"models/props_industrial/warehouse_shelf001.mdl"
+	{
+		"fr"	"Etagère industrielle"
+	}
+	"models/props/cs_assault/box_stack1.mdl"
+	{
+		"fr"	"Barricade de carton"
+	}
+	"models/props/de_vertigo/construction_wood_2x4_01.mdl"
+	{
+		"fr"	"Planche en bois"
+	}
 }

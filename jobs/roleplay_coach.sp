@@ -1563,9 +1563,11 @@ public void BuildingKevlarBox_break(const char[] output, int caller, int activat
 		rp_ClientAggroIncrement(activator, owner, 1000);
 	}
 	
-	char tmp[128];
-	GetEdictClassname(caller, tmp, sizeof(tmp));
-	CPrintToChat(owner, "" ...MOD_TAG... " %T", "Build_Destroyed", owner, tmp);
+	if( IsValidClient(owner) ) {
+		char tmp[128];
+		GetEdictClassname(caller, tmp, sizeof(tmp));
+		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Build_Destroyed", owner, tmp);
+	}
 	
 	float vecOrigin[3];
 	Entity_GetAbsOrigin(caller,vecOrigin);
@@ -1850,7 +1852,7 @@ public int MenuRubanColor(Handle menu, MenuAction action, int client, int param2
 		
 		if(rp_GetClientItem(client, item_id)==0){
 			char item_name[128];
-			rp_GetItemData(ITEM_NEONS, item_type_name, item_name, sizeof(item_name));
+			rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
 			CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemMissing", client, item_name);
 			return;
 		}

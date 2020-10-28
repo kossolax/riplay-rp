@@ -1,0 +1,165 @@
+"Phrases"
+{
+	"Appart_Bonus_Pay"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Votre appartement a fait remporté {green}{1}{default}$ supplémentaire."
+	}
+	"Appart_AlreadySell"
+	{
+		"fr"	"L'appartement a déjà été vendu à une autre personne."
+	}
+	"Garage_AlreadySell"
+	{
+		"fr"	"Le garage a déjà été vendu à une autre personne."
+	}
+	"Appart_Buy"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Vous êtes maintenant le propriétaire de l'appartement n°{red}{1}{default}."
+	}
+	"Garage_Buy"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Vous êtes maintenant le propriétaire du garage n°{red}{1}{default}."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Appart_MustBeInside"
+	{
+		"fr"		"Vous devez être dans votre appartement pour utiliser cet objet."
+	}
+	"Appart_MustBeOwner"
+	{
+		"fr"		"Vous n'êtes pas le propriétaire de cet appartement."
+	}
+	"Appart_RemoveKey"
+	{
+		"fr"		"Quel colocataire voulez-vous virer?"
+	}
+	"Appart_TargetNoKey"
+	{
+		"fr"		"Cette personne n'a pas les clés de cet appartement."
+	}
+	"Appart_TargetAlreadyKey"
+	{
+		"fr"		"Cette personne a déjà les clés de cet appartement."
+	}
+	"Appart_KeyRemovedTo"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"		"Les clés de l'appartement n°{red}{1}{default} a été retirées à {red}{2}{default}."
+	}
+	"Appart_KeyRemovedBy"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"		"Les clés de l'appartement n°{red}{1}{default} vous ont été retirées par {red}{2}{default}."
+	}
+	"Appart_KeyGiveTo"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"		"Les clés de l'appartement n°{red}{1}{default} a été données à {red}{2}{default}."
+	}
+	"Appart_KeyGiveBy"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"		"Les clés de l'appartement n°{red}{1}{default} vous ont été données par {red}{2}{default}."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Appart_None"
+	{
+		"fr"		"Vous n'avez pas d'appartement."
+	}
+	"Appart_Info"
+	{
+		"fr"		"Information sur vos appartements:"
+	}
+	"Appart_Number"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Appartement n°{1}"
+	}
+	"Garage_Number"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Garage n°{1}"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"appart_bonus"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Bonus: {1}"
+	}
+	"appart_owner"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Propriétaire: {1}"
+	}
+	"appart_bonus_energy"
+	{
+		"fr"		"énergie"
+	}
+	"appart_bonus_heal"
+	{
+		"fr"		"regénération"
+	}
+	"appart_bonus_armor"
+	{
+		"fr"		"kevlar"
+	}
+	"appart_bonus_garage"
+	{
+		"fr"		"garage"
+	}
+	"appart_bonus_vitality"
+	{
+		"fr"		"vitalité"
+	}
+	"appart_bonus_coffre"
+	{
+		"fr"		"coffre"
+	}
+	"appart_bonus_paye"
+	{
+		"#format"	"{1:d}"
+		"fr"		"paye (+{1}%}"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Prop_ToSpawn"
+	{
+		"fr"		"Quel props voulez vous spawn?"
+	}
+	"Prop_YouDontOwn"
+	{
+		"fr"		"Ce props ne vous appartient pas."
+	}
+	"Prop_AlreadyTrap"
+	{
+		"fr"		"Ce props est déjà piégé."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Item_Jumelle"
+	{
+		"fr"		"Vous pouvez maintenant utiliser vos jumelles (touche {red}H{default})."
+	}
+	"Item_NightVision"
+	{
+		"fr"		"Vous pouvez maintenant utiliser votre lampe de poche (touche {red}H{default})."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Menu_Villa"
+	{
+		"fr"		"Enchère de la Villa:\nJusqu'à dimanche 21 heures"
+	}
+	"Menu_Bed"
+	{
+		"fr"		"Combien souhaitez-vous miser?\n Attention, vous ne serrez remboursé\nqu'à la fin des enchères (dimanche 21 heures)"
+	}
+	"Menu_Villa_Bed"
+	{
+		"fr"		"Miser"
+	}
+	"Menu_Villa_Key"
+	{
+		"fr"		"Ajouter une clé"
+	}
+}

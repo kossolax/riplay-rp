@@ -39,5 +39,25 @@
 	{
 		"fr"		"Paix à votre âme, je ne connais pas cette maladie."
 	}
-	
+	"sick_heal"
+	{
+		"fr"		"Vous vous sentez mieux!"
+	}
+	"sick_fail"
+	{
+		"fr"		"Ça n'a eut aucun effet."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"poison_immune"
+	{
+		"fr"		"Cette personne semble être temporairement immunisé au poison."
+	}
+	"poison_self"
+	{
+		"fr"		"Vous avez été empoisonné."
+	}
+	"poison_heal"
+	{
+		"fr"		"Vous êtes maintenant guéri et immunisé aux poisons pour 24 minutes."
+	}
 }
