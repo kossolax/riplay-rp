@@ -162,8 +162,12 @@ public Action Cmd_ItemChirurgie(int args) {
 		WritePackCell(dp, vendeur);
 	}
 	
-	CPrintToChat(client, "" ...MOD_TAG... " %N{default} vous fait une opération chirurgicale.", vendeur);
-	CPrintToChat(vendeur, "" ...MOD_TAG... " Vous commencez à opérer %N{default}.", client);
+	char target_name[128], client_name[128];
+	GetClientName2(client, client_name, sizeof(client_name), false);
+	GetClientName2(vendeur, target_name, sizeof(target_name), false);
+	
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Chiru_By", client, target_name);
+	CPrintToChat(vendeur, "" ...MOD_TAG... " %T", "Chiru_Target", vendeur, client_name);
 	
 	rp_HookEvent(client, RP_PrePlayerPhysic, fwdFrozen, time);
 	rp_HookEvent(vendeur, RP_PrePlayerPhysic, fwdFrozen, time);
@@ -175,8 +179,8 @@ public Action Cmd_ItemChirurgie(int args) {
 	
 	g_iSuccess_last_faster_dead[client] = GetTime() - RoundToCeil(time);
 	
-	ServerCommand("sm_effect_panel %d %f \"Chirurgie en cours...\"", client, time);
-	ServerCommand("sm_effect_panel %d %f \"Chirurgie en cours...\"", vendeur, time);
+	ServerCommand("sm_effect_panel %d %f \"%T\"", client, time, "Chiru_Doing", client);
+	ServerCommand("sm_effect_panel %d %f \"%T\"", vendeur, time, "Chiru_Doing", vendeur);
 	
 	rp_Effect_Particle(client, "blood_pool");
 	
@@ -297,18 +301,18 @@ public Action Cmd_ItemSick(int args) {
 		
 		switch(rp_GetClientInt(client, i_Sick)) {
 			case sick_type_fievre:
-				CPrintToChat(client, "" ...MOD_TAG... " Vous êtes atteint d'une forte fièvre. Prenez des Cachets d'aspirine.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "sick_type_fievre", client);
 			case sick_type_grippe:
-				CPrintToChat(client, "" ...MOD_TAG... " Vous êtes atteint de la Grippe. Prenez des Cachets d'amantadine.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "sick_type_grippe", client);
 			case sick_type_tourista:
-				CPrintToChat(client, "" ...MOD_TAG... " Vous êtes atteint de la Tourista. Prenez des Cachets de norfloxacine.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "sick_type_tourista", client);
 			case sick_type_hemoragie:
-				CPrintToChat(client, "" ...MOD_TAG... " Vous êtes atteint d'hémorragie. Prenez une Poche de sang et priez.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "sick_type_hemoragie", client);
 			default: {
 				if( rp_GetClientInt(client, i_Sickness) )
-					CPrintToChat(client, "" ...MOD_TAG... " Vous êtes empoisonné, prenez donc un antipoison...");
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "sick_type_poison", client);
 				else
-					CPrintToChat(client, "" ...MOD_TAG... " Paix à votre âme. Je ne connais pas cette maladie.");
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "sick_type_none", client);
 			}
 				
 		}
@@ -317,11 +321,11 @@ public Action Cmd_ItemSick(int args) {
 	else if( bDiag[client] && rp_GetClientInt(client, i_Sick) == type ) {
 		rp_SetClientInt(client, i_Sick, view_as<int>(sick_type_none));
 		bDiag[client] = false;
-		CPrintToChat(client, "" ...MOD_TAG... " Vous vous sentez mieux.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "sick_heal", client);
 		g_iSuccess_last_faster_dead[client] = GetTime();
 	}
 	else {
-		CPrintToChat(client, "" ...MOD_TAG... " Ça n'a eut aucun effet.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "sick_fail", client);
 	}
 }
 public Action Cmd_ItemPoison(int args) {
@@ -332,7 +336,7 @@ public Action Cmd_ItemPoison(int args) {
 	
 	if( rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PEACEFULL ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotUseItemInPeace", client);
 		return Plugin_Handled;
 	}
 	
@@ -346,14 +350,13 @@ public Action Cmd_ItemPoison(int args) {
 	}
 	if( rp_GetClientFloat(client, fl_LastPoison) > GetGameTime() ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Cette personne semble être temporairement immunisé.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "poison_immune", client);
 		return Plugin_Handled;
 	}
 	
 	rp_SetClientInt(client, i_LastAgression, GetTime());
 	ServerCommand("sm_effect_particles %d Trail7 11 weapon_bone", client);
-	CPrintToChat(client, "" ...MOD_TAG... " Vous avez empoisonné %N.", target);
-	CPrintToChat(target, "" ...MOD_TAG... " Vous avez été empoisonné.");
+	CPrintToChat(target, "" ...MOD_TAG... " %T", "poison_self", target);
 	rp_ClientPoison(target, 120.0, client);
 	rp_ClientAggroIncrement(client, target, 1000);
 	rp_ClientOverlays(target, o_Action_Poison, 10.0);
@@ -365,7 +368,7 @@ public Action Cmd_ItemAntiPoison(int args) {
 	int client = GetCmdArgInt(1);
 	
 	if( rp_GetClientInt(client, i_Sickness) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes maintenant guéri et immunisé pour 24 minutes.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "poison_heal", client);
 		
 		if( rp_GetClientFloat(client, fl_LastPoison) > 0 && rp_GetClientFloat(client, fl_LastPoison)+1.0 >= GetGameTime() ) {
 			rp_IncrementSuccess(client, success_list_immune);
@@ -392,11 +395,17 @@ public Action Cmd_ItemFullHeal(int args) {
 	
 }
 public Action Cmd_ItemProtImmu(int args) {
-	
 	int client = GetCmdArgInt(1);
+	int item_id = GetCmdArgInt(args);
 	
+	if( rp_GetClientBool(client, b_HasProtImmu) ) {
+		ITEM_CANCEL(client, item_id);
+		char tmp[128];
+		rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemAlreadyEnable", client, tmp);
+		return Plugin_Handled;
+	}
 	rp_SetClientBool(client, b_HasProtImmu, true);
-	CPrintToChat(client, "" ...MOD_TAG... " Vous bénéficiez maintenant d'une protection immunitaire.");
 	return Plugin_Handled;
 }
 public Action Cmd_ItemRespawn(int args) {
@@ -412,19 +421,11 @@ public Action Cmd_ItemRespawn(int args) {
 		return Plugin_Handled;
 		
 	if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
+		rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+		char item_name[128];
+		rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
 		
-		float prix = float(rp_GetItemInt(item_id, item_type_prix));
-		float reduc = prix / 100.0 * float(rp_GetClientInt(vendeur, i_Reduction));
-		float taxe = rp_GetItemFloat(item_id, item_type_taxes);
-		
-		rp_ClientMoney(vendeur, i_AddToPay, -RoundFloat((prix * taxe) - reduc));
-		rp_ClientMoney(client, i_Bank, RoundFloat(prix - reduc));
-		
-		rp_SetJobCapital(11, rp_GetJobCapital(11) - RoundFloat(prix * (1.0 - taxe)));
-		
-		rp_SetClientStat(vendeur, i_MoneyEarned_Sales, rp_GetClientStat(vendeur, i_MoneyEarned_Sales) - RoundFloat((prix * taxe) - reduc));
-		
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet objet pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 		return Plugin_Handled;
 	}
 	
@@ -455,13 +456,16 @@ public Action Cmd_ItemRespawn(int args) {
 public Action Cmd_ItemCureDesintox(int args) { //Permet de devenir sobre si on est saoul
 	
 	int client = GetCmdArgInt(1);
+	int item_id = GetCmdArgInt(args);
 
-	if( rp_GetClientFloat(client, fl_Alcool) ) { //Si le taux d'alcool n'est pas nul
-		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes maintenant sobre.");
+	if( rp_GetClientFloat(client, fl_Alcool) > 0.0001 ) {
 		rp_SetClientFloat(client, fl_Alcool, 0.0001);
 	}
 	else {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas saoul.");
+		char item_name[128];
+		rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
+		
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 		ITEM_CANCEL(client, GetCmdArgInt(args));
 	}
 }
@@ -470,12 +474,14 @@ public Action Cmd_ItemAdrenaline(int args) {
 	
 	int client = GetCmdArgInt(1);
 	int item_id = GetCmdArgInt(args);
+	char item_name[128];
+	rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
 	
 	if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
 		if( item_id > 0 ) {
 			ITEM_CANCEL(client, item_id);
 		}
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet objet pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 		return Plugin_Handled;
 	}
 	
@@ -483,7 +489,7 @@ public Action Cmd_ItemAdrenaline(int args) {
 		if( item_id > 0 ) {
 			ITEM_CANCEL(client, item_id);
 		}
-		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes déjà drogué.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 		return Plugin_Handled;
 	}
 	
@@ -595,19 +601,17 @@ int BuildingHealBox(int client) {
 		GetEdictClassname(i, tmp, 63);
 		
 		if( StrEqual(classname, tmp) && rp_GetBuildingData(i, BD_owner) == client ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà une healbox.");
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
 			return 0;
 		}
 		if( StrEqual(tmp, "rp_healbox") ) {
 			Entity_GetAbsOrigin(i, vecOrigin2);
 			if( GetVectorDistance(vecOrigin, vecOrigin2) < 600 ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Il existe une autre healbox à proximité.");
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
 				return 0;
 			}
 		}
 	}
-	
-	CPrintToChat(client, "" ...MOD_TAG... " Construction en cours...");
 	
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client, _, _, _, 0.66);
 	
@@ -665,7 +669,11 @@ public void BuildingHealBox_break(const char[] output, int caller, int activator
 		rp_ClientAggroIncrement(activator, owner, 1000);
 	}
 	
-	CPrintToChat(owner,"" ...MOD_TAG... " Votre HealBox a été détruite");
+	if( IsValidClient(owner) ) {
+		char tmp[128];
+		GetEdictClassname(caller, tmp, sizeof(tmp));
+		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Build_Destroyed", owner, tmp);
+	}
 	
 	float vecOrigin[3];
 	Entity_GetAbsOrigin(caller,vecOrigin);

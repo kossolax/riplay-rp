@@ -69,6 +69,7 @@
 	}
 	"Dealer_BlackMarketItem"
 	{
+		"#format"	"{1:s}"
 		"fr"		"Combien de {1} voulez-vous acheter?"
 	}
 	"Dealer_Buy"
@@ -83,7 +84,7 @@
 	// ----------------------------------------------------------------------------------------------
 	"Crowbar_CarStolen"
 	{
-		"fr"		"Votre véhicule est resté sans surveillance et a été volé. Pensez à le garer sur un parking pour éviter ce problème."
+		"fr"		"Votre véhicule est resté sans surveillance et a été volé. Pensez à le laisser en sécurité sur un parking."
 	}
 	
 	// ----------------------------------------------------------------------------------------------

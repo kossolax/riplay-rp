@@ -52,7 +52,10 @@ public Action Cmd_Reload(int args) {
 }
 public void OnPluginStart() {
 	LoadTranslations("core.phrases");
+	LoadTranslations("common.phrases");
 	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.items.phrases");
+	LoadTranslations("roleplay.dealer.phrases");
 	
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	RegServerCmd("rp_item_drug", 		Cmd_ItemDrugs,			"RP-ITEM",	FCVAR_UNREGISTERED);
@@ -1787,12 +1790,15 @@ void MENU_ShowPickLock(int client, float percent, int difficulte, int type) {
 	rp_Effect_LoadingBar(tmp, sizeof(tmp), percent );
 	AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	
+	PrintToChatAll("%d", difficulte);
+	
 	switch( difficulte ) {
 		case  -1: Format(tmp, sizeof(tmp), "%T", "Difficulty_Failed", client);
 		case   1: Format(tmp, sizeof(tmp), "%T", "Difficulty_Easy", client);
-		case   2: Format(tmp, sizeof(tmp), "%T", "Difficulty_Average", client);
 		case   3: Format(tmp, sizeof(tmp), "%T", "Difficulty_Hard", client);
 		case   4: Format(tmp, sizeof(tmp), "%T", "Difficulty_VeryHard", client);
+		
+		default: Format(tmp, sizeof(tmp), "%T", "Difficulty_Average", client);
 	}
 	
 	AddMenuItem(menu, ".", tmp, ITEMDRAW_DISABLED);

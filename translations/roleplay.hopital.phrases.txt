@@ -1,0 +1,43 @@
+"Phrases"
+{
+	"Chiru_By"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} vous fait une opération chirurgicale."
+	}
+	"Chiru_Target"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous commencez à opérer %N."
+	}
+	"Chiru_Doing"
+	{
+		"fr"		"Opération chirurgicale en cours..."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"sick_type_fievre"
+	{
+		"fr"		"Vous êtes atteint d'une forte fièvre, prenez des {red}Cachets d'aspirine{default}."
+	}
+	"sick_type_grippe"
+	{
+		"fr"		"Vous êtes atteint de la Grippe, prenez des {red}Cachets d'amantadine{default}."
+	}
+	"sick_type_tourista"
+	{
+		"fr"		"Vous êtes atteint de la Tourista, prenez des {red}Cachets de norfloxacine{default}."
+	}
+	"sick_type_hemoragie"
+	{
+		"fr"		"Vous êtes atteint d'hémorragie, prenez une {red}Poche de sang et priez{default}."
+	}
+	"sick_type_poison"
+	{
+		"fr"		"Vous êtes empoisonné, prenez un {red}Antipoison{default}."
+	}
+	"sick_type_none"
+	{
+		"fr"		"Paix à votre âme, je ne connais pas cette maladie."
+	}
+	
+}
