@@ -3,12 +3,12 @@
 	"Chiru_By"
 	{
 		"#format"	"{1:s}"
-		"fr"		"{1} vous fait une opération chirurgicale."
+		"fr"		"{red}{1}{default} vous fait une opération chirurgicale."
 	}
 	"Chiru_Target"
 	{
 		"#format"	"{1:s}"
-		"fr"		"Vous commencez à opérer %N."
+		"fr"		"Vous commencez à opérer {red}{1}{default}."
 	}
 	"Chiru_Doing"
 	{

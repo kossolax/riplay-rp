@@ -259,9 +259,9 @@
 		"fr"		"Une amende de {1}$ vient d'être prélevée auprès de {2} pour défaut de: {3}"
 	}
 	// ----------------------------------------------------------------------------------------------
-	"PotDeVin_Own"
+	"PotDeVin_OwnLocalisation"
 	{
-		"fr"		"Votre pot de vin vient de réussir à bloquer votre localisation."
+		"fr"		"Votre pot de vin vient de réussir à bloquer {red}votre localisation{default}."
 	}
 	"PotDeVin_To"
 	{

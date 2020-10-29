@@ -304,8 +304,8 @@ public Action Cmd_ItemGiveAppartDouble(int args) {
 	char client_name[128], target_name[128];
 	GetClientName2(client, client_name, sizeof(client_name), false);
 	GetClientName2(target, target_name, sizeof(target_name), false);
-	CPrintToChat(client, "" ...MOD_TAG... " %T", "Appart_KeyGiveTo", client, target_name, appartID);
-	CPrintToChat(target, "" ...MOD_TAG... " %T", "Appart_KeyGiveBy", target, client_name, appartID);
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Appart_KeyGiveTo", client, appartID, target_name);
+	CPrintToChat(target, "" ...MOD_TAG... " %T", "Appart_KeyGiveBy", target, appartID, client_name);
 	
 	return Plugin_Handled;
 }

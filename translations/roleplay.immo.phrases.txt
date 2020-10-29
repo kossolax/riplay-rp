@@ -162,4 +162,9 @@
 	{
 		"fr"		"Ajouter une clé"
 	}
+	"Villa_Winner"
+	{
+		"#format"	"{1:s},{2:d}"
+		"fr"		"Le gagnant de la villa est... {red}{1}{default} pour {red}{2}{default}$!"
+	}
 }

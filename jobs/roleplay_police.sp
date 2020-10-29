@@ -1802,7 +1802,7 @@ public int MenuTribunal_GPS(Handle p_hItemMenu, MenuAction p_oAction, int client
 		if (Math_GetRandomInt(1, 100) < rp_GetClientInt(target, i_Cryptage) * 20) {
 			char target_name[128];
 			GetClientName2(target, target_name, sizeof(target_name), false);
-			CPrintToChat(target, ""...MOD_TAG..." %T", "PotDeVin_Own", target);
+			CPrintToChat(target, ""...MOD_TAG..." %T", "PotDeVin_OwnLocalisation", target);
 			CPrintToChat(client, ""...MOD_TAG..." %T", "PotDeVin_To", client, target_name);
 		}
 		else {

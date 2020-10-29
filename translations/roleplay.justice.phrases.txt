@@ -1,0 +1,428 @@
+"Phrases"
+{
+	"Justice_Acquittement_NonCoupable"
+	{
+		"fr"		"Non coupable"
+	}
+	"Justice_Acquittement_Conciliation"
+	{
+		"fr"		"Conciliation"
+	}
+	"Justice_Acquittement_Impossible"
+	{
+		"fr"		"Impossible de prouver les faits"
+	}
+	"Justice_Acquittement_DejaVu"
+	{
+		"fr"		"Déjà condamné"
+	}
+	"Justice_Acquittement_Cancel"
+	{
+		"fr"		"Plainte annulée"
+	}
+	"Justice_Acquittement_Newbie"
+	{
+		"fr"		"Amnistie des nouveaux"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Justice_Condamnation_VerySmall"
+	{
+		"fr"		"Très indulgent"
+	}
+	"Justice_Condamnation_Small"
+	{
+		"fr"		"Indulgent"
+	}
+	"Justice_Condamnation_Average"
+	{
+		"fr"		"Juste"
+	}
+	"Justice_Condamnation_Hard"
+	{
+		"fr"		"Sévère"
+	}
+	"Justice_Condamnation_VeryHard"
+	{
+		"fr"		"Très sévère"
+	}
+	"Justice_Condamnation_Disconnect"
+	{
+		"fr"		"Impitoyable"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Justice_NoPay"
+	{
+		"fr"		"La justice a décidé de {red}ne pas verser votre salaire{default} en raison de votre mauvais comportement envers la population."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Tribunal_Error_SelectFirst"
+	{
+		"fr"	"Veuillez selectionner une plainte du Tribunal forum en premier."
+	}
+	"Tribunal_Error_WrongCode"
+	{
+		"fr"	"Le code de confirmation est incorrect."
+	}
+	"Tribunal_Forum_Confirm_Condamn"
+	{
+		"fr"	"Afin de confirmer votre jugement, tappez maintenant /jgmt {red}{1}{default} heure amende raison"
+	}
+	"Tribunal_Forum_Confirm_Acquitter"
+	{
+		"fr"	"Afin de confirmer votre jugement, tappez maintenant /jgmt {red}{1}{default} raison"
+	}
+	"Tribunal_Forum_Condamn"
+	{
+		"fr"	"La personne a été {red}condamnée{default}."
+	}
+	"Tribunal_Forum_Acquit"
+	{
+		"fr"	"La personne a été {green}acquitée{default}."
+	}
+	"Tribunal_Forum_Cancel"
+	{
+		"fr"	"La plainte a été supprimée."
+	}
+	"Tribunal_Forum_None"
+	{
+		"fr"	"Il n'y'a aucun cas à traiter pour le moment."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Tribunal_Menu"
+	{
+		"fr"	"Tribunal de Princeton:"
+	}
+	"Tribunal_Menu_Start"
+	{
+		"fr"	"Débuter une audience"
+	}
+	"Tribunal_Menu_Wedding"
+	{
+		"fr"	"Gestion du mariage"
+	}
+	"Tribunal_Menu_Forum"
+	{
+		"fr"	"Gestion des plaintes Forum"
+	}
+	"Tribunal_Menu_Genre"
+	{
+		"fr"	"Gestion des plaintes Forum"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Tribunal_Menu_Audiance_Starting"
+	{
+		"fr"	"L'audience commencera dès le premier article."
+	}
+	"Tribunal_Menu_Audiance_AFK"
+	{
+		"#format"	"{1:s}"
+		"fr"	"{red}{1}{default} est apparu, car il est resté AFK trop longtemps."
+	}
+	"Tribunal_Menu_Audiance_Call"
+	{
+		"#format"	"{1:s},{2:d},{3:d}"
+		"fr"	"{red}{1}{default} est convoqué par le {green}Tribunal {2}{default} de Princeton [{green}{3}{default}/{green}3{default}]."
+	}
+	"Tribunal_Menu_Audiance_Search"
+	{
+		"#format"	"{1:s},{2:d},{3:d}"
+		"fr"	"{red}{1}{default} est recherché par le {red}Tribunal {2}{default} de Princeton depuis {red}{3}{default} minutes."
+	}
+	"Tribunal_Menu_Audiance_Came_Fast"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{red}{1}{default} est arrivé sans retard."
+	}
+	"Tribunal_Menu_Audiance_Came_Normal"
+	{
+		"#format"	"{1:s},{2:d}"
+		"fr"		"{red}{1}{default} est arrivé après {green}{2}{default} minutes."
+	}
+	"Tribunal_Menu_Audiance_Came_Slow"
+	{
+		"#format"	"{1:s},{2:d}"
+		"fr"		"{red}{1}{default} est arrivé après {red}{2}{default} minutes, c'est un {red}manquement{default} à la convocation."
+	}
+	"Tribunal_Menu_Audiance_Target"
+	{
+		"#format"	"{1:d},{2:t}"
+		"fr"	"Vous êtes attendu au Tribunal {1} de Princeton. Venez <u>immédiatement</u> pour un jugement <font color='#00cc00'>{2}</font>."
+	}
+	"Tribunal_Menu_Audiance_Avocat"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Vos services d'avocat sont requis au Tribunal {1}."
+	}
+	"Tribunal_Menu_Audiance_Main"
+	{
+		"fr"		"Tribunal de Princeton, affaire opposant"
+	}
+	"Tribunal_Menu_Audiance_Main_Players"
+	{
+		"#format"	"{1:s},{2:s}"
+		"fr"		"{1} et {2}"
+	}
+	"Tribunal_Menu_Audiance_Main_Juge"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Juge: {1}"
+	}
+	"Tribunal_Menu_Audiance_Main_Avocat_Victime"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Avocat de la Victime: {1}"
+	}
+	"Tribunal_Menu_Audiance_Main_Avocat_Defense"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Avocat de la Défense: {1}"
+	}
+	"Tribunal_Menu_Audiance_Main_Charges"
+	{
+		"fr"		"Charges:"
+	}
+	"Tribunal_Menu_Audiance_Main_TOTAL"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Peine encourue: {1} heure(s) et {2}$ d'amende"
+	}
+	"Tribunal_Menu_Audiance_Main_Dedo"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Dédommagement possible: {1}$"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Tribunal_Menu_Articles"
+	{
+		"fr"	"Gestions des articles"
+	}
+	"Tribunal_Menu_Articles_Add"
+	{
+		"fr"	"Ajouter un article"
+	}
+	"Tribunal_Menu_Articles_Remove"
+	{
+		"fr"	"Retirer un article"
+	}
+	"Tribunal_Menu_Articles_List"
+	{
+		"fr"	"Liste des articles:"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Tribunal_Menu_Avocats"
+	{
+		"fr"	"Gestions des avocats"
+	}
+	"Tribunal_Menu_Avocats_Victim"
+	{
+		"fr"	"Avocat de la victime"
+	}
+	"Tribunal_Menu_Avocats_Defense"
+	{
+		"fr"	"Avocat de la défense"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Tribunal_Menu_Enquete"
+	{
+		"fr"	"Enquêter"
+	}
+	"Tribunal_Menu_Enquete_Merco"
+	{
+		"fr"	"Convoquer les mercenaires"
+	}
+	"Tribunal_Menu_Enquete_Merco_Confirm"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Les mercenaires ont été convoqués au {red}Tribunal {1}{default}."
+	}
+	"Tribunal_Menu_Enquete_Self"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Enquêter sans mercenaire ({1}$)"
+	}
+	"Tribunal_Menu_Enquete_Log"
+	{
+		"fr"	"Enquêter dans les logs"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Tribunal_Menu_Condamner"
+	{
+		"fr"	"Condamner"
+	}
+	"Tribunal_Menu_Condamner_Confirm"
+	{
+		"fr"	"Quel est votre verdict?"
+	}
+	"Tribunal_Menu_Condamner_Given"
+	{
+		"#format"	"{1:s},{2:d},{3:d},{4:t}"
+		"fr"	"{1} a été condamné à {red}{2}{default} heure(s) de prison et à {red}{3}{default}$ d'amende. Le juge a été {red}{4}{default}."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Tribunal_Menu_Dedo"
+	{
+		"fr"	"Dédomager"
+	}
+	"Tribunal_Menu_Dedo_Amount"
+	{
+		"#format"	"{1:s},{2:d}"
+		"fr"	"Quel est la valeur de {1}?\n    {2}$"
+	}
+	"Tribunal_Menu_Dedo_Add"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Ajouter {1}$"
+	}
+	"Tribunal_Menu_Dedo_Remove"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Retirer {1}$"
+	}
+	"Tribunal_Menu_Dedo_Confirm"
+	{
+		"fr"	"Confirmer"
+	}
+	"Tribunal_Menu_Dedo_Given"
+	{
+		"#format"	"{1:s},{2:s},{3:d}"
+		"fr"	"{red}{1}{fault} a dédommagé {red}{2}{default} de {red}{3}{default}$."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Tribunal_Menu_Acquitter"
+	{
+		"fr"	"Acquitter"
+	}
+	"Tribunal_Menu_Acquitter_Confirm"
+	{
+		"fr"	"Pour quelle raison doit-elle être acquitée?"
+	}
+	"Tribunal_Menu_Condamner_Given"
+	{
+		"#format"	"{1:s},{2:t}"
+		"fr"	"{1} a été été acquitée: {green}{2}{default}."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Tribunal_Menu_Cancel"
+	{
+		"fr"	"Annuler l'audience"
+	}
+	"Tribunal_Menu_Cancel_Confirm"
+	{
+		"fr"	"Êtes vous sur d'annuler l'audience?"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Tribunal_Menu_Switch"
+	{
+		"fr"	"Inverser plaignant-suspect"
+	}
+	"Tribunal_Menu_Switch_Confirm"
+	{
+		"#format"	"{1:s},{2:s}"
+		"fr"	"Le Juge {red}{1}{default} cède sa place au Juge {red}{1}{default}."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Tribunal_Menu_Juge"
+	{
+		"fr"	"Changer de juge"
+	}
+	"Tribunal_Menu_Supprimer"
+	{
+		"fr"	"Supprimer"
+	}
+	"Tribunal_Menu_Plaignant"
+	{
+		"fr"	"Qui est le plaignant?"
+	}
+	"Tribunal_Menu_Suspect"
+	{
+		"fr"	"Qui est le suspect?"
+	}
+	"Tribunal_Menu_Juge"
+	{
+		"fr"	"Qui est le nouveau juge?"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Tribunal_Menu_Sexe"
+	{
+		"fr"	"Qui veut changer de sexe?"
+	}
+	"Tribunal_Menu_Sexe_Confirm"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Souhaitez-vous changer de sexe?\nCette opération vous coûtera {1}$."
+	}
+	"Tribunal_Menu_Sexe_Given"
+	{
+		"#format"	"{1:s},{2:t}"
+		"fr"	"{1} est maintenant {red}{2}{default}."
+	}
+	"Tribunal_Menu_Sexe_Deny"
+	{
+		"#format"	"{1:s}"
+		"fr"	"{1} a refusé de changer de sexe."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"PotDeVin_OwnKill"
+	{
+		"fr"		"Votre pot de vin vient de réussir à bloquer {red}une enquête{default} en cours."
+	}
+	"Enquete_Menu"
+	{
+		"fr"	"Sur qui voulez-vous récupérer des informations?"
+	}
+	"Enquete_MenuTarget"
+	{
+		"#format"	"{1:s}"
+		"fr"	"Information sur {1}:"
+	}
+	"Enquete_Localisation"
+	{
+		"#format"	"{1:s}"
+		"fr"	"Localisation: {1}"
+	}
+	"Enquete_Killed"
+	{
+		"#format"	"{1:s}"
+		"fr"	"Il a tué: {1}"
+	}
+	"Enquete_KilledBy"
+	{
+		"#format"	"{1:s}"
+		"fr"	"{1} l'a tué"
+	}
+	"Enquete_Steal"
+	{
+		"#format"	"{1:s}"
+		"fr"	"{1} l'a volé"
+	}
+	"Enquete_StealAmount"
+	{
+		"#format"	"{1:s},{2:d}"
+		"fr"	"{1} l'a volé {2}$"
+	}
+	"Enquete_KillingSpread"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Meurtre consécutif: {1}"
+	}
+	"Enquete_Knife"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Niveau d'entrainement: {1}%"
+	}
+	"Enquete_Weapon"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Précision de tir: {1}%"
+	}
+	"Enquete_Money"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Argent: {1}$"
+	}
+	"Enquete_Alcool"
+	{
+		"#format"	"{1:.3f}"
+		"fr"	"Taux d'alcoolémie: {1}°"
+	}
+}
