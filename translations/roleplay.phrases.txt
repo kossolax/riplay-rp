@@ -9,6 +9,11 @@
 		"#format"	"{1:s}"
 		"fr"		"Vous n'avez plus de {red}{1}{default}."
 	}
+	"Error_ItemCooldown"
+	{
+		"#format"	"{1:.1f}"
+		"fr"		"Vous ne pouvez rien utiliser pour encore {red}{1}{defualt} seconde(s)."
+	}
 	"Error_ItemNotEnought"
 	{
 		"#format"	"{1:s}"
@@ -174,6 +179,11 @@
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"	"Vous avez récupéré: {1}x {red}{2}{default}."
+	}
+	"Item_Free"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"	"Vous avez reçu comme cadeau: {1}x {red}{2}{default}."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Build_CannotHere"
