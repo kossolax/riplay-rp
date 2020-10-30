@@ -380,7 +380,10 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	}
 	
 	ent = (job == 221 || job == 222) ? BuildingBigCashMachine(client) : BuildingCashMachine(client, false);
+
 	SetEntProp(ent, Prop_Data, "m_iHealth", GetEntProp(ent, Prop_Data, "m_iHealth")/5);
+	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
+	
 	rp_SetBuildingData(ent, BD_FromBuild, 1);
 	
 	if( ent > 0 ) {
@@ -479,6 +482,7 @@ int BuildingCashMachine(int client, bool force=false) {
 	rp_SetBuildingData(ent, BD_started, GetTime());
 	rp_SetBuildingData(ent, BD_owner, client );
 	rp_SetBuildingData(ent, BD_FromBuild, 0);
+	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
 	
 	CreateTimer(3.0, BuildingCashMachine_post, ent);
 
@@ -524,7 +528,7 @@ public Action Frame_CashMachine(Handle timer, any ent) {
 	}
 	
 	int heal = Entity_GetHealth(ent) + Math_GetRandomInt(10, 20);
-	if (heal > 1000) heal = 1000;
+	if (heal > Entity_GetMaxHealth(ent)) heal = Entity_GetMaxHealth(ent);
 	Entity_SetHealth(ent, heal, true);
 	
 	
@@ -759,7 +763,7 @@ public Action Frame_BigCashMachine(Handle timer, any ent) {
 	}
 	
 	int heal = Entity_GetHealth(ent) + Math_GetRandomInt(10, 20);
-	if (heal > 10000) heal = 10000;
+	if (heal > Entity_GetMaxHealth(ent)) heal = Entity_GetMaxHealth(ent);
 	Entity_SetHealth(ent, heal, true);
 	
 	if( !rp_GetClientBool(client, b_IsAFK) && rp_GetClientInt(client, i_TimeAFK) <= 60 && g_bProps_trapped[ent] == false && rp_GetClientInt(client, i_SearchLVL) < 5 ) {

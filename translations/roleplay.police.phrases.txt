@@ -283,10 +283,6 @@
 		"fr"		"Il n'y a personne en prison."
 	}
 	// ----------------------------------------------------------------------------------------------
-	"Police_NoWeaponInStore"
-	{
-		"fr"		"Aucune arme n'est disponible pour le moment."
-	}
 	"Police_WeaponInStore"
 	{
 		"fr"		"Armées trouvées par la police:"

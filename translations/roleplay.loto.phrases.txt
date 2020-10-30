@@ -127,6 +127,10 @@
 		"#format"	"{1:d}"
 		"fr"	"Vous avez gagné {green}%i{default}$, félicitations!"
 	}
+	"Lotery_Lose"
+	{
+		"fr"	"Désolé, vous n'avez rien gagné!"
+	}
 	"Lotery_Cagnotte_First"
 	{
 		"#format"	"{1:s},{2:d}"

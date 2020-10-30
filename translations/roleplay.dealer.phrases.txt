@@ -72,11 +72,6 @@
 		"#format"	"{1:s}"
 		"fr"		"Combien de {1} voulez-vous acheter?"
 	}
-	"Dealer_Buy"
-	{
-		"#format"	"{1:d},{2:s},{3:d}"
-		"fr"		"Vous avez acheté {red}{1} {2}{default}, pour {red}{3}{default}$."
-	}
 	"Dealer_CannotDrop"
 	{
 		"fr"		"Vous ne pouvez pas lâcher votre arme pendant qu'un dealer vous vol, tirez lui dessus ou fuyez !"

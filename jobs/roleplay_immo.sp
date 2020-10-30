@@ -207,7 +207,7 @@ public Action Task_ItemAppartSerrure(Handle timer, Handle dp) {
 	int appartID = ReadPackCell(dp);
 
 	if( appartID == -1 ) {
-		CPrintToChat(client, ""...MOD_TAG..." %T", "Appart_MustBeInside", client);
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_OnlyInsideAppart", client);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
@@ -283,7 +283,7 @@ public Action Cmd_ItemGiveAppartDouble(int args) {
 	
 	int appartID = rp_GetPlayerZoneAppart(client);
 	if( appartID == -1 || appartID == 50 ) {
-		CPrintToChat(client, ""...MOD_TAG..." %T", "Appart_MustBeInside", client);
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_OnlyInsideAppart", client);
 		ITEM_CANCEL(client, itemID);
 		return Plugin_Handled;
 	}
@@ -318,7 +318,7 @@ public Action Cmd_ItemGiveBonus(int args) {
 	
 	int appartID = rp_GetPlayerZoneAppart(client);
 	if( appartID == -1 || appartID >= 50) {
-		CPrintToChat(client, ""...MOD_TAG..." %T", "Appart_MustBeInside", client);
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_OnlyInsideAppart", client);
 		ITEM_CANCEL(client, itemID);
 		return Plugin_Handled;
 	}

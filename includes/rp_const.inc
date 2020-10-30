@@ -78,7 +78,7 @@
 #define ITEM_PIEDBICHE		1
 #define ITEM_KITCROCHTAGE	2
 #define ITEM_KITEXPLOSIF	3
-#define ITEM_MANDAT			4
+#define ITEM_MAGNETCB 		4
 #define	ITEM_KNIFE			17
 #define ITEM_FITNESS		30
 #define ITEM_FEUARTIFICE	49
@@ -95,7 +95,6 @@
 #define	ITEM_JETONROUGE		276
 #define ITEM_JETONBLEU		286
 #define ITEM_CHEQUE			304
-#define ITEM_MAGNETCB 310
 
 // Zone:
 #define	METRO_PAIX		60

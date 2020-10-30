@@ -62,7 +62,10 @@ public Action Cmd_Reload(int args) {
 }
 public void OnPluginStart() {
 	LoadTranslations("core.phrases");
+	LoadTranslations("common.phrases");
 	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.items.phrases");
+	LoadTranslations("roleplay.mafia.phrases");
 	
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	RegServerCmd("rp_item_piedbiche", 	Cmd_ItemPiedBiche,		"RP-ITEM",	FCVAR_UNREGISTERED);
@@ -95,7 +98,7 @@ public Action CmdBreakCadenas(int args) {
 	
 	int appartID = zoneToAppartID(rp_GetPlayerZone(door));
 	if( appartID > 0 && g_flAppartProtection[appartID] > GetGameTime() ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Impossible de crocheter cette porte pour encore %d minutes.", RoundFloat((g_flAppartProtection[appartID] - GetGameTime()) / 60.0));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[appartID] - GetGameTime()) / 60.0);
 		return Plugin_Handled;
 	}
 	
@@ -108,9 +111,11 @@ public Action CmdBreakCadenas(int args) {
 	
 	if( GetRandomFloat() > difficulte ) {
 		
-		if( IsValidClient(g_iDoorDefine_LOCKER[doorID]) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Un cadenas est déja présent sur cette porte.");		
-			CPrintToChat(g_iDoorDefine_LOCKER[doorID], "" ...MOD_TAG... " Votre cadenas a été détruit.");
+		if( IsValidClient(g_iDoorDefine_LOCKER[doorID]) ) {			
+			char tmp[128];
+			rp_GetZoneData(tzone, zone_type_name, tmp, sizeof(tmp));
+			CPrintToChat(g_iDoorDefine_LOCKER[doorID], "" ...MOD_TAG... " %T", "Lockpad_BrokenYours", g_iDoorDefine_LOCKER[doorID], tmp);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Lockpad_Broken", client);
 			g_iDoorDefine_LOCKER[doorID] = 0;
 		}
 		
@@ -138,11 +143,11 @@ public Action Cmd_ItemDoorProtect(int args) {
 			g_flAppartProtection[appartID] += (time * 60.0);
 		}
 		
-		CPrintToChat(client, "" ...MOD_TAG... " La protection est activée pour %d minutes", RoundFloat((g_flAppartProtection[appartID] - GetGameTime()) / 60.0));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[appartID] - GetGameTime()) / 60.0);
 	}
 	else {
 		rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous devez être dans votre appartement pour acheter cet objet.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_OnlyInsideAppart", client);
 	}
 }
 public void OnMapStart() {
@@ -190,7 +195,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 		}
 	}
 	else {
-		CPrintToChat(client, "" ...MOD_TAG... " Impossible de se déguiser pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Deguise_Failed", client);
 		cooldown = 0.1;
 	}
 	return Plugin_Stop;
@@ -208,7 +213,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		rp_GetClientFloat(target, fl_LastStolen)+60.0 > GetGameTime() ||
 		rp_ClientFloodTriggered(client, target, fd_vol) ||
 		( rp_IsClientNew(target) && rp_GetClientFloat(target, fl_LastStolen)+300.0 > GetGameTime() ) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas d'argent sur lui.", target);
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotSteal_Target_ForNow", client);
 		cooldown = 1.0;
 		return Plugin_Stop;
 	}
@@ -217,7 +222,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 	}
 	
 	if( rp_GetZoneInt(rp_GetPlayerZone(target), zone_type_type) == 91 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas voler %N{default} ici.", target);
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotSteal_Target_ForNow", client);
 		return Plugin_Handled;
 	}
 	
@@ -260,8 +265,8 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 			addBuyMenu(client, target, it);
 			amount = rp_GetItemInt(it, item_type_prix);
 			
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez volé %s à %N, il a été envoyé au marché noir.", tmp, target);
-			CPrintToChat(target, "" ...MOD_TAG... " Quelqu'un vous a volé: %s.", tmp);
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Steal_Item_Target", client, 1, tmp);
+			CPrintToChat(target, ""...MOD_TAG..." %T", "Steal_Item_By", target, 1, tmp);
 						
 			LogToGame("[TSX-RP] [VOL] %L a vole %L 1 %s", client, target, tmp);
 			
@@ -328,8 +333,8 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		rp_SetClientInt(client, i_LastVolTarget, target);
 		rp_SetClientInt(target, i_LastVol, client);
 		
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez volé %d$ à %N.", amount, target);
-		CPrintToChat(target, "" ...MOD_TAG... " Quelqu'un vous a volé %d$.", amount);
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Steal_Money_Target", client, amount);
+		CPrintToChat(target, ""...MOD_TAG..." %T", "Steal_Money_By", target, amount);
 
 		//g_iSuccess_last_mafia[client][1] = GetTime();
 		//g_iSuccess_last_pas_vu_pas_pris[target] = GetTime();
@@ -389,10 +394,8 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		return Plugin_Stop;
 	}
 
-	if(rp_GetClientInt(client, i_Job) <= 93)
-		CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas d'argent ni d'item sur lui.", target);
-	else
-		CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas d'argent sur lui.", target);
+
+	CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotSteal_Target_Broke", client);
 
 	cooldown = 1.0;
 	return Plugin_Stop;	
@@ -409,20 +412,18 @@ public Action fwdOnPlayerUse(int client) {
 	if( rp_GetClientJobID(client) == 91 && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 91 ) {
 		bool changed = false;
 		
-		for(int itemID=1; itemID<=310; itemID++) {
-			
-			if(itemID == 1 || itemID == 2 || itemID == 3 || itemID == 310) {
-				int mnt = rp_GetClientItem(client, itemID);
-				int max = GetMaxKit(client, itemID);
-				if( mnt <  max ) {
-					rp_ClientGiveItem(client, itemID, max - mnt);
-					rp_GetItemData(itemID, item_type_name, tmp, sizeof(tmp));
-					CPrintToChat(client, "" ...MOD_TAG... " Vous avez récupéré %i %s.", max - mnt, tmp);
-					
-					changed = true;
-				}
+		for(int itemID=1; itemID<=4; itemID++) {
+			int mnt = rp_GetClientItem(client, itemID);
+			int max = GetMaxKit(client, itemID);
+			if( mnt <  max ) {
+				rp_ClientGiveItem(client, itemID, max - mnt);
+				rp_GetItemData(itemID, item_type_name, tmp, sizeof(tmp));
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Item_Take", client, max - mnt, tmp);
+				
+				changed = true;
 			}
 		}
+
 		
 		if(changed == true) {
 			FakeClientCommand(client, "say /item");
@@ -444,19 +445,18 @@ public Action Cmd_ItemDoorDefine(int args) {
 	int door = getDoor(client);
 	
 	if( door == 0 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser une porte.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_YouMustAim", client, "prop_door_rotating");
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	
 	int doorID = rp_GetDoorID(door);
 	if(g_iDoorDefine_LOCKER[doorID] != 0 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Un cadenas est déja présent sur cette porte.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Lockpad_Already", client);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	g_iDoorDefine_LOCKER[doorID] = client;
-	CPrintToChat(client, "" ...MOD_TAG... " Le cadenas a été placé avec succès.");
 	
 	return Plugin_Handled;
 }
@@ -471,7 +471,10 @@ public Action Cmd_ItemHack(int args) {
 	
 	if( !g_bCanUseCB[client] ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Votre CB est déchargée pour le moment.");
+		
+		char tmp[128];
+		rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, tmp);
 		return Plugin_Handled;
 	}
 	
@@ -481,13 +484,15 @@ public Action Cmd_ItemHack(int args) {
 
 	if( target <= 0 || type != 8) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser un distributeur personnel.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_YouMustAim", client, "prop_door_rotating");
 		return Plugin_Handled;
 	}
 
 	if( rp_GetClientFloat(targetOwner, fl_LastStolen)+60.0 > GetGameTime() ){
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Ce distributeur semble déjà bien endommagé.");
+		char tmp[128];
+		rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, tmp);
 		return Plugin_Handled;
 	}
 
@@ -530,22 +535,18 @@ public Action Cmd_ItemPiedBiche(int args) {
 	
 	if( rp_GetClientBool(client, b_MaySteal) == false ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas voler pour le moment.");
+		char tmp[128];
+		rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, tmp);
 		return Plugin_Handled;
 	}
 	
 	int type;
 	int target = getDistrib(client, type);
 
-	if( target <= 0 ) {
+	if( target <= 0 || type == 8 ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser un distributeur, un téléphone, plant de drogue, ou une imprimante.");
-		return Plugin_Handled;
-	}
-	
-	if(type == 8) {
-		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous devez utiliser une CB magnétique pour hack un distributeur personnel.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Crowbar", client);
 		return Plugin_Handled;
 	}
 
@@ -553,6 +554,19 @@ public Action Cmd_ItemPiedBiche(int args) {
 	
 	if( type == 3 || type == 4  )
 		start = Math_GetRandomFloat(0.5, 0.66);
+	
+	int owner = rp_GetBuildingData(target, BD_owner);
+	if( IsValidClient(owner) ) {
+		if( type == 4 || type == 5 ) {
+			CPrintToChat(owner, "" ...MOD_TAG... " %T", "Crowbar_FauxBillet", owner);
+		}
+		else if( type == 7 ) {
+			CPrintToChat(owner, "" ...MOD_TAG... " %T", "Crowbar_Drugs", owner);
+		}
+		else if( type == 8 ) {
+			CPrintToChat(owner, "" ...MOD_TAG... " %T", "Crowbar_Distrib", owner);
+		}
+	}
 		
 	
 	rp_SetClientStat(client, i_JobFails, rp_GetClientStat(client, i_JobFails) + 1);
@@ -659,7 +673,6 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				for (i = 0; i < rand; i++)
 					CreateTimer(i / 5.0, SpawnMoney, EntIndexToEntRef(target));
 				
-				CPrintToChat(client, "" ...MOD_TAG... " %d billets ont été sorti du distributeur.", rand);
 				stealAmount = 25*rand;
 			}
 			case 3: { // Armu
@@ -672,12 +685,13 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				time /= 4.0;
 				CreateTimer(0.1, SpawnMoney, EntIndexToEntRef(target));
 				stealAmount = 25;
-				rp_ClientDamage(target, 25, client);
+				
+				Entity_SetHealth(target, Entity_GetHealth(target) - Entity_GetMaxHealth(target) / 10);
 				
 				int owner = rp_GetBuildingData(target, BD_owner);
 				if( IsValidClient(owner) ) {
 					rp_ClientMoney(owner, i_Bank, -25);
-					CPrintToChat(owner, "" ...MOD_TAG... " Quelqu'un vole vos faux billets.");
+					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Crowbar_FauxBillet", owner);
 				}
 			}
 			case 5: { // Photocopieuse
@@ -689,12 +703,12 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				int owner = rp_GetBuildingData(target, BD_owner);
 				if( IsValidClient(owner) ) {
 					rp_ClientMoney(owner, i_Bank, -25 * 15);
-					CPrintToChat(owner, "" ...MOD_TAG... " Quelqu'un vole vos faux billets.");
+					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Crowbar_FauxBillet", owner);
 				}
 				
 				
 				stealAmount = 25 * 15;
-				rp_ClientDamage(target, 250, client);
+				Entity_SetHealth(target, Entity_GetHealth(target) - Entity_GetMaxHealth(target) / 10);
 				
 			}
 			case 6: { // Téléphone
@@ -705,6 +719,9 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 			case 7: { // Plant de drogue
 				
 				int count = rp_GetBuildingData(target, BD_count);
+				if( count > 3 )
+					count = 3;
+				
 				if( count > 0  ) {
 					char classname[64];
 					int sub = rp_GetBuildingData(target, BD_item_id);
@@ -718,16 +735,20 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 					
 					int owner = rp_GetBuildingData(target, BD_owner);
 					if( IsValidClient(owner) ) {
-						CPrintToChat(owner, "" ...MOD_TAG... " Quelqu'un vol votre drogue.");
+						CPrintToChat(owner, "" ...MOD_TAG... " %T", "Crowbar_Drugs", owner);
 						if( rp_GetBuildingData(target, BD_FromBuild) ) {
-							stealAmount = rp_GetItemInt(sub, item_type_prix) * count;
-							rp_ClientMoney(owner, i_Bank, -stealAmount/4);
-							CPrintToChat(owner, "" ...MOD_TAG... " Vous avez perdu notre préciseuse marchandise, vous avez remboursé %d$ au patron.", -stealAmount/4);
-							LogToGame("[CHEAT] [MAFIA] %L vole %L %d %s (%d$)", client, owner, count, classname, stealAmount);
+							count = 1;
 						}
+						
+						CPrintToChat(owner, "" ...MOD_TAG... " %T", "Steal_Item_By", owner, count, classname);
 					}
-					CPrintToChat(client, "" ...MOD_TAG... " Vous avez ramassé %d %s.", count, classname);
+					
+					for (int i = 0; i < count; i++)
+						addBuyMenu(client, target, sub);
+					
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Steal_Item_Target", owner, count, classname);
 				}
+				Entity_SetHealth(target, Entity_GetHealth(target) - Entity_GetMaxHealth(target) / 10);
 			}
 			case 8: { // Distrib Perso
 				time *= 4.0;
@@ -744,7 +765,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 					stealAmount = Math_GetRandomPow(1, stealAmount);
 
 					if(vol_max < stealAmount || rp_GetClientFloat(owner, fl_LastStolen)+60.0 > GetGameTime() ){
-						CPrintToChat(client, "" ...MOD_TAG... " Ce distributeur est vide !");
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Crowbar_Distrib_Failed", client);
 
 						MENU_ShowPickLock(client, percent, -1, type);
 						rp_ClientColorize(client);
@@ -760,14 +781,15 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 
 					rp_SetClientStat(owner, i_MoneySpent_Stolen, rp_GetClientStat(owner, i_MoneySpent_Stolen) + stealAmount);
 
-					CPrintToChat(owner, "" ...MOD_TAG... " Attention, quelqu'un à piraté votre distributeur et vous à volé %i$.", stealAmount);
-					CPrintToChat(client, "" ...MOD_TAG... " Vous avez piraté %i$ !", stealAmount);
+					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Crowbar_Distrib", owner);
+					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Steal_Money_By", owner, stealAmount);
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Steal_Money_Target", client, stealAmount);
 					
 					CreateTimer(time, AllowStealingCB, client);
 					time = 0.0;
 				} else {
 					CreateTimer(0.1, AllowStealingCB, client);
-					CPrintToChat(client, "" ...MOD_TAG... " Le vol a été annulé.");
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_FromServer", client);
 					return Plugin_Stop;
 				}
 			}
@@ -870,7 +892,7 @@ public Action Cmd_ItemPickLock(int args) {
 	int door = getDoor(client);
 	if( door == 0 ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser une porte.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_YouMustAim", client, "prop_door_rotating");
 		return Plugin_Handled;
 	}
 	
@@ -881,14 +903,13 @@ public Action Cmd_ItemPickLock(int args) {
 
 		if(g_flAppartProtection[appartID] > GetGameTime()) {
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "" ...MOD_TAG... " Impossible de crocheter cette porte pour encore %d minutes.", RoundFloat((g_flAppartProtection[appartID] - GetGameTime()) / 60.0));
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[appartID] - GetGameTime()) / 60.0);
 			return Plugin_Handled;
 		}
 
 		if (g_iAppartNewPickLock[appartID] > GetTime()) {
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "" ...MOD_TAG... " Impossible de crocheter cette porte pour encore %d secondes.", (g_iAppartNewPickLock[appartID] - GetTime()));
-			
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_iAppartNewPickLock[appartID] - GetGameTime()) / 60.0);
 			return Plugin_Handled;
 		}
 		
@@ -949,12 +970,19 @@ public Action ItemPickLockOver_frame(Handle timer, Handle dp) {
 	
 	int difficulte = 1;
 	int tzone = rp_GetPlayerZone(door);
+	int appartID = zoneToAppartID(tzone);
 	
 	if( rp_IsInPVP(client) || rp_GetZoneInt(tzone, zone_type_type) == 101 )
 		difficulte += 1;
 	if( rp_GetZoneBit( tzone ) & BITZONE_HAUTESECU || rp_GetZoneInt(tzone, zone_type_type) == 101 )
 		difficulte += 1;
-	if( g_iDoorDefine_LOCKER[doorID] )
+	
+	if( g_iDoorDefine_LOCKER[doorID] && rp_GetZoneInt(tzone, zone_type_type) == 1 )
+		difficulte += 1;
+	if( g_iDoorDefine_LOCKER[doorID] && rp_GetZoneInt(tzone, zone_type_type) != 1 )
+		difficulte += 2;
+	
+	if( appartID > 0 && appartID < 50 )
 		difficulte += 2;
 	
 	for (int i = 1; i <= MaxClients; i++) {
@@ -971,10 +999,19 @@ public Action ItemPickLockOver_frame(Handle timer, Handle dp) {
 			char zone[128];
  			rp_GetZoneData(rp_GetPlayerZone(door), zone_type_name, zone, sizeof(zone));
  			
-			CPrintToChat(g_iDoorDefine_LOCKER[doorID], "" ...MOD_TAG... " Quelqu'un a ouvert votre porte cadnacée (%s).", zone);
+			CPrintToChat(g_iDoorDefine_LOCKER[doorID], "" ...MOD_TAG... " %T", "Lockpad_Open", client, zone);
 			
-			if( Math_GetRandomInt(1, 10) == 5 ) {
-				CPrintToChat(g_iDoorDefine_LOCKER[doorID], "" ...MOD_TAG... " Votre cadenas a été détruit.");
+			int max = 10;
+			
+			if( rp_GetZoneInt(tzone, zone_type_type) == 1 )
+				max = 4;
+			
+			if( Math_GetRandomInt(1, max) == max ) {
+				char tmp[128];
+				rp_GetZoneData(tzone, zone_type_name, tmp, sizeof(tmp));
+			
+				CPrintToChat(g_iDoorDefine_LOCKER[doorID], "" ...MOD_TAG... " %T", "Lockpad_BrokenYours", g_iDoorDefine_LOCKER[doorID], tmp);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Lockpad_Broken", client);
 				g_iDoorDefine_LOCKER[doorID] = 0;
 			}
 		}
@@ -1000,7 +1037,6 @@ public Action ItemPickLockOver_frame(Handle timer, Handle dp) {
 		
 		rp_SetDoorLock(doorID, false); 
 		rp_ClientOpenDoor(client, doorID, true);
-		CPrintToChat(client, "" ...MOD_TAG... " La porte a été ouverte.");
 		
 		return Plugin_Stop;
 	}
@@ -1029,11 +1065,11 @@ public Action timerAlarm(Handle timer, any door) {
 public Action AllowStealing(Handle timer, any client) {
 	
 	rp_SetClientBool(client, b_MaySteal, true);
-	CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez à nouveau voler.");
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_NowSteal", client);
 }
 public Action AllowStealingCB(Handle timer, any client) {
 	g_bCanUseCB[client] = true;
-	CPrintToChat(client, "" ...MOD_TAG... " Votre CB magnétique est rechargée.");
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_NowSteal", client);
 }
 int GetMaxKit(int client, int itemID) {
 	int max, job = rp_GetClientInt(client, i_Job);
@@ -1081,20 +1117,19 @@ int getDistrib(int client, int& type) {
 	
 	int owner = rp_GetBuildingData(target, BD_owner);
 	
-	
 	if( StrEqual(classname, "rp_bank") && owner == 0 && !rp_GetBuildingData(target, BD_Trapped) )
 		type = 2;
 	else if( StrEqual(classname, "rp_weaponbox") )
 		type = 3;
 	else if( (StrEqual(classname, "rp_cashmachine") ) && rp_GetClientJobID(owner) != 91 &&
-		!rp_IsClientSafe(owner) && Entity_GetHealth(target) >= 5000)
+		!rp_IsClientSafe(owner) && (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target)) > 0.75) )
 		type = 4;
 	else if( (StrEqual(classname, "rp_bigcashmachine") ) && rp_GetClientJobID(owner) != 91 &&
-		!rp_IsClientSafe(owner) && Entity_GetHealth(target) >= 30000 )
+		!rp_IsClientSafe(owner) && (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target)) > 0.75) )
 		type = 5;
 	else if( StrEqual(classname, "rp_phone") )
 		type = 6;
-	else if( (StrEqual(classname, "rp_plant") ) && rp_GetClientJobID(owner) != 91 && Entity_GetHealth(target) >= 12500 && 
+	else if( (StrEqual(classname, "rp_plant") ) && rp_GetClientJobID(owner) != 91 && (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target)) > 0.75) && 
 		!rp_IsClientSafe(owner) && rp_GetBuildingData(target, BD_count) > 0 )
 		type = 7;
 	else if( StrEqual(classname, "rp_bank") && owner > 0 && IsValidClient(owner) && !rp_IsClientSafe(owner) )
@@ -1111,7 +1146,7 @@ void runAlarm(int client, int door) {
 			char zone[128];
 			rp_GetZoneData(rp_GetPlayerZone(door), zone_type_name, zone, sizeof(zone));
 			
-			CPrintToChat(alarm, "" ...MOD_TAG... " Quelqu'un crochette votre porte (%s).", zone );
+			CPrintToChat(alarm, "" ...MOD_TAG... " %T", "Lockpad_Open", client, zone);
 			rp_Effect_BeamBox(alarm, client);
 		}
 		
@@ -1137,14 +1172,14 @@ void MENU_ShowPickLock(int client, float percent, int difficulte, int type) {
 
 	Handle menu = CreateMenu(eventMenuNone);
 	switch( type ) {
-		case 1: SetMenuTitle(menu, "== Mafia: Ouverture d'une porte\n ");
-		case 2: SetMenuTitle(menu, "== Mafia: Crochetage d'un distributeur\n ");
-		case 3: SetMenuTitle(menu, "== Mafia: Crochetage d'une armurerie\n ");
-		case 4: SetMenuTitle(menu, "== Mafia: Crochetage d'une imprimante\n ");
-		case 5: SetMenuTitle(menu, "== Mafia: Crochetage d'une photocopieuse\n ");
-		case 6: SetMenuTitle(menu, "== Mafia: Crochetage d'un téléphone\n ");
-		case 7: SetMenuTitle(menu, "== Mafia: Crochetage d'un plant de drogue\n ");
-		case 8: SetMenuTitle(menu, "== Mafia: Hack d'un distributeur personnel\n ");
+		case 1: SetMenuTitle(menu, "%T", "Mafia_Crowbar_Door", client);
+		case 2: SetMenuTitle(menu, "%T", "Mafia_Crowbar_Distrib", client);
+		case 3: SetMenuTitle(menu, "%T", "Mafia_Crowbar_Armurerie", client);
+		case 4: SetMenuTitle(menu, "%T", "Mafia_Crowbar_Imprimante", client);
+		case 5: SetMenuTitle(menu, "%T", "Mafia_Crowbar_Photocop", client);
+		case 6: SetMenuTitle(menu, "%T", "Mafia_Crowbar_Phone", client);
+		case 7: SetMenuTitle(menu, "%T", "Mafia_Crowbar_Plant", client);
+		case 8: SetMenuTitle(menu, "%T", "Mafia_Crowbar_Hack", client);
 	}
 	
 	char tmp[64];
@@ -1152,15 +1187,16 @@ void MENU_ShowPickLock(int client, float percent, int difficulte, int type) {
 	AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	
 	switch( difficulte ) {
-		case -1: AddMenuItem(menu, ".", "Difficulté: Échec", ITEMDRAW_DISABLED);
-		case 1: AddMenuItem(menu, ".", "Difficulté: Facile", ITEMDRAW_DISABLED);
-		case 2: AddMenuItem(menu, ".", "Difficulté: Moyenne", ITEMDRAW_DISABLED);
-		case 3: AddMenuItem(menu, ".", "Difficulté: Difficile", ITEMDRAW_DISABLED);
-		case 4: AddMenuItem(menu, ".", "Difficulté: Très difficile", ITEMDRAW_DISABLED);
-		case 5: AddMenuItem(menu, ".", "Difficulté: Impossible", ITEMDRAW_DISABLED);
+		case  -1: Format(tmp, sizeof(tmp), "%T", "Difficulty_Failed", client);
+		case   1: Format(tmp, sizeof(tmp), "%T", "Difficulty_Easy", client);
+		case   3: Format(tmp, sizeof(tmp), "%T", "Difficulty_Hard", client);
+		case   4: Format(tmp, sizeof(tmp), "%T", "Difficulty_VeryHard", client);
+		case   5: Format(tmp, sizeof(tmp), "%T", "Difficulty_Impossible", client);
+		
+		default: Format(tmp, sizeof(tmp), "%T", "Difficulty_Average", client);
 	}
 	
-	Format(tmp, sizeof(tmp), "Policier proche: %d", rp_CountPoliceNear(client));
+	Format(tmp, sizeof(tmp), "%T", "Steal_Nearby", client, rp_CountPoliceNear(client));
 	AddMenuItem(menu, ".", tmp, ITEMDRAW_DISABLED);
 	
 	SetMenuExitBackButton(menu, false);
@@ -1191,12 +1227,12 @@ void missionTelephone(int client) {
 	WritePackFloat(dp, vecDir[0]);
 	WritePackFloat(dp, vecDir[1]);
 	
+	Handle menu = CreateMenu(eventMenuNone);
+	SetMenuTitle(menu, "%T\n ", "Phone_Mission", client);
+	
 	char msg[256];
 	rp_GetZoneData(rp_GetZoneFromPoint(vecDir), zone_type_name, msg, sizeof(msg));
-	Handle menu = CreateMenu(eventMenuNone);
-	SetMenuTitle(menu, "== MISSION TELEPHONE == \n ");
-	AddMenuItem(menu, "_", "Un hélicoptère vous envois un colis.", ITEMDRAW_DISABLED);
-	AddMenuItem(menu, "_", "Il sera envoyé près de:", ITEMDRAW_DISABLED);
+	Format(msg, sizeof(msg), "%T", "Phone_Mission_Copter", client, msg);
 	AddMenuItem(menu, "_", msg, ITEMDRAW_DISABLED);
 	
 	SetMenuExitButton(menu, true);
@@ -1259,7 +1295,10 @@ bool disapear(int client) {
 	Entity_GetAbsOrigin(client, vecCenter);
 	TE_SetupBeamRingPoint(vecCenter, 1.0, 200.0, g_cBeam, g_cBeam, 0, 10, 0.25, 80.0, 0.0, {100, 100, 255, 10}, 1, 0);
 	TE_SendToAll();
-	CPrintToChat(client, "" ...MOD_TAG... " Vous vous êtes déguisé en tant que %N.", rndClient[rnd]);
+	
+	char target_name[128];
+	GetClientName2(rndClient[rnd], target_name, sizeof(target_name), false);
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Deguise_Target", client, target_name);
 	LogToGame("[BUILD] [MAFIA] %L est maintenant invisible", client);
 	return true;
 }
@@ -1276,7 +1315,7 @@ public Action appear(Handle timer, any client) {
 		Entity_GetAbsOrigin(client, vecCenter);
 		TE_SetupBeamRingPoint(vecCenter, 1.0, 200.0, g_cBeam, g_cBeam, 0, 10, 0.25, 80.0, 0.0, {100, 100, 255, 10}, 1, 0);
 		TE_SendToAll();
-		CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes plus déguisé.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Deguise_Ended", client);
 		
 		LogToGame("[BUILD] [MAFIA] %L est maintenant visible", client);
 	}
@@ -1355,12 +1394,12 @@ void Cmd_BuyItemMenu(int client, bool free) {
 	int[] data = new int[IM_Max];
 	
 	if( position >= max ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Désolé il n'y a pas d'objet disponible pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_NoItemToSellForNow", client);
 		return;
 	}
 	
 	Menu menu = new Menu(Menu_BuyBlackMarket);
-	menu.SetTitle("Marché noir\n ");
+	menu.SetTitle("%T\n ", "Mafia_BlackMarket", client);
 	
 	while( position < max ) {
 		
@@ -1371,7 +1410,7 @@ void Cmd_BuyItemMenu(int client, bool free) {
 		
 		rp_GetItemData(data[IM_ItemID], item_type_name, tmp2, sizeof(tmp2));
 		Format(tmp, sizeof(tmp), "%d %d", position, free);
-		Format(tmp2, sizeof(tmp2), "%s pour %d$", tmp2, free?0:data[IM_Prix]);
+		Format(tmp2, sizeof(tmp2), "%s - %d$", tmp2, free?0:data[IM_Prix]);
 		menu.AddItem(tmp, tmp2);
 		
 		position = g_hBuyMenu.Position;
@@ -1433,7 +1472,7 @@ public int Menu_BuyBlackMarket(Handle p_hMenu, MenuAction p_oAction, int client,
 			if( IsValidClient(data[IM_Owner]) && rp_GetClientJobID(data[IM_Owner]) == 91 )
 				LogToGame("[TSX-RP] [ITEM-VENDRE] %L a vendu 1 %s a %L", data[IM_Owner], tmp, client);
 			
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez acheté 1 %s à au marché noir pour %d$", tmp, data[IM_Prix]);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Market_Buy", 1, tmp, data[IM_Prix]);
 			
 			if( data[IM_Owner] == client ) {
 				rp_SetJobCapital(91, rp_GetJobCapital(91) + RoundToCeil(float(data[IM_Prix]*10) * 0.5));
@@ -1444,13 +1483,13 @@ public int Menu_BuyBlackMarket(Handle p_hMenu, MenuAction p_oAction, int client,
 
 				rp_SetClientStat(data[IM_Owner], i_MoneyEarned_Sales, rp_GetClientStat(data[IM_Owner], i_MoneyEarned_Sales) + RoundToFloor(float(data[IM_Prix]) * 0.5));
 
-				CPrintToChat(data[IM_Owner], "" ...MOD_TAG... " Vous avez vendu 1 %s à %N{default} au marché noir pour %d$", tmp, client, data[IM_Prix]);
+				CPrintToChat(data[IM_Owner], "" ...MOD_TAG... " %T", "Market_Sell", data[IM_Owner], 1, tmp, data[IM_Prix]);
 			}
 			else {
 				rp_SetJobCapital(91, rp_GetJobCapital(91) + data[IM_Prix]);
 				
 				if( IsValidClient(data[IM_Owner]) && rp_GetClientJobID(data[IM_Owner]) == 91 )
-					CPrintToChat(data[IM_Owner], "" ...MOD_TAG... " Quelqu'un vous a volé 1 %s au marché noir.", tmp);
+					CPrintToChat(data[IM_Owner], "" ...MOD_TAG... " %T", "Steal_Item_By", data[IM_Owner], tmp);
 			}
 			
 			

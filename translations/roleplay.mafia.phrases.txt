@@ -1,0 +1,99 @@
+"Phrases"
+{
+	"Mafia_Protect"
+	{
+		"#format"	"{1:.1f}"
+		"fr"	"Impossible de crocheter cette porte pour encore {red}{1}{default} minute(s)"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Mafia_BlackMarket"
+	{
+		"fr"		"Marché noir de la Mafia:"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Mafia_Deguise_Failed"
+	{
+		"fr"	"Impossible de se déguiser pour le moment."
+	}
+	"Mafia_Deguise_Target"
+	{
+		"#format"	"{1:s}"
+		"fr"	"Vous vous êtes déguisé en tant que {red}{1}{default}."
+	}
+	"Mafia_Deguise_Ended"
+	{
+		"fr"	"Vous n'êtes plus déguisé."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Lockpad_Broken"
+	{
+		"fr"	"Le cadenas a été détruit."
+	}
+	"Lockpad_BrokenYours"
+	{
+		"#format"	"{1:s}"
+		"fr"	"Votre cadenas placé sur la porte {red}{1}{default}, a été {red}détruit{default}."
+	}
+	"Lockpad_Open"
+	{
+		"fr"	"Votre cadenas placé sur la porte {red}{1}{default}, a été {red}forcé{default}."
+	}
+	"Lockpad_Already"
+	{
+		"fr"	"Un cadenas est déja présent sur cette porte."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Mafia_Crowbar"
+	{
+		"fr"		"Le pied de biche est utilisable uniquement sur un {red}distributeur{default}, sur un {red}téléphone{default}, {red}l'armurerie{default} police, un {red}plant{default} de drogue, ou une {red}imprimante{default}."
+	}
+	"Crowbar_FauxBillet"
+	{
+		"fr"		"Quelqu'un vole vos {red}faux-billets{default}."
+	}
+	"Crowbar_Drugs"
+	{
+		"fr"		"Quelqu'un vole votre {red}drogue{default}."
+	}
+	"Crowbar_Distrib"
+	{
+		"fr"		"Quelqu'un vole votre {red}distributeur{default}."
+	}
+	"Crowbar_Distrib_Failed"
+	{
+		"fr"		"Ce distributeur est vide!"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Mafia_Crowbar_Door"
+	{
+		"fr"		"== Mafia: Ouverture d'une porte"
+	}
+	"Mafia_Crowbar_Distrib"
+	{
+		"fr"		"== Mafia: Crochetage d'un distributeur"
+	}
+	"Mafia_Crowbar_Armurerie"
+	{
+		"fr"		"== Mafia: Crochetage d'une armurerie"
+	}
+	"Mafia_Crowbar_Imprimante"
+	{
+		"fr"		"== Mafia: Crochetage d'une imprimante"
+	}
+	"Mafia_Crowbar_Photocop"
+	{
+		"fr"		"== Mafia: Crochetage d'une photocopieuse"
+	}
+	"Mafia_Crowbar_Phone"
+	{
+		"fr"		"== Mafia: Crochetage d'un téléphone"
+	}
+	"Mafia_Crowbar_Plant"
+	{
+		"fr"		"== Mafia: Crochetage d'un plant de drogue"
+	}
+	"Mafia_Crowbar_Hack"
+	{
+		"fr"		"== Mafia: Hack d'un distributeur personnel"
+	}
+}

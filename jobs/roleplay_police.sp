@@ -1916,7 +1916,7 @@ void Cmd_BuyWeapon(int client, bool free) {
 	int[] data = new int[BM_Max];
 	
 	if (position >= max) {
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "Police_NoWeaponInStore", client);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_NoItemToSellForNow", client);
 		return;
 	}
 	

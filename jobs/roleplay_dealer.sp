@@ -892,7 +892,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		rp_ClientOverlays(target, o_Action_StealMoney, 10.0);
 	}
 	else {
-		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotSteal_Target_Broke", target);
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotSteal_Target_Broke", client);
 		cooldown = 1.0;
 	}
 	
@@ -1037,6 +1037,7 @@ int BuildingPlant(int client, int type) {
 	rp_SetBuildingData(ent, BD_item_id, type);
 	rp_SetBuildingData(ent, BD_original_id, 0);
 	rp_SetBuildingData(ent, BD_FromBuild, 0);
+	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
 	
 	CreateTimer(3.0, BuildingPlant_post, ent);
 	
@@ -1214,7 +1215,7 @@ public Action Frame_BuildingPlant(Handle timer, any ent) {
 	}
 	
 	int heal = Entity_GetHealth(ent) + RoundFloat(time) * 10;
-	if (heal > 15000) heal = 15000;
+	if (heal > Entity_GetMaxHealth(ent)) heal = Entity_GetMaxHealth(ent);
 	Entity_SetHealth(ent, heal, true);
 	
 	CreateTimer(time, Frame_BuildingPlant, EntIndexToEntRef(ent));
@@ -1497,6 +1498,8 @@ public int MenuBuildingDealer(Handle menu, MenuAction action, int client, int pa
 				rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
 				rp_SetBuildingData(ent, BD_FromBuild, 1);
 				rp_SetBuildingData(ent, BD_max, 30);
+				SetEntProp(ent, Prop_Data, "m_iHealth", GetEntProp(ent, Prop_Data, "m_iHealth")/5);
+				Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
 			}
 		}
 	}
@@ -1534,7 +1537,7 @@ public int Menu_Market(Handle menu, MenuAction action, int client, int param2) {
 			rp_ClientGiveItem(client, itemID, amount);
 			
 			rp_GetItemData(itemID, item_type_name, options, sizeof(options));
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Dealer_Buy", client, amount, options, prix);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Market_Buy", client, amount, options, prix);
 			
 			FakeClientCommand(client, "say /item");
 		}
@@ -1797,6 +1800,7 @@ void MENU_ShowPickLock(int client, float percent, int difficulte, int type) {
 		case   1: Format(tmp, sizeof(tmp), "%T", "Difficulty_Easy", client);
 		case   3: Format(tmp, sizeof(tmp), "%T", "Difficulty_Hard", client);
 		case   4: Format(tmp, sizeof(tmp), "%T", "Difficulty_VeryHard", client);
+		case   5: Format(tmp, sizeof(tmp), "%T", "Difficulty_Impossible", client);
 		
 		default: Format(tmp, sizeof(tmp), "%T", "Difficulty_Average", client);
 	}

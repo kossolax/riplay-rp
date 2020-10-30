@@ -24,10 +24,6 @@
 		"fr"		"Vous êtes maintenant le propriétaire du garage n°{red}{1}{default}."
 	}
 	// ----------------------------------------------------------------------------------------------
-	"Appart_MustBeInside"
-	{
-		"fr"		"Vous devez être dans votre appartement pour utiliser cet objet."
-	}
 	"Appart_MustBeOwner"
 	{
 		"fr"		"Vous n'êtes pas le propriétaire de cet appartement."
