@@ -125,6 +125,7 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 	rp_HookEvent(client, RP_OnPlayerDataLoaded, fwdLoaded);
+	rp_HookEvent(client, RP_OnPlayerBuild,	fwdOnPlayerBuild);
 }
 public Action fwdLoaded(int client) {
 	
@@ -140,6 +141,25 @@ public Action fwdLoaded(int client) {
 		rp_SetClientInt(client, i_AppartCount, rp_GetClientInt(client, i_AppartCount) + 1);
 	}
 }
+public Action fwdOnPlayerBuild(int client, float& cooldown) {
+	if( rp_GetClientJobID(client) != 61 )
+		return Plugin_Continue;
+	
+	int ent = BuildingTomb(client);
+	rp_SetBuildingData(ent, BD_FromBuild, 1);
+	SetEntProp(ent, Prop_Data, "m_iHealth", GetEntProp(ent, Prop_Data, "m_iHealth")/5);
+	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
+	
+	if( ent > 0 ) {
+		rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
+		cooldown = 30.0;
+	}
+	else {
+		cooldown = 3.0;
+	}
+	return Plugin_Stop;
+}
+
 // ----------------------------------------------------------------------------
 public Action fwdCommand(int client, char[] command, char[] arg) {
 	if( StrEqual(command, "infocoloc") ||  StrEqual(command, "infocolloc") ) {
@@ -474,7 +494,8 @@ public int MenuPropAppart(Handle menu, MenuAction action, int client, int param2
 		delete trace;
 		
 		SetEntProp( ent, Prop_Data, "m_takedamage", 2);
-		SetEntProp( ent, Prop_Data, "m_iHealth", heal);
+		SetEntProp( ent, Prop_Data, "m_iHealth", heal);	
+		Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
 		
 		SetEntityMoveType(ent, MOVETYPE_VPHYSICS); 
 		TeleportEntity(ent, position, ang_ent, NULL_VECTOR);
@@ -574,7 +595,8 @@ public int MenuPropOutdoor(Handle menu, MenuAction action, int client, int param
 		delete trace;
 		
 		SetEntProp( ent, Prop_Data, "m_takedamage", 2);
-		SetEntProp( ent, Prop_Data, "m_iHealth", heal);
+		SetEntProp( ent, Prop_Data, "m_iHealth", heal);	
+		Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
 		
 		SetEntityMoveType(ent, MOVETYPE_VPHYSICS); 
 		TeleportEntity(ent, position, ang_ent, NULL_VECTOR);
@@ -738,6 +760,8 @@ int BuildingTomb(int client) {
 	
 	rp_SetClientBool(client, b_HasGrave, true);
 	rp_SetClientBool(client, b_SpawnToGrave, true);
+	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
+	
 	return 1;
 }
 public Action BuildingTomb_post(Handle timer, any entity) {

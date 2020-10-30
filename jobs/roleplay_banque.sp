@@ -490,6 +490,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown) {
 	int ent = BuidlingATM(client);
 	rp_SetBuildingData(ent, BD_FromBuild, 1);
 	SetEntProp(ent, Prop_Data, "m_iHealth", GetEntProp(ent, Prop_Data, "m_iHealth")/5);
+	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
 	
 	if( ent > 0 ) {
 		rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
@@ -570,6 +571,8 @@ int BuidlingATM(int client) {
 	CreateTimer(3.0, BuildingATM_post, ent);
 	rp_SetBuildingData(ent, BD_owner, client);
 	rp_SetBuildingData(ent, BD_FromBuild, 0);
+	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
+	
 	return ent;
 }
 

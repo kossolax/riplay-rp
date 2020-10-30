@@ -100,6 +100,7 @@ public Action Cmd_Smoke(int client, int args) {
 	rp_SetBuildingData(parent, BD_started, GetTime());
 	rp_SetBuildingData(parent, BD_owner, target );
 	rp_SetBuildingData(parent, BD_FromBuild, 0);
+	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
 	
 	return Plugin_Handled;
 }
@@ -222,6 +223,7 @@ public Action Cmd_Ball(int client, int args) {
 	rp_SetBuildingData(node, BD_started, GetTime());
 	rp_SetBuildingData(node, BD_owner, target );
 	rp_SetBuildingData(node, BD_FromBuild, 0);
+	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
 	
 	return Plugin_Handled;
 }

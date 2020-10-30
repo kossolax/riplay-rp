@@ -302,7 +302,7 @@ void showPlayerHintBox(int client, int target) {
 			String_ToLower(clientname, clientname, strlen(clientname));
 		}
 		
-		PrintHintText(client, "Props de %s\nHP: %d", clientname, Entity_GetHealth(target));
+		PrintHintText(client, "Props de %s\nHP: %d - %.2f%%", clientname, Entity_GetHealth(target), (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target))) * 100.0);
 	}
 	else if( StrContains(classname, "vehicle") >= 0 && IsValidClient(g_iVehicleData[target][car_owner]) ) {
 		

@@ -182,6 +182,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	int ent = BuildingMicrowave(client);
 	rp_SetBuildingData(ent, BD_FromBuild, 1);
 	SetEntProp(ent, Prop_Data, "m_iHealth", GetEntProp(ent, Prop_Data, "m_iHealth")/5);
+	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
 	
 	if( ent > 0 )
 		rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
@@ -243,6 +244,8 @@ int BuildingMicrowave(int client) {
 	rp_SetBuildingData(ent, BD_started, GetTime());
 	rp_SetBuildingData(ent, BD_owner, client );
 	rp_SetBuildingData(ent, BD_FromBuild, 0);
+	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
+	
 	g_eMwAct[ent] = true;
 	CreateTimer(3.0, BuildingMicrowave_post, ent);
 	return ent;
