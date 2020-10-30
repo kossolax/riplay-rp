@@ -69,7 +69,7 @@ public void OnPluginStart() {
 	LoadTranslations("common.phrases");
 	LoadTranslations("roleplay.phrases");
 	LoadTranslations("roleplay.items.phrases");
-	LoadTranslations("roleplay.justice.phrases");
+	LoadTranslations("roleplay.loto.phrases");
 	
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	// Loto

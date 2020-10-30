@@ -159,7 +159,7 @@
 	}
 	"Jeton_Which_Money_Amount"
 	{
-		"#format"	"{1:d},{1:d}"
+		"#format"	"{1:d},{2:d}"
 		"fr"	"{1}$ contre {2} jeton(s)"
 	}
 	"Jeton_Which_Money_Give"
