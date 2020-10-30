@@ -137,7 +137,7 @@
 	"Steal_Nearby"
 	{
 		"#format"	"{1:d}"
-		"fr"		"Policier proche: {1}"
+		"fr"		"Policier(s) proche: {1}"
 	}
 	"Difficulty_Failed"
 	{
