@@ -1,0 +1,7 @@
+"Phrases"
+{
+	"Machine_Max"
+	{
+		"fr"		"Vous ne pouvez pas avoir de {red}machine{default} supplémentaire."
+	}
+}

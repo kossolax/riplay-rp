@@ -120,8 +120,10 @@ public Action Cmd_ItemBioKev(int args) {
 	int item_id = GetCmdArgInt(args);
 	
 	if( rp_GetClientBool(client, ch_Kevlar) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà une régénération bionique.");
 		ITEM_CANCEL(client, item_id);
+		char tmp[128];
+		rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemAlreadyEnable", client, tmp);
 		return Plugin_Handled;
 	}
 	
@@ -136,8 +138,10 @@ public Action Cmd_ItemBioYeux(int args) {
 	int item_id = GetCmdArgInt(args);
 	
 	if( rp_GetClientBool(client, ch_Yeux) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà des yeux bioniques.");
 		ITEM_CANCEL(client, item_id);
+		char tmp[128];
+		rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemAlreadyEnable", client, tmp);
 		return Plugin_Handled;
 	}
 	
@@ -212,7 +216,7 @@ public Action Cmd_ItemNano(int args) {
 		if( item_id > 0 ) {
 			ITEM_CANCEL(client, item_id);
 		}
-		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotUseItemInPeace", client);
 		return Plugin_Handled;
 	}
 	rp_SetClientInt(client, i_LastAgression, GetTime());
@@ -257,7 +261,6 @@ public Action Cmd_ItemNano(int args) {
 		float vecStart[3];
 		GetClientEyePosition(client, vecStart);
 		vecStart[2] -= 20.0;
-		PrintToChatAll("debug implo, why this fucking shit not working ?");
 		rp_Effect_Push(vecStart, 500.0, -2000.0, client);		
 	}
 	else if( StrEqual(arg1, "flash") ) {
@@ -314,7 +317,7 @@ public Action Cmd_ItemMoreCash(int args) {
 	if( amount+max >= 15 ) {
 		int item_id = GetCmdArgInt(args);
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas avoir de machine supplémentaire.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Machine_Max", client);
 	}
 	else {
 		rp_SetClientInt(client, i_Machine, amount + 1);
@@ -327,7 +330,7 @@ public Action Cmd_ItemCash(int args) {
 	int client = GetCmdArgInt(1);
 	
 	if( rp_GetClientJobID(client) == 1 || rp_GetClientJobID(client) == 101 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit aux forces de l'ordre.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotUseItemPolice", client);
 		return Plugin_Handled;
 	}
 	
@@ -447,11 +450,9 @@ int BuildingCashMachine(int client, bool force=false) {
 		max += 3;
 	
 	if( count > (max-1) && !force) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez trop de machines actives.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
 		return 0;
 	}
-	
-	CPrintToChat(client, "" ...MOD_TAG... " Construction en cours...");
 	
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client, _, _, _, 0.66);
 	
@@ -605,10 +606,9 @@ void CashMachine_Destroy(int entity) {
 	
 	int owner = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
 	if( IsValidClient(owner) ) {
-		if( StrContains(name, "big") >= 0 )
-			CPrintToChat(owner, "" ...MOD_TAG... " Votre photocopieuse à faux-billets a été détruite.");
-		else
-			CPrintToChat(owner, "" ...MOD_TAG... " Une de vos machines à faux-billets a été détruite.");
+		char tmp[128];
+		GetEdictClassname(entity, tmp, sizeof(tmp));
+		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Build_Destroyed", owner, tmp);
 		rp_ClientOverlays(owner, o_Action_DestroyMachine, 10.0);
 		
 		if( rp_GetBuildingData(entity, BD_started)+120 < GetTime() ) {
@@ -656,7 +656,7 @@ public Action Cmd_ItemCashBig(int args) {
 	int client = GetCmdArgInt(1);
 	
 	if( rp_GetClientJobID(client) == 1 || rp_GetClientJobID(client) == 101 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit aux forces de l'ordre.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotUseItemPolice", client);
 		return Plugin_Handled;
 	}
 	
@@ -703,11 +703,9 @@ int BuildingBigCashMachine(int client) {
 		max += 3;
 	
 	if( count > (max-15) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez trop de machines actives.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
 		return 0;
 	}
-	
-	CPrintToChat(client, "" ...MOD_TAG... " Construction en cours...");
 	
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client, _, _, _, 0.66);
 	
@@ -847,7 +845,7 @@ int CountMachine(int client) {
 			count += 15;
 			Entity_GetAbsOrigin(i, vecOrigin2);
 			if( GetVectorDistance(vecOrigin, vecOrigin2) <= 50 ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas construire aussi proche d'une autre machine vous appartenant.");
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
 				return -1;
 			}
 		}
@@ -855,7 +853,7 @@ int CountMachine(int client) {
 			count++;
 			Entity_GetAbsOrigin(i, vecOrigin2);
 			if( GetVectorDistance(vecOrigin, vecOrigin2) <= 24 ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas construire aussi proche d'une autre machine vous appartenant.");
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
 				return -1;
 			}
 		}

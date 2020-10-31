@@ -25,7 +25,7 @@
 	}
 	"Plant_Max"
 	{
-		"fr"		"Vous ne pouvez pas avoir de plant supplémentaire."
+		"fr"		"Vous ne pouvez pas avoir de {red}plant{default} supplémentaire."
 	}
 	"Plant_Tick"
 	{
