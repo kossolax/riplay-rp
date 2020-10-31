@@ -47,33 +47,33 @@ int g_cBeam;
 
 // Numéro, Résumé, Heures, Amende, Dédo, Détails
 char g_szArticles[][][512] = {
-	{"221-1-a-12",	"Meurtre avec circonstances atténuantes",					"12",	"500",		"1000",	"Toutes atteintes involontaires à la vie d’un citoyen sont condamnées à une peine maximale de 12h de prison et 500$ d’amende." },
-	{"221-1-a-24",	"Meurtre",										"24",	"1250",		"2500",	"Toutes atteintes volontaires à la vie d’un citoyen sont condamnées à une peine maximale de 24h de prison et 1250$ d’amende." },
-	{"221-1-a-48",	"Meurtre avec circonstances aggravantes",					"48",	"2500",		"5000",	"Toutes atteintes volontaires et préméditée à la vie d’un citoyen sont condamnées à une peine maximale de 48h de prison et 2500$ d’amende." },
+	{"221-1-a-12",	"Act_Kill-",		"12",	"500",		"1000",	"Act_Kill-Desc" },
+	{"221-1-a-24",	"Act_Kill",			"24",	"1250",		"2500",	"Act_KillDesc" },
+	{"221-1-a-48",	"Act_Kill+",		"48",	"2500",		"5000",	"Act_Kill+Desc" },
 
-	{"221-1-b",	"Meurtre d'un policier",							"12",	"2000",		"1500",	"Toutes atteintes volontaires à la vie d’un officier des forces de l’ordre sont condamnées à une peine maximale de 12h de prison et 2 000$ d’amende." },
-	{"221-1-d",	"Agression physique",								"6",	"250",		"100",	"Les coups et blessures involontaires n’ayant pas provoqué des lésions corporelles sont condamnés à une peine maximale de 6h de prison et 250$ d’amende." },
+	{"221-1-b",		"Act_Kill++",		"12",	"2000",		"1500",	"Act_Kill++Desc" },
+	{"221-1-d",		"Act_Aggr",			"6",	"250",		"100",	"Act_AggrDesc" },
 
-	{"221-2",	"Vol",										"6",	"450",		"-1",	"Le vol est un acte punis d’une peine maximale de 6h de prison et 450$ d’amende." },
-	{"221-3",	"Manquement convocation",							"18",	"4000",		"0",	"Le manquement à une convocation devant les tribunaux sans motif valable est puni d’une peine maximale de 18h de prison et 4.000$ d'amende." },
-	{"221-4",	"Faux aveux / Dénonciations calomnieuses",					"6",	"1500",		"300",	"Les faux aveux ou les dénonciations calomnieuses sont punis d’une peine maximale de 6h de prison et 1500$ d’amende." },
-	{"221-5-a",	"Nuisances sonores", 								"6",	"1500", 	"0",	"Les nuisances sonores sont punies d’une peine maximale de 6h de prison et 1 500$ d'amende." },
-	{"221-5-b",	"Insultes / irrespect", 							"6",	"1000", 	"1250",	"Les insultes sont passibles d’une peine maximale de 6h de prison et 1000$ d’amende." },
-	{"221-5-c",	"Harcèlements / Menaces", 							"6",	"800",		"300",	"Les actes de harcèlement et/ou menaces sont passibles d'une peine maximale de 6h de prison et 800$ d'amende." },
-	{"221-7",	"Obstruction ",									"6",	"650",		"0",	"Tout acte obstruant les forces de l’ordre (Masque/Suicide/Pilule/Pots de vins, que ce soit avant ou pendant l’audience/Changement de pseudo délibéré, pendant la recherche du criminel et GHB), ou la fuite délibérée, ou mutinerie, sont passibles d’une peine maximale de 6h de prison et 650$ d'amende. " },
-	{"221-8",	"Bavure policière",								"24",	"3000",		"2000",	"Tout acte de maltraitance policière (taser, balle perdue, jail/déjail répétitif...) pourra être rapporté devant les tribunaux. La maltraitance est passible de 24h de prison au maximum, et d'une amende de 3 000$ au maximum" },
-	{"221-10-b",	"Association de malfaiteurs",							"6",	"500",		"0",	"Toute association de malfaiteurs (Défense lors de perquisitions notamment) est punissable d’une peine maximale de 6h de prison et 500$ d’amende." },
-	{"221-12",	"Profiter de la vulnérabilité d’une personne",					"18",	"3000",		"1500",	"Le fait de soumettre une personne à un acte criminel en abusant de sa vulnérabilité ou de sa dépendance à son travail est punis d’une peine maximale de 18h de prison et 3 000$ d’amende en plus de la peine du crime commis" },
-	{"221-13-a",	"Destruction de biens d’autrui",						"6",	"1500",		"1000",	"Tout acte volontaire ou involontaire de destruction de biens d'autrui et ce quelque soit les méthodes de destruction utilisées, peut-être condamné par 6h de prison et 1500$ au maximum" },
-	{"221-13-b",	"Atteinte à la vie privée",							"6",	"950",		"500",	"Les atteintes à la vie privée telles que l’espionnage, ou l’enregistrement d’une conversation intime, sont punies d’une peine maximale de 6h de prison et 950$ d'amende" },
-	{"221-13-c",	"Intrusion dans une propriété privée",						"6",	"800",		"500",	"La violation d’une propriété privée est punie d’une peine maximale de 6h de prison et 800$ d’amende." },
-	{"221-13-d",	"Intrusion dans un batiment fédéral",						"18",	"5000",		"500",	"La violation d’un batiment fédéral est punie d’une peine maximale de 18h de prison et 5000$ d’amende." },
-	{"221-14-a",	"Usage de produits illicites",							"6",	"1000",		"250",	"Droguer ou alcooliser une personne à son insu est un acte punis d’une peine maximale de 6h de prison et 1000$ d’amende. " },
-	{"221-14-b",	"Trafic illégal",								"6",	"1000",		"250",	"Droguer ou alcooliser une personne à son insu est un acte punis d’une peine maximale de 6h de prison et 1000$ d’amende. " },
-	{"221-15-a",	"Tentative de corruption",							"24",	"10000",	"0",	"Tout acte de corruption ou de tentative de corruption, est puni d’une peine maximale de 24h de prison et 10 000$ d’amende." },
-	{"221-15-b",	"Escroquerie",									"18",	"5000",		"-1",	"Tout acte d’escroquerie est puni d’une peine maximale de 24h de prison et 5 000$ d’amende." },
-	{"221-16",	"Séquestration",								"6",	"800",		"500",	"Les actes de séquestrations sont passibles d'une peine maximale de 6h de prison et 800$ d'amende." },
-	{"221-17",	"Acte de proxénétisme / prostitution",						"6",	"450",		"0",	"Tout acte de proxénétisme ou de prostitution est passible d'une peine maximale de 6h de prison et 450$ d’amende." }
+	{"221-2",		"Act_Vol",			"6",	"450",		"-1",	"Act_VolDesc" },
+	{"221-3",		"Act_MqConvoc",		"18",	"4000",		"0",	"Act_MqConvocDesc" },
+	{"221-4",		"Act_Fake",			"6",	"1500",		"300",	"Act_FakeDesc" },
+	{"221-5-a",		"Act_NuisaSono", 	"6",	"1500", 	"0",	"Act_NuisaSonoDesc" },
+	{"221-5-b",		"Act_Insult", 		"6",	"1000", 	"1250",	"Act_InsultDesc" },
+	{"221-5-c",		"Act_HarcMen", 		"6",	"800",		"300",	"Act_HarcMenDesc" },
+	{"221-7",		"Act_ObstruDesc",	"6",	"650",		"0",	"Act_ObstruDesc" },
+	{"221-8",		"Act_BavuPol",		"24",	"3000",		"2000",	"Act_BavuPolDesc" },
+	{"221-10-b",	"Act_AssocMalf",	"6",	"500",		"0",	"Act_AssocMalfDesc" },
+	{"221-12",		"Act_ProfitVulne",	"18",	"3000",		"1500",	"Act_ProfitVulneDesc" },
+	{"221-13-a",	"Act_Destruct",		"6",	"1500",		"1000",	"Act_DestructDesc" },
+	{"221-13-b",	"Act_ViePrv",		"6",	"950",		"500",	"Act_ViePrvDesc" },
+	{"221-13-c",	"Act_IntrusiPrv",	"6",	"800",		"500",	"Act_IntrusiPrvDesc" },
+	{"221-13-d",	"Act_IntrusiFede",	"18",	"5000",		"500",	"Act_IntrusiFedeDesc" },
+	{"221-14-a",	"Act_UseDrug",		"6",	"1000",		"250",	"Act_UseDrugDesc" },
+	{"221-14-b",	"Act_IllegTrafc",	"6",	"1000",		"250",	"Act_IllegTrafcDesc" },
+	{"221-15-a",	"Act_TCorrup",		"24",	"10000",	"0",	"Act_TCorrupDesc" },
+	{"221-15-b",	"Act_Escroq",		"18",	"5000",		"-1",	"Act_EscroqDesc" },
+	{"221-16",		"Act_Seq",			"6",	"800",		"500",	"Act_SeqDesc" },
+	{"221-17",		"Act_Pute",			"6",	"450",		"0",	"Act_PuteDesc" }
 };
 char g_szAcquittement[6][64] = { "Justice_Acquittement_NonCoupable coupable", "Justice_Acquittement_Conciliation", "Justice_Acquittement_Impossible", "Justice_Acquittement_DejaVu", "Justice_Acquittement_Cancel", "Justice_Acquittement_Newbie"};
 char g_szCondamnation[6][64] = { "Justice_Condamnation_VerySmall", "Justice_Condamnation_Small", "Justice_Condamnation_Average", "Justice_Condamnation_Hard", "Justice_Condamnation_VeryHard", "Justice_Condamnation_Disconnect"};
@@ -426,8 +426,9 @@ Menu AUDIENCE_Articles(int type, int a, int b, int c) {
 		subMenu.SetTitle("%T\n ", "Tribunal_Menu_Articles_List", client);
 		for (int i = 0; i < sizeof(g_szArticles); i++) {
 			Format(tmp, sizeof(tmp), "articles 1 %d", i);
+			Format(tmp2, sizeof(tmp2), "%T", g_szArticles[i][1], client);
 			
-			subMenu.AddItem(tmp, g_szArticles[i][1]);
+			subMenu.AddItem(tmp, tmp2);
 		}
 	}
 	else if( a == 2 && b == -1 ) {
@@ -437,8 +438,9 @@ Menu AUDIENCE_Articles(int type, int a, int b, int c) {
 			if( g_iArticles[type][i] <= 0 )
 				continue;
 			Format(tmp, sizeof(tmp), "articles 2 %d", i);
+			Format(tmp2, sizeof(tmp2), "%T", g_szArticles[i][1], client);
 			
-			subMenu.AddItem(tmp, g_szArticles[i][1]);
+			subMenu.AddItem(tmp, tmp2);
 		}
 	}
 	else if( a == 1 && b >= 0 ) {
@@ -504,11 +506,21 @@ Menu AUDIENCE_Condamner(int type, int articles) {
 		heure = RoundFloat(float(heure) * g_flCondamnation[articles]);
 		amende = RoundFloat(float(amende) * g_flCondamnation[articles]);
 		
-		SQL_Insert(type, 1, articles, heure, amende);
-		
 		char target_name[128];
 		GetClientName2(g_iTribunalData[type][td_Suspect], target_name, sizeof(target_name), false);
+		
+		CPrintToChatSearch(type, ""...MOD_TAG..." %T", "Tribunal_Menu_Condamner_Given", LANG_SERVER, target_name);
+		for (int i = 0; i < sizeof(g_szArticles); i++) {
+			if( g_iArticles[type][i] <= 0 )
+				continue;
+
+			CPrintToChatSearch(type, "" ...MOD_TAG... " %T", g_szArticles[i][5], LANG_SERVER, heure, amende);
+		}
+		
+		
 		CPrintToChatSearch(type, "" ...MOD_TAG... " %T", "Tribunal_Menu_Condamner_Given", LANG_SERVER, target_name, heure, amende, g_szCondamnation[articles]);
+		
+		SQL_Insert(type, 1, articles, heure, amende);
 		
 		AUDIENCE_Stop(type);
 	}
@@ -1041,7 +1053,8 @@ public Action fwdHUD(int client, char[] szHUD, const int size) {
 				if( g_iArticles[type][i] <= 0 )
 					continue;
 				
-				Format(szHUD, size, "%s %2dx   %s\n ", szHUD, g_iArticles[type][i], g_szArticles[i][1]);
+				Format(tmp1, sizeof(tmp1), "%T", g_szArticles[i][1], client);
+				Format(szHUD, size, "%s %2dx   %s\n ", szHUD, g_iArticles[type][i], tmp1);
 				
 				heure += (g_iArticles[type][i] * StringToInt(g_szArticles[i][2]));
 				amende += (g_iArticles[type][i] * StringToInt(g_szArticles[i][3]));

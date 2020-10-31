@@ -1,5 +1,265 @@
 "Phrases"
 {
+	"Act_Kill-"
+	{
+		"fr"		"Meurtre avec circonstances atténuantes"
+	}
+	"Act_Kill-Desc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Toute atteinte involontaire à la vie d’un citoyen est condamnée à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+
+	"Act_Kill"
+	{
+		"fr"		"Meurtre"
+	}
+	"Act_KillDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Toute atteinte volontaire à la vie d’un citoyen est condamnée à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+
+	"Act_Kill+"
+	{
+		"fr"		"Meurtre avec circonstances aggravantes"
+	}
+	"Act_Kill+Desc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Toute atteinte volontaire et préméditée à la vie d’un citoyen est condamnée à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+
+	"Act_Kill++"
+	{
+		"fr"		"Meurtre d'un policier"
+	}
+	"Act_Kill++Desc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Toute atteinte volontaire à la vie d’un officier des forces de l’ordre est condamnée à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+
+	"Act_Aggr"
+	{
+		"fr"		"Agression physique"
+	}
+	"Act_AggrDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Les coups et blessures involontaires n’ayant pas provoqué des lésions corporelles sont condamnés à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+
+	"Act_Vol"
+	{
+		"fr"		"Vol"
+	}
+	"Act_VolDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Tout vol est un acte punis d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+
+	"Act_MqConvoc"
+	{
+		"fr"		"Manquement convocation"
+	}
+	"Act_MqConvocDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Tout manquement à une convocation devant les tribunaux sans motif valable est puni d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+
+	"Act_Fake"
+	{
+		"fr"		"Faux aveux / Dénonciations calomnieuses"
+	}
+	"Act_FakeDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Tout faux aveux ou dénonciation calomnieuse est puni d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+
+	"Act_NuisaSono"
+	{
+		"fr"		"Nuisances sonores"
+	}
+	"Act_NuisaSonoDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Toute nuisance sonore est punie d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+
+	"Act_Insult"
+	{
+		"fr"		"Insultes / irrespect"
+	}
+	"Act_InsultDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Toute insulte est passible d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+
+	"Act_HarcMen"
+	{
+		"fr"		"Harcèlements / Menaces"
+	}
+	"Act_HarcMenDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Tout acte de harcèlement et/ou menaces sont passibles d'une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+
+	"Act_Obstru"
+	{
+		"fr"		"Obstruction"
+	}
+	"Act_ObstruDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Tout acte obstruant les forces de l’ordre (Masque/Suicide/Pilule/Pots de vins, que ce soit avant ou pendant l’audience/Changement de pseudo délibéré, pendant la recherche du criminel et GHB), ou la fuite délibérée, ou mutinerie, sont passibles d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+
+	"Act_BavuPol"
+	{
+		"fr"		"Bavure policière"
+	}
+	"Act_BavuPolDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Tout acte de maltraitance policière (taser, balle perdue, jail/déjail répétitif...) pourra être rapporté devant les tribunaux. La maltraitance est passible de {red}{1}{default}h de prison au maximum, et d'une amende de {red}{2}{default}$ au maximum."
+	}
+
+	"Act_AssocMalf"
+	{
+		"fr"		"Association de malfaiteurs"
+	}
+	"Act_AssocMalfDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Toute association de malfaiteurs (Défense lors de perquisitions notamment) est punissable d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+
+	"Act_ProfitVulne"
+	{
+		"fr"		"Profiter de la vulnérabilité d’une personne"
+	}
+	"Act_ProfitVulneDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Le fait de soumettre une personne à un acte criminel en abusant de sa vulnérabilité ou de sa dépendance à son travail est punis d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende en plus de la peine du crime commis."
+	}
+
+	"Act_Destruct"
+	{
+		"fr"		"Destruction de biens d’autrui"
+	}
+	"Act_DestructDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Tout acte volontaire ou involontaire de destruction de biens d'autrui et ce quelque soit les méthodes de destruction utilisées, peut-être condamné par {red}{1}{default}h de prison et {red}{2}{default}$ au maximum."
+	}
+
+	"Act_ViePrv"
+	{
+		"fr"		"Atteinte à la vie privée"
+	}
+	"Act_ViePrvDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Toute atteinte à la vie privée telle que l’espionnage, ou l’enregistrement d’une conversation intime est punie d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+
+	"Act_Vol"
+	{
+		"fr"		"Vol"
+	}
+	"Act_VolDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Tout vol est un acte punis d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+
+	"Act_IntrusiPrv"
+	{
+		"fr"		"Intrusion dans une propriété privée"
+	}
+	"Act_IntrusiPrvDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Toute violation d’une propriété privée est punie d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+
+	"Act_IntrusiFede"
+	{
+		"fr"		"Intrusion dans un batiment fédéral"
+	}
+	"Act_IntrusiFedeDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Toute violation d’un batiment fédéral est punie d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+
+	"Act_UseDrug"
+	{
+		"fr"		"Usage de produits illicites"
+	}
+	"Act_UseDrugDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Droguer ou alcooliser une personne à son insu est un acte punis d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+
+	"Act_IllegTrafc"
+	{
+		"fr"		"Trafic illégal"
+	}
+	"Act_IllegTrafcDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Tout trafic illégal est punis d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+
+	"Act_TCorrup"
+	{
+		"fr"		"Tentative de corruption"
+	}
+	"Act_TCorrupDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Tout acte de corruption ou de tentative de corruption, est puni d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+
+	"Act_Escroq"
+	{
+		"fr"		"Escroquerie"
+	}
+	"Act_EscroqDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Tout acte d’escroquerie est puni d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+
+	"Act_Seq"
+	{
+		"fr"		"Séquestration"
+	}
+	"Act_SeqDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Tout acte de séquestration est passible d'une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+
+	"Act_Pute"
+	{
+		"fr"		"Acte de proxénétisme / prostitution"
+	}
+	"Act_PuteDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Tout acte de proxénétisme ou de prostitution est passible d'une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+	}
+	// ----------------------------------------------------------------------------------------------
 	"Justice_Acquittement_NonCoupable"
 	{
 		"fr"		"Non coupable"
@@ -253,6 +513,11 @@
 	{
 		"fr"	"Quel est votre verdict?"
 	}
+	"Tribunal_Menu_Condamner_Doing"
+	{
+		"#format"	"{1:s}"
+		"fr"	"{1} a été jugé {red}coupable{default} des articles suivant:"
+	}
 	"Tribunal_Menu_Condamner_Given"
 	{
 		"#format"	"{1:s},{2:d},{3:d},{4:t}"
@@ -266,7 +531,7 @@
 	"Tribunal_Menu_Dedo_Amount"
 	{
 		"#format"	"{1:s},{2:d}"
-		"fr"	"Quel est la valeur de {1}?\n    {2}$"
+		"fr"	"Quel est la valeur de {1}?\n		{2}$"
 	}
 	"Tribunal_Menu_Dedo_Add"
 	{
