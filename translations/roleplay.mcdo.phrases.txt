@@ -24,4 +24,9 @@
 		"#format"	"{1:d}"
 		"fr"		"Manger {1} burgers"
 	}
+	
+	"Microwave_Ready"
+	{
+		"fr"		"Votre micro-ondes vient de sonner!"
+	}
 }
