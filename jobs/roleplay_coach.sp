@@ -450,14 +450,14 @@ public Action Cmd_ItemKnifeType(int args) {
 	int wepid = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 	if( !IsValidEntity(wepid) ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, ""...MOD_TAG..." %T", "Coach_KnifeInHands", client);
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_KnifeInHands", client);
 		return Plugin_Handled;
 	}
 	
 	GetEdictClassname(wepid, classname, sizeof(classname));
 	if( !Weapon_ShouldBeEquip(classname) ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, ""...MOD_TAG..." %T", "Coach_KnifeInHands", client);
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_KnifeInHands", client);
 		return Plugin_Handled;
 	}
 	
@@ -487,7 +487,7 @@ public Action Cmd_ItemKnifeType(int args) {
 	
 	if( !rp_SetClientKnifeType(client, ball_type_type) ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, ""...MOD_TAG..." %T", "Coach_KnifeInHands", client);
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_KnifeInHands", client);
 		return Plugin_Handled;
 	}
 	else {

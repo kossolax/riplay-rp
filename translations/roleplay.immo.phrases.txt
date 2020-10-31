@@ -1,10 +1,6 @@
 "Phrases"
 {
-	"Appart_Bonus_Pay"
-	{
-		"#format"	"{1:d}"
-		"fr"	"Votre appartement a fait remporté {green}{1}{default}$ supplémentaire."
-	}
+
 	"Appart_AlreadySell"
 	{
 		"fr"	"L'appartement a déjà été vendu à une autre personne."

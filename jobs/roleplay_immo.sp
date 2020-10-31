@@ -115,7 +115,7 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 		int sum = RoundToCeil(float(salary) * multi);
 		
 		if( verbose )
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Appart_Bonus_Pay", client, sum);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Pay_Bonus_Appart", client, sum);
 		
 		topay += sum;
 		return Plugin_Changed;
@@ -724,7 +724,7 @@ int BuildingTomb(int client) {
 		GetEdictClassname(i, tmp, sizeof(tmp));
 		
 		if( StrEqual(classname, tmp) && rp_GetBuildingData(i, BD_owner) == client ) {
-			CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
 			return 0;
 		}
 	}

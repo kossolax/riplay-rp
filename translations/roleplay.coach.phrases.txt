@@ -34,10 +34,6 @@
 		"fr"	"Vous avez ramassé votre couteau de lancé."
 	}
 	// ----------------------------------------------------------------------------------------------
-	"Coach_KnifeInHands"
-	{
-		"fr"	"Vous devez prendre votre couteau en main."
-	}
 	"edit_knife_done"
 	{
 		"fr"		"La modification a été apportée à votre couteau."

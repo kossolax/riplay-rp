@@ -1,0 +1,27 @@
+"Phrases"
+{
+	"Knife_Menu"
+	{
+		"fr"	"Quel couteau voulez-vous utiliser?"
+	}
+	"Burger_Menu"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Vous avez {1} Hamburger vitaux.\nCombien voulez-vous en manger?"
+	}
+	"Burger_Menu_NextLevel"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Manger {1} burgers pour atteindre le niveau suivant"
+	}
+	"Burger_Menu_All"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Manger tout mes {1} burgers"
+	}
+	"Burger_Menu_Count"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Manger {1} burgers"
+	}
+}
