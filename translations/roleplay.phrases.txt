@@ -705,9 +705,8 @@
 	}
 	"weapon_knife_ursus"
 	{
-		"fr"	"Couteau ursus"}
-	{
-		"fr"	
+		"fr"	"Couteau ursus"
+	}
 	"weapon_knife_gypsy_jackknife"
 	{
 		"fr"	"Couteau navaja"
@@ -734,6 +733,6 @@
 	}
 	"weapon_knife_outdoor"
 	{
-		"fr"	"Couteau de nomade"}
+		"fr"	"Couteau de nomade"
 	}
 }

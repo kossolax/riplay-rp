@@ -115,7 +115,7 @@ public Action task_KNIFE(Handle timer, any client) {
 	SetMenuTitle(menu, "%T\n ", "Knife_Menu", client);
 	
 	for (int i = 0; i < sizeof(g_szKnife); i++) {
-		AddMenuItem(menu, g_szKnife[i][0], g_szKnife[i][1]);
+		AddMenuItem(menu, g_szKnife[i], g_szKnife[i]);
 	}
 	
 	SetMenuExitButton(menu, true);
