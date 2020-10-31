@@ -79,10 +79,12 @@
 #define ITEM_KITCROCHTAGE	2
 #define ITEM_KITEXPLOSIF	3
 #define ITEM_MAGNETCB 		4
+#define ITEM_BERSERK 		6
 #define	ITEM_KNIFE			17
 #define ITEM_FITNESS		30
 #define ITEM_FEUARTIFICE	49
 #define ITEM_TICKETID		76
+#define ITEM_NANO_CRYO		78
 #define ITEM_CADEAU			132
 #define	ITEM_GPS			144
 #define	ITEM_REPAIR			176
