@@ -114,8 +114,11 @@ public Action task_KNIFE(Handle timer, any client) {
 	Handle menu = CreateMenu(MenuKnife);
 	SetMenuTitle(menu, "%T\n ", "Knife_Menu", client);
 	
+	char tmp[128];
+	
 	for (int i = 0; i < sizeof(g_szKnife); i++) {
-		AddMenuItem(menu, g_szKnife[i], g_szKnife[i]);
+		Format(tmp, sizeof(tmp), "%T", g_szKnife[i], client);
+		AddMenuItem(menu, g_szKnife[i], tmp);
 	}
 	
 	SetMenuExitButton(menu, true);
@@ -367,6 +370,8 @@ public Action Frame_Microwave(Handle timer, any ent) {
 		StopSoundAny(ent, SNDCHAN_AUTO, "ambient/machines/lab_loop1.wav");
 		return Plugin_Handled;
 	}
+	
+	int owner = rp_GetBuildingData(ent, BD_owner);
 	int time = rp_GetBuildingData(ent, BD_count);
 	int maxtime = rp_GetBuildingData(ent, BD_max);
 	if(time >= maxtime){
@@ -377,8 +382,10 @@ public Action Frame_Microwave(Handle timer, any ent) {
 	if(time == 0){
 		EmitSoundToAllAny("ambient/machines/lab_loop1.wav", ent, _, _, _, 0.33);
 	}
-	if( rp_GetClientBool(rp_GetBuildingData(ent, BD_owner), b_IsAFK) == false )
+	
+	if( rp_GetClientInt(owner, i_TimeAFK) <= 60 ) {
 		rp_SetBuildingData(ent, BD_count, ++time);
+	}
 	CreateTimer(1.0, Frame_Microwave, ent);
 	return Plugin_Handled;
 }
@@ -395,6 +402,9 @@ void giveHamburger(int client, int amount){
 			continue;
 
 		if(mci == j){
+			char tmp[128];
+			rp_GetItemData(i, item_type_name, tmp, sizeof(tmp));
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Take", client, amount, tmp);
 			rp_ClientGiveItem(client, i, amount);
 			break;
 		}

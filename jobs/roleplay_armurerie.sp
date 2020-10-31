@@ -136,36 +136,48 @@ public Action Cmd_ItemBallType(int args) {
 		return Plugin_Handled;
 	}
 	
+	enum_ball_type type = ball_type_none;
 	if( StrEqual(arg1, "fire") ) {
-		rp_SetWeaponBallType(wepid, ball_type_fire);
+		type = ball_type_fire;
 	}
 	else if( StrEqual(arg1, "caoutchouc") ) {
-		rp_SetWeaponBallType(wepid, ball_type_caoutchouc);
+		type = ball_type_caoutchouc;
 	}
 	else if( StrEqual(arg1, "paintball") ) {
-		rp_SetWeaponBallType(wepid, ball_type_paintball);
+		type = ball_type_paintball;
 	}
 	else if( StrEqual(arg1, "poison") ) {
-		rp_SetWeaponBallType(wepid, ball_type_poison);
+		type = ball_type_poison;
 	}
 	else if( StrEqual(arg1, "vampire") ) {
-		rp_SetWeaponBallType(wepid, ball_type_vampire);
+		type = ball_type_vampire;
 	}
 	else if( StrEqual(arg1, "reflex") ) {
-		rp_SetWeaponBallType(wepid, ball_type_reflexive);
+		type = ball_type_reflexive;
 	}
 	else if( StrEqual(arg1, "explode") ) {
-		rp_SetWeaponBallType(wepid, ball_type_explode);
+		type = ball_type_explode;
 	}
 	else if( StrEqual(arg1, "revitalisante") ) {
-		rp_SetWeaponBallType(wepid, ball_type_revitalisante);
+		type = ball_type_revitalisante;
 	}
 	else if( StrEqual(arg1, "nosteal") ) {
-		rp_SetWeaponBallType(wepid, ball_type_nosteal);
+		type = ball_type_nosteal;
 	}
 	else if( StrEqual(arg1, "notk") ) {
-		rp_SetWeaponBallType(wepid, ball_type_notk);
+		type = ball_type_notk;
 	}
+	
+	if( type == ball_type_none || rp_GetWeaponBallType(wepid) == type ) {
+		ITEM_CANCEL(client, item_id);
+		char item_name[128];
+		rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
+
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
+		return Plugin_Handled;
+	}
+	
+	rp_SetWeaponBallType(wepid, type);
 	
 	return Plugin_Handled;
 }

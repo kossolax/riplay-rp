@@ -1291,7 +1291,11 @@ public int Native_rp_SetClientKnifeType(Handle plugin, int numParams) {
 		return view_as<int>(false);
 	}
 	
-	g_iWeaponsBallType[wepid] = GetNativeCell(2);
+	int type = GetNativeCell(2);
+	if( g_iWeaponsBallType[wepid] == type )
+		return view_as<int>(false);
+	
+	g_iWeaponsBallType[wepid] = type;
 	
 	return view_as<int>(true);
 }
