@@ -431,7 +431,7 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 					return;
 				}
 				if( g_iUserData[target][i_PlayerLVL] < 306 ) {
-					CPrintToChat(client, "" ...MOD_TAG... " %N{default} doit être au moins de niveau 306 \"Haut conseillé\", afin d'effectuer un contrat kidnapping.");
+					CPrintToChat(client, "" ...MOD_TAG... " %N{default} doit être au moins de niveau 306 \"Haut conseillé\", afin d'effectuer un contrat kidnapping.", target);
 					return;
 				}
 				type = 1005;

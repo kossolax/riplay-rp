@@ -871,7 +871,7 @@ public void Check_2(Handle owner, Handle handle, const char[] error, any data) {
 	
 	g_iClient_OLD[data] = 1;
 	
-	if( !SQL_FetchRow(handle) ) {
+	if( !SQL_FetchRow(handle) && GetConVarInt(FindConVar("hostport")) == 27015 ) {
 		g_iClient_OLD[data] = 0;
 	}
 	
