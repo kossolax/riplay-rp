@@ -938,7 +938,7 @@ int BuildingPlant(int client, int type) {
 	
 	int count, max = 3;
 	
-	switch( rp_GetClientInt(client, i_Job) ) {
+	switch( rp_GetClientInt(client, i_Job) ) {		
 		case 81: max = 10;
 		case 82: max = 9;
 		case 83: max = 8;
@@ -946,6 +946,9 @@ int BuildingPlant(int client, int type) {
 		case 85: max = 6;
 		case 86: max = 5;
 		case 87: max = 4;
+		case 88: max = 4;
+		case 89: max = 4;
+		
 		default: max = 3;
 	}
 	

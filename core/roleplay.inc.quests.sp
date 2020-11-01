@@ -85,6 +85,7 @@ public void SQL_StartQuest_CB(Handle owner, Handle hQuery, const char[] error, a
 			g_iClientQuests[client][objectiveID] = SQL_FetchInt(hQuery, 6);
 			g_iClientQuests[client][stepID] = SQL_FetchInt(hQuery, 7);
 			
+			rp_HookEvent(client, RP_OnFrameSeconde, QuestFrame);
 			
 			Function fct2 = QuestGetFunction(g_iClientQuests[client][startID]);
 			if( fct2 != INVALID_FUNCTION ) {
@@ -94,7 +95,6 @@ public void SQL_StartQuest_CB(Handle owner, Handle hQuery, const char[] error, a
 				Call_Finish();
 			}
 			
-			rp_HookEvent(client, RP_OnFrameSeconde, QuestFrame);
 		}
 	}
 	else if( g_iClientQuests[client][stepID] == -1 ) {
@@ -236,6 +236,7 @@ public int Native_rp_QuestStepComplete(Handle plugin, int numParams) {
 	
 	
 	if( g_iClientQuests[client][questID] > 0 ) {
+		
 		rp_UnhookEvent(client, RP_OnFrameSeconde, QuestFrame);
 		
 		Function fct = QuestGetFunction(g_iClientQuests[client][overID]);
