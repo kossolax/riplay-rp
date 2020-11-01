@@ -1,10 +1,10 @@
 "Phrases"
 {
-	"Act_Kill-"
+	"Act_KillAtt"
 	{
 		"fr"		"Meurtre avec circonstances atténuantes"
 	}
-	"Act_Kill-Desc"
+	"Act_KillAttDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Toute atteinte involontaire à la vie d’un citoyen est condamnée à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
@@ -20,21 +20,21 @@
 		"fr"		"Toute atteinte volontaire à la vie d’un citoyen est condamnée à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
 	}
 
-	"Act_Kill+"
+	"Act_KillAggr"
 	{
 		"fr"		"Meurtre avec circonstances aggravantes"
 	}
-	"Act_Kill+Desc"
+	"Act_KillAggrDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Toute atteinte volontaire et préméditée à la vie d’un citoyen est condamnée à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
 	}
 
-	"Act_Kill++"
+	"Act_KillCT"
 	{
 		"fr"		"Meurtre d'un policier"
 	}
-	"Act_Kill++Desc"
+	"Act_KillCTDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Toute atteinte volontaire à la vie d’un officier des forces de l’ordre est condamnée à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
@@ -521,7 +521,7 @@
 	"Tribunal_Menu_Condamner_Given"
 	{
 		"#format"	"{1:s},{2:d},{3:d},{4:t}"
-		"fr"	"{1} a été condamné à {red}{2}{default} heure(s) de prison et à {red}{3}{default}$ d'amende. Le juge a été {red}{4}{default}."
+		"fr"	"{1} a été condamné {red}condamné{default} à {red}{2}{default} heure(s) de prison et à {red}{3}{default}$ d'amende. Le juge a été {red}{4}{default}."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tribunal_Menu_Dedo"
@@ -561,10 +561,10 @@
 	{
 		"fr"	"Pour quelle raison doit-elle être acquitée?"
 	}
-	"Tribunal_Menu_Condamner_Given"
+	"Tribunal_Menu_Acquitter_Given"
 	{
 		"#format"	"{1:s},{2:t}"
-		"fr"	"{1} a été été acquitée: {green}{2}{default}."
+		"fr"	"{1} a été acquité: {green}{2}{default}."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tribunal_Menu_Cancel"

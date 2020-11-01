@@ -47,11 +47,11 @@ int g_cBeam;
 
 // Numéro, Résumé, Heures, Amende, Dédo, Détails
 char g_szArticles[][][512] = {
-	{"221-1-a-12",	"Act_Kill-",		"12",	"500",		"1000",	"Act_Kill-Desc" },
+	{"221-1-a-12",	"Act_KillAtt",		"12",	"500",		"1000",	"Act_KillAttDesc" },
 	{"221-1-a-24",	"Act_Kill",			"24",	"1250",		"2500",	"Act_KillDesc" },
-	{"221-1-a-48",	"Act_Kill+",		"48",	"2500",		"5000",	"Act_Kill+Desc" },
+	{"221-1-a-48",	"Act_KillAggr",		"48",	"2500",		"5000",	"Act_KillAggrDesc" },
 
-	{"221-1-b",		"Act_Kill++",		"12",	"2000",		"1500",	"Act_Kill++Desc" },
+	{"221-1-b",		"Act_KillCT",		"12",	"2000",		"1500",	"Act_KillCTDesc" },
 	{"221-1-d",		"Act_Aggr",			"6",	"250",		"100",	"Act_AggrDesc" },
 
 	{"221-2",		"Act_Vol",			"6",	"450",		"-1",	"Act_VolDesc" },
@@ -60,7 +60,7 @@ char g_szArticles[][][512] = {
 	{"221-5-a",		"Act_NuisaSono", 	"6",	"1500", 	"0",	"Act_NuisaSonoDesc" },
 	{"221-5-b",		"Act_Insult", 		"6",	"1000", 	"1250",	"Act_InsultDesc" },
 	{"221-5-c",		"Act_HarcMen", 		"6",	"800",		"300",	"Act_HarcMenDesc" },
-	{"221-7",		"Act_ObstruDesc",	"6",	"650",		"0",	"Act_ObstruDesc" },
+	{"221-7",		"Act_Obstru",		"6",	"650",		"0",	"Act_ObstruDesc" },
 	{"221-8",		"Act_BavuPol",		"24",	"3000",		"2000",	"Act_BavuPolDesc" },
 	{"221-10-b",	"Act_AssocMalf",	"6",	"500",		"0",	"Act_AssocMalfDesc" },
 	{"221-12",		"Act_ProfitVulne",	"18",	"3000",		"1500",	"Act_ProfitVulneDesc" },
@@ -75,7 +75,7 @@ char g_szArticles[][][512] = {
 	{"221-16",		"Act_Seq",			"6",	"800",		"500",	"Act_SeqDesc" },
 	{"221-17",		"Act_Pute",			"6",	"450",		"0",	"Act_PuteDesc" }
 };
-char g_szAcquittement[6][64] = { "Justice_Acquittement_NonCoupable coupable", "Justice_Acquittement_Conciliation", "Justice_Acquittement_Impossible", "Justice_Acquittement_DejaVu", "Justice_Acquittement_Cancel", "Justice_Acquittement_Newbie"};
+char g_szAcquittement[6][64] = { "Justice_Acquittement_NonCoupable", "Justice_Acquittement_Conciliation", "Justice_Acquittement_Impossible", "Justice_Acquittement_DejaVu", "Justice_Acquittement_Cancel", "Justice_Acquittement_Newbie"};
 char g_szCondamnation[6][64] = { "Justice_Condamnation_VerySmall", "Justice_Condamnation_Small", "Justice_Condamnation_Average", "Justice_Condamnation_Hard", "Justice_Condamnation_VeryHard", "Justice_Condamnation_Disconnect"};
 float g_flCondamnation[6] = {0.2, 0.4, 0.6, 0.8, 1.0, 1.5};
 float g_flCoords[3][2][3];
@@ -509,17 +509,17 @@ Menu AUDIENCE_Condamner(int type, int articles) {
 		char target_name[128];
 		GetClientName2(g_iTribunalData[type][td_Suspect], target_name, sizeof(target_name), false);
 		
-		CPrintToChatSearch(type, ""...MOD_TAG..." %T", "Tribunal_Menu_Condamner_Given", LANG_SERVER, target_name);
+		CPrintToChatSearch(type, "{lightblue}================================");
+		CPrintToChatSearch(type, ""...MOD_TAG..." %T", "Tribunal_Menu_Condamner_Doing", LANG_SERVER, target_name);
 		for (int i = 0; i < sizeof(g_szArticles); i++) {
 			if( g_iArticles[type][i] <= 0 )
 				continue;
-
-			CPrintToChatSearch(type, "" ...MOD_TAG... " %T", g_szArticles[i][5], LANG_SERVER, heure, amende);
-		}
-		
-		
+			
+			CPrintToChatSearch(type, "- %T", g_szArticles[i][5], LANG_SERVER, heure, amende);
+		}		
 		CPrintToChatSearch(type, "" ...MOD_TAG... " %T", "Tribunal_Menu_Condamner_Given", LANG_SERVER, target_name, heure, amende, g_szCondamnation[articles]);
-		
+		CPrintToChatSearch(type, "{lightblue}================================");
+
 		SQL_Insert(type, 1, articles, heure, amende);
 		
 		AUDIENCE_Stop(type);
@@ -550,7 +550,7 @@ Menu AUDIENCE_Acquitter(int type, int articles) {
 		
 		char target_name[128];
 		GetClientName2(g_iTribunalData[type][td_Suspect], target_name, sizeof(target_name), false);
-		CPrintToChatSearch(type, "" ...MOD_TAG... " %T", "Tribunal_Menu_Condamner_Given", target_name, g_szAcquittement[articles]);
+		CPrintToChatSearch(type, "" ...MOD_TAG... " %T", "Tribunal_Menu_Acquitter_Given", LANG_SERVER, target_name, g_szAcquittement[articles]);
 		AUDIENCE_Stop(type);
 	}
 	
@@ -971,11 +971,15 @@ public Action Timer_AUDIENCE(Handle timer, any type) {
 	}
 		
 	if( time < 60 && time % 20 == 0 ) {
+		CPrintToChatSearch(type, "{lightblue}================================");
 		CPrintToChatSearch(type, "" ...MOD_TAG... " %T", "Tribunal_Menu_Audiance_Call", LANG_SERVER, target_name, type, time/20 + 1);
+		CPrintToChatSearch(type, "{lightblue}================================");
 		LogToGame("[TRIBUNAL] [AUDIENCE] Le juge %L a convoque %L [%d/3].", g_iTribunalData[type][td_Owner], target, time/20 + 1);
 	}
 	else if( time % 60 == 0 ) {
+		CPrintToChatSearch(type, "{lightblue}================================");
 		CPrintToChatSearch(type, "" ...MOD_TAG... " %T", "Tribunal_Menu_Audiance_Search", LANG_SERVER, target_name, type, time/60);
+		CPrintToChatSearch(type, "{lightblue}================================");
 		LogToGame("[TRIBUNAL] [AUDIENCE] Le juge %L recherche %L depuis %d minutes.", g_iTribunalData[type][td_Owner], target, time/60);
 		
 		if( time >= 24*60 )
@@ -1048,7 +1052,7 @@ public Action fwdHUD(int client, char[] szHUD, const int size) {
 		Format(szHUD, size, "%s\n ", szHUD);
 		
 		if( g_iTribunalData[type][td_ArticlesCount] > 0 ) {
-			Format(szHUD, size, "%s\%T:\n ", szHUD, "Tribunal_Menu_Audiance_Main_Charges", client);
+			Format(szHUD, size, "%s\%T\n ", szHUD, "Tribunal_Menu_Audiance_Main_Charges", client);
 			for (int i = 0; i < sizeof(g_szArticles); i++) {
 				if( g_iArticles[type][i] <= 0 )
 					continue;
@@ -1115,9 +1119,7 @@ stock void CPrintToChatSearch(int type, const char[] message, any...) {
 			continue;
 		
 		if( i == g_iTribunalData[type][td_Suspect] || GetTribunalType(rp_GetPlayerZone(i)) == type || rp_GetClientJobID(i) == 1 || rp_GetClientJobID(i) == 101 ) {
-			CPrintToChat(i, "{lightblue} ================================ ");
 			CPrintToChat(i, buffer);
-			CPrintToChat(i, "{lightblue} ================================ ");
 		}
 	}
 }
