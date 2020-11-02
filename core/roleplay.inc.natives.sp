@@ -410,7 +410,7 @@ public Action fwdPlayerJail(int client, int attacker) {
 	rp_UnhookEvent(client, RP_OnPlayerDead, fwdPlayerDead);
 	rp_UnhookEvent(client, RP_PostClientSendToJail, fwdPlayerDead);
 }
-public Action fwdPlayerDead(int client, int attacker, float& respawn, int& tdm) {
+public Action fwdPlayerDead(int client, int attacker, float& respawn, int& tdm, float& ctx) {
 	Handle timer;
 	for (int i = 0; i < g_iParentedParticle[client].Length; i++) {
 		timer = view_as<Handle>(g_iParentedParticle[client].Get(i));

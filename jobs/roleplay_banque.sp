@@ -249,7 +249,7 @@ public Action Cmd_ItemRegistre(int args){
 	
 	return Plugin_Handled;
 }
-public Action OnPlayerDeathFastRespawn(int victim, int attacker, float& respawn, int& tdm) {
+public Action OnPlayerDeathFastRespawn(int victim, int attacker, float& respawn, int& tdm, float& ctx) {
 	respawn /= 2.0;
 	return Plugin_Continue;
 }

@@ -476,16 +476,15 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 	respawn = Math_Clamp(respawn, 10.0, 40.0);
 	
 	if( GotPvPvPBonus(Client, cap_bunker) )
-		respawn /= 2.0;
+		respawn *= 0.75;
 	if( g_iUserData[Client][i_PlayerLVL] >= 650 )
-		respawn /= 2.0;
+		respawn *= 0.75;
 	
-
-	int killDuration = getKillContext(Attacker, Client);
+	
+	float killAcceleration = getKillAcceleration(Attacker, Client);
+	int killDuration = 5;
 	if( g_iKillLegitime[Attacker][Client] >= GetTime() || rp_GetZoneBit(rp_GetPlayerZone(Client)) & BITZONE_LEGIT ) {
-		killDuration = 1;
-		if( GetClientTeam(Attacker) == CS_TEAM_CT )
-			killDuration = 0;
+		killDuration = 0;
 	}
 	
 	if( Client_GetVehicle(Client) > 0 ) {
@@ -550,6 +549,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 	Call_PushCell(Attacker);
 	Call_PushCellRef(respawn);
 	Call_PushCellRef(killDuration);
+	Call_PushCellRef(killAcceleration);
 	Call_Finish(a);
 	
 	if( IsValidClient(Attacker) ) {
@@ -558,6 +558,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 		Call_PushCell(Client);
 		Call_PushString(weapon);
 		Call_PushCellRef(killDuration);
+		Call_PushCellRef(killAcceleration);
 		Call_Finish(b);
 	}
 	
@@ -602,9 +603,16 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 
 			if( g_iHideNextLog[Attacker][Client] == 0 ) {
 				if( !(GetZoneBit( GetPlayerZone(Client) ) & BITZONE_EVENT || GetZoneBit( GetPlayerZone(Client) ) & BITZONE_PVP) ) {
-					g_iUserData[Attacker][i_KillJailDuration] += killDuration;
+					
+					if( killDuration > 1 ) {
+						rp_ClientFloodIncrement(Attacker, Client, fd_freekill, float(FREEKILL_TIME));
+						g_iUserData[Attacker][i_KillingSpread]++;
+					}
+					
+					g_iUserData[Attacker][i_KillJailDuration] += RoundToCeil(Pow(float(g_iUserData[Attacker][i_KillingSpread]*killDuration), killAcceleration));
+					g_iUserData[Attacker][i_LastKillTime_ReduceTDM] = GetTime();
+					g_iUserData[Attacker][i_LastKillTime_ReduceFK] = GetTime();
 					g_iUserData[Attacker][i_LastKillTime] = GetTime();
-					g_iUserData[Attacker][i_KillingSpread] += (killDuration > 1 ? 1:0);
 				}
 
 
@@ -631,14 +639,8 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 					SetEntProp(Attacker, Prop_Send, "m_iNumRoundKills",  0);
 			}
 			
-			if( GetClientTeam(Client) == CS_TEAM_CT ) {
-				if( !IsInPVP(Client) && g_iHideNextLog[Attacker][Client] == 0 ) {
-					g_iUserData[Attacker][i_KillJailDuration] += killDuration;
-				}
-			}
-			
 			if( g_iHideNextLog[Attacker][Client] == 0 ) {
-				if( g_iUserData[Attacker][i_KillJailDuration] >= 120 ) {
+				if( g_iUserData[Attacker][i_KillJailDuration] >= AUTOKICK_TDM ) {
 					g_bUserData[Attacker][b_IsFreekiller] = true;
 					ServerCommand("rp_SendToJail %d 0", Attacker);
 					

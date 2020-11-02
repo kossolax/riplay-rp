@@ -800,7 +800,7 @@ public void OnClientDisconnect(int client) {
 		
 	removeClientTeam(client);
 }
-public Action fwdHostageCarryDead(int client, int attacker, float& respawn, int& tdm) {
+public Action fwdHostageCarryDead(int client, int attacker, float& respawn, int& tdm, float& ctx) {
 	rp_UnhookEvent(client, RP_OnPlayerDead, fwdHostageCarryDead);
 	rp_UnhookEvent(client, RP_OnPlayerZoneChange, fwdZoneChange);
 }
@@ -850,7 +850,7 @@ public Action fwdPressUse(int client) {
 		}
 	}
 }
-public Action fwdDead(int client, int attacker, float& respawn, int& tdm) {
+public Action fwdDead(int client, int attacker, float& respawn, int& tdm, float& ctx) {
 		
 	if( g_iQuestGain > 0 && g_iPlayerTeam[client] == TEAM_BRAQUEUR ) {
 		if (g_iPlayerTeam[attacker] == TEAM_POLICE) {

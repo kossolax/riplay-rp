@@ -335,7 +335,7 @@ public Action fwdHookJail(int attacker, int victim) {
 	
 	return Plugin_Continue;
 }
-public Action fwdHookDead(int victim, int attacker, float& respawn, int& tdm) {
+public Action fwdHookDead(int victim, int attacker, float& respawn, int& tdm, float& ctx) {
 	char tmp[64];
 	int zone = rp_GetZoneFromPoint(g_flLastPos[victim]);
 	int[] array = new int[PQ_Max];

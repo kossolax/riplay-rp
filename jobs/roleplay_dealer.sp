@@ -287,7 +287,7 @@ public Action Cmd_ItemDrugs(int args) {
 	
 	return Plugin_Handled;
 }
-public Action fwdGHB(int attacker, int victim, float& respawn, int& tdm) {
+public Action fwdGHB(int attacker, int victim, float& respawn, int& tdm, float& ctx) {
 	if( attacker == victim )
 		return Plugin_Continue;
 	
@@ -898,7 +898,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 	
 	return Plugin_Stop;
 }
-public Action fwdOnDeadSuccess(int client, int attacker, float& respawn, int& tdm) {
+public Action fwdOnDeadSuccess(int client, int attacker, float& respawn, int& tdm, float& ctx) {
 	rp_IncrementSuccess(attacker, success_list_no_18th);
 }
 // ----------------------------------------------------------------------------

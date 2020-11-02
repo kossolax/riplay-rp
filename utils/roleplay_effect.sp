@@ -160,7 +160,7 @@ public Action Effect_Particle(int client, int args) {
 	
 	return Plugin_Handled;
 }
-public Action fwdPlayerDead(int client, int attacker, float& respawn, int& tdm) {
+public Action fwdPlayerDead(int client, int attacker, float& respawn, int& tdm, float& ctx) {
 	char classname[65];
 	int ent;
 	for (int i = 0; i < g_iParentedParticle[client].Length; i++) {

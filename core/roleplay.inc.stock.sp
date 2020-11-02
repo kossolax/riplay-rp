@@ -32,61 +32,30 @@ int getNextReboot() {
 	
 	return next;
 }
-int getKillContext(int attack, int victim) {
+float getKillAcceleration(int attack, int victim) {
 	int zoneID, attackID, victimID;
 	
-	// ---- dans le comico	
+	// ---- dans les planques
 	zoneID = rp_GetZoneInt(rp_GetPlayerZone(victim), zone_type_type);
-	if( zoneID == 1 ) {
-		attackID = rp_GetClientJobID(attack);
-		victimID = rp_GetClientJobID(victim);
-	
-		if( attackID == zoneID && victimID == zoneID ) // Cas 1
-			return 8;
-		if( attackID == zoneID || victimID == zoneID ) // Cas 2
-			return 2;
-		return 5;
-	}
-	
-	// ---- dans les autres planques
-	zoneID = rp_GetZoneInt(rp_GetPlayerZone(victim), zone_type_type);
-	if( zoneID > 1 ) {
-		attackID = rp_GetClientJobID(attack);
-		victimID = rp_GetClientJobID(victim);
-	
-		if( attackID == zoneID && victimID == zoneID ) // Cas 1
-			return 9;
-		if( attackID == zoneID || victimID == zoneID ) // Cas 2
-			return 3;
-		return 6;
+	if( zoneID > 0 ) {
+		if( rp_GetClientJobID(victim) == 1 )
+			return 0.7;
+		return 0.5;
 	}
 	
 	// ---- dans les appart
 	zoneID = rp_GetPlayerZoneAppart(victim);
 	if( zoneID > 0 ) {
-		attackID = rp_GetClientKeyAppartement(attack, zoneID);
-		victimID = rp_GetClientKeyAppartement(victim, zoneID);
-		
-		if( attackID && victimID ) // Cas 1
-			return 11;
-		if( attackID || victimID ) // Cas 2
-			return 3;
-		return 7;
+		if( rp_GetClientJobID(victim) == 1 || rp_ClientFloodTriggered(attack, victim, fd_freekill) )
+			return 1.0;
+		return 0.8;
 	}
 	
-	// --- ailleurs, du même job:
-	attackID = rp_GetClientJobID(attack);
-	victimID = rp_GetClientJobID(victim);
-	if( attackID == victimID )
-		return 29;
-	
-	// --- ailleurs, du même group:
-	attackID = rp_GetClientGroupID(attack);
-	victimID = rp_GetClientGroupID(victim);
-	if( attackID == victimID )
-		return 29;
-		
-	return 29;
+	if( rp_ClientFloodTriggered(attack, victim, fd_freekill) )
+		return 1.45;
+	if( rp_GetClientJobID(victim) == 1 )
+		return 1.3;
+	return 1.1;
 }
 
 

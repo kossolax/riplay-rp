@@ -35,7 +35,9 @@ float g_flAppartProtection[200];
 bool g_bCanUseCB[MAXPLAYERS+1];
 Handle g_vCapture;
 int g_cBeam;
-DataPack g_hBuyMenu;
+DataPack g_hBuyMenu_Items;
+DataPack g_hBuyMenu_Weapons;
+
 enum IM_Int {
 	IM_Owner,
 	IM_StealFrom,
@@ -78,16 +80,24 @@ public void OnPluginStart() {
 	RegServerCmd("rp_GetStoreItem",	Cmd_GetStoreItem,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_door_breakcadenas", CmdBreakCadenas);
 	
-	g_hBuyMenu = new DataPack();
-	g_hBuyMenu.WriteCell(0);
-	DataPackPos pos = g_hBuyMenu.Position;
-	g_hBuyMenu.Reset();
-	g_hBuyMenu.WriteCell(pos);
+	g_hBuyMenu_Items = new DataPack();
+	g_hBuyMenu_Items.WriteCell(0);
+	DataPackPos pos = g_hBuyMenu_Items.Position;
+	g_hBuyMenu_Items.Reset();
+	g_hBuyMenu_Items.WriteCell(pos);
 	
 	for (int i = 1; i <= MaxClients; i++)
 		if( IsValidClient(i) )
 			OnClientPostAdminCheck(i);
 }
+public void OnAllPluginsLoaded() {
+	g_hBuyMenu_Weapons = rp_WeaponMenu_Create();
+}
+public void OnPluginEnd() {
+	if (g_hBuyMenu_Weapons)
+		rp_WeaponMenu_Clear(g_hBuyMenu_Weapons);
+}
+
 public Action CmdBreakCadenas(int args) {
 	int client = GetCmdArgInt(1);
 	int door = GetCmdArgInt(2);
@@ -719,15 +729,18 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 			case 7: { // Plant de drogue
 				
 				int count = rp_GetBuildingData(target, BD_count);
-				if( count > 3 )
-					count = 3;
 				
 				if( count > 0  ) {
 					char classname[64];
+					
 					int sub = rp_GetBuildingData(target, BD_item_id);
+					int prix = rp_GetItemInt(sub, item_type_prix);
+					int max = 1000 / (prix * count);
+					
+					if( count > max )
+						count = max;
 					
 					rp_GetItemData(sub, item_type_name, classname, sizeof(classname));
-					rp_ClientGiveItem(client, sub, count);
 					rp_SetBuildingData(target, BD_count, 0);
 					stealAmount = 75 * count;
 					SetEntityModel(target, "models/custom_prop/marijuana/marijuana_0.mdl");
@@ -737,7 +750,9 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 					if( IsValidClient(owner) ) {
 						CPrintToChat(owner, "" ...MOD_TAG... " %T", "Crowbar_Drugs", owner);
 						if( rp_GetBuildingData(target, BD_FromBuild) ) {
-							count = 1;
+							count /= 2;
+							if( count < 0 )
+								count = 1;
 						}
 						
 						CPrintToChat(owner, "" ...MOD_TAG... " %T", "Steal_Item_By", owner, count, classname);
@@ -746,6 +761,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 					for (int i = 0; i < count; i++)
 						addBuyMenu(client, target, sub);
 					
+					stealAmount = (count * prix) / 2;
 					CPrintToChat(client, "" ...MOD_TAG... " %T", "Steal_Item_Target", owner, count, classname);
 				}
 				Entity_SetHealth(target, Entity_GetHealth(target) - Entity_GetMaxHealth(target) / 10);
@@ -1325,15 +1341,15 @@ public Action fwdZoneChange(int client, int newZone, int oldZone) {
 		CreateTimer(0.1, appear, client);
 	}
 }
-public Action fwdDead(int client, int attacker, float& respawn, int& tdm) {
+public Action fwdDead(int client, int attacker, float& respawn, int& tdm, float& ctx) {
 	CreateTimer(0.1, appear, client);
 	return Plugin_Continue;
 }
 
 void deleteBuyMenu(DataPackPos pos) {
-	g_hBuyMenu.Reset();
-	DataPackPos max = g_hBuyMenu.ReadCell();
-	DataPackPos position = g_hBuyMenu.Position;
+	g_hBuyMenu_Items.Reset();
+	DataPackPos max = g_hBuyMenu_Items.ReadCell();
+	DataPackPos position = g_hBuyMenu_Items.Position;
 	
 	DataPack clone = new DataPack();
 	clone.WriteCell(0);
@@ -1343,7 +1359,7 @@ void deleteBuyMenu(DataPackPos pos) {
 	while( position < max ) {
 		
 		for (int i = 0; i < view_as<int>(IM_Max); i++) {
-			data[i] = g_hBuyMenu.ReadCell();
+			data[i] = g_hBuyMenu_Items.ReadCell();
 		}
 		
 		if( position != pos) {
@@ -1352,19 +1368,19 @@ void deleteBuyMenu(DataPackPos pos) {
 			}
 		}
 		
-		position = g_hBuyMenu.Position;
+		position = g_hBuyMenu_Items.Position;
 	}
 	position = clone.Position;
 	clone.Reset();
 	clone.WriteCell(position);
-	delete g_hBuyMenu;
-	g_hBuyMenu = clone;
+	delete g_hBuyMenu_Items;
+	g_hBuyMenu_Items = clone;
 }
 void getBuyMenu(DataPackPos pos, int[] data) {
-	g_hBuyMenu.Position = pos;
+	g_hBuyMenu_Items.Position = pos;
 	
 	for (int i = 0; i < view_as<int>(IM_Max); i++) {
-		data[i] = g_hBuyMenu.ReadCell();
+		data[i] = g_hBuyMenu_Items.ReadCell();
 	}
 }
 void addBuyMenu(int client, int target, int itemID) {
@@ -1376,20 +1392,20 @@ void addBuyMenu(int client, int target, int itemID) {
 	data[IM_ItemID] = itemID;
 	data[IM_Prix] = (rp_GetItemInt(itemID, item_type_prix) * MARCHEMAFIA_PC) / 100;
 	
-	g_hBuyMenu.Reset();
-	DataPackPos pos = g_hBuyMenu.ReadCell();
-	g_hBuyMenu.Position = pos;
+	g_hBuyMenu_Items.Reset();
+	DataPackPos pos = g_hBuyMenu_Items.ReadCell();
+	g_hBuyMenu_Items.Position = pos;
 	for (int i = 0; i < view_as<int>(IM_Max); i++) {
-		g_hBuyMenu.WriteCell(data[i]);
+		g_hBuyMenu_Items.WriteCell(data[i]);
 	}
-	pos = g_hBuyMenu.Position;
-	g_hBuyMenu.Reset();
-	g_hBuyMenu.WriteCell(pos);
+	pos = g_hBuyMenu_Items.Position;
+	g_hBuyMenu_Items.Reset();
+	g_hBuyMenu_Items.WriteCell(pos);
 }
 void Cmd_BuyItemMenu(int client, bool free) {
-	g_hBuyMenu.Reset();
-	DataPackPos max = g_hBuyMenu.ReadCell();
-	DataPackPos position = g_hBuyMenu.Position;
+	g_hBuyMenu_Items.Reset();
+	DataPackPos max = g_hBuyMenu_Items.ReadCell();
+	DataPackPos position = g_hBuyMenu_Items.Position;
 	char tmp[8], tmp2[129];
 	int[] data = new int[IM_Max];
 	
@@ -1413,7 +1429,7 @@ void Cmd_BuyItemMenu(int client, bool free) {
 		Format(tmp2, sizeof(tmp2), "%s - %d$", tmp2, free?0:data[IM_Prix]);
 		menu.AddItem(tmp, tmp2);
 		
-		position = g_hBuyMenu.Position;
+		position = g_hBuyMenu_Items.Position;
 	}
 
 	menu.Display(client, 60);

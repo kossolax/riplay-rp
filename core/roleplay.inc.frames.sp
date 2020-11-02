@@ -427,16 +427,26 @@ void OnGameFrame_10(float time) {
 				CheckMP(i);
 			}
 			
-			if( g_iUserData[i][i_LastKillTime]+(60) < iTime ) {
+			if( g_iUserData[i][i_LastKillTime_ReduceFK]+(FREEKILL_TIME) < iTime ) {
+				g_iUserData[i][i_KillingSpread]--;
+				g_iUserData[i][i_LastKillTime_ReduceFK] = iTime;
+			}
+			
+			if( g_iUserData[i][i_LastKillTime_ReduceTDM]+(1*60) < iTime ) {
 				g_iUserData[i][i_KillJailDuration]--;
 				changed = true;
 				SetEntProp(i, Prop_Send, "m_iNumRoundKills",  0);
-				g_iUserData[i][i_LastKillTime] = iTime;
+				g_iUserData[i][i_LastKillTime_ReduceTDM] = iTime;
 				
+			}
+			if( g_iUserData[i][i_KillingSpread] < 0 ) {
+				g_iUserData[i][i_KillingSpread] = 0;
 			}
 			if( g_iUserData[i][i_KillJailDuration] < 0 ) {
 				g_iUserData[i][i_KillJailDuration] = 0;
+				g_iUserData[i][i_KillingSpread] = 0; // volontaire.
 			}
+			
 			// TODO: Déplacer ça dans SexShop.
 			if( g_flUserData[i][fl_Alcool] > 0.0 ) {
 				g_flUserData[i][fl_Alcool] -= (0.15/60.0);
@@ -483,10 +493,9 @@ void OnGameFrame_10(float time) {
 					ClientCommand(i, "play common/warning");
 				}
 				
-				if( g_iHours % 6 == 0 ) {
-					g_iUserData[i][i_ContratTotal] -= 1;
-					if( g_iUserData[i][i_ContratTotal] < 0 )
-						g_iUserData[i][i_ContratTotal] = 0;
+				if( g_iHours % 6 == 0 ) {					
+					if( g_iUserData[i][i_ContratTotal] > 0 )
+						g_iUserData[i][i_ContratTotal]--;
 					
 					if( g_iUserData[i][i_MaskCount] < 5 )
 						g_iUserData[i][i_MaskCount]++;

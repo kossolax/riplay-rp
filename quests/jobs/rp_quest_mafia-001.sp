@@ -140,19 +140,19 @@ public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
 		int z = rp_GetPlayerZone(target);
 		
 		if( target == client ) {
-			for (int i = 1; i <= MaxClients; i++) {
-				if( !IsValidClient(i) || i == client )
+			for (int j = 1; j <= MaxClients; j++) {
+				if( !IsValidClient(j) || j == client )
 					continue;
-				if( lastFree[i] > GetGameTime() )
+				if( lastFree[j] > GetGameTime() )
 					continue;
-				if( rp_GetClientInt(i, i_JailTime) <=0 )
+				if( rp_GetClientInt(j, i_JailTime) <=0 )
 					continue;
-				if( rp_GetClientJobID(i) == 1 || rp_GetClientJobID(i) == 101 )
+				if( rp_GetClientJobID(j) == 1 || rp_GetClientJobID(j) == 101 )
 					continue;
 				
-				int zone = rp_GetPlayerZone(i);
+				int zone = rp_GetPlayerZone(j);
 				if( rp_GetZoneBit(zone) & (BITZONE_JAIL|BITZONE_LACOURS|BITZONE_HAUTESECU) ) {
-					PrintHintText(i, "Un mafieu s'approche pour tenter de vous libérer.");
+					PrintHintText(j, "Un mafieu s'approche pour tenter de vous libérer.");
 				}
 				
 			}

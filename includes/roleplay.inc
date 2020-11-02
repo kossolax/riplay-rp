@@ -92,8 +92,8 @@ typeset rp_event_enum {
 	function Action(int client);								                            /* RP_OnFrameSeconde */
 	function Action(int client, int& amount);						                        /* RP_OnAssurance */
 	function Action(int client);							        	                    /* RP_OnPlayerSpawn */
-	function Action(int victim, int attacker, float& respawn, int& tdm);	                /* RP_OnPlayerDead == return Plugin_Handled = cacher des logs */
-	function Action(int attacker, int victim, char weapon[64], int& tdm);              		/* RP_OnPlayerKill == return Plugin_Handled = cacher des logs */
+	function Action(int victim, int attacker, float& respawn, int& tdm, float& ctx);        /* RP_OnPlayerDead == return Plugin_Handled = cacher des logs */
+	function Action(int attacker, int victim, char weapon[64], int& tdm, float& ctx);       /* RP_OnPlayerKill == return Plugin_Handled = cacher des logs */
 	
 	function Action(int client, float& cooldown);					                        /* RP_OnPlayerBuild */
 	function Action(int client);								                            /* RP_OnPlayerUse */
@@ -756,6 +756,8 @@ enum int_user_data {
 	i_MaskCount,
 	i_AppartCount,
 	i_LastKillTime,
+	i_LastKillTime_ReduceTDM,
+	i_LastKillTime_ReduceFK,
 	i_AddToPay,
 	i_TimeAFK,
 	i_TimeAFK_today,
@@ -865,6 +867,7 @@ enum fd_user_data {
 	fd_job,
 	fd_kidnapping,
 	fd_ruban,
+	fd_freekill,
 
 	fd_udata_max
 };

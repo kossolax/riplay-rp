@@ -992,7 +992,7 @@ public Action CmdItemMask(int args) {
 	
 	return Plugin_Handled;
 }
-public Action fwdKill(int client, int victim, char weapon[64], int& tdm) {
+public Action fwdKill(int client, int victim, char weapon[64], int& tdm, float& ctx) {
 	int maskID = rp_GetClientInt(client, i_Mask);
 	
 	if( client != victim && maskID > 0 ) {
