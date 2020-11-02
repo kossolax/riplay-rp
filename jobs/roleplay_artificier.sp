@@ -57,6 +57,7 @@ int g_iTirsIndex[2049], g_iParticleIndex[2049], g_iPropultionIndex[2049], g_iFir
 float g_flStart[2049], g_flLastDir[2049][3];
 int g_iFireworksCount[65];
 int g_iMaxFireworks;
+int g_iFreeFirework[65];
 
 // ----------------------------------------------------------------------------
 public Action Cmd_Reload(int args) {
@@ -83,6 +84,20 @@ public void OnPluginStart() {
 	RegServerCmd("rp_item_nade",		Cmd_ItemNade,			"RP-ITEM",  FCVAR_UNREGISTERED);
 	
 	RegAdminCmd("sm_effect_fireworks", Cmd_Fireworks, 			ADMFLAG_RCON);
+}
+public void OnClientPostAdminCheck(int client) {
+	g_iFreeFirework[client] = 0;
+	rp_HookEvent(client, RP_OnPlayerBuild, fwdOnPlayerBuild);
+}
+public Action fwdOnPlayerBuild(int client, float& cooldown) {
+	if( rp_GetClientJobID(client) != 131 )
+		return Plugin_Continue;
+	
+	g_iFreeFirework[client] = 1;
+	Menu_Main(client);
+	cooldown = 1.0;
+	
+	return Plugin_Stop;
 }
 public Action Cmd_Fireworks(int client, int args) {
 	float delay = GetCmdArgFloat(1);
@@ -740,7 +755,7 @@ void FW_Spawn(int client) {
 	if( !rp_IsBuildingAllowed(client) )
 		return;
 	
-	if( rp_GetClientItem(client, ITEM_FEUARTIFICE) == 0 && !IsAdmin(client) ) {
+	if( rp_GetClientItem(client, ITEM_FEUARTIFICE) == 0 && !(IsAdmin(client) || g_iFreeFirework[client]>g_iFireworksCount[client]) ) {
 		char tmp[128];
 		rp_GetItemData(ITEM_GPS, item_type_name, tmp, sizeof(tmp));
 		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemMissing", client, tmp);
