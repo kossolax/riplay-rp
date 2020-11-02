@@ -84,6 +84,10 @@ public void OnPluginStart() {
 	RegServerCmd("rp_item_nade",		Cmd_ItemNade,			"RP-ITEM",  FCVAR_UNREGISTERED);
 	
 	RegAdminCmd("sm_effect_fireworks", Cmd_Fireworks, 			ADMFLAG_RCON);
+	
+	for (int i = 1; i <= MaxClients; i++) 
+		if( IsValidClient(i) )
+			OnClientPostAdminCheck(i);
 }
 public void OnClientPostAdminCheck(int client) {
 	g_iFreeFirework[client] = 0;
@@ -690,15 +694,17 @@ public Action task_OpenFirework(Handle timer, any client) {
 	Menu_Main(client);
 }
 void Menu_Main(int client) {
-	if( g_iMaxFireworks == 0 && !IsAdmin(client) )
-		return;
 	
 	char tmp[128];
+	rp_GetItemData(ITEM_FEUARTIFICE, item_type_name, tmp, sizeof(tmp));
 	Menu menu = new Menu(hdlMenu);
-	menu.SetTitle("%T\n ", "rp_item_firework", client);
+	menu.SetTitle("%s:\n ", tmp);
 	
+	int cpt = rp_GetClientItem(client, ITEM_FEUARTIFICE) + g_iFreeFirework[client];
+	if( cpt > g_iMaxFireworks )
+		cpt = g_iMaxFireworks;
 	
-	Format(tmp, sizeof(tmp), "%T\n ", "Firework_Build", client, g_iFireworksCount[client], g_iMaxFireworks);
+	Format(tmp, sizeof(tmp), "%T\n ", "Firework_Build", client, g_iFireworksCount[client], cpt);
 	menu.AddItem("0", tmp);	
 	Format(tmp, sizeof(tmp), "%T", "Firework_Trail", client, g_szParticles[g_iParticleIndex[client]]);
 	menu.AddItem("1", tmp);
@@ -757,7 +763,7 @@ void FW_Spawn(int client) {
 	
 	if( rp_GetClientItem(client, ITEM_FEUARTIFICE) == 0 && !(IsAdmin(client) || g_iFreeFirework[client]>g_iFireworksCount[client]) ) {
 		char tmp[128];
-		rp_GetItemData(ITEM_GPS, item_type_name, tmp, sizeof(tmp));
+		rp_GetItemData(ITEM_FEUARTIFICE, item_type_name, tmp, sizeof(tmp));
 		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemMissing", client, tmp);
 		return;
 	}
