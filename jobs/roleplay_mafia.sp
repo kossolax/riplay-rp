@@ -217,6 +217,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 	static char tmp[128], szQuery[1024];
 	
 	if( rp_GetClientJobID(target) == 91 ) {
+		cooldown = 1.0;
 		ACCESS_DENIED(client);
 	}
 	if( rp_GetClientInt(target, i_PlayerLVL) <= 5 ||
@@ -228,11 +229,13 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		return Plugin_Stop;
 	}
 	if( rp_GetZoneBit( rp_GetPlayerZone(target) ) & BITZONE_BLOCKSTEAL ) {
+		cooldown = 1.0;
 		ACCESS_DENIED(client);
 	}
 	
 	if( rp_GetZoneInt(rp_GetPlayerZone(target), zone_type_type) == 91 ) {
 		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_CannotSteal_Target_ForNow", client);
+		cooldown = 1.0;
 		return Plugin_Handled;
 	}
 	

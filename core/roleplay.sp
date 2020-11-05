@@ -254,6 +254,7 @@ public void OnPluginStart() {
 		view_as<Handle>(g_hRPNative[i][RP_OnPlayerCommand]) = CreateForward(ET_Hook, Param_Cell, Param_String, Param_String);
 		view_as<Handle>(g_hRPNative[i][RP_PrePlayerTalk]) = CreateForward(ET_Hook, Param_Cell, Param_String, Param_Cell, Param_Cell);
 		view_as<Handle>(g_hRPNative[i][RP_OnPlayerDataLoaded]) = CreateForward(ET_Hook, Param_Cell);
+		view_as<Handle>(g_hRPNative[i][RP_OnPlayerPreSteal]) = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_CellByRef);
 		view_as<Handle>(g_hRPNative[i][RP_OnPlayerSteal]) = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_CellByRef);
 		view_as<Handle>(g_hRPNative[i][RP_OnPlayerHear]) = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_FloatByRef);
 		view_as<Handle>(g_hRPNative[i][RP_OnPlayerZoneChange]) = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_Cell);

@@ -482,22 +482,30 @@ public Action Command_Say(int client, int args) {
 			return Plugin_Handled;
 		}
 		
-		Action a;
+		Action a, b;
 		float cd = STEAL_TIME;
 		
-		Call_StartForward( view_as<Handle>(g_hRPNative[client][RP_OnPlayerSteal]));
+		Call_StartForward( view_as<Handle>(g_hRPNative[client][RP_OnPlayerPreSteal]));
 		Call_PushCell(client);
 		Call_PushCell(target);
-		
 		Call_PushCellRef(cd);
 		Call_Finish(a);
 		
 		if( a != Plugin_Stop ) {
-			ACCESS_DENIED(client);
+			Call_StartForward( view_as<Handle>(g_hRPNative[client][RP_OnPlayerSteal]));
+			Call_PushCell(client);
+			Call_PushCell(target);
+			Call_PushCellRef(cd);
+			Call_Finish(b);
+			
+			if( b != Plugin_Stop ) {
+				ACCESS_DENIED(client);
+			}
 		}
 		
 		g_bUserData[client][b_MaySteal] = 0;
 		CreateTimer(cd, AllowStealing, client);
+		
 
 		return Plugin_Handled;
 	}
