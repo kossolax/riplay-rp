@@ -3,81 +3,100 @@
 	"Armu_WeaponInHands"
 	{
 		"fr"	"Vous devez prendre une arme en main."
+		"en"	"You must take a weapon in your hand."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"edit_weapon"
 	{
 		"fr"		"Modifier votre arme:"
+		"en"		"Modify your weapon:"
 	}
 	"edit_weapon_done"
 	{
 		"fr"		"La modification a été apportée à votre arme."
+		"en"		"The modification to your weapon has been made."
 	}
 	"edit_weapon_gang"
 	{
 		"fr"		"A quel groupe attribuer l'arme?"
+		"en"		"Assign the weapon to which group?"
 	}
 	"edit_weapon_sanAndreas"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Votre arme a déjà un San Andreas, il vous reste {1} balles dans le chargeur."
+		"en"		"Your gun already has a San Andreas, you have {1} bullets left in the clip."
 	}
 	"weapon_sanAndreas"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Votre arme a un San Andreas, il vous reste {1} balles dans le chargeur."
+		"en"		"Your gun has a San Andreas, you have {1} bullets left in the clip."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"add_bullet_sanAndreas"
 	{
 		"fr"		"Ajouter un san-andreas"
+		"en"		"Add a san-andreas"
 	}
 	"add_bullet_pvp"
 	{
 		"fr"		"Transformer en arme PvP"
+		"en"		"Transform into a PvP weapon"
 	}
 	"add_ball_type_fire"
 	{
 		"fr"		"Ajouter des cartouches incendiaire"
+		"en"		"Add fire rounds"
 	}
 	"add_ball_type_caoutchouc"
 	{
 		"fr"		"Ajouter des cartouches en caoutchouc"
+		"en"		"Add rubber rounds"
 	}
 	"add_ball_type_poison"
 	{
 		"fr"		"Ajouter des cartouches empoisonante"
+		"en"		"Add poison rounds"
 	}
 	"add_ball_type_vampire"
 	{
 		"fr"		"Ajouter des cartouches vampiriques"
+		"en"		"Add vampire rounds"
 	}
 	"add_ball_type_paintball"
 	{
 		"fr"		"Ajouter des cartouches de paintBall"
+		"en"		"Add paintball rounds"
 	}
 	"add_ball_type_reflexive"
 	{
 		"fr"		"Ajouter des cartouches rebondissantes"
+		"en"		"Add reflexive rounds"
 	}
 	"add_ball_type_explode"
 	{
 		"fr"		"Ajouter des cartouches explosives"
+		"en"		"Add explosive rounds"
 	}
 	"add_ball_type_revitalisante"
 	{
 		"fr"		"Ajouter des cartouches revitalisantes"
+		"en"		"Add revitalizing rounds"
 	}
 	"add_ball_type_nosteal"
 	{
 		"fr"		"Ajouter des cartouches anti-vol"
+		"en"		"Add anti-theft rounds"
 	}
 	"add_ball_type_notk"
 	{
 		"fr"		"Ajouter des cartouches Anti-TK"
+		"en"		"Add Anti-TK rounds"
 	}
 	"add_ball_type_braquage"
 	{
 		"fr"		"Ajouter des cartouches braquages"
+		"en"		"Add robbery rounds"
 	}
 }

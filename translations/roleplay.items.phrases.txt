@@ -5,56 +5,67 @@
 	{
 		"#format"	"{1:s}"
 		"fr"		"{1} Incendiaire"
+		"en"		"{1} Fire"
 	}
 	"wpn_ball_type_caoutchouc"
 	{
 		"#format"	"{1:s}"
 		"fr"		"{1} Caoutchouc"
+		"en"		"{1} Rubber"
 	}
 	"wpn_ball_type_poison"
 	{
 		"#format"	"{1:s}"
 		"fr"		"{1} Poison"
+		"en"		"{1} Poison"
 	}
 	"wpn_ball_type_vampire"
 	{
 		"#format"	"{1:s}"
 		"fr"		"{1} Vampirique"
+		"en"		"{1} Vampiric"
 	}
 	"wpn_ball_type_paintball"
 	{
 		"#format"	"{1:s}"
 		"fr"		"{1} PaintBall"
+		"en"		"{1} PaintBall"
 	}
 	"wpn_ball_type_reflexive"
 	{
 		"#format"	"{1:s}"
 		"fr"		"{1} Rebondissante"
+		"en"		"{1} Reflexive"
 	}
 	"wpn_ball_type_explode"
 	{
 		"#format"	"{1:s}"
 		"fr"		"{1} Explosive"
+		"en"		"{1} Explosive"
 	}
 	"wpn_ball_type_revitalisante"
 	{
 		"#format"	"{1:s}"
 		"fr"		"{1} Revitalisante"
+		"en"		"{1} Revitalizing"
 	}
 	"wpn_ball_type_nosteal"
 	{
 		"#format"	"{1:s}"
 		"fr"		"{1} Anti-Vol"
+		"en"		"{1} Anti-Theft"
 	}
 	"wpn_ball_type_notk"
 	{
 		"#format"	"{1:s}"
 		"fr"		"{1} Anti-TK"
+		"en"		"{1} Anti-TK"
 	}
 	"wpn_ball_type_braquage"
 	{
 		"#format"	"{1:s}"
 		"fr"		"{1} Braquage"
+		"en"		"{1} Robbery"
 	}
 	
 }

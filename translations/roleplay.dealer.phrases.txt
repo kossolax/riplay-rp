@@ -4,95 +4,116 @@
 	{
 		"#format"	"{1:s}"
 		"fr"	"Vous avez drogué {1}."
+		"en"	"You drugged {1}."
 	}
 	"Drug_By"
 	{
 		"fr"		"Une personne vous a drogué."
+		"en"		"A person has drugged you."
 	}
 	"Drug_Warn"
 	{
 		"fr"		"Attention, la surconsommation de drogue est dangereux pour la santé."
+		"en"		"Beware, excessive drug use is dangerous for your health."
 	}
 	"Drug_Fatal"
 	{
 		"fr"		"Attention, la surconsommation de drogue vous a rendu malade."
+		"en"		"Warning, excessive drug use made you sick."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Plant_Engrai"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Ce plant peut maintenant contenir {red}{1}{default} drogues."
+		"en"		"This plant may now contain {red}{1}{default} drugs."
 	}
 	"Plant_Max"
 	{
 		"fr"		"Vous ne pouvez pas avoir de {red}plant{default} supplémentaire."
+		"en"		"You can't have an additional {red}plant{default}."
 	}
 	"Plant_Tick"
 	{
 		"#format"	"{1:s},{2:d}"
-		"fr"		"Le plant {red}{1}{default} est prêt pour {red}{2}{default} utilisations"
+		"fr"		"Le plant {green}{1}{default} est prêt pour {red}{2}{default} utilisations"
+		"en"		"The plant {green}{1}{default} is ready for {red}{2}{default} use"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Dealer_Crowbar"
 	{
 		"fr"		"Le pied de biche est utilisable uniquement sur la {red}place{default} de la justice, sur un {red}distributeur{default}, {red}l'armurerie{default} police, {red}marché noire{default} mafia, ou une {red}voiture{default}."
+		"en"		"The crowbar can only be used on the {red}place{default} of justice, on a {red}cash machine{default}, {red}armory{default} of the police, {red}black market{default} mafia, or a {red}car{default}.
 	}
 	"Dealer_Crowbar_Car"
 	{
 		"fr"		"== Dealer: Vol d'un véhicule"
+		"en"		"== Dealer: Vehicle theft"
 	}
 	"Dealer_Crowbar_Distrib"
 	{
 		"fr"		"== Dealer: Vandalisme d'un distributeur"
+		"en"		"== Dealer: Cash machine vandalism"
 	}
 	"Dealer_Crowbar_Place"
 	{
 		"fr"		"== Dealer: Déracinage d'un colis"
+		"en"		"== Dealer: Package removal"
 	}
 	"Dealer_Crowbar_Police"
 	{
 		"fr"		"== Dealer: Vol de l'armurerie police"
+		"en"		"== Dealer: Police armory robbery"
 	}
 	"Dealer_Crowbar_Mafia"
 	{
 		"fr"		"== Dealer: Vol du marché noire"
+		"en"		"== Dealer: Black market robbery"
 	}
 	
 	// ----------------------------------------------------------------------------------------------
 	"Dealer_Menu"
 	{
 		"fr"		"Que voulez-vous planter aujourd'hui?"
+		"en"		"What do you want to plant today?"
 	}
 	"Dealer_BlackMarket"
 	{
 		"fr"		"Marché noir des Dealer:"
+		"en"		"Dealer black market:" 
 	}
 	"Dealer_BlackMarketItem"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Combien de {1} voulez-vous acheter?"
+		"en"		"How many {1} do you want to buy?"
 	}
 	"Dealer_CannotDrop"
 	{
 		"fr"		"Vous ne pouvez pas lâcher votre arme pendant qu'un dealer vous vol, tirez lui dessus ou fuyez !"
+		"en"		"You can't drop your gun while a dealer is robbing you, shoot him or escape!"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Crowbar_CarStolen"
 	{
 		"fr"		"Votre véhicule est resté sans surveillance et a été volé. Pensez à le laisser en sécurité sur un parking."
+		"en"		"Your vehicle was left unattended and was stolen. Remember to leave it safely in a parking lot."
 	}
 	
 	// ----------------------------------------------------------------------------------------------
 	"Teleport_Failed"
 	{
 		"fr"		"Vous n'avez trouvé aucun endroit sûre pour vous téléporter à cet endroit."
+		"en"		"You have not found a safe place to teleport to this location."
 	}
 	"Teleport_FailedInCar"
 	{
 		"fr"		"Il n'est pas possible de vous téléporter quand vous êtes dans un véhicule."
+		"en"		"It is not possible to teleport when you are in a vehicle."
 	}
 	"Teleport_Stopped"
 	{
 		"fr"		"Vous avez annulé la téléportation en restant accroupi."
+		"en"		"You have cancelled the teleportation by staying crouched."
 	}
 }

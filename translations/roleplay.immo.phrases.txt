@@ -1,162 +1,196 @@
 "Phrases"
 {
-
 	"Appart_AlreadySell"
 	{
 		"fr"	"L'appartement a déjà été vendu à une autre personne."
+		"en"	"The apartment has already been sold to another person."
 	}
 	"Garage_AlreadySell"
 	{
 		"fr"	"Le garage a déjà été vendu à une autre personne."
+		"en"	"The garage has already been sold to another person."
 	}
 	"Appart_Buy"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Vous êtes maintenant le propriétaire de l'appartement n°{red}{1}{default}."
+		"en"		"You are now the owner of the apartment n°{red}{1}{default}."
 	}
 	"Garage_Buy"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Vous êtes maintenant le propriétaire du garage n°{red}{1}{default}."
+		"en"		"You are now the owner of the garage n°{red}{1}{default}."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Appart_MustBeOwner"
 	{
 		"fr"		"Vous n'êtes pas le propriétaire de cet appartement."
+		"en"		"You are not the owner of this apartment."
 	}
 	"Appart_RemoveKey"
 	{
 		"fr"		"Quel colocataire voulez-vous virer?"
+		"en"		"Which roommate do you want to kick out?"
 	}
 	"Appart_TargetNoKey"
 	{
 		"fr"		"Cette personne n'a pas les clés de cet appartement."
+		"en"		"This person does not have the keys to this apartment."
 	}
 	"Appart_TargetAlreadyKey"
 	{
 		"fr"		"Cette personne a déjà les clés de cet appartement."
+		"en"		"This person already has the keys to this apartment."
 	}
 	"Appart_KeyRemovedTo"
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"		"Les clés de l'appartement n°{red}{1}{default} a été retirées à {red}{2}{default}."
+		"en"		"The keys to apartment n°{red}{1}{default} have been removed at {red}{2}{default}."
 	}
 	"Appart_KeyRemovedBy"
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"		"Les clés de l'appartement n°{red}{1}{default} vous ont été retirées par {red}{2}{default}."
+		"en"		"The keys of the apartment n°{red}{1}{default} have been taken away from you by {red}{2}{default}."
 	}
 	"Appart_KeyGiveTo"
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"		"Les clés de l'appartement n°{red}{1}{default} a été données à {red}{2}{default}."
+		"en"		"The keys of the apartment n°{red}{1}{default} were given to {red}{2}{default}."
 	}
 	"Appart_KeyGiveBy"
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"		"Les clés de l'appartement n°{red}{1}{default} vous ont été données par {red}{2}{default}."
+		"en"		"The keys of the apartment n°{red}{1}{default} were given to you by {red}{2}{default}."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Appart_None"
 	{
 		"fr"		"Vous n'avez pas d'appartement."
+		"en"		"You do not have an apartment."
 	}
 	"Appart_Info"
 	{
 		"fr"		"Information sur vos appartements:"
+		"en"		"Information about your apartments:"
 	}
 	"Appart_Number"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Appartement n°{1}"
+		"en"		"Apartment n°{1}"
 	}
 	"Garage_Number"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Garage n°{1}"
+		"en"		"Garage n°{1}"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"appart_bonus"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Bonus: {1}"
+		"en"		"Bonus: {1}"
 	}
 	"appart_owner"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Propriétaire: {1}"
+		"en"		"Owner: {1}"
 	}
 	"appart_bonus_energy"
 	{
 		"fr"		"énergie"
+		"en"		"energy"
 	}
 	"appart_bonus_heal"
 	{
 		"fr"		"regénération"
+		"en"		"regeneration"
 	}
 	"appart_bonus_armor"
 	{
 		"fr"		"kevlar"
+		"en"		"kevlar"
 	}
 	"appart_bonus_garage"
 	{
 		"fr"		"garage"
+		"en"		"garage"
 	}
 	"appart_bonus_vitality"
 	{
 		"fr"		"vitalité"
+		"en"		"vitality"
 	}
 	"appart_bonus_coffre"
 	{
 		"fr"		"coffre"
+		"en"		"safe"
 	}
 	"appart_bonus_paye"
 	{
 		"#format"	"{1:d}"
 		"fr"		"paye (+{1}%}"
+		"en"		"pay (+{1}%}"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Prop_ToSpawn"
 	{
 		"fr"		"Quel props voulez vous spawn?"
+		"en"		"What kind of props do you want to spawn?"
 	}
 	"Prop_YouDontOwn"
 	{
 		"fr"		"Ce props ne vous appartient pas."
+		"en"		"This prop does not belong to you."
 	}
 	"Prop_AlreadyTrap"
 	{
 		"fr"		"Ce props est déjà piégé."
+		"en"		"This prop is already trapped."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Item_Jumelle"
 	{
 		"fr"		"Vous pouvez maintenant utiliser vos jumelles (touche {red}H{default})."
+		"en"		"You can now use your binoculars (touche {red}H{default})."
 	}
 	"Item_NightVision"
 	{
 		"fr"		"Vous pouvez maintenant utiliser votre lampe de poche (touche {red}H{default})."
+		"en"		"You can now use your flashlight (touche {red}H{default})."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Menu_Villa"
 	{
 		"fr"		"Enchère de la Villa:\nJusqu'à dimanche 21 heures"
+		"en"		"Auction of the Villa:\nUntil Sunday 9:00pm"
 	}
 	"Menu_Bed"
 	{
 		"fr"		"Combien souhaitez-vous miser?\n Attention, vous ne serrez remboursé\nqu'à la fin des enchères (dimanche 21 heures)"
+		"en"		"How much would you like to bet?\n Attention, you will be refunded\nonly at the end of the auction (Sunday 9:00pm)"
 	}
 	"Menu_Villa_Bed"
 	{
 		"fr"		"Miser"
+		"en"		"Bet"
 	}
 	"Menu_Villa_Key"
 	{
 		"fr"		"Ajouter une clé"
+		"en"		"Add a key"
 	}
 	"Villa_Winner"
 	{
 		"#format"	"{1:s},{2:d}"
 		"fr"		"Le gagnant de la villa est... {red}{1}{default} pour {red}{2}{default}$!"
+		"en"		"The winner of the villa is... {red}{1}{default} for {red}{2}{default}$!"
 	}
 }
