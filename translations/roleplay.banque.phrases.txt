@@ -3,82 +3,100 @@
 	"Item_Register_TooMany"
 	{
 		"fr"	"Vous possédez déjà le maximum de registre bancaire."
+		"en"	"You already have the maximum amount of bank registers."
 	}
 	"Item_Count"
 	{
 		"#format"	"{1:d},{2:d},{3:s}"
 		"fr"	"Vous avez {1} {3} sur vous et {2} {3} en banque."
+		"en"	"You have {1} {3} on you and {2} {3} in the bank."
 	}
 	"Item_Buy"
 	{
 		"fr"	"Sélectionnez un objet à acheter:"
+		"en"	"Select an item to buy:"
 	}
 	"Item_BuyCount"
 	{
 		"fr"	"Sélectionnez combien en acheter:"
+		"en"	"Select how many to buy:"
 	}
 	"Item_MoveToBank_Singl"
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"	"{1} {2} a été transféré en banque."
+		"en"	"{1} {2} was transferred to the bank."
 	}
 	"Item_MoveToBank_Plural"
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"	"{1} {2} ont été transférés en banque."
+		"en"	"{1} {2} were transferred to the bank."
 	}
 	"Item_PackForNew"
 	{
 		"fr"		"Votre carte bancaire, votre coffre, votre RIB et vos permis sont maintenant actifs."
+		"en"		"Your credit card, safe deposit box, bank account number and permits are now active."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Metro_Menu"
 	{
 		"fr"	"Station de métro:"
+		"en"	"Metro station:"
 	}
 	"Metro_Event"
 	{
 		"fr"	"Métro: Station événementiel"
+		"en"	"Metro: Event station"
 	}
 	"Metro_Hell"
 	{
 		"fr"	"Métro: Station inconnue"
+		"en"	"Metro: Station unknown"
 	}
 	"Metro_Villa"
 	{
 		"fr"	"Métro: Station Villa"
+		"en"	"Metro: Villa Station"
 	}
 	"Metro_Start"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Restez assis à l'intérieur du métro, le prochain départ est dans {red}{1}{default} seconde(s)."
+		"en"	"Stay seated inside the metro, the next departure is in {red}{1}{default} second(s)."
 	}
 	"Metro_Paid"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Le métro vous a couté {red}{1}${default}, pensez à acheter des tickets à un banquier pour que le trajet vous coûte moins chère."
+		"en"	"The metro costs you {red}{1}${default}, think about buying tickets from a banker to make the trip cheaper."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Sign_Press"
 	{
 		"fr"	"Appuyez sur E pour modifier le panneau"
+		"en"	"Press E to change the sign"
 	}
 	"Sign_OwnedBy"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Panneau de {1}:"
+		"en"		"Sign owned by {1}:"
 	}
 	"Sign_Add"
 	{
 		"fr"		"Ajouter une ligne"
+		"en"		"Add a line"
 	}
 	"Sign_Adding"
 	{
 		"fr"		"Entrez une phrase dans le chat pour remplacer cette ligne. Entrez \".\" pour la supprimer."
+		"en"		"Enter a sentence in the chat to replace this line. Enter \".\" to delete it."
 	}
 	"Sign_PermWho"
 	{
 		"fr"		"Qui peut modifier ce panneau?"
+		"en"		"Who can change this sign?"
 	}
 	
 }

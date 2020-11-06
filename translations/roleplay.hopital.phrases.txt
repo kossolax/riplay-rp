@@ -4,60 +4,74 @@
 	{
 		"#format"	"{1:s}"
 		"fr"		"{red}{1}{default} vous fait une opération chirurgicale."
+		"en"		"{red}{1}{default} is performing surgery on you."
 	}
 	"Chiru_Target"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Vous commencez à opérer {red}{1}{default}."
+		"en"		"You begin to operate {red}{1}{default}."
 	}
 	"Chiru_Doing"
 	{
 		"fr"		"Opération chirurgicale en cours..."
+		"en"		"Surgery in progress..."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"sick_type_fievre"
 	{
 		"fr"		"Vous êtes atteint d'une forte fièvre, prenez des {red}Cachets d'aspirine{default}."
+		"en"		"You have a high fever, take {red}Aspirin pills{default}."
 	}
 	"sick_type_grippe"
 	{
 		"fr"		"Vous êtes atteint de la Grippe, prenez des {red}Cachets d'amantadine{default}."
+		"en"		"You have the flu, take {red}Amantadine pills{default}."
 	}
 	"sick_type_tourista"
 	{
 		"fr"		"Vous êtes atteint de la Tourista, prenez des {red}Cachets de norfloxacine{default}."
+		"en"		"You have Tourista, take {red}Norfloxacin pills{default}."
 	}
 	"sick_type_hemoragie"
 	{
 		"fr"		"Vous êtes atteint d'hémorragie, prenez une {red}Poche de sang et priez{default}."
+		"en"		"You are hemorrhaging, take a {red}Blood bag and pray{default}."
 	}
 	"sick_type_poison"
 	{
 		"fr"		"Vous êtes empoisonné, prenez un {red}Antipoison{default}."
+		"en"		"You are poisoned, take an {red}Antipoison{default}."
 	}
 	"sick_type_none"
 	{
 		"fr"		"Paix à votre âme, je ne connais pas cette maladie."
+		"en"		"God rest your soul, I don't know of this disease."
 	}
 	"sick_heal"
 	{
 		"fr"		"Vous vous sentez mieux!"
+		"en"		"You feel better!"
 	}
 	"sick_fail"
 	{
 		"fr"		"Ça n'a eut aucun effet."
+		"en"		"It had no effect."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"poison_immune"
 	{
 		"fr"		"Cette personne semble être temporairement immunisé au poison."
+		"en"		"This person appears to be temporarily immune to the poison."
 	}
 	"poison_self"
 	{
 		"fr"		"Vous avez été empoisonné."
+		"en"		"You have been poisoned."
 	}
 	"poison_heal"
 	{
 		"fr"		"Vous êtes maintenant guéri et immunisé aux poisons pour 24 minutes."
+		"en"		"You are now cured and immune to poisons for 24 minutes."
 	}
 }

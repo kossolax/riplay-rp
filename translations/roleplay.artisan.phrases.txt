@@ -4,114 +4,137 @@
 	{
 		"#format"	"{1:t}"
 		"fr"	"L'artisanat: {1}"
+		"en"	"Craftsmanship: {1}"
 	}
 	"Artisan_Status"
 	{
 		"#format"	"{1:d},{2:d},{3:d}"
 		"fr"		"{1} / {2} réussi(s), {3} échec(s)"
+		"en"		"{1} / {2} success(es), {3} failure(s)"
 	}
 	"Artisan_Level"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Niveau: {1}"
+		"en"		"Level: {1}"
 	}
 	"Artisan_XP"
 	{
 		"#format"	"{1:s}{2:.1f}"
 		"fr"		"Expérience: {1} {2}%"
+		"en"		"Experience: {1} {2}%"
 	}
 	"Artisan_SLEEP"
 	{
 		"#format"	"{1:s}{2:.1f}"
 		"fr"		"Fatigue: {1} {2}%"
+		"en"		"Fatigue: {1} {2}%"
 	}
 	"Artisan_POINTS"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Point(s) de compétence: {1}"
+		"en"		"Point(s) of expertise: {1}"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Artisan_Build"
 	{
 		"fr"	"Construire"
+		"en"	"Build"
 	}
 	"Artisan_Build_All"
 	{
 		"#format"	"{1:d},{2:.1f}"
 		"fr"	"Tout construire ({1}) ({2}sec)"
+		"en"	"Build all ({1}) ({2}sec)"
 	}
 	"Artisan_Build_Count"
 	{
 		"#format"	"{1:d},{2:.1f}"
 		"fr"	"Construire {1} ({2}sec)"
+		"en"	"Build {1} ({2}sec)"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Artisan_Recycl"
 	{
 		"fr"	"Recycler"
+		"en"	"Recycle"
 	}
 	"Artisan_Recycl_None"
 	{
 		"fr"	"Vous n'avez aucun item à recycler."
+		"en"	"You have no items to recycle."
 	}
 	"Artisan_Recycl_All"
 	{
 		"#format"	"{1:d},{2:.1f}"
 		"fr"	"Tout recycler ({1}) ({2}sec)"
+		"en"	"Recycle all ({1}) ({2}sec)"
 	}
 	"Artisan_Recycl_Count"
 	{
 		"#format"	"{1:d},{2:.1f}"
 		"fr"	"Recycler {1} ({2}sec)"
+		"en"	"Recycle {1} ({2}sec)"
 	}
 	// ----------------------------------------------------------------------------------------------	
 	"Artisan_Learn"
 	{
 		"fr"	"Apprendre"
+		"en"	"Learn"
 	}
 	"Artisan_Learn_None"
 	{
 		"fr"	"Vous n'avez aucun point d'apprentissage. Pour en avoir vous pouvez gagner un niveau d'artisanat ou acheter et lire une potion de sagesse."
+		"en"	"You have no learning points. To get one you can earn a craftsmanship level or buy and read a wisdom potion."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Artisan_Books"
 	{
 		"fr"	"Livre des recettes"
+		"en"	"Recipe book"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Artisan_Infos"
 	{
 		"fr"	"Vos informations"
+		"en"	"Your information"
 	}
 	"Artisan_Infos_Bonus_XP"
 	{
 		"#format"	"{1:.1f}"
 		"fr"	"Bonus: +50% d'expérience: {1} minute(s)."
+		"en"	"Bonus: +50% experience: {1} minute(s)."
 	}
 	"Artisan_Infos_Bonus_SLEEP"
 	{
 		"#format"	"{1:.1f}"
 		"fr"	"Bonus: -50% de fatigue: {1} minute(s)."
+		"en"	"Bonus: -50% fatigue: {1} minute(s)."
 	}
 	"Artisan_Infos_Bonus_FOCUS"
 	{
 		"#format"	"{1:.1f}"
 		"fr"	"Bonus: +50% de concentration: {1} minute(s)."
+		"en"	"Bonus: +50% concentration: {1} minute(s)."
 	}
 	"Artisan_Infos_Bonus_SPEED"
 	{
 		"#format"	"{1:.1f}"
 		"fr"	"Bonus: +100% de vitesse: {1} minute(s)."
+		"en"	"Bonus: +100% speed: {1} minute(s)."
 	}
 	"Artisan_Infos_Bonus_LUCK"
 	{
 		"#format"	"{1:.1f}"
 		"fr"	"Bonus: +5% de chance: {1} minute(s)."
+		"en"	"Bonus: +5% luck: {1} minute(s)."
 	}
 	"Artisan_Infos_Bonus_STEAL"
 	{
 		"#format"	"{1:.1f}"
 		"fr"	"Protection vol d'inventaire: {1} minute(s)."
+		"en"	"Inventory theft protection: {1} minute(s)."
 	}
 	// ----------------------------------------------------------------------------------------------
 	

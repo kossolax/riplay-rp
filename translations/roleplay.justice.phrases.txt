@@ -1,517 +1,314 @@
 "Phrases"
 {
-	"Act_KillAtt"
-	{
-		"fr"		"Meurtre avec circonstances atténuantes"
-	}
-	"Act_KillAttDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Toute atteinte involontaire à la vie d’un citoyen est condamnée à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-
-	"Act_Kill"
-	{
-		"fr"		"Meurtre"
-	}
-	"Act_KillDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Toute atteinte volontaire à la vie d’un citoyen est condamnée à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-
-	"Act_KillAggr"
-	{
-		"fr"		"Meurtre avec circonstances aggravantes"
-	}
-	"Act_KillAggrDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Toute atteinte volontaire et préméditée à la vie d’un citoyen est condamnée à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-
-	"Act_KillCT"
-	{
-		"fr"		"Meurtre d'un policier"
-	}
-	"Act_KillCTDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Toute atteinte volontaire à la vie d’un officier des forces de l’ordre est condamnée à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-
-	"Act_Aggr"
-	{
-		"fr"		"Agression physique"
-	}
-	"Act_AggrDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Les coups et blessures involontaires n’ayant pas provoqué des lésions corporelles sont condamnés à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-
-	"Act_Vol"
-	{
-		"fr"		"Vol"
-	}
-	"Act_VolDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Tout vol est un acte punis d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-
-	"Act_MqConvoc"
-	{
-		"fr"		"Manquement convocation"
-	}
-	"Act_MqConvocDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Tout manquement à une convocation devant les tribunaux sans motif valable est puni d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-
-	"Act_Fake"
-	{
-		"fr"		"Faux aveux / Dénonciations calomnieuses"
-	}
-	"Act_FakeDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Tout faux aveux ou dénonciation calomnieuse est puni d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-
-	"Act_NuisaSono"
-	{
-		"fr"		"Nuisances sonores"
-	}
-	"Act_NuisaSonoDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Toute nuisance sonore est punie d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-
-	"Act_Insult"
-	{
-		"fr"		"Insultes / irrespect"
-	}
-	"Act_InsultDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Toute insulte est passible d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-
-	"Act_HarcMen"
-	{
-		"fr"		"Harcèlements / Menaces"
-	}
-	"Act_HarcMenDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Tout acte de harcèlement et/ou menaces sont passibles d'une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-
-	"Act_Obstru"
-	{
-		"fr"		"Obstruction"
-	}
-	"Act_ObstruDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Tout acte obstruant les forces de l’ordre (Masque/Suicide/Pilule/Pots de vins, que ce soit avant ou pendant l’audience/Changement de pseudo délibéré, pendant la recherche du criminel et GHB), ou la fuite délibérée, ou mutinerie, sont passibles d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-
-	"Act_BavuPol"
-	{
-		"fr"		"Bavure policière"
-	}
-	"Act_BavuPolDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Tout acte de maltraitance policière (taser, balle perdue, jail/déjail répétitif...) pourra être rapporté devant les tribunaux. La maltraitance est passible de {red}{1}{default}h de prison au maximum, et d'une amende de {red}{2}{default}$ au maximum."
-	}
-
-	"Act_AssocMalf"
-	{
-		"fr"		"Association de malfaiteurs"
-	}
-	"Act_AssocMalfDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Toute association de malfaiteurs (Défense lors de perquisitions notamment) est punissable d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-
-	"Act_ProfitVulne"
-	{
-		"fr"		"Profiter de la vulnérabilité d’une personne"
-	}
-	"Act_ProfitVulneDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Le fait de soumettre une personne à un acte criminel en abusant de sa vulnérabilité ou de sa dépendance à son travail est punis d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende en plus de la peine du crime commis."
-	}
-
-	"Act_Destruct"
-	{
-		"fr"		"Destruction de biens d’autrui"
-	}
-	"Act_DestructDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Tout acte volontaire ou involontaire de destruction de biens d'autrui et ce quelque soit les méthodes de destruction utilisées, peut-être condamné par {red}{1}{default}h de prison et {red}{2}{default}$ au maximum."
-	}
-
-	"Act_ViePrv"
-	{
-		"fr"		"Atteinte à la vie privée"
-	}
-	"Act_ViePrvDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Toute atteinte à la vie privée telle que l’espionnage, ou l’enregistrement d’une conversation intime est punie d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-
-	"Act_Vol"
-	{
-		"fr"		"Vol"
-	}
-	"Act_VolDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Tout vol est un acte punis d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-
-	"Act_IntrusiPrv"
-	{
-		"fr"		"Intrusion dans une propriété privée"
-	}
-	"Act_IntrusiPrvDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Toute violation d’une propriété privée est punie d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-
-	"Act_IntrusiFede"
-	{
-		"fr"		"Intrusion dans un batiment fédéral"
-	}
-	"Act_IntrusiFedeDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Toute violation d’un batiment fédéral est punie d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-
-	"Act_UseDrug"
-	{
-		"fr"		"Usage de produits illicites"
-	}
-	"Act_UseDrugDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Droguer ou alcooliser une personne à son insu est un acte punis d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-
-	"Act_IllegTrafc"
-	{
-		"fr"		"Trafic illégal"
-	}
-	"Act_IllegTrafcDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Tout trafic illégal est punis d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-
-	"Act_TCorrup"
-	{
-		"fr"		"Tentative de corruption"
-	}
-	"Act_TCorrupDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Tout acte de corruption ou de tentative de corruption, est puni d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-
-	"Act_Escroq"
-	{
-		"fr"		"Escroquerie"
-	}
-	"Act_EscroqDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Tout acte d’escroquerie est puni d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-
-	"Act_Seq"
-	{
-		"fr"		"Séquestration"
-	}
-	"Act_SeqDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Tout acte de séquestration est passible d'une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-
-	"Act_Pute"
-	{
-		"fr"		"Acte de proxénétisme / prostitution"
-	}
-	"Act_PuteDesc"
-	{
-		"#format"	"{1:d},{2:d}"
-		"fr"		"Tout acte de proxénétisme ou de prostitution est passible d'une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
-	}
-	// ----------------------------------------------------------------------------------------------
 	"Justice_Acquittement_NonCoupable"
 	{
 		"fr"		"Non coupable"
+		"en"		"Not guilty"
 	}
 	"Justice_Acquittement_Conciliation"
 	{
 		"fr"		"Conciliation"
+		"en"		"Conciliation"
 	}
 	"Justice_Acquittement_Impossible"
 	{
 		"fr"		"Impossible de prouver les faits"
+		"en"		"Impossible to prove the facts"
 	}
 	"Justice_Acquittement_DejaVu"
 	{
 		"fr"		"Déjà condamné"
+		"en"		"Already convicted"
 	}
 	"Justice_Acquittement_Cancel"
 	{
 		"fr"		"Plainte annulée"
+		"en"		"Complaint withdrawn"
 	}
 	"Justice_Acquittement_Newbie"
 	{
 		"fr"		"Amnistie des nouveaux"
+		"en"		"Amnesty for new offenders"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Justice_Condamnation_VerySmall"
 	{
 		"fr"		"Très indulgent"
+		"en"		"Very lenient"
 	}
 	"Justice_Condamnation_Small"
 	{
 		"fr"		"Indulgent"
+		"en"		"Lenient"
 	}
 	"Justice_Condamnation_Average"
 	{
 		"fr"		"Juste"
+		"en"		"Fair"
 	}
 	"Justice_Condamnation_Hard"
 	{
 		"fr"		"Sévère"
+		"en"		"Severe"
 	}
 	"Justice_Condamnation_VeryHard"
 	{
 		"fr"		"Très sévère"
+		"en"		"Very severe"
 	}
 	"Justice_Condamnation_Disconnect"
 	{
 		"fr"		"Impitoyable"
+		"en"		"Merciless"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Justice_NoPay"
 	{
 		"fr"		"La justice a décidé de {red}ne pas verser votre salaire{default} en raison de votre mauvais comportement envers la population."
+		"en"		"Justice has decided to {red}not pay your salary{default} because of your bad behavior towards the public."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tribunal_Error_SelectFirst"
 	{
 		"fr"	"Veuillez selectionner une plainte du Tribunal forum en premier."
+		"en"	"Please select a forum Court complaint first."
 	}
 	"Tribunal_Error_WrongCode"
 	{
 		"fr"	"Le code de confirmation est incorrect."
+		"en"	"The confirmation code is incorrect."
 	}
 	"Tribunal_Forum_Confirm_Condamn"
 	{
 		"fr"	"Afin de confirmer votre jugement, tappez maintenant /jgmt {red}{1}{default} heure amende raison"
+		"en"	"In order to confirm your judgment, type /jgmt {red}{1}{default} hour penalty reason"
 	}
 	"Tribunal_Forum_Confirm_Acquitter"
 	{
 		"fr"	"Afin de confirmer votre jugement, tappez maintenant /jgmt {red}{1}{default} raison"
+		"en"	"In order to confirm your judgment, type /jgmt {red}{1}{default} reason"
 	}
 	"Tribunal_Forum_Condamn"
 	{
 		"fr"	"La personne a été {red}condamnée{default}."
+		"en"	"The individual has been {red}sentenced{default}."
 	}
 	"Tribunal_Forum_Acquit"
 	{
 		"fr"	"La personne a été {green}acquitée{default}."
+		"en"	"The individual has been {green}acquitted{default}."
 	}
 	"Tribunal_Forum_Cancel"
 	{
 		"fr"	"La plainte a été supprimée."
+		"en"	"The complaint has been withdrawn."
 	}
 	"Tribunal_Forum_None"
 	{
 		"fr"	"Il n'y'a aucun cas à traiter pour le moment."
+		"en"	"There are no cases to process at this time."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tribunal_Menu"
 	{
 		"fr"	"Tribunal de Princeton:"
+		"en"	"Princeton Courthouse:"
 	}
 	"Tribunal_Menu_Start"
 	{
 		"fr"	"Débuter une audience"
+		"en"	"Start a hearing"
 	}
 	"Tribunal_Menu_Wedding"
 	{
 		"fr"	"Gestion du mariage"
+		"en"	"Marriage management"
 	}
 	"Tribunal_Menu_Forum"
 	{
 		"fr"	"Gestion des plaintes Forum"
+		"en"	"Complaint management Forum"
 	}
 	"Tribunal_Menu_Genre"
 	{
 		"fr"	"Gestion des plaintes Forum"
+		"en"	"Complaint management Forum"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tribunal_Menu_Audiance_Starting"
 	{
 		"fr"	"L'audience commencera dès le premier article."
+		"en"	"The hearing will begin with the first article."
 	}
 	"Tribunal_Menu_Audiance_AFK"
 	{
 		"#format"	"{1:s}"
 		"fr"	"{red}{1}{default} est apparu, car il est resté AFK trop longtemps."
+		"en"	"{red}{1}{default} appeared, because it stayed AFK too long."
 	}
 	"Tribunal_Menu_Audiance_Call"
 	{
 		"#format"	"{1:s},{2:d},{3:d}"
 		"fr"	"{red}{1}{default} est convoqué par le {green}Tribunal {2}{default} de Princeton [{green}{3}{default}/{green}3{default}]."
+		"en"	"{red}{1}{default} is summoned by the {green}Court {2}{default} of Princeton [{green}{3}{default}/{green}3{default}]."
 	}
 	"Tribunal_Menu_Audiance_Search"
 	{
 		"#format"	"{1:s},{2:d},{3:d}"
 		"fr"	"{red}{1}{default} est recherché par le {red}Tribunal {2}{default} de Princeton depuis {red}{3}{default} minutes."
+		"en"	"{red}{1}{default} is sought by the {red}Court {2}{default} of Princeton for {red}{3}{default} minutes."
 	}
 	"Tribunal_Menu_Audiance_Came_Fast"
 	{
 		"#format"	"{1:s}"
 		"fr"		"{red}{1}{default} est arrivé sans retard."
+		"en"		"{red}{1}{default} came right away."
 	}
 	"Tribunal_Menu_Audiance_Came_Normal"
 	{
 		"#format"	"{1:s},{2:d}"
 		"fr"		"{red}{1}{default} est arrivé après {green}{2}{default} minutes."
+		"en"		"{red}{1}{default} arrived after {green}{2}{default} minutes."
 	}
 	"Tribunal_Menu_Audiance_Came_Slow"
 	{
 		"#format"	"{1:s},{2:d}"
 		"fr"		"{red}{1}{default} est arrivé après {red}{2}{default} minutes, c'est un {red}manquement{default} à la convocation."
+		"en"		"{red}{1}{default} arrived after {red}{2}{default} minutes, it's a {red}breach{default} of the summons."
 	}
 	"Tribunal_Menu_Audiance_Target"
 	{
 		"#format"	"{1:d},{2:t}"
 		"fr"	"Vous êtes attendu au Tribunal {1} de Princeton. Venez <u>immédiatement</u> pour un jugement <font color='#00cc00'>{2}</font>."
+		"en"	"You are expected in the Court {1} of Princeton. Come <u>immediately</u> for a judgment <font color='#00cc00'>{2}</font>."
 	}
 	"Tribunal_Menu_Audiance_Avocat"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Vos services d'avocat sont requis au Tribunal {1}."
+		"en"		"Your legal services are required at the Court."
 	}
 	"Tribunal_Menu_Audiance_Main"
 	{
 		"fr"		"Tribunal de Princeton, affaire opposant"
+		"en"		"Princeton Court, opposing case"
 	}
 	"Tribunal_Menu_Audiance_Main_Players"
 	{
 		"#format"	"{1:s},{2:s}"
 		"fr"		"{1} et {2}"
+		"en"		"{1} and {2}"
 	}
 	"Tribunal_Menu_Audiance_Main_Juge"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Juge: {1}"
+		"en"		"Judge: {1}"
 	}
 	"Tribunal_Menu_Audiance_Main_Avocat_Victime"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Avocat de la Victime: {1}"
+		"en"		"Victim's lawyer: {1}"
 	}
 	"Tribunal_Menu_Audiance_Main_Avocat_Defense"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Avocat de la Défense: {1}"
+		"en"		"Defense's lawyer: {1}"
 	}
 	"Tribunal_Menu_Audiance_Main_Charges"
 	{
 		"fr"		"Charges:"
+		"en"		"Charges:"
 	}
 	"Tribunal_Menu_Audiance_Main_TOTAL"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Peine encourue: {1} heure(s) et {2}$ d'amende"
+		"en"		"Penalty: {1} hour(s) and {2}$ fine"
 	}
 	"Tribunal_Menu_Audiance_Main_Dedo"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Dédommagement possible: {1}$"
+		"en"		"Possible compensation: {1}$"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tribunal_Menu_Articles"
 	{
 		"fr"	"Gestions des articles"
+		"en"	"Article management"
 	}
 	"Tribunal_Menu_Articles_Add"
 	{
 		"fr"	"Ajouter un article"
+		"en"	"Add an article"
 	}
 	"Tribunal_Menu_Articles_Remove"
 	{
 		"fr"	"Retirer un article"
+		"en"	"Remove an article"
 	}
 	"Tribunal_Menu_Articles_List"
 	{
 		"fr"	"Liste des articles:"
+		"en"	"List of articles:"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tribunal_Menu_Avocats"
 	{
 		"fr"	"Gestions des avocats"
+		"en"	"Lawyer management"
 	}
 	"Tribunal_Menu_Avocats_Victim"
 	{
 		"fr"	"Avocat de la victime"
+		"en"	"Victim's lawyer"
 	}
 	"Tribunal_Menu_Avocats_Defense"
 	{
 		"fr"	"Avocat de la défense"
+		"en"	"Defense's lawyer"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tribunal_Menu_Enquete"
 	{
 		"fr"	"Enquêter"
+		"en"	"Investigate"
 	}
 	"Tribunal_Menu_Enquete_Merco"
 	{
 		"fr"	"Convoquer les mercenaires"
+		"en"	"Summon the mercenaries"
 	}
 	"Tribunal_Menu_Enquete_Merco_Confirm"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Les mercenaires ont été convoqués au {red}Tribunal {1}{default}."
+		"en"	"The mercenaries were summoned to the {red}Court {1}{default}."
 	}
 	"Tribunal_Menu_Enquete_Self"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Enquêter sans mercenaire ({1}$)"
+		"en"	"Investigate without mercenaries ({1}$)"
 	}
 	"Tribunal_Menu_Enquete_Log"
 	{
 		"fr"	"Enquêter dans les logs"
+		"en"	"Search in the logs"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tribunal_Menu_Condamner"
 	{
 		"fr"	"Condamner"
+		"en"	"Convict"
 	}
 	"Tribunal_Menu_Condamner_Confirm"
 	{
 		"fr"	"Quel est votre verdict?"
+		"en"	"What is your verdict?"
 	}
 	"Tribunal_Menu_Condamner_Doing"
 	{
@@ -522,172 +319,208 @@
 	{
 		"#format"	"{1:s},{2:d},{3:d},{4:t}"
 		"fr"	"{1} a été condamné {red}condamné{default} à {red}{2}{default} heure(s) de prison et à {red}{3}{default}$ d'amende. Le juge a été {red}{4}{default}."
+		"en"	"{1} was {red}sentenced{default} to {red}{2}{default} hour(s) in jail and a {red}{3}{default}$ fine. The judge was {red}{4}{default}."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tribunal_Menu_Dedo"
 	{
 		"fr"	"Dédomager"
+		"en"	"Compensate"
 	}
 	"Tribunal_Menu_Dedo_Amount"
 	{
 		"#format"	"{1:s},{2:d}"
-		"fr"	"Quel est la valeur de {1}?\n		{2}$"
+		"fr"	"Quel est la valeur de {1}?\n    {2}$"
+		"en"	"What is the worth of {1}?\n    {2}$"
 	}
 	"Tribunal_Menu_Dedo_Add"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Ajouter {1}$"
+		"en"	"Add {1}$"
 	}
 	"Tribunal_Menu_Dedo_Remove"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Retirer {1}$"
+		"en"	"Remove {1}$"
 	}
 	"Tribunal_Menu_Dedo_Confirm"
 	{
 		"fr"	"Confirmer"
+		"en"	"Confirm"
 	}
 	"Tribunal_Menu_Dedo_Given"
 	{
 		"#format"	"{1:s},{2:s},{3:d}"
 		"fr"	"{red}{1}{fault} a dédommagé {red}{2}{default} de {red}{3}{default}$."
+		"en"	"{red}{1}{fault} has compensated {red}{2}{default} for {red}{3}{default}$."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tribunal_Menu_Acquitter"
 	{
 		"fr"	"Acquitter"
+		"en"	"Acquit"
 	}
 	"Tribunal_Menu_Acquitter_Confirm"
 	{
 		"fr"	"Pour quelle raison doit-elle être acquitée?"
+		"en"	"Why should she be acquitted?"
 	}
 	"Tribunal_Menu_Acquitter_Given"
 	{
 		"#format"	"{1:s},{2:t}"
 		"fr"	"{1} a été acquité: {green}{2}{default}."
+		"en"	"{1} was acquitted: {green}{2}{default}."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tribunal_Menu_Cancel"
 	{
 		"fr"	"Annuler l'audience"
+		"en"	"Cancel the hearing"
 	}
 	"Tribunal_Menu_Cancel_Confirm"
 	{
 		"fr"	"Êtes vous sur d'annuler l'audience?"
+		"en"	"Are you sure you want to cancel the hearing?"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tribunal_Menu_Switch"
 	{
 		"fr"	"Inverser plaignant-suspect"
+		"en"	"Reverse complainant-suspect"
 	}
 	"Tribunal_Menu_Switch_Confirm"
 	{
 		"#format"	"{1:s},{2:s}"
 		"fr"	"Le Juge {red}{1}{default} cède sa place au Juge {red}{1}{default}."
+		"en"	"Judge {red}{1}{default} concedes to Judge {red}{1}{default}."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tribunal_Menu_Juge"
 	{
 		"fr"	"Changer de juge"
+		"en"	"Change judge"
 	}
 	"Tribunal_Menu_Supprimer"
 	{
 		"fr"	"Supprimer"
+		"en"	"Remove"
 	}
 	"Tribunal_Menu_Plaignant"
 	{
 		"fr"	"Qui est le plaignant?"
+		"en"	"Who is the complainant?"
 	}
 	"Tribunal_Menu_Suspect"
 	{
 		"fr"	"Qui est le suspect?"
+		"en"	"Who is the suspect?"
 	}
 	"Tribunal_Menu_Juge"
 	{
 		"fr"	"Qui est le nouveau juge?"
+		"en"	"Who is the new judge?"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tribunal_Menu_Sexe"
 	{
 		"fr"	"Qui veut changer de sexe?"
+		"en"	"Who wants to change sex?"
 	}
 	"Tribunal_Menu_Sexe_Confirm"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Souhaitez-vous changer de sexe?\nCette opération vous coûtera {1}$."
+		"en"	"Would you like to change your sex?\nThis operation will cost you {1}$."
 	}
 	"Tribunal_Menu_Sexe_Given"
 	{
 		"#format"	"{1:s},{2:t}"
 		"fr"	"{1} est maintenant {red}{2}{default}."
+		"en"	"{1} is now {red}{2}{default}."
 	}
 	"Tribunal_Menu_Sexe_Deny"
 	{
 		"#format"	"{1:s}"
 		"fr"	"{1} a refusé de changer de sexe."
+		"en"	"{1} refused to change sex."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"PotDeVin_OwnKill"
 	{
 		"fr"		"Votre pot de vin vient de réussir à bloquer {red}une enquête{default} en cours."
+		"en"		"Your bribe just succeeded in blocking an ongoing {red}investigation{default}."
 	}
 	"Enquete_Menu"
 	{
 		"fr"	"Sur qui voulez-vous récupérer des informations?"
+		"en"	"Who do you want to retrieve information on?"
 	}
 	"Enquete_MenuTarget"
 	{
 		"#format"	"{1:s}"
 		"fr"	"Information sur {1}:"
+		"en"	"Information on {1}:"
 	}
 	"Enquete_Localisation"
 	{
 		"#format"	"{1:s}"
 		"fr"	"Localisation: {1}"
+		"en"	"Localization: {1}"
 	}
 	"Enquete_Killed"
 	{
 		"#format"	"{1:s}"
 		"fr"	"Il a tué: {1}"
+		"en"	"He killed: {1}"
 	}
 	"Enquete_KilledBy"
 	{
 		"#format"	"{1:s}"
 		"fr"	"{1} l'a tué"
+		"en"	"{1} killed him"
 	}
 	"Enquete_Steal"
 	{
 		"#format"	"{1:s}"
 		"fr"	"{1} l'a volé"
+		"en"	"{1} robbed him"
 	}
 	"Enquete_StealAmount"
 	{
 		"#format"	"{1:s},{2:d}"
 		"fr"	"{1} l'a volé {2}$"
+		"en"	"{1} stole {2}$"
 	}
 	"Enquete_KillingSpread"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Meurtre consécutif: {1}"
+		"en"	"Consecutive killings: {1}"
 	}
 	"Enquete_Knife"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Niveau d'entrainement: {1}%"
+		"en"	"Level of training: {1}%"
 	}
 	"Enquete_Weapon"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Précision de tir: {1}%"
+		"en"	"Shooting accuracy: {1}%"
 	}
 	"Enquete_Money"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Argent: {1}$"
+		"en"	"Money: {1}$"
 	}
 	"Enquete_Alcool"
 	{
 		"#format"	"{1:.3f}"
 		"fr"	"Taux d'alcoolémie: {1}°"
+		"en"	"Blood alcohol concentration: {1}°"
 	}
 }

@@ -3,176 +3,213 @@
 	"Error_DontTouchWheel"
 	{
 		"fr"	"Ne touchez pas à la roue!"
+		"en"	"Don't touch the wheel!"
 	}
 	"SlotMachine_CantForNow"
 	{
 		"fr"	"Impossible de jouer pour le moment."
+		"en"	"Can't play for now."
 	}
 	"SlotMachine_RequiredJeton"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Il faut {red}{1}{default} jeton(s) pour jouer à cette machine."
+		"en"	"You need {red}{1}{default} chip(s) to play this machine."
 	}
 	"SlotMachine_LoseTurn"
 	{
 		"fr"	"Vous avez perdu {red}un tour{default}!"
+		"en"	"You lost {red}a turn{default}!"
 	}
 	"SlotMachine_Lose"
 	{
 		"#format"	"{1:d}"
 		"fr"	"{red}BANKRUPT!{default} Vous avez perdu {red}{1}{default}$!"
+		"en"	"{red}BANKRUPT!{default} You have lost {red}{1}{default}$!"
 	}
 	"SlotMachine_WinCash"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Vous avez gagné {green}{1}{default}$!"
+		"en"	"You have won {green}{1}{default}$!"
 	}
 	"SlotMachine_Menu"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Machine à sous n°{1}"
+		"en"	"Slot machine n°{1}"
 	}
 	"SlotMachine_Menu_Full"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"	"Machine à sous n°{1}\nIl vous reste {2} jeton(s)"
+		"en"	"Slot machine n°{1}\nYou still have {2} token(s)"
 	}
 	"SlotMachine_Jeton"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Vous avez {1} jeton(s)"
+		"en"	"You have {1} token(s)"
 	}
 	"Play_Jeton"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Jouer {1} jeton(s)"
+		"en"	"Play {1} token(s)"
 	}
 	"SlotMachine_Jackpot"
 	{
 		"#format"	"{1:d}"
 		"fr"	"{1} Jeton(s)"
+		"en"	"{1} Token(s)"
 	}
 	"SlotMachine_Jackpot_Win"
 	{
 		"#format"	"{1:s},{2:d}"
 		"fr"	"{red}{1}{default} vient de gagner le jackpot de {green}{2}{default} jetons!"
+		"en"	"{red}{1}{default} just won the jackpot of {green}{2}{default} tokens!"
 	}
 	"SlotMachine_Win_Jeton"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Vous avez gagné {green}{1}{default} jeton(s)!"
+		"en"	"You won {green}{1}{default} token(s)!"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Dice_One"
 	{
 		"#format"	"{1:s},{2:d}"
 		"fr"	"{1} lance un dé et fait {green}{2}{default}!"
+		"en"	"{1} rolls a die and gets {green}{2}{default}!"
 	}
 	"Dice_Multiple"
 	{
 		"#format"	"{1:s},{2:d},{3:s},{4:d}"
 		"fr"	"{1} lance {2} dés et fait {3}, soit un total de {green}{4}{default}!"
+		"fr"	"{1} rolls {2} dice and gets {3}, for a total of {green}{4}{default}!"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"YouFeelLuck"
 	{
 		"fr"	"Vous vous sentez {green}chanceux{default} aujourd'hui."
+		"en"	"You feel {green}lucky{default} today."
 	}
 	"YouFeelVeryLuck"
 	{
 		"fr"	"Vous vous sentez extrêmement {green}chanceux{default} aujourd'hui! Cette fois, c'est la bonne!"
+		"en"	"You feel extremely {green}lucky{default} today! This time, it's the right one!"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Lotery_OnlyOne_Validated"
 	{
 		"fr"	"Votre ticket a été validé! Un tirage exceptionnel pour la brocante de Noël aura lieu mercredi vers 21h30."
+		"en"	"Your ticket has been validated! A special raffle for the Christmas flea market will take place on Wednesday around 9:30 p.m."
 	}
 	"Lotery_OnlyOne_Refund"
 	{
 		"fr"	"Votre ticket a déjà été validé, il vous a été remboursé."
+		"en"	"Your ticket has already been validated, it has been refunded to you."
 	}
 	"Lotery_Doing"
 	{
 		"fr"	"Vous êtes déjà entrain de gratter des tickets?!"
+		"en"	"You're already scratching tickets?!"
 	}
 	"Lotery_Cagnotte"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Vous avez {1} ticket(s) cagnotte.\nCombien voulez-vous en gratter?"
+		"en"	"You have {1} ticket(s) prize.\nHow many do you want to scratch?"
 	}
 	"Lotery_Ticket"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"	"Vous avez {1} ticket(s) de {2}$.\nCombien voulez-vous en gratter?"
+		"en"	"You have {1} ticket(s) for {2}$.\nHow many do you want to scratch?"
 	}
 	"Lotery_UntilWin"
 	{
 		"fr"	"Gratter jusqu'à ce que je gagne!"
+		"en"	"Scratch until I win!"
 	}
 	"Lotery_All"
 	{
 		"fr"	"Gratter tous mes tickets"
+		"en"	"Scratch all my tickets"
 	}
 	"Lottery_Amount"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Gratter {1} ticket(s)"
+		"en"	"Scratch {1} ticket(s)"
 	}
 	"Lotery_Validated"
 	{
 		"fr"	"Votre ticket a été validé. Les tirages ont lieu le {red}mardi{default} et le {red}samedi{default} à {red}21h{default}."
+		"en"	"Your ticket has been validated. Draws take place on {red}tuesday{default} and {red}saturday{default} at {red}9:00p.m.{default}."
 	}
 	"Lotery_Win"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Vous avez gagné {green}%i{default}$, félicitations!"
+		"en"	"You won {green}%i{default}$, congratulations!"
 	}
 	"Lotery_Lose"
 	{
 		"fr"	"Désolé, vous n'avez rien gagné!"
+		"en"	"Sorry, you lose!"
 	}
 	"Lotery_Cagnotte_First"
 	{
 		"#format"	"{1:s},{2:d}"
 		"fr"	"Le gagnant de la loterie est... {1}{default} et remporte {green}{2}{default}$!"
+		"en"	"The winner of the lottery is... {1}{default} and wins {green}{2}{default}$!"
 	}
 	"Lotery_Cagnotte_Second"
 	{
 		"#format"	"{1:s},{2:d}"
 		"fr"	"suivi de.... {1}{default} qui remporte {yellow}{2}{default}$!"
+		"en"	"followed by.... {1}{default} who wins {yellow}{2}{default}$!"
 	}
 	"Lotery_Cagnotte_Third"
 	{
 		"#format"	"{1:s},{2:d}"
 		"fr"	"{1}{default} remporte le lot de consolation de {red}{2}{default}$!"
+		"en"	"{1}{default} wins the consolation prize of {red}{2}{default}$!"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Jeton_Echange"
 	{
 		"#format"	"{1:s}"
 		"fr"	"{1} vous propose\nd'échanger vos jetons bleus\ncontre des lots."
+		"en"	"{1} offers you\nto exchange your blue tokens\nfor prizes."
 	}
 	"Jeton_Which"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Vous avez {1} jeton(s) bleu(s)\nQue souhaitez-vous échanger?"
+		"en"	"You have {1} blue token(s)\nWhat would you like to redeem them for?"
 	}
 	"Jeton_Which_Money"
 	{
 		"fr"	"Contre de l'argent"
+		"en"	"For money."
 	}
 	"Jeton_Which_Money_Amount"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"	"{1}$ contre {2} jeton(s)"
+		"en"	"{1}$ for {2} token(s)"
 	}
 	"Jeton_Which_Money_Give"
 	{
 		"fr"	"Vous avez reçu {green}{1}{default}$!"
+		"en"	"You have received {green}{1}{default}$!"
 	}
 	"Jeton_Which_Item_Amount"
 	{
 		"#format"	"{1:d},{2:s},{3:d}"
 		"fr"	"{1}x {2} contre {3} jeton(s)"
+		"en"	"{1}x {2} for {3} token(s)"
 	}
 }
