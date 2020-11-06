@@ -3,83 +3,102 @@
 	"Empty_String"
 	{
 		"fr"	""
+		"en"	""
 	}
 	"Error_ItemMissing"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Vous n'avez plus de {red}{1}{default}."
+		"en"		"You no longer have {red}{1}{default}."
 	}
 	"Error_ItemCooldown"
 	{
 		"#format"	"{1:.1f}"
 		"fr"		"Vous ne pouvez rien utiliser pour encore {red}{1}{defualt} seconde(s)."
+		"en"		"You can't use anything for another {red}{1}{defualt} second(s)."
 	}
 	"Error_ItemNotEnought"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Vous n'avez pas assez de {red}{1}{default}."
+		"en"		"You don't have enough {red}{1}{default}."
 	}
 	"Error_ItemAlreadyEnable"
 	{
 		"#format"	"{1:s}"
 		"fr"		"{red}{1}{default} est déjà activé."
+		"en"		"{red}{1}{default} is already enabled."
 	}
 	"Error_ItemCannotBeUsedForNow"
 	{
 		"#format"	"{1:s}"
 		"fr"	"{red}{1}{default} n'est pas disponible pour le moment."
+		"en"	"{red}{1}{default} cannot be used for now."
 	}
 	"Error_NotEnoughtMoney"
 	{
 		"fr"	"Vous n'avez pas assez d'argent."
+		"en"	"You don't have enough money."
 	}
 	"Error_CannotUseItemInPvP"
 	{
 		"fr"	"Cet objet est interdit en PvP."
+		"en"	"You cannot use this item in PvP."
 	}
 	"Error_CannotUseItemInPeace"
 	{
 		"fr"	"Cet objet est interdit en peacefull."
+		"en"	"You cannot use this item in peacefull."
 	}
 	"Error_CannotUseItemInCar"
 	{
 		"fr"	"Cet objet est interdit en voiture."
+		"en"	"You cannot use this item in the car."
 	}
 	"Error_CannotUseItemPolice"
 	{
 		"fr"	"Cet objet est interdit aux forces de l'ordre."
+		"en"	"You cannot use this item in law enforcement agencies."
 	}
 	"Error_CannotUseItemInPerquiz"
 	{
 		"fr"	"Cet objet est interdit lors d'une perquisition."
+		"en"	"You cannot use this item during a search."
 	}
 	"Error_CannotUseItemInBraquage"
 	{
 		"fr"	"Cet objet est interdit lors de ce braquage."
+		"en"	"You cannot use this item during the robbery."
 	}
 	"Error_CannotUseItemHere"
 	{
 		"fr"	"Cet objet est interdit où vous êtes."
+		"en"	"You cannot use this item here."
 	}
 	"Error_FromServer"
 	{
 		"fr"		"Quelque chose s'est mal passé."
+		"en"		"Something went wrong."
 	}
 	"Error_CannotSteal_Target_ForNow"
 	{
 		"fr"		"Il n'est pas possible de voler cette personne pour le moment."
+		"en"		"You cannot steal from this person for now."
 	}
 	"Error_CannotSteal_Target_Broke"
 	{
 		"fr"		"Cette personne a les poches vides."
+		"en"		"This person has empty pockets."
 	}
 	"Error_CannotFindTarget"
 	{
 		"fr"		"Vous devez viser une personne."
+		"en"		"You must aim at a person."
 	}
 	"Error_OnlyInside"
 	{
 		"fr"		"Vous devez être à l'intérieur pour utiliser cet objet."
+		"en"		"You must be inside to use this object."
 	}
 	"Error_OnlyInsideAppart"
 	{
@@ -89,6 +108,7 @@
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"		"Vous devez être au moins de niveau {1} ({red}{2}{default}), afin d'utiliser cette commande."
+		"en"		"You must be at least level {1} ({red}{2}{default}), to use this command."
 	}
 	"Error_YouMustAim"
 	{
@@ -118,21 +138,25 @@
 	"LEVEL_42"
 	{
 		"fr"		"Propriétaire"
+		"en"		"Owner"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Steal_Starting"
 	{
 		"fr"		"<font color='#ff0000'>Attention!</font> Quelqu'un essaye de vous voler!"
+		"en"		"<font color='#ff0000'>Attention!</font> Someone is trying to steal from you!"
 	}
 	"Steal_Money_Target"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Vous avez volé {red}{1}{default}$."
+		"en"		"You stole {red}{1}{default}$."
 	}
 	"Steal_Money_By"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Quelqu'un vous a volé {red}{1}{default}$."
+		"en"		"Someone robbed you {red}{1}{default}$."
 	}
 	"Steal_Item_Target"
 	{
@@ -147,31 +171,38 @@
 	"Steal_Failed"
 	{
 		"fr"		"Cette personne ne s'est pas laissée faire."
+		"en"		"This person didn't let it happen."
 	}
 	"Steal_Nearby"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Policier(s) proche: {1}"
+		"en"		"Police officer close by: {1}"
 	}
 	"Difficulty_Failed"
 	{
 		"fr"		"Difficulté: Échec"
+		"en"		"Difficulty: Failed" 
 	}
 	"Difficulty_Easy"
 	{
 		"fr"		"Difficulté: Facile"
+		"en"		"Difficulty: Easy"
 	}
 	"Difficulty_Average"
 	{
 		"fr"		"Difficulté: Moyenne"
+		"en"		"Difficulty: Average"
 	}
 	"Difficulty_Hard"
 	{
 		"fr"		"Difficulté: Difficile"
+		"en"		"Difficulty: Hard"
 	}
 	"Difficulty_VeryHard"
 	{
 		"fr"		"Difficulté: Très difficile"
+		"en"		"Difficulty: Very hard"
 	}
 	"Difficulty_Impossible"
 	{
@@ -181,51 +212,62 @@
 	"Jobs_All"
 	{
 		"fr"	"Tous les jobs"
+		"en"	"All jobs"
 	}
 	"Jobs_List"
 	{
 		"fr"	"Liste des jobs:"
+		"en"	"List of jobs:"
 	}
 	"Jobs_ListAvailable"
 	{
 		"fr"	"Liste des jobs disponibles:"
+		"en"	"List of available jobs:"
 	}
 	"Jobs_Noone"
 	{
 		"fr"	"Personne"
+		"fr"	"No one" 
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Cmd_TargetIsToFar"
 	{
 		"fr"	"Cette personne est beaucoup trop éloignée."
+		"en"	"This person is too far away."
 	}
 	"Cmd_TargetIsSlippy"
 	{
 		"fr"	"Cette personne vous a glissé des mains."
+		"en"	"This person slipped out from your grasp."
 	}
 	"Cmd_TargetIgnore"
 	{
 		"fr"	"Cette personne vous ignore."
+		"en"	"Cette personne vous ignore."
 	}
 	"Cmd_OutOf_Car_By"
 	{
 		"#format"	"{1:s}"
 		"fr"	"{1} vous a sorti de votre voiture."
+		"en"	"{1} pulled you out of your car."
 	}
 	"Cmd_NowSteal"
 	{
 		"fr"	"Vous pouvez à nouveau voler."
+		"en"	"You can steal again."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Item_Take"
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"	"Vous avez récupéré: {1}x {green}{2}{default}."
+		"en"	"You have retrieved: {1}x {green}{2}{default}."
 	}
 	"Item_Free"
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"	"Vous avez reçu comme cadeau: {1}x {green}{2}{default}."
+		"en"	"You received a gift: {1}x {green}{2}{default}."
 	}
 	"Market_Buy"
 	{
@@ -241,63 +283,77 @@
 	"Build_CannotHere"
 	{
 		"fr"	"Vous ne pouvez pas construire ici."
+		"en"	"You cannot build here."
 	}
 	"Build_TooMany"
 	{
 		"fr"	"Vous avez trop de props actif en ville."
+		"en"	"You have too many active props in town."
 	}
 	"Build_Destroyed"
 	{
 		"#format"	"{1:t}"
 		"fr"	"{1} a été détruite."
+		"en"	"{1} was destroyed."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Banned_Event"
 	{
 		"fr"	"En raison de votre mauvais comportement, il vous est temporairement interdit de participer à un event."
+		"en"	"Due to your misconduct, you are temporarily banned from participating in an event."
 	}
 	"Ignore"
 	{
 		"fr"	"Ignorer"
+		"en"	"Ignore"
 	}
 	"Ignore_For"
 	{
 		"#format"	"{1:s},{2:d}"	
 		"fr"	"Vous ignorez les demandes de {1} pour {2} heures."
+		"en"	"You ignore requests for {1} for {2} hours."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"a_male"
 	{
 		"fr"	"Un homme"
+		"en"	"A male"
 	}
 	"a_female"
 	{
 		"fr"	"Une femme"
+		"en"	"A female"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Perm_Edit"
 	{
 		"fr"		"Modifier les permissions"
+		"en"		"Change permissions"
 	}
 	"Perm_Self"
 	{
 		"fr"		"Uniquement moi"
+		"en"		"Only me"
 	}
 	"Perm_Chef"
 	{
 		"fr"		"Tous les chefs de mon job"
+		"en"		"All the bosses from my job"
 	}
 	"Perm_Job"
 	{
 		"fr"		"Toutes les personnes de mon job"
+		"en"		"All the people from my job"
 	}
 	"Perm_Gang"
 	{
 		"fr"		"Toutes les personnes de mon gang"
+		"en"		"All the people in my gang"
 	}
 	"Perm_Everyone"
 	{
 		"fr"		"Tout le monde"
+		"en"		"Everyone"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Phone_Mission"
@@ -313,50 +369,62 @@
 	"rp_banana"
 	{
 		"fr"	"une banane"
+		"en"	"a banana"
 	}
 	"rp_bank"
 	{
 		"fr"	"un distributeur"
+		"en"	"a cash machine"
 	}
 	"rp_barriere"
 	{
 		"fr"	"une barrière"
+		"en"	"a barrier"
 	}
 	"rp_bigcashmachine"
 	{
 		"fr"	"une photocopieuse"
+		"en"	"a photocopier"
 	}
 	"rp_braquage_mask"
 	{
 		"fr"	"un masque"
+		"en"	"a mask"
 	}
 	"rp_cashmachine"
 	{
 		"fr"	"une imprimante à faux-billet"
+		"en"	"a counterfeit bill printer"
 	}
 	"rp_copter"
 	{
 		"fr"	"un hélicoptère"
+		"en"	"a helicopter"
 	}
 	"rp_crate"
 	{
 		"fr"	"une caisse"
+		"en"	"a crate"
 	}
 	"rp_discoball"
 	{
 		"fr"	"une boule disco"
+		"en"	"a disco ball"
 	}
 	"rp_discosmoke"
 	{
 		"fr"	"un fumigène"
+		"en"	"a smoke machine"
 	}
 	"rp_emote"
 	{
 		"fr"	"une dance"
+		"en"	"a dance"
 	}
 	"rp_grave"
 	{
 		"fr"	"une pière tombale"
+		"en"	"a gravestone"
 	}
 	"rp_gyrophare"
 	{
@@ -365,46 +433,57 @@
 	"rp_healbox"
 	{
 		"fr"	"une healbox"
+		"en"	"a healbox"
 	}
 	"rp_kevlarbox"
 	{
 		"fr"	"une kevlarbox"
+		"en"	"a kevlarbox"
 	}
 	"rp_microwave"
 	{
 		"fr"	"un microonde"
+		"en"	"a microwave"
 	}
 	"rp_mine"
 	{
 		"fr"	"une mine"
+		"en"	"a mine"
 	}
 	"rp_phone"
 	{
 		"fr"	"un téléphone"
+		"en"	"a phone"
 	}
 	"rp_plant"
 	{
 		"fr"	"un plant de drogue"
+		"en"	"a drug plant"
 	}
 	"rp_props"
 	{
 		"fr"	"un prop"
+		"en"	"a prop"
 	}
 	"rp_sign"
 	{
 		"fr"	"un panneau"
+		"en"	"a sign"
 	}
 	"rp_table"
 	{
 		"fr"	"une table de craft"
+		"en"	"a craft table"
 	}
 	"rp_weaponbox"
 	{
 		"fr"	"une caisse d'armes"
+		"en"	"a crate of weapons"
 	}
 	"prop_vehicle_driveable"
 	{
 		"fr"	"un véhicule"
+		"en"	"a vehicle"
 	}
 	"prop_door_rotating"
 	{
@@ -414,245 +493,305 @@
 	"Trail"
 	{
 		"fr"	"Propulseur"
+		"en"	"Propellant"
 	}
 	"Trail2"
 	{
 		"fr"	"Fusée n°1"
+		"en"	"Rocket n°1"
 	}
 	"Trail_01"
 	{
 		"fr"	"Fusée n°2"
+		"en"	"Rocket n°2"
 	}
 	"Trail3"
 	{
 		"fr"	"Petit cube bleu"
+		"en"	"Small blue cube"
 	}
 	"Trail4"
 	{
 		"fr"	"Fumée verte n°1"
+		"en"	"Green smoke n°1"
 	}
 	"Trail_03"
 	{
 		"fr"	"Fumée verte n°2"
+		"en"	"Green smoke n°2"
 	}
 	"Trail7"
 	{
 		"fr"	"Fumée verte n°3"
+		"en"	"Green smoke n°3"
 	}
 	"Trail5"
 	{
 		"fr"	"Seringue"
+		"en"	"Syringe"
 	}
 	"Trail8"
 	{
 		"fr"	"Fumée blanche et bleue"
+		"en"	"White and blue smoke"
 	}
 	"Trail10"
 	{
 		"fr"	"Bulle bleue n°1"
+		"en"	"Blue bubble n°1"
 	}
 	"Trail13"
 	{
 		"fr"	"Bulle bleue n°2"
+		"en"	"Blue bubble n°2"
 	}
 	"Trail11"
 	{
 		"fr"	"Fumée Or"
+		"en"	"Gold Smoke"
 	}
 	"Trail12"
 	{
 		"fr"	"Fumée bleue n°1"
+		"en"	"Blue smoke n°1"
 	}
 	"Trail_02"
 	{
 		"fr"	"Fumée bleue n°2"
+		"en"	"Blue smoke n°2"
 	}
 	"Trail15"
 	{
 		"fr"	"Trait jaune et vert"
+		"en"	"Yellow and green line"
 	}
 	"Trail_04"
 	{
 		"fr"	"Fumée bleue et rose"
+		"en"	"Blue and pink smoke"
 	}
 	"trail_money"
 	{
 		"fr"	"Billets"
+		"en"	"Bills"
 	}
 	"trail_heart"
 	{
 		"fr"	"Coeurs"
+		"en"	"Hearts"
 	}
 	"confetti_balloons"
 	{
 		"fr"	"Ballons"
+		"en"	"Balloons"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"-1 -1 -1"
 	{
 		"fr"	"Couleur personnalisé"
+		"en"	"Custom color"
 	}
 	"128 0 0"
 	{
 		"fr"	"Rubis"
+		"en"	"Ruby"
 	}
 	"255 0 0"
 	{
 		"fr"	"Rouge"
+		"en"	"Red"
 	}
 	"255 128 0"
 	{
 		"fr"	"Orange"
+		"en"	"Orange"
 	}
 	"255 255 0"
 	{
 		"fr"	"Jaune"
+		"en"	"Yellow"
 	} 
 	"128 255 0"
 	{
 		"fr"	"Vert-pomme"
+		"en"	"Apple green"
 	}
 	"0 255 0"
 	{
 		"fr"	"Vert"
+		"en"	"Green"
 	}
 	"0 128 0"
 	{
 		"fr"	"Vert-foncé"
+		"en"	"Dark green"
 	}
 	"0 255 128"
 	{
 		"fr"	"Vert-émeraude"
+		"en"	"Emerald green"
 	}
 	"0 255 255"
 	{
-		"fr"	"Bleu-ciel" 
+		"fr"	"Bleu-ciel"
+		"en"	"Sky blue"  
 	}
 	"0 128 255"
 	{
 		"fr"	"Bleu-clair"
+		"en"	"Light blue"
 	}
 	"0 0 255"
 	{
 		"fr"	"Bleu"
+		"en"	"Blue"
 	}
 	"0 0 128"
 	{
 		"fr"	"Bleu-Foncé"
+		"en"	"Dark blue"
 	}
 	
 	"128 0 255"
 	{
 		"fr"	"Mauve"
+		"en"	"Mauve"
 	}
 	"255 0 255"
 	{
 		"fr"	"Rose"
+		"en"	"Pink"
 	}
 	"255 0 128"
 	{
 		"fr"	"Fushia"
+		"en"	"Fushia"
 	}
 	"255 255 255"
 	{
 		"fr"	"Blanc"
+		"en"	"White"
 	}
 	"128 128 128"
 	{
 		"fr"	"Gris"
+		"en"	"Gray"
 	}
 	"0 0 0"
 	{
 		"fr"	"Noir"
+		"en"	"Black"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"models/props_office/desk_01.mdl"
 	{
 		"fr"	"Bureau"
+		"en"	"Desk"
 	}
 	"models/props_interiors/tv.mdl"
 	{
 		"fr"	"Télévision"
+		"en"	"Television"
 	}
 	"models/props_c17/furniturewashingmachine001a.mdl"
 	{
 		"fr"	"Machine à laver"
+		"en"	"Washing machine"
 	}
 	"models/props_c17/FurnitureDresser001a.mdl"
 	{
 		"fr"	"Armoire"
+		"en"	"Wardrobe"
 	}
 	"models/props_interiors/chair_office2.mdl"
 	{
 		"fr"	"Chaise"
+		"en"	"Chair"
 	}
 	"models/props_interiors/couch.mdl"
 	{
 		"fr"	"Canapé"
+		"en"	"Couch"
 	}
 	"models/props_interiors/coffee_table_rectangular.mdl"
 	{
 		"fr"	"Table basse"
+		"en"	"Coffee table"
 	}
 	"models/props/cs_assault/box_stack1.mdl"
 	{
 		"fr"	"Pile de palettes"
+		"en"	"Stack of pallets"
 	}
 	"models/props/cs_militia/bar01.mdl"
 	{
 		"fr"	"Bar"
+		"en"	"Bar"
 	}
 	"models/props/de_house/bed_rustic.mdl"
 	{
 		"fr"	"Lit"
+		"en"	"Bed"
 	}
 	"models/props_interiors/tv_cabinet.mdl"
 	{
 		"fr"	"Etagère télévision"
+		"en"	"Television cabinet"
 	}
 	"models/props/DeadlyDesire/blocks/32x32.mdl"
 	{
 		"fr"	"Cube"
+		"en"	"Block"
 	}
 	"models/props_industrial/pallet_stack_96.mdl"
 	{
 		"fr"	"Palette"
+		"en"	"Pallet"
 	}
 	"models/props_fortifications/concrete_block001_128_reference.mdl"
 	{
 		"fr"	"Mur de fortification"
+		"en"	"Fortification wall"
 	}
 	"models/props/cs_office/vending_machine.mdl"
 	{
 		"fr"	"Distributeur de boisson"
+		"en"	"Vending machine"
 	}
 	"models/props_urban/boat002.mdl"
 	{
 		"fr"	"Bateau"
+		"en"	"Boat"
 	}
 	"models/props_urban/outhouse002.mdl"
 	{
 		"fr"	"Cabine de toilettes"
+		"en"	"Outhouse"
 	}
 	"models/props_pipes/concrete_pipe001b.mdl"
 	{
 		"fr"	"Conduit en béton"
+		"en"	"Concrete pipe"
 	}
 	"models/props_interiors/table_picnic.mdl"
 	{
 		"fr"	"Table de picnic"
+		"en"	"Picnic table"
 	}
 	"models/props_industrial/warehouse_shelf001.mdl"
 	{
 		"fr"	"Etagère industrielle"
+		"en"	"Industrial shelf"
 	}
 	"models/props/cs_assault/box_stack1.mdl"
 	{
 		"fr"	"Barricade de carton"
+		"en"	"Cardboard barricade"
 	}
 	"models/props/de_vertigo/construction_wood_2x4_01.mdl"
 	{
 		"fr"	"Planche en bois"
+		"en"	"Wooden board"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"weapon_knife"
