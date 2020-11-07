@@ -159,7 +159,7 @@
 	// ----------------------------------------------------------------------------------------------
 	"HUD_Date"
 	{
-		"#format"	"{1:s},{1:d},{3:t},{1:d}" // szHours, g_iDays, szMonths, g_iYear
+		"#format"	"{1:s},{2:d},{3:t},{4:d}" // szHours, g_iDays, szMonths, g_iYear
 		"fr"		"{1} {2} {3} {4}"
 	}
 	"HUD_Month_1"
