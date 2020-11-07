@@ -112,7 +112,7 @@
 	}
 	"Error_YouMustAim"
 	{
-		"#format"	"{1:s}"
+		"#format"	"{1:t}"
 		"fr"	"Vous devez viser {red}{1}{default}."
 	}
 	"Error_NoItemToSellForNow"

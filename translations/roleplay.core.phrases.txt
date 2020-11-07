@@ -1,0 +1,46 @@
+"Phrases"
+{
+	// ----------------------------------------------------------------------------------------------
+	"Menu_SelectJobTarget"
+	{
+		"#format"	"{1:s}"
+		"fr"	"Sélectionner un job pour: %s"
+	}
+	"Menu_SelectGroupTarget"
+	{
+		"#format"	"{1:s}"
+		"fr"	"Sélectionner un groupe pour: %s"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Kick_AFK"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Vous êtes resté trop longtemps AFK, mais un admin vous a accordé un remboursement de {1}$."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Cmd_KnifeDamage"
+	{
+		"#format"	"{1:s},{2:d}"
+		"fr"		"{1} fera {2} dégat(s) de {red}couteau{default} jusqu'à sa mort."
+	}
+	"Cmd_HandsDamage"
+	{
+		"#format"	"{1:s},{2:d}"
+		"fr"		"{1} fera {2} dégat(s) avec ses {red}poings{default} jusqu'à sa mort."
+	}
+	"Cmd_WeaponDamage"
+	{
+		"#format"	"{1:s},{2:d}"
+		"fr"		"{1} aura {2}% de {red}précision de tir{default} jusqu'à sa mort."
+	}
+	"Cmd_Clear"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} a été réinitialisé."
+	}
+	"Cmd_Clean"
+	{
+		"#format"	"{1:d}"
+		"fr"		"{1} entités ont été supprimées."
+	}
+}

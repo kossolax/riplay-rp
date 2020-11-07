@@ -70,9 +70,13 @@ public void OnPluginStart() {
 	AddNormalSoundHook(sound_hook);
 
 	Format(szGeneralMenu, sizeof(szGeneralMenu), "   RolePlay - INFO: (%s)   ", __LAST_REV__);
-	LoadTranslations("common.phrases");
 	LoadTranslations("core.phrases");
+	LoadTranslations("common.phrases");
+	LoadTranslations("funcommands.phrases");
+	LoadTranslations("plugin.basecommands");
 	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.items.phrases");
+	LoadTranslations("roleplay.core.phrases");
 	
 	//
 	// Events:
