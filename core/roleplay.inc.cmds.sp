@@ -74,8 +74,7 @@ public Action cmd_ForceJob(int client, int args) {
 	}
 	
 	
-	char TargetName[64];
-	char tmp[256];
+	char TargetName[64], tmp[256];
 	GetClientName2(target, TargetName, sizeof(TargetName), true);
 	
 	Format(tmp, sizeof(tmp), "%T\n ", "Menu_SelectJobTarget", client, TargetName);
@@ -103,7 +102,7 @@ public Action cmd_ForceMeGroup(int client, int args) {
 
 	int target = client;
 	
-	char tmp[256];
+	char TargetName[64], tmp[256];
 	GetClientName2(target, TargetName, sizeof(TargetName), true);
 	
 	Format(tmp, sizeof(tmp), "%T\n ", "Menu_SelectGroupTarget", client, TargetName);
@@ -134,8 +133,7 @@ public Action cmd_ForceMeJob(int client, int args) {
 	}
 	int target = client;
 	
-	char TargetName[64];
-	char tmp[256];
+	char TargetName[64], tmp[256];
 	GetClientName2(target, TargetName, sizeof(TargetName), true);
 	
 	Format(tmp, sizeof(tmp), "%T\n ", "Menu_SelectJobTarget", client, TargetName);
@@ -250,8 +248,8 @@ public Action cmd_NoclipVip(int client, int args) {
 		
 			if(GetEntityMoveType(target) != MOVETYPE_NOCLIP) {
 				SetEntityMoveType(target, MOVETYPE_NOCLIP);
-				GetClientName2(target, targetname, sizeof(targetname), false);
-				PrintToChatZone(zone, "%T", "Toggled noclip on target", LANG_SERVER, "_s", targetname);
+				GetClientName2(target, target_name, sizeof(target_name), false);
+				PrintToChatZone(zone, "%T", "Toggled noclip on target", LANG_SERVER, "_s", target_name);
 				rp_HookEvent(target, RP_OnPlayerZoneChange, fwdZoneChange);
 			}
 			
@@ -436,7 +434,7 @@ public Action Cmd_Save(int client, int args) {
 
 public Action Cmd_CheckAFK(int client, int args) {
 	
-	if( GetClientCount(false) <= GetMaxClients()-2 ) {
+	if( GetClientCount(false) <= MaxClients-2 ) {
 		ReplyToCommand(client, "%T", "Error_ItemCannotBeUsedForNow", client, "rp_afk");
 		return Plugin_Handled;
 	}
@@ -449,7 +447,7 @@ public Action Cmd_CheckAFK(int client, int args) {
 	}
 	
 	char targetname[64];
-	GetClientName2(target, tartganem, sizeof(targetname), false);
+	GetClientName2(target, targetname, sizeof(targetname), false);
 	ReplyToCommand(client, "%T", "Kicked target", client, targetname);
 	client = target;
 	
