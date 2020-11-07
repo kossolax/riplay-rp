@@ -709,14 +709,15 @@ bool IsAdmin(int client) {
 		}
 	}
 
-	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
-
-	for(int i = 0; i < sizeof(g_szSuperAdmin); i++) {
-		if(!StrEqual(g_szSuperAdmin[i], szSteamID)) {
-			continue;
+	if( GetUserFlagBits(client) & ADMFLAG_ROOT){
+		GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
+		for(int i = 0; i < sizeof(g_szSuperAdmin); i++) {
+			if(!StrEqual(g_szSuperAdmin[i], szSteamID)) {
+				continue;
+			}
+			
+			return true;
 		}
-		
-		return true;
 	}
 
 	return false;

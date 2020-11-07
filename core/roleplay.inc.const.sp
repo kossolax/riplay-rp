@@ -32,8 +32,8 @@
 #define PROPTYPE_BOTH			0
 #define PROPTYPE_SEND			1
 #define PROPTYPE_DATA			2
-#define DAMAGE_NO 			0
-#define DAMAGE_YES 			2
+#define DAMAGE_NO 				0
+#define DAMAGE_YES 				2
 #define SOLID_VPHYSICS	 		6
 #define COLLISION_GROUP_PLAYER 	5
 
@@ -53,10 +53,9 @@ char g_szSuperAdmin[][] = {
 	"76561197976095234", // Genesys
 	"76561198018935404", // Kriax
 	"76561198078500771", // Cubartiste
-	"76561198043944522", // Demox
 	"76561197985083039", // Loolie
-	"76561197985606301", // Just
 	"76561197975247242", // Kosso
+	"76561197975262643", // sky
 };
 
 int g_iPlayerCount;
@@ -104,7 +103,6 @@ enum KillStack {
 	
 	KillStack_max
 };
-char g_szMonth[12][8] = {	"Jan",	"Fév",	"Mar",	"Avr",	"Mai",	"Juin",	"Juil",	"Août",	"Sept",	"Oct",	"Nov",	"Déc"	};
 
 float g_flVehicleDamage = 1.0;
 Handle g_hAllowDamage;
@@ -227,17 +225,17 @@ char g_szItems_SAVE[MAX_PLAYERS+1][64][32];
 
 
 char g_szPaintBall[11][3][64] = {
-	{	"paintball/pb_babyblue2.vmt",	"0",	"0"	},
-	{	"paintball/pb_black2.vmt",	"0",	"0"	},
-	{	"paintball/pb_blue2.vmt",	"0",	"0"	},
-	{	"paintball/pb_brown2.vmt",	"0",	"0"	},
-	{	"paintball/pb_dark_green2.vmt",	"0",	"0"	},
+	{	"paintball/pb_babyblue2.vmt",		"0",	"0"	},
+	{	"paintball/pb_black2.vmt",			"0",	"0"	},
+	{	"paintball/pb_blue2.vmt",			"0",	"0"	},
+	{	"paintball/pb_brown2.vmt",			"0",	"0"	},
+	{	"paintball/pb_dark_green2.vmt",		"0",	"0"	},
 	{	"paintball/pb_medslateblue2.vmt",	"0",	"0"	},
-	{	"paintball/pb_olive2.vmt",	"0",	"0"	},
-	{	"paintball/pb_red_orange2.vmt",	"0",	"0"	},
-	{	"paintball/pb_red2.vmt",	"0",	"0"	},
-	{	"paintball/pb_violet2.vmt",	"0",	"0"	},
-	{	"paintball/pb_white2.vmt",	"0",	"0"	}
+	{	"paintball/pb_olive2.vmt",			"0",	"0"	},
+	{	"paintball/pb_red_orange2.vmt",		"0",	"0"	},
+	{	"paintball/pb_red2.vmt",			"0",	"0"	},
+	{	"paintball/pb_violet2.vmt",			"0",	"0"	},
+	{	"paintball/pb_white2.vmt",			"0",	"0"	}
 };
 //
 // Cvar's

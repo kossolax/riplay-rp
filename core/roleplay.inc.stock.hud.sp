@@ -92,21 +92,22 @@ void PrintCapital(int client, char[] szHUD, int size) {
 	}
 }
 void PrintHours( char[] szReturn, int size) {
+	static char szMonths[64], szHours[64];
 	
-	char[] szHours = new char[size];
 	if( g_iHours < 10 ) {
-		Format(szHours, size, "0%d:", g_iHours);
+		Format(szHours, sizeof(szHours), "0%d:", g_iHours);
 	}
 	else {
-		Format(szHours, size, "%d:", g_iHours);
+		Format(szHours, sizeof(szHours), "%d:", g_iHours);
 	}
 	
 	if( g_iMinutes < 10 ) {
-		Format(szHours, size, "%s0", szHours);
+		Format(szHours, sizeof(szHours), "%s0", szHours);
 	}
-	Format(szHours, size, "%s%d", szHours, g_iMinutes);
+	Format(szHours, sizeof(szHours), "%s%d", szHours, g_iMinutes);
+	Format(szMonths, sizeof(szMonths), "HUD_Month_%d", g_iMonth);
 	
-	Format(szReturn, size, "%s %i %s %i", szHours, g_iDays, g_szMonth[g_iMonth-1], g_iYear);
+	Format(szReturn, size, "%T", "HUD_Date", LANG_SERVER, szHours, g_iDays, szMonths, g_iYear);
 }
 void PrintJail(int client, char[] szReturn, int size) {
 	

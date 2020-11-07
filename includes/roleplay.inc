@@ -621,7 +621,7 @@ native void rp_WeaponMenu_Get(DataPack hBuyMenu, DataPackPos pos, char weapon[BM
 #define BITZONE_PERQUIZ		(1<<25)
 #define BITZONE_LEGIT		(1<<26)
 
-#define MAX_ITEMS	311
+#define MAX_ITEMS	350
 #define MAX_JOBS	230
 
 // ----------------------------------------------------------------------------

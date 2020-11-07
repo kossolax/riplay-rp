@@ -43,4 +43,70 @@
 		"#format"	"{1:d}"
 		"fr"		"{1} entités ont été supprimées."
 	}
+	// ----------------------------------------------------------------------------------------------
+	"HUD_Date"
+	{
+		"#format"	"{1:s},{1:d},{3:t},{1:d}" // szHours, g_iDays, szMonths, g_iYear
+		"fr"		"{1} {2} {3} {4}"
+	}
+	"HUD_Month_1"
+	{
+		"fr"	"Jan"
+		"en"	"Jan"
+	}
+	"HUD_Month_2"
+	{
+		"fr"	"Fév"
+		"en"	"Feb"
+	}
+	"HUD_Month_3"
+	{
+		"fr"	"Mar"
+		"en"	"Mar"
+	}
+	"HUD_Month_4"
+	{
+		"fr"	"Avr"
+		"en"	"Apr"
+	}
+	"HUD_Month_5"
+	{
+		"fr"	"Mai"
+		"en"	"May"
+	}
+	"HUD_Month_6"
+	{
+		"fr"	"Juin"
+		"en"	"June"
+	}
+	"HUD_Month_7"
+	{
+		"fr"	"Juil"
+		"en"	"July"
+	}
+	"HUD_Month_8"
+	{
+		"fr"	"Août"
+		"en"	"Aug"
+	}
+	"HUD_Month_9"
+	{
+		"fr"	"Sept"
+		"en"	"Sept"
+	}
+	"HUD_Month_10"
+	{
+		"fr"	"Oct"
+		"en"	"Oct"
+	}
+	"HUD_Month_11"
+	{
+		"fr"	"Nov"
+		"en"	"Nov"
+	}
+	"HUD_Month_12"
+	{
+		"fr"	"Déc"
+		"en"	"Dec"
+	}
 }
