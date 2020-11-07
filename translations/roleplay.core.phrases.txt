@@ -18,6 +18,119 @@
 		"fr"	"Vous êtes resté trop longtemps AFK, mais un admin vous a accordé un remboursement de {1}$."
 	}
 	// ----------------------------------------------------------------------------------------------
+	"Force_Bind"
+	{
+		"fr"	"Votre bind est incorrecte. Si vous souhaitez utiliser la force, modifier votre bind comme ceci: {red}bind X +force{default}"
+	}
+	"Force_Already"
+	{
+		"fr"	"Impossible d'utiliser la force lorsqu'un autre joueur vous tient."
+	}
+	"Force_Here"
+	{
+		"fr"	"Impossible d'utiliser la force ici."
+	}
+	"Force_Kill"
+	{
+		"#format"	"{1:d},{2:d},{3:d}"
+		"fr"	"Vous avez perdu {red}{1}{default}$ pour avoir abusé du pouvoir de la force ({2}/{3})."
+	}
+	"Force_Ban"
+	{
+		"fr"	"Abuse de la force"
+	}
+	"Force_Menu"
+	{
+		"fr"	"Gestion de la force:"
+	}
+	"Force_Filter"
+	{
+		"#format"	"{1:t}"
+		"fr"	"Limitation: [{1}]"
+	}
+	"Force_Filter_Player"
+	{
+		"fr"	"JOUEURS"
+	}
+	"Force_Filter_Prop"
+	{
+		"fr"	"PROPS"
+	}
+	"Force_Filter_All"
+	{
+		"fr"	"TOUS"
+	}
+	
+	"Force_Move"
+	{
+		"#format"	"{1:t}"
+		"fr"	"Déplacement: [{1}]"
+	}
+	"Force_Move_Teleport"
+	{
+		"fr"	"TELEPORT"
+	}
+	"Force_Move_Velocity"
+	{
+		"fr"	"VÉLOCITÉ"
+	}
+	
+	"Force_Search"
+	{
+		"#format"	"{1:t}"
+		"fr"	"Recherche: [{1}]"
+	}
+	"Force_Search_Aim"
+	{
+		"fr"	"VISÉE"
+	}
+	"Force_Search_Sphere"
+	{
+		"fr"	"SPHERE"
+	}
+	
+	"Force_Distance"
+	{
+		"#format"	"{1:t}"
+		"fr"	"Distance: [{1}]"
+	}
+	"Force_Distance_Nearby"
+	{
+		"#format"	"{1:t}"
+	}
+	"Force_Distance_Away"
+	{
+		"fr"	"LOIN"
+	}
+	
+	"Force_Toggle"
+	{
+		"#format"	"{1:t}"
+		"fr"	"Saisir: [{1}]"
+	}
+	"Force_Toggle_Alter"
+	{
+		"fr"	"ALTERER"
+	}
+	"Force_Toggle_HOLD"
+	{
+		"fr"	"MAINTENIR"
+	}
+	
+	"Force_Cannot_Player"
+	{
+		"fr"	"Vous n'êtes pas autorisé à déplacer cette personne."
+	}
+	"Force_Cannot_Car"
+	{
+		"fr"	"Vous n'êtes pas autorisé à déplacer ce véhicule."
+	}
+	"Force_Cannot_Prop"
+	{
+		"fr"	"Vous n'êtes pas autorisé à déplacer ce props."
+	}
+	
+	// ----------------------------------------------------------------------------------------------
 	"Cmd_KnifeDamage"
 	{
 		"#format"	"{1:s},{2:d}"
