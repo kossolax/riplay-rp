@@ -501,7 +501,7 @@ public Action Cmd_ItemHack(int args) {
 		return Plugin_Handled;
 	}
 
-	if( rp_GetClientFloat(targetOwner, fl_LastStolen)+60.0 > GetGameTime() ){
+	if( targetOwner > 0 && rp_GetClientFloat(targetOwner, fl_LastStolen)+60.0 > GetGameTime() ){
 		ITEM_CANCEL(client, item_id);
 		char tmp[128];
 		rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
