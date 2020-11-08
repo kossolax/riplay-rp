@@ -176,20 +176,6 @@ public void OnMapStart() {
 	g_cGlow = PrecacheModel("materials/sprites/glow01.vmt", true);
 }
 public void OnClientPostAdminCheck(int client){
-	if(g_nbMdItems == -1){
-		int jobID;
-		for(int i = 0; i < MAX_ITEMS; i++){
-			if( rp_GetItemInt(i, item_type_prix) <= 0 )
-				continue;
-			if( rp_GetItemInt(i, item_type_auto) == 1 )
-				continue;
-			jobID = rp_GetItemInt(i, item_type_job_id);
-			if(jobID != 21)
-				continue;
-
-			g_nbMdItems++;
-		}
-	}
 	rp_HookEvent(client, RP_OnPlayerBuild,	fwdOnPlayerBuild);
 }
 // ------------------------------------------------------------------------------
@@ -391,6 +377,26 @@ public Action Frame_Microwave(Handle timer, any ent) {
 	return Plugin_Handled;
 }
 void giveHamburger(int client, int amount){
+	char tmp[128];
+	
+	if( g_nbMdItems == -1 ) {
+		int jobID;
+		for(int i = 0; i < MAX_ITEMS; i++){
+			if( rp_GetItemInt(i, item_type_prix) <= 0 )
+				continue;
+			if( rp_GetItemInt(i, item_type_auto) == 1 )
+				continue;
+			jobID = rp_GetItemInt(i, item_type_job_id);
+			if(jobID != 21)
+				continue;
+			
+			rp_GetItemData(i, item_type_extra_cmd, tmp, sizeof(tmp));
+			if( StrEqual(tmp, "rp_item_microwaves") )
+				continue;
+			g_nbMdItems++;
+		}
+	}
+	
 	int mci = Math_GetRandomInt(0, g_nbMdItems);
 	int j = 0, jobID;	
 	for(int i = 0; i < MAX_ITEMS; i++){
@@ -401,9 +407,12 @@ void giveHamburger(int client, int amount){
 		jobID = rp_GetItemInt(i, item_type_job_id);
 		if(jobID != 21)
 			continue;
+		
+		rp_GetItemData(i, item_type_extra_cmd, tmp, sizeof(tmp));
+		if( StrEqual(tmp, "rp_item_microwaves") )
+			continue;
 
 		if(mci == j){
-			char tmp[128];
 			rp_GetItemData(i, item_type_name, tmp, sizeof(tmp));
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Take", client, amount, tmp);
 			rp_ClientGiveItem(client, i, amount);
