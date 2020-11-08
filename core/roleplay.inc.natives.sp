@@ -1332,7 +1332,10 @@ public int Native_rp_GetClientGroupID(Handle plugin, int numParams) {
 	return GetGroupPrimaryID(GetNativeCell(1));
 }
 public int Native_rp_GetClientJobID(Handle plugin, int numParams) {
-	return GetJobPrimaryID(GetNativeCell(1));
+	int client = GetNativeCell(1);
+	if( client > 0 )
+		return GetJobPrimaryID(client);
+	return -1;
 }
 public int Native_rp_IsInPVP(Handle plugin, int numParams) {
 	return IsInPVP(GetNativeCell(1));

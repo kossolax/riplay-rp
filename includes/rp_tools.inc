@@ -116,6 +116,9 @@ bool rp_IsInBunkerArea(int client) {
 	return false;
 }
 stock bool rp_IsClientSafe(int client) {
+	if( client <= 0 )
+		return false;
+	
 	if( rp_IsClientNew(client) )
 		return true;
 	if( rp_GetClientBool(client, b_IsAFK) )

@@ -291,15 +291,20 @@ void showPlayerHintBox(int client, int target) {
 			}
 		}
 	}
-	else if( IsValidClient(rp_GetBuildingData(target, BD_owner)) ) {
+	else if( IsValidClient(rp_GetBuildingData(target, BD_owner)) || rp_GetBuildingData(target, BD_owner) == -1 ) {
 		
 		int target2 = rp_GetBuildingData(target, BD_owner);
 		
-		GetClientName2(target2, clientname, sizeof(clientname));
-		String_ColorsToHTML(clientname, sizeof(clientname));
-		
-		if( g_bUserData[target2][b_CAPSLOCK] )  {
-			String_ToLower(clientname, clientname, strlen(clientname));
+		if( target2 > 0 ) {
+			GetClientName2(target2, clientname, sizeof(clientname));
+			String_ColorsToHTML(clientname, sizeof(clientname));
+			
+			if( g_bUserData[target2][b_CAPSLOCK] )  {
+				String_ToLower(clientname, clientname, strlen(clientname));
+			}
+		}
+		else {
+			Format(clientname, sizeof(clientname), "??????");
 		}
 		
 		PrintHintText(client, "Props de %s\nHP: %d - %.2f%%", clientname, Entity_GetHealth(target), (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target))) * 100.0);
