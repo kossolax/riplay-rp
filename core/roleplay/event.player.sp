@@ -605,7 +605,8 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 				if( !(GetZoneBit( GetPlayerZone(Client) ) & BITZONE_EVENT || GetZoneBit( GetPlayerZone(Client) ) & BITZONE_PVP) ) {
 					
 					if( killDuration > 1 ) {
-						rp_ClientFloodIncrement(Attacker, Client, fd_freekill, float(FREEKILL_TIME));
+						if( killAcceleration >= 0.75 )
+							rp_ClientFloodIncrement(Attacker, Client, fd_freekill, float(FREEKILL_TIME));
 						g_iUserData[Attacker][i_KillingSpread]++;
 					}
 					
