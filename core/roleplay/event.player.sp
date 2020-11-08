@@ -640,14 +640,17 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 			}
 			
 			if( g_iHideNextLog[Attacker][Client] == 0 ) {
-				if( g_iUserData[Attacker][i_KillJailDuration] >= AUTOKICK_TDM ) {
+				
+				int max = rp_CountPolice() > 0 ? AUTOKICK_TDM_WITH : AUTOKICK_TDM_WITHOUT;
+				if( g_iUserData[Attacker][i_KillJailDuration] >= max ) {
 					g_bUserData[Attacker][b_IsFreekiller] = true;
 					ServerCommand("rp_SendToJail %d 0", Attacker);
 					
 					if( rp_GetClientInt(Attacker, i_JailTime) < g_iUserData[Attacker][i_KillJailDuration] * 60 )
 						rp_SetClientInt(Attacker, i_JailTime, g_iUserData[Attacker][i_KillJailDuration] * 60);
-				
-					KickClient(Attacker, "Vous avez été kické pour FREEKILL abusif");
+					
+					if( g_iUserData[Attacker][i_KillJailDuration] >= AUTOKICK_TDM_WITH && g_iUserData[Attacker][i_KillJailDuration] >= AUTOKICK_TDM_WITHOUT )
+						KickClient(Attacker, "Vous avez été kické pour FREEKILL abusif");
 				}
 			}
 			
