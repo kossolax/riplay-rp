@@ -67,6 +67,11 @@
 		"fr"		"Les clés de l'appartement n°{red}{1}{default} vous ont été données par {red}{2}{default}."
 		"en"		"The keys of the apartment n°{red}{1}{default} were given to you by {red}{2}{default}."
 	}
+	"Appart_KeyTooMany"
+	{
+		"fr"		"Vous ne pouvez pas avoir de colocataire supplémentaire."
+		"en"		"You cannot have an additional roommate."
+	}
 	// ----------------------------------------------------------------------------------------------
 	"Appart_None"
 	{

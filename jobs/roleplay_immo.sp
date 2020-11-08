@@ -302,7 +302,7 @@ public Action Cmd_ItemGiveAppartDouble(int args) {
 	}
 	
 	int appartID = rp_GetPlayerZoneAppart(client);
-	if( appartID == -1 || appartID == 50 ) {
+	if( appartID == -1 ) {
 		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_OnlyInsideAppart", client);
 		ITEM_CANCEL(client, itemID);
 		return Plugin_Handled;
@@ -312,8 +312,33 @@ public Action Cmd_ItemGiveAppartDouble(int args) {
 		ITEM_CANCEL(client, itemID);
 		return Plugin_Handled;
 	}
+	
 	if( rp_GetClientKeyAppartement(target, appartID ) ) {
 		CPrintToChat(client, ""...MOD_TAG..." %T", "Appart_TargetAlreadyKey", client);
+		ITEM_CANCEL(client, itemID);
+		return Plugin_Handled;
+	}
+	
+	int price = rp_GetAppartementInt(appartID, appart_price);
+	int max = 0;
+	switch( price ) {
+		case 300: max = 3;
+		case 450: max = 4;
+		case 600: max = 5;
+	}
+	
+	int count = 0;
+	for(int i=1; i<=MAXPLAYERS; i++){
+		if( !IsValidClient(i) )
+			continue;
+		
+		if( rp_GetClientKeyAppartement(i, appartID) && i!=client){
+			count++;
+		}
+	}
+	
+	if( count >= max ) {
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Appart_KeyTooMany", client);
 		ITEM_CANCEL(client, itemID);
 		return Plugin_Handled;
 	}

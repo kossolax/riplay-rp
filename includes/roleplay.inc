@@ -1097,6 +1097,7 @@ enum type_appart_bonus {
 	appart_bonus_paye,
 
 	appart_proprio,
+	appart_price,
 
 	appart_bonus_max
 };

@@ -761,13 +761,13 @@ stock int rp_GetWeaponPriceCartouche(int weaponID) {
 	return prix;
 }
 
-stock int rp_CountPolice(int client) {
-	static float g_flLastCheck[65];
-	static int g_iLastData[65];
+stock int rp_CountPolice() {
+	static float g_flLastCheck;
+	static int g_iLastData;
 	char tmp[64];
 	
-	if (g_flLastCheck[client] > GetGameTime()) {
-		return g_iLastData[client];
+	if (g_flLastCheck > GetGameTime()) {
+		return g_iLastData;
 	}
 	
 	int job, count;
@@ -783,8 +783,8 @@ stock int rp_CountPolice(int client) {
 		}
 	}
 	
-	g_flLastCheck[client] = GetGameTime() + 5.0;
-	g_iLastData[client] = count;
+	g_flLastCheck = GetGameTime() + 5.0;
+	g_iLastData = count;
 	return count;
 }
 stock int rp_CountPoliceNear(int client) {
