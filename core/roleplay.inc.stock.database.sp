@@ -319,7 +319,7 @@ void LoadServerDatabase() {
 		SQL_FetchString(hQuery, 3, g_szSellingKeys[ door_id ][key_type_prix], 255);
 		SQL_FetchString(hQuery, 4, g_szSellingKeys[ door_id ][key_type_name], 255);
 		
-		rp_SetAppartementInt(door_id, appart_price, StringToInt(g_szSellingKeys[ door_id ][key_type_prix]));
+		g_iAppartBonus[door_id][appart_price] = StringToInt(g_szSellingKeys[ door_id ][key_type_prix]);
 	}
 	//
 	//

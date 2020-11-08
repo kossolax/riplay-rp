@@ -193,8 +193,10 @@ public Action Cmd_ItemGiveAppart(int args) {
 	
 	if( !rp_GetClientKeyAppartement(client, appart) ) {
 		
-		for (int i = 0; i < view_as<int>(appart_bonus_max); i++)
-			rp_SetAppartementInt(appart, view_as<type_appart_bonus>(i), 0);
+		for (int i = 0; i < view_as<int>(appart_bonus_max); i++) {
+			if( i != view_as<int>(appart_price) )
+				rp_SetAppartementInt(appart, view_as<type_appart_bonus>(i), 0);
+		}
 		
 		rp_SetClientInt(client, i_AppartCount, rp_GetClientInt(client, i_AppartCount) + 1);
 		rp_SetClientKeyAppartement(client, appart, true);
@@ -325,6 +327,9 @@ public Action Cmd_ItemGiveAppartDouble(int args) {
 		case 300: max = 3;
 		case 450: max = 4;
 		case 600: max = 5;
+		
+		case 500: max = 1;
+		case 750: max = 3;
 	}
 	
 	int count = 0;
