@@ -223,6 +223,13 @@ int g_iItems_BANK[MAX_PLAYERS+1][MAX_ITEMS+1][view_as<int>(STACK_itemStack_max)]
 
 char g_szItems_SAVE[MAX_PLAYERS+1][64][32];
 
+char g_szTrees[][] = {
+	"models/props/hr_massive/hr_foliage/birch_tree_01.mdl",
+	"models/props/hr_massive/hr_foliage/birch_tree_02.mdl",
+	"models/props_foliage/mall_tree_medium01.mdl",
+	"models/props_foliage/urban_tree01.mdl",
+	"models/props/de_inferno/tree_large.mdl"
+};
 
 char g_szPaintBall[11][3][64] = {
 	{	"paintball/pb_babyblue2.vmt",		"0",	"0"	},

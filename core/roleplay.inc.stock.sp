@@ -879,23 +879,21 @@ void RP_SpawnBank() {
 				SetEntityModel(ent, "models/DeadlyDesire/props/atm01.mdl");
 				DispatchKeyValue(ent, "solid", "0");
 				
-				vecAngles[1] -= 90.0;				
+				vecAngles[1] -= 90.0;
 			}
 			else if( StrEqual(type, "tree") ) {
 				Format(tmp, sizeof(tmp), "rp_tree");
 				
-				DispatchKeyValue(ent, "model", "models/models_kit/xmas/xmastree_mini.mdl");
+				int rnd = GetRandomInt(0, sizeof(g_szTrees) - 1);
+				
+				PrecacheModel(g_szTrees[rnd]);
+				DispatchKeyValue(ent, "model", g_szTrees[rnd]);
 				DispatchKeyValue(ent, "solid", "6");
 				
-				SetEntityModel(ent, "models/models_kit/xmas/xmastree_mini.mdl");
-			}
-			else if( StrEqual(type, "tree2") ) {
-				Format(tmp, sizeof(tmp), "rp_tree2");
+				SetEntityModel(ent, g_szTrees[rnd]);
 				
-				DispatchKeyValue(ent, "model", "models/models_kit/xmas/xmastree.mdl");
-				DispatchKeyValue(ent, "solid", "6");
-				
-				SetEntityModel(ent, "models/models_kit/xmas/xmastree.mdl");
+				vecAngles[1] += GetRandomFloat(-180.0, 180.0);
+				vecOrigin[2] -= 4.0;
 			}
 			
 			DispatchKeyValue(ent, "classname", tmp);
@@ -929,7 +927,7 @@ void RP_SpawnBank() {
 			rp_AcceptEntityInput( ent, "EnableCollision" );
 			
 			#if defined EVENT_NOEL
-			if( StrEqual(type, "tree") || StrEqual(type, "tree2") ) {
+			if( StrEqual(type, "tree2") ) {
 				if( GetConVarInt(g_hEVENT_NOEL) != 1 )
 					rp_AcceptEntityInput(ent, "Kill");
 			}
