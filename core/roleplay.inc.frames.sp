@@ -63,7 +63,6 @@ void OnGameFrame_01(float time) {
 		Entity_GetAbsOrigin(i, pos);
 		
 		if( pos[2] <= -10000.0 ) {
-			PrintToChatAll("Un props est tombe hors map... %d - %s", i, g_szEntityName[i]);
 			rp_AcceptEntityInput(i, "Kill");
 		}
 	}
@@ -90,10 +89,10 @@ void OnGameFrame_01(float time) {
 		
 		if( !IsPlayerAlive(Client) ) {
 			if( g_flUserData[Client][fl_RespawnTime] > time ) {
-				PrintHintText(Client, "<font color='#ff0000'>Vous êtes mort.</font>\nVous allez revivre dans:\n      %.1f seconde%c", g_flUserData[Client][fl_RespawnTime]-time, (g_flUserData[Client][fl_RespawnTime]-time>=2.0?'s':' ') );
+				PrintHintText(Client, "%T", "HUD_RespawnIn", Client, g_flUserData[Client][fl_RespawnTime]-time);
 			}
 			else {
-				PrintHintText(Client, "\nAppuyez sur une touche pour revivre.");
+				PrintHintText(Client, "%T", "HUD_RespawnPress", Client);
 			}
 			
 			check_dead(Client);
@@ -142,7 +141,7 @@ void OnGameFrame_01(float time) {
 		
 		if( g_bUserData[Client][b_GameModePassive] == true && g_iUserData[Client][i_Job] >= 1 && g_iUserData[Client][i_Job] <= 8 ) {
 			g_bUserData[Client][b_GameModePassive] = false;
-			CPrintToChat(Client, "" ...MOD_TAG... " Le mode de jeu passif a été désactivé.");
+			CPrintToChat(Client, "" ...MOD_TAG... " %T", "Passive_Disabled", Client);
 		}
 		
 		if( !(rp_GetZoneBit( rp_GetPlayerZone(Client) ) & BITZONE_PVP) && !(rp_GetZoneBit( rp_GetPlayerZone(Client) ) & BITZONE_EVENT)	) {
@@ -311,7 +310,7 @@ void OnGameFrame_01(float time) {
 			continue;
 		
 		if( car > 0 ) {
-			PrintHintText(Client, "Voiture: %dHP\nVitesse: %.1fkm/h", rp_GetVehicleInt(car, car_health), float(GetEntProp(car, Prop_Data, "m_nSpeed"))* 1.609);
+			PrintHintText(Client, "%T", "HUD_Vehicle", Client, rp_GetVehicleInt(car, car_health), float(GetEntProp(car, Prop_Data, "m_nSpeed"))* 1.609, GetEntProp(car, Prop_Data, "m_nSpeed"));
 		}
 		else {
 			showPlayerHintBox(Client, rp_GetClientTarget(Client));
@@ -388,7 +387,7 @@ void OnGameFrame_10(float time) {
 
 	if( g_iHours == 1 && g_iMinutes == 1 ) {
 		if(g_bIsBlackFriday) {
-			Format(bfAnnoucement, sizeof(bfAnnoucement), "" ...MOD_TAG... " Journée exceptionnelle du Black Friday ! Profitez d'une réduction de {lightblue}-%iPCT{default} sur tous vos achats !", g_iBlackFriday[1]);
+			Format(bfAnnoucement, sizeof(bfAnnoucement), "" ...MOD_TAG... " %T", "BlackFriday_ADS", LANG_SERVER, g_iBlackFriday[1]);
 			ReplaceString(bfAnnoucement, sizeof(bfAnnoucement), "PCT", "%%", true);
 			CPrintToChatAll(bfAnnoucement);
 		}
@@ -524,7 +523,7 @@ void OnGameFrame_10(float time) {
 
 				if(infoPeineTime == 180) {
 					if( g_bUserData[i][b_ExitJailMenu] && g_iUserData[i][i_JailTime] > 0 ) {
-						CPrintToChat(i, "" ...MOD_TAG... "{default} Tu peux modifier la durée/zone de ton emprisonnement en tapant /peine");
+						CPrintToChat(i, "" ...MOD_TAG... " %T", "Cmd_Peine", i);
 					}
 				}
 
@@ -555,11 +554,11 @@ void OnGameFrame_10(float time) {
 						int MP[] =  { 128, 129, 234, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257 };
 						int rnd = Math_GetRandomInt(0, sizeof(MP) - 1);
 						int qt = (200/rp_GetItemInt(MP[rnd], item_type_prix));
-						CPrintToChat(i, "" ...MOD_TAG... " Vous avez trouvé %d %s", qt, g_szItemList[MP[rnd]][item_type_name]);
+						CPrintToChat(i, "" ...MOD_TAG... " %T", "Item_Found", i, qt, g_szItemList[MP[rnd]][item_type_name]);
 						rp_ClientGiveItem(i, MP[rnd], qt);
 					}
 					if( !g_bUserData[i][b_GameModePassive] && jobID == 171 && Math_GetRandomInt(0, 250) == 42 ) {
-						CPrintToChat(i, "" ...MOD_TAG... " Vous avez trouvé %s", g_szItemList[276][item_type_name]);
+						CPrintToChat(i, "" ...MOD_TAG... " %T", "Item_Found", i, 1, g_szItemList[276][item_type_name]);
 						rp_ClientGiveItem(i, 276);
 					}
 					
@@ -781,7 +780,7 @@ void OnGameFrame_10(float time) {
 							
 						rp_ClientResetSkin(i);
 						rp_ClientSendToSpawn(i, true);
-						CPrintToChat(i, "" ...MOD_TAG... " Vous avez été liberé de prison.");
+						CPrintToChat(i, "" ...MOD_TAG... " %T", "JailFree", i);
 					}
 				}
 				
@@ -865,30 +864,23 @@ void OnGameFrame_10(float time) {
 			if( (g_iUserData[i][i_Money] + g_iUserData[i][i_Bank]) <= -100 ) {
 				
 				if( (g_iUserData[i][i_Money] + g_iUserData[i][i_Bank]) <= -5000 ) {
-					ServerCommand("amx_ban \"#%i\" \"0\" \"limite -5000$\"", GetClientUserId(i));
+					ServerCommand("amx_ban \"#%i\" \"0\" \"%T\"", GetClientUserId(i), "Ban_Cash", LANG_SERVER, -5000);
 				}
 				else {
-					ServerCommand("amx_ban \"#%i\" \"60\" \"limite -100$\"", GetClientUserId(i));
+					ServerCommand("amx_ban \"#%i\" \"60\" \"%T\"", GetClientUserId(i), "Ban_Cash", LANG_SERVER, -100);
 				}
 				
 				g_iUserData[i][i_Money] = 0;
 				g_iUserData[i][i_Bank] = 0;
 			}
 			if( g_iUserData[i][i_Dette] >= 25000 ) {
-				ServerCommand("amx_ban \"#%i\" \"0\" \"limite -25000$\"", GetClientUserId(i));
+				ServerCommand("amx_ban \"#%i\" \"0\" \"%T\"", GetClientUserId(i), "Ban_Cash", LANG_SERVER, -25000);
 			}
 		}
 		else if( IsValidClient(i) && !IsFakeClient(i) ) {
 			Handle mSayPanel = CreatePanel();
 			SetPanelTitle(mSayPanel, szGeneralMenu);
-			DrawPanelText(mSayPanel, " ");
-			DrawPanelText(mSayPanel, "Chargement de vos informations...");
-			DrawPanelText(mSayPanel, "Ceci peut prendre jusqu'à une minute.");
-			DrawPanelText(mSayPanel, " ");
-			DrawPanelText(mSayPanel, " ");
-			DrawPanelText(mSayPanel, " ");
-			DrawPanelText(mSayPanel, "Les serveurs Steam sont peut-être saturé.");
-			DrawPanelText(mSayPanel, "Dans ce cas les délais peuvent être plus long.");
+			DrawPanelText(mSayPanel, "%T", "HUD_LoadingData", i);
 			
 			SendPanelToClient(mSayPanel, i, MenuNothing, 2);
 			CreateTimer(1.1, PostKillHandle, mSayPanel);
@@ -923,18 +915,18 @@ public void CRON_TIMER() {
 	if( (StringToInt(szHours) ==  4 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 30) ||
 		(StringToInt(szHours) == 16 && StringToInt(szMinutes) == 29 && StringToInt(szSecondes) == 30) 
 		) {	
-		CPrintToChatAll("" ...MOD_TAG... " Le serveur va {red}redémarrer{default} dans 30 secondes.");
-		CPrintToChatAll("" ...MOD_TAG... " Le serveur va {red}redémarrer{default} dans 30 secondes.");
-		CPrintToChatAll("" ...MOD_TAG... " Le serveur va {red}redémarrer{default} dans 30 secondes.");
+		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
+		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
+		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
 		ServerCommand("rp_give_assu");
 	}
 	if( (StringToInt(szHours) ==  4 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 59) ||
 		(StringToInt(szHours) == 16 && StringToInt(szMinutes) == 29 && StringToInt(szSecondes) == 59) ) {
-		CPrintToChatAll("" ...MOD_TAG... " Le serveur va {red}redémarrer{default} MAINTENANT.");
+		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootNow", LANG_SERVER);
 	}
 	if( (StringToInt(szHours) ==  5 && StringToInt(szMinutes) ==  0 && StringToInt(szSecondes) == 0) ||
 		(StringToInt(szHours) == 16 && StringToInt(szMinutes) == 30 && StringToInt(szSecondes) == 0) ) {
-		CPrintToChatAll("" ...MOD_TAG... " Le serveur va {red}redémarrer{default} MAINTENANT.");
+		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootNow", LANG_SERVER);
 		
 		for(int i = 1; i <= MaxClients; i++)
 			if( IsValidClient(i) )
@@ -943,17 +935,11 @@ public void CRON_TIMER() {
 		CreateTimer(0.1, RebootServer);
 	}
 	
-	/*
-	if( StringToInt(szDayOfWeek) == 3 ) { // Mercredi
-		if( StringToInt(szHours) == 18 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 18h00m00s
-			ServerCommand("rp_capture 1");
-		}
-	}
 	if( StringToInt(szDayOfWeek) == 5 ) { // Vendredi
 		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
 			ServerCommand("rp_capture 1");
 		}
-	}*/
+	}
 }
 public Action RebootServer(Handle timer, any none) {
 	ServerCommand("quit");

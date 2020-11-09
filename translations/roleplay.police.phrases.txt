@@ -169,6 +169,11 @@
 		"fr"		"Vous avez été libéré de prison par {1}."
 		"en"		"You have been released from jail by {1}."
 	}
+	"JailFree"
+	{
+		"fr"		"Vous avez terminé votre peine de prison."
+		"en"		"You have been released from jail."
+	}
 	"JailAutoFree"
 	{
 		"#format"	"{1:s},{2:t}"
@@ -180,12 +185,6 @@
 		"#format"	"{1:s}"
 		"fr"		"{1} ne peut pas être arrêté pour le moment à cause d'une quête."
 		"en"		"{1} cannot be stopped for the moment because of a quest."
-	}
-	"JailFree_By"
-	{
-		"#format"	"{1:s}"
-		"fr"		"Vous avez été libéré de prison par {1}."
-		"en"		"You have been released from jail by {1}."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Police_NoPay"

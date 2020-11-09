@@ -263,6 +263,12 @@
 		"fr"	"Vous avez récupéré: {1}x {green}{2}{default}."
 		"en"	"You have retrieved: {1}x {green}{2}{default}."
 	}
+	"Item_Found"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"	"Vous avez trouvé: {1}x {green}{2}{default}."
+		"en"	"You have found: {1}x {green}{2}{default}."
+	}
 	"Item_Free"
 	{
 		"#format"	"{1:d},{2:s}"

@@ -156,6 +156,55 @@
 		"#format"	"{1:d}"
 		"fr"		"{1} entités ont été supprimées."
 	}
+	"Cmd_Peine"
+	{
+		"fr"		"Vous pouvez modifier la durée/zone de ton emprisonnement en tapant {red}/peine{default}."
+	}
+	"Cmd_RebootIn"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Le serveur va {red}redémarrer{default} dans {1} secondes."
+	}
+	"Cmd_RebootNow"
+	{
+		"fr"		"Le serveur va {red}redémarrer{default} MAINTENANT."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Ban_Cash"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Limite {1}$"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Passive_Disabled"
+	{
+		"fr"		"Le mode de jeu passif a été désactivé."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"BlackFriday_ADS"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Journée exceptionnelle du Black Friday ! Profitez d'une réduction de {green}-{1}%{default} sur tous vos achats !"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"HUD_RespawnIn"
+	{
+		"#format"	"{1:.1f}"
+		"fr"		"<font color='#ff0000'>Vous êtes mort.</font>\nVous allez revivre dans:\n<center><font color='#00ff00'>{1}</font> seconde(s)</center>"
+	}
+	"HUD_RespawnPress"
+	{
+		"fr"		"<font color='#ff0000'>Vous êtes mort.</font>\nAppuyez sur n'importe quelle touche pour revivre."
+	}
+	"HUD_Vehicle"
+	{
+		"#format"		"{1:d},{2:.1f},{3:d}" // HP, KmH, MpH
+		"fr"			"Voiture: {1}HP\nVitesse: {2}km/h"
+	}
+	"HUD_LoadingData"
+	{
+		"fr"			" \nChargement de vos informations...\nCeci peut prendre jusqu'à une minute\n \n \n \nLes serveurs Steam sont peut-être saturé,\ndans ce cas les délais peuvent être plus long."
+	}
 	// ----------------------------------------------------------------------------------------------
 	"HUD_Date"
 	{
