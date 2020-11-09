@@ -61,6 +61,10 @@ int SkyBoxID = -1;
 int g_cSnow;
 ArrayList g_iParentedParticle[65];
 
+
+int g_iEntitycount;
+bool g_bLightIsOn = false;
+
 public Plugin myinfo = {
 	name = "PHUN: Effect", author = "KoSSoLaX",
 	description = "Effect", version = "1.7",
@@ -332,6 +336,22 @@ public Action sound_hook(int clients[64], int &numClients, char sample[PLATFORM_
 public void OnEntityCreated(int entity, const char[] classname)  {
 	if( StrEqual(classname, "item_coop_coin") ) {
 		SDKHook(entity, SDKHook_Touch, OnTouch);
+	}
+	
+	char name[128];
+	if( g_iEntitycount > 1900 && g_bLightIsOn ) {
+		for(int a=MaxClients; a<=2048; a++) {
+			if( !IsValidEdict(a) )
+				continue;
+			if( !IsValidEntity(a) )
+				continue;
+			
+			GetEntPropString(a, Prop_Data, "m_iName", name, sizeof(name));
+			if( StrContains(name, "-street_light", false) > 0 || StrEqual(name, "street_light", false) ) {
+				g_bLightIsOn = false;
+				rp_AcceptEntityInput(a, "LightOff");
+			}
+		}
 	}
 }
 
@@ -1180,11 +1200,11 @@ public Action Effect_Fading(int client, int args) {
 }
 
 
-
 public void OnGameFrame() {
-	
+	static char szLight[12], szAlpha[12], name[128], name2[128];
+	g_iEntitycount = 0;
 	for(int i=1; i<= MAX_ENTITIES; i++) {
-		
+				
 		if( !IsValidEdict(i) ) {
 			g_fEntity_over[i] = 0.0;
 			g_fEntity_star[i] = 0.0;
@@ -1207,6 +1227,8 @@ public void OnGameFrame() {
 			g_fEntity_star3[i] = 0.0;
 			continue;
 		}
+		
+		g_iEntitycount++;
 		
 		if( g_fEntity_over[i] >= GetGameTime() ) {
 			
@@ -1286,7 +1308,7 @@ public void OnGameFrame() {
 			return;
 		}
 		
-		char szLight[12], szAlpha[12], name[128], name2[128];
+		
 		//
 		Format(szLight, 11, "%s", g_szFADE_TIME_light[light]);
 		//
@@ -1342,6 +1364,10 @@ public void OnGameFrame() {
 				if( StrEqual(name, "night_spotlight", false) ) {
 					rp_AcceptEntityInput(a, "LightOff");
 				}
+				if( StrContains(name, "-street_light", false) > 0 || StrEqual(name, "street_light", false) ) {
+					g_bLightIsOn = false;
+					rp_AcceptEntityInput(a, "LightOff");
+				}
 			}
 			else if( alpha > 128 ) {
 				if( StrEqual(name, "night_light", false) ) {
@@ -1349,6 +1375,12 @@ public void OnGameFrame() {
 				}
 				if( StrEqual(name, "night_spotlight", false) ) {
 					rp_AcceptEntityInput(a, "LightOn");
+				}
+				if( StrContains(name, "-street_light", false) > 0 || StrEqual(name, "street_light", false) ) {
+					if( g_iEntitycount < 1800 ) {
+						g_bLightIsOn = true;
+						rp_AcceptEntityInput(a, "LightOn");
+					}
 				}
 			}
 		}
