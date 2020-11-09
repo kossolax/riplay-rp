@@ -880,7 +880,9 @@ void OnGameFrame_10(float time) {
 		else if( IsValidClient(i) && !IsFakeClient(i) ) {
 			Handle mSayPanel = CreatePanel();
 			SetPanelTitle(mSayPanel, szGeneralMenu);
-			DrawPanelText(mSayPanel, "%T", "HUD_LoadingData", i);
+			
+			Format(szHUD, sizeof(szHUD), "%T", "HUD_LoadingData", i);
+			DrawPanelText(mSayPanel, szHUD);
 			
 			SendPanelToClient(mSayPanel, i, MenuNothing, 2);
 			CreateTimer(1.1, PostKillHandle, mSayPanel);
