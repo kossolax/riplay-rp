@@ -1012,9 +1012,11 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		if( g_flUserData[Client][fl_ArtisanFatigue] <= 0.0 )
 			g_flUserData[Client][fl_ArtisanFatigue] = 0.0;
 		
-		g_flUserData[Client][fl_Vitality] -= float(now_time - g_iUserData[Client][i_LastTime]) / 45.0;
-		if( g_flUserData[Client][fl_Vitality] <= 0.0 )
-			g_flUserData[Client][fl_Vitality] = 0.0;
+		#if FREEZE_VITALITY != 1
+			g_flUserData[Client][fl_Vitality] -= float(now_time - g_iUserData[Client][i_LastTime]) / 45.0;
+			if( g_flUserData[Client][fl_Vitality] <= 0.0 )
+				g_flUserData[Client][fl_Vitality] = 0.0;
+		#endif
 		
 		if( g_iUserData[Client][i_LastTime]+(1*60*60) < now_time )
 			g_iUserData[Client][i_Sick] = 0;
