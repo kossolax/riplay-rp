@@ -400,7 +400,7 @@ public Action Cmd_ReloadSQL(int client, int args) {
 	LoadServerDatabase();
 	LoadDoors();
 	
-	ReplyToCommand(client, "%T", "Executed config", "rp_csgo");
+	ReplyToCommand(client, "%T", "Executed config", client, "rp_csgo");
 	
 	return Plugin_Handled;
 }
