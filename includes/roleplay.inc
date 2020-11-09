@@ -818,7 +818,7 @@ enum int_user_data {
 	i_SkinDonateur,
 	i_ELO,
 	i_PVPBannedUntil,
-	
+	i_AllowedDismiss,
 	i_udata_max
 };
 enum float_user_data {
