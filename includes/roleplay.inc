@@ -609,6 +609,7 @@ native void rp_WeaponMenu_Get(DataPack hBuyMenu, DataPackPos pos, char weapon[BM
 #define BITZONE_BLOCKOUT	(1<<10)
 #define BITZONE_BLOCKJAIL	(1<<11)
 #define BITZONE_BLOCKSPEAK	(1<<12)
+#define BITZONE_BLOCKRADAR	(1<<13)
 #define BITZONE_PARKING		(1<<15)
 #define BITZONE_ROAD		(1<<16)
 #define BITZONE_JUSTICEITEM	(1<<18)

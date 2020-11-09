@@ -337,7 +337,7 @@ void RP_PerformFade(int client) {
 	
 	int hud = GetEntProp(client, Prop_Send, "m_iHideHUD");
 	int hud2 = hud;
-	bool radar = ( !IsInPVP(client) && !g_bUserData[client][b_GameModePassive] && GetEntProp(client, Prop_Send, "m_bDrawViewmodel") == 1 );
+	bool radar = ( !IsInPVP(client) && !(GetZoneBit( GetPlayerZone(client) ) & BITZONE_BLOCKRADAR) && !g_bUserData[client][b_GameModePassive] && GetEntProp(client, Prop_Send, "m_bDrawViewmodel") == 1 );
 	
 	if( g_bUserData[client][b_Blind] || !radar || (GetZoneBit( GetPlayerZone(client) ) & BITZONE_EVENT) ) {
 		if( !(hud & HIDEHUD_RADAR) )
