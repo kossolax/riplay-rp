@@ -77,6 +77,23 @@ public void OnPluginStart() {
 	LoadTranslations("roleplay.phrases");
 	LoadTranslations("roleplay.items.phrases");
 	LoadTranslations("roleplay.core.phrases");
+	//
+	LoadTranslations("roleplay.armurerie.phrases");
+	LoadTranslations("roleplay.artificier.phrases");
+	LoadTranslations("roleplay.artisan.phrases");
+	LoadTranslations("roleplay.banque.phrases");
+	LoadTranslations("roleplay.carshop.phrases");
+	LoadTranslations("roleplay.coach.phrases");
+	LoadTranslations("roleplay.dealer.phrases");
+	LoadTranslations("roleplay.hopital.phrases");
+	LoadTranslations("roleplay.immo.phrases");
+	LoadTranslations("roleplay.justice.phrases");
+	LoadTranslations("roleplay.loto.phrases");
+	LoadTranslations("roleplay.mafia.phrases");
+	LoadTranslations("roleplay.mcdo.phrases");
+	LoadTranslations("roleplay.mercenaire.phrases");
+	LoadTranslations("roleplay.police.phrases");
+	LoadTranslations("roleplay.technicien.phrases");
 	
 	//
 	// Events:

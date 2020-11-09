@@ -569,6 +569,7 @@ native void rp_ClientMoney(int client, int_user_data type, int amount, bool isSa
 typedef NextMessageCallback = function void(int client, any data, char[] message);
 native void rp_GetClientNextMessage(int client, any data, NextMessageCallback cb);
 // ----------------------------------------------------------------------------
+native void rp_GetLevelData(rank_level level, rankType typeID, char[] str, int length);			/* Récupère les données d'un levle */
 
 enum BM_Int {
 	BM_Owner,
@@ -1086,7 +1087,7 @@ enum car_data {
 	car_gyro_left,
 	car_gyro_right,
 	
-	car_data_max,
+	car_data_max
 };
 enum type_appart_bonus {
 	appart_bonus_energy,
@@ -1235,6 +1236,43 @@ enum rankType {
 	rank_type_description,
 	
 	rank_type_max
+};
+enum rank_level {
+	level_none,
+	level_1,
+	level_2,
+	level_3,
+	level_4,
+	level_5,
+	level_6,
+	level_owner,
+	level_8,
+	level_9,
+	level_10,
+	level_11,
+	level_12,
+	level_13,
+	level_14,
+	level_15,
+	level_16,
+	level_17,
+	level_18,
+	level_19,
+	level_20,
+	level_21,
+	level_22,
+	level_23,
+	level_24,
+	level_25,
+	level_26,
+	level_27,
+	level_28,
+	level_29,
+	level_30,
+	level_31,
+	level_32,
+	
+	level_max
 };
 enum serverRules {
 	rules_Amendes,

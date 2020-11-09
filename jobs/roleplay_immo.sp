@@ -927,9 +927,11 @@ public int MenuNothing(Handle menu, MenuAction action, int client, int param2) {
 }
 // ----------------------------------------------------------------------------
 public Action Cmd_BedVilla(int client){
+	char tmp[128];
 	
 	if( rp_GetClientInt(client, i_PlayerLVL) < 42 ) {
-		CPrintToChat(client, "" ...MOD_TAG... "%T", "Error_Level", client, 42, "LEVEL_42");
+		rp_GetLevelData(level_owner, rank_type_name, tmp, sizeof(tmp));
+		CPrintToChat(client, "" ...MOD_TAG... "%T", "Error_Level", client, 42, tmp);
 		return Plugin_Handled;
 	}
 	

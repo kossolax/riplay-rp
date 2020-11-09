@@ -175,6 +175,11 @@
 		"#format"	"{1:d}"
 		"fr"		"Limite {1}$"
 	}
+	"Ban_Refund"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Vous n'avez pas reçu {red}{1}{defualt}$ afin de rembourser votre dette de {red}{2}{default}$."
+	}
 	// ----------------------------------------------------------------------------------------------
 	"Passive_Disabled"
 	{

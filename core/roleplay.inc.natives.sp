@@ -208,9 +208,14 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 	CreateNative("rp_GetForwardHandle", Native_GetForwardHandle);
 	CreateNative("rp_GetClientNextMessage", Native_rp_GetClientNextMessage);
 	
+	CreateNative("rp_GetLevelData",	Native_rp_GetLevelData);
+	
 	RegPluginLibrary("roleplay");
 	
 	return APLRes_Success;
+}
+public int Native_rp_GetLevelData(Handle plugin, int numParams) {
+	SetNativeString(3, g_szLevelList[GetNativeCell(1)][GetNativeCell(2)], GetNativeCell(4));
 }
 public int Native_rp_ClientCanAttack(Handle plugin, int numParams) {
 	return Client_CanAttack(GetNativeCell(1), GetNativeCell(2));
@@ -225,7 +230,7 @@ public int Native_rp_ClientMoney(Handle plugin, int numParams) {
 		if(!unsafe){
 			LogToGame("[CHEATING] [CLIENT-MONEY] %L aurait du recevoir %d.", client, amount);
 			LogStackTrace("[CHEATING] [CLIENT-MONEY] %L aurait du recevoir %d.", client, amount);
-			CPrintToChat(client, "Transaction de %d bloquée, contactez un admin immédiatement.", amount);
+			CPrintToChat(client, "%T", "Error_FromServer", client);
 			return 0;
 		}
 	}
@@ -234,7 +239,7 @@ public int Native_rp_ClientMoney(Handle plugin, int numParams) {
 	if( dette > 0 && amount > 0 ) {
 		
 		if( amount > 10 )
-			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas reçu %d$ afin de rembourser votre dette de %d$.", (amount < dette ? amount : dette), dette);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Ban_Refund", client, (amount < dette ? amount : dette), dette);
 		
 		dette -= amount;
 		if (dette < 0) {
@@ -467,6 +472,7 @@ public int Native_rp_GetClientSSO(Handle plugin, int numParams) {
 	SetNativeString(2, tmp, GetNativeCell(3));
 }
 public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
+	char tmp[128];
 	int client = view_as<int>(GetNativeCell(1));
 	int xp = view_as<int>(GetNativeCell(2));
 	
@@ -477,19 +483,18 @@ public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
 		return 0;
 	}
 	
-	if( GetJobPrimaryID(client) == g_iUserData[client][i_Job] && g_iUserData[client][i_TimePlayedJob] >= (60*60*100) ) {
+	if( g_iUserData[client][i_Job] > 0 && GetJobPrimaryID(client) == g_iUserData[client][i_Job] && g_iUserData[client][i_TimePlayedJob] >= (60*60*100) ) {
 		float factor = (float(g_iUserData[client][i_TimePlayedJob]) / (60.0 * 60.0 * 1000.0));
 		xp += RoundFloat( float(xp) * factor);
 	}
+#if defined EVENT_BIRTHDAY
+	xp = xp * 2;
+#endif
+
 	g_iUserData[client][i_PlayerXP] += xp;
 
 	if( xp >= 100 )
-#if defined EVENT_BIRTHDAY
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez gagné {red}2x{green}%d{default} points d'expérience.", xp);
-	xp = xp * 2;
-#else
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez gagné {green}%d{default} points d'expérience.", xp);
-#endif
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "LEVEL_XP", client, xp);
 	
 	while( g_iUserData[client][i_PlayerXP] >= (g_iUserData[client][i_PlayerLVL] * 3600) ) {
 		g_iUserData[client][i_PlayerLVL]++;
@@ -507,18 +512,18 @@ public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
 			g_iUserData[client][i_PlayerRank] = a + 1;
 			
 			if( b == 702 ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 50 cadeaux dans votre banque.");
-				rp_ClientGiveItem(client, ITEM_CADEAU, 50, true);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Give", client, 50, g_szItemList[ITEM_CADEAU][item_type_name]);
+				rp_ClientGiveItem(client, ITEM_CADEAU, 50);
 			}
 			if( b == 600 ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 25 cadeaux dans votre banque.");
-				rp_ClientGiveItem(client, ITEM_CADEAU, 25, true);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Give", client, 25, g_szItemList[ITEM_CADEAU][item_type_name]);
+				rp_ClientGiveItem(client, ITEM_CADEAU, 25);
 			}
 			
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez atteint le niveau {green}%d{default}. Vous êtes maintenant {green}%s{default}!", g_iUserData[client][i_PlayerLVL], g_szLevelList[ g_iUserData[client][i_PlayerRank] ][rank_type_name]);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "LEVEL_RANK", client, g_iUserData[client][i_PlayerLVL], g_szLevelList[ g_iUserData[client][i_PlayerRank] ][rank_type_name]);
 		}
 		else {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez atteint le niveau {green}%d{default}.", g_iUserData[client][i_PlayerLVL]);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "LEVEL_UP", g_iUserData[client][i_PlayerLVL]);
 		}
 	}
 	return 1;
