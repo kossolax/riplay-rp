@@ -523,7 +523,7 @@ public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "LEVEL_RANK", client, g_iUserData[client][i_PlayerLVL], g_szLevelList[ g_iUserData[client][i_PlayerRank] ][rank_type_name]);
 		}
 		else {
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "LEVEL_UP", g_iUserData[client][i_PlayerLVL]);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "LEVEL_UP", client, g_iUserData[client][i_PlayerLVL]);
 		}
 	}
 	return 1;
