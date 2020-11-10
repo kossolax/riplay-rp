@@ -170,6 +170,16 @@
 		"fr"		"Le serveur va {red}redémarrer{default} MAINTENANT."
 	}
 	// ----------------------------------------------------------------------------------------------
+	"Phone_Mission"
+	{
+		"fr"		"Mission téléphone:"
+	}
+	"Phone_Mission_Send"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Un hélicoptère vous envois un colis, il sera envoyé près de: {1}."
+	}
+	// ----------------------------------------------------------------------------------------------
 	"Ban_Cash"
 	{
 		"#format"	"{1:d}"
