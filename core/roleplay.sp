@@ -286,6 +286,7 @@ public void OnPluginStart() {
 		view_as<Handle>(g_hRPNative[i][RP_PreClientCraft]) = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_CellByRef);
 		view_as<Handle>(g_hRPNative[i][RP_PostClientCraft]) = CreateForward(ET_Hook, Param_Cell, Param_Cell);
 		view_as<Handle>(g_hRPNative[i][RP_PreBuildingCount]) = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_CellByRef);
+		view_as<Handle>(g_hRPNative[i][RP_PostPickLock]) = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_Cell, Param_Cell);
 		view_as<Handle>(g_hRPNative[i][RP_PostPiedBiche]) = CreateForward(ET_Hook, Param_Cell, Param_Cell);
 		view_as<Handle>(g_hRPNative[i][RP_PreClientTeleport]) = CreateForward(ET_Hook, Param_Cell);
 		view_as<Handle>(g_hRPNative[i][RP_PostStealWeapon]) = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_Cell);

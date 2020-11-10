@@ -59,6 +59,7 @@ enum rp_event {
 	RP_PostClientCraft,			/* Après qu'un craft réussisse */
 	
 	RP_PreBuildingCount,		/* Calcule du nombre maximum de plant/machine */
+	RP_PostPickLock,			/* Lorsqu'un kit de crochetage se termine */
 	RP_PostPiedBiche,			/* Lorsqu'un pied de biche se termine */
 	RP_PreClientTeleport,		/* Lorsqu'un joueur tente de se téléporter */
 	RP_PostStealWeapon,			/* Lorsqu'un joueur termine de voler une arme */
@@ -114,6 +115,7 @@ typeset rp_event_enum {
 	function Action(int client, int itemID, int& free);										/* RP_PreClientCraft */
 	function Action(int client, int itemID);												/* RP_PostClientCraft */	
 	function Action(int client, int itemID, int & max); 									/* RP_PreBuildingCount */
+	function Action(int client, int doorID, int difficulty, int alarmed);					/* RP_PostPickLock */
 	function Action(int client, int type); 													/* RP_PostPiedBiche */
 	function Action(int client);															/* RP_PreClientTeleport */
 	function Action(int client, int target, int weaponID);									/* RP_PostStealWeapon */

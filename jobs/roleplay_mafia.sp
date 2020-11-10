@@ -1014,6 +1014,13 @@ public Action ItemPickLockOver_frame(Handle timer, Handle dp) {
 	
 	if( percent >= 1.0 ) {
 		
+		Call_StartForward(rp_GetForwardHandle(client, RP_PostPickLock));
+		Call_PushCell(client);
+		Call_PushCell(door);
+		Call_PushCell(difficulte);
+		Call_PushCell(g_iDoorDefine_LOCKER[doorID]);
+		Call_Finish();
+		
 		if( IsValidClient(g_iDoorDefine_LOCKER[doorID]) ) {
 			char zone[128];
  			rp_GetZoneData(rp_GetPlayerZone(door), zone_type_name, zone, sizeof(zone));
