@@ -123,6 +123,9 @@ public Action PostLoading(Handle timer, any zomg) {
 	if( g_iHours >= 18 || g_iHours < 6 ) {
 		ServerCommand("sm_effect_time night 1.0");
 	}
+	else {
+		ServerCommand("sm_effect_time day 1.0");
+	}
 	
 	AddServerTag("roleplay");
 	AddServerTag("rp");
