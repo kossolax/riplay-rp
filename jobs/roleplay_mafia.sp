@@ -79,6 +79,8 @@ public void OnPluginStart() {
 	RegServerCmd("rp_item_doorprotect", Cmd_ItemDoorProtect,	"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_GetStoreItem",	Cmd_GetStoreItem,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_door_breakcadenas", CmdBreakCadenas);
+	RegServerCmd("rp_door_remove_cadenas", CmdBreakCadenas_Force);
+	
 	
 	g_hBuyMenu_Items = new DataPack();
 	g_hBuyMenu_Items.WriteCell(0);
@@ -97,7 +99,20 @@ public void OnPluginEnd() {
 	if (g_hBuyMenu_Weapons)
 		rp_WeaponMenu_Clear(g_hBuyMenu_Weapons);
 }
-
+public Action CmdBreakCadenas_Force(int args) {
+	int door = GetCmdArgInt(1);
+	int tzone = rp_GetPlayerZone(door);
+	int doorID = rp_GetDoorID(door);
+	
+	if( IsValidClient(g_iDoorDefine_LOCKER[doorID]) ) {			
+		char tmp[128];
+		rp_GetZoneData(tzone, zone_type_name, tmp, sizeof(tmp));
+		CPrintToChat(g_iDoorDefine_LOCKER[doorID], "" ...MOD_TAG... " %T", "Lockpad_BrokenYours", g_iDoorDefine_LOCKER[doorID], tmp);
+		g_iDoorDefine_LOCKER[doorID] = 0;
+	}
+	
+	return Plugin_Handled;
+}
 public Action CmdBreakCadenas(int args) {
 	int client = GetCmdArgInt(1);
 	int door = GetCmdArgInt(2);
