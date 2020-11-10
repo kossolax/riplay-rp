@@ -303,7 +303,7 @@ public void Cmd_QuestMenu(int client) {
 		menu.SetTitle("%T\n ", "Phone_Quest", client);
 		
 		char msg[256], expl[32][64];
-		Format(msg, sizeof(msg), "%T", "Phone_Quest_Cancel", client, g_szZoneList[GetPointZone(vecDir)][zone_type_name]);
+		Format(msg, sizeof(msg), "%T", "Phone_Quest_Cancel", client);
 		String_WordWrap(msg, 40);
 		int len = ExplodeString(msg, "\n", expl, sizeof(expl), sizeof(expl[]));
 		for (int i = 0; i < len; i++) {

@@ -123,6 +123,10 @@
 	{
 		"fr"	"Vous devez prendre votre couteau en main."
 	}
+	"Error_YouMustBeAliveToTalk"
+	{
+		"fr"	"Vous devez être en vie pour parler."
+	}
 	// ----------------------------------------------------------------------------------------------
 	"Pay_Bonus_Appart"
 	{

@@ -667,8 +667,8 @@ Menu AUDIENCE_Enquete(int type, int a, int b) {
 			char szURL[1024];
 			GetClientAuthId(b, AUTH_TYPE, tmp2, sizeof(tmp2));
 
-			Format(szURL, sizeof(szURL), ""...MOD_URL..."#/tribunal/case/%s", tmp2);
-			PrintToConsole(g_iTribunalData[type][td_Owner], ""...MOD_URL..."#/tribunal/case/%s", tmp2);
+			Format(szURL, sizeof(szURL), ""...MOD_URL..."index.php#/tribunal/case/%s", tmp2);
+			PrintToConsole(g_iTribunalData[type][td_Owner], ""...MOD_URL..."index.php#/tribunal/case/%s", tmp2);
 			
 			RP_ShowMOTD(g_iTribunalData[type][td_Owner], szURL);
 		}
@@ -761,8 +761,8 @@ Menu AUDIENCE_Forum(int client, int a, int b) {
 	}
 	else if( b == 0 ) {
 			
-		Format(query, sizeof(query), ""...MOD_URL..."#/tribunal/case/%d", a);
-		PrintToConsole(client, ""...MOD_URL..."#/tribunal/case/%d", a);
+		Format(query, sizeof(query), ""...MOD_URL..."index.php#/tribunal/case/%d", a);
+		PrintToConsole(client, ""...MOD_URL..."index.php#/tribunal/case/%d", a);
 		RP_ShowMOTD(client, query);
 		
 	 	subMenu = new Menu(MenuTribunal);

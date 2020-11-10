@@ -1848,8 +1848,8 @@ void displayTribunal(int client, const char szSteamID[64]) {
 	SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery);
 	
 	
-	Format(szURL, sizeof(szURL), ""...MOD_URL..."#/tribunal/case/%s", szSteamID);
-	PrintToConsole(client, ""...MOD_URL..."#/tribunal/case/%s", szSteamID);
+	Format(szURL, sizeof(szURL), ""...MOD_URL..."index.php#/tribunal/case/%s", szSteamID);
+	PrintToConsole(client, ""...MOD_URL..."index.php#/tribunal/case/%s", szSteamID);
 	
 	RP_ShowMOTD(client, szURL);
 }

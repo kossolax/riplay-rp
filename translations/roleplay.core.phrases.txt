@@ -169,6 +169,16 @@
 	{
 		"fr"		"Le serveur va {red}redémarrer{default} MAINTENANT."
 	}
+	"Cmd_Plainte"
+	{
+		"fr"		"Porter plainte contre un Policier:"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Chat_Admin"
+	{
+		"#format"	"{1:s},{2:s}"
+		"fr"		"{1} ({red}ADMIN{default}): {2}"
+	}
 	// ----------------------------------------------------------------------------------------------
 	"Phone_Mission"
 	{

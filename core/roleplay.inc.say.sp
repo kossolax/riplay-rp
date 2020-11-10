@@ -20,7 +20,7 @@ public Action Command_Say(int client, int args) {
 		return Plugin_Handled;
 	}
 	if( !IsPlayerAlive(client) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous devez être en vie pour parler.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_YouMustBeAliveToTalk", client);
 		return Plugin_Handled;
 	}
 
@@ -65,9 +65,9 @@ public Action Command_Say(int client, int args) {
 		
 		// Setup menu
 		Handle menu = CreateMenu(MenuTribunal_plainte);
-		char steamID[32], nickname[65];
+		char steamID[32], nickname[64];
 		
-		SetMenuTitle(menu, "Porter plainte contre un policier\n ");
+		SetMenuTitle(menu, "%T\n ", "Cmd_Plainte", client);
 
 		for(int i=1; i<=MaxClients; i++) {
 			if( !IsValidClient(i) )
@@ -78,7 +78,7 @@ public Action Command_Say(int client, int args) {
 				continue;
 
 			GetClientAuthId(i, AUTH_TYPE, steamID, sizeof(steamID), false);
-			GetClientName(i, nickname, sizeof(nickname));
+			GetClientName2(i, nickname, sizeof(nickname), true);
 			
 			AddMenuItem(menu, steamID, nickname);
 		}
@@ -99,13 +99,12 @@ public Action Command_Say(int client, int args) {
 		return Plugin_Handled;
 	}
 	else if( strcmp(szSayTrig, "!site", false) == 0 || strcmp(szSayTrig, "/site", false) == 0 ) {		
-		RP_ShowMOTD(client, "https://www.riplay.fr/");
+		RP_ShowMOTD(client, MOD_URL);
 
 		return Plugin_Handled;
 	}
 	else if( strcmp(szSayTrig, "!craft", false) == 0 || strcmp(szSayTrig, "/craft", false) == 0 ) {
-			
-		RP_ShowMOTD(client, "https://rpweb.riplay.fr/craft.php");
+		RP_ShowMOTD(client, MOD_URL ... "craft.php");
 
 		return Plugin_Handled;
 	}
@@ -128,16 +127,12 @@ public Action Command_Say(int client, int args) {
 		}
 
 		CPrintToChatAll("{red} =================================={default} ");
-		CPrintToChatAll("{lightblue}%s{default} ({red}ADMIN{default}): %s", name, szSayText);
+		CPrintToChatAll("%T", "Chat_Admin", LANG_SERVER, name, szSayText);
 		CPrintToChatAll("{red} =================================={default} ");
 
 		return Plugin_Handled;
 	}
-	
-	if( GetZoneBit( GetPlayerZone(client) ) & BITZONE_BLOCKTALK ) {
-		ACCESS_DENIED(client);
-	}
-	if(	strcmp(szSayTrig, "!screen", false) == 0	|| strcmp(szSayTrig, "/screen", false) == 0 ) {
+	else if(	strcmp(szSayTrig, "!screen", false) == 0	|| strcmp(szSayTrig, "/screen", false) == 0 ) {
 
 		int val = GetEntProp(client, Prop_Send, "m_bDrawViewmodel");
 		int hud = GetEntProp(client, Prop_Send, "m_iHideHUD");
@@ -164,7 +159,7 @@ public Action Command_Say(int client, int args) {
 		}
 		return Plugin_Handled;
 	}
-	if(	strcmp(szSayTrig, "!money", false) == 0	|| strcmp(szSayTrig, "/money", false) == 0	||
+	else if(	strcmp(szSayTrig, "!money", false) == 0	|| strcmp(szSayTrig, "/money", false) == 0	||
 		strcmp(szSayTrig, "!statut", false) == 0	|| strcmp(szSayTrig, "/statut", false) == 0	||
 		strcmp(szSayTrig, "!hud", false) == 0	|| strcmp(szSayTrig, "/hud", false) == 0	||
 		strcmp(szSayTrig, "!s", false) == 0	|| strcmp(szSayTrig, "/s", false) == 0	||
@@ -214,101 +209,9 @@ public Action Command_Say(int client, int args) {
 		CPrintToChat(client, "" ...MOD_TAG... " Derniere revision: %s %s TAG: %s", __TIME__, __DATE__, __LAST_REV__);
 
 		return Plugin_Handled;
-	}
-	else if(strcmp(szSayTrig, "!use", false) == 0 || strcmp(szSayTrig, "/use", false) == 0) {
-		
-		if( IsValidDoor(target) && Entity_GetDistance(client, target) < MAX_AREA_DIST ) {
-			
-			int door_bdd = g_iDoorDouble[target - MaxClients ];
-			int wasLocked = GetEntProp(target, Prop_Data, "m_bLocked");
-			bool canUnlock = IsPlayerHaveKey(client, target, 2);
-			bool canLock = IsPlayerHaveKey(client, target, 1);
-
-			if( wasLocked && canUnlock ) {
-				SetEntProp(target, Prop_Data, "m_bLocked", 0);
-				if( door_bdd > 0 )
-					SetEntProp(door_bdd+MaxClients, Prop_Data, "m_bLocked", 0);
-			}
-			
-			if( canUnlock || !wasLocked ) {
-				rp_AcceptEntityInput(target, "Toggle", client);
-				if( door_bdd > 0 )
-					rp_AcceptEntityInput(door_bdd+MaxClients, "Toggle", client);
-			}
-
-			if( wasLocked && canLock ) {
-				ScheduleEntityInput(target, 0.001, "Lock");
-				if( door_bdd > 0 )
-					ScheduleEntityInput(door_bdd+MaxClients, 0.001, "Lock");
-			}
-		}
-		else if( rp_GetBuildingData(target, BD_owner) == client ) {
-			float vecAngles[3];
-			Entity_GetAbsAngles(target, vecAngles);
-			vecAngles[1] += 45.0;
-			if( vecAngles[1] > 360.0 )
-				vecAngles[1] -= 360.0;
-			
-			TeleportEntity(target, NULL_VECTOR, vecAngles, NULL_VECTOR);
-		}
-
-		return Plugin_Handled;
-	}
-	else if(strcmp(szSayTrig, "!forceuse", false) == 0 || strcmp(szSayTrig, "/forceuse", false) == 0) {
-
-		if( !IsAdmin(client) ) {
-			ACCESS_DENIED(client);
-		}
-
-		//Open:
-		rp_AcceptEntityInput(target, "Toggle", client);
-
-		return Plugin_Handled;
-	}
-	else if(strcmp(szSayTrig, "!forcelock", false) == 0 || strcmp(szSayTrig, "/forcelock", false) == 0) {
-
-		if( !IsAdmin(client) ) {
-			ACCESS_DENIED(client);
-		}
-
-		g_iDoorNouse[ (target - MaxClients) ] = 1;
-
-
-		return Plugin_Handled;
-	}
-	else if(strcmp(szSayTrig, "!forceunlock", false) == 0 || strcmp(szSayTrig, "/forceunlock", false) == 0) {
-
-
-		if( !IsAdmin(client) ) {
-			ACCESS_DENIED(client);
-		}
-
-		g_iDoorNouse[ (target - MaxClients) ] = 0;
-
-		return Plugin_Handled;
-	}
-	else if(strcmp(szSayTrig, "!lock", false) == 0 || strcmp(szSayTrig, "/lock", false) == 0) {
-
-		target = GetClientAimTarget(client, false);
-		if( !IsValidDoor(target) && IsValidEdict(target) && IsValidDoor(Entity_GetParent(target)) )
-			target = Entity_GetParent(target);
-
-		ToggleDoorLock(client, target, 1);
-
-		return Plugin_Handled;
-	}
-	else if(strcmp(szSayTrig, "!unlock", false) == 0 || strcmp(szSayTrig, "/unlock", false) == 0) {
-
-		target = GetClientAimTarget(client, false);
-		if( !IsValidDoor(target) && IsValidEdict(target) && IsValidDoor(Entity_GetParent(target)) )
-			target = Entity_GetParent(target);
-
-		ToggleDoorLock(client, target, 2);
-
-		return Plugin_Handled;
-	}
+	}	
 	else if( strcmp(szSayTrig, "!leave", false) == 0 || strcmp(szSayTrig, "/leave", false) == 0 ||
-	strcmp(szSayTrig, "!quitter", false) == 0 || strcmp(szSayTrig, "/quitter", false) == 0
+		strcmp(szSayTrig, "!quitter", false) == 0 || strcmp(szSayTrig, "/quitter", false) == 0
 	) {
 
 		int door = target;
@@ -587,7 +490,7 @@ public Action Command_Say(int client, int args) {
 		return Plugin_Handled;
 	}
 	else if(	strcmp(szSayTrig, "!skin", false) == 0		|| strcmp(szSayTrig, "/skin", false) == 0 ||
-	strcmp(szSayTrig, "!skins", false) == 0		|| strcmp(szSayTrig, "/skins", false) == 0
+		strcmp(szSayTrig, "!skins", false) == 0		|| strcmp(szSayTrig, "/skins", false) == 0
 	) {
 
 		CPrintToChat(client, "" ...MOD_TAG... " Vous devez vous rendre dans une cabine d'essage." );
@@ -627,151 +530,9 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	else if( strcmp(szSayTrig, "!out", false) == 0		|| strcmp(szSayTrig, "/out", false) == 0 ) {
-
-	#if defined USING_VEHICLE
-		if( IsValidVehicle(target) ) {
-			int car = GetEntPropEnt(client, Prop_Send, "m_hVehicle");
-			int driver = GetEntPropEnt(target, Prop_Send, "m_hPlayer");
-			if( IsEntitiesNear(client, target)) {
-				if( car == -1 ) {
-					if( IsValidClient(driver) ) {
-						char client_name[128];
-						GetClientName2(client, client_name, sizeof(client_name), false);
-						if( g_iVehicleData[target][car_owner] == client && driver != client ) {
-							ExitVehicle(driver, target, true);
-							CPrintToChat(driver, ""...MOD_TAG..." %T", "Cmd_OutOf_Car_By", driver, client_name);
-						}
-						
-						if( g_iUserData[client][i_ToKill] == driver && driver != client ) {
-							ExitVehicle(driver, target, true);
-							CPrintToChat(driver, ""...MOD_TAG..." %T", "Cmd_OutOf_Car_By", driver, client_name);
-						}
-						
-						for(int i=1; i<=MaxClients; i++) {
-							if( !IsValidClient(i) )
-								continue;
-							if( g_iCarPassager[target][i] && g_iUserData[client][i_ToKill] == i && i != client ) {
-								LeaveVehiclePassager(i, target);
-								CPrintToChat(i, ""...MOD_TAG..." %T", "Cmd_OutOf_Car_By", i, client_name);
-							}
-						}
-						
-					}
-				}
-			}
-			return Plugin_Handled;
-		}
-	#endif
-		
-		
-		int appart = getZoneAppart(client);
-		bool in_appart = false;
-		
-		if( appart > 0 && g_iDoorOwner_v2[client][appart] ) {
-			in_appart = true;
-		}
-		
-		if( g_iUserData[client][i_Job] == 0 && !in_appart ) {
-			ACCESS_DENIED(client);
-		}
-
-		if( !IsValidClient(target) )
-			return Plugin_Handled;
-
-		if( !IsPlayerAlive(target) )
-			return Plugin_Handled;
-		
-		if( Client_GetVehicle(target) > 0 || rp_GetClientVehiclePassager(target) > 0 )
-			return Plugin_Handled;
-
-		if( (GetZoneBit( GetPlayerZone(client) ) & BITZONE_BLOCKOUT) || (GetZoneBit( GetPlayerZone(target) ) & BITZONE_BLOCKOUT) ) {
-			ACCESS_DENIED(client);
-		}
-
-		if( g_bUserData[client][b_MaySteal] == 0) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas /out pour le moment.");
-			return Plugin_Handled;
-		}
-		
-		if( g_iUserData[target][i_KidnappedBy] > 0 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas /out un joueur kidnappé.");
-			return Plugin_Handled;
-		}
-
-		int job_tree = g_iUserData[client][i_Job];
-
-		if( StringToInt( g_szJobList[ job_tree ][job_type_isboss] ) != 1 ) {
-			job_tree = StringToInt( g_szJobList[ job_tree ][job_type_ownboss] );
-		}
-
-		int ClientZone = GetPlayerZone(client);
-		int ClientZoneJob = StringToInt( g_szZoneList[ClientZone][zone_type_type] );
-
-		if( StringToInt( g_szJobList[ ClientZoneJob ][job_type_isboss] ) != 1 ) {
-			ClientZoneJob = StringToInt( g_szJobList[ ClientZoneJob ][job_type_ownboss] );
-		}
-
-		int TargetZone = GetPlayerZone(target);
-		int TargetZoneJob = StringToInt( g_szZoneList[TargetZone][zone_type_type] );
-
-		if( StringToInt( g_szJobList[ TargetZoneJob ][job_type_isboss] ) != 1 ) {
-			TargetZoneJob = StringToInt( g_szJobList[ TargetZoneJob ][job_type_ownboss] );
-		}
-		
-		if( ClientZone == 0 || ClientZoneJob <= 0 || ClientZoneJob != job_tree ) {
-			if( !in_appart ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser le /out ici.");
-				return Plugin_Handled;
-			}
-		}
-
-		if( ClientZoneJob != TargetZoneJob ) {
-			if( !in_appart ) {
-				CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'est pas dans votre zone.", target);
-				return Plugin_Handled;
-			}
-		}
-		if( ClientZone != TargetZone ) {
-			if( in_appart ) {
-				CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'est pas dans votre zone.", target);
-				return Plugin_Handled;
-			}
-		}
-		
-		if( in_appart ) {
-			if( g_iDoorOwner_v2[target][appart] ) {
-				CPrintToChat(client, "" ...MOD_TAG... " %N{default} est un de vos collocataires.", target);
-				return Plugin_Handled;
-			}
-			
-		}
-
-		if( StringToInt( g_szZoneList[ClientZone][zone_type_bit] ) & BITZONE_PERQUIZ ) {
-			if( !IsPolice(client) && !IsJuge(client) ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser le /out ici pour le moment.");
-				return Plugin_Handled;
-			}
-		}
-		
-		CPrintToChat(client, "" ...MOD_TAG... " %N{default} a été mis dehors.", target);
-		CPrintToChat(target, "" ...MOD_TAG... " %N{default} vous a mis dehors.", client);
-		LogToGame("[OUT] %L a sorti %L", client, target);
-		
-		SendPlayerToSpawn(target, true);
-		rp_ClientColorize(target);
-		
-		g_bUserData[client][b_MaySteal] = false;
-		if( GetClientTeam(target) == CS_TEAM_CT )
-			CreateTimer(10.0, AllowStealing, client);
-		else
-			CreateTimer(0.01, AllowStealing, client);
-
-		return Plugin_Handled;
-	}
 	else if(	strcmp(szSayTrig, "!engage", false) == 0		|| strcmp(szSayTrig, "/engage", false) == 0	||
-	strcmp(szSayTrig, "!engager", false) == 0		|| strcmp(szSayTrig, "/engager", false) == 0||
-	strcmp(szSayTrig, "!hire", false) == 0			|| strcmp(szSayTrig, "/hire", false) == 0
+		strcmp(szSayTrig, "!engager", false) == 0		|| strcmp(szSayTrig, "/engager", false) == 0||
+		strcmp(szSayTrig, "!hire", false) == 0			|| strcmp(szSayTrig, "/hire", false) == 0
 	) {
 
 		if( !IsBoss(client) ) {
@@ -818,8 +579,8 @@ public Action Command_Say(int client, int args) {
 		return Plugin_Handled;
 	}
 	else if(	strcmp(szSayTrig, "!vire", false) == 0		|| strcmp(szSayTrig, "/vire", false) == 0	||
-	strcmp(szSayTrig, "!virer", false) == 0		|| strcmp(szSayTrig, "/virer", false) == 0	||
-	strcmp(szSayTrig, "!fire", false) == 0		|| strcmp(szSayTrig, "/fire", false) == 0
+		strcmp(szSayTrig, "!virer", false) == 0		|| strcmp(szSayTrig, "/virer", false) == 0	||
+		strcmp(szSayTrig, "!fire", false) == 0		|| strcmp(szSayTrig, "/fire", false) == 0
 	) {
 
 		if( !IsBoss(client) ) {
@@ -834,8 +595,8 @@ public Action Command_Say(int client, int args) {
 		return Plugin_Handled;
 	}
 	else if(	strcmp(szSayTrig, "!demission", false) == 0		|| strcmp(szSayTrig, "/demission", false) == 0		||
-	strcmp(szSayTrig, "!demissionner", false) == 0	|| strcmp(szSayTrig, "/demissionner", false) == 0	||
-	strcmp(szSayTrig, "!demissionne", false) == 0	|| strcmp(szSayTrig, "/demissionne", false) == 0
+		strcmp(szSayTrig, "!demissionner", false) == 0	|| strcmp(szSayTrig, "/demissionner", false) == 0	||
+		strcmp(szSayTrig, "!demissionne", false) == 0	|| strcmp(szSayTrig, "/demissionne", false) == 0
 	) {
 
 		if( StringToInt(  g_szJobList[ g_iUserData[client][i_Job] ][job_type_isboss] ) == 1) {
@@ -880,287 +641,7 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	else if(	strcmp(szSayTrig, "!afk", false) == 0 || strcmp(szSayTrig, "/afk", false) == 0 ) {
-
-		if( !IsPolice(client) && !IsJuge(client) ) {
-			ACCESS_DENIED(client);
-		}
-		
-		int braquage = GetConVarInt(FindConVar("rp_braquage"));
-		
-		if( braquage > 0 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Attention, un braquage est en cours. Le fait de passer AFK diminue");
-			CPrintToChat(client, "" ...MOD_TAG... " les chances de win pour vos collègues. Si vous utilisez le /afk");
-			CPrintToChat(client, "" ...MOD_TAG... " avant le début du braquage, celui-ci restera équilibré. Pensez-y, merci.");
-			LogToGame("[CHEATING] [AFK-BRAQUAGE] %L.", client);
-		}
-		
-		if( g_bUserData[client][b_Stealing] ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez temporairement pas utiliser le /afk.");
-			return Plugin_Handled;
-		}
-		GetClientEyeAngles(client, g_Position[client]);
-		
-		g_iUserData[client][i_TimeAFK] += 180;
-		return Plugin_Handled;
-	}
-	else if(	strcmp(szSayTrig, "!assu", false) == 0		|| strcmp(szSayTrig, "/assu", false) == 0 ||
-	strcmp(szSayTrig, "!assurance", false) == 0	|| strcmp(szSayTrig, "/assurance", false) == 0
-	) {
-
-		CPrintToChat(client, "" ...MOD_TAG... " Votre assurance vous couvre pour %i$.", GetAssurence(client));
-		return Plugin_Handled;
-	}
-	else if(	strcmp(szSayTrig, "!heal", false) == 0		|| strcmp(szSayTrig, "/heal", false) == 0	) {
-
-		if( !IsMedic(client) ) {
-			ACCESS_DENIED(client);
-		}
-
-		if( !IsValidClient(target) )
-			return Plugin_Handled;
-
-		if( (GetZoneBit( GetPlayerZone(client) ) & BITZONE_BLOCKSELL)
-		) {
-			ACCESS_DENIED(client);
-		}
-
-		if( IsInPVP(client) ) {
-			ACCESS_DENIED(client);
-		}
-
-		float vecOrigin[3], vecOrigin2[3];
-		GetClientAbsOrigin(client, vecOrigin);
-		
-		// Setup menu
-		Handle menu = CreateMenu(eventGiveMenu_2Bis); // _2
-		SetMenuTitle(menu, "Liste des joueurs a cet endroit\n ");
-		
-		int amount = 0;
-		
-		char tmp[24], tmp2[64];
-		for(int i=1; i<=MaxClients; i++) {
-			if( !IsValidClient(i) )
-				continue;
-			if( !IsPlayerAlive(i) )
-				continue;
-
-			GetEntPropVector(i, Prop_Send, "m_vecOrigin", vecOrigin2);
-			if( GetVectorDistance(vecOrigin, vecOrigin2) >= MAX_AREA_DIST/2 )
-				continue;
-			
-			if( (GetZoneBit( GetPlayerZone(i) ) & BITZONE_BLOCKSELL) || IsInPVP(i)  ) {
-				continue;
-			}
-			
-			int heal = GetClientHealth(target);
-			int max_heal = GetClientMaxHealth(target);
-			int diff = (max_heal-heal);
-			if( diff <= 0 )
-				continue;
-			
-			
-			Format(tmp, sizeof(tmp), "7_1_0_0_%i", i);
-			
-			GetClientName(i, tmp2, 63);
-			AddMenuItem(menu, tmp, tmp2);
-			amount++;
-		}
-
-		if( amount > 0 ) {
-			SetMenuExitButton(menu, true);
-			DisplayMenu(menu, client, MENU_TIME_DURATION);
-		}
-		else {
-			CPrintToChat(client, "" ...MOD_TAG... " Il n'y a personne dans les environs.");
-			CloseHandle(menu);
-		}
-		
-		return Plugin_Handled;
-	}
-	else if(	strcmp(szSayTrig, "!mort", false) == 0		|| strcmp(szSayTrig, "/mort", false) == 0
-	) {
-
-		if( !IsPlayerAlive(client) )
-			return Plugin_Handled;
-
-		if( !IsMedic(client) ) {
-			ACCESS_DENIED(client);
-		}
-
-		float vecOrigin[3], vecOrigin2[3];
-		GetClientAbsOrigin(client, vecOrigin);
-
-		// Setup menu
-		Handle menu = CreateMenu(eventGiveMenu_2Bis); // _2
-		SetMenuTitle(menu, "Liste des joueurs mort a cet endroit\n ");
-
-		int amount = 0;
-		char tmp[24], tmp2[64];
-		for(int i=1; i<=MaxClients; i++) {
-			if( !IsValidClient(i) )
-				continue;
-			if( IsPlayerAlive(i) )
-				continue;
-			if( !g_bUserData[i][b_MayUseUltimate] )
-				continue;
-			
-			int ragdoll = GetEntPropEnt(i, Prop_Send, "m_hRagdoll");
-
-			if( !IsValidEdict(ragdoll) )
-				continue;
-			if( !IsValidEntity(ragdoll) )
-				continue;
-			
-			
-			GetEntPropVector(ragdoll, Prop_Send, "m_vecOrigin", vecOrigin2);
-			if( GetVectorDistance(vecOrigin, vecOrigin2) >= MAX_AREA_DIST*4 )
-				continue;
-			
-			Format(tmp, sizeof(tmp), "5_1_0_0_%i", i);
-			
-			GetClientName(i, tmp2, 63);
-			AddMenuItem(menu, tmp, tmp2);
-			amount++;
-		}
-
-		if( amount > 0 ) {
-			SetMenuExitButton(menu, true);
-			DisplayMenu(menu, client, MENU_TIME_DURATION);
-		}
-		else {
-			CPrintToChat(client, "" ...MOD_TAG... " Il n'y a personne a faire revivre dans les environs.");
-			CloseHandle(menu);
-		}
-		return Plugin_Handled;
-
-	}
-	else if(
-	strcmp(szSayTrig, "!vendre", false) == 0	|| strcmp(szSayTrig, "/vendre", false) == 0	||
-	strcmp(szSayTrig, "!v", false) == 0		|| strcmp(szSayTrig, "/v", false) == 0
-	) {
-
-
-		DrawVendreMenu(client);
-
-
-		return Plugin_Handled;
-	}
-	else if(
-		strcmp(szSayTrig, "!objet", false) == 0		|| strcmp(szSayTrig, "/objet", false) == 0	||
-		strcmp(szSayTrig, "!objets", false) == 0	|| strcmp(szSayTrig, "/objets", false) == 0	||
-		strcmp(szSayTrig, "!item", false) == 0		|| strcmp(szSayTrig, "/item", false) == 0	||
-		strcmp(szSayTrig, "!items", false) == 0		|| strcmp(szSayTrig, "/items", false) == 0	||
-		strcmp(szSayTrig, "!inbag", false) == 0		|| strcmp(szSayTrig, "/inbag", false) == 0	||
-		strcmp(szSayTrig, "!sac", false) == 0		|| strcmp(szSayTrig, "/sac", false) == 0	||
-		strcmp(szSayTrig, "!inventaire", false) == 0|| strcmp(szSayTrig, "/inventaire", false) == 0 ||
-		strcmp(szSayTrig, "!i", false) == 0			|| strcmp(szSayTrig, "/i", false) == 0
-	) {
-
-		OpenItemMenu(client);
-
-		return Plugin_Handled;
-	}
-	else if(	strcmp(szSayTrig, "!give", false) == 0		|| strcmp(szSayTrig, "/give", false) == 0	||
-				strcmp(szSayTrig, "!donner", false) == 0	|| strcmp(szSayTrig, "/donner", false) == 0
-	) {
-
-		if( !IsTutorialOver(client) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas terminé le tutorial.");
-			return Plugin_Handled;
-		}
-		
-		if( g_iUserData[client][i_SearchLVL] >= 1 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas donner de l'argnet quand vous êtes recherché par le Tribunal.");
-			return Plugin_Handled;
-		}		
-		
-		if( g_iUserData[client][i_PlayerLVL] < 12 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous devez être au moins de niveau 12 \"Simple Citoyen\", afin d'utiliser cette commande.");
-			return Plugin_Handled;
-		}
-		
-		if( g_bUserData[client][b_IsSearchByTribunal] ) {
-			PrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas donner de l'argnet quand vous êtes recherché par le Tribunal.");
-			return Plugin_Handled;
-		}
-		
-		if( g_bUserData[client][b_IsMuteGive] ) {
-			PrintToChat(client, "\x04[\x02MUTE\x01]\x01: Vous avez été interdit d'utiliser le /give.");
-			return Plugin_Handled;
-		}
-		
-		if( !IsValidClient(target) )
-			return Plugin_Handled;
-
-		if( !IsPlayerAlive(target) )
-			return Plugin_Handled;
-
-		int amount = StringToInt(szSayText);
-
-		if( g_iUserData[client][i_Money] < amount ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent.");
-			return Plugin_Handled;
-		}
-		if( amount <= 0 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous devez donner plus de 0$.");
-			return Plugin_Handled;
-		}
-		if( amount > 100000 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous devez donner moins de 100 000$.");
-			return Plugin_Handled;
-		}
-		
-		if( g_iUserData[client][i_GiveAmountTime]+amount > 100000 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas donner autant d'argent en aussi peu de temps.");
-			return Plugin_Handled;
-		}
-		char targetSteamID[64];
-		GetClientAuthId(target, AUTH_TYPE, targetSteamID, sizeof(targetSteamID), false);
-		
-		if( g_iDoubleCompte[client].FindString(targetSteamID) >= 0 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas donner d'argnet à l'un de vos double compte. S'il ne s'agit pas d'un double compte, vous pouvez contester cette déicision sur ce lien:");
-			GetClientAuthId(client, AUTH_TYPE, targetSteamID, sizeof(targetSteamID), false);
-			CPrintToChat(client, "" ...MOD_TAG... " https://rpweb.riplay.fr/index.php#/pilori/double/%s", targetSteamID);
-			return Plugin_Handled;
-		}
-		
-		
-
-		g_iUserStat[client][i_MoneySpent_Give] += amount;
-		g_iUserStat[target][i_MoneyEarned_Give] += amount;
-		rp_ClientMoney(client, i_Money, -amount);
-		rp_ClientMoney(target, i_Money, amount);
-		g_iUserData[client][i_GiveAmountTime] += amount;
-		Handle dp;
-		CreateDataTimer(60.0, TIMER_ReduceGiveAmount, dp, TIMER_DATA_HNDL_CLOSE);
-		WritePackCell(dp, client);
-		WritePackCell(dp, amount);
-		
-		
-
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez donné %i$ à %N.", amount, target);
-		CPrintToChat(target, "" ...MOD_TAG... " %N{default} vous a donné %i$.", client, amount);
-		
-		LogToGame("[TSX-RP] [GIVE-MONEY] %L a donné %i$ à %L.", client, amount, target);
-		
-		StoreUserData(client);
-		StoreUserData(target);		
-		if( CanMakeSuccess(client, success_list_robin_wood) ) {
-			if( (g_iUserData[target][i_Money]+g_iUserData[target][i_Bank]-amount) <= 500 && amount >= 10000 ) {
-				for( int i=0; i<10; i++ ) {
-					if( StrEqual(g_szSuccess_last_give[client][i], targetSteamID) )
-						break;
-					if( strlen(g_szSuccess_last_give[client][i]) < 1 ) {
-						Format(g_szSuccess_last_give[client][i], 31, "%s", targetSteamID);
-						g_iUserSuccess[client][success_list_robin_wood][sd_count] = (i+1);
-						break;
-					}
-				}
-			}
-		}
-		return Plugin_Handled;
-	}
+	
 	else if(	strcmp(szSayTrig, "!givexp", false) == 0		|| strcmp(szSayTrig, "/givexp", false) == 0 ) {
 
 		if( !IsTutorialOver(client) ) {
@@ -1318,7 +799,7 @@ public Action Command_Say(int client, int args) {
 		return Plugin_Handled;
 	}
 	else if(	strcmp(szSayTrig, "!win", false) == 0		|| strcmp(szSayTrig, "/win", false) == 0	||
-	strcmp(szSayTrig, "!gagnant", false) == 0		|| strcmp(szSayTrig, "/gagnant", false) == 0
+		strcmp(szSayTrig, "!gagnant", false) == 0		|| strcmp(szSayTrig, "/gagnant", false) == 0
 	) {
 
 		char query[1024];
@@ -1400,6 +881,527 @@ public Action Command_Say(int client, int args) {
 
 		SQL_TQuery(g_hBDD, menuDeleteNote_Client, query, client, DBPrio_High);
 
+		return Plugin_Handled;
+	}
+		else if(	strcmp(szSayTrig, "!afk", false) == 0 || strcmp(szSayTrig, "/afk", false) == 0 ) {
+
+		if( !IsPolice(client) && !IsJuge(client) ) {
+			ACCESS_DENIED(client);
+		}
+		
+		int braquage = GetConVarInt(FindConVar("rp_braquage"));
+		
+		if( braquage > 0 ) {
+			CPrintToChat(client, "" ...MOD_TAG... " Attention, un braquage est en cours. Le fait de passer AFK diminue");
+			CPrintToChat(client, "" ...MOD_TAG... " les chances de win pour vos collègues. Si vous utilisez le /afk");
+			CPrintToChat(client, "" ...MOD_TAG... " avant le début du braquage, celui-ci restera équilibré. Pensez-y, merci.");
+			LogToGame("[CHEATING] [AFK-BRAQUAGE] %L.", client);
+		}
+		
+		if( g_bUserData[client][b_Stealing] ) {
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez temporairement pas utiliser le /afk.");
+			return Plugin_Handled;
+		}
+		GetClientEyeAngles(client, g_Position[client]);
+		
+		g_iUserData[client][i_TimeAFK] += 180;
+		return Plugin_Handled;
+	}
+	else if(	strcmp(szSayTrig, "!assu", false) == 0		|| strcmp(szSayTrig, "/assu", false) == 0 ||
+		strcmp(szSayTrig, "!assurance", false) == 0	|| strcmp(szSayTrig, "/assurance", false) == 0
+	) {
+
+		CPrintToChat(client, "" ...MOD_TAG... " Votre assurance vous couvre pour %i$.", GetAssurence(client));
+		return Plugin_Handled;
+	}
+	else if(	strcmp(szSayTrig, "!heal", false) == 0		|| strcmp(szSayTrig, "/heal", false) == 0	) {
+
+		if( !IsMedic(client) ) {
+			ACCESS_DENIED(client);
+		}
+
+		if( !IsValidClient(target) )
+			return Plugin_Handled;
+
+		if( (GetZoneBit( GetPlayerZone(client) ) & BITZONE_BLOCKSELL)
+		) {
+			ACCESS_DENIED(client);
+		}
+
+		if( IsInPVP(client) ) {
+			ACCESS_DENIED(client);
+		}
+
+		float vecOrigin[3], vecOrigin2[3];
+		GetClientAbsOrigin(client, vecOrigin);
+		
+		// Setup menu
+		Handle menu = CreateMenu(eventGiveMenu_2Bis); // _2
+		SetMenuTitle(menu, "Liste des joueurs a cet endroit\n ");
+		
+		int amount = 0;
+		
+		char tmp[24], tmp2[64];
+		for(int i=1; i<=MaxClients; i++) {
+			if( !IsValidClient(i) )
+				continue;
+			if( !IsPlayerAlive(i) )
+				continue;
+
+			GetEntPropVector(i, Prop_Send, "m_vecOrigin", vecOrigin2);
+			if( GetVectorDistance(vecOrigin, vecOrigin2) >= MAX_AREA_DIST/2 )
+				continue;
+			
+			if( (GetZoneBit( GetPlayerZone(i) ) & BITZONE_BLOCKSELL) || IsInPVP(i)  ) {
+				continue;
+			}
+			
+			int heal = GetClientHealth(target);
+			int max_heal = GetClientMaxHealth(target);
+			int diff = (max_heal-heal);
+			if( diff <= 0 )
+				continue;
+			
+			
+			Format(tmp, sizeof(tmp), "7_1_0_0_%i", i);
+			
+			GetClientName(i, tmp2, 63);
+			AddMenuItem(menu, tmp, tmp2);
+			amount++;
+		}
+
+		if( amount > 0 ) {
+			SetMenuExitButton(menu, true);
+			DisplayMenu(menu, client, MENU_TIME_DURATION);
+		}
+		else {
+			CPrintToChat(client, "" ...MOD_TAG... " Il n'y a personne dans les environs.");
+			CloseHandle(menu);
+		}
+		
+		return Plugin_Handled;
+	}
+	else if(	strcmp(szSayTrig, "!mort", false) == 0		|| strcmp(szSayTrig, "/mort", false) == 0
+	) {
+
+		if( !IsPlayerAlive(client) )
+			return Plugin_Handled;
+
+		if( !IsMedic(client) ) {
+			ACCESS_DENIED(client);
+		}
+
+		float vecOrigin[3], vecOrigin2[3];
+		GetClientAbsOrigin(client, vecOrigin);
+
+		// Setup menu
+		Handle menu = CreateMenu(eventGiveMenu_2Bis); // _2
+		SetMenuTitle(menu, "Liste des joueurs mort a cet endroit\n ");
+
+		int amount = 0;
+		char tmp[24], tmp2[64];
+		for(int i=1; i<=MaxClients; i++) {
+			if( !IsValidClient(i) )
+				continue;
+			if( IsPlayerAlive(i) )
+				continue;
+			if( !g_bUserData[i][b_MayUseUltimate] )
+				continue;
+			
+			int ragdoll = GetEntPropEnt(i, Prop_Send, "m_hRagdoll");
+
+			if( !IsValidEdict(ragdoll) )
+				continue;
+			if( !IsValidEntity(ragdoll) )
+				continue;
+			
+			
+			GetEntPropVector(ragdoll, Prop_Send, "m_vecOrigin", vecOrigin2);
+			if( GetVectorDistance(vecOrigin, vecOrigin2) >= MAX_AREA_DIST*4 )
+				continue;
+			
+			Format(tmp, sizeof(tmp), "5_1_0_0_%i", i);
+			
+			GetClientName(i, tmp2, 63);
+			AddMenuItem(menu, tmp, tmp2);
+			amount++;
+		}
+
+		if( amount > 0 ) {
+			SetMenuExitButton(menu, true);
+			DisplayMenu(menu, client, MENU_TIME_DURATION);
+		}
+		else {
+			CPrintToChat(client, "" ...MOD_TAG... " Il n'y a personne a faire revivre dans les environs.");
+			CloseHandle(menu);
+		}
+		return Plugin_Handled;
+
+	}
+	// ----------------------------------------------------------------------------------------------------------------------------------
+	if( GetZoneBit( GetPlayerZone(client) ) & BITZONE_BLOCKTALK ) {
+		ACCESS_DENIED(client);
+	}
+	if(strcmp(szSayTrig, "!use", false) == 0 || strcmp(szSayTrig, "/use", false) == 0) {
+		
+		if( IsValidDoor(target) && Entity_GetDistance(client, target) < MAX_AREA_DIST ) {
+			
+			int door_bdd = g_iDoorDouble[target - MaxClients ];
+			int wasLocked = GetEntProp(target, Prop_Data, "m_bLocked");
+			bool canUnlock = IsPlayerHaveKey(client, target, 2);
+			bool canLock = IsPlayerHaveKey(client, target, 1);
+
+			if( wasLocked && canUnlock ) {
+				SetEntProp(target, Prop_Data, "m_bLocked", 0);
+				if( door_bdd > 0 )
+					SetEntProp(door_bdd+MaxClients, Prop_Data, "m_bLocked", 0);
+			}
+			
+			if( canUnlock || !wasLocked ) {
+				rp_AcceptEntityInput(target, "Toggle", client);
+				if( door_bdd > 0 )
+					rp_AcceptEntityInput(door_bdd+MaxClients, "Toggle", client);
+			}
+
+			if( wasLocked && canLock ) {
+				ScheduleEntityInput(target, 0.001, "Lock");
+				if( door_bdd > 0 )
+					ScheduleEntityInput(door_bdd+MaxClients, 0.001, "Lock");
+			}
+		}
+		else if( rp_GetBuildingData(target, BD_owner) == client ) {
+			float vecAngles[3];
+			Entity_GetAbsAngles(target, vecAngles);
+			vecAngles[1] += 45.0;
+			if( vecAngles[1] > 360.0 )
+				vecAngles[1] -= 360.0;
+			
+			TeleportEntity(target, NULL_VECTOR, vecAngles, NULL_VECTOR);
+		}
+
+		return Plugin_Handled;
+	}
+	else if(strcmp(szSayTrig, "!forceuse", false) == 0 || strcmp(szSayTrig, "/forceuse", false) == 0) {
+
+		if( !IsAdmin(client) ) {
+			ACCESS_DENIED(client);
+		}
+
+		//Open:
+		rp_AcceptEntityInput(target, "Toggle", client);
+
+		return Plugin_Handled;
+	}
+	else if(strcmp(szSayTrig, "!forcelock", false) == 0 || strcmp(szSayTrig, "/forcelock", false) == 0) {
+
+		if( !IsAdmin(client) ) {
+			ACCESS_DENIED(client);
+		}
+
+		g_iDoorNouse[ (target - MaxClients) ] = 1;
+
+
+		return Plugin_Handled;
+	}
+	else if(strcmp(szSayTrig, "!forceunlock", false) == 0 || strcmp(szSayTrig, "/forceunlock", false) == 0) {
+
+
+		if( !IsAdmin(client) ) {
+			ACCESS_DENIED(client);
+		}
+
+		g_iDoorNouse[ (target - MaxClients) ] = 0;
+
+		return Plugin_Handled;
+	}
+	else if(strcmp(szSayTrig, "!lock", false) == 0 || strcmp(szSayTrig, "/lock", false) == 0) {
+
+		target = GetClientAimTarget(client, false);
+		if( !IsValidDoor(target) && IsValidEdict(target) && IsValidDoor(Entity_GetParent(target)) )
+			target = Entity_GetParent(target);
+
+		ToggleDoorLock(client, target, 1);
+
+		return Plugin_Handled;
+	}
+	else if(strcmp(szSayTrig, "!unlock", false) == 0 || strcmp(szSayTrig, "/unlock", false) == 0) {
+
+		target = GetClientAimTarget(client, false);
+		if( !IsValidDoor(target) && IsValidEdict(target) && IsValidDoor(Entity_GetParent(target)) )
+			target = Entity_GetParent(target);
+
+		ToggleDoorLock(client, target, 2);
+
+		return Plugin_Handled;
+	}
+	else if( strcmp(szSayTrig, "!out", false) == 0		|| strcmp(szSayTrig, "/out", false) == 0 ) {
+
+	#if defined USING_VEHICLE
+		if( IsValidVehicle(target) ) {
+			int car = GetEntPropEnt(client, Prop_Send, "m_hVehicle");
+			int driver = GetEntPropEnt(target, Prop_Send, "m_hPlayer");
+			if( IsEntitiesNear(client, target)) {
+				if( car == -1 ) {
+					if( IsValidClient(driver) ) {
+						char client_name[128];
+						GetClientName2(client, client_name, sizeof(client_name), false);
+						if( g_iVehicleData[target][car_owner] == client && driver != client ) {
+							ExitVehicle(driver, target, true);
+							CPrintToChat(driver, ""...MOD_TAG..." %T", "Cmd_OutOf_Car_By", driver, client_name);
+						}
+						
+						if( g_iUserData[client][i_ToKill] == driver && driver != client ) {
+							ExitVehicle(driver, target, true);
+							CPrintToChat(driver, ""...MOD_TAG..." %T", "Cmd_OutOf_Car_By", driver, client_name);
+						}
+						
+						for(int i=1; i<=MaxClients; i++) {
+							if( !IsValidClient(i) )
+								continue;
+							if( g_iCarPassager[target][i] && g_iUserData[client][i_ToKill] == i && i != client ) {
+								LeaveVehiclePassager(i, target);
+								CPrintToChat(i, ""...MOD_TAG..." %T", "Cmd_OutOf_Car_By", i, client_name);
+							}
+						}
+						
+					}
+				}
+			}
+			return Plugin_Handled;
+		}
+	#endif
+		
+		
+		int appart = getZoneAppart(client);
+		bool in_appart = false;
+		
+		if( appart > 0 && g_iDoorOwner_v2[client][appart] ) {
+			in_appart = true;
+		}
+		
+		if( g_iUserData[client][i_Job] == 0 && !in_appart ) {
+			ACCESS_DENIED(client);
+		}
+
+		if( !IsValidClient(target) )
+			return Plugin_Handled;
+
+		if( !IsPlayerAlive(target) )
+			return Plugin_Handled;
+		
+		if( Client_GetVehicle(target) > 0 || rp_GetClientVehiclePassager(target) > 0 )
+			return Plugin_Handled;
+
+		if( (GetZoneBit( GetPlayerZone(client) ) & BITZONE_BLOCKOUT) || (GetZoneBit( GetPlayerZone(target) ) & BITZONE_BLOCKOUT) ) {
+			ACCESS_DENIED(client);
+		}
+
+		if( g_bUserData[client][b_MaySteal] == 0) {
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas /out pour le moment.");
+			return Plugin_Handled;
+		}
+		
+		if( g_iUserData[target][i_KidnappedBy] > 0 ) {
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas /out un joueur kidnappé.");
+			return Plugin_Handled;
+		}
+
+		int job_tree = g_iUserData[client][i_Job];
+
+		if( StringToInt( g_szJobList[ job_tree ][job_type_isboss] ) != 1 ) {
+			job_tree = StringToInt( g_szJobList[ job_tree ][job_type_ownboss] );
+		}
+
+		int ClientZone = GetPlayerZone(client);
+		int ClientZoneJob = StringToInt( g_szZoneList[ClientZone][zone_type_type] );
+
+		if( StringToInt( g_szJobList[ ClientZoneJob ][job_type_isboss] ) != 1 ) {
+			ClientZoneJob = StringToInt( g_szJobList[ ClientZoneJob ][job_type_ownboss] );
+		}
+
+		int TargetZone = GetPlayerZone(target);
+		int TargetZoneJob = StringToInt( g_szZoneList[TargetZone][zone_type_type] );
+
+		if( StringToInt( g_szJobList[ TargetZoneJob ][job_type_isboss] ) != 1 ) {
+			TargetZoneJob = StringToInt( g_szJobList[ TargetZoneJob ][job_type_ownboss] );
+		}
+		
+		if( ClientZone == 0 || ClientZoneJob <= 0 || ClientZoneJob != job_tree ) {
+			if( !in_appart ) {
+				CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser le /out ici.");
+				return Plugin_Handled;
+			}
+		}
+
+		if( ClientZoneJob != TargetZoneJob ) {
+			if( !in_appart ) {
+				CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'est pas dans votre zone.", target);
+				return Plugin_Handled;
+			}
+		}
+		if( ClientZone != TargetZone ) {
+			if( in_appart ) {
+				CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'est pas dans votre zone.", target);
+				return Plugin_Handled;
+			}
+		}
+		
+		if( in_appart ) {
+			if( g_iDoorOwner_v2[target][appart] ) {
+				CPrintToChat(client, "" ...MOD_TAG... " %N{default} est un de vos collocataires.", target);
+				return Plugin_Handled;
+			}
+			
+		}
+
+		if( StringToInt( g_szZoneList[ClientZone][zone_type_bit] ) & BITZONE_PERQUIZ ) {
+			if( !IsPolice(client) && !IsJuge(client) ) {
+				CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser le /out ici pour le moment.");
+				return Plugin_Handled;
+			}
+		}
+		
+		CPrintToChat(client, "" ...MOD_TAG... " %N{default} a été mis dehors.", target);
+		CPrintToChat(target, "" ...MOD_TAG... " %N{default} vous a mis dehors.", client);
+		LogToGame("[OUT] %L a sorti %L", client, target);
+		
+		SendPlayerToSpawn(target, true);
+		rp_ClientColorize(target);
+		
+		g_bUserData[client][b_MaySteal] = false;
+		if( GetClientTeam(target) == CS_TEAM_CT )
+			CreateTimer(10.0, AllowStealing, client);
+		else
+			CreateTimer(0.01, AllowStealing, client);
+
+		return Plugin_Handled;
+	}
+	
+
+	else if(
+		strcmp(szSayTrig, "!vendre", false) == 0	|| strcmp(szSayTrig, "/vendre", false) == 0	||
+		strcmp(szSayTrig, "!v", false) == 0		|| strcmp(szSayTrig, "/v", false) == 0
+	) {
+
+
+		DrawVendreMenu(client);
+
+
+		return Plugin_Handled;
+	}
+	else if(
+		strcmp(szSayTrig, "!objet", false) == 0		|| strcmp(szSayTrig, "/objet", false) == 0	||
+		strcmp(szSayTrig, "!objets", false) == 0	|| strcmp(szSayTrig, "/objets", false) == 0	||
+		strcmp(szSayTrig, "!item", false) == 0		|| strcmp(szSayTrig, "/item", false) == 0	||
+		strcmp(szSayTrig, "!items", false) == 0		|| strcmp(szSayTrig, "/items", false) == 0	||
+		strcmp(szSayTrig, "!inbag", false) == 0		|| strcmp(szSayTrig, "/inbag", false) == 0	||
+		strcmp(szSayTrig, "!sac", false) == 0		|| strcmp(szSayTrig, "/sac", false) == 0	||
+		strcmp(szSayTrig, "!inventaire", false) == 0|| strcmp(szSayTrig, "/inventaire", false) == 0 ||
+		strcmp(szSayTrig, "!i", false) == 0			|| strcmp(szSayTrig, "/i", false) == 0
+	) {
+
+		OpenItemMenu(client);
+
+		return Plugin_Handled;
+	}
+	else if(	strcmp(szSayTrig, "!give", false) == 0		|| strcmp(szSayTrig, "/give", false) == 0	||
+				strcmp(szSayTrig, "!donner", false) == 0	|| strcmp(szSayTrig, "/donner", false) == 0
+	) {
+
+		if( !IsTutorialOver(client) ) {
+			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas terminé le tutorial.");
+			return Plugin_Handled;
+		}
+		
+		if( g_iUserData[client][i_SearchLVL] >= 1 ) {
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas donner de l'argnet quand vous êtes recherché par le Tribunal.");
+			return Plugin_Handled;
+		}		
+		
+		if( g_iUserData[client][i_PlayerLVL] < 12 ) {
+			CPrintToChat(client, "" ...MOD_TAG... " Vous devez être au moins de niveau 12 \"Simple Citoyen\", afin d'utiliser cette commande.");
+			return Plugin_Handled;
+		}
+		
+		if( g_bUserData[client][b_IsSearchByTribunal] ) {
+			PrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas donner de l'argnet quand vous êtes recherché par le Tribunal.");
+			return Plugin_Handled;
+		}
+		
+		if( g_bUserData[client][b_IsMuteGive] ) {
+			PrintToChat(client, "\x04[\x02MUTE\x01]\x01: Vous avez été interdit d'utiliser le /give.");
+			return Plugin_Handled;
+		}
+		
+		if( !IsValidClient(target) )
+			return Plugin_Handled;
+
+		if( !IsPlayerAlive(target) )
+			return Plugin_Handled;
+
+		int amount = StringToInt(szSayText);
+
+		if( g_iUserData[client][i_Money] < amount ) {
+			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent.");
+			return Plugin_Handled;
+		}
+		if( amount <= 0 ) {
+			CPrintToChat(client, "" ...MOD_TAG... " Vous devez donner plus de 0$.");
+			return Plugin_Handled;
+		}
+		if( amount > 100000 ) {
+			CPrintToChat(client, "" ...MOD_TAG... " Vous devez donner moins de 100 000$.");
+			return Plugin_Handled;
+		}
+		
+		if( g_iUserData[client][i_GiveAmountTime]+amount > 100000 ) {
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas donner autant d'argent en aussi peu de temps.");
+			return Plugin_Handled;
+		}
+		char targetSteamID[64];
+		GetClientAuthId(target, AUTH_TYPE, targetSteamID, sizeof(targetSteamID), false);
+		
+		if( g_iDoubleCompte[client].FindString(targetSteamID) >= 0 ) {
+			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas donner d'argnet à l'un de vos double compte. S'il ne s'agit pas d'un double compte, vous pouvez contester cette déicision sur ce lien:");
+			GetClientAuthId(client, AUTH_TYPE, targetSteamID, sizeof(targetSteamID), false);
+			CPrintToChat(client, "" ...MOD_TAG... " https://rpweb.riplay.fr/index.php#/pilori/double/%s", targetSteamID);
+			return Plugin_Handled;
+		}
+		
+		
+
+		g_iUserStat[client][i_MoneySpent_Give] += amount;
+		g_iUserStat[target][i_MoneyEarned_Give] += amount;
+		rp_ClientMoney(client, i_Money, -amount);
+		rp_ClientMoney(target, i_Money, amount);
+		g_iUserData[client][i_GiveAmountTime] += amount;
+		Handle dp;
+		CreateDataTimer(60.0, TIMER_ReduceGiveAmount, dp, TIMER_DATA_HNDL_CLOSE);
+		WritePackCell(dp, client);
+		WritePackCell(dp, amount);
+		
+		
+
+		CPrintToChat(client, "" ...MOD_TAG... " Vous avez donné %i$ à %N.", amount, target);
+		CPrintToChat(target, "" ...MOD_TAG... " %N{default} vous a donné %i$.", client, amount);
+		
+		LogToGame("[TSX-RP] [GIVE-MONEY] %L a donné %i$ à %L.", client, amount, target);
+		
+		StoreUserData(client);
+		StoreUserData(target);		
+		if( CanMakeSuccess(client, success_list_robin_wood) ) {
+			if( (g_iUserData[target][i_Money]+g_iUserData[target][i_Bank]-amount) <= 500 && amount >= 10000 ) {
+				for( int i=0; i<10; i++ ) {
+					if( StrEqual(g_szSuccess_last_give[client][i], targetSteamID) )
+						break;
+					if( strlen(g_szSuccess_last_give[client][i]) < 1 ) {
+						Format(g_szSuccess_last_give[client][i], 31, "%s", targetSteamID);
+						g_iUserSuccess[client][success_list_robin_wood][sd_count] = (i+1);
+						break;
+					}
+				}
+			}
+		}
 		return Plugin_Handled;
 	}
 	

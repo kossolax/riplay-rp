@@ -15,7 +15,7 @@
 
 #define __LAST_REV__			"8.2 - REBORN"
 #define	MOD_TAG					"{lightblue}[RIPLAY.FR]{default}"
-#define MOD_URL					"https://rpweb.riplay.fr/index.php"
+#define MOD_URL					"https://rpweb.riplay.fr/"
 
 //#define DEBUG
 #define MAX_LOCATIONS			150
