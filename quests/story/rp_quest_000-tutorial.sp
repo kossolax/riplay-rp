@@ -567,7 +567,7 @@ public void Q10_Frame(int objectiveID, int client) {
 }
 // ----------------------------------------------------------------------------
 public void Q12_Frame(int objectiveID, int client) {
-	float origin[3], target[3] = {2472.0, -1063.0, -2144.0};
+	float origin[3], target[3] = {677.0, -1109.0, -2135.0};
 	GetClientAbsOrigin(client, origin);
 	
 	if( rp_ClientCanDrawPanel(client) ) {
@@ -590,7 +590,7 @@ public void Q12_Frame(int objectiveID, int client) {
 		DrawPanelText(panel, " ");
 		DrawPanelText(panel, " Bon jeu!");
 		DrawPanelText(panel, " ");
-		DrawPanelText(panel, "→ Rendez-vous devant l'hôpital afin de");
+		DrawPanelText(panel, "→ Rendez-vous a coté l'hôpital afin de");
 		DrawPanelText(panel, "commencer votre aventure RolePlay.");
 		
 		rp_SendPanelToClient(panel, client, 1.1);
@@ -749,6 +749,9 @@ public void Q14_Done(int objectiveID, int client) {
 
 	Format(szQuery, sizeof(szQuery), "DELETE FROM `rp_users3` WHERE `steamid`='%s';", szSteamID);
 	SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery);
+	
+	
+	CPrintToChat(client, "" ...MOD_TAG... " Voici une invitation pour rejoindre notre discord: {green}https://discord.gg/hw4GSSw{default}");
 }
 void drawJobMenu(int client) {
 	char tmp[128], tmp2[8];
