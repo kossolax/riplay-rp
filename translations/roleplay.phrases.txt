@@ -324,6 +324,11 @@
 		"fr"	"En raison de votre mauvais comportement, il vous est temporairement interdit de participer à un event."
 		"en"	"Due to your misconduct, you are temporarily banned from participating in an event."
 	}
+	"Banned_Quest"
+	{
+		"fr"	"En raison de votre mauvais comportement, il vous est temporairement interdit de participer aux quêtes."
+		"en"	"Due to your misconduct, you are temporarily banned from participating in a  quest."
+	}
 	"Ignore"
 	{
 		"fr"	"Ignorer"

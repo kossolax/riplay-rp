@@ -43,14 +43,13 @@ void DisplayPhoneMenu(int client) {
 	WritePackFloat(dp, vecDir[0]);
 	WritePackFloat(dp, vecDir[1]);
 	
-	char msg[256], expl[32][80];
-	Format(msg, sizeof(msg), "%T", "Phone_Mission_Send", client, g_szZoneList[GetPointZone(vecDir)][zone_type_name]);
-	String_WordWrap(msg, 40);
-	int len = ExplodeString(msg, "\n", expl, sizeof(expl), sizeof(expl[]));
-	
 	Handle menu = CreateMenu(MenuNothing);
 	SetMenuTitle(menu, "%T\n ", "Phone_Mission", client);
 	
+	char msg[256], expl[32][64];
+	Format(msg, sizeof(msg), "%T", "Phone_Mission_Send", client, g_szZoneList[GetPointZone(vecDir)][zone_type_name]);
+	String_WordWrap(msg, 40);
+	int len = ExplodeString(msg, "\n", expl, sizeof(expl), sizeof(expl[]));
 	for (int i = 0; i < len; i++) {
 		AddMenuItem(menu, "_", expl[i], ITEMDRAW_DISABLED);
 	}

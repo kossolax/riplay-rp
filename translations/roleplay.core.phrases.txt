@@ -179,6 +179,26 @@
 		"#format"	"{1:s}"
 		"fr"		"Un hélicoptère vous envois un colis, il sera envoyé près de: {1}."
 	}
+	"Phone_Quest"
+	{
+		"fr"		"Menu des quêtes:"
+	}
+	"Phone_Quest_None"
+	{
+		"fr"		"Vous n'avez aucune quête disponible pour le moment."
+	}
+	"Phone_Quest_Cancel"
+	{
+		"fr"		"Vous avez déjà une quête en cours. Si vous abandonnez, vous ne pourrezpas reprendre cette quête pendant au moins 24 heures. Souhaitez-vous l'interrompre?"
+	}
+	"Phone_Quest_Cancel_Continue"
+	{
+		"fr"		"Non, je veux continuer"
+	}
+	"Phone_Quest_Cancel_Stop"
+	{
+		"fr"		"Oui, je veux l'arrêter"
+	}
 	// ----------------------------------------------------------------------------------------------
 	"Ban_Cash"
 	{
