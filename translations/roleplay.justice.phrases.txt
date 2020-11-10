@@ -73,11 +73,6 @@
 		"fr"	"Veuillez selectionner une plainte du Tribunal forum en premier."
 		"en"	"Please select a forum Court complaint first."
 	}
-	"Tribunal_Error_WrongCode"
-	{
-		"fr"	"Le code de confirmation est incorrect."
-		"en"	"The confirmation code is incorrect."
-	}
 	"Tribunal_Forum_Confirm_Condamn"
 	{
 		"fr"	"Afin de confirmer votre jugement, tappez maintenant /jgmt {red}{1}{default} heure amende raison"

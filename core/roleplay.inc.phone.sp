@@ -46,7 +46,7 @@ void DisplayPhoneMenu(int client) {
 	Handle menu = CreateMenu(MenuNothing);
 	SetMenuTitle(menu, "%T\n ", "Phone_Mission", client);
 	
-	char msg[256], expl[32][64];
+	char msg[1024], expl[32][64];
 	Format(msg, sizeof(msg), "%T", "Phone_Mission_Send", client, g_szZoneList[GetPointZone(vecDir)][zone_type_name]);
 	String_WordWrap(msg, 40);
 	int len = ExplodeString(msg, "\n", expl, sizeof(expl), sizeof(expl[]));

@@ -28,6 +28,11 @@
 		"fr"		"Vous n'êtes pas le propriétaire de cet appartement."
 		"en"		"You are not the owner of this apartment."
 	}
+	"Appart_MustHaveKey"
+	{
+		"fr"		"Vous n'avez pas les clés de cet appartement."
+		"en"		"You does not have the keys to this apartment."
+	}
 	"Appart_RemoveKey"
 	{
 		"fr"		"Quel colocataire voulez-vous virer?"
@@ -48,6 +53,12 @@
 		"#format"	"{1:d},{2:s}"
 		"fr"		"Les clés de l'appartement n°{red}{1}{default} a été retirées à {red}{2}{default}."
 		"en"		"The keys to apartment n°{red}{1}{default} have been removed at {red}{2}{default}."
+	}
+	"Appart_KeyRemovedSelf"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"		"Vous avez quitté l'appartement n°{red}{1}{default}."
+		"en"		"You have left apartment n°{red}{1}{default}."
 	}
 	"Appart_KeyRemovedBy"
 	{

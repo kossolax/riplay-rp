@@ -96,7 +96,7 @@
 	}
 	"Force_Distance_Nearby"
 	{
-		"#format"	"{1:t}"
+		"fr"	"PROCHE"
 	}
 	"Force_Distance_Away"
 	{
@@ -173,11 +173,249 @@
 	{
 		"fr"		"Porter plainte contre un Policier:"
 	}
-	// ----------------------------------------------------------------------------------------------
-	"Chat_Admin"
+	"Cmd_Report"
+	{
+		"fr"		"Porter plainte contre un Citoyen:"
+	}
+	"Cmd_Money"
+	{
+		"#format"	"{1:d},{2:d},{3:s}"
+		"fr"		"Argent: {green}{1}{default}$ - En Banque: {green}{2}{default}$ - Job: {green}{3}{default}."
+	}
+	"Cmd_Vita"
+	{
+		"#format"	"{1:.1f},{2:d}"
+		"fr"		"Vous avez êtes maintenant niveau {green}{2}{default} en vitalité avec {green}{1}{default} point(s)."
+	}
+	"Cmd_REV"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"fr"		"Dernière révision: {1} {2} TAG: {3}"
+	}
+	"Cmd_Skin"
+	{
+		"fr"		"Vous devez vous rendre dans une cabine d'essage."
+	}
+	"Cmd_Assu"
+	{
+		"fr"		"Votre assurance vous couvre pour {green}{1}{default}$."
+	}
+	"Cmd_AddNote"
 	{
 		"#format"	"{1:s},{2:s}"
-		"fr"		"{1} ({red}ADMIN{default}): {2}"
+		"fr"		"{1} a ajouté la note: {red}{2}{default}."
+	}
+	"Cmd_ListOfPlayer"
+	{
+		"fr"		"Liste des personnes:"
+	}
+	"Cmd_ListOfPlayer_None"
+	{
+		"fr"		"Il y'a personne."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Cmd_Out_Cannot_Kidnap"
+	{
+		"fr"		"Vous ne pouvez pas /out une personne kidnappée."
+	}
+	"Cmd_Out_Cannot_Coloc"
+	{
+		"fr"		"Vous ne pouvez pas /out l'un de vos colocataire."
+	}
+	"Cmd_Out_Cannot_Perquiz"
+	{
+		"fr"		"Vous ne pouvez pas /out un membre des forces de l'ordre durant une perquisition."
+	}
+	"Cmd_Out_Cannot_Zone"
+	{
+		"fr"		"Vous ne pouvez pas /out cette personne dans cette zone."
+	}
+	"Cmd_Out_Target"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez mis dehors {1}."
+	}
+	"Cmd_Out_Self"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez été mis dehors par {1}."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Cmd_Dismiss_Cannot_Chef"
+	{
+		"fr"		"Les chefs de jobs doivent contacter un administrateur pour démissionner."
+	}
+	"Cmd_Dismiss_Cannot_Quest"
+	{
+		"fr"		"Vous devez d'abord terminer votre quête pour pouvoir démissionner."
+	}
+	"Cmd_Dismiss_Warning"
+	{
+		"fr"		"{red}STOP!{default}  Soyez certain d'avoir un nouvel emploi avant de démissionner.\nIl faut {red}OBLIGATOIREMENT{default} contacter un {red}CHEF DE METIER{default} pour en récupérer un.\nSans quoi, vous resterez sans emploi pour un long moment..."
+	}
+	"Cmd_Dismiss_Confirm"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Confirmez en tapant: {red}/demission {1}{default}"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Cmd_Enquete_Call"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"fr"		"{1} souhaite faire une enquête sur {2}, il se trouve {3}."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Cmd_GiveXP_NotEnought"
+	{
+		"fr"		"Vous n'avez pas assez d'XP à donner."
+	}
+	"Cmd_GiveXP_MoreThan"
+	{
+		"fr"		"Vous devez donner plus de 100XP."
+	}
+	"Cmd_GiveXP_Target"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"		"Vous avez donné {green}{1}{default} points d'expérience à {green}{2}{default}."
+	}
+	"Cmd_GiveXP_Self"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"		"Vous avez reçu {green}{1}{default} points d'expérience de {green}{2}{default}."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Cmd_Give_NotEnought"
+	{
+		"fr"		"Vous n'avez pas assez d'argent à donner."
+	}
+	"Cmd_Give_MoreThan"
+	{
+		"fr"		"Vous devez donner plus de 0$."
+	}
+	"Cmd_Give_LessThan"
+	{
+		"fr"		"Vous devez donner moins de 100.000$."
+	}
+	"Cmd_Give_TooFast"
+	{
+		"fr"		"Vous ne pouvez pas donner autant d'argent en aussi peu de temps."
+	}
+	"Cmd_Give_Double"
+	{
+		"fr"		"Vous ne pouvez pas donner d'argnet à l'un de vos double compte. S'il ne s'agit pas d'un double compte, vous pouvez contester cette déicision sur ce lien:"
+	}
+	"Cmd_Give_Target"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"		"Vous avez donné {green}{1}{default}$ à {green}{2}{default}."
+	}
+	"Cmd_Give_Self"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"		"Vous avez reçu {green}{1}{default}$ de {green}{2}{default}."
+	}
+	"Cmd_Give_Tribunal"
+	{
+		"fr"		"Vous ne pouvez pas donner de l'argnet quand vous êtes recherché par le Tribunal."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Cmd_Hire"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Sélectionner un job pour: {1}"
+	}
+	"Cmd_Hire_Unemployed"
+	{
+		"fr"		"Cette personne a déjà un emploi."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Cmd_Tuto_InTutorial"
+	{
+		"#format"	"{1:s}"
+		"fr"		"TUTORIAL: {1}"
+	}
+	"Cmd_Tuto_WithJob"
+	{
+		"#format"	"{1:s}"
+		"fr"		"DÉBUTANT: {1}"
+	}
+	"Cmd_Tuto_WithoutJob"
+	{
+		"#format"	"{1:s}"
+		"fr"		"SANS EMPLOI: {1}"
+	}
+	"Cmd_Tuto_Count"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Il y' a actuellement {red}{1}{default} nouveau(x) joueur(s)."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Cmd_Appart"
+	{
+		"fr"		"Liste des appartements et garages:"
+	}
+	"Cmd_Appart_Free"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Appartement {1}: Disponible"
+	}
+	"Cmd_Appart_Occupied"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Appartement {1}: Occupé"
+	}
+	"Cmd_Garage_Free"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Garage {1}: Disponible"
+	}
+	"Cmd_Garage_Occupied"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Garage {1}: Occupé"
+	}
+	"Cmd_Appart_Count"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Il y'a {red}{1}{default} appartement(s) et {red}{2}{default} garage(s) disponible."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Chat_Talk"
+	{
+		"#format"	"{1:s},{2:t},{3:s}"
+		"fr"		"{teamcolor}{1}{default} {2}: {3}"
+	}
+	"Chat_TAG_Admin"
+	{
+		"fr"		"({green}ADMIN{default})"
+	}
+	"Chat_TAG_VIP"
+	{
+		"fr"		"({green}VIP{default})"
+	}
+	"Chat_TAG_GROUP"
+	{
+		"fr"		"({red}GROUPE{default})"
+	}
+	"Chat_TAG_TEAM"
+	{
+		"fr"		"({orange}JOB{default})"
+	}
+	"Chat_TAG_COLOC"
+	{
+		"fr"		"({purple}COLOC{default})"
+	}
+	"Chat_TAG_EMOTE"
+	{
+		"fr"		"({olive}ANNONCE{default})"
+	}
+	"Chat_TAG_LOCAL"
+	{
+		"fr"		"({teamcolor}LOCAL{default})"
+	}
+	"Chat_TAG_WEDDING"
+	{
+		"fr"		"({red}MARIÉ{default})"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Phone_Mission"

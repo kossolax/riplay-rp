@@ -5,6 +5,18 @@
 		"fr"	""
 		"en"	""
 	}
+	"Error_Command_ForNow"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous ne pouvez pas utiliser cette commande pour le moment."
+		"en"		"You cannot use this command for now."
+	}
+	"Error_Command_Here"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous ne pouvez pas utiliser cette commande ici."
+		"en"		"You cannot use this command here."
+	}
 	"Error_ItemMissing"
 	{
 		"#format"	"{1:s}"
@@ -80,6 +92,11 @@
 		"fr"		"Quelque chose s'est mal passé."
 		"en"		"Something went wrong."
 	}
+	"Error_CannotSteal_ForNow"
+	{
+		"fr"		"Il n'est pas possible de voler pour le moment."
+		"en"		"You cannot steal for now."
+	}
 	"Error_CannotSteal_Target_ForNow"
 	{
 		"fr"		"Il n'est pas possible de voler cette personne pour le moment."
@@ -102,7 +119,7 @@
 	}
 	"Error_OnlyInsideAppart"
 	{
-		"fr"		"Vous devez être à l'intérieur pour utiliser cet objet."
+		"fr"		"Vous devez être à l'intérieur de votre appartement pour utiliser cet objet."
 	}
 	"Error_Level"
 	{
@@ -126,6 +143,20 @@
 	"Error_YouMustBeAliveToTalk"
 	{
 		"fr"	"Vous devez être en vie pour parler."
+	}
+	"Error_YouMustWaitToTalk"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Vous devez attendre encore {1} seconde(s), avant d'utiliser à nouveau le chat général."
+	}
+	"Error_YouMustNotSpam"
+	{
+		"fr"	"Votre message a été bloqué afin d'éviter d'éventuel spam."
+	}
+	"Error_WrongCode"
+	{
+		"fr"	"Le code de confirmation est incorrect."
+		"en"	"The confirmation code is incorrect."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Pay_Bonus_Appart"
@@ -222,6 +253,8 @@
 	{
 		"fr"		"Difficulté: Impossible"
 	}
+	
+	// ----------------------------------------------------------------------------------------------
 	// ----------------------------------------------------------------------------------------------
 	"Jobs_All"
 	{
@@ -311,6 +344,11 @@
 		"fr"	"Vous ne pouvez pas construire ici."
 		"en"	"You cannot build here."
 	}
+	"Build_Cannot_ForNow"
+	{
+		"fr"	"Vous ne pouvez pas construire pour le moment."
+		"en"	"You cannot build for now."
+	}
 	"Build_TooMany"
 	{
 		"fr"	"Vous avez trop de props actif en ville."
@@ -331,7 +369,22 @@
 	"Banned_Quest"
 	{
 		"fr"	"En raison de votre mauvais comportement, il vous est temporairement interdit de participer aux quêtes."
-		"en"	"Due to your misconduct, you are temporarily banned from participating in a  quest."
+		"en"	"Due to your misconduct, you are temporarily banned from participating in a quest."
+	}
+	"Banned_Give"
+	{
+		"fr"	"En raison de votre mauvais comportement, il vous est temporairement interdit de donner de l'argent aux autres personnes."
+		"en"	"Due to your misconduct, you are temporarily banned from giving money to others."
+	}
+	"Banned_GlobalTalk"
+	{
+		"fr"	"En raison de votre mauvais comportement, il vous est temporairement interdit d'utiliser le chat général."
+		"en"	"Due to your misconduct, you are temporarily banned from talking in global chat."
+	}
+	"Banned_LocalTalk"
+	{
+		"fr"	"En raison de votre mauvais comportement, il vous est temporairement interdit d'utiliser le chat local."
+		"en"	"Due to your misconduct, you are temporarily banned from talking in local chat."
 	}
 	"Ignore"
 	{

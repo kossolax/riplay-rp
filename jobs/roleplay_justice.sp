@@ -215,7 +215,7 @@ public Action Cmd_Jugement(int client, char[] arg) {
 	amende = StringToInt(buffers[3]);
 	
 	if( !StrEqual(buffers[1], g_szJugementDATA[client][0]) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "Tribunal_Error_WrongCode", client);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_WrongCode", client);
 		return Plugin_Handled;
 	}
 	

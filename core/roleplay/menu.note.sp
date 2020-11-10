@@ -19,12 +19,14 @@ public int menuShowNote_Client(Handle owner, Handle req, const char[] error, any
 	Handle menu = CreateMenu(MenuSelectNote);
 	SetMenuTitle(menu, "Informations\n ");
 	
-	char tmp[256];
+	char tmp1[256], tmp2[256];
 	while( SQL_FetchRow(req) ) {
 		
-		SQL_FetchString(req, 0, tmp, 255);
+		SQL_FetchString(req, 0, tmp1, sizeof(tmp1));
+		SQL_FetchString(req, 1, tmp2, sizeof(tmp2));
 		
-		AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
+		Format(tmp1, sizeof(tmp1), "%s - il y'a %s heure(s)", tmp2);
+		AddMenuItem(menu, tmp1, tmp1, ITEMDRAW_DISABLED);
 	}
 	
 	SetMenuExitButton(menu, true);

@@ -86,7 +86,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 			CreateTimer(10.0, AllowTalking, client);
 		}
 		
-		CPrintToChatAll("{lightblue}%s{default} ({olive}ANNONCE{default}): %s", name, arg);
+		CPrintToChatAll("%T", "Chat_Talk", LANG_SERVER, name, "Chat_TAG_EMOTE", arg);
 		LogToGame("[TSX-RP] [ANNONCES] %L: %s", client, arg);
 
 		return Plugin_Handled;
@@ -117,7 +117,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 		}
 		for( int i = 0; i<sizeof(clientChat); i++ ){
 			if(clientChat[i])
-				CPrintToChatEx(i, client, "{lightblue}%s{default} ({purple}COLOC{default}): %s", name, arg);
+				CPrintToChatEx(i, client, "%T", "Chat_Talk", LANG_SERVER, name, "Chat_TAG_COLOC", arg);
 		}
 		
 		LogToGame("[TSX-RP] [CHAT-COLLOC] %L: %s", client, arg);
@@ -147,7 +147,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 				j2 = 1;
 
 			if( j == j2 ) {
-				CPrintToChatEx(i, client, "{lightblue}%s{default} ({orange}TEAM{default}): %s", name, arg);
+				CPrintToChatEx(i, client, "%T", "Chat_Talk", LANG_SERVER, name, "Chat_TAG_TEAM", arg);
 			}
 		}
 		
@@ -161,8 +161,8 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 			ACCESS_DENIED(client);
 		}
 		
-		CPrintToChatEx(mari, client, "{lightblue}%s{default} ({red}MARIÉ{default}): %s", name, arg);
-		CPrintToChatEx(client, client, "{lightblue}%s{default} ({red}MARIÉ{default}): %s", name, arg);
+		CPrintToChatEx(mari, client, "%T", "Chat_Talk", LANG_SERVER, name, "Chat_TAG_WEDDING", arg);
+		CPrintToChatEx(client, client, "%T", "Chat_Talk", LANG_SERVER, name, "Chat_TAG_WEDDING", arg);
 		
 		LogToGame("[TSX-RP] [CHAT-MARIE] %L: %s", client, arg);
 		return Plugin_Handled;
@@ -177,7 +177,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 				continue;
 
 			if( rp_GetClientGroupID(i) == rp_GetClientGroupID(client) ) {
-				CPrintToChatEx(i, client, "{lightblue}%s{default} ({red}GROUP{default}): %s", name, arg);
+				CPrintToChatEx(i, client, "%T", "Chat_Talk", LANG_SERVER, name, "Chat_TAG_GROUP", arg);
 			}
 		}
 		
