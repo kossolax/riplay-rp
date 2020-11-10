@@ -361,6 +361,9 @@ void showPlayerHintBox(int client, int target) {
 				
 				PrintHintText(client, "%s de:\n %s", (appart<100?"Appartement":"Garage"), clientname);
 			}
+			else if( appart == 12 ) {
+				PrintHintText(client, "Appartement de: ", "??????");
+			}
 			else if( appart == 50 ) {
 				rp_GetServerString(villaOwnerName, clientname, sizeof(clientname));
 				PrintHintText(client, "Villa de: %s", clientname);
