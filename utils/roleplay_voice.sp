@@ -29,14 +29,20 @@ public Plugin myinfo = {
 	description = "RolePlay - Utils: VoiceProximity",
 	version = __LAST_REV__, url = "https://www.ts-x.eu"
 };
-
+public Action Cmd_Reload(int args) {
+	char name[64];
+	GetPluginFilename(INVALID_HANDLE, name, sizeof(name));
+	ServerCommand("sm plugins reload %s", name);
+	return Plugin_Continue;
+}
 public void OnPluginStart() {
 	LoadTranslations("core.phrases");
 	LoadTranslations("common.phrases");
 	LoadTranslations("plugin.basecommands");
 	LoadTranslations("roleplay.phrases");
 	LoadTranslations("roleplay.core.phrases");
-	
+
+	RegServerCmd("rp_quest_reload", Cmd_Reload);	
 	for (int i = 1; i <= MaxClients; i++)
 		if( IsValidClient(i) )
 			OnClientPostAdminCheck(i);
