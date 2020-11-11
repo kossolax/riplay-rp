@@ -24,14 +24,14 @@
 	"edit_weapon_sanAndreas"
 	{
 		"#format"	"{1:d}"
-		"fr"		"Votre arme a déjà un San Andreas, il vous reste {1} balles dans le chargeur."
-		"en"		"Your gun already has a San Andreas, you have {1} bullets left in the clip."
+		"fr"		"Votre arme a déjà un San Andreas, il vous reste {red}{1}{default} balles dans le chargeur."
+		"en"		"Your gun already has a San Andreas, you have {red}{1}{default} bullets left in the clip."
 	}
 	"weapon_sanAndreas"
 	{
 		"#format"	"{1:d}"
-		"fr"		"Votre arme a un San Andreas, il vous reste {1} balles dans le chargeur."
-		"en"		"Your gun has a San Andreas, you have {1} bullets left in the clip."
+		"fr"		"Votre arme possède un San Andreas, il vous reste {red}{1}{default} balles dans le chargeur."
+		"en"		"Your gun has a San Andreas, you have {red}{1}{default} bullets left in the clip."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"add_bullet_sanAndreas"
@@ -56,7 +56,7 @@
 	}
 	"add_ball_type_poison"
 	{
-		"fr"		"Ajouter des cartouches empoisonante"
+		"fr"		"Ajouter des cartouches empoisonnante"
 		"en"		"Add poison rounds"
 	}
 	"add_ball_type_vampire"

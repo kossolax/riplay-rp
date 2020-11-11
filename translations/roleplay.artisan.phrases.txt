@@ -62,8 +62,8 @@
 	}
 	"Artisan_Recycl_None"
 	{
-		"fr"	"Vous n'avez aucun item à recycler."
-		"en"	"You have no items to recycle."
+		"fr"	"Vous n'avez {red}aucun{default} item à recycler."
+		"en"	"You have {red}no{default} items to recycle."
 	}
 	"Artisan_Recycl_All"
 	{
@@ -85,8 +85,8 @@
 	}
 	"Artisan_Learn_None"
 	{
-		"fr"	"Vous n'avez aucun point d'apprentissage. Pour en avoir vous pouvez gagner un niveau d'artisanat ou acheter et lire une potion de sagesse."
-		"en"	"You have no learning points. To get one you can earn a craftsmanship level or buy and read a wisdom potion."
+		"fr"	"Vous n'avez {red}aucun{default} point d'apprentissage. Pour en avoir vous pouvez gagner un {red}niveau d'artisanat{default} ou acheter et lire une {red}potion de sagesse{default}."
+		"en"	"You have {red}no{default} learning points. To get one you can earn a {red}craftsmanship level{default} or buy and read a {red}wisdom potion{default}."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Artisan_Books"

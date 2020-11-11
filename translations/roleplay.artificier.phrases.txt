@@ -3,8 +3,8 @@
 	"Bomb_WillExplodeIn"
 	{
 		"#format"	"{1:d}"
-		"fr"	"La petite bombe a été placée et explosera dans {red}{1}{default} secondes."
-		"en"	"The small bomb has been placed and will explode in {red}{1}{default} seconds."
+		"fr"	"La {blue}petite bombe{default} a été placée et explosera dans {red}{1}{default} secondes."
+		"en"	"The {blue}small bomb{default} has been placed and will explode in {red}{1}{default} seconds."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Firework_Build"
