@@ -32,7 +32,10 @@ public Plugin myinfo = {
 
 public void OnPluginStart() {
 	LoadTranslations("core.phrases");
+	LoadTranslations("common.phrases");
+	LoadTranslations("plugin.basecommands");
 	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.core.phrases");
 	
 	for (int i = 1; i <= MaxClients; i++)
 		if( IsValidClient(i) )

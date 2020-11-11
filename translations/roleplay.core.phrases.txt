@@ -198,6 +198,7 @@
 	}
 	"Cmd_Assu"
 	{
+		"#format"	"{1:d}"
 		"fr"		"Votre assurance vous couvre pour {green}{1}{default}$."
 	}
 	"Cmd_AddNote"
