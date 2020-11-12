@@ -21,6 +21,12 @@
 #pragma newdecls required
 #include <roleplay.inc>	// https://www.ts-x.eu
 
+
+#define TREE_HP				1
+#define TREE_RESPAWN_MIN	3.0
+#define TREE_RESPAWN_MAX	5.0
+
+
 char g_szTrees[][] = {
 	"models/props/hr_massive/hr_foliage/birch_tree_01.mdl",
 	"models/props/hr_massive/hr_foliage/birch_tree_02.mdl",
@@ -29,6 +35,8 @@ char g_szTrees[][] = {
 char g_szWoodGibs[][] = {
 	"models/props/de_inferno/hr_i/wood_beam_a/wood_beam_a1.mdl"
 };
+
+int g_iTreeID[2049];
 
 public void OnMapStart() {
 	for (int i = 0; i < sizeof(g_szTrees); i++) {
@@ -39,7 +47,15 @@ public void OnMapStart() {
 	}
 }
 public void OnPluginStart() {
-	float pos[3], ang[3], min[3], max[3];
+	HookEvent("round_start", 		EventRoundStart, 	EventHookMode_Post);
+	OnRoundStart();
+}
+public Action EventRoundStart(Handle ev, const char[] name, bool  bd) {
+	OnRoundStart();
+
+	return Plugin_Continue;
+}
+public void OnRoundStart() {
 	char tmp[256];
 	for(int i=0; i<MAX_ENTITIES; i++) {
 		if( !IsValidEdict(i) )
@@ -57,50 +73,65 @@ public void OnPluginStart() {
 		rp_GetLocationData(i, location_type_base, tmp, sizeof(tmp));
 		
 		if( StrEqual(tmp, "tree") ) {
-			pos[0] = float(rp_GetLocationInt(i, location_type_origin_x));
-			pos[1] = float(rp_GetLocationInt(i, location_type_origin_y));
-			pos[2] = float(rp_GetLocationInt(i, location_type_origin_z));
-			
-			
-			int rnd = GetRandomInt(0, sizeof(g_szTrees) - 1);
-			
-			
-			int ent = CreateEntityByName("prop_physics");
-			DispatchKeyValue(ent, "model", g_szTrees[rnd]);
-			DispatchKeyValue(ent, "solid", "6");
-			DispatchKeyValue(ent, "classname", "rp_tree");
-			DispatchSpawn(ent);
-			ActivateEntity(ent);
-			
-			ang[1] += GetRandomFloat(-180.0, 180.0);
-			
-			Entity_GetMinSize(ent, min);
-			Entity_GetMaxSize(ent, max);
-			
-			int size = RoundFloat(max[2] - min[2]);
-			SetEntProp(ent, Prop_Data, "m_iHealth", size*2);
-			Entity_SetMaxHealth(ent, size*2);
-			
-			SDKHook(ent, SDKHook_OnTakeDamage, OnTreeDamage);
-			SDKHook(ent, SDKHook_VPhysicsUpdate, OnTreeThink);
-
-			rp_AcceptEntityInput(ent, "DisableMotion");
-			rp_AcceptEntityInput(ent, "DisableCollision" );
-			rp_AcceptEntityInput(ent, "EnableCollision" );
-			
-			TeleportEntity(ent, pos, ang, NULL_VECTOR);
+			CreateTimer(GetRandomFloat(0.0, 3.0), SpawnTree, i);
 		}
 	}
 }
 
+public Action SpawnTree(Handle timer, any i) {
+	float pos[3], ang[3], min[3], max[3];
+	pos[0] = float(rp_GetLocationInt(i, location_type_origin_x));
+	pos[1] = float(rp_GetLocationInt(i, location_type_origin_y));
+	pos[2] = float(rp_GetLocationInt(i, location_type_origin_z));
+	
+	
+	int rnd = GetRandomInt(0, sizeof(g_szTrees) - 1);
+	
+	int ent = CreateEntityByName("prop_physics");
+	DispatchKeyValue(ent, "model", g_szTrees[rnd]);
+	DispatchKeyValue(ent, "solid", "6");
+	DispatchKeyValue(ent, "classname", "rp_tree");
+	DispatchSpawn(ent);
+	ActivateEntity(ent);
+	
+	ang[1] += GetRandomFloat(-180.0, 180.0);
+	
+	Entity_GetMinSize(ent, min);
+	Entity_GetMaxSize(ent, max);
+	
+	int size = RoundFloat(max[2] - min[2]);
+	SetEntProp(ent, Prop_Data, "m_iHealth", size*TREE_HP);
+	Entity_SetMaxHealth(ent, size*TREE_HP);
+	
+	SDKHook(ent, SDKHook_OnTakeDamage, OnTreeDamage);
+	SDKHook(ent, SDKHook_VPhysicsUpdate, OnTreeThink);
 
+	rp_AcceptEntityInput(ent, "DisableMotion");
+	rp_AcceptEntityInput(ent, "DisableCollision" );
+	rp_AcceptEntityInput(ent, "EnableCollision" );
+	
+	TeleportEntity(ent, pos, ang, NULL_VECTOR);
+	ServerCommand("sm_effect_fading %d 1 0", ent);
+	g_iTreeID[ent] = i;
+}
+public void OnEntityCreated(int entity, const char[] classname) {
+	if( entity > 0 ) {
+		g_iTreeID[entity] = 0;
+	}
+}
+public void OnEntityDestroyed(int entity) {
+	if( entity > 0 && g_iTreeID[entity] > 0 ) {
+		CreateTimer(GetRandomFloat(TREE_RESPAWN_MIN, TREE_RESPAWN_MAX), SpawnTree, g_iTreeID[entity]);
+		g_iTreeID[entity] = 0;
+	}
+}
 public void OnTreeThink(int entity) {
 	static float lastMove[2048][3];
 	float ang[3], vel[3], src[3], dst[3], min[3], max[3];
 	Entity_GetAbsAngles(entity, ang);
 	Entity_GetAbsOrigin(entity, dst);
 	GetAngleVectors(ang, NULL_VECTOR, NULL_VECTOR, vel);
-		
+	
 	if( FloatAbs(vel[2]) < 0.5 && Entity_GetHealth(entity) <= 0 ) {		
 		if( GetVectorDotProduct(lastMove[entity], vel) < 0.999999999 ) {
 			lastMove[entity] = vel;
@@ -108,10 +139,9 @@ public void OnTreeThink(int entity) {
 		}
 		
 		int rnd = GetRandomInt(0, sizeof(g_szWoodGibs) - 1);
-		PrecacheModel(g_szWoodGibs[rnd]);
 
 		float dist = 0.0;
-		while( dist < float(Entity_GetMaxHealth(entity)/2)-128.0 ) {
+		while( dist < float(Entity_GetMaxHealth(entity)/TREE_HP)-128.0 ) {
 			int ent = CreateEntityByName("prop_physics");
 			DispatchKeyValue(ent, "model", g_szWoodGibs[rnd]);
 			DispatchKeyValue(ent, "classname", "rp_wood");
@@ -139,44 +169,42 @@ public void OnTreeThink(int entity) {
 		Entity_SetSolidType(entity, SOLID_NONE);
 		ServerCommand("sm_effect_fading %d 1 1", entity);
 		rp_ScheduleEntityInput(entity, 1.0, "Kill");
-		
 		SDKUnhook(entity, SDKHook_VPhysicsUpdate, OnTreeThink);
 	}
 }
 public Action OnWoodDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& weapon, float damageForce[3], float damagePosition[3]) {
-	static char tmp[128];
-	
 	if( attacker == inflictor && damagetype & DMG_SLASH ) {
-		GetEdictClassname(weapon, tmp, sizeof(tmp));
-		
-		if( StrEqual(tmp, "weapon_melee") ) {
-			Entity_GetModel(weapon, tmp, sizeof(tmp));
-			if( StrEqual(tmp, "models/weapons/v_axe.mdl") ) {
-				AcceptEntityInput(victim, "Break");
-			}
+		if( IsMeleeAxe(weapon) ) {	
+			AcceptEntityInput(victim, "Break");
 		}
 	}
 }
 public Action OnTreeDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& weapon, float damageForce[3], float damagePosition[3]) {
-	static char tmp[128];
-	
 	if( attacker == inflictor && damagetype & DMG_SLASH ) {
-		GetEdictClassname(weapon, tmp, sizeof(tmp));
-		
-		if( StrEqual(tmp, "weapon_melee") ) {
-			Entity_GetModel(weapon, tmp, sizeof(tmp));
-			if( StrEqual(tmp, "models/weapons/v_axe.mdl") ) {
-				
-				SetEntProp(victim, Prop_Data, "m_iHealth", Entity_GetHealth(victim) - RoundFloat(damage));
-				if( Entity_GetHealth(victim) <= 0 ) {		
-					SetEntProp(victim, Prop_Data, "m_iHealth", 0);
-					AcceptEntityInput(victim, "EnableMotion");
-				
-					float vel[3];
-					vel[2] = 32.0;				
-					TeleportEntity(victim, NULL_VECTOR, NULL_VECTOR, damageForce);
-				}			
+		if( IsMeleeAxe(weapon) ) {				
+			SetEntProp(victim, Prop_Data, "m_iHealth", Entity_GetHealth(victim) - RoundFloat(damage));
+			if( Entity_GetHealth(victim) <= 0 ) {		
+				SetEntProp(victim, Prop_Data, "m_iHealth", 0);
+				AcceptEntityInput(victim, "EnableMotion");
+			
+				float vel[3];
+				vel[2] = 32.0;				
+				TeleportEntity(victim, NULL_VECTOR, NULL_VECTOR, damageForce);	
 			}
 		}
 	}
+}
+
+
+stock bool IsMeleeAxe(int weapon) {
+	static char tmp[128];
+	
+	GetEdictClassname(weapon, tmp, sizeof(tmp));
+	if( StrEqual(tmp, "weapon_melee") ) {
+		Entity_GetModel(weapon, tmp, sizeof(tmp));
+		if( StrEqual(tmp, "models/weapons/v_axe.mdl") ) {
+			return true;
+		}
+	}
+	return false;
 }
