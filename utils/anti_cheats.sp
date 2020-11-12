@@ -45,6 +45,11 @@ float g_flGameTime;
 float g_flSpawnOrigin[65][3];
 
 public void OnPluginStart() {
+	if( GetConVarInt(FindConVar("hostport")) != 27015 ) {
+		SetFailState("test serv");
+		return;
+	}
+	
 	AddCommandListener(OnCheatCommand, "noclip");
 	AddCommandListener(OnCheatCommand, "god");
 	AddCommandListener(OnCheatCommand, "give");
