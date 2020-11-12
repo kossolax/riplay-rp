@@ -793,29 +793,25 @@ bool IsEntitiesNear(int ent1, int ent2, bool tres_proche = false, float cache = 
 	return g_bLastData[ent1][ent2];
 }
 void RP_SpawnBank() {
-	char mapname[32];
+	char szMysql[1024], type[32], tmp[256], mapname[32];
 	GetCurrentMap(mapname, sizeof(mapname));
-	
-	char szMysql[1024];
-	Format(szMysql, sizeof(szMysql), "SELECT `id`, `origin_x`, `origin_y`, `origin_z`, `angle_y`, `type` FROM `rp_spawner` WHERE `map`='%s';", mapname);
+
+	Format(szMysql, sizeof(szMysql), "SELECT `id`, `origin_x`, `origin_y`, `origin_z`, `angle_y`, `type`, `physics` FROM `rp_spawner` WHERE `map`='%s';", mapname);
 	
 	SQL_LockDatabase(g_hBDD);
 	Handle req = SQL_Query(g_hBDD, szMysql);
 	
 	if( req != INVALID_HANDLE ) {
-		
 		for(int i=0; i<MAX_ENTITIES; i++) {
-			
 			if( !IsValidEdict(i) )
 				continue;
 			if( !IsValidEntity(i) )
 				continue;
 			
-			char classname[64];
-			GetEdictClassname(i, classname, 63);
+			GetEdictClassname(i, tmp, sizeof(tmp));
 			
-			if( StrContains(classname, "rp_phone") == 0 || StrContains(classname, "rp_tree") == 0 || StrContains(classname, "rp_bank") == 0 || StrContains(classname, "rp_mail_") == 0  || StrContains(classname, "rp_weaponbox") == 0 ) {
-				if( StrContains(classname, "rp_bank") == 0 && rp_GetBuildingData(i, BD_owner) != 0 )
+			if( StrContains(tmp, "rp_phone") == 0 || StrContains(tmp, "rp_bank") == 0 || StrContains(tmp, "rp_mail_") == 0  || StrContains(tmp, "rp_weaponbox") == 0 ) {
+				if( StrContains(tmp, "rp_bank") == 0 && rp_GetBuildingData(i, BD_owner) != 0 )
 					continue;
 				rp_AcceptEntityInput(i, "Kill");
 			}
@@ -831,11 +827,9 @@ void RP_SpawnBank() {
 			vecOrigin[2] = float(SQL_FetchInt(req, 3));
 			vecAngles[1] = float(SQL_FetchInt(req, 4));
 			
-			char type[32];
 			SQL_FetchString(req, 5, type, sizeof(type));
 			
-			int ent = CreateEntityByName("prop_dynamic");
-			char tmp[255];
+			int ent = CreateEntityByName(SQL_FetchInt(req, 6) == 0 ? "prop_dynamic" : "prop_physics");
 			
 			if( StrEqual(type, "bank") ) {
 				Format(tmp, sizeof(tmp), "rp_bank");
@@ -880,20 +874,6 @@ void RP_SpawnBank() {
 				DispatchKeyValue(ent, "solid", "0");
 				
 				vecAngles[1] -= 90.0;
-			}
-			else if( StrEqual(type, "tree") ) {
-				Format(tmp, sizeof(tmp), "rp_tree");
-				
-				int rnd = GetRandomInt(0, sizeof(g_szTrees) - 1);
-				
-				PrecacheModel(g_szTrees[rnd]);
-				DispatchKeyValue(ent, "model", g_szTrees[rnd]);
-				DispatchKeyValue(ent, "solid", "6");
-				
-				SetEntityModel(ent, g_szTrees[rnd]);
-				
-				vecAngles[1] += GetRandomFloat(-180.0, 180.0);
-				vecOrigin[2] -= 4.0;
 			}
 			
 			DispatchKeyValue(ent, "classname", tmp);

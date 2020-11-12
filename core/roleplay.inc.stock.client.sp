@@ -344,6 +344,7 @@ void showPlayerHintBox(int client, int target) {
 			Format(fmt, sizeof(fmt), "\n%s conduit.", clientname);
 		}
 		
+		
 		PrintHintText(client, "Voiture de fonction\nHP: %d%s", rp_GetVehicleInt(target, car_health), fmt);
 	}
 	else if( StrContains(classname, "door") >= 0 ) {
@@ -394,10 +395,36 @@ void showPlayerHintBox(int client, int target) {
 		}
 	}
 	else if( StrContains(classname, "bank") >= 0 ) {
-		PrintHintText(client, "\n Distributeur de billet");
+		PrintHintText(client, "\n Distributeur de billets");
+	}
+	else if( StrContains(classname, "mail") >= 0 ) {
+		
+		
+		char tmp3[2][64];
+		
+		ReplaceString(classname, sizeof(classname), "rp_mail_", "");
+		int job = StringToInt(classname);
+		
+		if( job > 0 ) {
+			rp_GetJobData(job, job_type_name, classname, sizeof(classname));	
+			ExplodeString(classname, " - ", tmp3, sizeof(tmp3), sizeof(tmp3[]));
+			Format(classname, sizeof(classname), "%s", tmp3[1]);
+		}
+		else {
+			Format(classname, sizeof(classname), "Mairie");
+		}
+		
+		PrintHintText(client, "\n Boîte aux lettres %s", classname);
+
 	}
 	else if( StrContains(classname, "phone") >= 0 ) {
 		PrintHintText(client, "\n Téléphone public");
+	}
+	else if( StrContains(classname, "tree") >= 0 ) {
+		PrintHintText(client, "Arbre\nHP: %d - %.2f%%", Entity_GetHealth(target), (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target))) * 100.0);
+	}
+	else if( StrContains(classname, "crystal") >= 0 ) {
+		PrintHintText(client, "Minerai\nHP: %d - %.2f%%", Entity_GetHealth(target), (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target))) * 100.0);
 	}
 }
 
