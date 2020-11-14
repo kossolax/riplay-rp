@@ -10,6 +10,8 @@
 	#include "roleplay.sp"
 #endif
 
+// TODO: Utiliser la Sync / ChangePersonal.
+
 public int eventHireMenu(Handle p_hHireMenu, MenuAction p_oAction, int p_iParam1, int p_iParam2) {
 	if (p_oAction == MenuAction_Select) {
 		char szMenuItem[32];
@@ -55,81 +57,7 @@ public int eventHireMenu2(Handle p_hHireMenu, MenuAction p_oAction, int p_iParam
 		CloseHandle(p_hHireMenu);
 	}
 }
-public int MenuSelectFire(Handle p_hHireMenu, MenuAction p_oAction, int p_iParam1, int p_iParam2) { 
-	if (p_oAction == MenuAction_Select) {
-		char szMenuItem[32];
-		
-		if (GetMenuItem(p_hHireMenu, p_iParam2, szMenuItem, sizeof(szMenuItem))) {
-			
-			
-			int were_in_game = 0;
-			for(int i=1; i<=MaxClients; i++) {
-				
-				if( !IsValidClient(i) ) 
-					continue;
-				
-				char SteamID[64];
-				GetClientAuthId(i, AUTH_TYPE, SteamID, sizeof(SteamID), false);
-				
-				if( StrEqual(SteamID, szMenuItem) ) {
-					were_in_game = i;
-					ChangePersonnal(i, SynType_job, 0, p_iParam1);
-					break;
-				}
-			}
-			
-			char tmp[1024];
-			Format(tmp, 1023, "UPDATE `rp_users` SET `job_id`='0' WHERE `steamid`='%s'", szMenuItem);
-			SQL_TQuery(g_hBDD, SQL_QueryCallBack, tmp);
-			
-			if( were_in_game == 0 ) {
-				
-				CPrintToChat(p_iParam1, "" ...MOD_TAG... " Vous avez viré un joueur non-connecté (%s).", szMenuItem);
-				
-				
-				char szLog[1024];
-				Format(szLog, sizeof(szLog), "[TSX-RP] [SYN] [JOB] (%s) est maintenant Sans emploi par %L.", szMenuItem, p_iParam1);
-				
-				LogToGame(szLog);
-			}
-		}
-	}
-	else if (p_oAction == MenuAction_End) {
-		CloseHandle(p_hHireMenu);
-	}
-}
 
-public int menuFire_Client(Handle owner, Handle hQuery, const char[] error, any client) {
-	// Setup menu
-	Handle menu = CreateMenu(MenuSelectFire);
-	SetMenuTitle(menu, "Sélectionner qui virer\n ");
-	
-	char SteamID[64], name[128];
-	int job_id;
-	
-	while( SQL_FetchRow(hQuery) ) {
-		
-		
-		SQL_FetchString(hQuery, 0, SteamID, 63);
-		SQL_FetchString(hQuery, 1, name, 127);
-		job_id = SQL_FetchInt(hQuery, 2);
-		
-		if( job_id == g_iUserData[client][i_Job] )
-			continue;
-		
-		if( StringToInt(g_szJobList[ job_id ][2]) != GetJobPrimaryID(client) )
-			continue;
-		
-		if( SQL_FetchInt(hQuery, 3) <= ((GetTime())-(7*24*60*60)) ) {
-			Format(name, sizeof(name), "%s - Inactif", name);
-		}
-		
-		AddMenuItem(menu, SteamID, name);
-	}
-	
-	SetMenuExitButton(menu, true);
-	DisplayMenu(menu, client, MENU_TIME_DURATION);
-}
 public int eventSetJobMenu(Handle p_hHireMenu, MenuAction p_oAction, int p_iParam1, int p_iParam2) {
 	if( !IsBoss(p_iParam1) ) {
 		return;
@@ -155,8 +83,7 @@ public int eventSetJobMenu(Handle p_hHireMenu, MenuAction p_oAction, int p_iPara
 				GetClientAuthId(i, AUTH_TYPE, SteamID, sizeof(SteamID), false);
 				
 				if( StrEqual(SteamID, data[0]) ) {
-					CPrintToChat(i, "" ...MOD_TAG... " %N{default} a modifié votre job. Vous êtes maintenant: %s.", p_iParam1, g_szJobList[iJobID][job_type_name]);
-					g_iUserData[i][i_Job] = iJobID;
+					ChangePersonnal(i, SynType_job, iJobID, p_iParam1);
 					break;
 				}
 			}

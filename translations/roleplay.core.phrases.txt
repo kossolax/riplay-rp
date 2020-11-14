@@ -591,12 +591,12 @@
 	"Hint_Arbre"
 	{
 		"#format"	"{1:d},{2:.2f}"
-		"fr"		"Arbre\nHP {1} - {2}"
+		"fr"		"Arbre\nHP {1} - {2}%"
 	}
 	"Hint_Stone"
 	{
 		"#format"	"{1:d},{2:.2f}"
-		"fr"		"Minerai\nHP {1} - {2}"
+		"fr"		"Minerai\nHP {1} - {2}%"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Pay_Cannot_Full"
@@ -633,17 +633,17 @@
 	"Syn_Hire"
 	{
 		"#format"	"{1:s},{2:s}"
-		"fr"		"Vous avez été {green}engagé{default} comme {green}{2}{default}, par {1}."
+		"fr"		"Vous avez été {green}engagé{default} comme {green}{1}{default}, par {2}."
 	}
 	"Syn_Upgrade"
 	{
 		"#format"	"{1:s},{2:s}"
-		"fr"		"Vous avez été {green}promu{default} comme {green}{2}{default}, par {1}."
+		"fr"		"Vous avez été {green}promu{default} comme {green}{1}{default}, par {2}."
 	}
 	"Syn_Downgrade"
 	{
 		"#format"	"{1:s},{2:s}"
-		"fr"		"Vous avez été {red}rétrogradé{default} comme {red}{2}{default}, par {1}."
+		"fr"		"Vous avez été {red}rétrogradé{default} comme {red}{1}{default}, par {2}."
 	}
 	"Syn_Fire"
 	{

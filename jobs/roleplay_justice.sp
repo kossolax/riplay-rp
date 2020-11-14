@@ -91,12 +91,21 @@ int g_iXpAudience[] = { 10, 20, 30, 40, 50, 60, 80, 100, 120, 150, 180, 220, 250
 #define GetTribunalZone(%1) (%1==1?TRIBUNAL_1:TRIBUNAL_2)
 #define GetTribunalJail(%1) (%1==1?TRIBUJAIL_1:TRIBUJAIL_2)
 
+public Action Cmd_Reload(int args) {
+	char name[64];
+	GetPluginFilename(INVALID_HANDLE, name, sizeof(name));
+	ServerCommand("sm plugins reload %s", name);
+	return Plugin_Continue;
+}
+
 public void OnPluginStart() {
 	LoadTranslations("core.phrases");
 	LoadTranslations("common.phrases");
 	LoadTranslations("roleplay.phrases");
 	LoadTranslations("roleplay.items.phrases");
 	LoadTranslations("roleplay.justice.phrases");
+	
+	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	
 	g_flCoords[1][0] = view_as<float>( { -508.0, -818.0, -1870.0 } );
 	g_flCoords[1][1] = view_as<float>( { -508.0, -712.0, -1870.0 } );

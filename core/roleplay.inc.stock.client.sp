@@ -389,7 +389,7 @@ void showPlayerHintBox(int client, int target) {
 				PrintHintText(client, "%T", "Hint_Villa", client, clientname); 
 			}
 			else {
-				PrintHintText(client, "%T", (appart < 100 ? "Hint_Appart_Sell" : "Hint_Garage_Sell"), client, appart, StringToInt(g_szSellingKeys[appart][key_type_prix]));
+				PrintHintText(client, "%T", (appart < 100 ? "Hint_Appart_Sell" : "Hint_Garage_Sell"), client, appart > 100 ? appart - 100 : appart, StringToInt(g_szSellingKeys[appart][key_type_prix]));
 			}
 		}
 		else {
@@ -687,7 +687,7 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 
 			if( from_id == 0 )
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Hire", client, g_szJobList[to_id][job_type_name], szPseudo);
-			else if( from_id < to_id )
+			else if( from_id > to_id )
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Upgrade", client, g_szJobList[to_id][job_type_name], szPseudo);
 			else
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Downgrade", client, g_szJobList[to_id][job_type_name], szPseudo);
@@ -703,7 +703,9 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 				g_bUserData[client][b_LicenseSell] = false;
 			}
 			else {
-				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Fire", client);
+				if( IsValidClient(invoker) )
+					GetClientName2(invoker, szPseudo, sizeof(szPseudo), false);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Fire", client, szPseudo);
 			}			
 			
 			if( origin[client] > 0 && IsBoss(origin[client]) ) {
@@ -725,7 +727,7 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 
 			if( from_id == 0 )
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Hire", client, g_szGroupList[to_id][group_type_name], szPseudo);
-			else if( from_id < to_id )
+			else if( from_id > to_id )
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Upgrade", client, g_szGroupList[to_id][group_type_name], szPseudo);
 			else
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Downgrade", client, g_szGroupList[to_id][group_type_name], szPseudo);

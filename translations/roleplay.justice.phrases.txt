@@ -1,10 +1,10 @@
 "Phrases"
 {
-	"Act_Kill-"
+	"Act_KillAtt"
 	{
 		"fr"		"Meurtre avec circonstances atténuantes"
 	}
-	"Act_Kill-Desc"
+	"Act_KillAttDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Toute atteinte involontaire à la vie d’un citoyen est condamnée à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
@@ -20,21 +20,21 @@
 		"fr"		"Toute atteinte volontaire à la vie d’un citoyen est condamnée à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
 	}
 
-	"Act_Kill+"
+	"Act_KillAggr"
 	{
 		"fr"		"Meurtre avec circonstances aggravantes"
 	}
-	"Act_Kill+Desc"
+	"Act_KillAggrDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Toute atteinte volontaire et préméditée à la vie d’un citoyen est condamnée à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
 	}
 
-	"Act_Kill++"
+	"Act_KillCT"
 	{
 		"fr"		"Meurtre d'un policier"
 	}
-	"Act_Kill++Desc"
+	"Act_KillCTDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Toute atteinte volontaire à la vie d’un officier des forces de l’ordre est condamnée à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
@@ -386,8 +386,8 @@
 	}
 	"Tribunal_Menu_Genre"
 	{
-		"fr"	"Gestion des plaintes Forum"
-		"en"	"Complaint management Forum"
+		"fr"	"Changer le genre d'une personne"
+		"en"	"Change gender"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tribunal_Menu_Audiance_Starting"

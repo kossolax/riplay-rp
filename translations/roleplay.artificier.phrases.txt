@@ -2,7 +2,7 @@
 {
 	"Bomb_WillExplodeIn"
 	{
-		"#format"	"{1:d}"
+		"#format"	"{1:.0f}"
 		"fr"	"La {blue}petite bombe{default} a été placée et explosera dans {red}{1}{default} secondes."
 		"en"	"The {blue}small bomb{default} has been placed and will explode in {red}{1}{default} seconds."
 	}

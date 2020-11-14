@@ -421,7 +421,9 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	else if(	strcmp(szSayTrig, "!boss", false) == 0		|| strcmp(szSayTrig, "/boss", false) == 0 ) {
+	else if(	strcmp(szSayTrig, "!boss", false) == 0		|| strcmp(szSayTrig, "/boss", false) == 0 ||
+				strcmp(szSayTrig, "!virer", false) == 0		|| strcmp(szSayTrig, "/virer", false) == 0 || 
+				strcmp(szSayTrig, "!fire", false) == 0		|| strcmp(szSayTrig, "/fire", false) == 0	) {
 
 		if( !IsBoss(client) ) {
 			ACCESS_DENIED(client);
@@ -546,22 +548,6 @@ public Action Command_Say(int client, int args) {
 
 		SetMenuExitButton(hHireMenu, true);
 		DisplayMenu(hHireMenu, client, MENU_TIME_DURATION);
-
-		return Plugin_Handled;
-	}
-	else if(	strcmp(szSayTrig, "!vire", false) == 0		|| strcmp(szSayTrig, "/vire", false) == 0	||
-		strcmp(szSayTrig, "!virer", false) == 0		|| strcmp(szSayTrig, "/virer", false) == 0	||
-		strcmp(szSayTrig, "!fire", false) == 0		|| strcmp(szSayTrig, "/fire", false) == 0
-	) {
-
-		if( !IsBoss(client) ) {
-			ACCESS_DENIED(client);
-		}
-
-		char query[1024];
-		Format(query, sizeof(query), "SELECT `steamid`, `name`, `job_id`, UNIX_TIMESTAMP(`last_connected`) FROM `rp_users` WHERE `job_id`<>'0'");
-
-		SQL_TQuery(g_hBDD, menuFire_Client, query, client, DBPrio_High);
 
 		return Plugin_Handled;
 	}
