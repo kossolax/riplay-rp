@@ -375,7 +375,7 @@ void showPlayerHintBox(int client, int target) {
 					String_ToLower(clientname, clientname, strlen(clientname));
 				}
 				
-				PrintHintText(client, "%T", appart < 100 ? "Hint_Appart" : "Hint_Garage"), client, clientname);
+				PrintHintText(client, "%T", (appart < 100 ? "Hint_Appart" : "Hint_Garage"), client, clientname);
 			}
 			else if( appart == 12 ) {
 				PrintHintText(client, "%T", "Hint_Appart", client, "??????");
@@ -389,7 +389,7 @@ void showPlayerHintBox(int client, int target) {
 				PrintHintText(client, "%T", "Hint_Villa", client, clientname); 
 			}
 			else {
-				PrintHintText(client, "%T", (appart<100?"Hint_Appart_Sell":"Hint_Garage_Sell"), client, appart, StringToInt(g_szSellingKeys[appart][key_type_prix]));
+				PrintHintText(client, "%T", (appart < 100 ? "Hint_Appart_Sell" : "Hint_Garage_Sell"), client, appart, StringToInt(g_szSellingKeys[appart][key_type_prix]));
 			}
 		}
 		else {
@@ -400,7 +400,7 @@ void showPlayerHintBox(int client, int target) {
 			strcopy(clientname, sizeof(clientname), expl[0]);
 			
 			Format(classname, sizeof(classname), "Empty_String");
-			Format(classname2, sizeof(classname2), "Empty_String");
+			Format(clientname2, sizeof(clientname2), "Empty_String");
 			
 			if( Entity_GetDistance(client, target) < 512.0 ) {
 				Format(clientname2, sizeof(clientname2), "%s", GetEntProp(target, Prop_Data, "m_bLocked") ? "Hint_Door_Close" : "Hint_Door_Open");			
