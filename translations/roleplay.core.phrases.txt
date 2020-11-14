@@ -482,12 +482,172 @@
 	}
 	"HUD_Vehicle"
 	{
-		"#format"		"{1:d},{2:.1f},{3:d}" // HP, KmH, MpH
-		"fr"			"Voiture: {1}HP\nVitesse: {2}km/h"
+		"#format"	"{1:d},{2:.1f},{3:d}" // HP, KmH, MpH
+		"fr"		"Voiture: {1}HP\nVitesse: {2}km/h"
 	}
 	"HUD_LoadingData"
 	{
-		"fr"			" \nChargement de vos informations...\nCeci peut prendre jusqu'à une minute\n \n \n \nLes serveurs Steam sont peut-être saturé,\ndans ce cas les délais peuvent être plus long."
+		"fr"		" \nChargement de vos informations...\nCeci peut prendre jusqu'à une minute\n \n \n \nLes serveurs Steam sont peut-être saturé,\ndans ce cas les délais peuvent être plus long."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"HINT_Player"
+	{
+		"#format"	"{1:s},{2:s},{3:d},{4:s},{5:s}"			// color, name, HP, jail, job
+		"fr"		"<font color='#{1}'>{2}</font>[HP: {3}] {4}\nJob: {5}"
+	}
+	"HINT_NewPlayer"
+	{
+		"#format"	"{1:s},{2:s},{3:d},{4:s},{5:s}"			// color, name, HP, jail, job
+		"fr"		"<strong>*NEW*</strong> <font color='#{1}'>{2}</font>[HP: {3}] {4}\nJob: {5}"
+	}
+	"Hint_Props"
+	{
+		"#format"	"{1:s},{2:s},{3:.2f}"
+		"fr"		"Props de {1}\nHP: {2} - {3}%"
+	}
+	"Hint_Vehicle"
+	{
+		"#format"	"{1:s},{2:d}"
+		"fr"		"Véhicule de {1}\n \nHP: {2}"
+	}
+	"Hint_VehicleDriving"
+	{
+		"#format"	"{1:s},{2:s},{3:d}"
+		"fr"		"Véhicule de {1}\n{2} Conduit\nHP: {3}"
+	}
+	"Hint_VehicleJob"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Véhicule de fonction\n \nHP: {1}"
+	}
+	"Hint_VehicleJobDriving"
+	{
+		"#format"	"{1:s},{2:d}"
+		"fr"		"Véhicule de fonction\n{1} Conduit\nHP: {2}"
+	}
+	"Hint_Appart"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Appartement de {1}"
+	}
+	"Hint_Appart_Sell"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Appartement {1} à louer\nPrix: {2}$"
+	}
+	"Hint_Garage"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Garage de {1}"
+	}
+	"Hint_Garage_Sell"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Garage {1} à louer\nPrix: {2}$"
+	}
+	"Hint_Villa"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Villa de {1}"
+	}
+	"Hint_Door"
+	{
+		"#format"	"{1:s},{2:t},{3:t}"
+		"fr"		"Porte {1} {2}\n{3}"
+	}
+	"Hint_Door_Close"
+	{
+		"fr"		"<font color='#ff0000'>fermée</font>"
+	}
+	"Hint_Door_Open"
+	{
+		"fr"		"<font color='#00ff00'>ouverte</font>"
+	}
+	"Hint_Door_WithoutKey"
+	{
+		"fr"		"Vous n'avez <font color='#ff0000'>pas les clés</font>."
+	}
+	"Hint_Door_WithKey"
+	{
+		"fr"		"Vous avez <font color='#00ff00'>les clés</font>."
+	}
+	"Hint_ATM"
+	{
+		"fr"		"Distributeur de billets"
+	}
+	"Hint_MAIL"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Boite aux lettres {1}"
+	}
+	"Hint_MAIL_Mairie"
+	{
+		"fr"		"de la Mairie"
+	}
+	"Hint_Phone"
+	{
+		"fr"		"Téléphone public"
+	}
+	"Hint_Arbre"
+	{
+		"#format"	"{1:d},{2:.2f}"
+		"fr"		"Arbre\nHP {1} - {2}"
+	}
+	"Hint_Stone"
+	{
+		"#format"	"{1:d},{2:.2f}"
+		"fr"		"Minerai\nHP {1} - {2}"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Pay_Cannot_Full"
+	{
+		"fr"		"Votre coffre en banque est plein, impossible de vous payer."
+	}
+	"Pay_Cannot_AFK"
+	{
+		"fr"		"Vous êtes resté trop longtemps AFK, vous n'avez pas le droit de toucher votre paye."
+	}
+	"Pay_Cannot_Jail"
+	{
+		"fr"		"Étant en prison, vous n'avez reçu que 10%% de votre paye."
+	}
+	"Pay_Cannot_Tribunal"
+	{
+		"fr"		"Etant recherché par le Tribunal, vous n'avez pas le droit de toucher votre paye."
+	}
+	"Pay_Cannot_Bankrupt"
+	{
+		"fr"		"L'entreprise pour laquel vous travaillez est en faillite. Vous n'avez pas de paye."
+	}
+	"Pay_Give"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Vous avez reçu votre paye de {green}{1}{default}$."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"ScoreBar_TAG_Police"
+	{
+		"fr"		"Gendarmerie"
+	}
+	"ScoreBar_TAG_Juge"
+	{
+		"fr"		"Juge"
+	}
+	"ScoreBar_TAG_Criminal"
+	{
+		"fr"		"Criminel"
+	}
+	"ScoreBar_TAG_InJail"
+	{
+		"fr"		"En prison"
+	}
+	"ScoreBar_TAG_AFK"
+	{
+		"fr"		"AFK"
+	}
+	"ScoreBar_TAG_InTUTO"
+	{
+		"fr"		"TUTORIAL"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"HUD_Date"

@@ -372,6 +372,22 @@
 		"en"	"{1} was destroyed."
 	}
 	// ----------------------------------------------------------------------------------------------
+	"Dead_DropWallet"
+	{
+		"fr"	"Vous avez accidentellement fait tombé votre {red}porte-feuilles{default}."
+		"en"	"You have accidentaly dropped your {red}wallet{default}."
+	}
+	"Dead_DropCB"
+	{
+		"fr"	"Vous avez accidentellement fait tombé votre {red}carte bancaire{default}."
+		"en"	"You have accidentaly dropped your {red}bank card{default}."
+	}
+	"Dead_DropSkin"
+	{
+		"fr"	"Vous avez accidentellement déchiré votre {red}tenue vestimentaire{default}."
+		"en"	"You have accidentaly torn your {red}attire{default}."
+	}
+	// ----------------------------------------------------------------------------------------------
 	"Banned_Event"
 	{
 		"fr"	"En raison de votre mauvais comportement, il vous est temporairement interdit de participer à un event."

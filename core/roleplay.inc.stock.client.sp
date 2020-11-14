@@ -39,38 +39,36 @@ void DeathDrop(int Client) {
 		if( rand >= 1 && rand < 70 ) {
 			
 			SpawnMoney(vecOrigin, true);
-			CPrintToChat(Client, "" ...MOD_TAG... " Vous avez fait tomber votre porte-feuille.");
+			CPrintToChat(Client, "" ...MOD_TAG... " %T", "Dead_DropWallet", Client);
 			rp_ClientMoney(Client, i_Money, -Math_GetRandomInt(20, 50));
 		}
 		else if( rand >= 71 && rand < 86 ) {
-			
-			SpawnMoney(vecOrigin, true);
-			rp_ClientMoney(Client, i_Money, -Math_GetRandomInt(20, 50));
-
 			if( g_bUserData[Client][b_HaveCard] == 1 ) {
 				g_bUserData[Client][b_HaveCard] = 0;
-				CPrintToChat(Client, "" ...MOD_TAG... " Vous avez fait tomber votre porte-feuille, et vous avez perdu votre carte bancaire...");
+				CPrintToChat(Client, "" ...MOD_TAG... " %T", "Dead_DropCB", Client);
 			}
 			else {
-				CPrintToChat(Client, "" ...MOD_TAG... " Vous avez fait tomber votre porte-feuille.");
+				CPrintToChat(Client, "" ...MOD_TAG... " %T", "Dead_DropWallet", Client);
+				SpawnMoney(vecOrigin, true);
+				rp_ClientMoney(Client, i_Money, -Math_GetRandomInt(20, 50));
 			}
 		}
 		else if( rand >= 86 && rand < 101 ) {
 			if( strlen(g_szUserData[Client][sz_Skin]) > 2 ) {
 				Format(g_szUserData[Client][sz_Skin], sizeof(g_szUserData[][]), "");
-				CPrintToChat(Client, "" ...MOD_TAG... " Vos vêtements sont devenus inutilisable...");
+				CPrintToChat(Client, "" ...MOD_TAG... " %T", "Dead_DropSkin", Client);
 			}
 			else {
 				
 				SpawnMoney(vecOrigin, true);
-				CPrintToChat(Client, "" ...MOD_TAG... " Vous avez fait tomber votre porte-feuille.");
+				CPrintToChat(Client, "" ...MOD_TAG... " %T", "Dead_DropWallet", Client);
 				rp_ClientMoney(Client, i_Money, -Math_GetRandomInt(20, 50));
 			}
 		}
 		else {
 			
 			SpawnMoney(vecOrigin, true);
-			CPrintToChat(Client, "" ...MOD_TAG... " Vous avez fait tomber votre porte-feuille.");
+			CPrintToChat(Client, "" ...MOD_TAG... " %T", "Dead_DropWallet", Client);
 			rp_ClientMoney(Client, i_Money, -Math_GetRandomInt(20, 50));
 		}
 	}
@@ -123,20 +121,29 @@ void updateClanTag(int client) {
 	if( g_iUserData[client][i_Job] >= 1 && g_iUserData[client][i_Job] <= 10 ) {
 		if( GetClientTeam(client) != CS_TEAM_CT ) {
 			if(g_iUserData[client][i_KillJailDuration] > 1) {
-				Format(ClanTag, sizeof(ClanTag), "Criminel");
+				Format(ClanTag, sizeof(ClanTag), "%T", "ScoreBar_TAG_Criminal", LANG_SERVER);
 			} else {
-				Format(ClanTag, sizeof(ClanTag), "Gendarmerie");
+				Format(ClanTag, sizeof(ClanTag), "%T", "ScoreBar_TAG_Police", LANG_SERVER);
 			}
 		}
 	}	
+	if( g_iUserData[client][i_Job] >= 1 && g_iUserData[client][i_Job] <= 10 ) {
+		if( GetClientTeam(client) != CS_TEAM_CT ) {
+			if(g_iUserData[client][i_KillJailDuration] > 1) {
+				Format(ClanTag, sizeof(ClanTag), "%T", "ScoreBar_TAG_Criminal", LANG_SERVER);
+			} else {
+				Format(ClanTag, sizeof(ClanTag), "%T", "ScoreBar_TAG_Juge", LANG_SERVER);
+			}
+		}
+	}
 	if( g_iUserData[client][i_JailTime] > 0 ) {
-		Format(ClanTag, sizeof(ClanTag), "En prison");
+		Format(ClanTag, sizeof(ClanTag), "%T", "ScoreBar_TAG_InJail", LANG_SERVER);
 	}
 	else if( g_bUserData[client][b_IsAFK] ) {
-		Format(ClanTag, sizeof(ClanTag), "AFK");
+		Format(ClanTag, sizeof(ClanTag), "%T", "ScoreBar_TAG_AFK", LANG_SERVER);
 	}
 	else if( !IsTutorialOver(client) ) {
-		Format(ClanTag, sizeof(ClanTag), "TUTORIAL");
+		Format(ClanTag, sizeof(ClanTag), "%T", "ScoreBar_TAG_InTUTO", LANG_SERVER);
 	}
 
 	ServerCommand("sm_force_clantag \"%d\" \"%s\"", client, ClanTag);
@@ -245,7 +252,7 @@ void showPlayerHintBox(int client, int target) {
 		char szJail[128];
 		PrintJail(target, szJail, sizeof(szJail));
 		
-		GetClientName2(target, clientname, sizeof(clientname));
+		GetClientName2(target, clientname, sizeof(clientname), false);
 		String_ColorsToHTML(clientname, sizeof(clientname));
 		
 		if( g_bUserData[target][b_CAPSLOCK] )  {
@@ -256,7 +263,7 @@ void showPlayerHintBox(int client, int target) {
 			return;
 		}
 		if( g_iClient_OLD[target] ) {
-			PrintHintText(client, "%s%s</font>[HP: %i]%s\nJob: %s", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail, g_szJobList[g_iUserData[target][i_Job]][job_type_name]);
+			PrintHintText(client, "%T", "HINT_Player", client, g_bUserData[target][b_GameModePassive] ? "00cc00" : "cc0000", clientname, (GetClientHealth(target)), szJail, g_szJobList[g_iUserData[target][i_Job]][job_type_name]);
 		}
 		else {
 			
@@ -264,29 +271,33 @@ void showPlayerHintBox(int client, int target) {
 			if (flags & ADMFLAG_GENERIC || flags & ADMFLAG_ROOT ||
 				(GetJobPrimaryID(client) == g_iUserData[client][i_Job] && g_iUserData[client][i_Job] > 0 && g_iUserData[target][i_Job] == 0 ) ||
 				IsJuge(client) || IsPolice(client) ) {
-				PrintHintText(client, "%s%s</font>[HP: %i]%s\n*NEW*Job: %s", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail, g_szJobList[g_iUserData[target][i_Job]][job_type_name]);
+				PrintHintText(client, "%T", "HINT_NewPlayer", client, g_bUserData[target][b_GameModePassive] ? "00cc00" : "cc0000", clientname, (GetClientHealth(target)), szJail, g_szJobList[g_iUserData[target][i_Job]][job_type_name]);
 			}
 			else {
-				PrintHintText(client, "%s%s</font>[HP: %i]%s\nJob: %s", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail, g_szJobList[g_iUserData[target][i_Job]][job_type_name]);
+				PrintHintText(client, "%T", "HINT_Player", client, g_bUserData[target][b_GameModePassive] ? "00cc00" : "cc0000", clientname, (GetClientHealth(target)), szJail, g_szJobList[g_iUserData[target][i_Job]][job_type_name]);
 			}
 		}
 		
 		if(IsJuge(target)) {
+			Format(classname, sizeof(classname), "%T", "ScoreBar_TAG_Juge", client);
+			
 			if( GetClientTeam(target) != CS_TEAM_CT ) {
 				if(g_iUserData[target][i_KillJailDuration] > 1) {
-					PrintHintText(client, "%s%s</font>[HP: %i]%s\nJob: Criminel", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail);
+					PrintHintText(client, "%T", "HINT_Player", client, g_bUserData[target][b_GameModePassive] ? "00cc00" : "cc0000", clientname, (GetClientHealth(target)), szJail, classname);
 				} else {
-					PrintHintText(client, "%s%s</font>[HP: %i]%s\nJob: Justice", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail);
+					PrintHintText(client, "%T", "HINT_Player", client, g_bUserData[target][b_GameModePassive] ? "00cc00" : "cc0000", clientname, (GetClientHealth(target)), szJail, classname);
 				}
 			}
 		}
 
 		if(IsPolice(target)) {
+			Format(classname, sizeof(classname), "%T", "ScoreBar_TAG_Police", client);
+			
 			if( GetClientTeam(target) != CS_TEAM_CT ) {
 				if(g_iUserData[target][i_KillJailDuration] > 1) {
-					PrintHintText(client, "%s%s</font>[HP: %i]%s\nJob: Criminel", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail);
+					PrintHintText(client, "%T", "HINT_Player", client, g_bUserData[target][b_GameModePassive] ? "00cc00" : "cc0000", clientname, (GetClientHealth(target)), szJail, classname);
 				} else {
-					PrintHintText(client, "%s%s</font>[HP: %i]%s\nJob: Gendarmerie", g_bUserData[target][b_GameModePassive] ? "<font color='#00cc00'>" : "<font color='#cc0000'>", clientname, (GetClientHealth(target)), szJail);
+					PrintHintText(client, "%T", "HINT_Player", client, g_bUserData[target][b_GameModePassive] ? "00cc00" : "cc0000", clientname, (GetClientHealth(target)), szJail, classname);
 				}
 			}
 		}
@@ -296,7 +307,7 @@ void showPlayerHintBox(int client, int target) {
 		int target2 = rp_GetBuildingData(target, BD_owner);
 		
 		if( target2 > 0 ) {
-			GetClientName2(target2, clientname, sizeof(clientname));
+			GetClientName2(target2, clientname, sizeof(clientname), false);
 			String_ColorsToHTML(clientname, sizeof(clientname));
 			
 			if( g_bUserData[target2][b_CAPSLOCK] )  {
@@ -307,13 +318,13 @@ void showPlayerHintBox(int client, int target) {
 			Format(clientname, sizeof(clientname), "??????");
 		}
 		
-		PrintHintText(client, "Props de %s\nHP: %d - %.2f%%", clientname, Entity_GetHealth(target), (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target))) * 100.0);
+		PrintHintText(client, "%T", "Hint_Props", client, clientname, Entity_GetHealth(target), (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target))) * 100.0);
 	}
 	else if( StrContains(classname, "vehicle") >= 0 && IsValidClient(g_iVehicleData[target][car_owner]) ) {
 		
 		int target2 = g_iVehicleData[target][car_owner];
 		
-		GetClientName2(target2, clientname, sizeof(clientname));
+		GetClientName2(target2, clientname, sizeof(clientname), false);
 		String_ColorsToHTML(clientname, sizeof(clientname));
 		
 		if( g_bUserData[target2][b_CAPSLOCK] )  {
@@ -323,10 +334,14 @@ void showPlayerHintBox(int client, int target) {
 		int target3 = GetEntPropEnt(target, Prop_Send, "m_hPlayer");
 		char fmt[128];
 		if( IsValidClient(target3) ) {
-			Format(fmt, sizeof(fmt), "\n%s conduit.", clientname);
+			GetClientName2(target3, clientname2, sizeof(clientname2), false);
+			String_ColorsToHTML(clientname2, sizeof(clientname2));
+			
+			PrintHintText(client, "%T", "Hint_VehicleDriving", client, clientname, clientname2, rp_GetVehicleInt(target, car_health));
 		}
-		
-		PrintHintText(client, "Voiture de %s\nHP: %d%s", clientname, rp_GetVehicleInt(target, car_health), fmt);
+		else {
+			PrintHintText(client, "%T", "Hint_Vehicle", client, clientname, rp_GetVehicleInt(target, car_health));
+		}
 	}
 	else if( StrContains(classname, "vehicle") >= 0 && g_iVehicleData[target][car_owner] < 0 ) {
 		
@@ -334,18 +349,18 @@ void showPlayerHintBox(int client, int target) {
 		char fmt[128];
 		if( IsValidClient(target3) ) {
 			
-			GetClientName2(target3, clientname, sizeof(clientname));
+			GetClientName2(target3, clientname, sizeof(clientname), false);
 			String_ColorsToHTML(clientname, sizeof(clientname));
 			
 			if( g_bUserData[target3][b_CAPSLOCK] )  {
 				String_ToLower(clientname, clientname, strlen(clientname));
 			}
 			
-			Format(fmt, sizeof(fmt), "\n%s conduit.", clientname);
+			PrintHintText(client, "%T", "Hint_VehicleJobDriving", client, clientname, rp_GetVehicleInt(target, car_health));
 		}
-		
-		
-		PrintHintText(client, "Voiture de fonction\nHP: %d%s", rp_GetVehicleInt(target, car_health), fmt);
+		else {
+			PrintHintText(client, "%T", "Hint_VehicleJob", client, rp_GetVehicleInt(target, car_health));
+		}
 	}
 	else if( StrContains(classname, "door") >= 0 ) {
 		int appart = getDoorAppart(target);
@@ -353,28 +368,28 @@ void showPlayerHintBox(int client, int target) {
 			int owner = g_iAppartBonus[appart][appart_proprio];
 			if( IsValidClient(owner) ) {
 				
-				GetClientName2(owner, clientname, sizeof(clientname));
+				GetClientName2(owner, clientname, sizeof(clientname), false);
 				String_ColorsToHTML(clientname, sizeof(clientname));
 				
 				if( g_bUserData[owner][b_CAPSLOCK] )  {
 					String_ToLower(clientname, clientname, strlen(clientname));
 				}
 				
-				PrintHintText(client, "%s de:\n %s", (appart<100?"Appartement":"Garage"), clientname);
+				PrintHintText(client, "%T", appart < 100 ? "Hint_Appart" : "Hint_Garage"), client, clientname);
 			}
 			else if( appart == 12 ) {
-				PrintHintText(client, "Appartement de: ", "??????");
+				PrintHintText(client, "%T", "Hint_Appart", client, "??????");
 			}
 			else if( appart == 50 ) {
 				rp_GetServerString(villaOwnerName, clientname, sizeof(clientname));
-				PrintHintText(client, "Villa de: %s", clientname);
+				PrintHintText(client, "%T", "Hint_Villa", client, clientname);
 			}
 			else if( appart == 51 ) {
 				rp_GetServerString(maireName, clientname, sizeof(clientname));
-				PrintHintText(client, "Villa de: %s", clientname);
+				PrintHintText(client, "%T", "Hint_Villa", client, clientname); 
 			}
 			else {
-				PrintHintText(client, "%s %d à louer\nPrix: %s$", (appart<100?"Appartement":"Garage"), appart, g_szSellingKeys[appart][key_type_prix]);
+				PrintHintText(client, "%T", (appart<100?"Hint_Appart_Sell":"Hint_Garage_Sell"), client, appart, StringToInt(g_szSellingKeys[appart][key_type_prix]));
 			}
 		}
 		else {
@@ -384,22 +399,22 @@ void showPlayerHintBox(int client, int target) {
 			ExplodeString(expl[0], ":", expl, sizeof(expl), sizeof(expl[]));
 			strcopy(clientname, sizeof(clientname), expl[0]);
 			
-			classname[0] = clientname2[0] = 0;			
+			Format(classname, sizeof(classname), "Empty_String");
+			Format(classname2, sizeof(classname2), "Empty_String");
+			
 			if( Entity_GetDistance(client, target) < 512.0 ) {
-				Format(clientname2, sizeof(clientname2), "<font color='#%s</font>,", GetEntProp(target, Prop_Data, "m_bLocked") ? "FF0000'>Fermée" : "00FF00'>Ouverte");			
+				Format(clientname2, sizeof(clientname2), "%s", GetEntProp(target, Prop_Data, "m_bLocked") ? "Hint_Door_Close" : "Hint_Door_Open");			
 				if( rp_GetDoorID(target) > 0 )
-					Format(classname, sizeof(classname), "<font color='#%s</font>.", rp_GetClientKeyDoor(client, rp_GetDoorID(target)) ? "00FF00'> vous avez les clés" : "FF0000'> vous n'avez pas les clés" );
+					Format(classname, sizeof(classname), "%s", rp_GetClientKeyDoor(client, rp_GetDoorID(target)) ? "Hint_Door_WithKey" : "Hint_Door_WithoutKey" );
 			}
-				
-			PrintHintText(client, "Porte: %s\n %s%s", clientname, clientname2, classname);
+			
+			PrintHintText(client, "%T", "Hint_Door", client, clientname, clientname2, classname);
 		}
 	}
 	else if( StrContains(classname, "bank") >= 0 ) {
-		PrintHintText(client, "\n Distributeur de billets");
+		PrintHintText(client, "\n %T", "Hint_ATM", client);
 	}
 	else if( StrContains(classname, "mail") >= 0 ) {
-		
-		
 		char tmp3[2][64];
 		
 		ReplaceString(classname, sizeof(classname), "rp_mail_", "");
@@ -411,20 +426,20 @@ void showPlayerHintBox(int client, int target) {
 			Format(classname, sizeof(classname), "%s", tmp3[1]);
 		}
 		else {
-			Format(classname, sizeof(classname), "Mairie");
+			Format(classname, sizeof(classname), "%T", "Hint_MAIL_Mairie", client);
 		}
 		
-		PrintHintText(client, "\n Boîte aux lettres %s", classname);
+		PrintHintText(client, "%T", "Hint_MAIL", client, classname);
 
 	}
 	else if( StrContains(classname, "phone") >= 0 ) {
-		PrintHintText(client, "\n Téléphone public");
+		PrintHintText(client, "%T", "Hint_Phone", client);
 	}
 	else if( StrContains(classname, "tree") >= 0 ) {
-		PrintHintText(client, "Arbre\nHP: %d - %.2f%%", Entity_GetHealth(target), (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target))) * 100.0);
+		PrintHintText(client, "%T", "Hint_Arbre", client, Entity_GetHealth(target), (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target))) * 100.0);
 	}
-	else if( StrContains(classname, "crystal") >= 0 ) {
-		PrintHintText(client, "Minerai\nHP: %d - %.2f%%", Entity_GetHealth(target), (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target))) * 100.0);
+	else if( StrContains(classname, "stone") >= 0 ) {
+		PrintHintText(client, "%T", "Hint_Stone", client, Entity_GetHealth(target), (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target))) * 100.0);
 	}
 }
 
@@ -564,27 +579,27 @@ int GivePlayerPay(int i, bool calculator = false) {
 	
 	if( g_iUserData[i][i_ItemBankPrice] > getClientBankLimit(i) ) {
 		if( !calculator ) {
-			CPrintToChat(i, "" ...MOD_TAG... " Votre coffre en banque est plein, impossible de vous payer.");
+			CPrintToChat(i, "" ...MOD_TAG... " %T", "Pay_Cannot_Full", i);
 			float pc = float(g_iUserData[i][i_ItemBankPrice]) / float(getClientBankLimit(i)) * 100.0;
 			LogToGame("[CHEATING] [BANK] %L Coffre de la banque plein: %f%%", i, pc);
 			if( pc > 200.0 )
-				KickClient(i, "Votre coffre est beaucoup trop plein.");
+				KickClient(i, "%T", "Pay_Cannot_Full", i);
 		}
 	}
 	else if( g_bUserData[i][b_IsAFK] ) {
 		if( !calculator )
-			CPrintToChat(i, "" ...MOD_TAG... " Etant AFK, vous n'avez pas le droit de toucher votre paye.");
+			CPrintToChat(i, "" ...MOD_TAG... " %T", "Pay_Cannot_AFK", i);
 	}
 	else if( g_iUserData[i][i_TimeAFK_today] >= (18*60) ) {
 		if( !calculator )
-			CPrintToChat(i, "" ...MOD_TAG... " Vous avez passé plus de 18 heures AFK sur cette journée. Vous ne serez donc pas payé.");
+			CPrintToChat(i, "" ...MOD_TAG... " %T", "Pay_Cannot_AFK", i);
 	}
 	else {
 							
 		if( IsClientInJail(i) && g_iUserData[i][i_JailTime] > 0 ) {
 			
 			if( !calculator )
-				CPrintToChat(i, "" ...MOD_TAG... " Étant en prison, vous n'avez reçu que 10%% de votre paye.");
+				CPrintToChat(i, "" ...MOD_TAG... " %T", "Pay_Cannot_Jail", i);
 
 			SetJobCapital(1, GetJobCapital(1) + RoundFloat((to_pay/10.0)*6.0) );
 			SetJobCapital(101, GetJobCapital(101) + RoundFloat((to_pay/10.0)*3.0) );
@@ -593,7 +608,7 @@ int GivePlayerPay(int i, bool calculator = false) {
 		}
 		if( g_iUserData[i][i_SearchLVL] >= 4 ) {
 			if( !calculator )
-				CPrintToChat(i, "" ...MOD_TAG... " Etant recherché par le Tribunal, vous n'avez pas le droit de toucher votre paye.");
+				CPrintToChat(i, "" ...MOD_TAG... " %T", "Pay_Cannot_Tribunal", i);
 
 			SetJobCapital(101, GetJobCapital(101) + RoundFloat((to_pay/10.0)*7.0) );
 			SetJobCapital(1, GetJobCapital(1) + RoundFloat((to_pay/10.0)*3.0) );
@@ -603,13 +618,13 @@ int GivePlayerPay(int i, bool calculator = false) {
 		if( !calculator ) {
 				
 			if( capital > 0 || g_iUserData[i][i_Job] == 0 ) {
-				CPrintToChat(i, "" ...MOD_TAG... " Vous avez reçu votre paye de %i$.", to_pay);
+				CPrintToChat(i, "" ...MOD_TAG... " %T", "Pay_Give", i, to_pay);
 				SetJobCapital( g_iUserData[i][i_Job], (capital-to_pay));
 				g_iUserStat[i][i_MoneyEarned_Pay] += to_pay;
 				rp_ClientMoney(i, g_bUserData[i][b_PayToBank] ? i_Bank : i_Money, to_pay);
 			}
 			else {
-				CPrintToChat(i, "" ...MOD_TAG... " L'entreprise pour laquel vous travaillez est en faillite. Vous n'avez pas de paye.");
+				CPrintToChat(i, "" ...MOD_TAG... " %T", "Pay_Cannot_Bankrupt", i);
 				
 				GetClientAuthId(i, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 				Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`) VALUES (NULL, '%s', '%i', '%i', '1', '%i', '%s', '%i');",
@@ -623,7 +638,7 @@ int GivePlayerPay(int i, bool calculator = false) {
 		to_pay += g_iUserData[i][i_AddToPay];
 				
 		if( !calculator ) {
-			CPrintToChat(i, "" ...MOD_TAG... " Vous avez reçu: %d$ pour votre travail d'aujourd'hui.", g_iUserData[i][i_AddToPay]);
+			CPrintToChat(i, "" ...MOD_TAG... " %T", "Pay_Work", i, g_iUserData[i][i_AddToPay]);
 			g_iUserStat[i][i_MoneyEarned_Pay] += g_iUserData[i][i_AddToPay];
 				
 			int tmp = g_iUserData[i][i_AddToPay];
@@ -634,7 +649,6 @@ int GivePlayerPay(int i, bool calculator = false) {
 	}
 	
 	if( !calculator ) {
-		addToGroup(i, to_pay/100);
 		g_iUserData[i][i_Disposed] = 10;
 		g_iUserData[i][i_TimeAFK_today] = 0;
 	}

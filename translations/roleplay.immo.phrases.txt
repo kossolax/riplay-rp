@@ -209,4 +209,20 @@
 		"fr"		"Le gagnant de la villa est... {red}{1}{default} pour {red}{2}{default}$!"
 		"en"		"The winner of the villa is... {red}{1}{default} for {red}{2}{default}$!"
 	}
+	// ----------------------------------------------------------------------------------------------
+	"Tomb_Dead"
+	{
+		"fr"		"Vous êtes mort..."
+		"en"		"You are dead..."
+	}
+	"Tomb_RespawnTomb"
+	{
+		"fr"		"Revivre sur ma tombe"
+		"en"		"Respawn on my grave"
+	}
+	"Tomb_RespawnMap"
+	{
+		"fr"		"Revivre sur n'importe où"
+		"en"		"Respawn elsewhere"
+	}
 }

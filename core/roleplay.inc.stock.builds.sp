@@ -162,6 +162,7 @@ public Action WeaponEquip(int client, int weapon) {
 }
 
 void showGraveMenu(int client) {
+	char tmp[128];
 	if( !g_bUserData[client][b_HasGrave] )
 		return;
 	if( !IsPlayerAlive(client) )
@@ -171,43 +172,43 @@ void showGraveMenu(int client) {
 	
 	
 	Handle menu = CreateMenu(eventTombSwitch);
-	SetMenuTitle(menu, "Vous êtes mort...\n\n");
+	SetMenuTitle(menu, "%T\n ", "Tomb_Dead", client);
 	
-	AddMenuItem(menu, "tomb", "Revivre sur ma tombe");
-	AddMenuItem(menu, "any", "Revivre n'importe ou");
+	Format(tmp, sizeof(tmp), "%T", "Tomb_RespawnTomb", client);	AddMenuItem(menu, "tomb", tmp);
+	Format(tmp, sizeof(tmp), "%T", "Tomb_RespawnMap", client);	AddMenuItem(menu, "any", tmp);
 	
 	SetMenuExitButton(menu, false);
-	DisplayMenu(menu, client, 1);
+	DisplayMenu(menu, client, 5);
 }
 bool CheckBuild(int client, bool showMsg = true) {
 	if( IsInVehicle(client) ) {
 		if( showMsg )
-			CPrintToChat(client, "" ...MOD_TAG... " Impossible de construire en voiture.");
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
 		return false;
 	}
 	if(! (GetEntityFlags(client) & FL_ONGROUND) ) {
 		if( showMsg )
-			CPrintToChat(client, "" ...MOD_TAG... " Impossible de construire dans les airs");
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
 		return false;
 	}
 	if( g_iGrabbing[client] > 0 ) {
 		if( showMsg )
-			CPrintToChat(client, "" ...MOD_TAG... " Impossible de construire lorsque vous utilisez la force.");
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Build_Cannot_ForNow", client);
 		return false;
 	}
 	if( g_iGroundEntity[client] > 0 ) {
 		if( showMsg )
-			CPrintToChat(client, "" ...MOD_TAG... " Impossible de construire sur quelque chose");
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
 		return false;
 	}
 	if( GetZoneBit(GetPlayerZone(client) ) & BITZONE_BLOCKBUILD ) {
 		if( showMsg )
-			CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
 		return false;
 	}
 	if( GetZoneBit(GetPlayerZone(client) ) & BITZONE_EVENT ) {
 		if( showMsg )
-			CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
 		return false;
 	}
 	return true;
