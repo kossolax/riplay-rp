@@ -119,7 +119,8 @@
 	}
 	"Error_OnlyInsideAppart"
 	{
-		"fr"		"Vous devez être à l'intérieur de votre appartement pour utiliser cet objet."
+		"fr"		"Vous devez être à l'intérieur pour utiliser cet objet."
+		"en"		"You must be inside to use this object."
 	}
 	"Error_Level"
 	{
@@ -131,14 +132,17 @@
 	{
 		"#format"	"{1:t}"
 		"fr"	"Vous devez viser {red}{1}{default}."
+		"en"	"You must aim {red}{1}{default}."
 	}
 	"Error_NoItemToSellForNow"
 	{
 		"fr"	"Il n'y a rien à vendre pour le moment"
+		"en"	"There is nothing to sell at the moment."
 	}
 	"Error_KnifeInHands"
 	{
 		"fr"	"Vous devez prendre votre couteau en main."
+		"en"	"You must take your knife in hand."
 	}
 	"Error_YouMustBeAliveToTalk"
 	{
@@ -163,11 +167,13 @@
 	{
 		"#format"	"{1:d}"
 		"fr"	"Votre appartement a fait remporté {green}{1}{default}$ supplémentaire."
+		"en"	"Your apartment earned {green}{1}{default}$ extra."
 	}
 	"Pay_Bonus_Vitality"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"	"Votre vitalité de niveau {green}{1}{default} a fait remporté {green}{2}{default}$ supplémentaire."
+		"en"	"Your level {green}{1}{default} vitality earned you {green}{2}{default}$ extra."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"LEVEL_XP"
@@ -207,11 +213,13 @@
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"		"Vous avez volé {1}x {red}{2}{default}."
+		"en"		"You stole {1}x {red}{2}{default}."
 	}
 	"Steal_Item_By"
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"		"Quelqu'un vous a volé {1}x {red}{2}{default}."
+		"en"		"Someone stole from you {1}x {red}{2}{default}."
 	}
 	"Steal_Failed"
 	{
@@ -252,6 +260,7 @@
 	"Difficulty_Impossible"
 	{
 		"fr"		"Difficulté: Impossible"
+		"en"		"Difficulty: Impossible"
 	}
 	
 	// ----------------------------------------------------------------------------------------------
@@ -274,7 +283,7 @@
 	"Jobs_Noone"
 	{
 		"fr"	"Personne"
-		"fr"	"No one" 
+		"en"	"No one" 
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Cmd_TargetIsToFar"
@@ -332,11 +341,13 @@
 	{
 		"#format"	"{1:d},{2:s},{3:d}"
 		"fr"		"Vous avez acheté {red}{1} {2}{default}, pour {red}{3}{default}$."
+		"en"		"You purchased {red}{1} {2}{default}, for {red}{3}{default}$."
 	}
 	"Market_Sell"
 	{
 		"#format"	"{1:d},{2:s},{3:d}"
 		"fr"		"Vous avez vendu {red}{1} {2}{default}, pour {red}{3}{default}$."
+		"en"		"You sold {red}{1} {2}{default}, for {red}{3}{default}$."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Build_CannotHere"
@@ -443,11 +454,13 @@
 	"Phone_Mission"
 	{
 		"fr"		"Appel d'un inconnu:"
+		"en"		"Call from an unknown person:"
 	}
 	"Phone_Mission_Copter"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Un hélicoptère vous envois un colis.\nIl sera envoyé près de: {1}"
+		"en"		"A helicopter is delivering you a package.\nIt will be delivered close to: {1}"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"rp_banana"
@@ -572,6 +585,7 @@
 	"prop_door_rotating"
 	{
 		"fr"	"une porte"
+		"en"    "a door"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Trail"
@@ -885,77 +899,96 @@
 	"weapon_knife_css"
 	{
 		"fr"	"Couteau classique"
+		"en"	"Classic knife"
 	}
 	"weapon_bayonet"
 	{
 		"fr"	"Baïonnette"
+		"en"	"Bayonet"
 	}
 	"weapon_knife_flip"
 	{
 		"fr"	"Couteau pliant"
+		"en"	"Folding knife"
 	}
 	"weapon_knife_gut"
 	{
 		"fr"	"Couteau à éviscérer"
+		"en"	"Gutting knife"
 	}
 	"weapon_knife_karambit"
 	{
 		"fr"	"Karambit"
+		"en"	"Karambit"
 	}
 	"weapon_knife_m9_bayonet"
 	{
 		"fr"	"Baïonnette M9"
+		"en"	"Bayonet M9"
 	}
 	"weapon_knife_tactical"
 	{
 		"fr"	"Couteau de chasseur"
+		"en"	"Hunting knife"
 	}
 	"weapon_knife_butterfly"
 	{
 		"fr"	"Couteau papillon"
+		"en"	"Butterfly knife"
 	}
 	"weapon_knife_falchion"
 	{
 		"fr"	"Couteau fauchon"
+		"en"	"Falchion knife"
 	}
 	"weapon_knife_push"
 	{
 		"fr"	"Dagues sombres"
+		"en"	"Dark dagger"
 	}
 	"weapon_knife_survival_bowie"
 	{
 		"fr"	"Couteau bowie"
+		"en"	"Bowie knife"
 	}
 	"weapon_knife_ursus"
 	{
 		"fr"	"Couteau ursus"
+		"en"	"Ursus knife"
 	}
 	"weapon_knife_gypsy_jackknife"
 	{
 		"fr"	"Couteau navaja"
+		"en"	"Navaja knife"
 	}
 	"weapon_knife_stiletto"
 	{
 		"fr"	"Couteau stileto"
+		"en"	"Stiletto knife"
 	}
 	"weapon_knife_widowmaker"
 	{
 		"fr"	"Couteau canif"
+		"en"	"Pocket knife"
 	}
 	"weapon_knife_canis"
 	{
 		"fr"	"Couteau de survie"
+		"en"	"Survival knife"
 	}
 	"weapon_knife_cord"
 	{
 		"fr"	"Couteau en paracorde"
+		"en"	"Paracord knife"
 	}
 	"weapon_knife_skeleton"
 	{
 		"fr"	"Couteau squelettique"
+		"en"	"Skeleton knife"
 	}
 	"weapon_knife_outdoor"
 	{
 		"fr"	"Couteau de nomade"
+		"en"	"Nomad knife"
 	}
 }
