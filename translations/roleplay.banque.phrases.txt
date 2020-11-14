@@ -98,5 +98,13 @@
 		"fr"		"Qui peut modifier ce panneau?"
 		"en"		"Who can change this sign?"
 	}
-	
+	// ----------------------------------------------------------------------------------------------
+	"License_Expire_Primary"
+	{
+		"fr"		"Attention, ton permis de {red}port d'armes lourde{default} vient d'expirer. Pensez à en racheter un auprès d'un banquier."
+	}
+	"License_Expire_Secondary"
+	{
+		"fr"		"Attention, ton permis de {red}port d'armes légère{default} vient d'expirer. Pensez à en racheter un auprès d'un banquier."
+	}
 }
