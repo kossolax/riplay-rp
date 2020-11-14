@@ -1406,6 +1406,7 @@ public void itemSave_Withdraw_2(Handle owner, Handle hQuery, const char[] error,
 	char buffer[BUFFER_SIZE], buffer2[BUFFER_SIZE], szData[2][BUFFER_SIZE];
 	int size = (BUFFER_SIZE+SQL_FetchSize(hQuery, 1));
 	char[] data = new char[size];
+	char tmp[128];
 	
 	SQL_FetchString(hQuery, 1, data, size);	
 	// ------------
