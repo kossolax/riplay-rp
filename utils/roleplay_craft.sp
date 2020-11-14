@@ -25,7 +25,7 @@
 #define TREE_HP				1
 #define TREE_RESPAWN_MIN	3.0
 #define TREE_RESPAWN_MAX	5.0
-
+#define STONE_MAX			32
 
 char g_szTrees[][] = {
 	"models/props/hr_massive/hr_foliage/birch_tree_01.mdl",
@@ -35,15 +35,39 @@ char g_szTrees[][] = {
 char g_szWoodGibs[][] = {
 	"models/props/de_inferno/hr_i/wood_beam_a/wood_beam_a1.mdl"
 };
+char g_szStone[][] = {
+	"models/custom_prop/minerals/coal/coal.mdl",
+	"models/custom_prop/minerals/granite/granite.mdl",
+	"models/custom_prop/minerals/ironstone/ironstone.mdl",
+	"models/custom_prop/minerals/mica/mica.mdl",
+	"models/custom_prop/minerals/mineral6/mineral6.mdl",
+	"models/custom_prop/minerals/mineral7/mineral7.mdl",
+	"models/custom_prop/minerals/mineral8/mineral8.mdl",
+	"models/custom_prop/minerals/mineral9/mineral9.mdl",
+	"models/custom_prop/minerals/mineral10/mineral10.mdl",
+	"models/custom_prop/minerals/mineral11/mineral11.mdl",
+	"models/custom_prop/minerals/mineral12/mineral12.mdl",
+	"models/custom_prop/minerals/mineral13/mineral13.mdl",
+	"models/custom_prop/minerals/mineral_green/mineral_green.mdl",
+	"models/custom_prop/minerals/mineral_orange/mineral_orange.mdl",
+	"models/custom_prop/minerals/quartz/quartz.mdl"
+};
 
-int g_iTreeID[2049];
+int g_iTreeID[2049], g_iStoneID[2049];
+int g_iStoneCount = 0;
+int g_cBeam;
 
 public void OnMapStart() {
+	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt");
+	
 	for (int i = 0; i < sizeof(g_szTrees); i++) {
 		PrecacheModel(g_szTrees[i]);
 	}
 	for (int i = 0; i < sizeof(g_szWoodGibs); i++) {
 		PrecacheModel(g_szWoodGibs[i]);
+	}
+	for (int i = 0; i < sizeof(g_szStone); i++) {
+		PrecacheModel(g_szStone[i]);
 	}
 }
 public void OnPluginStart() {
@@ -114,15 +138,106 @@ public Action SpawnTree(Handle timer, any i) {
 	ServerCommand("sm_effect_fading %d 1 0", ent);
 	g_iTreeID[ent] = i;
 }
+public Action OnPlayerRunCmd(int client) {
+	float min[3], max[3], src[3], dst[3], nrm[3], dir[3], tmp[3];
+	char model[128];
+	int zone = rp_GetPlayerZone(client);
+	int lvl = getMineLevel(zone);
+	int x, y, z = 2;
+	
+	if( lvl > 0 && g_iStoneCount < STONE_MAX ) {
+		min[0] = rp_GetZoneFloat(zone, zone_type_min_x);
+		min[1] = rp_GetZoneFloat(zone, zone_type_min_y);
+		min[2] = rp_GetZoneFloat(zone, zone_type_min_z);
+		
+		max[0] = rp_GetZoneFloat(zone, zone_type_max_x);
+		max[1] = rp_GetZoneFloat(zone, zone_type_max_y);
+		max[2] = rp_GetZoneFloat(zone, zone_type_max_z);
+		
+		if( max[0] - min[0] > max[1] - min[1] )
+			y = 1;
+		else
+			x = 1;
+		
+		src[x] = min[x];
+		src[y] = (min[y] + max[y]) / 2.0;
+		src[z] = (min[z] + max[z]) / 2.0;
+		
+		dst[x] = max[x];
+		dst[y] = (min[y] + max[y]) / 2.0;
+		dst[z] = (min[z] + max[z]) / 2.0;
+		
+		TE_SetupBeamPoints(src, dst, g_cBeam, 0, 0, 10, 0.1, 1.0, 1.0, 0, 0.0, {10, 255, 10, 250}, 10);
+		TE_SendToClient(client);
+		
+		TE_SetupBeamPoints(dst, src, g_cBeam, 0, 0, 10, 0.1, 1.0, 1.0, 0, 0.0, {10, 255, 10, 250}, 10);
+		TE_SendToClient(client);
+		
+		nrm[x] = Math_Lerp(src[x], dst[x], GetRandomFloat());
+		nrm[y] = src[y];
+		nrm[z] = src[z];
+		
+		dir[x] = nrm[x];
+		dir[y] = nrm[y] + 256.0 * (GetRandomInt(0, 1)==0?1:-1);
+		dir[z] = nrm[z];
+		
+		Handle tr = TR_TraceRayEx(nrm, dir, MASK_SOLID_BRUSHONLY, RayType_EndPoint);
+		if( TR_DidHit(tr) ) {
+			TR_GetEndPosition(dir, tr);
+			TR_GetPlaneNormal(tr, tmp);
+			
+			TE_SetupBeamPoints(nrm, dir, g_cBeam, 0, 0, 10, 0.1, 1.0, 1.0, 0, 0.0, {10, 0, 255, 250}, 10);
+			TE_SendToClient(client);
+			
+			int rnd = GetRandomInt(0, sizeof(g_szStone) - 1);
+			int size = Math_GetRandomPow(0, 2);
+			Format(model, sizeof(model), "%s", g_szStone[rnd]);
+			if( size > 0 ) {
+				if( size == 1 )
+					ReplaceString(model, sizeof(model), ".mdl", "2.mdl");
+				if( size == 2 )
+					ReplaceString(model, sizeof(model), ".mdl", "3.mdl");
+			}
+			
+			int ent = CreateEntityByName("prop_physics");
+			DispatchKeyValue(ent, "model", model);
+			DispatchKeyValue(ent, "solid", "6");
+			DispatchKeyValue(ent, "classname", "rp_stone");
+			DispatchSpawn(ent);
+			ActivateEntity(ent);
+			
+			SDKHook(ent, SDKHook_OnTakeDamage, OnStoneDamage);
+			
+			rp_AcceptEntityInput(ent, "DisableMotion");
+			rp_AcceptEntityInput(ent, "DisableCollision" );
+			rp_AcceptEntityInput(ent, "EnableCollision" );
+			
+			
+			GetVectorAngles(tmp, nrm);
+			nrm[0] += 90.0;
+			TeleportEntity(ent, dir, nrm, NULL_VECTOR);
+			ServerCommand("sm_effect_fading %d 1 0", ent);
+			g_iStoneID[ent] = 1;
+			g_iStoneCount++;
+		}
+		delete tr;		
+	}
+}
 public void OnEntityCreated(int entity, const char[] classname) {
 	if( entity > 0 ) {
 		g_iTreeID[entity] = 0;
+		g_iStoneID[entity] = 0;
 	}
 }
 public void OnEntityDestroyed(int entity) {
-	if( entity > 0 && g_iTreeID[entity] > 0 ) {
-		CreateTimer(GetRandomFloat(TREE_RESPAWN_MIN, TREE_RESPAWN_MAX), SpawnTree, g_iTreeID[entity]);
-		g_iTreeID[entity] = 0;
+	if( entity > 0 ) {
+		if( g_iTreeID[entity] > 0 ) {
+			CreateTimer(GetRandomFloat(TREE_RESPAWN_MIN, TREE_RESPAWN_MAX), SpawnTree, g_iTreeID[entity]);
+			g_iTreeID[entity] = 0;
+		}
+		if( g_iStoneID[entity] > 0 ) {
+			g_iStoneCount--;
+		}
 	}
 }
 public void OnTreeThink(int entity) {
@@ -172,6 +287,13 @@ public void OnTreeThink(int entity) {
 		SDKUnhook(entity, SDKHook_VPhysicsUpdate, OnTreeThink);
 	}
 }
+public Action OnStoneDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& weapon, float damageForce[3], float damagePosition[3]) {
+	if( attacker == inflictor && damagetype & DMG_SLASH ) {
+		if( IsMeleeHammer(weapon) ) {	
+			AcceptEntityInput(victim, "Break");
+		}
+	}
+}
 public Action OnWoodDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& weapon, float damageForce[3], float damagePosition[3]) {
 	if( attacker == inflictor && damagetype & DMG_SLASH ) {
 		if( IsMeleeAxe(weapon) ) {	
@@ -195,14 +317,56 @@ public Action OnTreeDamage(int victim, int& attacker, int& inflictor, float& dam
 	}
 }
 
-
-stock bool IsMeleeAxe(int weapon) {
+stock int getMineLevel(int zone) {
+	static int level[MAX_ZONES] =  { -2, ... };
+	
+	if( level[zone] == -2 ) {
+		char tmp[128];
+		
+		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+		if( StrContains(tmp, "mine") == 0 ) {
+			ReplaceString(tmp, sizeof(tmp), "mine_", "");
+			level[zone] = StringToInt(tmp);
+		}
+		else {
+			level[zone] = -1;
+		}
+	}
+	
+	return level[zone];
+}
+// ------------------------------------------------------------------------------------------------
+bool IsMeleeAxe(int weapon) {
 	static char tmp[128];
 	
 	GetEdictClassname(weapon, tmp, sizeof(tmp));
 	if( StrEqual(tmp, "weapon_melee") ) {
 		Entity_GetModel(weapon, tmp, sizeof(tmp));
 		if( StrEqual(tmp, "models/weapons/v_axe.mdl") ) {
+			return true;
+		}
+	}
+	return false;
+}
+bool IsMeleeHammer(int weapon) {
+	static char tmp[128];
+	
+	GetEdictClassname(weapon, tmp, sizeof(tmp));
+	if( StrEqual(tmp, "weapon_melee") ) {
+		Entity_GetModel(weapon, tmp, sizeof(tmp));
+		if( StrEqual(tmp, "models/weapons/v_hammer.mdl") ) {
+			return true;
+		}
+	}
+	return false;
+}
+bool IsMeleeSpanner(int weapon) {
+	static char tmp[128];
+	
+	GetEdictClassname(weapon, tmp, sizeof(tmp));
+	if( StrEqual(tmp, "weapon_melee") ) {
+		Entity_GetModel(weapon, tmp, sizeof(tmp));
+		if( StrEqual(tmp, "models/weapons/v_spanner.mdl") ) {
 			return true;
 		}
 	}
