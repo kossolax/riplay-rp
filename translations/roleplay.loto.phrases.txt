@@ -115,6 +115,12 @@
 		"fr"	"Vous êtes déjà entrain de gratter des tickets?!"
 		"en"	"You're already scratching tickets?!"
 	}
+	"Loterry_Count"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Vous avez gratté {green}{1}{default} ticket(s), la cagnotte totale est de: {green}{2}{default}$."
+		"en"		"You have scratched {green}{1}{default} ticket(s), the total amount of the cagnotte is: {green}{2}{default}$."
+	}
 	"Lotery_Cagnotte"
 	{
 		"#format"	"{1:d}"

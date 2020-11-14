@@ -427,7 +427,7 @@ public Action StoreData(Handle timer, any client) {
 public void showCagnotteInfo(Handle owner, Handle hQuery, const char[] error, any client) {
 	if( SQL_FetchRow(hQuery) ) {
 		// g_iLOTO;
-		CPrintToChat(client, "" ...MOD_TAG... " %N{default} vous avez gratté %d tickets, la cagnotte totale est de: %d$", client, SQL_FetchInt(hQuery, 0), rp_GetServerInt(lotoCagnotte));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Loterry_Count", client, SQL_FetchInt(hQuery, 0), rp_GetServerInt(lotoCagnotte));
 	}
 }
 public void SQL_SetLoteryAmount(Handle owner, Handle hQuery, const char[] error, any none) {
@@ -785,7 +785,7 @@ void ResetUserData(int client) {
 	g_iUserData[client][i_FistTrainAdmin] = -1;
 	g_flUserData[client][fl_WeaponTrainAdmin] = -1.0;
 	
-	Format(g_szItems_SAVE[client][0], sizeof(g_szItems_SAVE[][]), "Registre 1");
+	Format(g_szItems_SAVE[client][0], sizeof(g_szItems_SAVE[][]), "%T", "Item_Register", client, 1);
 	for( int i=1; i<sizeof(g_szItems_SAVE[]); i++ )
 		Format(g_szItems_SAVE[client][i], sizeof(g_szItems_SAVE[][]), "");
 	
@@ -1378,7 +1378,7 @@ bool ItemSave_AddSave(int client){
 	char query[128];
 	for(int i=0; i<sizeof(g_szItems_SAVE[]); i++){
 		if(StrEqual(g_szItems_SAVE[client][i], "")){
-			Format(g_szItems_SAVE[client][i], sizeof(g_szItems_SAVE[][]), "Registre %d", i+1);
+			Format(g_szItems_SAVE[client][i], sizeof(g_szItems_SAVE[][]), "%T", "Item_Register", client, i+1);
 			GetClientAuthId(client, AUTH_TYPE, query, sizeof(query), false);
 			Format(query, sizeof(query), "INSERT INTO rp_itemsaves (steamid, slot, name, save) VALUES ('%s', %d, '%s', '')", query, i, g_szItems_SAVE[client][i]);
 
@@ -1417,7 +1417,6 @@ public void itemSave_Withdraw_2(Handle owner, Handle hQuery, const char[] error,
 		LogToGame("[TSX-RP] [BANK-ITEM] %L a déposé: %d %s", client, g_iItems[client][pos][STACK_item_amount], g_szItemList[g_iItems[client][pos][STACK_item_id]][item_type_name]);
 		g_iItems[client][pos][STACK_item_id] = g_iItems[client][pos][STACK_item_amount] = 0;
 	}
-	CPrintToChat(client, "" ...MOD_TAG... " Tous vos items ont été déposés.");
 	
 	g_iUserData[client][i_ItemCount] = 0;
 
@@ -1436,24 +1435,20 @@ public void itemSave_Withdraw_2(Handle owner, Handle hQuery, const char[] error,
 			continue;
 		if( objet_amount <= 0 )
 			continue;
-			
 
 		inBank = rp_GetClientItem(client, objet_id, true);
-		if( inBank < objet_amount ){
-			if(inBank > 0)
-				CPrintToChat(client, "" ...MOD_TAG... " Il vous {green}manque{default} %d %s dans votre banque.", objet_amount-inBank, g_szItemList[objet_id][item_type_name]);
-			else
-				CPrintToChat(client, "" ...MOD_TAG... " Vous {red}n'avez plus de {default} %s (%d) dans votre banque.", g_szItemList[objet_id][item_type_name], objet_amount-inBank);
-			
+		if( inBank < objet_amount ){			
 			objet_amount = inBank;
 		}
+		
+		rp_GetItemData(objet_id, item_type_name, tmp, sizeof(tmp));
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Item_Take", client, objet_id, tmp);
 		rp_ClientGiveItem(client, objet_id, -objet_amount, true);
 		rp_ClientGiveItem(client, objet_id, objet_amount, false);
 		
 		LogToGame("[TSX-RP] [BANK-ITEM] %L a retiré: %d %s", client, objet_amount, g_szItemList[objet_id][item_type_name]);
 	}
 	SQL_FetchString(hQuery, 0, buffer, BUFFER_SIZE);
-	CPrintToChat(client, "" ...MOD_TAG... " Votre registre \"%s\" a été récupéré.", buffer);
 	CloseHandle(hQuery);
 }
 
