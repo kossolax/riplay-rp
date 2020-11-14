@@ -658,10 +658,9 @@ int GivePlayerPay(int i, bool calculator = false) {
 }
 int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szPseudo[64]="le site web", char szSource[64]="SERVER", char szRaison[255]="") {
 	int from_id = -1;
-	char szMessage[1024], szLog[1024], name[128];
+	char szLog[1024], name[128];
 	static origin[65];
 	
-	Format(szMessage, sizeof(szMessage), "" ...MOD_TAG... " Vous avez");
 	Format(szLog, sizeof(szLog), "[TSX-RP] [SYN]");
 	
 	if( type == SynType_job ) {
@@ -687,11 +686,11 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 				GetClientName2(invoker, szPseudo, sizeof(szPseudo), false);
 
 			if( from_id == 0 )
-				Format(szMessage, sizeof(szMessage), "%T", "Syn_Hire", client, g_szJobList[to_id][job_type_name], szPseudo);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Hire", client, g_szJobList[to_id][job_type_name], szPseudo);
 			else if( from_id < to_id )
-				Format(szMessage, sizeof(szMessage), "%T", "Syn_Upgrade", client, g_szJobList[to_id][job_type_name], szPseudo);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Upgrade", client, g_szJobList[to_id][job_type_name], szPseudo);
 			else
-				Format(szMessage, sizeof(szMessage), "%T", "Syn_Downgrade", client, g_szJobList[to_id][job_type_name], szPseudo);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Downgrade", client, g_szJobList[to_id][job_type_name], szPseudo);
 			
 			if( invoker > 0 && !g_iClient_OLD[client] ) {
 				IncrementSuccess(invoker, success_list_bon_patron);
@@ -700,11 +699,11 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 		}
 		else {
 			if( client == invoker ) {
-				Format(szMessage, sizeof(szMessage), "%T", "Syn_Dismiss", client);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Dismiss", client);
 				g_bUserData[client][b_LicenseSell] = false;
 			}
 			else {
-				Format(szMessage, sizeof(szMessage), "%T", "Syn_Fire", client);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Fire", client);
 			}			
 			
 			if( origin[client] > 0 && IsBoss(origin[client]) ) {
@@ -725,19 +724,19 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 				GetClientName2(invoker, szPseudo, sizeof(szPseudo), false);
 
 			if( from_id == 0 )
-				Format(szMessage, sizeof(szMessage), "%T", "Syn_Hire", client, g_szGroupList[to_id][group_type_name], szPseudo);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Hire", client, g_szGroupList[to_id][group_type_name], szPseudo);
 			else if( from_id < to_id )
-				Format(szMessage, sizeof(szMessage), "%T", "Syn_Upgrade", client, g_szGroupList[to_id][group_type_name], szPseudo);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Upgrade", client, g_szGroupList[to_id][group_type_name], szPseudo);
 			else
-				Format(szMessage, sizeof(szMessage), "%T", "Syn_Downgrade", client, g_szGroupList[to_id][group_type_name], szPseudo);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Downgrade", client, g_szGroupList[to_id][group_type_name], szPseudo);
 		}
 		else {
 			if( client == invoker ) {
-				Format(szMessage, sizeof(szMessage), "%T", "Syn_Dismiss", client);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Dismiss", client);
 				g_bUserData[client][b_LicenseSell] = false;
 			}
 			else {
-				Format(szMessage, sizeof(szMessage), "%T", "Syn_Fire", client);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Fire", client);
 			}
 		}
 		
@@ -748,13 +747,11 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 		rp_ClientMoney(client, i_Bank, to_id, true);
 		
 		if( to_id > 0 ) {
-			Format(szMessage, sizeof(szMessage), "%T", "Syn_Money_Give", client, to_id, szPseudo);
-			
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Money_Give", client, to_id, szPseudo);
 			Format(szLog, sizeof(szLog), "%s [MONEY] %L à reçu %i$", szLog, client, to_id);
 		}
 		else {
-			Format(szMessage, sizeof(szMessage), "%T", "Syn_Money_Take", client, -to_id, szPseudo);
-			
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Money_Take", client, -to_id, szPseudo);
 			Format(szLog, sizeof(szLog), "%s [MONEY] %L à perdu %i$", szLog, client, -(to_id));
 		}
 	}
@@ -808,7 +805,6 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 		LogToGame("[TSX-RP] [SYN] [ITEM-TRANSFERT] %L %d %s pour %s", client, invoker, g_szItemList[to_id][item_type_name], szPseudo);
 	}
 	else if( type == SynType_xp ) {
-		
 		rp_ClientXPIncrement(client, to_id);
 		
 		LogToGame("[TSX-RP] [SYN] [XP] %L %d xp par %s", client, to_id, szPseudo);
@@ -827,7 +823,6 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 	
 	if( type != SynType_item && type != SynType_itemBank && type != SynType_xp ) {
 		LogToGame(szLog);
-		CPrintToChat(client, szMessage);
 	}
 	
 	StoreUserData(client);
@@ -1075,7 +1070,7 @@ void CopSetVisible(int client) {
 		g_bUserData[client][b_MaySteal] = false;
 		CreateTimer(10.0, AllowStealing, client);
 	}		
-	CPrintToChat(client, "" ...MOD_TAG... " Vous êtes maintenant visible.");
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Visibility_Visible", client);
 	g_flUserData[client][fl_invisibleTimeLeft] = GetGameTime() + 5.0;
 }
 void CopSetInvisible(int client) {
@@ -1084,19 +1079,19 @@ void CopSetInvisible(int client) {
 	g_bUserData[client][b_Invisible] = true;
 	ClientCommand(client, "r_screenoverlay effects/hsv.vmt");
 	
-	CPrintToChat(client, "" ...MOD_TAG... " Vous êtes maintenant invisible.");
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Visibility_Invisible", client);
 }
 void CheckLiscence(int client) {	
 	if(g_bUserData[client][b_License1]) {
 		if(GetTime() > g_iUserData[client][i_StartLicense1] + (24*60*60)*14) {
-			CPrintToChat(client, "" ...MOD_TAG... " Attention, ton permis de port d'arme léger vient d'expirer. Pense à racheter tes permis auprès d'un banquier.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "License_Expire_Secondary", client);
 			g_bUserData[client][b_License1] = 0;
 		}
 	}
  
 	if(g_bUserData[client][b_License2]) {
 		if(GetTime() > g_iUserData[client][i_StartLicense2] + (24*60*60)*14) {
-			CPrintToChat(client, "" ...MOD_TAG... " Attention, ton permis de port d'arme lourd vient d'expirer. Pense à racheter tes permis auprès d'un banquier..");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "License_Expire_Primary", client);
 			g_bUserData[client][b_License2] = 0;
 		}
 	}

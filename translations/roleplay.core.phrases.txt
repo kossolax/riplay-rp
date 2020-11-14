@@ -664,6 +664,34 @@
 		"#format"	"{1:d},{2:s}"
 		"fr"		"Vous avez {red}perdu{default} {1}$ par {2}."
 	}
+	"Syn_Jail"
+	{
+		"#format"	"{1:d},{2:s},{3:s}"
+		"fr"		"Vous avez été {red}condamné{default} à {red}{1}{default} heure(s) de prison par {2}, pour {3}." 
+	}
+	"Syn_Item_Give"
+	{
+		"#format"	"{1:d},{2:s},{3:s}"
+		"fr"		"Vous avez {green}reçu{default}: {1} {2} par {3}."
+	}
+	"Syn_Item_Take"
+	{
+		"#format"	"{1:d},{2:s},{3:s}"
+		"fr"		"Vous avez {red}perdu{default}: {1} {2} par {3}."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Visibility_Visible"
+	{
+		"fr"		"Vous êtes maintenant {red}visible{default}."
+	}
+	"Visibility_Transparent"
+	{
+		"fr"		"Vous êtes maintenant {yellow}transparent{default}."
+	}
+	"Visibility_Invisible"
+	{
+		"fr"		"Vous êtes maintenant {green}invisible{default}."
+	}
 	// ----------------------------------------------------------------------------------------------
 	"ScoreBar_TAG_Police"
 	{
