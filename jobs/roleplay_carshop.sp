@@ -82,6 +82,8 @@ char g_szColor[][] = {
 
 int g_iVehiclePolice = -1;
 int g_iVehicleJustice = -1;
+int g_iVehicleHopital = -1;
+
 
 // ----------------------------------------------------------------------------
 public Action Cmd_Reload(int args) {
@@ -137,6 +139,13 @@ public void OnPluginStart() {
 				if( skin == 1 )
 					g_iVehicleJustice = EntIndexToEntRef(i);
 			}
+			
+			if( StrContains(model, "csgo_drop_crate_spectrum_v7") >= 0 ) {
+				int skin = GetEntProp(i, Prop_Send, "m_nSkin");
+				if( skin == 0 )
+					g_iVehicleHopital = EntIndexToEntRef(i);
+			}
+			
 		}
 	}
 	
@@ -185,6 +194,21 @@ public Action Check_VehiclePolice(Handle timer, any none) {
 		}
 	}
 	
+	if( EntRefToEntIndex(g_iVehicleHopital) <= 0 ) {
+		float pos[3] =  {1336.0, -2307.0, -2008.0 };
+		
+		int car = rp_CreateVehicle(view_as<float>({1336.0, -2307.0, 0.0 }), view_as<float>({0.0, 90.0, 0.0}), "models/props/crates/csgo_drop_crate_spectrum_v7.mdl", 0);
+		TeleportEntity(car, pos, NULL_VECTOR, NULL_VECTOR);
+		if( rp_IsValidVehicle(car) ) {
+			SetEntProp(car, Prop_Data, "m_bLocked", 1);
+			rp_SetVehicleInt(car, car_owner, -11);
+			rp_SetVehicleInt(car, car_maxPassager, 2);
+			SetEntProp(car, Prop_Send, "m_nBody", 0);
+			
+			g_iVehicleHopital = EntIndexToEntRef(car);
+		}
+	}
+	
 	bool light = (GetConVarInt(FindConVar("rp_braquage")) > 0 || GetConVarInt(FindConVar("rp_kidnapping")) > 0 || GetConVarInt(FindConVar("rp_perquisition")) > 0);
 	if( light ) {
 		if( EntRefToEntIndex(g_iVehiclePolice) >= 0 ) {
@@ -214,6 +238,9 @@ public Action Check_VehiclePolice(Handle timer, any none) {
 			
 		if( rp_GetClientJobID(i) == 101 && EntRefToEntIndex(g_iVehicleJustice) > 0 )
 			rp_SetClientKeyVehicle(i, EntRefToEntIndex(g_iVehicleJustice), true);
+		
+		if( rp_GetClientJobID(i) == 11 && EntRefToEntIndex(g_iVehicleHopital) > 0 )
+			rp_SetClientKeyVehicle(i, EntRefToEntIndex(g_iVehicleHopital), true);
 		
 	}
 	
@@ -522,6 +549,9 @@ public Action Cmd_ItemVehicle(int args) {
 	if( StrEqual(arg1, "models/natalya/vehicles/police_crown_victoria_csgo_v2.mdl") ) {
 		max = 3;
 	}
+	if( StrEqual(arg1, "models/props/crates/csgo_drop_crate_spectrum_v7.mdl") ) {
+		max = 1;
+	}
 	
 	if( rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PEACEFULL ) {
 		CAR_CANCEL(client, item_id, sendToBank);
@@ -735,6 +765,9 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	if(!valid) {
 		Format(ScriptPath, sizeof(ScriptPath), "scripts/vehicles/jeep.txt");
 	}
+	
+	LogToGame(model);
+	LogToGame(ScriptPath);
 	
 	DispatchKeyValue(ent, "model", 				model);
 	DispatchKeyValue(ent, "vehiclescript", 		ScriptPath);
