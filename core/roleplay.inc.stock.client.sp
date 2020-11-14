@@ -658,8 +658,7 @@ int GivePlayerPay(int i, bool calculator = false) {
 }
 int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szPseudo[64]="le site web", char szSource[64]="SERVER", char szRaison[255]="") {
 	int from_id = -1;
-	char szMessage[1024];
-	char szLog[1024];
+	char szMessage[1024], szLog[1024], name[128];
 	static origin[65];
 	
 	Format(szMessage, sizeof(szMessage), "" ...MOD_TAG... " Vous avez");
@@ -683,9 +682,16 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 		g_iUserData[client][i_Job] = to_id;
 		ServerCommand("sm_force_discord_group %N", client);
 		
-		
 		if( to_id > 0 ) {
-			Format(szMessage, sizeof(szMessage), "%s été promu comme %s", szMessage, g_szJobList[to_id][job_type_name]);
+			if( IsValidClient(invoker) )
+				GetClientName2(invoker, szPseudo, sizeof(szPseudo), false);
+
+			if( from_id == 0 )
+				Format(szMessage, sizeof(szMessage), "%T", "Syn_Hire", client, g_szJobList[to_id][job_type_name], szPseudo);
+			else if( from_id < to_id )
+				Format(szMessage, sizeof(szMessage), "%T", "Syn_Upgrade", client, g_szJobList[to_id][job_type_name], szPseudo);
+			else
+				Format(szMessage, sizeof(szMessage), "%T", "Syn_Downgrade", client, g_szJobList[to_id][job_type_name], szPseudo);
 			
 			if( invoker > 0 && !g_iClient_OLD[client] ) {
 				IncrementSuccess(invoker, success_list_bon_patron);
@@ -694,11 +700,11 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 		}
 		else {
 			if( client == invoker ) {
-				Format(szMessage, sizeof(szMessage), "%s démissioné de votre job", szMessage);
+				Format(szMessage, sizeof(szMessage), "%T", "Syn_Dismiss", client);
 				g_bUserData[client][b_LicenseSell] = false;
 			}
 			else {
-				Format(szMessage, sizeof(szMessage), "%s été viré de votre job", szMessage);
+				Format(szMessage, sizeof(szMessage), "%T", "Syn_Fire", client);
 			}			
 			
 			if( origin[client] > 0 && IsBoss(origin[client]) ) {
@@ -715,10 +721,24 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 		g_iUserData[client][i_Group] = to_id;
 		
 		if( to_id > 0 ) {
-			Format(szMessage, sizeof(szMessage), "%s été promu comme %s", szMessage, g_szGroupList[to_id][group_type_name]);
+			if( IsValidClient(invoker) )
+				GetClientName2(invoker, szPseudo, sizeof(szPseudo), false);
+
+			if( from_id == 0 )
+				Format(szMessage, sizeof(szMessage), "%T", "Syn_Hire", client, g_szGroupList[to_id][group_type_name], szPseudo);
+			else if( from_id < to_id )
+				Format(szMessage, sizeof(szMessage), "%T", "Syn_Upgrade", client, g_szGroupList[to_id][group_type_name], szPseudo);
+			else
+				Format(szMessage, sizeof(szMessage), "%T", "Syn_Downgrade", client, g_szGroupList[to_id][group_type_name], szPseudo);
 		}
 		else {
-			Format(szMessage, sizeof(szMessage), "%s été viré de votre groupe", szMessage);
+			if( client == invoker ) {
+				Format(szMessage, sizeof(szMessage), "%T", "Syn_Dismiss", client);
+				g_bUserData[client][b_LicenseSell] = false;
+			}
+			else {
+				Format(szMessage, sizeof(szMessage), "%T", "Syn_Fire", client);
+			}
 		}
 		
 		Format(szLog, sizeof(szLog), "%s [GROUP] %L était %s et est maintenant %s", szLog, client, g_szGroupList[from_id][group_type_name], g_szGroupList[to_id][group_type_name]);
@@ -728,12 +748,12 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 		rp_ClientMoney(client, i_Bank, to_id, true);
 		
 		if( to_id > 0 ) {
-			Format(szMessage, sizeof(szMessage), "%s reçu %i$", szMessage, to_id);
+			Format(szMessage, sizeof(szMessage), "%T", "Syn_Money_Give", client, to_id, szPseudo);
 			
 			Format(szLog, sizeof(szLog), "%s [MONEY] %L à reçu %i$", szLog, client, to_id);
 		}
 		else {
-			Format(szMessage, sizeof(szMessage), "%s perdu %i$", szMessage, -(to_id));
+			Format(szMessage, sizeof(szMessage), "%T", "Syn_Money_Take", client, -to_id, szPseudo);
 			
 			Format(szLog, sizeof(szLog), "%s [MONEY] %L à perdu %i$", szLog, client, -(to_id));
 		}
@@ -745,9 +765,7 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 		else
 			g_iUserData[client][i_JailTime] += to_id;
 		
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez été condamné à faire %i heure de prison par le juge %s", to_id/60, szPseudo);
-		CPrintToChat(client, "" ...MOD_TAG... " La raison de cette condamnation est %s", szRaison);
-		
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Jail", client, to_id/60, szPseudo, szRaison);
 		rp_ClientOverlays(client, o_Jail_Juge, 10.0);
 		
 		LogToGame("[TSX-RP] [SYN] [JAIL] %L %d heures pour %s par %s", client, to_id/60, szRaison, szPseudo);		
@@ -760,7 +778,6 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 			else {
 				LeaveVehiclePassager(client);
 			}
-			//SendPlayerToJail(client);
 			ServerCommand("rp_SendToJail %d", client);
 		}		
 		
@@ -768,24 +785,25 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 	}
 	else if( type == SynType_itemBank ) {
 		
-		updateBankCost(client);
 		rp_ClientGiveItem(client, to_id, invoker, true);
+		updateBankCost(client);
 		
 		if( invoker > 0 )
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu: %d %s par %s.", invoker, g_szItemList[to_id][item_type_name], szPseudo);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Item_Give", client, invoker, g_szItemList[to_id][item_type_name], szPseudo);
 		else
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez donné: %d %s pour %s.", -invoker, g_szItemList[to_id][item_type_name], szPseudo);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Item_Take", client, invoker, g_szItemList[to_id][item_type_name], szPseudo);
 		
 		LogToGame("[TSX-RP] [SYN] [ITEM-TRANSFERT] %L %d %s pour %s", client, invoker, g_szItemList[to_id][item_type_name], szPseudo);
 	}
 	else if( type == SynType_item ) {
 		
 		rp_ClientGiveItem(client, to_id, invoker);
+		updateBankCost(client);
 		
 		if( invoker > 0 )
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu: %d %s par %s.", invoker, g_szItemList[to_id][item_type_name], szPseudo);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Item_Give", client, invoker, g_szItemList[to_id][item_type_name], szPseudo);
 		else
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez donné: %d %s pour %s.", -invoker, g_szItemList[to_id][item_type_name], szPseudo);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Item_Take", client, invoker, g_szItemList[to_id][item_type_name], szPseudo);
 		
 		LogToGame("[TSX-RP] [SYN] [ITEM-TRANSFERT] %L %d %s pour %s", client, invoker, g_szItemList[to_id][item_type_name], szPseudo);
 	}
@@ -798,7 +816,6 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 	
 	
 	if( IsValidClient(invoker) && type != SynType_item ) {		
-		
 		char szSteamID2[64];
 		GetClientAuthId(invoker, AUTH_TYPE, szSteamID2, sizeof(szSteamID2), false);
 		
@@ -806,11 +823,7 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 		Format(szSource, sizeof(szSource), "%s", szSteamID2);
 	}
 	
-	if( !(type == SynType_job && client == invoker ) )
-		Format(szMessage, sizeof(szMessage), "%s par %s.", szMessage, szPseudo);
-	
 	Format(szLog, sizeof(szLog), "%s par %s (%s).", szLog, szPseudo, szSource);
-	
 	
 	if( type != SynType_item && type != SynType_itemBank && type != SynType_xp ) {
 		LogToGame(szLog);

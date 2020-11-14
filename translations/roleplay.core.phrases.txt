@@ -624,6 +624,46 @@
 		"#format"	"{1:d}"
 		"fr"		"Vous avez reçu votre paye de {green}{1}{default}$."
 	}
+	"Pay_Work"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Vous avez reçu {green}{1}{default}$ pour votre travail d'ajourd'hui."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Syn_Hire"
+	{
+		"#format"	"{1:s},{2:s}"
+		"fr"		"Vous avez été {green}engagé{default} comme {green}{2}{default}, par {1}."
+	}
+	"Syn_Upgrade"
+	{
+		"#format"	"{1:s},{2:s}"
+		"fr"		"Vous avez été {green}promu{default} comme {green}{2}{default}, par {1}."
+	}
+	"Syn_Downgrade"
+	{
+		"#format"	"{1:s},{2:s}"
+		"fr"		"Vous avez été {red}rétrogradé{default} comme {red}{2}{default}, par {1}."
+	}
+	"Syn_Fire"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez été {red}viré{default} par {1}."
+	}
+	"Syn_Dismiss"
+	{
+		"fr"		"Vous avez {red}démissionné{default}."
+	}
+	"Syn_Money_Give"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"		"Vous avez {green}reçu{default} {1}$ par {2}."
+	}
+	"Syn_Money_Take"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"		"Vous avez {red}perdu{default} {1}$ par {2}."
+	}
 	// ----------------------------------------------------------------------------------------------
 	"ScoreBar_TAG_Police"
 	{
