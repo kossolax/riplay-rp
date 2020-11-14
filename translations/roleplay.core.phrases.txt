@@ -601,23 +601,23 @@
 	// ----------------------------------------------------------------------------------------------
 	"Pay_Cannot_Full"
 	{
-		"fr"		"Votre coffre en banque est plein, impossible de vous payer."
+		"fr"		"Votre coffre en banque est {red}plein{default}, vous {red}ne toucherez pas {default}votre paye."
 	}
 	"Pay_Cannot_AFK"
 	{
-		"fr"		"Vous êtes resté trop longtemps AFK, vous n'avez pas le droit de toucher votre paye."
+		"fr"		"Vous êtes resté trop longtemps {red}AFK{default}, vous {red}ne toucherez pas {default}votre paye."
 	}
 	"Pay_Cannot_Jail"
 	{
-		"fr"		"Étant en prison, vous n'avez reçu que 10%% de votre paye."
+		"fr"		"Vous êtes en {red}prison{default}, vous n'avez reçu que {red}10% {default}de votre paye."
 	}
 	"Pay_Cannot_Tribunal"
 	{
-		"fr"		"Etant recherché par le Tribunal, vous n'avez pas le droit de toucher votre paye."
+		"fr"		"Vous êtes {red}recherché {default}par le Tribunal, vous {red}ne toucherez pas {default}votre paye."
 	}
 	"Pay_Cannot_Bankrupt"
 	{
-		"fr"		"L'entreprise pour laquel vous travaillez est en faillite. Vous n'avez pas de paye."
+		"fr"		"Votre entreprise a fait {red}faillite{default}. vous {red}ne toucherez pas {default}votre paye."
 	}
 	"Pay_Give"
 	{
