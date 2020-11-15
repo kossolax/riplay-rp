@@ -21,11 +21,14 @@
 #pragma newdecls required
 #include <roleplay.inc>	// https://www.ts-x.eu
 
-
+#define	STONE_HP			1
 #define TREE_HP				1
 #define TREE_RESPAWN_MIN	3.0
 #define TREE_RESPAWN_MAX	5.0
-#define STONE_MAX			32
+#define STONE_MAX			64
+
+#define ITEM_BOIS			293
+#define ITEM_LATEX			309
 
 char g_szTrees[][] = {
 	"models/props/hr_massive/hr_foliage/birch_tree_01.mdl",
@@ -35,27 +38,28 @@ char g_szTrees[][] = {
 char g_szWoodGibs[][] = {
 	"models/props/de_inferno/hr_i/wood_beam_a/wood_beam_a1.mdl"
 };
-char g_szStone[][] = {
-	"models/custom_prop/minerals/coal/coal.mdl",
-	"models/custom_prop/minerals/granite/granite.mdl",
-	"models/custom_prop/minerals/ironstone/ironstone.mdl",
-	"models/custom_prop/minerals/mica/mica.mdl",
-	"models/custom_prop/minerals/mineral6/mineral6.mdl",
-	"models/custom_prop/minerals/mineral7/mineral7.mdl",
-	"models/custom_prop/minerals/mineral8/mineral8.mdl",
-	"models/custom_prop/minerals/mineral9/mineral9.mdl",
-	"models/custom_prop/minerals/mineral10/mineral10.mdl",
-	"models/custom_prop/minerals/mineral11/mineral11.mdl",
-	"models/custom_prop/minerals/mineral12/mineral12.mdl",
-	"models/custom_prop/minerals/mineral13/mineral13.mdl",
-	"models/custom_prop/minerals/mineral_green/mineral_green.mdl",
-	"models/custom_prop/minerals/mineral_orange/mineral_orange.mdl",
-	"models/custom_prop/minerals/quartz/quartz.mdl"
+char g_szStone[][][] = {
+	{"models/custom_prop/minerals/coal/coal.mdl",						"15",	"1", "0"},
+	{"models/custom_prop/minerals/granite/granite.mdl",					"14",	"1", "0"},
+	{"models/custom_prop/minerals/ironstone/ironstone.mdl", 			"13",	"1", "289"}, // fer
+	{"models/custom_prop/minerals/mineral6/mineral6.mdl", 				"12",	"1", "325"}, // alluminium
+	{"models/custom_prop/minerals/mica/mica.mdl", 						"11",	"1", "0"},
+	{"models/custom_prop/minerals/mineral7/mineral7.mdl", 				"10",	"2", "0"},
+	{"models/custom_prop/minerals/mineral8/mineral8.mdl", 				"9",	"2", "311"}, // cuivre
+	{"models/custom_prop/minerals/mineral9/mineral9.mdl", 				"8",	"2", "290"}, // zinc
+	{"models/custom_prop/minerals/mineral10/mineral10.mdl", 			"7",	"2", "317"}, // sable
+	{"models/custom_prop/minerals/mineral11/mineral11.mdl", 			"6",	"3", "303"},   // or
+	{"models/custom_prop/minerals/mineral12/mineral12.mdl", 			"5",	"3", "0"},
+	{"models/custom_prop/minerals/mineral13/mineral13.mdl",		 		"4",	"3", "0"},
+	{"models/custom_prop/minerals/mineral_green/mineral_green.mdl", 	"3",	"3", "323"},  // uranium
+	{"models/custom_prop/minerals/mineral_orange/mineral_orange.mdl",	"2",	"4", "0"},
+	{"models/custom_prop/minerals/quartz/quartz.mdl", 					"1",	"4", "299"}   // souffre
 };
-
 int g_iTreeID[2049], g_iStoneID[2049];
 int g_iStoneCount = 0;
 int g_cBeam;
+int g_iMaxRandomMineral;
+ArrayList g_iSpawn;
 
 public void OnMapStart() {
 	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt");
@@ -67,12 +71,62 @@ public void OnMapStart() {
 		PrecacheModel(g_szWoodGibs[i]);
 	}
 	for (int i = 0; i < sizeof(g_szStone); i++) {
-		PrecacheModel(g_szStone[i]);
+		PrecacheModel(g_szStone[i][0]);
 	}
 }
 public void OnPluginStart() {
 	HookEvent("round_start", 		EventRoundStart, 	EventHookMode_Post);
 	OnRoundStart();
+	
+	g_iMaxRandomMineral = 0;
+	for (int i = 0; i < sizeof(g_szStone); i++) {
+		g_iMaxRandomMineral += StringToInt(g_szStone[i][1]);
+	}
+	
+	if( g_iSpawn != INVALID_HANDLE )
+		g_iSpawn.Clear();
+		
+	g_iSpawn = new ArrayList(1, 0);
+	for (int i = 0; i < sizeof(g_szStone); i++) {
+		for (int j = 0; j < StringToInt(g_szStone[i][1]); j++) {
+			g_iSpawn.Push(i);
+		}
+		
+		//PrintToChatAll("%s -- %f %%", g_szStone[i][0], StringToInt(g_szStone[i][1]) / float(g_iMaxRandomMineral) * 100.0);
+	}
+	
+	if( true ) {
+		char model[PLATFORM_MAX_PATH];
+		float dst[3];
+		for (int i = 0; i < sizeof(g_szStone); i++) {
+			for (int type = 0; type < 3; type++ ) {
+				Format(model, sizeof(model), "%s", g_szStone[i][0]);
+				if( type > 0 ) {
+					if( type == 1 )
+						ReplaceString(model, sizeof(model), ".mdl", "2.mdl");
+					if( type == 2 )
+						ReplaceString(model, sizeof(model), ".mdl", "3.mdl");
+				}
+				int ent = CreateEntityByName("prop_physics");
+				DispatchKeyValue(ent, "model", model);
+				DispatchKeyValue(ent, "solid", "6");
+				DispatchKeyValue(ent, "classname", "rp_stone");
+				DispatchSpawn(ent);
+				ActivateEntity(ent);
+				rp_AcceptEntityInput(ent, "DisableMotion");
+				
+				dst[0] = -6837 - 80.0 * type;
+				dst[1] = 128.0 + 64.0 * i;
+				dst[2] = -2328.0;
+				
+				rp_SetBuildingData(ent, BD_item_id, StringToInt(g_szStone[i][3]));
+				SDKHook(ent, SDKHook_OnTakeDamage, OnPropDamage);
+				
+				TeleportEntity(ent, dst, NULL_VECTOR, NULL_VECTOR);
+			}
+		}
+	}
+	
 }
 public Action EventRoundStart(Handle ev, const char[] name, bool  bd) {
 	OnRoundStart();
@@ -88,7 +142,7 @@ public void OnRoundStart() {
 			continue;
 		
 		GetEdictClassname(i, tmp, sizeof(tmp));
-		if( StrContains(tmp, "rp_tree") == 0 || StrContains(tmp, "rp_wood") == 0 ) {
+		if( StrContains(tmp, "rp_tree") == 0 || StrContains(tmp, "rp_wood") == 0 || StrContains(tmp, "rp_stone") == 0 ) {
 			rp_AcceptEntityInput(i, "Kill");
 		}
 	}
@@ -127,7 +181,7 @@ public Action SpawnTree(Handle timer, any i) {
 	SetEntProp(ent, Prop_Data, "m_iHealth", size*TREE_HP);
 	Entity_SetMaxHealth(ent, size*TREE_HP);
 	
-	SDKHook(ent, SDKHook_OnTakeDamage, OnTreeDamage);
+	SDKHook(ent, SDKHook_OnTakeDamage, OnPropDamage);
 	SDKHook(ent, SDKHook_VPhysicsUpdate, OnTreeThink);
 
 	rp_AcceptEntityInput(ent, "DisableMotion");
@@ -138,14 +192,24 @@ public Action SpawnTree(Handle timer, any i) {
 	ServerCommand("sm_effect_fading %d 1 0", ent);
 	g_iTreeID[ent] = i;
 }
-public Action OnPlayerRunCmd(int client) {
-	float min[3], max[3], src[3], dst[3], nrm[3], dir[3], tmp[3];
+
+void SpawnMineral() {
+	float min[3], max[3], src[3], dst[3], nrm[3], dir[3], tmp[3], size[2][3];
 	char model[128];
-	int zone = rp_GetPlayerZone(client);
-	int lvl = getMineLevel(zone);
-	int x, y, z = 2;
+	int pick = GetRandomInt(0, g_iMaxRandomMineral-1);
+	int rnd = g_iSpawn.Get(pick);
+	int level = StringToInt(g_szStone[rnd][2]);
+	int stack[MAX_ZONES];
+	int cpt, x, y, z = 2;
 	
-	if( lvl > 0 && g_iStoneCount < STONE_MAX ) {
+	for (int i = 0; i < MAX_ZONES; i++) {
+		if( getMineLevel(i) == level ) {
+			stack[cpt++] = i;
+		}
+	}
+	
+	int zone = stack[GetRandomInt(0, cpt - 1)];
+	if( g_iStoneCount < STONE_MAX ) {
 		min[0] = rp_GetZoneFloat(zone, zone_type_min_x);
 		min[1] = rp_GetZoneFloat(zone, zone_type_min_y);
 		min[2] = rp_GetZoneFloat(zone, zone_type_min_z);
@@ -167,12 +231,6 @@ public Action OnPlayerRunCmd(int client) {
 		dst[y] = (min[y] + max[y]) / 2.0;
 		dst[z] = (min[z] + max[z]) / 2.0;
 		
-		TE_SetupBeamPoints(src, dst, g_cBeam, 0, 0, 10, 0.1, 1.0, 1.0, 0, 0.0, {10, 255, 10, 250}, 10);
-		TE_SendToClient(client);
-		
-		TE_SetupBeamPoints(dst, src, g_cBeam, 0, 0, 10, 0.1, 1.0, 1.0, 0, 0.0, {10, 255, 10, 250}, 10);
-		TE_SendToClient(client);
-		
 		nrm[x] = Math_Lerp(src[x], dst[x], GetRandomFloat());
 		nrm[y] = src[y];
 		nrm[z] = src[z];
@@ -181,21 +239,18 @@ public Action OnPlayerRunCmd(int client) {
 		dir[y] = nrm[y] + 256.0 * (GetRandomInt(0, 1)==0?1:-1);
 		dir[z] = nrm[z];
 		
-		Handle tr = TR_TraceRayEx(nrm, dir, MASK_SOLID_BRUSHONLY, RayType_EndPoint);
+		Handle tr = TR_TraceRayFilterEx(nrm, dir, MASK_SOLID_BRUSHONLY, RayType_EndPoint, FilterToNone);
 		if( TR_DidHit(tr) ) {
 			TR_GetEndPosition(dir, tr);
 			TR_GetPlaneNormal(tr, tmp);
 			
-			TE_SetupBeamPoints(nrm, dir, g_cBeam, 0, 0, 10, 0.1, 1.0, 1.0, 0, 0.0, {10, 0, 255, 250}, 10);
-			TE_SendToClient(client);
-			
-			int rnd = GetRandomInt(0, sizeof(g_szStone) - 1);
-			int size = Math_GetRandomPow(0, 2);
-			Format(model, sizeof(model), "%s", g_szStone[rnd]);
-			if( size > 0 ) {
-				if( size == 1 )
+			Format(model, sizeof(model), "%s", g_szStone[rnd][0]);
+	
+			int type = Math_GetRandomPow(0, 2);
+			if( type > 0 ) {
+				if( type == 1 )
 					ReplaceString(model, sizeof(model), ".mdl", "2.mdl");
-				if( size == 2 )
+				if( type == 2 )
 					ReplaceString(model, sizeof(model), ".mdl", "3.mdl");
 			}
 			
@@ -206,22 +261,41 @@ public Action OnPlayerRunCmd(int client) {
 			DispatchSpawn(ent);
 			ActivateEntity(ent);
 			
-			SDKHook(ent, SDKHook_OnTakeDamage, OnStoneDamage);
+			Entity_GetMinSize(ent, size[0]);
+			Entity_GetMaxSize(ent, size[1]);
+			
+			SetEntProp(ent, Prop_Data, "m_iHealth", RoundFloat((max[z]-min[z])*STONE_HP));
+			Entity_SetMaxHealth(ent, RoundFloat((max[z]-min[z])*STONE_HP));
+			
+			SDKHook(ent, SDKHook_OnTakeDamage, OnPropDamage);
 			
 			rp_AcceptEntityInput(ent, "DisableMotion");
 			rp_AcceptEntityInput(ent, "DisableCollision" );
 			rp_AcceptEntityInput(ent, "EnableCollision" );
-			
-			
+			rp_SetBuildingData(ent, BD_item_id, StringToInt(g_szStone[rnd][3]));
+			rp_SetBuildingData(ent, BD_count, type + 1);
+
 			GetVectorAngles(tmp, nrm);
 			nrm[0] += 90.0;
+			dir[z] = GetRandomFloat(min[z] - size[0][0], max[z] - size[1][0]);
 			TeleportEntity(ent, dir, nrm, NULL_VECTOR);
 			ServerCommand("sm_effect_fading %d 1 0", ent);
-			g_iStoneID[ent] = 1;
+			g_iStoneID[ent] = rnd+1;
 			g_iStoneCount++;
 		}
 		delete tr;		
 	}
+}
+
+public Action OnPlayerRunCmd(int client) {
+	int lvl = getMineLevel(rp_GetPlayerZone(client));
+	
+	if( lvl >= 0 ) {
+		SpawnMineral();
+	}
+}
+public bool FilterToNone(int entity, int mask, any data) {
+	return false;
 }
 public void OnEntityCreated(int entity, const char[] classname) {
 	if( entity > 0 ) {
@@ -278,7 +352,7 @@ public void OnTreeThink(int entity) {
 			TeleportEntity(ent, src, ang, NULL_VECTOR);
 			rp_ScheduleEntityInput(ent, 60.0, "Break");
 			Entity_SetCollisionGroup(ent, COLLISION_GROUP_DEBRIS|COLLISION_GROUP_PLAYER);
-			SDKHook(ent, SDKHook_OnTakeDamage, OnWoodDamage);
+			SDKHook(ent, SDKHook_OnTakeDamage, OnPropDamage);
 		}
 		
 		Entity_SetSolidType(entity, SOLID_NONE);
@@ -287,27 +361,39 @@ public void OnTreeThink(int entity) {
 		SDKUnhook(entity, SDKHook_VPhysicsUpdate, OnTreeThink);
 	}
 }
-public Action OnStoneDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& weapon, float damageForce[3], float damagePosition[3]) {
+public Action OnPropDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& weapon, float damageForce[3], float damagePosition[3]) {
+	static char tmp[128];
+
 	if( attacker == inflictor && damagetype & DMG_SLASH ) {
-		if( IsMeleeHammer(weapon) ) {	
-			AcceptEntityInput(victim, "Break");
-		}
-	}
-}
-public Action OnWoodDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& weapon, float damageForce[3], float damagePosition[3]) {
-	if( attacker == inflictor && damagetype & DMG_SLASH ) {
-		if( IsMeleeAxe(weapon) ) {	
-			AcceptEntityInput(victim, "Break");
-		}
-	}
-}
-public Action OnTreeDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& weapon, float damageForce[3], float damagePosition[3]) {
-	if( attacker == inflictor && damagetype & DMG_SLASH ) {
-		if( IsMeleeAxe(weapon) ) {				
+		GetEdictClassname(victim, tmp, sizeof(tmp));
+		
+		if( StrEqual(tmp, "rp_stone") && IsMeleeHammer(weapon) ) {
 			SetEntProp(victim, Prop_Data, "m_iHealth", Entity_GetHealth(victim) - RoundFloat(damage));
-			if( Entity_GetHealth(victim) <= 0 ) {		
+			if( Entity_GetHealth(victim) <= 0 ) {
+				SetEntProp(victim, Prop_Data, "m_iHealth", 0);
+				rp_AcceptEntityInput(victim, "EnableMotion");
+				
+				Entity_SetCollisionGroup(victim, COLLISION_GROUP_DEBRIS);
+				rp_ScheduleEntityInput(victim, 10.0, "Break");
+				ServerCommand("sm_effect_fading %d 10 1", victim);
+				
+				int itemID = rp_GetBuildingData(victim, BD_item_id);
+				if( itemID > 0 ) {
+					rp_ClientGiveItem(attacker, itemID, rp_GetBuildingData(victim, BD_count));
+				}
+			}
+		}
+		if( StrEqual(tmp, "rp_wood") && IsMeleeAxe(weapon) ) {
+			rp_ClientGiveItem(attacker, ITEM_BOIS);
+			AcceptEntityInput(victim, "Break");
+		}
+		if( StrEqual(tmp, "rp_tree") && IsMeleeAxe(weapon) ) {
+			SetEntProp(victim, Prop_Data, "m_iHealth", Entity_GetHealth(victim) - RoundFloat(damage));
+			if( Entity_GetHealth(victim) <= 0 ) {
+				rp_ClientGiveItem(attacker, ITEM_LATEX);
 				SetEntProp(victim, Prop_Data, "m_iHealth", 0);
 				AcceptEntityInput(victim, "EnableMotion");
+				SDKUnhook(victim, SDKHook_OnTakeDamage, OnPropDamage);
 			
 				float vel[3];
 				vel[2] = 32.0;				
@@ -316,7 +402,6 @@ public Action OnTreeDamage(int victim, int& attacker, int& inflictor, float& dam
 		}
 	}
 }
-
 stock int getMineLevel(int zone) {
 	static int level[MAX_ZONES] =  { -2, ... };
 	
