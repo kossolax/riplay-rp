@@ -438,8 +438,15 @@ void showPlayerHintBox(int client, int target) {
 	else if( StrContains(classname, "tree") >= 0 ) {
 		PrintHintText(client, "%T", "Hint_Arbre", client, Entity_GetHealth(target), (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target))) * 100.0);
 	}
+	else if( StrContains(classname, "wood") >= 0 ) {
+		PrintHintText(client, "%T", "Hint_Bois", client, Entity_GetHealth(target), (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target))) * 100.0);
+	}
 	else if( StrContains(classname, "stone") >= 0 ) {
-		PrintHintText(client, "%T", "Hint_Stone", client, Entity_GetHealth(target), (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target))) * 100.0);
+		int to_id = rp_GetBuildingData(target, BD_item_id);
+		
+		Format(clientname, sizeof(clientname), "%s", to_id > 0 ? g_szItemList[to_id][item_type_name] : "??????");
+		
+		PrintHintText(client, "%T", "Hint_Stone", client, clientname, Entity_GetHealth(target), (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target))) * 100.0);
 	}
 }
 
