@@ -157,8 +157,8 @@
 	"Lotery_Win"
 	{
 		"#format"	"{1:d}"
-		"fr"	"Vous avez gagné {green}%i{default}$, félicitations!"
-		"en"	"You won {green}%i{default}$, congratulations!"
+		"fr"	"Vous avez gagné {green}{1}{default}$, félicitations!"
+		"en"	"You won {green}{1}{default}$, congratulations!"
 	}
 	"Lotery_Lose"
 	{
