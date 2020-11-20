@@ -604,6 +604,30 @@
 		"fr"		"{1}\nHP {2} - {3}%"
 	}
 	// ----------------------------------------------------------------------------------------------
+	"Door_Cannot_NoKey"
+	{
+		"fr"		"Vous n'avez {red}pas{default} les clés de cette porte."
+	}
+	"Door_AddAll"
+	{
+		"fr"		"Ajouter les clés à tous le monde"
+	}
+	"Door_RemoveAll"
+	{
+		"fr"		"Retirer les clés à tous le monde"
+	}
+	"Door_Add"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Ajouter - {1}"
+	}
+	"Door_Remove"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Retirer - {1}"
+	}
+	
+	// ----------------------------------------------------------------------------------------------
 	"Pay_Cannot_Full"
 	{
 		"fr"		"Votre coffre en banque est {red}plein{default}, vous {red}ne toucherez pas {default}votre paye."
