@@ -273,6 +273,7 @@ void ToggleDoorLock(int client, int door, int lock_type) {
 		if( lock_type == 1) {
 			if( !GetEntProp(door, Prop_Data, "m_bLocked") ) {
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Door_Lock", client);
+				EmitSoundToAllAny("doors/default_locked.wav", door, _, _, _, 0.25);
 			}
 			LockSomeDoor(door_bdd, 1);
 		}
@@ -280,6 +281,7 @@ void ToggleDoorLock(int client, int door, int lock_type) {
 		if( lock_type == 2) {
 			if( GetEntProp(door, Prop_Data, "m_bLocked") ) {
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Door_Unlock", client);
+				EmitSoundToAllAny("doors/latchunlocked1.wav", door, _, _, _, 0.25);
 			}
 			LockSomeDoor(door_bdd, 0);
 		}

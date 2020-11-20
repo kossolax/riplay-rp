@@ -36,6 +36,9 @@ public void OnMapStart() {
 	PrecacheSoundAny("weapons/hegrenade/explode5.wav");
 	PrecacheSoundAny("physics/glass/glass_impact_bullet4.wav");
 	PrecacheSoundAny("buttons/blip1.wav");
+	PrecacheSoundAny("doors/default_locked.wav");
+	PrecacheSoundAny("doors/latchunlocked1.wav");
+	
 	g_cSnow = PrecacheDecal("DeadlyDesire/maps/snow.vmt");
 	if( g_cSnow ) { }
 

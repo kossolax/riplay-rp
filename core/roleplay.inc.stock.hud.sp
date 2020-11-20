@@ -139,23 +139,23 @@ void PrintSick(int client, char[] szReturn, int size) {
 		Format(szReturn, size, "\n %T", "HUD_Sick", client);
 	}
 }
-void PrintAdmin( int i, char[] szAdmin, int size) {	
-	int flags = GetUserFlagBits(i);
+void PrintAdmin( int client, char[] szAdmin, int size) {	
+	int flags = GetUserFlagBits(client);
 	if (flags & ADMFLAG_GENERIC || flags & ADMFLAG_KICK || flags & ADMFLAG_ROOT) {
-		Format(szAdmin, size, "\n%T", "HUD_Admin", client, g_iEntityCount/float(g_iEntityLimit) * 100.0, GetPlayerZone(i), g_iUserData[i][i_GiveXP]);
+		Format(szAdmin, size, "\n%T", "HUD_Admin", client, g_iEntityCount/float(g_iEntityLimit) * 100.0, GetPlayerZone(client), g_iUserData[client][i_GiveXP]);
 	}
 	else {
 		Format(szAdmin, size, "");
 	}
 }
-void PrintMail( int i, char[] szAdmin, int size) {
-	if ( g_bUserData[i][b_HasQuest]) {
+void PrintMail( int client, char[] szAdmin, int size) {
+	if ( g_bUserData[client][b_HasQuest]) {
 		Format(szAdmin, size, "\n%T", "HUD_Quest", client);
-		if( g_bUserData[i][b_HasMail]) {
+		if( g_bUserData[client][b_HasMail]) {
 			Format(szAdmin, size, "%s\n%T", szAdmin, "HUD_Mail", client);
 		}
 	}
-	else if ( g_bUserData[i][b_HasMail]) {
+	else if ( g_bUserData[client][b_HasMail]) {
 		Format(szAdmin, size, "\n%T", "HUD_Mail", client);
 	}
 	else {

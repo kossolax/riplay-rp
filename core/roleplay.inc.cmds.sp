@@ -1203,6 +1203,12 @@ public Action cmd_ForceUnlock(int client, int args) {
 	int ent = GetClientAimTarget(client, false);
 	
 	if( IsValidDoor(ent) ) {
+		
+		if( GetEntProp(ent, Prop_Data, "m_bLocked") ) {
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Door_Unlock", client);
+			EmitSoundToAllAny("doors/latchunlocked1.wav", ent, _, _, _, 0.25);
+		}
+		
 		SetEntProp(ent, Prop_Data, "m_bLocked", 0);
 		int door_bdd = g_iDoorDouble[ent - MaxClients ] + MaxClients;
 		if( door_bdd > MaxClients )
@@ -1215,6 +1221,12 @@ public Action cmd_ForceLock(int client, int args) {
 	int ent = GetClientAimTarget(client, false);
 	
 	if( IsValidDoor(ent) ) {
+		
+		if( !GetEntProp(ent, Prop_Data, "m_bLocked") ) {
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Door_Lock", client);
+			EmitSoundToAllAny("doors/default_locked.wav", ent, _, _, _, 0.25);
+		}
+		
 		SetEntProp(ent, Prop_Data, "m_bLocked", 1);
 		int door_bdd = g_iDoorDouble[ent - MaxClients ] + MaxClients;
 		if( door_bdd > MaxClients )

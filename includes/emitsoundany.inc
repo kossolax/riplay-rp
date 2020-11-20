@@ -133,7 +133,41 @@ stock EmitSoundToClientAny(client,
 	level, flags, volume, pitch, speakerentity,
 	origin, dir, updatePos, soundtime);
 }
-
+stock EmitSoundToTeamAny(team,
+				const String:sample[], 
+                 entity = SOUND_FROM_PLAYER, 
+                 channel = SNDCHAN_AUTO, 
+                 level = SNDLEVEL_NORMAL, 
+                 flags = SND_NOFLAGS, 
+                 Float:volume = SNDVOL_NORMAL, 
+                 pitch = SNDPITCH_NORMAL, 
+                 speakerentity = -1, 
+                 const Float:origin[3] = NULL_VECTOR, 
+                 const Float:dir[3] = NULL_VECTOR, 
+                 bool:updatePos = true, 
+                 Float:soundtime = 0.0)
+{
+	new clients[MaxClients];
+	new total = 0;
+	
+	for (new i=1; i<=MaxClients; i++)
+	{
+		if (IsClientInGame(i))
+		{
+			if( GetClientTeam(i) == team )
+				clients[total++] = i;
+		}
+	}
+	
+	if (!total)
+	{
+		return;
+	}
+	
+	EmitSoundAny(clients, total, sample, entity, channel, 
+	level, flags, volume, pitch, speakerentity,
+	origin, dir, updatePos, soundtime);
+}
 stock EmitSoundToAllAny(const String:sample[], 
                  entity = SOUND_FROM_PLAYER, 
                  channel = SNDCHAN_AUTO, 
