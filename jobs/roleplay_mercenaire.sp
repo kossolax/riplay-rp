@@ -70,7 +70,7 @@ public void OnPluginStart() {
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	RegServerCmd("rp_item_contrat",		Cmd_ItemContrat,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_conprotect",	Cmd_ItemConProtect,		"RP-ITEM",	FCVAR_UNREGISTERED);
-
+	
 	RegServerCmd("rp_item_cryptage",	Cmd_ItemCryptage,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_map",			Cmd_ItemMaps,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	
@@ -102,9 +102,19 @@ public void OnCvarChange(Handle cvar, const char[] oldVal, const char[] newVal) 
 }
 // ----------------------------------------------------------------------------
 public void OnClientPostAdminCheck(int client) {
+	rp_HookEvent(client, RP_OnPlayerBuild, fwdOnPlayerBuild);
 	rp_HookEvent(client, RP_OnPlayerCommand, fwfCommand);
 	rp_HookEvent(client, RP_PostTakeDamageWeapon, fwdWeapon);
 	g_bBlockDrop[client] = false;
+}
+public Action fwdOnPlayerBuild(int client, float& cooldown) {
+	if( rp_GetClientJobID(client) != 41 )
+		return Plugin_Continue;
+	
+	ServerCommand("rp_item_lancercut %d -1", client);
+	cooldown = 10.0;
+	
+	return Plugin_Stop;
 }
 public void OnClientDisconnect(int client) {
 	if( rp_GetClientInt(client, i_ToKill) > 0 && rp_GetClientJobID(client) == 41 ) {
@@ -1088,4 +1098,3 @@ void changeZoneState(int zone, bool enabled) {
 		rp_SetZoneBit(i, bits);
 	}
 }
-

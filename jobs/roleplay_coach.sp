@@ -118,7 +118,6 @@ char g_szColor[][] = {
 	"128 128 128",
 	"0 0 0"
 };
-int g_iKnifeThrowID = -1;
 int g_cBeam, g_cGlow, g_cExplode;
 Handle g_hCigarette[65];
 Handle g_vKnife, g_vWepaon;
@@ -380,7 +379,6 @@ public Action Cmd_ItemCutThrow(int args) {
 	
 	int client = GetCmdArgInt(1);
 	rp_SetClientInt(client, i_LastDangerousShot, GetTime());
-	g_iKnifeThrowID = GetCmdArgInt(args);
 	
 	rp_SetClientInt(client, i_LastAgression, GetTime());
 	
@@ -399,6 +397,7 @@ public Action Cmd_ItemCutThrow(int args) {
 	SetEntityModel(entity, MODEL_KNIFE);
 	SetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity", client);
 	SetEntPropFloat(entity, Prop_Send, "m_flElasticity", 0.2);
+	rp_SetBuildingData(entity, BD_item_id, GetCmdArgInt(args));
 	
 	TeleportEntity(entity, fPos, fAng, fVel);
 	
@@ -429,9 +428,9 @@ public void Cmd_ItemCutThrow_TOUCH(int rocket, int entity) {
 		}
 	}
 	
-	if( !touched) {
-		rp_GetItemData(g_iKnifeThrowID, item_type_name, classname, sizeof(classname));
-		rp_ClientGiveItem(attacker, g_iKnifeThrowID);
+	int knife = rp_GetBuildingData(rocket, BD_item_id);
+	if( !touched && knife > 0 ) {
+		rp_ClientGiveItem(attacker, knife);
 		CPrintToChat(attacker, ""...MOD_TAG..." %T", "Coach_KnifeGet", attacker);
 	}
 	
