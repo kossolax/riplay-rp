@@ -626,6 +626,18 @@
 		"#format"	"{1:s}"
 		"fr"		"Retirer - {1}"
 	}
+	"Door_Lock"
+	{
+		"fr"		"Cette porte a été {red}fermée{default} à clé."
+	}
+	"Door_Unlock"
+	{
+		"fr"		"Cette porte a été {green}déverouillée{default}."
+	}
+	"Door_IsLocked"
+	{
+		"fr"		"La porte est {red}fermée{default} à clé, tapez {red}/unlock{default} pour l'ouvrir."
+	}
 	
 	// ----------------------------------------------------------------------------------------------
 	"Pay_Cannot_Full"
