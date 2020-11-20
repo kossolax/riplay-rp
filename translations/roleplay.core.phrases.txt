@@ -148,6 +148,10 @@
 	}
 	
 	// ----------------------------------------------------------------------------------------------
+	"Cmd_Reload"
+	{
+		"fr"		"La configuration du serveur a été rechargée."
+	}
 	"Cmd_KnifeDamage"
 	{
 		"#format"	"{1:s},{2:d}"

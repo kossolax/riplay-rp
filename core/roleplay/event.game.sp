@@ -14,8 +14,6 @@
 //
 // On map started
 public void OnMapStart() {
-
-	CPrintToChatAll("" ...MOD_TAG... " Chargement de la config RP.");
 	PrintToServer("[TSX-RP] Chargement...");
 
 	char mapname[64];
@@ -73,7 +71,7 @@ public void OnMapStart() {
 	ServerCommand("mp_teamname_1 \"Police\"");
 	ServerCommand("mp_teamname_2 \"Civil\"");
 
-	CPrintToChatAll("" ...MOD_TAG... " Config chargée avec succès.");
+	CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_Reload", LANG_SERVER);
 	PrintToServer("--------------------------------------------------------------");
 	PrintToServer("");
 	PrintToServer("			Counter-Strike Source: RolePlay");
@@ -312,7 +310,6 @@ public Action GameLogHook(const char[] message) {
 
 			if( IsInPVP(client) || IsInPVP(target) || g_iHideNextLog[client][target] == 1 ) {
 				g_iHideNextLog[client][target] = 0;
-				PrintToConsole(client, "Votre meurtre sur %L a été retiré des logs", target);
 				LogToGame("[HIDDEN] %L -> %L", client, target);
 				return Plugin_Handled;
 			}
