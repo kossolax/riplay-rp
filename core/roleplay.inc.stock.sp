@@ -306,7 +306,7 @@ void AFK_Check(int client) {
 			
 			if( !g_bUserData[client][b_IsAFK] ) {
 				g_bUserData[client][b_IsAFK] = true;
-				CPrintToChat(client, "" ...MOD_TAG... " Vous êtes maintenant considéré comme AFK.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "AFK_Start", client);
 				LogToGame("[TSX-RP] [AFK] %L est maintenant AFK.", client);
 				
 				g_iUserData[client][i_TimeAFK_total] += 60;
@@ -329,7 +329,7 @@ void AFK_Check(int client) {
 								rp_ClientGiveItem(client, i, -rp_GetClientItem(client, i), false);
 							}
 						}
-						KickClient(client, "Vous êtes resté trop longtemps AFK.");
+						KickClient(client, "%T", "AFK_Kick", client);
 					}
 				}
 			}
@@ -338,7 +338,7 @@ void AFK_Check(int client) {
 	else {
 		if( g_bUserData[client][b_IsAFK] ) {
 			g_bUserData[client][b_IsAFK] = false;
-			CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes plus considéré comme AFK (%d minute%s).", g_iUserData[client][i_TimeAFK]/60, ((g_iUserData[client][i_TimeAFK]/60)>=2?"s" : ""));
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "AFK_End", client, g_iUserData[client][i_TimeAFK]/60);
 			LogToGame("[TSX-RP] [AFK] %L n'est plus AFK.", client);
 		}
 		g_iUserData[client][i_TimeAFK] = 0;
@@ -362,7 +362,7 @@ void SQL_Reconnect() {
 
 
 	if( g_hBDD == INVALID_HANDLE ) {
-		PrintToChatAll("ERREUR FATAL, Perte de la connexion à la base de donnée.");
+		PrintToChatAll("%T", "Error_FromServer", LANG_SERVER);
 		LogToGame("ERREUR FATAL, Perte de la connexion à la base de donnée.");
 		LogToFile("roleplay.txt", "ERREUR FATAL, Perte de la connexion à la base de donnée.");
 		g_hBDD = SQL_Connect("default", true, g_szError, sizeof(g_szError));
@@ -652,7 +652,7 @@ public void MoneyEntityGotTouch(int touched, int toucher) {
 	
 	rp_ClientMoney(toucher, i_AddToPay, amount);
 	
-	CPrintToChat(toucher, "" ...MOD_TAG... " Vous avez récupéré %i$.", amount);
+	CPrintToChat(toucher, "" ...MOD_TAG... " %T", "Money_Take", toucher, amount);
 	
 	SDKUnhook(touched, SDKHook_Touch, MoneyEntityGotTouch);
 	rp_AcceptEntityInput(touched, "Kill");
@@ -1213,13 +1213,6 @@ void AddDownloadsTable() {
 // Autoriser le vol d'un joueur
 public Action AllowStealing(Handle timer, any client) {
 	g_bUserData[client][b_MaySteal] = true;
-	
-	if( IsValidClient(client) ) {
-		if (IsGangMaffia(client) || IsDealer(client) )
-			CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez à nouveau voler.");
-		else if( IsTech(client) )
-			CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez à nouveau poser une machine.");		
-	}
 }
 int _GetTime(float time) {
 	static float last;

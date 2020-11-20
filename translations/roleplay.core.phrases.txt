@@ -12,10 +12,23 @@
 		"fr"	"Sélectionner un groupe pour: %s"
 	}
 	// ----------------------------------------------------------------------------------------------
-	"Kick_AFK"
+	"AFK_KickAdmin"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Vous êtes resté trop longtemps AFK, mais un admin vous a accordé un remboursement de {1}$."
+	}
+	"AFK_Kick"
+	{
+		"fr"	"Vous êtes resté trop longtemps AFK."
+	}
+	"AFK_Start"
+	{
+		"fr"	"Vous êtes maintenant considéré comme {red}AFK{default}."
+	}
+	"AFK_End"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Vous n'êtes plus considéré comme {green}AFK{default} ({1} minute(s))."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Force_Bind"

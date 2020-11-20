@@ -313,6 +313,12 @@
 		"en"	"You can steal again."
 	}
 	// ----------------------------------------------------------------------------------------------
+	"Money_Take"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Vous avez récupéré: {green}{1}{default}$."
+		"en"	"You have retrieved: {green}{1}{default}$."
+	}
 	"Item_Take"
 	{
 		"#format"	"{1:d},{2:s}"

@@ -466,7 +466,7 @@ public Action Cmd_CheckAFK(int client, int args) {
 	Format(query, sizeof(query), "INSERT INTO `rp_users2` (`id`, `steamid`, `bank`, `pseudo` ) VALUES (NULL, '%s', '%i', 'slot admin');", SteamID, amount);
 	
 	SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);	
-	KickClient(client, "%T", "Kick_AFK", client, amount);
+	KickClient(client, "%T", "AFK_KickAdmin", client, amount);
 	
 	return Plugin_Handled;
 }
