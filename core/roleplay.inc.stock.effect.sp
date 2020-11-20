@@ -355,8 +355,6 @@ void RP_PerformFade(int client) {
 		SetEntProp(client, Prop_Send, "m_iHideHUD", hud);
 	}
 	
-	
-	
 	Handle hFadeClient = StartMessageOne("Fade",client);
 	PbSetInt(hFadeClient, "duration", 1);
 	PbSetInt(hFadeClient, "hold_time", 1);

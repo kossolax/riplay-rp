@@ -710,34 +710,28 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				
 			}
 			case 4: { // Imprimante
-				time /= 4.0;
-				CreateTimer(0.1, SpawnMoney, EntIndexToEntRef(target));
-				stealAmount = 25;
-				
-				Entity_SetHealth(target, Entity_GetHealth(target) - Entity_GetMaxHealth(target) / 10);
+				time /= 6.0;
 				
 				int owner = rp_GetBuildingData(target, BD_owner);
 				if( IsValidClient(owner) ) {
-					rp_ClientMoney(owner, i_Bank, -25);
+					rp_SetBuildingData(target, BD_HackedBy, client);
+					rp_SetBuildingData(target, BD_HackedTime, GetTime());
 					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Crowbar_FauxBillet", owner);
 				}
+				
+				Entity_SetHealth(target, Entity_GetHealth(target) - Entity_GetMaxHealth(target) / 10);
 			}
 			case 5: { // Photocopieuse
-				time *= 4.0;
-				
-				for (int i = 0; i < 15; i++)
-					CreateTimer(i / 5.0, SpawnMoney, EntIndexToEntRef(target));
+				time /= 6.0;
 				
 				int owner = rp_GetBuildingData(target, BD_owner);
 				if( IsValidClient(owner) ) {
-					rp_ClientMoney(owner, i_Bank, -25 * 15);
+					rp_SetBuildingData(target, BD_HackedBy, client);
+					rp_SetBuildingData(target, BD_HackedTime, GetTime());
 					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Crowbar_FauxBillet", owner);
 				}
 				
-				
-				stealAmount = 25 * 15;
 				Entity_SetHealth(target, Entity_GetHealth(target) - Entity_GetMaxHealth(target) / 10);
-				
 			}
 			case 6: { // Téléphone
 				time *= 6.0;
@@ -787,16 +781,14 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 			case 8: { // Distrib Perso
 				time *= 4.0;
 				int owner = rp_GetBuildingData(target, BD_owner);
-				stealAmount = 150;
+				stealAmount = 1500;
 
 				if( IsValidClient(owner) ) {
 					
-					int vol_max = rp_GetClientInt(owner, i_Money)+rp_GetClientInt(owner, i_Bank);
-					if(vol_max/2000 > stealAmount){
-						stealAmount = vol_max/2000;
-					}
+					int vol_max = (rp_GetClientInt(owner, i_Money) + rp_GetClientInt(owner, i_Bank)) / 500;
+					int vol_min = (rp_GetClientInt(owner, i_Money)+rp_GetClientInt(owner, i_Bank)) / 2000;
 
-					stealAmount = Math_GetRandomPow(1, stealAmount);
+					stealAmount = Math_GetRandomPow(vol_min, vol_max);
 
 					if(vol_max < stealAmount || rp_GetClientFloat(owner, fl_LastStolen)+60.0 > GetGameTime() ){
 						CPrintToChat(client, "" ...MOD_TAG... " %T", "Crowbar_Distrib_Failed", client);
@@ -1163,10 +1155,10 @@ int getDistrib(int client, int& type) {
 	else if( StrEqual(classname, "rp_weaponbox") )
 		type = 3;
 	else if( (StrEqual(classname, "rp_cashmachine") ) && rp_GetClientJobID(owner) != 91 &&
-		!rp_IsClientSafe(owner) && (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target)) > 0.75) )
+		!rp_IsClientSafe(owner) && (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target)) > 0.75) && rp_GetBuildingData(target, BD_HackedTime)+6*60 < GetTime() )
 		type = 4;
 	else if( (StrEqual(classname, "rp_bigcashmachine") ) && rp_GetClientJobID(owner) != 91 &&
-		!rp_IsClientSafe(owner) && (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target)) > 0.75) )
+		!rp_IsClientSafe(owner) && (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target)) > 0.75) && rp_GetBuildingData(target, BD_HackedTime)+6*60 < GetTime() )
 		type = 5;
 	else if( StrEqual(classname, "rp_phone") )
 		type = 6;

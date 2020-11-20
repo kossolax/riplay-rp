@@ -502,7 +502,7 @@
 	}
 	"Hint_Props"
 	{
-		"#format"	"{1:s},{2:s},{3:.2f}"
+		"#format"	"{1:s},{2:d},{3:.2f}"
 		"fr"		"Props de {1}\nHP: {2} - {3}%"
 	}
 	"Hint_Vehicle"

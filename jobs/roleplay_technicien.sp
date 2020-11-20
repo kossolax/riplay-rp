@@ -89,11 +89,22 @@ public void OnMapStart() {
 public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnAssurance,	fwdAssurance);
 	rp_HookEvent(client, RP_OnPlayerBuild,	fwdOnPlayerBuild);
-	
+	rp_HookEvent(client, RP_OnPlayerUse, 	fwdOnPlayerUse);
 	if( rp_GetClientBool(client, ch_Kevlar) )
 		rp_HookEvent(client, RP_OnFrameSeconde, fwdRegenKevlar);
 	if( rp_GetClientBool(client, ch_Yeux) )
 		rp_HookEvent(client, RP_PreHUDColorize, fwfBioYeux);
+}
+public Action fwdOnPlayerUse(int client) {
+	char classname[64];
+	int ent = rp_GetClientTarget(client);
+	if( ent > 0 && rp_GetBuildingData(ent, BD_owner) == client && rp_IsEntitiesNear(client, ent, true) ) {
+		GetEdictClassname(ent, classname, sizeof(classname));
+		
+		if( StrEqual(classname, "rp_cashmachine") || StrEqual(classname, "rp_bigcashmachine") ) {
+			rp_SetBuildingData(ent, BD_HackedBy, 0);
+		}
+	}
 }
 public Action fwdAssurance(int client, int& amount) {	
 	
@@ -482,6 +493,8 @@ int BuildingCashMachine(int client, bool force=false) {
 	
 	rp_SetBuildingData(ent, BD_started, GetTime());
 	rp_SetBuildingData(ent, BD_owner, client );
+	rp_SetBuildingData(ent, BD_HackedBy, 0);
+//	rp_SetBuildingData(ent, BD_HackedTime, GetTime()); TBD
 	rp_SetBuildingData(ent, BD_FromBuild, 0);
 	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
 	
@@ -501,6 +514,9 @@ public Action BuildingCashMachine_post(Handle timer, any entity) {
 	
 	return Plugin_Handled;
 }
+public void BuildingCashMachine_use(const char[] output, int caller, int activator, float delay) {
+	PrintToChatAll("used");
+}
 public void BuildingCashMachine_break(const char[] output, int caller, int activator, float delay) {
 	CashMachine_Destroy(caller);
 	
@@ -510,15 +526,10 @@ public void BuildingCashMachine_break(const char[] output, int caller, int activ
 		int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
 		if( IsValidClient(owner) ) {
 			rp_ClientAggroIncrement(activator, owner, 1000);
-			
-			if( rp_IsInPVP(caller) ) {
-				if( rp_GetClientGroupID(activator) > 0 && rp_GetClientGroupID(owner) > 0 && rp_GetClientGroupID(activator) != rp_GetClientGroupID(owner) ) {
-					CashMachine_Destroy(caller);
-				}
-			}
 		}
 	}
 }
+
 public Action Frame_CashMachine(Handle timer, any ent) {
 	ent = EntRefToEntIndex(ent); if( ent == -1 ) { return Plugin_Handled; }
 	
@@ -527,22 +538,30 @@ public Action Frame_CashMachine(Handle timer, any ent) {
 		rp_ScheduleEntityInput(ent, 60.0, "Kill");
 		return Plugin_Handled;
 	}
+	if( IsValidClient(rp_GetBuildingData(ent, BD_HackedBy)) ) {
+		if( rp_GetBuildingData(ent, BD_HackedTime)+6*60 > GetTime() ) {
+			client = rp_GetBuildingData(ent, BD_HackedBy);
+		}
+		else {
+			rp_SetBuildingData(ent, BD_HackedBy, 0);
+		}
+	}
 	
 	int heal = Entity_GetHealth(ent) + Math_GetRandomInt(10, 20);
 	if (heal > Entity_GetMaxHealth(ent)) heal = Entity_GetMaxHealth(ent);
 	Entity_SetHealth(ent, heal, true);
 	
-	
-	
 	if( !rp_GetClientBool(client, b_IsAFK) && rp_GetClientInt(client, i_TimeAFK) <= 60 && g_bProps_trapped[ent] == false && rp_GetClientInt(client, i_SearchLVL) < 5 ) {
-		EmitSoundToAllAny("ambient/tones/equip3.wav", ent, _, _, _, 0.66);
+		EmitSoundToTeamAny(CS_TEAM_CT, "ambient/tones/equip3.wav", ent, _, _, _, 0.66);
+		EmitSoundToClientAny(client, "ambient/tones/equip3.wav", ent, _, _, _, 0.66);
+		if( client != GetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity") )
+			EmitSoundToClientAny(GetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity"), "ambient/tones/equip3.wav", ent, _, _, _, 0.66);
 		
 		rp_ClientMoney(client, i_Bank, 1);
 		rp_SetClientStat(client, i_MoneyEarned_CashMachine, rp_GetClientStat(client, i_MoneyEarned_CashMachine)+1);
 		
 		int capital_id = rp_GetRandomCapital( rp_GetClientJobID(client) );
 		rp_SetJobCapital( capital_id, rp_GetJobCapital(capital_id)-1 );
-		
 		
 		if( rp_GetClientJobID(client) == 221 && Math_GetRandomInt(1, 100) > 80 ) {
 			rp_SetJobCapital( capital_id, rp_GetJobCapital(capital_id)-1 );
@@ -582,24 +601,24 @@ public Action Frame_CashMachine(Handle timer, any ent) {
 		}
 	}
 	
+	if( IsValidClient(rp_GetBuildingData(ent, BD_HackedBy)) ) {
+		float src[3], min[3], max[3];
+		Entity_GetAbsOrigin(ent, src);
+		Entity_GetMinSize(ent, min);
+		Entity_GetMaxSize(ent, max);
+		min[2] = max[2] = 0.0;
+		src[2] += 8.0;
+		
+		TE_SetupBeamRingPoint(src, GetVectorDistance(min, max)-1.0, GetVectorDistance(min, max), g_cBeam, g_cGlow, 0, 0, time + 0.1, 8.0, 0.0, {200, 32, 32, 50}, 0, 0);
+		TE_SendToAll();
+	}
+	
 	CreateTimer(time, Frame_CashMachine, EntIndexToEntRef(ent));
 	return Plugin_Handled;
 }
 void CashMachine_Destroy(int entity) {
 	float vecOrigin[3];
 	Entity_GetAbsOrigin(entity, vecOrigin);
-	
-	char name[64];
-	GetEdictClassname(entity, name, sizeof(name));
-	
-	if( rp_GetBuildingData(entity, BD_started)+120 < GetTime() ) {
-		rp_Effect_SpawnMoney(vecOrigin, true);
-		if( StrContains(name, "big") >= 0 ){
-			for(int i = 0; i<14; i++){
-			  rp_Effect_SpawnMoney(vecOrigin, true);
-			}
-		}
-	}
 	
 	TE_SetupExplosion(vecOrigin, g_cExplode, 0.5, 2, 1, 25, 25);
 	TE_SendToAll();
@@ -733,7 +752,10 @@ int BuildingBigCashMachine(int client) {
 	
 	rp_SetBuildingData(ent, BD_started, GetTime());
 	rp_SetBuildingData(ent, BD_owner, client );
+	rp_SetBuildingData(ent, BD_HackedBy, 0);
+//	rp_SetBuildingData(ent, BD_HackedTime, GetTime()); TBD
 	rp_SetBuildingData(ent, BD_FromBuild, 0);
+	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
 	
 	CreateTimer(5.0, BuildingBigCashMachine_post, ent);
 
@@ -759,13 +781,24 @@ public Action Frame_BigCashMachine(Handle timer, any ent) {
 		rp_ScheduleEntityInput(ent, 60.0, "Kill");
 		return Plugin_Handled;
 	}
+	if( IsValidClient(rp_GetBuildingData(ent, BD_HackedBy)) ) {
+		if( rp_GetBuildingData(ent, BD_HackedTime)+6*60 > GetTime() ) {
+			client = rp_GetBuildingData(ent, BD_HackedBy);
+		}
+		else {
+			rp_SetBuildingData(ent, BD_HackedBy, 0);
+		}
+	}
 	
 	int heal = Entity_GetHealth(ent) + Math_GetRandomInt(10, 20);
 	if (heal > Entity_GetMaxHealth(ent)) heal = Entity_GetMaxHealth(ent);
 	Entity_SetHealth(ent, heal, true);
 	
 	if( !rp_GetClientBool(client, b_IsAFK) && rp_GetClientInt(client, i_TimeAFK) <= 60 && g_bProps_trapped[ent] == false && rp_GetClientInt(client, i_SearchLVL) < 5 ) {
-		EmitSoundToAllAny("ambient/tones/equip3.wav", ent, _, _, _, 1.0);
+		EmitSoundToTeamAny(CS_TEAM_CT, "ambient/tones/equip3.wav", ent, _, _, _, 1.0);
+		EmitSoundToClientAny(client, "ambient/tones/equip3.wav", ent, _, _, _, 1.0);
+		if( client != GetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity") )
+			EmitSoundToClientAny(GetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity"), "ambient/tones/equip3.wav", ent, _, _, _, 0.66);
 		
 		rp_ClientMoney(client, i_Bank, 2);
 		rp_SetClientStat(client, i_MoneyEarned_CashMachine, rp_GetClientStat(client, i_MoneyEarned_CashMachine)+2);
@@ -812,7 +845,21 @@ public Action Frame_BigCashMachine(Handle timer, any ent) {
 		}
 	}
 	
-	CreateTimer(time/7.5, Frame_BigCashMachine, EntIndexToEntRef(ent));
+	time /= 7.5;
+	
+	if( IsValidClient(rp_GetBuildingData(ent, BD_HackedBy)) ) {
+		float src[3], min[3], max[3];
+		Entity_GetAbsOrigin(ent, src);
+		Entity_GetMinSize(ent, min);
+		Entity_GetMaxSize(ent, max);
+		min[2] = max[2] = 0.0;
+		src[2] += 8.0;
+		
+		TE_SetupBeamRingPoint(src, GetVectorDistance(min, max)-1.0, GetVectorDistance(min, max), g_cBeam, g_cGlow, 0, 0, time + 0.1, 8.0, 0.0, {200, 32, 32, 50}, 0, 0);
+		TE_SendToAll();
+	}
+	
+	CreateTimer(time, Frame_BigCashMachine, EntIndexToEntRef(ent));
 	return Plugin_Handled;
 }
 float GetMachineTime(int client) {

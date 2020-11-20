@@ -1129,10 +1129,6 @@ void Plant_Destroy(int entity) {
 	float vecOrigin[3];
 	Entity_GetAbsOrigin(entity, vecOrigin);
 	
-	if( rp_GetBuildingData(entity, BD_started)+120 < GetTime() ) {
-		rp_Effect_SpawnMoney(vecOrigin, true);
-	}
-	
 	TE_SetupExplosion(vecOrigin, g_cExplode, 0.5, 2, 1, 25, 25);
 	TE_SendToAll();
 	
