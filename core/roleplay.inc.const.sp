@@ -46,7 +46,6 @@
 
 
 #define BUFFER_SIZE			32
-#define ITEM_BANK_LIMIT		500000
 
 char g_szSuperAdmin[][] = {
 	"76561197987342816", // Gozer
