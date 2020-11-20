@@ -30,6 +30,10 @@
 		"#format"	"{1:d}"
 		"fr"	"Vous n'êtes plus considéré comme {green}AFK{default} ({1} minute(s))."
 	}
+	"AFK_Braquage"
+	{
+		"fr"	"Attention, un braquage est en cours. Le fait de passer AFK diminue les chances de win pour vos collègues."
+	}
 	// ----------------------------------------------------------------------------------------------
 	"Force_Bind"
 	{

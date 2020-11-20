@@ -57,7 +57,9 @@ public Action Command_Say(int client, int args) {
 
 	bool removed = RemoveString(szSayText, szSayTrig);
 
-	if(strcmp(szSayTrig, "!plainte", false) == 0 || strcmp(szSayTrig, "/plainte", false) == 0) {
+	if(	strcmp(szSayTrig, "!plainte", false) == 0 || strcmp(szSayTrig, "/plainte", false) == 0 ||
+		strcmp(szSayTrig, "!complaint", false) == 0 || strcmp(szSayTrig, "/complaint", false) == 0
+		) {
 
 		if( !IsClientInJail(client) ) {
 			ACCESS_DENIED(client);
@@ -88,7 +90,11 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	if(strcmp(szSayTrig, "!peine", false) == 0 || strcmp(szSayTrig, "/peine", false) == 0) {
+	else if(
+		strcmp(szSayTrig, "!peine", false) == 0 || strcmp(szSayTrig, "/peine", false) == 0 ||
+		strcmp(szSayTrig, "!penalty", false) == 0 || strcmp(szSayTrig, "/penalty", false) == 0
+		
+		) {
 
 		if( !IsClientInJail(client) ) {
 			ACCESS_DENIED(client);
@@ -98,29 +104,36 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	else if( strcmp(szSayTrig, "!site", false) == 0 || strcmp(szSayTrig, "/site", false) == 0 ) {		
+	else if(
+		strcmp(szSayTrig, "!site", false) == 0 || strcmp(szSayTrig, "/site", false) == 0 ||
+		strcmp(szSayTrig, "!web", false) == 0 || strcmp(szSayTrig, "/web", false) == 0
+		) {		
 		RP_ShowMOTD(client, MOD_URL);
 
 		return Plugin_Handled;
 	}
-	else if( strcmp(szSayTrig, "!craft", false) == 0 || strcmp(szSayTrig, "/craft", false) == 0 ) {
+	else if(
+		strcmp(szSayTrig, "!craft", false) == 0 || strcmp(szSayTrig, "/craft", false) == 0
+		) {
 		RP_ShowMOTD(client, MOD_URL ... "craft.php");
 
 		return Plugin_Handled;
 	}
-	else if(strcmp(szSayTrig, "!success", false) == 0 || strcmp(szSayTrig, "/success", false) == 0 ||
-			strcmp(szSayTrig, "!sucess", false) == 0 || strcmp(szSayTrig, "/sucess", false) == 0 ||
-			strcmp(szSayTrig, "!succes", false) == 0 || strcmp(szSayTrig, "/succes", false) == 0 ||
-			strcmp(szSayTrig, "!succès", false) == 0 || strcmp(szSayTrig, "/succès", false) == 0
-			
+	else if(
+		strcmp(szSayTrig, "!success", false) == 0 || strcmp(szSayTrig, "/success", false) == 0 ||
+		strcmp(szSayTrig, "!sucess", false) == 0 || strcmp(szSayTrig, "/sucess", false) == 0 ||
+		strcmp(szSayTrig, "!succes", false) == 0 || strcmp(szSayTrig, "/succes", false) == 0 ||
+		strcmp(szSayTrig, "!achievement", false) == 0 || strcmp(szSayTrig, "/achievement ", false) == 0 ||
+		strcmp(szSayTrig, "!succès", false) == 0 || strcmp(szSayTrig, "/succès", false) == 0	
 		) {
 		
 		Draw_Success(client, -1);
 		
 		return Plugin_Handled;
 	}
-	else if( strcmp(szSayTrig, "!a", false) == 0		|| strcmp(szSayTrig, "/a", false) == 0
-	) {
+	else if(
+		strcmp(szSayTrig, "!a", false) == 0		|| strcmp(szSayTrig, "/a", false) == 0
+		) {
 		int flags = GetUserFlagBits(client);
 		if (!(flags & ADMFLAG_GENERIC || flags & ADMFLAG_ROOT)) {
 			ACCESS_DENIED(client);
@@ -132,7 +145,9 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	else if(	strcmp(szSayTrig, "!screen", false) == 0	|| strcmp(szSayTrig, "/screen", false) == 0 ) {
+	else if(
+		strcmp(szSayTrig, "!screen", false) == 0	|| strcmp(szSayTrig, "/screen", false) == 0
+		) {
 
 		int val = GetEntProp(client, Prop_Send, "m_bDrawViewmodel");
 		int hud = GetEntProp(client, Prop_Send, "m_iHideHUD");
@@ -159,21 +174,24 @@ public Action Command_Say(int client, int args) {
 		}
 		return Plugin_Handled;
 	}
-	else if(	strcmp(szSayTrig, "!money", false) == 0	|| strcmp(szSayTrig, "/money", false) == 0	||
+	else if(
+		strcmp(szSayTrig, "!money", false) == 0	|| strcmp(szSayTrig, "/money", false) == 0	||
 		strcmp(szSayTrig, "!statut", false) == 0	|| strcmp(szSayTrig, "/statut", false) == 0	||
 		strcmp(szSayTrig, "!hud", false) == 0	|| strcmp(szSayTrig, "/hud", false) == 0	||
 		strcmp(szSayTrig, "!s", false) == 0	|| strcmp(szSayTrig, "/s", false) == 0	||
 		strcmp(szSayTrig, "!status", false) == 0	|| strcmp(szSayTrig, "/status", false) == 0
-	) {
+		) {
 
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_Money", client, g_iUserData[client][i_Money], g_iUserData[client][i_Bank], g_szJobList[g_iUserData[client][i_Job]][job_type_name]);
 
 		return Plugin_Handled;
 	}
-	else if(	strcmp(szSayTrig, "!passive", false) == 0 || strcmp(szSayTrig, "/passive", false) == 0 ||
-				strcmp(szSayTrig, "!passif", false) == 0 || strcmp(szSayTrig, "/passif", false) == 0 ||
-				strcmp(szSayTrig, "!active", false) == 0 || strcmp(szSayTrig, "/active", false) == 0 ||
-				strcmp(szSayTrig, "!actif", false) == 0 || strcmp(szSayTrig, "/actif", false) == 0) {
+	else if(
+		strcmp(szSayTrig, "!passive", false) == 0 || strcmp(szSayTrig, "/passive", false) == 0 ||
+		strcmp(szSayTrig, "!passif", false) == 0 || strcmp(szSayTrig, "/passif", false) == 0 ||
+		strcmp(szSayTrig, "!active", false) == 0 || strcmp(szSayTrig, "/active", false) == 0 ||
+		strcmp(szSayTrig, "!actif", false) == 0 || strcmp(szSayTrig, "/actif", false) == 0
+		) {
 		
 		if( g_iUserData[client][i_PlayerLVL] < 2 ) {
 			char tmp[128];
@@ -185,7 +203,10 @@ public Action Command_Say(int client, int args) {
 		Draw_PassiveMenu(client);
 		return Plugin_Handled;
 	}
-	else if(	strcmp(szSayTrig, "!vita", false) == 0 || strcmp(szSayTrig, "/vita", false) == 0 ) {
+	else if(
+		strcmp(szSayTrig, "!vita", false) == 0 || strcmp(szSayTrig, "/vita", false) == 0 ||
+		strcmp(szSayTrig, "!vitality", false) == 0 || strcmp(szSayTrig, "/vitality", false) == 0
+		) {
 
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_Vita", client, g_flUserData[client][fl_Vitality], GetVitaLevel(client));
 		return Plugin_Handled;
@@ -199,15 +220,18 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	else if(strcmp(szSayTrig, "!rev", false) == 0 || strcmp(szSayTrig, "/rev", false) == 0) {
+	else if(
+		strcmp(szSayTrig, "!rev", false) == 0 || strcmp(szSayTrig, "/rev", false) == 0
+		) {
 
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_REV", client, __TIME__, __DATE__, __LAST_REV__);
 
 		return Plugin_Handled;
 	}	
-	else if( strcmp(szSayTrig, "!leave", false) == 0 || strcmp(szSayTrig, "/leave", false) == 0 ||
+	else if(
+		strcmp(szSayTrig, "!leave", false) == 0 || strcmp(szSayTrig, "/leave", false) == 0 ||
 		strcmp(szSayTrig, "!quitter", false) == 0 || strcmp(szSayTrig, "/quitter", false) == 0
-	) {
+		) {
 
 		int door = target;
 		int door_bdd = (door-MaxClients);
@@ -261,9 +285,10 @@ public Action Command_Say(int client, int args) {
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Appart_KeyRemovedSelf", client, can);
 		return Plugin_Handled;
 	}
-	else if( strcmp(szSayTrig, "!appart", false) == 0 || strcmp(szSayTrig, "/appart", false) == 0 ||
-			strcmp(szSayTrig, "!garage", false) == 0 || strcmp(szSayTrig, "/garage", false) == 0
-	) {
+	else if(
+		strcmp(szSayTrig, "!appart", false) == 0 || strcmp(szSayTrig, "/appart", false) == 0 ||
+		strcmp(szSayTrig, "!garage", false) == 0 || strcmp(szSayTrig, "/garage", false) == 0
+		) {
 		
 		// Setup menu
 		Handle menu = CreateMenu(MenuNothing);
@@ -293,8 +318,9 @@ public Action Command_Say(int client, int args) {
 		
 		return Plugin_Handled;
 	}
-	else if( strcmp(szSayTrig, "!tuto", false) == 0 || strcmp(szSayTrig, "/tuto", false) == 0 ||
-			strcmp(szSayTrig, "!tuto", false) == 0 || strcmp(szSayTrig, "/tuto", false) == 0
+	else if(
+		strcmp(szSayTrig, "!tuto", false) == 0 || strcmp(szSayTrig, "/tuto", false) == 0 ||
+		strcmp(szSayTrig, "!tutorial", false) == 0 || strcmp(szSayTrig, "/tutorial", false) == 0
 	) {
 		
 		// Setup menu
@@ -332,7 +358,12 @@ public Action Command_Say(int client, int args) {
 		
 		return Plugin_Handled;
 	}
-	else if(	strcmp(szSayTrig, "!vol", false) == 0		|| strcmp(szSayTrig, "/vol", false) == 0	) {
+	else if(
+		strcmp(szSayTrig, "!vol", false) == 0		|| strcmp(szSayTrig, "/vol", false) == 0 ||
+		strcmp(szSayTrig, "!voler", false) == 0		|| strcmp(szSayTrig, "/voler", false) == 0 ||
+		strcmp(szSayTrig, "!voller", false) == 0		|| strcmp(szSayTrig, "/voller", false) == 0 ||
+		strcmp(szSayTrig, "!steal", false) == 0		|| strcmp(szSayTrig, "/steal", false) == 0
+		) {
 
 		if( GetZoneBit( GetPlayerZone(client) ) & BITZONE_BLOCKSTEAL ) {
 			ACCESS_DENIED(client);
@@ -396,7 +427,9 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	if(	strcmp(szSayTrig, "!report", false) == 0		|| strcmp(szSayTrig, "/report", false) == 0 ) {
+	if(
+		strcmp(szSayTrig, "!report", false) == 0		|| strcmp(szSayTrig, "/report", false) == 0
+		) {
 
 		// Setup menu
 		Handle menu = CreateMenu(MenuTribunal_report);
@@ -421,9 +454,11 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	else if(	strcmp(szSayTrig, "!boss", false) == 0		|| strcmp(szSayTrig, "/boss", false) == 0 ||
-				strcmp(szSayTrig, "!virer", false) == 0		|| strcmp(szSayTrig, "/virer", false) == 0 || 
-				strcmp(szSayTrig, "!fire", false) == 0		|| strcmp(szSayTrig, "/fire", false) == 0	) {
+	else if(
+		strcmp(szSayTrig, "!boss", false) == 0		|| strcmp(szSayTrig, "/boss", false) == 0 ||
+		strcmp(szSayTrig, "!virer", false) == 0		|| strcmp(szSayTrig, "/virer", false) == 0 || 
+		strcmp(szSayTrig, "!fire", false) == 0		|| strcmp(szSayTrig, "/fire", false) == 0
+		) {
 
 		if( !IsBoss(client) ) {
 			ACCESS_DENIED(client);
@@ -433,8 +468,9 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	else if( strcmp(szSayTrig, "!build", false) == 0		|| strcmp(szSayTrig, "/build", false) == 0	||
-			strcmp(szSayTrig, "!b", false) == 0		|| strcmp(szSayTrig, "/b", false) == 0
+	else if(
+		strcmp(szSayTrig, "!build", false) == 0		|| strcmp(szSayTrig, "/build", false) == 0	||
+		strcmp(szSayTrig, "!b", false) == 0		|| strcmp(szSayTrig, "/b", false) == 0
 		) {
 
 		if( GetZoneBit( GetPlayerZone(client) ) & BITZONE_BLOCKBUILD ) {
@@ -462,9 +498,10 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	else if(	strcmp(szSayTrig, "!skin", false) == 0		|| strcmp(szSayTrig, "/skin", false) == 0 ||
+	else if(
+		strcmp(szSayTrig, "!skin", false) == 0		|| strcmp(szSayTrig, "/skin", false) == 0 ||
 		strcmp(szSayTrig, "!skins", false) == 0		|| strcmp(szSayTrig, "/skins", false) == 0
-	) {
+		) {
 
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_Skin", client);
 		return Plugin_Handled;
@@ -472,7 +509,7 @@ public Action Command_Say(int client, int args) {
 	else if(
 		strcmp(szSayTrig, "!cle", false) == 0		|| strcmp(szSayTrig, "/cle", false) == 0 ||
 		strcmp(szSayTrig, "!key", false) == 0		|| strcmp(szSayTrig, "/key", false) == 0
-	) {
+		) {
 
 
 		if( !IsBoss(client) ) {
@@ -486,7 +523,7 @@ public Action Command_Say(int client, int args) {
 	else if(
 		strcmp(szSayTrig, "!cles", false) == 0		|| strcmp(szSayTrig, "/cles", false) == 0 ||
 		strcmp(szSayTrig, "!keys", false) == 0		|| strcmp(szSayTrig, "/keys", false) == 0
-	) {
+		) {
 
 
 		if( !IsBoss(client) ) {
@@ -503,10 +540,11 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	else if(	strcmp(szSayTrig, "!engage", false) == 0		|| strcmp(szSayTrig, "/engage", false) == 0	||
+	else if(
+		strcmp(szSayTrig, "!engage", false) == 0		|| strcmp(szSayTrig, "/engage", false) == 0	||
 		strcmp(szSayTrig, "!engager", false) == 0		|| strcmp(szSayTrig, "/engager", false) == 0||
 		strcmp(szSayTrig, "!hire", false) == 0			|| strcmp(szSayTrig, "/hire", false) == 0
-	) {
+		) {
 
 		if( !IsBoss(client) ) {
 			ACCESS_DENIED(client);
@@ -551,10 +589,12 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	else if(	strcmp(szSayTrig, "!demission", false) == 0		|| strcmp(szSayTrig, "/demission", false) == 0		||
+	else if(
+		strcmp(szSayTrig, "!demission", false) == 0		|| strcmp(szSayTrig, "/demission", false) == 0		||
 		strcmp(szSayTrig, "!demissionner", false) == 0	|| strcmp(szSayTrig, "/demissionner", false) == 0	||
-		strcmp(szSayTrig, "!demissionne", false) == 0	|| strcmp(szSayTrig, "/demissionne", false) == 0
-	) {
+		strcmp(szSayTrig, "!demissionne", false) == 0	|| strcmp(szSayTrig, "/demissionne", false) == 0    ||
+		strcmp(szSayTrig, "!dismiss", false) == 0	|| strcmp(szSayTrig, "/dismiss", false) == 0
+		) {
 
 		if( StringToInt(  g_szJobList[ g_iUserData[client][i_Job] ][job_type_isboss] ) == 1) {
 			CPrintToChat(client, "" ...MOD_TAG... "%T", "Cmd_Dismiss_Cannot_Chef", client);
@@ -594,7 +634,9 @@ public Action Command_Say(int client, int args) {
 		return Plugin_Handled;
 	}
 	
-	else if(	strcmp(szSayTrig, "!givexp", false) == 0		|| strcmp(szSayTrig, "/givexp", false) == 0 ) {
+	else if(
+		strcmp(szSayTrig, "!givexp", false) == 0		|| strcmp(szSayTrig, "/givexp", false) == 0
+		) {
 		
 		int flags = GetUserFlagBits(client);
 		if( !(flags & ADMFLAG_GENERIC || flags & ADMFLAG_ROOT) ) {
@@ -635,9 +677,10 @@ public Action Command_Say(int client, int args) {
 		
 		return Plugin_Handled;
 	}
-	else if(	strcmp(szSayTrig, "!givecb", false) == 0		|| strcmp(szSayTrig, "/givecb", false) == 0	||
+	else if(
+		strcmp(szSayTrig, "!givecb", false) == 0		|| strcmp(szSayTrig, "/givecb", false) == 0	||
 		strcmp(szSayTrig, "!donnercb", false) == 0	|| strcmp(szSayTrig, "/donnercb", false) == 0
-	) {
+		) {
 		if( !IsAdmin(client) ) {
 			ACCESS_DENIED(client);
 		}
@@ -672,11 +715,12 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	else if(	strcmp(szSayTrig, "!thirdperson", false) == 0		|| strcmp(szSayTrig, "/thirdperson", false) == 0 ||
-				strcmp(szSayTrig, "!firstperson", false) == 0		|| strcmp(szSayTrig, "/firstperson", false) == 0 ||
-				strcmp(szSayTrig, "!3rd", false) == 0				|| strcmp(szSayTrig, "/3rd", false) == 0 ||
-				strcmp(szSayTrig, "!1st", false) == 0			|| strcmp(szSayTrig, "/1st", false) == 0
-	) {
+	else if(
+		strcmp(szSayTrig, "!thirdperson", false) == 0		|| strcmp(szSayTrig, "/thirdperson", false) == 0 ||
+		strcmp(szSayTrig, "!firstperson", false) == 0		|| strcmp(szSayTrig, "/firstperson", false) == 0 ||
+		strcmp(szSayTrig, "!3rd", false) == 0				|| strcmp(szSayTrig, "/3rd", false) == 0 ||
+		strcmp(szSayTrig, "!1st", false) == 0			|| strcmp(szSayTrig, "/1st", false) == 0
+		) {
 		
 		if( g_bIsInCaptureMode && rp_GetClientGroupID(client) > 0 ) {
 			ACCESS_DENIED(client);
@@ -692,8 +736,10 @@ public Action Command_Say(int client, int args) {
 		}
 		return Plugin_Handled;
 	}
-	else if(	strcmp(szSayTrig, "!enquete", false) == 0		|| strcmp(szSayTrig, "/enquete", false) == 0
-	) {
+	else if(
+		strcmp(szSayTrig, "!enquete", false) == 0		|| strcmp(szSayTrig, "/enquete", false) == 0 ||
+		strcmp(szSayTrig, "!investigation", false) == 0	|| strcmp(szSayTrig, "/investigation", false) == 0
+		) {
 		if( !IsPolice(client) && !IsJuge(client) && !IsTueur(client) ) {
 			ACCESS_DENIED(client);
 		}
@@ -763,9 +809,10 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	else if(	strcmp(szSayTrig, "!win", false) == 0		|| strcmp(szSayTrig, "/win", false) == 0	||
+	else if(
+		strcmp(szSayTrig, "!win", false) == 0		|| strcmp(szSayTrig, "/win", false) == 0	||
 		strcmp(szSayTrig, "!gagnant", false) == 0		|| strcmp(szSayTrig, "/gagnant", false) == 0
-	) {
+		) {
 
 		char query[1024];
 		Format(query, sizeof(query), "SELECT `name`, CEIL((UNIX_TIMESTAMP()-`timestamp`)/(60*60)) as txt FROM `rp_sell` INNER JOIN `rp_users` ON `rp_users`.`steamid`=`rp_sell`.`steamid` WHERE `rp_sell`.`item_type`='4' AND `rp_sell`.`job_id`='171' ORDER BY `id` DESC LIMIT 10;");
@@ -774,9 +821,25 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	else if(	strcmp(szSayTrig, "!shownote", false) == 0		|| strcmp(szSayTrig, "/shownote", false) == 0	||
-				strcmp(szSayTrig, "!shownotes", false) == 0		|| strcmp(szSayTrig, "/shownotes", false) == 0
-	) {
+	else if(
+		strcmp(szSayTrig, "!cagnotte", false) == 0		|| strcmp(szSayTrig, "/cagnotte", false) == 0 ||
+		strcmp(szSayTrig, "!jackpot", false) == 0		|| strcmp(szSayTrig, "/jackpot", false) == 0
+		) {
+
+		char szSteamID[64];
+		GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
+		
+		char query[1024];
+		Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_loto` WHERE `steamid`='%s';", szSteamID);
+
+		SQL_TQuery(g_hBDD, showCagnotteInfo, query, client);
+
+		return Plugin_Handled;
+	}
+	else if(
+		strcmp(szSayTrig, "!shownote", false) == 0		|| strcmp(szSayTrig, "/shownote", false) == 0	||
+		strcmp(szSayTrig, "!shownotes", false) == 0		|| strcmp(szSayTrig, "/shownotes", false) == 0
+		) {
 
 		if( g_iUserData[client][i_Job] == 0 ) {
 			ACCESS_DENIED(client);
@@ -791,20 +854,9 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	else if(	strcmp(szSayTrig, "!cagnotte", false) == 0		|| strcmp(szSayTrig, "/cagnotte", false) == 0	) {
-
-		char szSteamID[64];
-		GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
-		
-		char query[1024];
-		Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_loto` WHERE `steamid`='%s';", szSteamID);
-
-		SQL_TQuery(g_hBDD, showCagnotteInfo, query, client);
-
-		return Plugin_Handled;
-	}
-	else if(	strcmp(szSayTrig, "!addnote", false) == 0		|| strcmp(szSayTrig, "/addnote", false) == 0 ||
-				strcmp(szSayTrig, "!an", false) == 0		|| strcmp(szSayTrig, "/an", false) == 0
+	else if(
+		strcmp(szSayTrig, "!addnote", false) == 0		|| strcmp(szSayTrig, "/addnote", false) == 0 ||
+		strcmp(szSayTrig, "!an", false) == 0		|| strcmp(szSayTrig, "/an", false) == 0
 		) {
 		if( g_iUserData[client][i_Job] == 0 || (!IsBoss(client) && !IsPolice(client) && !IsJuge(client)) ) {
 			ACCESS_DENIED(client);
@@ -831,9 +883,10 @@ public Action Command_Say(int client, int args) {
 		}
 		return Plugin_Handled;
 	}
-	else if(	strcmp(szSayTrig, "!deletenote", false) == 0		|| strcmp(szSayTrig, "/deletenote", false) == 0 ||
-				strcmp(szSayTrig, "!deletenotes", false) == 0			|| strcmp(szSayTrig, "/deletenotes", false) == 0
-	) {
+	else if(
+		strcmp(szSayTrig, "!deletenote", false) == 0		|| strcmp(szSayTrig, "/deletenote", false) == 0 ||
+		strcmp(szSayTrig, "!deletenotes", false) == 0			|| strcmp(szSayTrig, "/deletenotes", false) == 0
+		) {
 
 		if( g_iUserData[client][i_Job] == 0 || (!IsBoss(client) && !IsPolice(client) && !IsJuge(client)) ) {
 			ACCESS_DENIED(client);
@@ -848,7 +901,9 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-		else if(	strcmp(szSayTrig, "!afk", false) == 0 || strcmp(szSayTrig, "/afk", false) == 0 ) {
+	else if(
+		strcmp(szSayTrig, "!afk", false) == 0 || strcmp(szSayTrig, "/afk", false) == 0
+		) {
 
 		if( !IsPolice(client) && !IsJuge(client) ) {
 			ACCESS_DENIED(client);
@@ -857,9 +912,7 @@ public Action Command_Say(int client, int args) {
 		int braquage = GetConVarInt(FindConVar("rp_braquage"));
 		
 		if( braquage > 0 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Attention, un braquage est en cours. Le fait de passer AFK diminue");
-			CPrintToChat(client, "" ...MOD_TAG... " les chances de win pour vos collègues. Si vous utilisez le /afk");
-			CPrintToChat(client, "" ...MOD_TAG... " avant le début du braquage, celui-ci restera équilibré. Pensez-y, merci.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "AFK_Braquage", client);
 			LogToGame("[CHEATING] [AFK-BRAQUAGE] %L.", client);
 		}
 		
@@ -872,15 +925,21 @@ public Action Command_Say(int client, int args) {
 		g_iUserData[client][i_TimeAFK] += 180;
 		return Plugin_Handled;
 	}
-	else if(	strcmp(szSayTrig, "!assu", false) == 0		|| strcmp(szSayTrig, "/assu", false) == 0 ||
-		strcmp(szSayTrig, "!assurance", false) == 0	|| strcmp(szSayTrig, "/assurance", false) == 0
-	) {
+	else if(
+		strcmp(szSayTrig, "!assu", false) == 0		|| strcmp(szSayTrig, "/assu", false) == 0 ||
+		strcmp(szSayTrig, "!assurance", false) == 0	|| strcmp(szSayTrig, "/assurance", false) == 0 ||
+		strcmp(szSayTrig, "!insurance", false) == 0	|| strcmp(szSayTrig, "/insurance", false) == 0
+		) {
 
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_Assu", client, GetAssurence(client));
 		return Plugin_Handled;
 	}
-	else if(	strcmp(szSayTrig, "!heal", false) == 0		|| strcmp(szSayTrig, "/heal", false) == 0	||
-				strcmp(szSayTrig, "!mort", false) == 0		|| strcmp(szSayTrig, "/mort", false) == 0 ) {
+	else if(
+		strcmp(szSayTrig, "!heal", false) == 0		|| strcmp(szSayTrig, "/heal", false) == 0	||
+		strcmp(szSayTrig, "!soin", false) == 0		|| strcmp(szSayTrig, "/soin", false) == 0 	||
+		strcmp(szSayTrig, "!mort", false) == 0		|| strcmp(szSayTrig, "/mort", false) == 0 	||
+		strcmp(szSayTrig, "!dead", false) == 0		|| strcmp(szSayTrig, "/dead", false) == 0 
+		) {
 
 		if( !IsMedic(client) ) {
 			ACCESS_DENIED(client);
@@ -976,7 +1035,9 @@ public Action Command_Say(int client, int args) {
 	if( GetZoneBit( GetPlayerZone(client) ) & BITZONE_BLOCKTALK ) {
 		ACCESS_DENIED(client);
 	}
-	if(strcmp(szSayTrig, "!use", false) == 0 || strcmp(szSayTrig, "/use", false) == 0) {
+	if(
+		strcmp(szSayTrig, "!use", false) == 0 || strcmp(szSayTrig, "/use", false) == 0
+		) {
 		
 		if( IsValidDoor(target) && Entity_GetDistance(client, target) < MAX_AREA_DIST ) {
 			
@@ -1015,7 +1076,9 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	else if(strcmp(szSayTrig, "!forceuse", false) == 0 || strcmp(szSayTrig, "/forceuse", false) == 0) {
+	else if(
+		strcmp(szSayTrig, "!forceuse", false) == 0 || strcmp(szSayTrig, "/forceuse", false) == 0
+		) {
 
 		if( !IsAdmin(client) ) {
 			ACCESS_DENIED(client);
@@ -1026,7 +1089,9 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	else if(strcmp(szSayTrig, "!forcelock", false) == 0 || strcmp(szSayTrig, "/forcelock", false) == 0) {
+	else if(
+		strcmp(szSayTrig, "!forcelock", false) == 0 || strcmp(szSayTrig, "/forcelock", false) == 0
+		) {
 
 		if( !IsAdmin(client) ) {
 			ACCESS_DENIED(client);
@@ -1037,7 +1102,9 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	else if(strcmp(szSayTrig, "!forceunlock", false) == 0 || strcmp(szSayTrig, "/forceunlock", false) == 0) {
+	else if(
+		strcmp(szSayTrig, "!forceunlock", false) == 0 || strcmp(szSayTrig, "/forceunlock", false) == 0
+		) {
 
 
 		if( !IsAdmin(client) ) {
@@ -1048,7 +1115,9 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	else if(strcmp(szSayTrig, "!lock", false) == 0 || strcmp(szSayTrig, "/lock", false) == 0) {
+	else if(
+		strcmp(szSayTrig, "!lock", false) == 0 || strcmp(szSayTrig, "/lock", false) == 0
+		) {
 
 		target = GetClientAimTarget(client, false);
 		if( !IsValidDoor(target) && IsValidEdict(target) && IsValidDoor(Entity_GetParent(target)) )
@@ -1058,7 +1127,9 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	else if(strcmp(szSayTrig, "!unlock", false) == 0 || strcmp(szSayTrig, "/unlock", false) == 0) {
+	else if(
+		strcmp(szSayTrig, "!unlock", false) == 0 || strcmp(szSayTrig, "/unlock", false) == 0
+		) {
 
 		target = GetClientAimTarget(client, false);
 		if( !IsValidDoor(target) && IsValidEdict(target) && IsValidDoor(Entity_GetParent(target)) )
@@ -1068,9 +1139,11 @@ public Action Command_Say(int client, int args) {
 
 		return Plugin_Handled;
 	}
-	else if( strcmp(szSayTrig, "!out", false) == 0		|| strcmp(szSayTrig, "/out", false) == 0 ) {
+	else if(
+		strcmp(szSayTrig, "!out", false) == 0		|| strcmp(szSayTrig, "/out", false) == 0
+		) {
 
-	#if defined USING_VEHICLE
+		#if defined USING_VEHICLE
 		if( IsValidVehicle(target) ) {
 			int car = GetEntPropEnt(client, Prop_Send, "m_hVehicle");
 			int driver = GetEntPropEnt(target, Prop_Send, "m_hPlayer");
@@ -1103,8 +1176,7 @@ public Action Command_Say(int client, int args) {
 			}
 			return Plugin_Handled;
 		}
-	#endif
-		
+		#endif
 		
 		int appart = getZoneAppart(client);
 		bool in_appart = false;
@@ -1207,13 +1279,11 @@ public Action Command_Say(int client, int args) {
 
 	else if(
 		strcmp(szSayTrig, "!vendre", false) == 0	|| strcmp(szSayTrig, "/vendre", false) == 0	||
+		strcmp(szSayTrig, "!sell", false) == 0	|| strcmp(szSayTrig, "/sell", false) == 0	||
 		strcmp(szSayTrig, "!v", false) == 0		|| strcmp(szSayTrig, "/v", false) == 0
 	) {
 
-
 		DrawVendreMenu(client);
-
-
 		return Plugin_Handled;
 	}
 	else if(
@@ -1228,12 +1298,12 @@ public Action Command_Say(int client, int args) {
 	) {
 
 		OpenItemMenu(client);
-
 		return Plugin_Handled;
 	}
-	else if(	strcmp(szSayTrig, "!give", false) == 0		|| strcmp(szSayTrig, "/give", false) == 0	||
-				strcmp(szSayTrig, "!donner", false) == 0	|| strcmp(szSayTrig, "/donner", false) == 0
-	) {
+	else if(
+		strcmp(szSayTrig, "!give", false) == 0		|| strcmp(szSayTrig, "/give", false) == 0	||
+		strcmp(szSayTrig, "!donner", false) == 0	|| strcmp(szSayTrig, "/donner", false) == 0
+		) {
 		if( !IsTutorialOver(client) ) {
 			return Plugin_Handled;
 		}		
