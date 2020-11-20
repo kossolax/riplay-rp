@@ -621,6 +621,10 @@
 		"fr"		"{1}\nHP {2} - {3}%"
 	}
 	// ----------------------------------------------------------------------------------------------
+	"Vehicule_Cannot_NoKey"
+	{
+		"fr"		"Vous n'avez {red}pas{default} les clés de ce véhicule."
+	}
 	"Door_Cannot_NoKey"
 	{
 		"fr"		"Vous n'avez {red}pas{default} les clés de cette porte."
