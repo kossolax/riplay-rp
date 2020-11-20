@@ -816,7 +816,7 @@
 	}
 	"HUD_Rank"
 	{
-		"#format"	"{1:s},{2:s}"
+		"#format"	"{1:d},{2:s}"
 		"fr"		"Rang     : {1} - {2}"
 	}
 	"HUD_Zone"
@@ -846,7 +846,7 @@
 	"HUD_Admin"
 	{
 		"#format"	"{1:.1f},{2:d},{3:d}"
-		"fr"		"Limite  : {1}% - Z:{2} - XP:{3}"
+		"fr"		"Limite   : {1}% - Z:{2} - XP:{3}"
 	}
 	"HUD_Quest"
 	{
@@ -934,6 +934,6 @@
 	"Success_Win"
 	{
 		"#format"	"{1:s},{2:s}"
-		"{1} a remporté le succès {lightblue}{2}{default}!"
+		"fr"		"{1} a remporté le succès {lightblue}{2}{default}!"
 	}
 }
