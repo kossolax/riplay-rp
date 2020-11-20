@@ -960,10 +960,11 @@ public int Native_rp_SetClientVehiclePassager(Handle plugin, int numParams ) {
 	int client = GetNativeCell(1);
 	int car = GetNativeCell(2);
 	
+	int offset = GetNativeCell(3);
+	int version = GetNativeCell(4);
 	
-	int offset = 0;
-	bool found = false;
-	char tmp[32];
+	bool found = offset != 0;
+	char tmp[32], model[128];
 	
 	while( !found && offset < g_iVehicleData[car][car_maxPassager] ) {
 		offset++;
@@ -975,18 +976,25 @@ public int Native_rp_SetClientVehiclePassager(Handle plugin, int numParams ) {
 			continue;
 		
 		found = true;
-		g_iCarPassager1[car][offset] = client;
 	}
 	
 	if( !found )
 		return view_as<int>(false);
 	
+
+	g_iCarPassager1[car][offset] = client;
 	g_iCarPassager2[client] = car;
+	Format(tmp, sizeof(tmp), "vehicle_feet_passenger%d", offset);
+	PrintToChatAll("about to attach %d on %s", client, tmp);
 	
-	int ent = CreateEntityByName("prop_dynamic");
-	
-	DispatchKeyValue(ent, "model", "models/natalya/vehicles/csgo_car_seat_00.mdl");				
-	SetEntityModel(ent, "models/natalya/vehicles/csgo_car_seat_00.mdl");
+	int ent = CreateEntityByName("prop_dynamic");	
+	if( version == 2 )
+		Format(model, sizeof(model), "models/props/crates/csgo_drop_crate_spectrum_v8.mdl");
+	else
+		Format(model, sizeof(model), "models/natalya/vehicles/csgo_car_seat_00.mdl");
+
+	DispatchKeyValue(ent, "model", model);				
+	SetEntityModel(ent, model);
 	DispatchKeyValue(ent, "solid", "0");
 	
 	if( LookupAttachment(client, "legacy_weapon_bone") <= 0 ) {

@@ -202,10 +202,11 @@ public Action Check_VehiclePolice(Handle timer, any none) {
 		if( rp_IsValidVehicle(car) ) {
 			SetEntProp(car, Prop_Data, "m_bLocked", 1);
 			rp_SetVehicleInt(car, car_owner, -11);
-			rp_SetVehicleInt(car, car_maxPassager, 2);
+			rp_SetVehicleInt(car, car_maxPassager, 1);
 			SetEntProp(car, Prop_Send, "m_nBody", 0);
 			
 			g_iVehicleHopital = EntIndexToEntRef(car);
+			// rp_SetClientVehiclePassager(client, vehicle, 2, 2);
 		}
 	}
 	

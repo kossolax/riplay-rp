@@ -58,7 +58,7 @@ Handle g_hTeleport, g_hLookupAttachment, g_hForward_RP_OnPlayerGotPay, g_hOnVoic
 public Plugin myinfo = {
 	name = "RolePlay", author = "KoSSoLaX",
 	description = "Counter-Strike Global Offensive - RolePlay",
-	version = __LAST_REV__, url = "http://www.ts-x.eu"
+	version = __LAST_REV__, url = "https://riplay.fr"
 };
 
 // -----------------------------------------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ public void OnPluginStart() {
 	SetRandomSeed(GetTime());
 	AddNormalSoundHook(sound_hook);
 
-	Format(szGeneralMenu, sizeof(szGeneralMenu), "   RolePlay - INFO: (%s)   ", __LAST_REV__);
+	Format(szGeneralMenu, sizeof(szGeneralMenu), "   RolePlay - %s", __LAST_REV__);
 	LoadTranslations("core.phrases");
 	LoadTranslations("common.phrases");
 	LoadTranslations("funcommands.phrases");
