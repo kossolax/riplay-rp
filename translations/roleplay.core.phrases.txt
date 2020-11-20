@@ -914,4 +914,18 @@
 		"fr"	"Déc"
 		"en"	"Dec"
 	}
+	// ----------------------------------------------------------------------------------------------
+	"Success_Done"
+	{
+		"fr"	"Mes succès accompli"
+	}
+	"Success_Todo"
+	{
+		"fr"	"Mes succès à faire"
+	}
+	"Success_Win"
+	{
+		"#format"	"{1:s},{2:s}"
+		"{1} a remporté le succès {lightblue}{2}{default}!"
+	}
 }

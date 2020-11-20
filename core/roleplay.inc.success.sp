@@ -126,8 +126,8 @@ void Draw_Success(int client, int type) {
 	menu.SetTitle("Vos succès\n ");
 	
 	if( type == -1 ) {
-		menu.AddItem("-2", "Mes succès accompli");
-		menu.AddItem("-3", "Les succès à faire");
+		Format(tmp, sizeof(tmp), "%T", "Success_Done", client); menu.AddItem("-2", tmp);
+		Format(tmp, sizeof(tmp), "%T", "Success_Todo", client); menu.AddItem("-3", tmp);
 	}
 	else if( type == -2 ) {
 		int size = success_list_all;
@@ -404,14 +404,15 @@ void WonSuccess(int client, int success) {
 	
 	if( IsValidClient(client) && CanMakeSuccess(client, success) && g_bUserData[client][b_isConnected] && g_bUserData[client][b_isConnected2] && IsTutorialOver(client) ) {
 		
-		char szSteamID[64], query[1024];
+		char szSteamID[64], query[1024], clientname[128];
 		GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 		
 		g_iUserSuccess[client][success][sd_last] = GetTime();
 		g_iUserSuccess[client][success][sd_count] = 0;
 		g_iUserSuccess[client][success][sd_achieved]++;
 		
-		CPrintToChatAllEx(client, "" ...MOD_TAG... " %N{default} a remporté le succès {lightblue}%s{default}", client, g_szSuccessData[success][success_type_name]); 
+		GetClientName2(client, clientname, sizeof(clientname), false);
+		CPrintToChatAllEx(client, "" ...MOD_TAG... " %T", "Success_Win", client, clientname, g_szSuccessData[success][success_type_name]); 
 		rp_ClientXPIncrement(client, 500);
 		
 		LogToGame("[TSX-RP] [SUCCES] %N (%s) a remporté le succès: %s", client, szSteamID, g_szSuccessData[success][success_type_name]);
