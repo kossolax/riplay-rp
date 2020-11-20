@@ -381,7 +381,7 @@ public void OnConfigsExecuted() {
 	ServerCommand("sv_usercmd_custom_random_seed 0");
 	ServerCommand("spec_freeze_deathanim_time 999999");
 	ServerCommand("mp_forcecamera 1");	
-	ServerCommand("mp_radar_showall 1");
+	ServerCommand("mp_radar_showall 2");
 	ServerCommand("weapon_recoil_scale 1");
 	ServerCommand("ammo_grenade_limit_snowballs 1");
 	ServerCommand("sv_shield_hitpoints 5000");
