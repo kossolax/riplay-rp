@@ -339,7 +339,7 @@ public void vehicle_OnPreThinkPost(int client) {
 		if( WasInVehicle[client] == 0 ) {
 			if( !rp_GetClientKeyVehicle(client, InVehicle) ) {
 				ExitVehicle(client, InVehicle, true);
-				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas les clés de cette voiture.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicule_Cannot_NoKey", client);
 				rp_AcceptEntityInput(InVehicle, "Lock");
 			}
 			ClientCommand(client, "cam_idealpitch 65");
