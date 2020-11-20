@@ -395,7 +395,7 @@ native int rp_GetClientVehiclePassager(int client);
  * @param  {[type]} int vehicleID     Le véhicule
  * @return  bool    Vrai si le joueur a été correctement placé.
  */
-native bool rp_SetClientVehiclePassager(int client, int vehicleID);
+native bool rp_SetClientVehiclePassager(int client, int vehicleID, int offset = 0, int version = 1);
 /**
  * Définir une propriétée d'un véhicule
  * @param  {[type]} int      vehicleID     le véhicule
@@ -965,6 +965,8 @@ enum building_prop_data {
 	BD_item_id,
 	BD_original_id,
 	BD_FromBuild,
+	BD_HackedBy,
+	BD_HackedTime,
 	
 	building_prop_data_max
 };
