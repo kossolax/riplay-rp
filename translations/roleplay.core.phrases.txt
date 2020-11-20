@@ -759,6 +759,79 @@
 		"fr"		"TUTORIAL"
 	}
 	// ----------------------------------------------------------------------------------------------
+	"HUD_Energy"
+	{
+		"#format"	"{1:.2f}"
+		"fr"		"Énergie : {1}%"
+	}
+	"HUD_Dept"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Dette     : {1}$"
+	}
+	"HUD_Money"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Argent  : {1}$"
+	}
+	"HUD_Bank"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Banque : {1}$"
+	}
+	"HUD_Job"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Job       : {1}"
+	}
+	"HUD_Group"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Groupe : {1}"
+	}
+	"HUD_Rank"
+	{
+		"#format"	"{1:s},{2:s}"
+		"fr"		"Rang     : {1} - {2}"
+	}
+	"HUD_Zone"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Zone     : {1}"
+	}
+	"HUD_Salaire"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Salaire  : {1}$"
+	}
+	"HUD_Salaire_Extra"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Salaire  : {1}$ + {2}$"
+	}
+	"HUD_Jail_Days"
+	{
+		"#format"	"{1:d},{2:d},{3:d}"
+		"fr"		"En prison pour encore: {1}j {2}h{3}"
+	}
+	"HUD_Sick"
+	{
+		"fr"		"/!\ Maladie /!\"
+	}
+	"HUD_Admin"
+	{
+		"#format"	"{1:.1f},{2:d},{3:d}"
+		"fr"		"Limite  : {1}% - Z:{2} - XP:{3}"
+	}
+	"HUD_Quest"
+	{
+		"fr"		"Une quête est disponible"
+	}
+	"HUD_Mail"
+	{
+		"fr"		"Un nouveau message"
+	}
+	
 	"HUD_Date"
 	{
 		"#format"	"{1:s},{2:d},{3:t},{4:d}" // szHours, g_iDays, szMonths, g_iYear
