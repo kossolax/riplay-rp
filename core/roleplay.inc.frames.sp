@@ -53,6 +53,7 @@ void OnGameFrame_01(float time) {
 		}
 	}
 
+
 	for(int i=MaxClients; i<2048; i++) {
 		if( !IsValidEdict(i) || !IsValidEntity(i) )
 			continue;
@@ -329,6 +330,9 @@ void OnGameFrame_10(float time) {
 	if( last_minutes == g_iMinutes ) 
 		return;
 	
+	GameRules_SetProp("m_bIsDroppingItems", 1, 1, 0, true);
+	GameRules_SetPropFloat("m_fRoundStartTime", GetGameTime(), 0, true);
+	GameRules_SetProp("m_iRoundTime", g_iHours*60 + g_iMinutes, 4, 0, true);
 	last_minutes = g_iMinutes;
 
 	SQL_Reconnect();
@@ -412,8 +416,18 @@ void OnGameFrame_10(float time) {
 	bool changed = false;
 	float fNow[3];
 	PrintHours(szDates, sizeof(szDates));
+	int t, ct;
 	
 	for (int i = 1; i <= MaxClients; i++) {
+		if( !IsValidClient(i) )
+			continue;
+		
+		int team = GetClientTeam(i);
+		if( team == CS_TEAM_T )
+			t++;
+		else if( team == CS_TEAM_CT )
+			ct++;
+		
 		if ( g_bUserData[i][b_isConnected] ) {
 			
 			jobID = rp_GetClientJobID(i);
@@ -877,7 +891,7 @@ void OnGameFrame_10(float time) {
 				ServerCommand("amx_ban \"#%i\" \"0\" \"%T\"", GetClientUserId(i), "Ban_Cash", LANG_SERVER, -25000);
 			}
 		}
-		else if( IsValidClient(i) && !IsFakeClient(i) ) {
+		else if( !IsFakeClient(i) ) {
 			Handle mSayPanel = CreatePanel();
 			SetPanelTitle(mSayPanel, szGeneralMenu);
 			
@@ -888,6 +902,11 @@ void OnGameFrame_10(float time) {
 			CreateTimer(1.1, PostKillHandle, mSayPanel);
 		}
 	}
+	
+	
+	
+	SetTeamScore(CS_TEAM_CT, ct);
+	SetTeamScore(CS_TEAM_T, t);
 }
 public void CRON_TIMER() {
 	char szDayOfWeek[12], szHours[12], szMinutes[12], szSecondes[12];
