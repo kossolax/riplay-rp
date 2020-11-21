@@ -29,6 +29,11 @@
 
 #define ITEM_BOIS			293
 #define ITEM_LATEX			309
+#define ITEM_CANNE			330
+#define ITEM_EAU			335
+
+#define MODEL_BUCKET1		"models/props_junk/trafficcone001a.mdl"
+#define MODEL_BUCKET2		"models/props_junk/metalbucket01a.mdl"
 
 char g_szTrees[][] = {
 	"models/props/hr_massive/hr_foliage/birch_tree_01.mdl",
@@ -61,20 +66,23 @@ int g_cBeam;
 int g_iMaxRandomMineral;
 ArrayList g_iSpawn;
 
-public void OnMapStart() {
-	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt");
-	
-	for (int i = 0; i < sizeof(g_szTrees); i++) {
-		PrecacheModel(g_szTrees[i]);
-	}
-	for (int i = 0; i < sizeof(g_szWoodGibs); i++) {
-		PrecacheModel(g_szWoodGibs[i]);
-	}
-	for (int i = 0; i < sizeof(g_szStone); i++) {
-		PrecacheModel(g_szStone[i][0]);
-	}
+float g_flAnimStart[2049];
+int g_iAnimState[2049];
+int g_iAnimEntity[65][3];
+
+// ----------------------------------------------------------------------------
+public Action Cmd_Reload(int args) {
+	char name[64];
+	GetPluginFilename(INVALID_HANDLE, name, sizeof(name));
+	ServerCommand("sm plugins reload %s", name);
+	return Plugin_Continue;
 }
+
 public void OnPluginStart() {
+	RegServerCmd("rp_quest_reload", Cmd_Reload);
+	
+	RegServerCmd("rp_item_fish", 		Cmd_Fish,			"RP-ITEM",	FCVAR_UNREGISTERED);
+	
 	HookEvent("round_start", 		EventRoundStart, 	EventHookMode_Post);
 	OnRoundStart();
 	
@@ -126,7 +134,207 @@ public void OnPluginStart() {
 			}
 		}
 	}
+}
+public void OnMapStart() {
+	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt");
 	
+	PrecacheModel(MODEL_BUCKET1);
+	PrecacheModel(MODEL_BUCKET2);
+	
+	
+	for (int i = 0; i < sizeof(g_szTrees); i++) {
+		PrecacheModel(g_szTrees[i]);
+	}
+	for (int i = 0; i < sizeof(g_szWoodGibs); i++) {
+		PrecacheModel(g_szWoodGibs[i]);
+	}
+	for (int i = 0; i < sizeof(g_szStone); i++) {
+		PrecacheModel(g_szStone[i][0]);
+	}
+}
+
+public Action Cmd_Fish(int args) {
+	int client = GetCmdArgInt(1);
+	
+	float eye[3], ang[3], src[3], pos[3];
+	GetClientEyePosition(client, eye);
+	GetClientEyeAngles(client, ang);
+	
+	char target1[128];
+	
+	if (rp_ClientEmote(client, "Emote_Fishing")) {
+		rp_HookEvent(client, RP_OnPlayerEmote, OnEmote);
+		
+		int ent = CreateEntityByName("prop_physics");
+		Format(target1, sizeof(target1), "rope_1_%d", ent);
+		
+		DispatchKeyValue(ent, "model", MODEL_BUCKET1);
+		DispatchKeyValue(ent, "targetname", target1);
+
+		DispatchSpawn(ent);
+		Entity_SetModel(ent, MODEL_BUCKET2);
+		
+		Entity_SetOwner(ent, client);
+		SetEntityMoveType(ent, MOVETYPE_NONE);
+		Entity_SetSolidFlags(ent, FSOLID_TRIGGER);
+		Entity_SetCollisionGroup(ent, COLLISION_GROUP_DEBRIS_TRIGGER);
+		
+		src[0] = -32.0;
+		ang[0] = ang[2] = 0.0;
+		
+		Math_RotateVector(src, ang, pos);
+		AddVectors(eye, pos, pos);
+		ang[0] = -90.0;
+		TeleportEntity(ent, pos, ang, NULL_VECTOR);
+		
+		int rope = CreateEntityByName("move_rope");
+		DispatchKeyValue(rope, "Collide", "1");
+		DispatchKeyValue(rope, "Slack", "128");
+		DispatchKeyValue(rope, "Type", "0" );
+		DispatchKeyValue(rope, "Width", "1" );
+		DispatchKeyValue(rope, "NextKey", target1);
+		DispatchKeyValue(rope, "RopeMaterial", "cable/cable.vmt");
+		DispatchSpawn(rope);
+		
+		TeleportEntity(rope, eye, NULL_VECTOR, NULL_VECTOR);
+		ActivateEntity(rope);
+		
+		SetVariantString("!activator");
+		AcceptEntityInput(rope, "SetParent", client);
+		
+		SetVariantString("weapon_hand_R");
+		AcceptEntityInput(rope, "SetParentAttachment", rope, rope, 0);
+		
+		g_flAnimStart[ent] = GetTickedTime();
+		g_iAnimState[ent] = 0;
+		g_iAnimEntity[client][0] = ent;
+		g_iAnimEntity[client][1] = rope;
+		g_iAnimEntity[client][2] = 0;
+		
+		ServerCommand("sm_effect_fading %d 0.2 0", ent);
+		CreateTimer(0.01, Animate, EntIndexToEntRef(ent), TIMER_REPEAT);
+	}
+	else {
+		int item_id = GetCmdArgInt(args);
+		if( item_id > 0 ) {
+			rp_ClientGiveItem(client, item_id);
+		}
+	}
+	
+	
+	return Plugin_Handled;
+}
+public Action Animate(Handle timer, any target) {
+	int ent = EntRefToEntIndex(target);
+	if( ent == INVALID_ENT_REFERENCE )
+		return Plugin_Stop;
+	
+	float duration = GetTickedTime() - g_flAnimStart[ent];
+	float vel[3], ang[3], pos[3], src[3], dst[3];
+	
+	int client = Entity_GetOwner(ent);
+	
+	switch(g_iAnimState[ent]) {
+		case 0: {
+			if( duration > 0.05) {
+				SetEntityMoveType(ent, MOVETYPE_VPHYSICS);
+				if( duration > 0.1)
+					vel[2] = 16.0;
+				
+				TeleportEntity(ent, NULL_VECTOR, NULL_VECTOR, vel);
+				if( duration > 0.25)
+					g_iAnimState[ent] =  1;
+			}
+		}
+		case 1: { // throw
+			Entity_GetAbsAngles(ent, ang);
+			ang[0] = ang[2] = 0.0;
+			pos[0] = -256.0;
+			pos[2] = 256.0;
+			
+			Math_RotateVector(pos, ang, vel);
+			TeleportEntity(ent, NULL_VECTOR, NULL_VECTOR, vel);
+			g_iAnimState[ent] =  2;
+		}
+		case 2: { // pull
+			if( duration > 1.4 ) {
+				Entity_GetAbsOrigin(ent, dst);
+				GetClientEyePosition(client, src);
+				SubtractVectors(src, dst, src);
+				
+				NormalizeVector(src, src);
+				ScaleVector(src, 64.0);
+				
+				TeleportEntity(ent, NULL_VECTOR, NULL_VECTOR, src);
+				
+				if( GetEntProp(ent, Prop_Data, "m_nWaterLevel") > 0 )
+					g_iAnimEntity[client][2] = 1;
+				
+				if( duration > 2.8 )
+					g_iAnimState[ent] = 3;
+			}
+		}
+		case 3: { // big pull
+			int parent = Entity_GetParent(client);
+			Entity_GetAbsAngles(parent, ang);
+			ang[0] = ang[2] = 0.0;
+			pos[0] = -256.0;
+			pos[2] = 256.0 + 128.0;
+			
+			Math_RotateVector(pos, ang, vel);
+			
+			TeleportEntity(ent, NULL_VECTOR, NULL_VECTOR, vel);
+			g_iAnimState[ent] = 4;
+		}
+		case 4: { // ending
+			if( duration > 3.3 ) {
+				int parent = Entity_GetParent(client);
+				Entity_GetAbsOrigin(ent, dst);
+				GetClientEyePosition(client, src);
+				SubtractVectors(src, dst, src);
+				
+				NormalizeVector(src, src);
+				ScaleVector(src, 64.0);
+				
+				TeleportEntity(ent, NULL_VECTOR, NULL_VECTOR, src);
+				
+				if( duration > 4.0 ) {
+					Entity_GetAbsOrigin(parent, dst);
+					TeleportEntity(client, dst, NULL_VECTOR, NULL_VECTOR);
+					return Plugin_Stop;
+				}
+			}
+		}
+	}
+	
+	return Plugin_Continue;
+}
+public Action OnEmote(int client, const char[] emote, float time) {
+	if( StrEqual(emote, "Emote_Fishing") && time >= 0.0 ) {
+		
+		
+		if( time >= 4.0 && g_iAnimEntity[client][2]) {
+			if( GetRandomInt(0, 100) != 42 ) {
+				rp_ClientGiveItem(client, ITEM_CANNE);
+			}
+			else {
+				CPrintToChat(client, "" ...MOD_TAG... " Votre canne à eau s'est brisée.");
+			}
+			
+			rp_ClientGiveItem(client, ITEM_EAU);
+			
+		}
+		else {
+			rp_ClientGiveItem(client, ITEM_CANNE);
+		}
+		
+		FakeClientCommand(client, "say /i");
+		rp_UnhookEvent(client, RP_OnPlayerEmote, OnEmote);
+		
+		AcceptEntityInput(g_iAnimEntity[client][1], "Kill");
+		AcceptEntityInput(g_iAnimEntity[client][0], "Kill");
+		
+	}
 }
 public Action EventRoundStart(Handle ev, const char[] name, bool  bd) {
 	OnRoundStart();
@@ -192,7 +400,6 @@ public Action SpawnTree(Handle timer, any i) {
 	ServerCommand("sm_effect_fading %d 1 0", ent);
 	g_iTreeID[ent] = i;
 }
-
 void SpawnMineral() {
 	float min[3], max[3], src[3], dst[3], nrm[3], dir[3], tmp[3], size[2][3];
 	char model[128];
@@ -380,12 +587,22 @@ public Action OnPropDamage(int victim, int& attacker, int& inflictor, float& dam
 				int itemID = rp_GetBuildingData(victim, BD_item_id);
 				if( itemID > 0 ) {
 					rp_ClientGiveItem(attacker, itemID, rp_GetBuildingData(victim, BD_count));
+					
+					if( GetRandomInt(0, 100) == 42 ) {
+						AcceptEntityInput(weapon, "Kill");
+						FakeClientCommand(attacker, "use weapon_fists");
+					}
 				}
 			}
 		}
 		if( StrEqual(tmp, "rp_wood") && IsMeleeAxe(weapon) ) {
 			rp_ClientGiveItem(attacker, ITEM_BOIS);
 			AcceptEntityInput(victim, "Break");
+			
+			if( GetRandomInt(0, 100) == 42 ) {
+				AcceptEntityInput(weapon, "Kill");
+				FakeClientCommand(attacker, "use weapon_fists");
+			}
 		}
 		if( StrEqual(tmp, "rp_tree") && IsMeleeAxe(weapon) ) {
 			SetEntProp(victim, Prop_Data, "m_iHealth", Entity_GetHealth(victim) - RoundFloat(damage));

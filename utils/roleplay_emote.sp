@@ -118,7 +118,7 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 public int Native_rp_ClientEmote(Handle plugin, int numParams) {
 	char anim[128];
 	int client = GetNativeCell(1);
-	GetNativeArray(2, str, sizeof(str));
+	GetNativeString(2, anim, sizeof(anim));
 	
 	if( canEmote(client) ) {
 		startEmote(client, anim);
