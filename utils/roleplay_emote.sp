@@ -10,6 +10,8 @@
 
 int g_iEmoteEnt[65];
 int g_iEmoteClient[2049];
+float g_flEmoteStart[65];
+char g_szCurrentEmote[65][128];
 
 #define EF_BONEMERGE			(1 << 0)
 #define EF_NOINTERP				(1 << 3)
@@ -134,19 +136,16 @@ public void OnPluginStart() {
 			OnClientPostAdminCheck(i);
 }
 public MRESReturn DHooks_OnTeleport(int client, Handle hParams) {
- 	
 	if( EntRefToEntIndex(g_iEmoteEnt[client]) > 0 ) {
 		stopEmote(client);
 	}
  
  	return MRES_Ignored;
  }
- 
 public void OnClientPostAdminCheck(int client) {
 	DHookEntity(g_hTeleport, false, client);
 	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 }
-
 public Action fwdCommand(int client, char[] command, char[] arg) {
 	if( StrEqual(command, "emote") || StrEqual(command, "émote") || StrEqual(command, "emotes") || StrEqual(command, "émotes") ) {
 		if( !canAccess(client) ) {
@@ -254,11 +253,20 @@ bool startEmote(int client, const char[] anim) {
 	
 	g_iEmoteEnt[client] = EntIndexToEntRef(ent);
 	g_iEmoteClient[ent] = GetClientUserId(client);
+	g_flEmoteStart[client] = GetGameTime();
+	strcopy(g_szCurrentEmote[client], sizeof(g_szCurrentEmote[]), anim);
 	
 	SetEntityMoveType(client, MOVETYPE_NONE);
 	ClientCommand(client, "thirdperson");
 	
 	FakeClientCommand(client, "use weapon_fists");
+	
+	Call_StartForward(rp_GetForwardHandle(client, RP_OnPlayerEmote));
+	Call_PushCell(client);
+	Call_PushString(anim);
+	Call_PushCell(-1.0);
+	Call_Finish();
+	
 	CreateTimer(0.0, Frame_Animation, GetClientUserId(client));
 }
 public Action Frame_Animation(Handle timer, any userid) {
@@ -285,8 +293,6 @@ public void EndAnimation(const char[] output, int caller, int activator, float d
 	if( client > 0 )
 		stopEmote(client);
 }
-
-
 void stopEmote(int client) {
 	
 	int caller = EntRefToEntIndex(g_iEmoteEnt[client]);
@@ -303,4 +309,10 @@ void stopEmote(int client) {
 	
 	g_iEmoteEnt[client] = 0;
 	g_iEmoteClient[caller] = 0;
+	
+	Call_StartForward(rp_GetForwardHandle(client, RP_OnPlayerEmote));
+	Call_PushCell(client);
+	Call_PushString(g_szCurrentEmote[client]);
+	Call_PushCell( GetGameTime() - g_flEmoteStart[client] );
+	Call_Finish();
 }

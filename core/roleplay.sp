@@ -300,6 +300,7 @@ public void OnPluginStart() {
 		view_as<Handle>(g_hRPNative[i][RP_OnPlayerHINT]) = CreateForward(ET_Hook, Param_Cell, Param_Cell);		
 		view_as<Handle>(g_hRPNative[i][RP_OnJugementOver]) = CreateForward(ET_Hook, Param_Cell, Param_Array, Param_Array);
 		view_as<Handle>(g_hRPNative[i][RP_OnPlayerPay]) = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_CellByRef, Param_Cell);
+		view_as<Handle>(g_hRPNative[i][RP_OnPlayerEmote]) = CreateForward(ET_Hook, Param_Cell, Param_String, Param_Cell);
 		
 		g_iChatData[i] = new ArrayList(1);
 		g_iDoubleCompte[i] = new ArrayList(64);

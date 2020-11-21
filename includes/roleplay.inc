@@ -71,6 +71,7 @@ enum rp_event {
 	
 	RP_OnJugementOver,			/* Lorsqu'un jugement est prononcé */
 	RP_OnPlayerPay,
+	RP_OnPlayerEmote,
 
 	
 	RP_EventMax
@@ -126,6 +127,7 @@ typeset rp_event_enum {
 	function Action(int client, int jobID, int target, int victim, int& prix, int arg);		/* RP_OnBlackMarket */
 	function Action(int client, int data[6], int charges[28]);								/* RP_OnJugementOver */
 	function Action(int client, int base, int& amount, bool verbose);						/* RP_OnPlayerPay */
+	function Action(int client, const char[] emote, float step);							/* RP_OnPlayerEmote */
 };
 /**
  * Hook un évenement d'un joueur
