@@ -110,6 +110,24 @@ char g_szEmote[][][] = {
 	{"Emote_IrishJig", "Irish Jig", "1"},
 };
 
+public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error, int err_max) {
+	CreateNative("rp_ClientEmote", 		Native_rp_ClientEmote);
+	
+	return APLRes_Success;
+}
+public int Native_rp_ClientEmote(Handle plugin, int numParams) {
+	char anim[128];
+	int client = GetNativeCell(1);
+	GetNativeArray(2, str, sizeof(str));
+	
+	if( canEmote(client) ) {
+		startEmote(client, anim);
+		return view_as<int>(true);
+	}
+	
+	return view_as<int>(false);
+}
+
 public void OnPluginStart() {
 	LoadTranslations("core.phrases");
 	LoadTranslations("roleplay.phrases");
@@ -201,7 +219,7 @@ public int Handler_MainEmote(Handle hItem, MenuAction oAction, int client, int p
 		
 		MainEmote(client, StringToInt(tmp[0]), 6* (param/6) );
 		
-		if( g_iEmoteEnt[client] == 0 && rp_IsBuildingAllowed(client) && !isMoving(GetClientButtons(client)) ) {
+		if( canEmote(client) && rp_IsBuildingAllowed(client) ) {
 			startEmote(client, tmp[1]);
 		}
 	}
@@ -222,6 +240,9 @@ public Action OnPlayerRunCmd(int client, int& buttons, int& impulse, float vel[3
 	}
 }
 
+bool canEmote(int client) {
+	return g_iEmoteEnt[client] == 0 && !isMoving(GetClientButtons(client));
+}
 bool startEmote(int client, const char[] anim) {
 	
 	float vec[3], ang[3];
