@@ -130,7 +130,7 @@ public void OnClientPostAdminCheck(int client) {
 public void OnClientDisconnect(int client) {
 	for (int i = 1; i <= 2048; i++) {
 		if( IsValidEdict(i) && IsValidEntity(i) && rp_GetBuildingData(i, BD_Trapped) == client ) {
-			rp_GetBuildingData(i, BD_Trapped, 0);
+			rp_SetBuildingData(i, BD_Trapped, 0);
 			SDKUnhook(i, SDKHook_OnTakeDamage, PropsDamage);
 			SDKUnhook(i, SDKHook_Touch,	PropsTouched);
 		}
