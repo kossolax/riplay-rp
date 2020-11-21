@@ -127,7 +127,7 @@ void updateClanTag(int client) {
 			}
 		}
 	}	
-	if( g_iUserData[client][i_Job] >= 1 && g_iUserData[client][i_Job] <= 10 ) {
+	if( g_iUserData[client][i_Job] >= 101 && g_iUserData[client][i_Job] <= 110 ) {
 		if( GetClientTeam(client) != CS_TEAM_CT ) {
 			if(g_iUserData[client][i_KillJailDuration] > 1) {
 				Format(ClanTag, sizeof(ClanTag), "%T", "ScoreBar_TAG_Criminal", LANG_SERVER);
