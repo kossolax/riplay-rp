@@ -127,6 +127,15 @@ public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerDataLoaded, fwdLoaded);
 	rp_HookEvent(client, RP_OnPlayerBuild,	fwdOnPlayerBuild);
 }
+public void OnClientDisconnect(int client) {
+	for (int i = 1; i <= 2048; i++) {
+		if( IsValidEdict(i) && IsValidEntity(i) && rp_GetBuildingData(i, BD_Trapped) == client ) {
+			rp_GetBuildingData(i, BD_Trapped, 0);
+			SDKUnhook(i, SDKHook_OnTakeDamage, PropsDamage);
+			SDKUnhook(i, SDKHook_Touch,	PropsTouched);
+		}
+	}
+}
 public Action fwdLoaded(int client) {
 	
 	rp_SetClientKeyAppartement(client, 50, rp_GetClientBool(client, b_HasVilla) );
@@ -669,43 +678,50 @@ public Action OnPropDamage(int caller, int &attacker, int &inflictor, float &dam
 	return Plugin_Continue;
 }
 // ----------------------------------------------------------------------------
+bool canBeTrapped(int client, int entity) {
+	char classname[128];
+	GetEdictClassname(entity, classname, sizeof(classname));
+	
+	if( rp_IsValidDoor(entity) && rp_GetClientKeyDoor(client, rp_GetDoorID(entity)) ) {
+		return true;
+	}
+	
+	if( rp_GetBuildingData(entity, BD_owner) == client ) {
+		return true;
+	}
+	
+	
+	return false;
+}
 public Action Cmd_ItemPropTrap(int args) {
 	int client = GetCmdArgInt(1);
-	int target = GetClientAimTarget(client, false);
+	int target = rp_GetClientTarget(client);
 	
 	int item_id = GetCmdArgInt(args);
-	if( target == 0 || !IsValidEdict(target) || !IsValidEntity(target) || !rp_IsMoveAble(target) ) {
+	if( target == 0 || !IsValidEdict(target) || !IsValidEntity(target) || !canBeTrapped(client, target) ) {
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	
-	if( rp_GetBuildingData(target, BD_owner) != client ) {
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "Prop_YouDontOwn", client);
-		ITEM_CANCEL(client, item_id);
-		return Plugin_Handled;
-	}
-	
-	if( rp_GetBuildingData(target, BD_Trapped) ) {
+	if( rp_GetBuildingData(target, BD_Trapped) == 0 ) {
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Prop_AlreadyTrap", client);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	
-	rp_SetClientInt(client, i_LastAgression, GetTime());
 	float vecTarget[3];
 	Entity_GetAbsOrigin(target, vecTarget);
 	TE_SetupBeamRingPoint(vecTarget, 1.0, 150.0, g_cBeam, g_cGlow, 0, 15, 0.5, 50.0, 0.0, {50, 100, 255, 50}, 10, 0);
 	TE_SendToAll();
 	
-	rp_SetBuildingData(target, BD_Trapped, 1);
-	SDKHook(target, SDKHook_OnTakeDamage, PropsDamage);
+	rp_SetBuildingData(target, BD_Trapped, client);
+	SDKHook(target,	SDKHook_OnTakeDamage, PropsDamage);
 	SDKHook(target, SDKHook_Touch,		PropsTouched);
 	return Plugin_Handled;
 }
 public void PropsTouched(int touched, int toucher) {
 	if( IsValidClient(toucher) && toucher != rp_GetBuildingData(touched, BD_owner) ) {
-		rp_Effect_PropExplode(touched);
-		rp_SetClientInt(rp_GetBuildingData(touched, BD_owner), i_LastAgression, GetTime());
+		rp_Effect_PropExplode(touched, toucher);
 	}
 }
 public Action PropsDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
@@ -714,8 +730,8 @@ public Action PropsDamage(int victim, int &attacker, int &inflictor, float &dama
 		char sWeapon[32];
 		
 		GetEdictClassname(wep_id, sWeapon, sizeof(sWeapon));
-		if( StrContains(sWeapon, "weapon_knife") == 0 || StrContains(sWeapon, "weapon_bayonet") == 0 ) {
-			rp_Effect_PropExplode(victim);
+		if( StrContains(sWeapon, "weapon_knife") == 0 || StrContains(sWeapon, "weapon_bayonet") == 0 || StrContains(sWeapon, "weapon_fists") == 0 || StrContains(sWeapon, "weapon_melee") == 0 ) {
+			rp_Effect_PropExplode(victim, attacker);
 		}
 	}
 }

@@ -369,11 +369,8 @@ void SQL_Reconnect() {
 	}
 }
 
-int ExplosionDamage(float origin[3], float damage, float lenght, int index=0, int index2=0, char weapon[] = "") {
+int ExplosionDamage(float origin[3], float damage, float lenght, int activator=0, int inflictor=0, char weapon[] = "") {
 	static float lastExpl[3];
-	
-	if( index2 ) {
-	}
 	
 	int zone = GetPointZone(origin);
 	int zoneBIT = GetZoneBit(zone);
@@ -385,7 +382,7 @@ int ExplosionDamage(float origin[3], float damage, float lenght, int index=0, in
 		return 0;
 	origin[2] -= 25.0;
 	
-	if( !(zoneBIT & BITZONE_EVENT) && !(zoneBIT & BITZONE_PVP) && IsValidClient(index) && rp_GetClientJobID(index) == 131 && !g_bUserData[index][b_GameModePassive] ) { 
+	if( !(zoneBIT & BITZONE_EVENT) && !(zoneBIT & BITZONE_PVP) && IsValidClient(activator) && rp_GetClientJobID(activator) == 131 && !g_bUserData[activator][b_GameModePassive] ) { 
 		damage *= 1.5;
 	}
 	
@@ -401,7 +398,7 @@ int ExplosionDamage(float origin[3], float damage, float lenght, int index=0, in
 	if( GetVectorDistance(origin, lastExpl) >= 8.0 ) {
 		
 		
-		Handle tr = TR_TraceHullFilterEx(origin, origin, min, max, MASK_SHOT, TraceEntityFilterStuff2);
+		Handle tr = TR_TraceHullFilterEx(origin, origin, min, max, MASK_SHOT, TraceEntityFilterStuff2, inflictor);
 		
 		TR_GetPlaneNormal(tr, normal);
 		TR_GetEndPosition(origin2, tr);
@@ -430,11 +427,11 @@ int ExplosionDamage(float origin[3], float damage, float lenght, int index=0, in
 	
 	bool minimal = false;
 	if( StrEqual(weapon, "weapon_sucetteduo") ) {
-		if( !IsInPVP(index) ) {
+		if( !IsInPVP(activator) ) {
 			minimal = true;
 		}
 		
-		if( !(zoneBIT & BITZONE_EVENT) && !(zoneBIT & BITZONE_PVP) && IsValidClient(index) && rp_GetClientJobID(index) == 191 && !g_bUserData[index][b_GameModePassive] ) {
+		if( !(zoneBIT & BITZONE_EVENT) && !(zoneBIT & BITZONE_PVP) && IsValidClient(activator) && rp_GetClientJobID(activator) == 191 && !g_bUserData[activator][b_GameModePassive] ) {
 			damage *= 1.5;
 			lenght *= 2.0;
 		}
@@ -476,7 +473,7 @@ int ExplosionDamage(float origin[3], float damage, float lenght, int index=0, in
 		if( dmg < 0.0 )
 			continue;
 		
-		TR_TraceRayFilter(origin, PlayerVec, MASK_SHOT, RayType_EndPoint, TraceEntityFilterStuff2);
+		TR_TraceRayFilter(origin, PlayerVec, MASK_SHOT, RayType_EndPoint, TraceEntityFilterStuff2, inflictor);
 		float fraction = (TR_GetFraction()) * 1.25;
 		
 		if( fraction > 1.0 )
@@ -489,17 +486,17 @@ int ExplosionDamage(float origin[3], float damage, float lenght, int index=0, in
 		if( dmg <= 0.0 )
 			continue;
 		
-		g_iUserData[index][i_LastAgression] = GetTime();
-		DealDamage(i, RoundFloat(dmg), index, DMG_BLAST, weapon);
+		g_iUserData[activator][i_LastAgression] = GetTime();
+		DealDamage(i, RoundFloat(dmg), activator, DMG_BLAST, weapon);
 		if( IsValidClient(i) )
-			rp_ClientAggroIncrement(index, i, RoundFloat(dmg));
+			rp_ClientAggroIncrement(activator, i, RoundFloat(dmg));
 		res++;
 	}
 	
 	MakeRadiusPush2(origin, lenght, (damage * 2.0));
 	return res;
 }
-public bool TraceEntityFilterStuff2(int entity, int mask) {
+public bool TraceEntityFilterStuff2(int entity, int mask, int data) {
 
 	if( IsValidClient(entity) || IsMoveAble(entity) )
 		return false;
@@ -511,6 +508,9 @@ public bool TraceEntityFilterStuff2(int entity, int mask) {
 			return false;
 		}
 	}
+	
+	if( data > 0 && entity == data )
+		return false;
 	
 	return true;
 }
@@ -563,7 +563,7 @@ void MakeRadiusPush2( float center[3], float lenght, float damage, int ignore = 
 			NormalizeVector(vecPushDir, vecPushDir);
 			float dist = view_as<float>(Math_Min(1.0, (lenght - GetVectorDistance(vecOrigin, center)))) * FallOff;
 			
-			TR_TraceRayFilter(center, vecOrigin, MASK_SHOT, RayType_EndPoint, TraceEntityFilterStuff2);
+			TR_TraceRayFilter(center, vecOrigin, MASK_SHOT, RayType_EndPoint, TraceEntityFilterStuff2, ignore);
 			float fraction = (TR_GetFraction()) * 1.5;
 			
 			if( fraction >= 1.0 )

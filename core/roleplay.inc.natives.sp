@@ -811,35 +811,38 @@ public int Native_rp_ClientResetSkin(Handle plugin, int numParams ) {
 	SetPersonalSkin(GetNativeCell(1));
 }
 public int Native_rp_Effect_PropExplode(Handle plugin, int numParams) {
-	int ent = GetNativeCell(1);
-	bool tazer = view_as<bool>(GetNativeCell(2));
+
 	
-	if( !rp_GetBuildingData(ent, BD_Trapped) )
+	int ent = GetNativeCell(1);
+	int attacker = GetNativeCell(2);
+	bool tazer = view_as<bool>(GetNativeCell(3));
+	
+	if( rp_GetBuildingData(ent, BD_Trapped) == 0 )
+		return;
+	if( rp_GetBuildingData(ent, BD_owner) == attacker )
+		return;
+	if( rp_IsValidDoor(ent) && rp_GetClientKeyDoor(attacker, rp_GetDoorID(ent)) )
+		return;
+	if( rp_GetClientBool(attacker, b_GameModePassive) && rp_ClientCanAttack(rp_GetBuildingData(ent, BD_Trapped), attacker) == false )
 		return;
 	
-	rp_SetBuildingData(ent, BD_Trapped, false);
-	
-	float vecOrigin[3];
+	float vecOrigin[3], min[3], max[3];
 	Entity_GetAbsOrigin(ent, vecOrigin);
+	Entity_GetMinSize(ent, min);
+	Entity_GetMaxSize(ent, max);
+	vecOrigin[0] += (min[0] + max[0]) / 2.0;
+	vecOrigin[1] += (min[1] + max[1]) / 2.0;
+	vecOrigin[2] += (min[2] + max[2]) / 2.0;
 	
-	float dmg = float(RoundToCeil(Entity_GetHealth(ent)/5.0)+5);
-	if( tazer ) 
-		dmg *= 2.0;
+	float dmg = 300.0 * (tazer ? 4.0 : 1.0);
 	
-	char model[128];
-	Entity_GetModel(ent, model, sizeof(model));
-	
-	if( StrContains(model, "cash_register") != -1 ) {
-		dmg *= 4.0;
-		if( tazer ) 
-			dmg *= 4.0;
-	}
-	
-	ExplosionDamage(vecOrigin, dmg, 250.0, rp_GetBuildingData(ent, BD_owner), ent);
+	ExplosionDamage(vecOrigin, dmg, 256.0, rp_GetBuildingData(ent, BD_Trapped), ent, "rp_trap");
+	rp_SetBuildingData(ent, BD_Trapped, 0);
 	
 	TE_SetupExplosion(vecOrigin, g_cExplode, 1.0, 0, 0, 200, 200);
 	TE_SendToAll();
-	rp_AcceptEntityInput(ent, "Kill");
+	
+	SDKHooks_TakeDamage(ent, ent, attacker, dmg);
 }
 public int Native_rp_SetClientKeyAppartement(Handle plugin, int numParams ) {
 	g_iDoorOwner_v2[GetNativeCell(1)][GetNativeCell(2)] = GetNativeCell(3);

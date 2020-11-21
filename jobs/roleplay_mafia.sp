@@ -680,6 +680,15 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 	if( percent >= 1.0 ) {
 		rp_ClientColorize(client);
 		
+		if( rp_GetBuildingData(target, BD_Trapped) > 0 ) {
+			rp_Effect_PropExplode(target, client);
+			if( rp_GetBuildingData(target, BD_Trapped) == 0 ) {
+				CreateTimer(0.1, AllowStealing, client);
+				return Plugin_Stop;
+			}
+		}
+
+		
 		rp_SetClientStat(client, i_JobSucess, rp_GetClientStat(client, i_JobSucess) + 1);
 		rp_SetClientStat(client, i_JobFails, rp_GetClientStat(client, i_JobFails) - 1);
 		

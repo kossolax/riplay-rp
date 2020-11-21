@@ -781,7 +781,7 @@ public Action Cmd_Tazer(int client) {
 		if (reward >= 0) {
 			
 			rp_Effect_Tazer(client, target);
-			rp_Effect_PropExplode(target, true);
+			rp_Effect_PropExplode(target, client, true);
 			rp_AcceptEntityInput(target, "Kill");
 			
 			rp_ClientMoney(client, i_AddToPay, reward);

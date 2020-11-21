@@ -48,8 +48,8 @@ Action OpenBossGestionCle(int client, bool typess = false) {
 	char tmp[256], tmp2[256];
 	
 	if( typess ) {
-		Format(tmp, sizeof(tmp), "-1_%i", door_bdd);	Format(tmp2, sizeof(tmp2), "%T", "Door_AddAll", client);	AddMenuItem(menu, tmp, tmp2);
-		Format(tmp, sizeof(tmp), "-2_%i", door_bdd);	Format(tmp2, sizeof(tmp2), "%T", "Door_RemoveAll", client);	AddMenuItem(menu, tmp, tmp2);
+		Format(tmp, sizeof(tmp), "-1_%i", door_bdd);	Format(tmp2, sizeof(tmp2), "%T", "Door_RemoveAll", client);	AddMenuItem(menu, tmp, tmp2);
+		Format(tmp, sizeof(tmp), "-2_%i", door_bdd);	Format(tmp2, sizeof(tmp2), "%T", "Door_AddAll", client);	AddMenuItem(menu, tmp, tmp2);
 	}
 	
 	
@@ -261,6 +261,7 @@ stock bool IsPlayerHaveKey( int client, int door, int lock=0) {
 }
 void ToggleDoorLock(int client, int door, int lock_type) {
 	int door_bdd = (door - MaxClients);
+
 	
 	if( !IsValidDoor(door) )
 		return;
@@ -300,24 +301,24 @@ void ToggleDoor(int client, int door) {
 	int door_bdd = (door - MaxClients);
 	
 	if( IsPlayerHaveKey( client, door, GetLockType(door)) ) {
-		
-		char classname[64];
-		GetEdictClassname(door, classname, 63);
-		
 		if( GetEntProp(door, Prop_Data, "m_bLocked") ) {
 			LockSomeDoor(door_bdd, 1);
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Door_IsLocked", client);
 			return;
-		}
-		else if( StrEqual(classname, "func_door", false) || StrEqual(classname, "func_door_rotating", false)  || StrEqual(classname, "prop_door_rotating", false) ) {
-			ActivateDoor(client, door_bdd);
 		}
 	}
 	else {
 		if( GetEntProp(door, Prop_Data, "m_bLocked") ) {
 			LockSomeDoor(door_bdd, 1);
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Door_Cannot_NoKey", client);
+			return;
 		}
+	}
+	
+	char classname[64];
+	GetEdictClassname(door, classname, sizeof(classname));
+	if( StrEqual(classname, "func_door", false) || StrEqual(classname, "func_door_rotating", false)  || StrEqual(classname, "prop_door_rotating", false) ) {
+		ActivateDoor(client, door_bdd);
 	}
 }
 void LockSomeDoor(int door_bdd, int lock) {
@@ -346,6 +347,9 @@ void ActivateDoor(int client, int door_bdd) {
 	int door = (door_bdd + MaxClients);
 	
 	rp_AcceptEntityInput(door, "Toggle", client);
+	if( rp_GetBuildingData(door, BD_Trapped) == 1 ) {
+		rp_Effect_PropExplode(door, client);
+	}
 	
 	door_bdd = g_iDoorDouble[door_bdd];
 	
@@ -353,6 +357,10 @@ void ActivateDoor(int client, int door_bdd) {
 		
 		door = (door_bdd + MaxClients);
 		rp_AcceptEntityInput(door, "Toggle", client);
+		if( rp_GetBuildingData(door, BD_Trapped) == 1 ) {
+			rp_Effect_PropExplode(door, client);
+		}
+
 	}
 }
 
