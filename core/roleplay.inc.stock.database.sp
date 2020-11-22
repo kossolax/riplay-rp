@@ -545,8 +545,8 @@ void StoreUserData(int client) {
 		MysqlQuery, g_iUserData[client][i_Malus], g_iUserData[client][i_KillJailDuration], g_bUserData[client][b_IsFreekiller], GetAssurence(client), g_bUserData[client][b_FreeAssurance], g_iUserData[client][i_Esquive], g_szUserData[client][sz_Skin], g_iUserData[client][i_SkinDonateur]);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
-		"%s `sick`='%i', `tuto`='%i', `TimePlayedJob`='%d', `artisan_xp`='%d', `artisan_lvl`='%d', `artisan_points`='%d',  `artisan_fatigue`='%f', ",
-		MysqlQuery, g_iUserData[client][i_Sick], g_iUserData[client][i_Tutorial], g_iUserData[client][i_TimePlayedJob],  g_iUserData[client][i_ArtisanXP],  g_iUserData[client][i_ArtisanLevel],  g_iUserData[client][i_ArtisanPoints],  g_flUserData[client][fl_ArtisanFatigue]);
+		"%s `sick`='%i', `tuto`='%i', `TimePlayedJob`='%d', `artisan_xp`='%d', `artisan_lvl`='%d', `artisan_points`='%d', `artisan_fatigue`='%f', `artisan_spe`='%d', ",
+		MysqlQuery, g_iUserData[client][i_Sick], g_iUserData[client][i_Tutorial], g_iUserData[client][i_TimePlayedJob],  g_iUserData[client][i_ArtisanXP],  g_iUserData[client][i_ArtisanLevel],  g_iUserData[client][i_ArtisanPoints],  g_flUserData[client][fl_ArtisanFatigue],  g_iUserData[client][i_ArtisanSpe]);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
 		"%s `xp`='%i', `level`='%i', `prestige`='%i', `passive`='%d', ",
@@ -835,9 +835,11 @@ void LoadUserData(int Client) {
 		Format(query, sizeof(query),
 			"%s `artisan_xp`, `artisan_lvl`, `artisan_points`, `artisan_fatigue`, `kill`, `death`, `kill2`, `death2`, `jrouge`, `jbleu`, `xp`, ", query);
 		Format(query, sizeof(query),
-			"%s `level`, `prestige`, `female`, `birthday`, `birthmonth`, `lastname`, `firstname`, `rules`, `jobplaytime`, `adminxp`, `dette`, `time_played`, ", query, SteamID); 
+			"%s `level`, `prestige`, `female`, `birthday`, `birthmonth`, `lastname`, `firstname`, `rules`, `jobplaytime`, `adminxp`, `dette`, `time_played`, ", query); 
 		Format(query, sizeof(query),
-			"%s `permi_lege_start`, `permi_lourd_start`, `freekiller`, `amende_permi_lege`, `amende_permi_lourd`, `skin_id`, `freeassu`, `points`, `pvp_banned`, `allowed_dismiss` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
+			"%s `permi_lege_start`, `permi_lourd_start`, `freekiller`, `amende_permi_lege`, `amende_permi_lourd`, `skin_id`, `freeassu`, `points`, `pvp_banned`, ", query); 
+		Format(query, sizeof(query),
+			"%s `allowed_dismiss`, `artisan_spe` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
 
 		SQL_TQuery(g_hBDD, LoadUserData_2, query, Client, DBPrio_High);
 		
@@ -974,6 +976,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		g_iUserData[Client][i_ArtisanLevel] = SQL_FetchInt(hQuery, 32);
 		g_iUserData[Client][i_ArtisanPoints] = SQL_FetchInt(hQuery, 33);
 		g_flUserData[Client][fl_ArtisanFatigue] = SQL_FetchFloat(hQuery, 34);
+		g_iUserData[Client][i_ArtisanSpeciality] = SQL_FetchInt(hQuery, 64);
 		g_iUserData[Client][i_KillMonth] = SQL_FetchInt(hQuery, 35);
 		g_iUserData[Client][i_DeathMonth] = SQL_FetchInt(hQuery, 36);
 		g_iUserData[Client][i_Kill31Days] = SQL_FetchInt(hQuery, 37);
@@ -1002,6 +1005,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		g_iUserData[Client][i_ELO] = SQL_FetchInt(hQuery, 61);
 		g_iUserData[Client][i_PVPBannedUntil] = SQL_FetchInt(hQuery, 62);
 		g_iUserData[Client][i_AllowedDismiss] = SQL_FetchInt(hQuery, 63);
+		// 64 = artisan spe
 		int freeassu = SQL_FetchInt(hQuery, 60);
 
 		SQL_FetchString(hQuery, 47, g_szUserData[Client][sz_LastName], sizeof(g_szUserData[][]));

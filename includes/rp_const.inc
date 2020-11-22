@@ -70,6 +70,11 @@
 #define MODEL_BARRIERE		"models/props_fortifications/police_barrier001_128_reference.mdl"
 #define MODEL_TABLE1 		"models/props/de_boathouse/table_drafting01.mdl"
 #define MODEL_TABLE2		"models/props/de_boathouse/table_drafting02.mdl"
+
+#define MODEL_TABLE_METAL	"models/mosi/fallout4/furniture/workstations/armorworkbench.mdl"
+#define MODEL_TABLE_INGE	"models/brickscrafting/workbench_1.mdl"
+#define MODEL_TABLE_ALCH	"models/voikanaa/props_dragonsreach/alchemyworkbench.mdl"
+
 #define	MODEL_PANNEAU		"models/props/de_cbble/cobble_sign02.mdl"
 #define MODEL_PLANT_0		"models/custom_prop/marijuana/marijuana_0.mdl"
 #define MODEL_PLANT_1		"models/custom_prop/marijuana/marijuana_1.mdl"

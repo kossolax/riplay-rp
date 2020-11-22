@@ -789,6 +789,7 @@ enum int_user_data {
 	i_ArtisanXP,
 	i_ArtisanLevel,
 	i_ArtisanPoints,
+	i_ArtisanSpeciality,
 	i_FakeClient,
 	
 	i_KillMonth,
