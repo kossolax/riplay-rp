@@ -23,15 +23,26 @@ public int eventItemMenu(Handle p_hItemMenu, MenuAction p_oAction, int p_iParam1
 			return;
 		}
 		
-		if(	StringToInt(g_szZoneList[ GetPlayerZone(p_iParam1) ][zone_type_bit]) & BITZONE_JUSTICEITEM	) {
+		int bit = StringToInt(g_szZoneList[GetPlayerZone(p_iParam1)][zone_type_bit]);
+		
+		if(	bit & BITZONE_JUSTICEITEM	) {
 			if( !IsPolice(p_iParam1) && !IsJuge(p_iParam1) ) {
 				CPrintToChat(p_iParam1, "" ...MOD_TAG... " Les items sont interdit dans cette zone.");
 				return;
 			}
 		}
-		else if( StringToInt(g_szZoneList[ GetPlayerZone(p_iParam1) ][zone_type_bit]) & BITZONE_BLOCKITEM	) {
-			CPrintToChat(p_iParam1, "" ...MOD_TAG... " Les items sont interdit dans cette zone.");
-			return;
+		
+		if( bit & BITZONE_BLOCKITEM	) {
+			if( GetConVarInt(g_hAllowItem) == 2 ) {
+				if( !(bit & BITZONE_EVENT) ) {
+					CPrintToChat(p_iParam1, "" ...MOD_TAG... " Les items sont interdit dans cette zone.");
+					return;
+				}
+			}
+			else {
+				CPrintToChat(p_iParam1, "" ...MOD_TAG... " Les items sont interdit dans cette zone.");
+				return;
+			}
 		}
 		
 		for(int i=1; i<=MaxClients; i++) {
