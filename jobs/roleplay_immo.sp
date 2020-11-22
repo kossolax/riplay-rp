@@ -54,6 +54,7 @@ char g_PropsOutdoor[][128] = {
 	"models/props/cs_assault/box_stack1.mdl",
 	"models/props/de_vertigo/construction_wood_2x4_01.mdl"
 };
+
 // ----------------------------------------------------------------------------
 public Action Cmd_Reload(int args) {
 	char name[64];

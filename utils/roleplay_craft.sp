@@ -90,6 +90,8 @@ public void OnPluginStart() {
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	
 	RegServerCmd("rp_item_fish", 		Cmd_Fish,			"RP-ITEM",	FCVAR_UNREGISTERED);
+	RegServerCmd("rp_item_sentry", 		Cmd_Sentry,			"RP-ITEM",	FCVAR_UNREGISTERED);
+	
 	
 	HookEvent("round_start", 		EventRoundStart, 	EventHookMode_Post);
 	OnRoundStart();
@@ -143,9 +145,7 @@ public void OnPluginStart() {
 		}
 	}
 }
-public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error, int err_max) {
-	CreateNative("rp_CreateSentry", 		Native_rp_CreateSentry);
-	
+public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error, int err_max) {	
 	g_hOnSentryAttack = CreateGlobalForward("RP_OnSentryAttack", ET_Hook, Param_Cell, Param_Cell);
 	return APLRes_Success;
 }
@@ -171,7 +171,14 @@ public void OnMapStart() {
 		PrecacheModel(g_szStone[i][0]);
 	}
 }
-
+public Action Cmd_Sentry(int args) {
+	int client = GetCmdArgInt(1);
+	float pos[3], ang[3];
+	Entity_GetAbsOrigin(client, pos);
+	Entity_GetAbsAngles(client, ang);
+	
+	CreateSentry(client, pos, ang);
+}
 public Action Cmd_Fish(int args) {
 	int client = GetCmdArgInt(1);
 	
@@ -654,11 +661,7 @@ stock int getMineLevel(int zone) {
 	return level[zone];
 }
 // ------------------------------------------------------------------------------------------------
-public int Native_rp_CreateSentry(Handle plugin, int numParams) {
-	int owner = GetNativeCell(1);
-	float pos[3];
-	GetNativeArray(2, pos, sizeof(pos));
-	
+void CreateSentry(int owner, float pos[3], float ang[3]) {	
 	int ent = CreateEntityByName("monster_generic");
 	DispatchKeyValue(ent, "classname", "rp_sentry");
 	DispatchKeyValue(ent, "model", MODEL_SENTRY);
@@ -670,7 +673,7 @@ public int Native_rp_CreateSentry(Handle plugin, int numParams) {
 	SetEntityMoveType(ent, MOVETYPE_FLYGRAVITY);
 	SetEntProp(ent, Prop_Data, "m_lifeState", 2);
 	
-	TeleportEntity(ent, pos, NULL_VECTOR, NULL_VECTOR);
+	TeleportEntity(ent, pos, ang, NULL_VECTOR);
 	SDKHook(ent, SDKHook_Think, OnThink);
 }
 void getTargetAngle(int ent, int target, float& tilt, float& yaw) {
@@ -755,6 +758,9 @@ int getEnemy(int ent, float src[3], float ang[3], float& tilt, float threshold) 
 	
 	int nearest = 0;
 	float dist = 2048.0*2048.0;
+	int owner = Entity_GetOwner(ent);
+	int zone = rp_GetZoneInt(rp_GetPlayerZone(ent), zone_type_type);
+	int appart = rp_GetPlayerZoneAppart(ent);
 	
 	for (int i = 1; i <= MaxClients; i++) {
 		if( !IsValidClient(i) )
@@ -763,7 +769,17 @@ int getEnemy(int ent, float src[3], float ang[3], float& tilt, float threshold) 
 			continue;		
 		if( GetEntityMoveType(i) == MOVETYPE_NOCLIP )
 			continue;
-		if( Entity_GetOwner(ent) == i )
+		if( owner == i )
+			continue;
+		if( zone > 0 && rp_GetClientJobID(i) == zone )
+			continue;
+		if( appart > 0 && rp_GetClientKeyAppartement(i, appart) )
+			continue;
+		if( zone == 1 && rp_GetClientJobID(i) == 101 || zone == 101 && rp_GetClientJobID(i) == 1 )
+			continue;
+		if( rp_ClientCanAttack(owner, i) == false )
+			continue;
+		if( GetEntProp(i, Prop_Data, "m_takedamage") == 0 )
 			continue;
 		
 		Action a;
@@ -787,10 +803,9 @@ int getEnemy(int ent, float src[3], float ang[3], float& tilt, float threshold) 
 				Handle trace = TR_TraceRayFilterEx(src, dst, MASK_SHOT, RayType_EndPoint, TraceEntityFilterSelf, ent);
 
 				if( TR_DidHit(trace) ) {
-					float x = TR_GetFraction(trace);
 					int y = TR_GetEntityIndex(trace);
 					
-					if( y == i && x > 0.9 ) {
+					if( y == i ) {
 						dist = tmp;
 						nearest = i;
 					}
@@ -809,7 +824,7 @@ public void OnThink(int ent) {
 	int state = GetEntProp(ent, Prop_Data, "m_iInteractionState");
 	int oldEnemy = GetEntPropEnt(ent, Prop_Data, "m_hInteractionPartner");
 
-	int damage = 0; 
+	int damage = 10;
 	float push = 128.0;
 	float fire = 0.0125;
 	float speed = (5.0/360.0);
@@ -818,7 +833,7 @@ public void OnThink(int ent) {
 	float src[3], ang[3], dst[3], dir[3], vel[3];
 	Entity_GetAbsOrigin(ent, src);
 	Entity_GetAbsAngles(ent, ang);
-	src[2] += 40.0;
+	src[2] += 43.0; 
 	
 	ang[0] = ang[0] + (yaw-0.5) * 90.0;
 	ang[1] = ang[1] + AngleMod(180.0 + (tilt * 360.0));
@@ -861,17 +876,10 @@ public void OnThink(int ent) {
 					AddVectors(vel, dir, dir);
 					TeleportEntity(victim, NULL_VECTOR, NULL_VECTOR, dir);
 					if( damage > 0 )
-						rp_ClientDamage(victim, damage, 0, "rp_sentry");
+						rp_ClientDamage(victim, damage, Entity_GetOwner(ent), "rp_sentry");
 				}
 				
-				int tracerId = CreateEntityByName("info_particle_system");
-				DispatchKeyValue(tracerId, "OnUser1", "!self,KillHierarchy,,0.01,-1");
-				DispatchSpawn(tracerId);
-				TeleportEntity(tracerId, dst, NULL_VECTOR, NULL_VECTOR);
-				AcceptEntityInput(tracerId, "FireUser1");
-				
-				TE_SetupEffect("weapon_tracers_original", ent, 1);
-				TE_WriteNum("m_nOtherEntIndex", tracerId);
+				TE_SetupBeamPoints(src, dst, g_cBeam, 0, 0, 0, 0.1, 0.25, 0.25, 0, 0.0, { 64, 64, 64, 64 }, 0);
 				TE_SendToAll();
 			}
 			delete trace;
@@ -957,33 +965,4 @@ float AngleMod(float flAngle) {
 }
 public bool TraceEntityFilterSelf(int entity, int contentsMask, any data) {
 	return entity != data;
-}
-int GetEffectIndex(const char[] sEffectName) {
-	static int table = INVALID_STRING_TABLE;
-	
-	if (table == INVALID_STRING_TABLE)
-		table = FindStringTable("EffectDispatch");
-	
-	int iIndex = FindStringIndex(table, sEffectName);
-	if(iIndex != INVALID_STRING_INDEX)
-		return iIndex;
-	
-	return 0;
-}
-void TE_SetupEffect(const char[] effect, int parentId, int attachmentId=-1) {
-	static int effectId = -1;
-	static int table = -1;
-	if( effectId == -1 )
-		effectId = GetEffectIndex("ParticleEffect");
-	if( table == -1 )
-		table = FindStringTable("ParticleEffectNames");
-	
-	TE_Start("EffectDispatch");
-	TE_WriteNum("m_nHitBox", FindStringIndex(table, effect));
-	TE_WriteNum("m_nAttachmentIndex", attachmentId);		
-				
-	TE_WriteNum("entindex", parentId);
-	TE_WriteNum("m_fFlags", (1<<0));
-	TE_WriteNum("m_nDamageType", 4);
-	TE_WriteNum("m_iEffectName", effectId);
 }

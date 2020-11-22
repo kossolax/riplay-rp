@@ -576,7 +576,6 @@ native void rp_GetClientNextMessage(int client, any data, NextMessageCallback cb
 // ----------------------------------------------------------------------------
 native void rp_GetLevelData(rank_level level, rankType typeID, char[] str, int length);			/* Récupère les données d'un levle */
 // ----------------------------------------------------------------------------
-native void rp_CreateSentry(int client, float pos[3]);
 
 enum BM_Int {
 	BM_Owner,
