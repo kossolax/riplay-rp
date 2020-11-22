@@ -34,7 +34,7 @@ public int eventItemMenu(Handle p_hItemMenu, MenuAction p_oAction, int p_iParam1
 		
 		if( bit & BITZONE_BLOCKITEM	) {
 			if( GetConVarInt(g_hAllowItem) == 2 ) {
-				if( !(bit & BITZONE_EVENT) ) {
+				if( !(bit & (BITZONE_EVENT|BITZONE_LACOURS)) ) {
 					CPrintToChat(p_iParam1, "" ...MOD_TAG... " Les items sont interdit dans cette zone.");
 					return;
 				}
