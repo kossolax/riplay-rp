@@ -36,6 +36,7 @@ enum craft_book {
 }
 
 StringMap g_hReceipe;
+int g_iItemCraftType[MAX_ITEMS];
 bool g_bCanCraft[65][MAX_ITEMS];
 bool g_bInCraft[65];
 float g_flClientBook[65][view_as<int>(book_max)];
@@ -71,7 +72,7 @@ public void OnPluginStart() {
 	LoadTranslations("roleplay.items.phrases");
 	LoadTranslations("roleplay.artisan.phrases");
 	
-	RegServerCmd("rp_quest_reload", Cmd_Reload);	
+	RegServerCmd("rp_quest_reload", 		Cmd_Reload);	
 	RegServerCmd("rp_item_crafttable",		Cmd_ItemCraftTable,		"RP-ITEM", 	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_craftbook",		Cmd_ItemCraftBook,		"RP-ITEM", 	FCVAR_UNREGISTERED);
 	
@@ -80,9 +81,13 @@ public void OnPluginStart() {
 	for (int i = 1; i <= MaxClients; i++)
 		if( IsValidClient(i) )
 			OnClientPostAdminCheck(i);
-}
-public void OnAllPluginsLoaded() {
-	SQL_TQuery(rp_GetDatabase(), SQL_LoadReceipe, "SELECT `itemid`, `raw`, `amount`, REPLACE(`extra_cmd`, 'rp_item_primal ', '') `rate` FROM `rp_craft` C INNER JOIN `rp_items` I ON C.`raw`=I.`id` ORDER BY `itemid`, `raw`", 0, DBPrio_Low);
+
+	SQL_TQuery(rp_GetDatabase(), SQL_LoadReceipe, "\
+	( \
+	    SELECT `itemid`, `raw`, `amount`, SUBSTRING_INDEX(`extra_cmd`, ' ', -1) `rate` FROM `rp_craft` C INNER JOIN `rp_items` I ON C.`raw`=I.`id` WHERE `extra_cmd` LIKE 'rp_item_primal%' \
+	    UNION \
+	    SELECT `itemid`, `raw`, `amount`, 0 as `rate` FROM `rp_craft` C INNER JOIN `rp_items` I ON C.`raw`=I.`id` WHERE `extra_cmd` LIKE 'rp_item_raw%' \
+	) ORDER BY `itemid`, `raw`", 0, DBPrio_Low);
 }
 public Action CmdSetFatigue(int client, int args) {
 	float f = GetCmdArgFloat(2);
@@ -96,13 +101,19 @@ public Action CmdSetFatigue(int client, int args) {
 public void OnMapStart() {
 	PrecacheModel(MODEL_TABLE1);
 	PrecacheModel(MODEL_TABLE2);
+	
+	PrecacheModel(MODEL_TABLE_METAL);
+	PrecacheModel(MODEL_TABLE_INGE);
+	PrecacheModel(MODEL_TABLE_ALCH);
+	
 	PrecacheModel(MODEL_PANNEAU);
 }
 public Action Cmd_ItemCraftTable(int args) {
-	int client = GetCmdArgInt(1);
+	int type = GetCmdArgInt(1);
+	int client = GetCmdArgInt(2);
 	int item_id = GetCmdArgInt(args);
 	
-	if( BuidlingTABLE(client) == 0 ) {
+	if( BuidlingTABLE(client, type) == 0 ) {
 		ITEM_CANCEL(client, item_id);
 	}
 	
@@ -147,6 +158,7 @@ public Action Cmd_ItemCraftBook(int args) {
 	return Plugin_Handled;
 }
 public void SQL_LoadReceipe(Handle owner, Handle hQuery, const char[] error, any client) {
+	PrintToChatAll(error);
 	if( g_hReceipe ) {
 		g_hReceipe.Clear();
 		delete g_hReceipe;
@@ -168,6 +180,19 @@ public void SQL_LoadReceipe(Handle owner, Handle hQuery, const char[] error, any
 			g_hReceipe.SetValue(itemID, magic);
 		}
 		magic.PushArray(data, craft_type_max);
+	}
+	
+	char tmp[128], tmp2[2][64];
+	for (int i = 0; i < MAX_ITEMS; i++) {
+		rp_GetItemData(i, item_type_extra_cmd, tmp, sizeof(tmp));
+		ExplodeString(tmp, " ", tmp2, sizeof(tmp2), sizeof(tmp2[]));
+		
+		if( StrContains(tmp, "rp_item_primal") == 0 )
+			g_iItemCraftType[i] = 0;
+		else if( StrContains(tmp, "rp_item_raw") == 0 )
+			g_iItemCraftType[i] = StringToInt(tmp2[1]);
+		else
+			g_iItemCraftType[i] = -1;
 	}
 	return;
 }
@@ -208,7 +233,7 @@ public Action fwdFrozen(int client, float& speed, float& gravity) {
 	return Plugin_Stop;
 }
 public Action fwdUse(int client) {
-	if( isNearTable(client) && !g_bInCraft[client] ) {
+	if( isNearTable(client) > 0 && !g_bInCraft[client] ) {
 		displayArtisanMenu(client);
 		return Plugin_Handled;
 	}
@@ -219,7 +244,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown) {
 	if( rp_GetClientJobID(client) != 31 )
 		return Plugin_Continue;
 	
-	int ent = BuidlingTABLE(client);
+	int ent = BuidlingTABLE(client, 0);
 	rp_SetBuildingData(ent, BD_FromBuild, 1);
 	SetEntProp(ent, Prop_Data, "m_iHealth", GetEntProp(ent, Prop_Data, "m_iHealth")/5);
 	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
@@ -235,7 +260,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown) {
 	return Plugin_Stop;
 }
 public Action fwdCanStealItem(int client, int target) {
-	if( g_flClientBook[target][book_steal] > GetTickedTime() && isNearTable(target) )
+	if( g_flClientBook[target][book_steal] > GetTickedTime() && isNearTable(target) > 0 )
 		return Plugin_Handled;
 	return Plugin_Continue;
 }
@@ -246,21 +271,32 @@ void displayArtisanMenu(int client) {
 		rp_SetClientInt(client, i_ArtisanLevel, 1);
 	}
 	
+	int type = rp_GetBuildingData(isNearTable(client), BD_item_id);
+	
 	char tmp[128];
 	Handle menu = CreateMenu(eventArtisanMenu);
 	SetMenuTitle(menu, "%T\n ", "Artisan_Menu", client, "Empty_String");
 	
-	Format(tmp, sizeof(tmp), "%T", "Artisan_Build", client);
-	AddMenuItem(menu, "build", tmp);
 	
-	Format(tmp, sizeof(tmp), "%T", "Artisan_Recycl", client);
-	AddMenuItem(menu, "recycl", tmp);
+	if( type == 0 ) {
+		Format(tmp, sizeof(tmp), "%T", "Artisan_Build", client);
+		AddMenuItem(menu, "build", tmp);
 	
-	Format(tmp, sizeof(tmp), "%T", "Artisan_Learn", client);
-	AddMenuItem(menu, "learn", tmp);
+		Format(tmp, sizeof(tmp), "%T", "Artisan_Recycl", client);
+		AddMenuItem(menu, "recycl", tmp);
+		
+		Format(tmp, sizeof(tmp), "%T", "Artisan_Learn", client);
+		AddMenuItem(menu, "learn", tmp);
+		
+		Format(tmp, sizeof(tmp), "%T", "Artisan_Books", client);
+		AddMenuItem(menu, "book", tmp);
+	}
+	else {
+		Format(tmp, sizeof(tmp), "%T", "Artisan_Build", client);
+		AddMenuItem(menu, "build -1", tmp);
+	}
 	
-	Format(tmp, sizeof(tmp), "%T", "Artisan_Books", client);
-	AddMenuItem(menu, "book", tmp);
+	
 	
 	Format(tmp, sizeof(tmp), "%T", "Artisan_Infos", client);
 	AddMenuItem(menu, "stats", tmp);
@@ -287,6 +323,7 @@ int getNumberOfCraftInJob(int client, int jobID) {
 }
 void displayBuildMenu(int client, int jobID, int itemID) {
 	
+	int type = rp_GetBuildingData(isNearTable(client), BD_item_id);
 	int clientItem[MAX_ITEMS];
 	int[] data = new int[craft_type_max];
 	for(int i = 0; i < MAX_ITEMS; i++)
@@ -319,16 +356,21 @@ void displayBuildMenu(int client, int jobID, int itemID) {
 		SetMenuTitle(menu, "%T\n ", "Artisan_Menu", client, "Artisan_Build");
 		
 		for(int i = 0; i < MAX_ITEMS; i++) {
-			if( !g_bCanCraft[client][i] && !doRP_CanClientCraftForFree(client, i) )
+			if( type != g_iItemCraftType[i] )
 				continue;
-			if( rp_GetItemInt(i, item_type_job_id) != jobID && jobID != -1 )
-				continue;
+
+			if( type == 0 ) {
+				if( !g_bCanCraft[client][i] && !doRP_CanClientCraftForFree(client, i) )
+					continue;
+				if( rp_GetItemInt(i, item_type_job_id) != jobID && jobID != -1 )
+					continue;
+			}
+			
 			Format(tmp, sizeof(tmp), "%d", i);
 			if( !g_hReceipe.GetValue(tmp, magic) )
 				continue;
-			
+						
 			can = true;
-			
 			for (int j = 0; j < magic.Length; j++) {
 				magic.GetArray(j, data);
 				
@@ -623,7 +665,7 @@ public Action stopBuilding(Handle timer, Handle dp) {
 	if( !IsValidClient(client) ) {
 		return Plugin_Stop;
 	}
-	if( !isNearTable(client) ) {
+	if( isNearTable(client) == 0 ) {
 		CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
 		g_bInCraft[client] = false;
 		return Plugin_Stop;
@@ -767,6 +809,7 @@ void MENU_ShowCraftin(int client, int total, int amount, int positive, int fatig
 float getDuration(int client, int itemID) {
 	if( rp_GetItemInt(itemID, item_type_job_id) == 91 )
 		return -1.0;
+	
 	char tmp[12];
 	int[] data = new int[craft_type_max];
 	Format(tmp, sizeof(tmp), "%d", itemID);
@@ -779,7 +822,11 @@ float getDuration(int client, int itemID) {
 	float duration = 0.0;
 	for (int i = 0; i < magic.Length; i++) {
 		magic.GetArray(i, data);
-		duration += 0.02 * data[craft_amount];
+		
+		if( g_iItemCraftType[itemID] == 0 )
+			duration += 0.02 * data[craft_amount];
+		else
+			duration += 0.5 * data[craft_amount];
 	}
 	
 	if( g_flClientBook[client][book_speed] > GetTickedTime() )
@@ -809,15 +856,15 @@ int ClientGiveXP(int client, int xp) {
 	rp_SetClientInt(client, i_ArtisanPoints, basePoint);
 	
 }
-bool isNearTable(int client) {
+int isNearTable(int client) {
 	char classname[65];
 	int target = rp_GetClientTarget(client);
 	if( IsValidEdict(target) && IsValidEntity(target) ) {
 		GetEdictClassname(target, classname, sizeof(classname));
 		if( StrContains(classname, "rp_table") == 0 && rp_IsEntitiesNear(client, target, true) )
-			return true;
+			return target;
 	}
-	return false;
+	return 0;
 }
 
 void addStatsToMenu(int client, Handle menu) {
@@ -842,7 +889,7 @@ void addStatsToMenu(int client, Handle menu) {
 	AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 }
 // ----------------------------------------------------------------------------
-int BuidlingTABLE(int client) {
+int BuidlingTABLE(int client, int type) {
 	
 	if( !rp_IsBuildingAllowed(client) )
 		return 0;	
@@ -873,19 +920,27 @@ int BuidlingTABLE(int client) {
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client);
 	
 	int ent = CreateEntityByName("prop_physics_override");
-	count = Math_GetRandomInt(0, 1);
 	DispatchKeyValue(ent, "classname", classname);
-	if( count )
-		DispatchKeyValue(ent, "model", MODEL_TABLE1);
-	else
-		DispatchKeyValue(ent, "model", MODEL_TABLE2);
+	
+	switch(type) {
+		case 0: {
+			if( Math_GetRandomInt(0, 1) )
+				DispatchKeyValue(ent, "model", MODEL_TABLE1);
+			else
+				DispatchKeyValue(ent, "model", MODEL_TABLE2);
+		}
+		case 1: {
+			DispatchKeyValue(ent, "model", MODEL_TABLE_METAL);
+		}
+		case 2: {
+			DispatchKeyValue(ent, "model", MODEL_TABLE_INGE);
+		}
+		case 3: {
+			DispatchKeyValue(ent, "model", MODEL_TABLE_ALCH);
+		}
+	}
 	DispatchSpawn(ent);
 	ActivateEntity(ent);
-	
-	if( count )
-		DispatchKeyValue(ent, "model", MODEL_TABLE1);
-	else
-		DispatchKeyValue(ent, "model", MODEL_TABLE2);
 	
 	SetEntProp( ent, Prop_Data, "m_iHealth", 50000);
 	SetEntProp( ent, Prop_Data, "m_takedamage", 0);
@@ -904,6 +959,7 @@ int BuidlingTABLE(int client) {
 	CreateTimer(3.0, BuildingTABLE_post, ent);
 	rp_SetBuildingData(ent, BD_owner, client);
 	rp_SetBuildingData(ent, BD_FromBuild, 0);
+	rp_SetBuildingData(ent, BD_item_id, type);
 	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
 	
 	return ent;
