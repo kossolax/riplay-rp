@@ -387,6 +387,8 @@ public void OnConfigsExecuted() {
 	ServerCommand("ammo_grenade_limit_snowballs 1");
 	ServerCommand("sv_shield_hitpoints 5000");
 	
+	ServerCommand("ent_remove_all prop_vehicle_driveable");
+	
 	//g_hWeaponScale = FindConVar("weapon_recoil_scale");
 }
 public Action SwitchOFF(Handle timer, any omg) {
