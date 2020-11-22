@@ -17,7 +17,7 @@
 
 // ----------------------------------------------------------------------------
 forward Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbose);
-
+forward Action RP_OnSentryAttack(int sentry, int client);
 // ----------------------------------------------------------------------------
 enum rp_event {
 	RP_PreTakeDamage,			     /* Le joueur recoit des dégats, quelques soit l'arme. Attention, n'est jamais appelé en zone EVENT */
@@ -575,6 +575,8 @@ typedef NextMessageCallback = function void(int client, any data, char[] message
 native void rp_GetClientNextMessage(int client, any data, NextMessageCallback cb);
 // ----------------------------------------------------------------------------
 native void rp_GetLevelData(rank_level level, rankType typeID, char[] str, int length);			/* Récupère les données d'un levle */
+// ----------------------------------------------------------------------------
+native void rp_CreateSentry(int client, float pos[3]);
 
 enum BM_Int {
 	BM_Owner,
