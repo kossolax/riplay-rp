@@ -120,7 +120,13 @@ public int Native_rp_ClientEmote(Handle plugin, int numParams) {
 	int client = GetNativeCell(1);
 	GetNativeString(2, anim, sizeof(anim));
 	
-	if( canEmote(client) ) {
+	if( strlen(anim) == 0 ) {
+		if( EntRefToEntIndex(g_iEmoteEnt[client]) > 0 ) {
+			stopEmote(client);
+			return view_as<int>(true);
+		}
+	}
+	else if( canEmote(client) ) {
 		startEmote(client, anim);
 		return view_as<int>(true);
 	}

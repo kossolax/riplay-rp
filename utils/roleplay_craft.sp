@@ -300,7 +300,7 @@ public Action Animate(Handle timer, any target) {
 				
 				if( duration > 4.0 ) {
 					Entity_GetAbsOrigin(parent, dst);
-					TeleportEntity(client, dst, NULL_VECTOR, NULL_VECTOR);
+					rp_ClientEmote(client, "");
 					return Plugin_Stop;
 				}
 			}
@@ -311,14 +311,12 @@ public Action Animate(Handle timer, any target) {
 }
 public Action OnEmote(int client, const char[] emote, float time) {
 	if( StrEqual(emote, "Emote_Fishing") && time >= 0.0 ) {
-		
-		
 		if( time >= 4.0 && g_iAnimEntity[client][2]) {
 			if( GetRandomInt(0, 100) != 42 ) {
 				rp_ClientGiveItem(client, ITEM_CANNE);
 			}
 			else {
-				CPrintToChat(client, "" ...MOD_TAG... " Votre canne à eau s'est brisée.");
+				CPrintToChat(client, "" ...MOD_TAG... " Votre canne à eau s'est {red}brisée{default}.");
 			}
 			
 			rp_ClientGiveItem(client, ITEM_EAU);
@@ -333,7 +331,6 @@ public Action OnEmote(int client, const char[] emote, float time) {
 		
 		AcceptEntityInput(g_iAnimEntity[client][1], "Kill");
 		AcceptEntityInput(g_iAnimEntity[client][0], "Kill");
-		
 	}
 }
 public Action EventRoundStart(Handle ev, const char[] name, bool  bd) {
