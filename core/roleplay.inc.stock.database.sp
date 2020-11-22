@@ -546,7 +546,7 @@ void StoreUserData(int client) {
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
 		"%s `sick`='%i', `tuto`='%i', `TimePlayedJob`='%d', `artisan_xp`='%d', `artisan_lvl`='%d', `artisan_points`='%d', `artisan_fatigue`='%f', `artisan_spe`='%d', ",
-		MysqlQuery, g_iUserData[client][i_Sick], g_iUserData[client][i_Tutorial], g_iUserData[client][i_TimePlayedJob],  g_iUserData[client][i_ArtisanXP],  g_iUserData[client][i_ArtisanLevel],  g_iUserData[client][i_ArtisanPoints],  g_flUserData[client][fl_ArtisanFatigue],  g_iUserData[client][i_ArtisanSpe]);
+		MysqlQuery, g_iUserData[client][i_Sick], g_iUserData[client][i_Tutorial], g_iUserData[client][i_TimePlayedJob],  g_iUserData[client][i_ArtisanXP],  g_iUserData[client][i_ArtisanLevel],  g_iUserData[client][i_ArtisanPoints],  g_flUserData[client][fl_ArtisanFatigue],  g_iUserData[client][i_ArtisanSpeciality]);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
 		"%s `xp`='%i', `level`='%i', `prestige`='%i', `passive`='%d', ",
