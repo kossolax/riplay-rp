@@ -1795,8 +1795,6 @@ void MENU_ShowPickLock(int client, float percent, int difficulte, int type) {
 	rp_Effect_LoadingBar(tmp, sizeof(tmp), percent );
 	AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	
-	PrintToChatAll("%d", difficulte);
-	
 	switch( difficulte ) {
 		case  -1: Format(tmp, sizeof(tmp), "%T", "Difficulty_Failed", client);
 		case   1: Format(tmp, sizeof(tmp), "%T", "Difficulty_Easy", client);
