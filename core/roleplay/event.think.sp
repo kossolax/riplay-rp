@@ -171,13 +171,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		}
 	}
 	lastButtons[client] = buttons;
-	
-	if( impulse == 100 ) {
-		if( g_bUserData[client][b_LampePoche] == 0 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas de Lampe de poche utilisable.");
-			return Plugin_Handled;
-		}
-	}
+
 	return changed ? Plugin_Changed : Plugin_Continue;
 }
 

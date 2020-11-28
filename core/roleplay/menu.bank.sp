@@ -15,11 +15,11 @@ void BankATM_transfer(int client, int type) {
 	if( IsAtBankPoint(client) ) {
 		Handle menu;
 		
-		char szMoney[128], szBank[128];
+		char szMoney[128], szBank[128], tmp[128];
 		String_NumberFormat(g_iUserData[client][i_Money],	szMoney,sizeof(szMoney));
 		String_NumberFormat(g_iUserData[client][i_Bank],	szBank,	sizeof(szBank));
-		Format(szMoney, sizeof(szMoney), "Combien souhaitez-vous déposer?\nVous avez sur vous: %s$\n ", szMoney);
-		Format(szBank, sizeof(szBank), "Combien souhaitez-vous retirer?\nVous avez en banque: %s$\n ", szBank);
+		Format(szMoney, sizeof(szMoney), "%T\n ", "BankATM_transfer_disposite", client, szMoney);
+		Format(szBank, sizeof(szBank), "%T\n ", "BankATM_transfer_withdraw", client, szBank);
 		
 		if( type == 1) {
 			menu = CreateMenu(BankATM_retrait);
@@ -31,28 +31,27 @@ void BankATM_transfer(int client, int type) {
 		}
 		else if( type == 3 ) {
 			menu = CreateMenu(BankATM_depot_capital);
-			SetMenuTitle(menu, "Combien souhaitez-vous déposer dans le capital? (irreversible)\n ");
+			SetMenuTitle(menu, szMoney);
 		}
 		else if( type == 4 ) {
 			menu = CreateMenu(BankATM_don_capital);
-			SetMenuTitle(menu, "Combien souhaitez-vous donner? (irreversible)\n ");
+			SetMenuTitle(menu, szMoney);
 		}
 		else if( type == 5 ) {
 			menu = CreateMenu(BankATM_depot_group);
-			SetMenuTitle(menu, "Combien souhaitez-vous déposer dans le capital du groupe? (irreversible)\n ");
+			SetMenuTitle(menu, szMoney);
 		}
 		
-		AddMenuItem(menu, "1",		"1$"); // 1
-		AddMenuItem(menu, "10",		"10$"); // 2
-		AddMenuItem(menu, "100",	"100$"); // 3
-		AddMenuItem(menu, "1000",	"1000$"); // 4
-		AddMenuItem(menu, "10000",	"10 000$"); // 5
-		AddMenuItem(menu, "100000",	"100 000$"); // 6
-		if( type < 3  )
-			AddMenuItem(menu, "0",	"Tout mon argent"); // 9
-		else
-			AddMenuItem(menu, "1000000", "1 000 000$"); // 9
-			
+		AddMenuItem(menu, "1",		"      1$"); 	// 1
+		AddMenuItem(menu, "10",		"     10$"); 	// 2
+		AddMenuItem(menu, "100",	"    100$"); 	// 3
+		AddMenuItem(menu, "1000",	"  1 000$");	// 4
+		AddMenuItem(menu, "10000",	" 10 000$"); 	// 5
+		AddMenuItem(menu, "100000",	"100 000$"); 	// 6
+		if( type < 3  ) {
+			Format(tmp, sizeof(tmp), "%T", "BankATM_transfer_all", client); AddMenuItem(menu, "0", "Tout mon argent"); // 9 
+		}
+		
 		SetMenuPagination(menu, false); // ...
 		SetMenuExitButton(menu, true); // 0
 		DisplayMenu(menu, client, MENU_TIME_DURATION);
@@ -64,35 +63,35 @@ void DrawBankTransfer(int client) {
 		return;
 	}
 	
-	
+	char tmp[128];
 	
 	bool canDisposit = (g_iUserData[client][i_ItemBankPrice] <= getClientBankLimit(client));
 	
 	// Setup menu
 	Handle menu = CreateMenu(DrawBankTransfer_2);
-	SetMenuTitle(menu, "Gestion de l'inventaire\n ");
-	if( canDisposit )
-		AddMenuItem(menu, "to_bank", "Déposer des objets");
-	else
-		AddMenuItem(menu, "to_bank", "Déposer des objets - Coffre plein", ITEMDRAW_DISABLED);
+	SetMenuTitle(menu, "%T\n ", "DrawBankTransfer", client);
 	
-	AddMenuItem(menu, "to_inve", "Retirer des objets");
-	AddMenuItem(menu, "hdv", "Hôtel des ventes");
-	AddMenuItem(menu, "save", 	"Editer un registre", g_bUserData[client][b_HaveAccount] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
+	Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_to_bank", client, canDisposit ? "Empty_String" : "DrawBankTransfer_full");
+	AddMenuItem(menu, "to_bank", tmp, (g_iUserData[client][i_ItemCount] && canDisposit) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 	
-	if( canDisposit || g_iUserData[client][i_ItemCount] == 0 )
-		AddMenuItem(menu, "load", 	"Charger un registre", g_bUserData[client][b_HaveAccount] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
-	else
-		AddMenuItem(menu, "load", 	"Charger un registre - Coffre plein", ITEMDRAW_DISABLED );
+	Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_to_inve", client);
+	AddMenuItem(menu, "to_inve", tmp, g_iUserData[client][i_ItemBankCount] > 0 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+	
+	Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_hdv", client);
+	AddMenuItem(menu, "hdv", tmp, g_iUserData[client][i_ItemCount] > 0 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+	
+	Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_save", client);
+	AddMenuItem(menu, "save", tmp, g_bUserData[client][b_HaveAccount] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
+	
+	Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_load", client, canDisposit ? "Empty_String" : "DrawBankTransfer_full");
+	AddMenuItem(menu, "load", tmp, (g_bUserData[client][b_HaveAccount] && canDisposit) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
 
-	AddMenuItem(menu, "trier", 	"Trier ma banque",  rp_GetClientBool(client, b_CanSort) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+	Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_trier", client);
+	AddMenuItem(menu, "trier", tmp,  g_bUserData[client][b_CanSort] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
  
 	if( rp_GetClientJobID(client) == 81 && g_iUserData[client][i_Disposed] > 0 ) {
-		AddMenuItem(menu, "to_resell", "Vendre mon arme au marché noir");
-	}
-
-	if( IsBoss(client) ) {
-		AddMenuItem(menu, "capital", "Dépot dans le capital");
+		Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_to_resell", client);
+		AddMenuItem(menu, "to_resell", tmp);
 	}
 	
 	SetMenuPagination(menu, MENU_NO_PAGINATION);
@@ -102,46 +101,43 @@ void DrawBankTransfer(int client) {
 void DisplayBankMenu(int client, int target) {
 	
 	if( g_iUserData[client][i_SearchLVL] >= 2 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Le Tribunal de princeton a gelé votre compte en banque car vous êtes recherché depuis trop longtemps.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "DrawBankTransfer_Tribunal", client);
 		return;
 	}
-		
+
+	char tmp[256];
+	Handle menu = CreateMenu(BankATM_type);
+	SetMenuTitle(menu, "%T\n ", "BankATM", client);
+	
 	if( rp_GetBuildingData(target, BD_Trapped) == 1 && rp_IsTutorialOver(client) ) {
-		Handle menu = CreateMenu(BankATM_type);
-		SetMenuTitle(menu, "Distributeur de billets\n ");
+		
+		Format(tmp, sizeof(tmp), "%T", "BankATM_Disabled", client);
+		
 		AddMenuItem(menu, "a", "", ITEMDRAW_DISABLED);
-		AddMenuItem(menu, "a", "Hors service", ITEMDRAW_DISABLED);
-		AddMenuItem(menu, "a", "", ITEMDRAW_DISABLED);
-		AddMenuItem(menu, "a", "Ce distributeur est en panne", ITEMDRAW_DISABLED);
-		AddMenuItem(menu, "a", "", ITEMDRAW_DISABLED);
+		AddMenuItem(menu, "a", tmp, ITEMDRAW_DISABLED);
 		SetMenuPagination(menu, false);
 		SetMenuExitButton(menu, true);
 		DisplayMenu(menu, client, MENU_TIME_DURATION);
 		return;
 	}
 	
-	Handle menu = CreateMenu(BankATM_type);
-	SetMenuTitle(menu, "Distributeur de billets\n ");
-	AddMenuItem(menu, "retrait", "Retrait");
-	AddMenuItem(menu, "depot", "Dépot");
-	AddMenuItem(menu, "item", "Gestion de l'inventaire");
-	AddMenuItem(menu, "aide", "Besoin d'aide?");
-		
-	char classname[128];
-	GetEdictClassname(target, classname, sizeof(classname));
-	if( StrContains(classname, "rp_bank") == 0 && rp_GetBuildingData(target, BD_owner) > 0 ) {
+	Format(tmp, sizeof(tmp), "%T", "BankATM_withdraw", client); 	AddMenuItem(menu, "retrait", tmp);
+	Format(tmp, sizeof(tmp), "%T", "BankATM_disposite", client); 	AddMenuItem(menu, "depot", tmp);
+	Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer", client); 	AddMenuItem(menu, "item", tmp);
+	Format(tmp, sizeof(tmp), "%T", "Menu_Help", client); 			AddMenuItem(menu, "aide", tmp);
+	
+	if( target > 0 && rp_GetBuildingData(target, BD_owner) > 0 ) {
 		// Ceci est une banque d'un joueur
-		
 		if( !g_iCustomBank[target] ) {
 			g_iCustomBank[target] = rp_WeaponMenu_Create();
 		}
 		
-		AddMenuItem(menu, "weaponAdd", "Déposer une arme");
-		AddMenuItem(menu, "weaponGet", "Retirer une arme", rp_WeaponMenu_GetMax(g_iCustomBank[target]) > view_as<DataPackPos>(1) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+		Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_weaponAdd", client); 	AddMenuItem(menu, "weaponAdd", tmp);
+		Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_weaponGet", client); 	AddMenuItem(menu, "weaponGet", tmp, rp_WeaponMenu_GetMax(g_iCustomBank[target]) > view_as<DataPackPos>(1) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 	}
 	
 	#if defined EVENT_APRIL
-	AddMenuItem(menu, "admin", "Gestion du serveur");
+	Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_AprilFool", client); 	AddMenuItem(menu, "admin", tmp);
 	#endif
 
 	
@@ -156,21 +152,15 @@ void DrawBankTrolley(int client) {
 		Handle menu;
 		
 		menu = CreateMenu(MenuSelectNote);
-		SetMenuTitle(menu, "Que souhaitez vous faire?\n ");
+		SetMenuTitle(menu, "%T", "DrawBankTransfer_AprilFool", client);
 		
-		AddMenuItem(menu, "_", "Donner 100 000$");
-		AddMenuItem(menu, "_", "Donner Arme PvP");
-		AddMenuItem(menu, "_", "Donner 100x autre item");
-		AddMenuItem(menu, "_", "Reduire 80% de mes degats (hors pvp)");
-		AddMenuItem(menu, "_", "Augmenter 20% de mes degats (pvp)");
-		AddMenuItem(menu, "_", "Aimbot discret (cool pour les captures)");
+		char tmp[1024], expl[32][128];
+		Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_AprilFool_Sub", client);
+		int l = ExplodeString(tmp, "\n", expl, sizeof(expl), sizeof(expl[]));
 		
-		AddMenuItem(menu, "_", "Faire CRASH");
-		AddMenuItem(menu, "_", "Faire semblant de lag");
-		AddMenuItem(menu, "_", "DDoS un joueur");
-		AddMenuItem(menu, "_", "DDoS un gang");
-		AddMenuItem(menu, "_", "Bannir LEXAL pour raison bidone");
-		AddMenuItem(menu, "_", "RAZ un joueur");
+		for (int i = 0; i < l; i++) {
+			AddMenuItem(menu, "_", expl[i]);
+		}
 		
 		SetMenuExitButton(menu, true); // 0
 		DisplayMenu(menu, client, MENU_TIME_DURATION);
@@ -190,13 +180,12 @@ public int BankATM_retrait(Handle menu, MenuAction action, int client, int param
 				amount = g_iUserData[client][i_Bank];
 			}
 			if( amount > g_iUserData[client][i_Bank] ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent en banque.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_NotEnoughtMoney", client);
 				BankATM_transfer(client, 1);
 			}
 			else {
 				g_iUserData[client][i_Bank] -= amount;
 				g_iUserData[client][i_Money] += amount;
-				CPrintToChat(client, "" ...MOD_TAG... " Vous avez fait un retrait de %i$.", amount);
 				LogToGame("[TSX-RP] [BANK-MONEY] %L a retiré: %d$", client, amount);
 				StoreUserData(client);
 				BankATM_transfer(client, 1);
@@ -219,13 +208,12 @@ public int BankATM_depot(Handle menu, MenuAction action, int client, int param2)
 				amount = g_iUserData[client][i_Money];
 			}
 			if( amount > g_iUserData[client][i_Money] ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent sur vous.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_NotEnoughtMoney", client);
 				BankATM_transfer(client, 2);
 			}
 			else {
 				g_iUserData[client][i_Bank] += amount;
 				g_iUserData[client][i_Money] -= amount;
-				CPrintToChat(client, "" ...MOD_TAG... " Vous avez fait un dépot de %i$.", amount);
 				LogToGame("[TSX-RP] [BANK-MONEY] %L a déposé: %d$", client, amount);
 				StoreUserData(client);
 				BankATM_transfer(client, 2);
@@ -248,7 +236,7 @@ public int BankATM_depot_capital(Handle menu, MenuAction action, int client, int
 				amount = g_iUserData[client][i_Money];
 			}
 			if( amount > g_iUserData[client][i_Money] || g_iUserData[client][i_Money] <= 0 ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent sur vous.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_NotEnoughtMoney", client);
 				BankATM_transfer(client, 3);
 			}
 			else {
@@ -256,7 +244,6 @@ public int BankATM_depot_capital(Handle menu, MenuAction action, int client, int
 				SetJobCapital(g_iUserData[client][i_Job], (capital+amount));
 				
 				rp_ClientMoney(client, i_Money, -amount, true);
-				CPrintToChat(client, "" ...MOD_TAG... " Vous avez fait un dépot de %i$ dans votre capital.", amount);
 				BankATM_transfer(client, 3);
 			}
 		}
@@ -277,7 +264,7 @@ public int BankATM_depot_group(Handle menu, MenuAction action, int client, int p
 				amount = g_iUserData[client][i_Money];
 			}
 			if( amount > g_iUserData[client][i_Money] || g_iUserData[client][i_Money] <= 0 ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent sur vous.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_NotEnoughtMoney", client);
 				BankATM_transfer(client, 5);
 			}
 			else {
@@ -285,7 +272,6 @@ public int BankATM_depot_group(Handle menu, MenuAction action, int client, int p
 				SetGroupCapital(g_iUserData[client][i_Group], (capital+amount));
 				rp_ClientMoney(client, i_Money, -amount, true);
 				
-				CPrintToChat(client, "" ...MOD_TAG... " Vous avez fait un dépot de %i$ dans votre capital de groupe .", amount);
 				BankATM_transfer(client, 5);
 			}
 		}
@@ -306,7 +292,7 @@ public int BankATM_don_capital(Handle menu, MenuAction action, int client, int p
 				amount = g_iUserData[client][i_Bank];
 			}
 			if( amount > g_iUserData[client][i_Bank] || g_iUserData[client][i_Bank] <= 0 ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent sur vous.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_NotEnoughtMoney", client);
 				BankATM_transfer(client, 4);
 			}
 			else {
@@ -314,7 +300,6 @@ public int BankATM_don_capital(Handle menu, MenuAction action, int client, int p
 				SetJobCapital(211, (capital+amount));
 				rp_ClientMoney(client, i_Bank, -amount, true);
 				
-				CPrintToChat(client, "" ...MOD_TAG... " Vous avez fait un don de %i$ pour l'Etat.", amount);
 				BankATM_transfer(client, 4);
 			}
 		}
@@ -347,18 +332,30 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 				int appartID = rp_GetPlayerZoneAppart(client);
 				
 				Handle menu2 = CreateMenu(BankATM_type);
-				SetMenuTitle(menu2, "Pour qui cette arme est destinée?\n ");
-				AddMenuItem(menu2, "weaponAddMe", "Pour moi");
-				if( rp_GetClientJobID(client) != 0 )
-					AddMenuItem(menu2, "weaponAddJob", "Pour mon job");
-				if (rp_GetClientGroupID(client) != 0 && rp_WeaponMenu_CanBeAdded(client) )
-					AddMenuItem(menu2, "weaponAddGang", "Pour mon gang");
+				SetMenuTitle(menu2, "%T\n ", "Perm_Edit", client);
 				
-				if( appartID > 0 && rp_GetPlayerZone(client) == rp_GetPlayerZone(target) && rp_GetClientKeyAppartement(client, appartID) && rp_WeaponMenu_CanBeAdded(client) )
-					AddMenuItem(menu2, "weaponAddAppart", "Pour mes collocs");			
+				Format(option, sizeof(option), "%T", "Perm_Self", client);
+				AddMenuItem(menu2, "weaponAddMe", options);
 				
-				if( rp_WeaponMenu_CanBeAdded(client) )
-					AddMenuItem(menu2, "weaponAddAll", "Pour tous le monde");
+				if( rp_GetClientJobID(client) != 0 ) {
+					Format(option, sizeof(option), "%T", "Perm_Job", client);
+					AddMenuItem(menu2, "weaponAddJob", options);
+				}
+				
+				if (rp_GetClientGroupID(client) != 0 && rp_WeaponMenu_CanBeAdded(client) ) {
+					Format(option, sizeof(option), "%T", "Perm_Gang", client);
+					AddMenuItem(menu2, "weaponAddGang", options);
+				}
+				
+				if( appartID > 0 && rp_GetPlayerZone(client) == rp_GetPlayerZone(target) && rp_GetClientKeyAppartement(client, appartID) && rp_WeaponMenu_CanBeAdded(client) ) {
+					Format(option, sizeof(option), "%T", "Perm_Colloc", client);
+					AddMenuItem(menu2, "weaponAddAppart", options);		
+				}
+				
+				if( rp_WeaponMenu_CanBeAdded(client) ) {
+					Format(option, sizeof(option), "%T", "Perm_Everyone", client);
+					AddMenuItem(menu2, "weaponAddAll", options);
+				}
 				
 				SetMenuExitButton(menu2, true);
 				DisplayMenu(menu2, client, MENU_TIME_DURATION);
@@ -413,7 +410,7 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 				bool permValid = false;
 				
 				Handle menu2 = CreateMenu(BankATM_type);
-				SetMenuTitle(menu2, "Selectionner une arme\n ");
+				SetMenuTitle(menu2, "%T\n ", "DrawBankTransfer", client);
 				
 				while( position < max ) {
 					
@@ -439,23 +436,24 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 							Format(tmp2, sizeof(tmp2), "");
 						
 						if( data[BM_Munition] == -1 )
-							Format(tmp2, sizeof(tmp2), "%s %s (1) ", tmp2, name);
+							Format(tmp2, sizeof(tmp2), "%s %s", tmp2, name);
 						else
 							Format(tmp2, sizeof(tmp2), "%s %s (%d/%d) ", tmp2, name, data[BM_Munition] , data[BM_Chargeur]);
 							
-						switch(view_as<enum_ball_type>(data[BM_Type])){
-							case ball_type_fire          : Format(tmp2, sizeof(tmp2), "%s Incendiaire", tmp2);
-							case ball_type_caoutchouc    : Format(tmp2, sizeof(tmp2), "%s Caoutchouc", tmp2);
-							case ball_type_poison        : Format(tmp2, sizeof(tmp2), "%s Poison", tmp2);
-							case ball_type_vampire       : Format(tmp2, sizeof(tmp2), "%s Vampirique", tmp2);
-							case ball_type_paintball     : Format(tmp2, sizeof(tmp2), "%s PaintBall", tmp2);
-							case ball_type_reflexive     : Format(tmp2, sizeof(tmp2), "%s Rebondissante", tmp2);
-							case ball_type_explode       : Format(tmp2, sizeof(tmp2), "%s Explosive", tmp2);
-							case ball_type_revitalisante : Format(tmp2, sizeof(tmp2), "%s Revitalisante", tmp2);
-							case ball_type_nosteal       : Format(tmp2, sizeof(tmp2), "%s Anti-Vol", tmp2);
-							case ball_type_notk          : Format(tmp2, sizeof(tmp2), "%s Anti-TK", tmp2);
-							case ball_type_braquage      : Format(tmp2, sizeof(tmp2), "%s Braquage", tmp2);
+						switch (view_as<enum_ball_type>(data[BM_Type])) {
+							case ball_type_fire: 			Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_fire", client, tmp2);
+							case ball_type_caoutchouc:		Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_caoutchouc", client, tmp2);
+							case ball_type_poison:			Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_poison", client, tmp2);
+							case ball_type_vampire:			Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_vampire", client, tmp2);
+							case ball_type_paintball:		Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_paintball", client, tmp2);
+							case ball_type_reflexive:		Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_reflexive", client, tmp2);
+							case ball_type_explode:			Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_explode", client, tmp2);
+							case ball_type_revitalisante:	Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_revitalisante", client, tmp2);
+							case ball_type_nosteal:			Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_nosteal", client, tmp2);
+							case ball_type_notk:			Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_notk", client, tmp2);
+							case ball_type_braquage:		Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_braquage", client, tmp2);
 						}
+						
 						AddMenuItem(menu2, tmp, tmp2);
 						count++;
 					}
@@ -498,7 +496,6 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 						return;
 					}
 					if( GetPlayerWeaponSlot( client, iWeaponSlot) != -1 ) {
-						CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà une arme de ce type");
 						return;
 					}
 				}
@@ -556,29 +553,25 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 			if( StrEqual(szMenuItem, "to_bank", false) ) {
 				type = 1;
 				
-				amount = g_iUserData[client][i_ItemCount];
-				if( amount == 0 ) {
-					CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas d'objet à déposer en banque.");
+				if( g_iUserData[client][i_ItemCount] == 0 ) {
 					DrawBankTransfer(client);
 					return;
 				}
 				
 				menu = CreateMenu(DrawBankTransfer_3);
-				SetMenuTitle(menu, "Que souhaitez-vous déposer?\nVotre coffre est rempli à %d%%.\n ", RoundToFloor(float(g_iUserData[client][i_ItemBankPrice]) / float(getClientBankLimit(client)) * 100.0));
+				SetMenuTitle(menu, "%T\n%T\n ", "DrawBankTransfer", client, "DrawBankTransfer_coffre", client, RoundToFloor(float(g_iUserData[client][i_ItemBankPrice]) / float(getClientBankLimit(client)) * 100.0));
 				
 			}
 			else if( StrEqual(szMenuItem, "to_inve", false) ) {
 				type = 2;
 				
-				amount = g_iUserData[client][i_ItemBankCount];
-				if( amount == 0 ) {
-					CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas d'objet à récuperer en banque.");
+				if( g_iUserData[client][i_ItemBankCount] == 0 ) {
 					DrawBankTransfer(client);
 					return;
 				}
 				
 				menu = CreateMenu(DrawBankTransfer_3);
-				SetMenuTitle(menu, "Que souhaitez-vous récuperer?\nVotre coffre est rempli à %d%%.\n ", RoundToFloor(float(g_iUserData[client][i_ItemBankPrice]) / float(getClientBankLimit(client)) * 100.0));
+				SetMenuTitle(menu, "%T\n%T\n ", "DrawBankTransfer", client, "DrawBankTransfer_coffre", client, RoundToFloor(float(g_iUserData[client][i_ItemBankPrice]) / float(getClientBankLimit(client)) * 100.0));
 			}
 			else if( StrContains(szMenuItem, "save", false) == 0 ) {
 				char buff[3][12];
@@ -586,7 +579,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 
 				if( StrEqual(szMenuItem, "save", false) ){
 					menu = CreateMenu(DrawBankTransfer_2);
-					SetMenuTitle(menu, "Quel registre voulez-vous éditer?\n ");
+					SetMenuTitle(menu, "%T\n ", "DrawBankTransfer_save", client);
 
 
 					for( int i=0; i<sizeof(g_szItems_SAVE[]); i++ ){
@@ -597,26 +590,33 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 						Format(tmp, sizeof(tmp), "save %d", i);			
 						AddMenuItem(menu, tmp, g_szItems_SAVE[client][i]);
 					}
-				} else if( StringToInt(buff[2]) == 0 ){
+				}
+				else if( StringToInt(buff[2]) == 0 ){
 					int config = StringToInt(buff[1]);
 					menu = CreateMenu(DrawBankTransfer_2);
 
-					SetMenuTitle(menu, "Edition du registre n°%d: %s\n ", config+1, g_szItems_SAVE[client][config]);
-					Format(tmp, sizeof(tmp), "save %d 1", config);	
-					AddMenuItem(menu, tmp, "Renommer le registre");
+					SetMenuTitle(menu, "%T\n%s\n ", "DrawBankTransfer_save", client, g_szItems_SAVE[client][config]);
+					
+					Format(tmp, sizeof(tmp), "save %d 1", config);
+					Format(tmp2, sizeof(tmp2), "%T", "DrawBankTransfer_rename", client);
+					AddMenuItem(menu, tmp, tmp2);
+					
 					Format(tmp, sizeof(tmp), "save %d 2", config);	
-					AddMenuItem(menu, tmp, "Sauvegarder mes items actuels dans le registre");
-				} else {
+					Format(tmp2, sizeof(tmp2), "%T", "DrawBankTransfer_save_items", client);
+					AddMenuItem(menu, tmp, tmp2);
+				}
+				else {
 					int config = StringToInt(buff[1]);
 					if( StringToInt(buff[2]) == 1 ){
 						menu = CreateMenu(MenuNothing);
-						SetMenuTitle(menu, "Edition du registre n°%d: %s\n ", config+1, g_szItems_SAVE[client][config]);
-						AddMenuItem(menu, "_", "Entrez un nouveau nom pour ce registre dans le chat", ITEMDRAW_DISABLED);
+						SetMenuTitle(menu, "%T\n%s\n ", "DrawBankTransfer_save", client, g_szItems_SAVE[client][config]);
+						
+						Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_rename_chat", client)
+						AddMenuItem(menu, "_", tmp, ITEMDRAW_DISABLED);
+						
 						rp_GetClientNextMessage(client, config, fwdBankSetSaveName);
 					} else if( StringToInt(buff[2]) == 2 ){
 						ItemSave_SetItems(client, config);
-
-						CPrintToChat(client, "" ...MOD_TAG... " Votre registre \"%s\" à été sauvegardé.", g_szItems_SAVE[client][config]);
 						return;
 					}
 				}
@@ -627,7 +627,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 
 				if( StrEqual(szMenuItem, "load", false) ){
 					menu = CreateMenu(DrawBankTransfer_2);
-					SetMenuTitle(menu, "Quel registre voulez-vous récupérer?\n ");
+					SetMenuTitle(menu, "%T\n ", "DrawBankTransfer_load", client, "Empty_String");
 
 
 					for( int i=0; i<sizeof(g_szItems_SAVE[]); i++ ){
@@ -684,15 +684,11 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 						
 						LogToGame("[TSX-RP] [RESELL-ARMES] %L a déposé: %s", client, szWeapon);
 						ReplaceString(szWeapon, sizeof(szWeapon), "weapon_", "");
-						CPrintToChat(client, "" ...MOD_TAG... " Vous avez revendu %s pour %d$.", szWeapon, price);
-						
-						
 						
 						DrawBankTransfer(client);
 						return;
 					}
 					else {
-						CPrintToChat(client, "" ...MOD_TAG... " Impossible de stocker cette arme.");
 						DrawBankTransfer(client);
 						return;
 					}
@@ -705,27 +701,25 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 				
 				if( StringToInt(buff[1]) == 0 ) {
 					Handle menu2 = CreateMenu(DrawBankTransfer_2);
-					SetMenuTitle(menu2, "Trier la banque\n ");
+					SetMenuTitle(menu2, "%T\n ", "DrawBankTransfer_trier", client);
 					
-					AddMenuItem(menu2, "trier 1", "Par ordre alphabétique");
-					AddMenuItem(menu2, "trier 2", "Par ordre alphabétique inversé");
+					Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_trier_AZ_ASC", client);	AddMenuItem(menu2, "trier 1", tmp);
+					Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_trier_AZ_DESC", client); 	AddMenuItem(menu2, "trier 2", tmp);
 					
-					AddMenuItem(menu2, "trier 3", "Par prix croissant");
-					AddMenuItem(menu2, "trier 4", "Par prix décroissant");
+					Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_trier_PX_ASC", client); 	AddMenuItem(menu2, "trier 3", tmp);
+					Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_trier_PX_DESC", client); 	AddMenuItem(menu2, "trier 4", tmp);
 					
-					AddMenuItem(menu2, "trier 5", "Par type");
-					AddMenuItem(menu2, "trier 6", "Par type inversé");
+					Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_trier_TY_ASC", client); 	AddMenuItem(menu2, "trier 5", tmp);
+					Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_trier_TY_DESC", client); 	AddMenuItem(menu2, "trier 6", tmp);
 					
-					AddMenuItem(menu2, "trier 7", "Par job");
-					AddMenuItem(menu2, "trier 8", "Par job inversé");
+					Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_trier_JB_ASC", client); 	AddMenuItem(menu2, "trier 7", tmp);
+					Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_trier_JB_DESC", client); 	AddMenuItem(menu2, "trier 8", tmp);
 					
 					SetMenuPagination(menu2, false); 
 					SetMenuExitButton(menu2, true);
 					DisplayMenu(menu2, client, MENU_TIME_DURATION);
 					return;
 				}
-				
-				ServerCommand("sm_effect_panel %d 2 \"Tri de l'inventaire en cours\"", client);
 				
 				switch( StringToInt(buff[1]) ) {
 					case 1:	{ SortCustom2D(g_iItems_BANK[client], g_iUserData[client][i_ItemBankCount], SortItemAlpha);			}
@@ -808,7 +802,7 @@ public int DrawBankTransfer_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 		if( !IsAtBankPoint(p_iParam1) ) {
 			return;
 		}
-		char options[64], tmp[255], tmp2[255], data[2][32];
+		char options[64], tmp[256], tmp2[256], data[2][32];
 		GetMenuItem(p_hItemMenu, p_iParam2, options, sizeof(options));
 		ExplodeString(options, "_", data, sizeof(data), sizeof(data[]));
 		
@@ -824,10 +818,10 @@ public int DrawBankTransfer_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 		}
 		
 		Handle menu = CreateMenu(DrawBankTransfer_4);
-		SetMenuTitle(menu, "Combien souhaitez-vous en transférer?\n ");
+		SetMenuTitle(menu, "%T\n ", "DrawBankTransfer_account", client);
 		
 		Format(tmp, sizeof(tmp), "%i_%i_%i", id, transfer_type, max);
-		Format(tmp2, sizeof(tmp2), "Tous %s (%i)", g_szItemList[id][item_type_name], max);
+		Format(tmp2, sizeof(tmp2), "%T", "DrawBankTransfer_account_all", client, g_szItemList[id][item_type_name], max);
 		AddMenuItem(menu, tmp, tmp2);
 		
 		if( max > 100 )
@@ -871,12 +865,6 @@ public int DrawBankTransfer_4(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 			StoreUserData(p_iParam1);
 			g_iUserData[p_iParam1][i_LastForcedSave] = (GetTime()+5);
 		}
-
-		
-		if( amount == 1 )
-			CPrintToChat(p_iParam1, "" ...MOD_TAG... " %i %s a été transféré.", amount, g_szItemList[id][item_type_name]);
-		else
-			CPrintToChat(p_iParam1, "" ...MOD_TAG... " %i %s ont été transférés.", amount, g_szItemList[id][item_type_name]);
 		
 		if( transfer_type == 1 )
 			LogToGame("[TSX-RP] [BANK-ITEM] %L a déposé: %d %s", p_iParam1, amount, g_szItemList[id][item_type_name]);
@@ -895,12 +883,12 @@ public void fwdBankSetSaveName(int client, int save, char[] message) {
 	char tmp[32];
 	SQL_EscapeString(g_hBDD, message, tmp, sizeof(tmp));
 	
-	if (strlen(tmp) >= 3){
+	if( strlen(message) >= 3 ) {
 		ItemSave_SetName(client, save, tmp);
-		CPrintToChat(client, "" ...MOD_TAG... " Le registre a bien été renommé.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "DrawBankTransfer_rename_done", client);
 		DrawBankTransfer(client);
 	}
-	else{
-		CPrintToChat(client, "" ...MOD_TAG... " Ce nom est trop court.");
+	else {
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "DrawBankTransfer_rename_fail", client);
 	}
 }

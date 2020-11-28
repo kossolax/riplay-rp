@@ -1,0 +1,187 @@
+"Phrases"
+{
+	"HUD_WarnDisconnect"
+	{
+		"fr"	"Attention\n \nVous avez déconnecté avec\ndes objets dans votre inventaires.\nCette fois, ils vous ont été rendu.\n\nPensez à les déposer en banque,\nafin d'éviter de mauvaise surprise."
+	}
+	"Understand"
+	{
+		"fr"	"J'ai compris"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"cl_downloadfilter"
+	{
+		"fr"	"Des problemes d'affichage? Entrez {red}cl_downloadfilter all{default} dans votre console, puis relancer CS:GO."
+	}
+	"cl_join_advertise"
+	{
+		"fr"	"Entrez {green}cl_join_advertise 2{default} dans votre console, pour que vos amis puissent vous rejoindre facilement {red}<3{default}!"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Kill_Self"
+	{
+		"#format"	"{1:s}"
+		"fr"	"{red}{1}{default} s'est tué."
+	}
+	"Kill_Target"
+	{
+		"#format"	"{2:s},{1:s}"
+		"fr"	"{red}{1}{default} a tué {red}{2}{default}."
+	}
+	"Kill_Kick"
+	{
+		"fr"	"Vous avez été kické pour FREEKILL abusif"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Menu_Help"
+	{
+		"fr"	"Besoin d'aide?"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"BankATM"
+	{
+		"fr"	"Distributeur de billets"
+	}
+	"BankATM_Disabled"
+	{
+		"fr"	"Hors service\n \nCe distributeur est en panne."
+	}
+	"BankATM_disposite"
+	{
+		"fr"	"Déposer de l'argent"
+	}
+	"BankATM_withdraw"
+	{
+		"fr"	"Retirer de l'argent"
+	}
+	"BankATM_transfer_disposite"
+	{
+		"#format"	"{1:s}"
+		"fr"	"Combien souhaitez-vous déposer? ({1}$"
+	}
+	"BankATM_transfer_withdraw"
+	{
+		"#format"	"{1:s}"
+		"fr"	"Combien souhaitez-vous retirer? ({1}$"
+	}
+	"BankATM_transfer_all"
+	{
+		"fr"	"Tout mon argent"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"DrawBankTransfer"
+	{
+		"fr"	"Gestion de l'inventaire"
+	}
+	"DrawBankTransfer_account"
+	{
+		"fr"	"Combien souhaitez-vous en transférer?"
+	}
+	"DrawBankTransfer_account_all"
+	{
+		"fr"	"Tous {1} ({2})"
+	}
+	"DrawBankTransfer_to_bank"
+	{
+		"#format"	"{1:t}"
+		"fr"	"Déposer des objets {1}"
+	}
+	"DrawBankTransfer_coffre"
+	{
+		"#format"	"{1:d}"
+		fr"		"Votre coffre est rempli à {1}%."
+	}
+	"DrawBankTransfer_full"
+	{
+		"fr"	"(coffre plein)"
+	}
+	"DrawBankTransfer_to_inve"
+	{
+		"fr"	"Retirer des objets"
+	}
+	"DrawBankTransfer_hdv"
+	{
+		"fr"	"Hôtel des ventes"
+	}
+	"DrawBankTransfer_save"
+	{
+		"fr"	"Editer un registre"
+	}
+	"DrawBankTransfer_rename"
+	{
+		"fr"	"Renommer un registre"
+	}
+	"DrawBankTransfer_rename_chat"
+	{
+		"fr"	"Entrez un nouveau nom pour ce registre dans le chat"
+	}
+	"DrawBankTransfer_save_items"
+	{
+		"fr"	"Sauvegarder mes items actuels dans le registre"
+	}
+	"DrawBankTransfer_load"
+	{
+		"#format"	"{1:t}"
+		"fr"	"Charger un registre {1}"
+	}
+	"DrawBankTransfer_trier"
+	{
+		"fr"	"Trier mon coffre"
+	}
+	"DrawBankTransfer_trier_AZ_ASC"
+	{
+		"fr"	"Par ordre alphabétique"
+	}
+	"DrawBankTransfer_trier_AZ_DESC"
+	{
+		"fr"	"Par ordre alphabétique inversé"
+	}
+	"DrawBankTransfer_trier_PX_ASC"
+	{
+		"fr"	"Par prix croissant"
+	}
+	"DrawBankTransfer_trier_PX_DESC"
+	{
+		"fr"	"Par prix décroissant"
+	}
+	"DrawBankTransfer_trier_TY_ASC"
+	{
+		"fr"	"Par type"
+	}
+	"DrawBankTransfer_trier_TY_DESC"
+	{
+		"fr"	"Par type inversé"
+	}
+	"DrawBankTransfer_trier_JB_ASC"
+	{
+		"fr"	"Par job"
+	}
+	"DrawBankTransfer_trier_JB_DESC"
+	{
+		"fr"	"Par job inversé"
+	}
+	"DrawBankTransfer_to_resell"
+	{
+		"fr"	"Vendre mon arme au marché noir"
+	}
+	"DrawBankTransfer_Tribunal"
+	{
+		"fr"	"Le Tribunal de princeton a {red}gelé votre compte{default} en banque, car vous êtes recherché depuis trop longtemps."
+	}
+	"DrawBankTransfer_weaponAdd"
+	{
+		"fr"	"Déposer une arme"
+	}
+	"DrawBankTransfer_weaponGet"
+	{
+		"fr"	"Retirer une arme"
+	}
+	"DrawBankTransfer_AprilFool"
+	{
+		"fr"	"Gestion du serveur"
+	}
+	"DrawBankTransfer_AprilFool_Sub"
+	{
+		"fr"	"Se donner 100 000$\nSe donner Arme PvP\nSe donner 100x un item\nReduire 80% de mes degats (hors pvp)\nAugmenter 20% de mes degats (pvp)\nAimbot discret\nFaire CRASH\nFaire semblant de lag\nDDoS un joueur\nDDoS un gang\nBannir LEXAL pour raison bidone\nRAZ un joueur"
+	}
+}

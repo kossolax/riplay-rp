@@ -467,6 +467,11 @@
 		"fr"		"Toutes les personnes de mon gang"
 		"en"		"All the people in my gang"
 	}
+	"Perm_Colloc"
+	{
+		"fr"		"Tous mes collocataires"
+		"en"		"All the people in my appartement"
+	}
 	"Perm_Everyone"
 	{
 		"fr"		"Tout le monde"

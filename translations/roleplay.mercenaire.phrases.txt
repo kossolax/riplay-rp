@@ -174,7 +174,7 @@
 	// ----------------------------------------------------------------------------------------------
 	"Crypto_Blocked"
 	{
-		"fr"		"Le Tribunal de princeton a {red}gelé vos achats{default} de pot de vin car vous êtes recherché depuis trop longtemps."
+		"fr"		"Le Tribunal de princeton a {red}gelé vos achats{default} de pot de vin, car vous êtes recherché depuis trop longtemps."
 	}
 	"Crypto_Done"
 	{

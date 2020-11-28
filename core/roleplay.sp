@@ -77,6 +77,7 @@ public void OnPluginStart() {
 	LoadTranslations("roleplay.phrases");
 	LoadTranslations("roleplay.items.phrases");
 	LoadTranslations("roleplay.core.phrases");
+	LoadTranslations("roleplay.core.sub.phrases");
 	//
 	LoadTranslations("roleplay.armurerie.phrases");
 	LoadTranslations("roleplay.artificier.phrases");
