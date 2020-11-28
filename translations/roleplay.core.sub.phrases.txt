@@ -115,6 +115,15 @@
 	{
 		"fr"	"Entrez un nouveau nom pour ce registre dans le chat"
 	}
+	"DrawBankTransfer_rename_done"
+	{
+		"fr"	"Le registre a bien été renommé."
+	}
+	"DrawBankTransfer_rename_fail"
+	{
+		"fr"	"Ce nom est trop court."
+	}
+	
 	"DrawBankTransfer_save_items"
 	{
 		"fr"	"Sauvegarder mes items actuels dans le registre"
