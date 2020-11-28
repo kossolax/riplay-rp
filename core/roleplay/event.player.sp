@@ -655,7 +655,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 	if( Client ) {
 
 		if( g_bUserData[Client][b_Beacon] == 1 ) {
-			CPrintToChatAll("" ...MOD_TAG... " %T", ( Attacker <= 0 || Attacker == Client ) ? "Kill_Self" : "Kill_Target", i, client_name, target_name);
+			CPrintToChatAll("" ...MOD_TAG... " %T", ( Attacker <= 0 || Attacker == Client ) ? "Kill_Self" : "Kill_Target", LANG_SERVER, client_name, target_name);
 			g_bUserData[Client][b_Beacon] = 0;
 		}
 		

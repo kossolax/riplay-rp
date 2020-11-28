@@ -311,7 +311,7 @@ public int BankATM_don_capital(Handle menu, MenuAction action, int client, int p
 
 public int BankATM_type(Handle menu, MenuAction action, int client, int param2) {
 	if( action == MenuAction_Select ) {
-		char options[64];
+		char options[64], tmp[128];
 		GetMenuItem(menu, param2, options, 63);
 		
 		int target = IsAtBankPoint(client);
@@ -334,27 +334,27 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 				Handle menu2 = CreateMenu(BankATM_type);
 				SetMenuTitle(menu2, "%T\n ", "Perm_Edit", client);
 				
-				Format(option, sizeof(option), "%T", "Perm_Self", client);
-				AddMenuItem(menu2, "weaponAddMe", options);
+				Format(tmp, sizeof(tmp), "%T", "Perm_Self", client);
+				AddMenuItem(menu2, "weaponAddMe", tmp);
 				
 				if( rp_GetClientJobID(client) != 0 ) {
-					Format(option, sizeof(option), "%T", "Perm_Job", client);
-					AddMenuItem(menu2, "weaponAddJob", options);
+					Format(tmp, sizeof(tmp), "%T", "Perm_Job", client);
+					AddMenuItem(menu2, "weaponAddJob", tmp);
 				}
 				
 				if (rp_GetClientGroupID(client) != 0 && rp_WeaponMenu_CanBeAdded(client) ) {
-					Format(option, sizeof(option), "%T", "Perm_Gang", client);
-					AddMenuItem(menu2, "weaponAddGang", options);
+					Format(tmp, sizeof(tmp), "%T", "Perm_Gang", client);
+					AddMenuItem(menu2, "weaponAddGang", tmp);
 				}
 				
 				if( appartID > 0 && rp_GetPlayerZone(client) == rp_GetPlayerZone(target) && rp_GetClientKeyAppartement(client, appartID) && rp_WeaponMenu_CanBeAdded(client) ) {
-					Format(option, sizeof(option), "%T", "Perm_Colloc", client);
-					AddMenuItem(menu2, "weaponAddAppart", options);		
+					Format(tmp, sizeof(tmp), "%T", "Perm_Colloc", client);
+					AddMenuItem(menu2, "weaponAddAppart", tmp);		
 				}
 				
 				if( rp_WeaponMenu_CanBeAdded(client) ) {
-					Format(option, sizeof(option), "%T", "Perm_Everyone", client);
-					AddMenuItem(menu2, "weaponAddAll", options);
+					Format(tmp, sizeof(tmp), "%T", "Perm_Everyone", client);
+					AddMenuItem(menu2, "weaponAddAll", tmp);
 				}
 				
 				SetMenuExitButton(menu2, true);
@@ -404,7 +404,7 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 				if( position >= max )
 					return;
 				
-				char name[BM_WeaponNameSize], tmp[32], tmp2[128];
+				char name[BM_WeaponNameSize], tmp2[128];
 				int[] data = new int[view_as<int>(BM_Max)];
 				int count = 0;
 				bool permValid = false;
@@ -611,7 +611,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 						menu = CreateMenu(MenuNothing);
 						SetMenuTitle(menu, "%T\n%s\n ", "DrawBankTransfer_save", client, g_szItems_SAVE[client][config]);
 						
-						Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_rename_chat", client)
+						Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_rename_chat", client);
 						AddMenuItem(menu, "_", tmp, ITEMDRAW_DISABLED);
 						
 						rp_GetClientNextMessage(client, config, fwdBankSetSaveName);
@@ -818,10 +818,10 @@ public int DrawBankTransfer_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 		}
 		
 		Handle menu = CreateMenu(DrawBankTransfer_4);
-		SetMenuTitle(menu, "%T\n ", "DrawBankTransfer_account", client);
+		SetMenuTitle(menu, "%T\n ", "DrawBankTransfer_account", p_iParam1);
 		
 		Format(tmp, sizeof(tmp), "%i_%i_%i", id, transfer_type, max);
-		Format(tmp2, sizeof(tmp2), "%T", "DrawBankTransfer_account_all", client, g_szItemList[id][item_type_name], max);
+		Format(tmp2, sizeof(tmp2), "%T", "DrawBankTransfer_account_all", p_iParam1, g_szItemList[id][item_type_name], max);
 		AddMenuItem(menu, tmp, tmp2);
 		
 		if( max > 100 )
