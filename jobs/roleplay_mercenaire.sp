@@ -74,7 +74,7 @@ public void OnPluginStart() {
 	RegServerCmd("rp_item_cryptage",	Cmd_ItemCryptage,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_map",			Cmd_ItemMaps,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	
-	g_vConfigTueur = CreateConVar("rp_config_kidnapping", "225,226,227,228,236,237-238");
+	g_vConfigTueur = CreateConVar("rp_config_kidnapping", "176,177,178,179,187,188-189");
 	
 	g_hActive 		= CreateConVar("rp_kidnapping", "0");
 	
