@@ -21,12 +21,12 @@
 	"Kill_Self"
 	{
 		"#format"	"{1:s}"
-		"fr"	"{red}{1}{default} s'est tué."
+		"fr"		"{red}{1}{default} s'est tué."
 	}
 	"Kill_Target"
 	{
-		"#format"	"{2:s},{1:s}"
-		"fr"	"{red}{1}{default} a tué {red}{2}{default}."
+		"#format"	"{1:s},{2:s}"
+		"fr"		"{red}{2}{default} a tué {red}{1}{default}."
 	}
 	"Kill_Kick"
 	{
@@ -89,7 +89,7 @@
 	"DrawBankTransfer_coffre"
 	{
 		"#format"	"{1:d}"
-		fr"		"Votre coffre est rempli à {1}%."
+		"fr"		"Votre coffre est rempli à {1}%."
 	}
 	"DrawBankTransfer_full"
 	{
