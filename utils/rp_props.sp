@@ -489,8 +489,9 @@ public Action Command_getSkin(int Client,int args) {
 	GetEdictClassname(Ent, name, sizeof(name));
 	GetEntPropString(Ent, Prop_Data, "m_ModelName", modelname, 128);
 	GetEntPropString(Ent, Prop_Data, "m_iName", i_targetname, sizeof(i_targetname));
+	int hammer = GetEntProp(Ent, Prop_Data, "m_iHammerID");
 	
-	PrintToChat(Client, "[SKIN] %s [CLASS] %s [ID] %d [PERM-ID] %d [NAME] %s",modelname, name, Ent, (Ent-MaxClients), i_targetname);         
+	PrintToChat(Client, "[SKIN] %s [CLASS] %s [ID] %d [PERM-ID] %d [HAMMER-ID] %d [NAME] %s",modelname, name, Ent, (Ent-MaxClients), hammer, i_targetname);         
 	return Plugin_Handled;
 }
 public Action Command_remove(int client,int args ) {
