@@ -123,35 +123,6 @@ public void OnClientDisconnect(int Client) {
 		g_bUserData[Client][b_isConnected]  = 0;
 		g_bUserData[Client][b_isConnected2]  = 0;
 		
-		for(int a=1; a<MAX_KEYSELL; a++) {
-			
-			if( g_iAppartBonus[a][appart_proprio] <= 0 )
-				continue;
-			
-			if( g_iAppartBonus[a][appart_proprio] != Client )
-				continue;
-				
-			int rand[MAX_PLAYERS+1], mnt=0;
-			for(int i=1; i<=MAX_PLAYERS; i++) {
-				if( !IsValidClient(i) )
-					continue;
-				if( Client == i )
-					continue;
-				
-				if( g_iDoorOwner_v2[i][a] ) {
-					rand[mnt] = i;
-					mnt++;
-				}
-			}
-			
-			if( mnt > 0 ) {
-				g_iAppartBonus[a][appart_proprio] = rand[GetRandomInt(0, mnt-1)];
-			}
-			else {
-				g_iAppartBonus[a][appart_proprio] = 0;
-			}
-		}
-		
 		char classname[64];
 		for(int i=MaxClients-1; i < MAX_ENTITIES; i++) {
 			

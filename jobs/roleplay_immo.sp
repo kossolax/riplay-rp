@@ -27,7 +27,20 @@ public Plugin myinfo = {
 
 int g_cBeam, g_cGlow;
 
-int g_PropsAppartItemId,g_PropsOutdoorItemId;
+#define ITEM_PROP_APPART 77
+#define ITEM_PROP_EXTRER 184
+
+
+float g_flMinsMax[MAX_ZONES][3][3];
+int g_iRayCount[MAX_ZONES][2];
+int g_sCount[MAXPLAYERS][64], g_iHealth[MAXPLAYERS][64][64];
+float g_vecOrigin[MAXPLAYERS][64][64][3], g_vecAngle[MAXPLAYERS][64][64][3];
+char g_szModel[MAXPLAYERS][64][64][PLATFORM_MAX_PATH];
+bool g_bDataLoaded[MAXPLAYERS];
+
+bool g_bAppartCanBeSaved[64];
+int g_iEntitycount = 0;
+
 char g_PropsAppart[][128] = {
 	"models/props_office/desk_01.mdl",
 	"models/props_interiors/tv.mdl",
@@ -54,7 +67,6 @@ char g_PropsOutdoor[][128] = {
 	"models/props/cs_assault/box_stack1.mdl",
 	"models/props/de_vertigo/construction_wood_2x4_01.mdl"
 };
-
 // ----------------------------------------------------------------------------
 public Action Cmd_Reload(int args) {
 	char name[64];
@@ -88,9 +100,354 @@ public void OnPluginStart() {
 		if( IsValidClient(i) )
 			OnClientPostAdminCheck(i);
 	
+	for (int i = 0; i < 64; i++) {
+		g_flMinsMax[i][0][0] = g_flMinsMax[i][0][1] = g_flMinsMax[i][0][2] =  99999.9;
+		g_flMinsMax[i][1][0] = g_flMinsMax[i][1][1] = g_flMinsMax[i][1][2] = -99999.9;
+	}
 	CreateTimer(1.0, taskVillaProp);
 	CreateTimer(60.0, taskVillaProp);
+	CreateTimer(1.0, saveProps, 0, TIMER_REPEAT);
 }
+public Action saveProps(Handle timer, any none) {
+	char tmp[128];
+	
+	g_iEntitycount = 0;
+	for(int i=1; i<= 2048; i++) {
+		if( !IsValidEdict(i) || !IsValidEntity(i) )
+			continue;
+		g_iEntitycount++;
+	}
+	
+	for (int i = 0; i < MAX_ZONES; i++) {
+		
+		rp_GetZoneData(i, zone_type_type, tmp, sizeof(tmp));
+		
+		if( StrContains(tmp, "appart_") == 0) {
+			ReplaceString(tmp, sizeof(tmp), "appart_", "");
+			int appartID = StringToInt(tmp);
+			
+			if( appartID > 0 && appartID < 50 && g_bAppartCanBeSaved[appartID] ) {
+				if( g_iRayCount[i][0] < 128 ) {
+					calibrate(i);
+				}
+				else {
+					if( rp_GetAppartementInt(appartID, appart_proprio) > 0 ) {
+						saveAppart(i, appartID, GetRandomInt(0, 100) != 50 );
+					}
+				}
+			}
+		}
+	}
+}
+void calibrate(int zone) {
+	float min[3], max[3], src[3];
+	
+	min[0] = rp_GetZoneFloat(zone, zone_type_min_x);
+	min[1] = rp_GetZoneFloat(zone, zone_type_min_y);
+	min[2] = rp_GetZoneFloat(zone, zone_type_min_z);
+	
+	max[0] = rp_GetZoneFloat(zone, zone_type_max_x);
+	max[1] = rp_GetZoneFloat(zone, zone_type_max_y);
+	max[2] = rp_GetZoneFloat(zone, zone_type_max_z);
+	
+	src[0] = GetRandomFloat(min[0] + 32.0, max[0] - 32.0);
+	src[1] = GetRandomFloat(min[1] + 32.0, max[1] - 32.0);
+	src[2] = GetRandomFloat(min[2] + 32.0, max[2] - 32.0);
+	
+	bool changed = false;
+	changed = changed || calibrateRay(zone, src, min, max, view_as<float>({1.0, 0.0, 0.0}));
+	changed = changed || calibrateRay(zone, src, min, max, view_as<float>({0.0, 1.0, 0.0}));
+	changed = changed || calibrateRay(zone, src, min, max, view_as<float>({0.0, 0.0, 1.0}));
+	
+	g_iRayCount[zone][0]++;
+	if( changed )
+		g_iRayCount[zone][1]++;
+}
+bool calibrateRay(int zone, float src[3], float min[3], float max[3], float dir[3]) {
+	Handle tr;
+	int x = 0;
+	int y = 1;
+	int z = 2;
+	bool changed = false;
+	
+	float dst[3];
+	dst[x] = min[x] * dir[x] + src[x] * (1.0-dir[x]);
+	dst[y] = min[y] * dir[y] + src[y] * (1.0-dir[y]);
+	dst[z] = min[z] * dir[z] + src[z] * (1.0-dir[z]);
+	
+	tr = TR_TraceRayFilterEx(src, dst, MASK_SOLID_BRUSHONLY, RayType_EndPoint, FilterToNone);
+	if( TR_DidHit(tr) && TR_GetFraction(tr) > 0.8 && TR_GetFraction(tr) < 1.0 && GetVectorDistance(src, dst) > 32.0 ) {
+		TR_GetEndPosition(dst, tr);
+		
+		{
+			if( dst[x] < g_flMinsMax[zone][0][x] && dst[x] >= min[x] && dir[x] > 0.0 ) {
+				g_flMinsMax[zone][0][x] = dst[x];
+				changed = true;
+			}
+			if( dst[y] < g_flMinsMax[zone][0][y] && dst[y] >= min[y] && dir[y] > 0.0 ) {
+				g_flMinsMax[zone][0][y] = dst[y];
+				changed = true;
+			}
+			if( dst[z] < g_flMinsMax[zone][0][z] && dst[z] >= min[z] && dir[z] > 0.0 ) {
+				g_flMinsMax[zone][0][z] = dst[z];
+				changed = true;
+			}
+		}
+	}
+	delete tr;
+	
+	dst[x] = max[x] * dir[x] + src[x] * (1.0-dir[x]);
+	dst[y] = max[y] * dir[y] + src[y] * (1.0-dir[y]);
+	dst[z] = max[z] * dir[z] + src[z] * (1.0-dir[z]);
+	
+	tr = TR_TraceRayFilterEx(src, dst, MASK_SOLID_BRUSHONLY, RayType_EndPoint, FilterToNone);
+	if( TR_DidHit(tr) && TR_GetFraction(tr) > 0.8 && TR_GetFraction(tr) < 1.0 && GetVectorDistance(src, dst) > 32.0 ) {		
+		TR_GetEndPosition(dst, tr);
+				
+		{
+			if( dst[x] > g_flMinsMax[zone][1][x] && dst[x] <= max[x] && dir[x] > 0.0 ) {
+				g_flMinsMax[zone][1][x] = dst[x];
+				changed = true;
+			}
+			if( dst[y] > g_flMinsMax[zone][1][y] && dst[y] <= max[y] && dir[y] > 0.0 ) {
+				g_flMinsMax[zone][1][y] = dst[y];
+				changed = true;
+			}
+			if( dst[z] > g_flMinsMax[zone][1][z] && dst[z] <= max[z] && dir[z] > 0.0 ) {
+				g_flMinsMax[zone][1][z] = dst[z];
+				changed = true;
+			}	
+		}
+	}
+	delete tr;
+	
+	if( changed ) {
+		g_flMinsMax[zone][2][0] = (g_flMinsMax[zone][0][0] + g_flMinsMax[zone][1][0]) / 2.0;
+		g_flMinsMax[zone][2][1] = (g_flMinsMax[zone][0][1] + g_flMinsMax[zone][1][1]) / 2.0;
+		g_flMinsMax[zone][2][2] = (g_flMinsMax[zone][0][2] + g_flMinsMax[zone][1][2]) / 2.0;
+	}
+	
+	return changed;
+}
+void saveAppart(int zone, int appartID, bool sql = false) {
+	if( g_bAppartCanBeSaved[appartID] == false )
+		return;
+	if( g_iRayCount[zone][0] < 128 )
+		return;
+
+	float src[3], ang[3], dir[3];
+	int appartType = getAppartType(appartID);
+	int client = rp_GetAppartementInt(appartID, appart_proprio);
+	
+	if( g_bDataLoaded[client] == false )
+		return;
+	
+	g_sCount[client][appartType] = 0;
+				
+	getAppartRotation(appartID, ang);
+	NegateVector(ang);
+	
+	static char save[PLATFORM_MAX_PATH * 2 * 32 + 1024], query[PLATFORM_MAX_PATH * 2 * 32 + 1024];
+	char tmp[128];
+	
+	save[0] = 0;
+	query[0] = 0;
+	
+	for (int i = MaxClients; i <= 2048; i++) {
+		if( !IsValidEdict(i) || !IsValidEntity(i) )
+			continue;
+		if( rp_GetBuildingData(i, BD_owner) != client )
+			continue;
+		if( rp_GetBuildingData(i, BD_item_id) != ITEM_PROP_APPART )
+			continue;
+		GetEdictClassname(i, tmp, sizeof(tmp));
+		if( !StrEqual(tmp, "rp_props") )
+			continue;
+		if( rp_GetPlayerZoneAppart(i) != appartID )
+			continue;
+		
+		int id = g_sCount[client][appartType];
+		Entity_GetAbsOrigin(i, src);
+		SubtractVectors(src, g_flMinsMax[zone][2], src);
+		Math_RotateVector(src, ang, g_vecOrigin[client][appartType][id]);
+
+		Entity_GetAbsAngles(i, dir);
+		AddVectors(dir, ang, g_vecAngle[client][appartType][id]);
+		
+		Entity_GetModel(i, g_szModel[client][appartType][id], sizeof(g_szModel[][]));
+		
+		g_iHealth[client][appartType][id] = Entity_GetHealth(i);
+		
+		g_sCount[client][appartType]++;
+		
+		if( sql ) {
+			Format(save, sizeof(save), "%s%.3f,%.3f,%.3f,%.3f,%.3f,%.3f,%s,%d;", save,
+				g_vecOrigin[client][appartType][id][0], g_vecOrigin[client][appartType][id][1], g_vecOrigin[client][appartType][id][2]+0.01,
+				g_vecAngle[client][appartType][id][0], g_vecAngle[client][appartType][id][1], g_vecAngle[client][appartType][id][2],
+				g_szModel[client][appartType][id], g_iHealth[client][appartType][id]
+			);
+		}
+		
+		if( g_sCount[client][appartType] >= 20 )
+			break;
+	}
+	
+	if( sql ) {
+		char steamid[64];
+		GetClientAuthId(client, AUTH_TYPE, steamid, sizeof(steamid));
+		
+		Format(query, sizeof(query), "INSERT INTO `rp_appart` (`steamid`, `appartid`, `props`) VALUES ('%s', '%d', '%s') ON DUPLICATE KEY UPDATE `props`='%s';",
+			steamid, appartType, save, save);
+		
+		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query, 0, DBPrio_Low);
+	}
+}
+void loadAppart(int appartID) {
+	if( g_iEntitycount > 1800 )
+		return;
+	
+	int client = rp_GetAppartementInt(appartID, appart_proprio);
+	if( g_bDataLoaded[client] == false )
+		return;
+
+	int zone = getAppartZone(appartID);
+	if( g_iRayCount[zone][0] < 128 )
+		return;
+	
+	float ang[3], src[3], dir[3];
+	int appartType = getAppartType(appartID);
+	
+	g_bAppartCanBeSaved[appartID] = true; // do not remove.
+	cleanAppart(appartID);
+	g_bAppartCanBeSaved[appartID] = true; // do not remove, volontary twice.
+	
+	getAppartRotation(appartID, ang);
+	
+	for (int i = 0; i < g_sCount[client][appartType]; i++) {
+		
+		Math_RotateVector(g_vecOrigin[client][appartType][i], ang, src);
+		AddVectors(src, g_flMinsMax[zone][2], src);
+		
+		AddVectors(g_vecAngle[client][appartType][i], ang, dir);					
+		int ent = SpawnProp(client, src, dir, g_szModel[client][appartType][i]);
+		
+		Entity_SetHealth(ent, g_iHealth[client][appartType][i]);
+	}
+}
+void cleanAppart(int appartID) {
+	char tmp[128];
+	
+	for (int i = MaxClients; i <= 2048; i++) {
+		if( !IsValidEdict(i) || !IsValidEntity(i) )
+			continue;
+		if( rp_GetBuildingData(i, BD_item_id) != ITEM_PROP_APPART )
+			continue;
+		GetEdictClassname(i, tmp, sizeof(tmp));
+		if( !StrEqual(tmp, "rp_props") )
+			continue;
+		
+		if( rp_GetPlayerZoneAppart(i) != appartID )
+			continue;
+				
+		AcceptEntityInput(i, "Kill");
+	}
+	
+	
+	g_bAppartCanBeSaved[appartID] = false; // do not move upper "kill".
+	
+}
+int getAppartType(int appartID) {
+	if( appartID < 50 ) {
+		int a = (appartID / 10) * 10;
+		int c = appartID % 2;
+		
+		int base = a + c;
+		
+		if( base == 41 )
+			base = 10;
+		if( base == 30 )
+			base = 11;
+		
+		return base;
+	}
+	return 0;
+}
+void getAppartRotation(int appartID, float ang[3]) {
+	ang[0] = ang[1] = ang[2] = 0.0;
+
+	if( appartID < 50 ) {
+		int a = (appartID / 10) * 10;
+		int c = appartID % 2;
+		int base = a + c;
+		
+		if( base == 30 )
+			ang[1] = 90.0;
+	}
+}
+int getAppartZone(int appartID) {
+	static char tmp[128];
+	for (int i = 0; i < MAX_ZONES; i++) {
+		rp_GetZoneData(i, zone_type_type, tmp, sizeof(tmp));
+		
+		if( StrContains(tmp, "appart_") == 0) {
+			ReplaceString(tmp, sizeof(tmp), "appart_", "");
+			if( appartID == StringToInt(tmp) )
+				return i;
+		}
+	}
+	return 0;
+}
+public bool FilterToNone(int entity, int mask, any data) {
+	return false;
+}
+
+public Action OnPlayerRunCmd(int client) {
+	int zone = rp_GetPlayerZone(client);
+	
+	if( g_iRayCount[zone][0] < 128 ) {
+		int appartID = rp_GetPlayerZoneAppart(client);
+		if( appartID > 0 && appartID < 50 ) {
+			calibrate(zone);
+		}
+	}
+}
+public void OnEntityCreated(int entity, const char[] classname)  {
+	if( g_iEntitycount > 1900 ) {
+		int stack[64], count;
+		
+		for (int i = 1; i <= 50; i++) {
+			if( g_bAppartCanBeSaved[i] == true && rp_GetAppartementInt(i, appart_proprio) > 0 )
+				stack[count++] = i;
+		}
+		
+		if( count > 0 ) {
+			int rnd = GetRandomInt(0, count - 1);
+			cleanAppart(stack[rnd]);
+		}
+	}
+	
+	if( entity > 0 && entity <= 2048 )
+		g_iEntitycount++;
+}
+public void OnEntityDestroyed(int entity) {
+	if( entity > 0 && entity <= 2048 )
+		g_iEntitycount--;
+	
+	if( g_iEntitycount < 1800 ) {
+		int stack[64], count;
+		
+		for (int i = 1; i <= 50; i++) {
+			if( g_bAppartCanBeSaved[i] == false && rp_GetAppartementInt(i, appart_proprio) > 0 )
+				stack[count++] = i;
+		}
+		
+		if( count > 0 ) {
+			int rnd = GetRandomInt(0, count - 1);
+			loadAppart(stack[rnd]);
+		}
+	}
+}
+// ----------------------------------------------------------------------------
 public Action taskVillaProp(Handle timer, any none) {
 	for(int i=0; i<view_as<int>(appart_bonus_paye); i++) {
 		rp_SetAppartementInt(50, view_as<type_appart_bonus>(i), 1);
@@ -127,6 +484,54 @@ public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 	rp_HookEvent(client, RP_OnPlayerDataLoaded, fwdLoaded);
 	rp_HookEvent(client, RP_OnPlayerBuild,	fwdOnPlayerBuild);
+	
+	g_bDataLoaded[client] = false;
+	for (int i = 0; i < 64; i++) {
+		g_sCount[client][i] = 0;
+	}
+	
+	char query[1024], steamid[64];
+	GetClientAuthId(client, AUTH_TYPE, steamid, sizeof(steamid));
+	Format(query, sizeof(query), "SELECT `appartid`, `props` FROM `rp_appart` WHERE `steamid`='%s';", steamid);
+	SQL_TQuery(rp_GetDatabase(), SQL_QueryProps, query, client, DBPrio_Low);
+	
+	
+}
+public void SQL_QueryProps(Handle owner, Handle hQuery, const char[] error, any client) {
+	static char save[PLATFORM_MAX_PATH * 1 * 64 + 1024], data[64][PLATFORM_MAX_PATH + 256], row[8][PLATFORM_MAX_PATH];
+	
+	while( SQL_FetchRow(hQuery) ) {
+		int appartType = SQL_FetchInt(hQuery, 0);
+		
+		SQL_FetchString(hQuery, 1, save, sizeof(save));
+		int cpt = ExplodeString(save, ";", data, sizeof(data), sizeof(data[]));
+		
+		g_sCount[client][appartType] = 0;
+		for (int i = 0; i < cpt; i++) {
+			cpt = ExplodeString(data[i], ",", row, sizeof(row), sizeof(row[]));
+			if( cpt < 5 || strlen(data[i]) < 5 ) // means there is no data
+				break;
+			
+			int id = g_sCount[client][appartType];
+			
+			g_vecOrigin[client][appartType][id][0] = StringToFloat(row[0]);
+			g_vecOrigin[client][appartType][id][1] = StringToFloat(row[1]);
+			g_vecOrigin[client][appartType][id][2] = StringToFloat(row[2]);
+			
+			g_vecAngle[client][appartType][id][0] = StringToFloat(row[3]);
+			g_vecAngle[client][appartType][id][1] = StringToFloat(row[4]);
+			g_vecAngle[client][appartType][id][2] = StringToFloat(row[5]);
+			
+			Format(g_szModel[client][appartType][id], sizeof(g_szModel[][]), "%s", row[6]);
+			
+			g_iHealth[client][appartType][id] = StringToInt(row[7]);
+			
+			g_sCount[client][appartType]++;
+		}
+	}
+	
+	
+	g_bDataLoaded[client] = true;
 }
 public void OnClientDisconnect(int client) {
 	for (int i = 1; i <= 2048; i++) {
@@ -136,17 +541,39 @@ public void OnClientDisconnect(int client) {
 			SDKUnhook(i, SDKHook_Touch,	PropsTouched);
 		}
 	}
+	
+	for(int a=1; a<200; a++) {
+		if( rp_GetAppartementInt(a, appart_proprio) != client )
+			continue;
+		
+		cleanAppart(a);
+		int stack[64], count;
+		for(int i=1; i<=64; i++) {
+			if( !IsValidClient(i) || i == client )
+				continue;
+			
+			if( rp_GetClientKeyAppartement(i, a) ) {
+				stack[count++] = i;
+			}
+		}
+		
+		if( count > 0 ) {
+			rp_SetAppartementInt(a, appart_proprio, stack[GetRandomInt(0, count - 1)]);
+			loadAppart(a);
+		}
+		else {
+			rp_SetAppartementInt(a, appart_proprio, 0);
+		}
+	}
 }
 public Action fwdLoaded(int client) {
 	
-	rp_SetClientKeyAppartement(client, 50, rp_GetClientBool(client, b_HasVilla) );
-	if( rp_GetClientBool(client, b_HasVilla) )
+	if( rp_GetClientBool(client, b_HasVilla) ) {
+		rp_SetClientKeyAppartement(client, 50, true);
 		rp_SetClientInt(client, i_AppartCount, rp_GetClientInt(client, i_AppartCount) + 1);
+	}
 	
-	char tmp[32], tmp2[32];
-	GetClientAuthId(client, AUTH_TYPE, tmp, sizeof(tmp));
-	rp_GetServerString(mairieID, tmp2, sizeof(tmp2));
-	if( StrEqual(tmp, tmp2) ) {
+	if( rp_GetClientGroupID(client) > 0 && rp_GetCaptureInt(cap_bunker) == rp_GetClientGroupID(client) ) {
 		rp_SetClientKeyAppartement(client, 51, true );
 		rp_SetClientInt(client, i_AppartCount, rp_GetClientInt(client, i_AppartCount) + 1);
 	}
@@ -169,7 +596,6 @@ public Action fwdOnPlayerBuild(int client, float& cooldown) {
 	}
 	return Plugin_Stop;
 }
-
 // ----------------------------------------------------------------------------
 public Action fwdCommand(int client, char[] command, char[] arg) {
 	if( StrEqual(command, "infocoloc") ||  StrEqual(command, "infocolloc") ) {
@@ -216,6 +642,11 @@ public Action Cmd_ItemGiveAppart(int args) {
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Garage_Buy", client, appart-100);
 		else
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Appart_Buy", client,appart);
+		
+		
+		if( appart > 0 && appart < 50 ) {
+			loadAppart(appart);
+		}
 	}
 	
 	return Plugin_Continue;
@@ -457,7 +888,7 @@ public Action Cmd_ItemPropAppart(int args){
 	int client = GetCmdArgInt(1);
 	int item_id = GetCmdArgInt(args);
 	rp_ClientGiveItem(client,item_id);
-	g_PropsAppartItemId = item_id;
+
 	int zone = rp_GetPlayerZone(client);
 	int appart = rp_GetPlayerZoneAppart(client);
 	if(appart == -1){
@@ -481,11 +912,46 @@ public Action task_ItemPropAppart(Handle timer, any client) {
 	DisplayMenu(menu, client, 60);
 	return Plugin_Handled;
 }
+int SpawnProp(int client, float pos[3], float ang[3], const char[] model) {
+	int ent = CreateEntityByName("prop_physics_override"); 
+	if( !IsModelPrecached(model) ) {
+		PrecacheModel(model);
+	}
+	DispatchKeyValue(ent, "classname", "rp_props");
+	DispatchKeyValue(ent, "physdamagescale", "0.0");
+	DispatchKeyValue(ent, "model", model);
+	DispatchSpawn(ent);
+	SetEntityModel(ent, model);
+	
+	TeleportEntity(ent, pos, ang, NULL_VECTOR);
+	
+	rp_SetBuildingData(ent, BD_owner, client);
+	rp_SetBuildingData(ent, BD_item_id, ITEM_PROP_APPART);
+	SDKHook(ent, SDKHook_OnTakeDamage, OnPropDamage);
+	
+	SetEntityMoveType(ent, MOVETYPE_VPHYSICS); 
+	
+	float min[3], max[3];
+	GetEntPropVector( ent, Prop_Send, "m_vecMins", min );
+	GetEntPropVector( ent, Prop_Send, "m_vecMaxs", max );
+	
+	float volume = (max[0]-min[0]) * (max[1]-min[1]) * (max[2]-min[2]);
+	int heal = RoundToCeil(volume/50.0)+10;
+	
+	SetEntProp( ent, Prop_Data, "m_takedamage", 2);
+	SetEntProp( ent, Prop_Data, "m_iHealth", heal);	
+	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
+	
+	rp_AcceptEntityInput(ent, "DisableMotion");
+	rp_ScheduleEntityInput(ent, 0.6, "EnableMotion");
+	
+	return ent;
+}
 public int MenuPropAppart(Handle menu, MenuAction action, int client, int param2) {
 	if( action == MenuAction_Select ) {
 		char model[128];
 		GetMenuItem(menu, param2, model, 127);
-		int item_id = g_PropsAppartItemId;
+
 		int zone = rp_GetPlayerZone(client);
 		int appart = rp_GetPlayerZoneAppart(client);
 		if(appart == -1){
@@ -494,18 +960,17 @@ public int MenuPropAppart(Handle menu, MenuAction action, int client, int param2
 				return;
 			}
 		}
-		int ent = CreateEntityByName("prop_physics_override"); 
-		if( !IsModelPrecached(model) ) {
-			PrecacheModel(model);
+		if( g_bAppartCanBeSaved[appart] == false ) {
+			char item_name[128];
+			rp_GetItemData(ITEM_PROP_APPART, item_type_name, item_name, sizeof(item_name));
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
+			return;
 		}
-		DispatchKeyValue(ent, "classname", "rp_props");
-		DispatchKeyValue(ent, "physdamagescale", "0.0");
-		DispatchKeyValue(ent, "model", model);
-		DispatchSpawn(ent);
-		SetEntityModel(ent, model);
 		
 		float min[3], max[3], position[3], ang_eye[3], ang_ent[3], normal[3];
 		float distance = 50.0;
+		
+		int ent = SpawnProp(client, position, ang_eye, model);
 		
 		GetEntPropVector( ent, Prop_Send, "m_vecMins", min );
 		GetEntPropVector( ent, Prop_Send, "m_vecMaxs", max );
@@ -519,9 +984,7 @@ public int MenuPropAppart(Handle menu, MenuAction action, int client, int param2
 		
 		NegateVector( normal );
 		GetVectorAngles( normal, ang_ent );
-		
-		float volume = (max[0]-min[0]) * (max[1]-min[1]) * (max[2]-min[2]);
-		int heal = RoundToCeil(volume/50.0)+10;
+
 		position[2] += max[2];
 		Handle trace = TR_TraceHullEx(position, position, min, max, MASK_SOLID);
 		if( TR_DidHit(trace) ) {
@@ -533,23 +996,11 @@ public int MenuPropAppart(Handle menu, MenuAction action, int client, int param2
 		}
 		delete trace;
 		
-		SetEntProp( ent, Prop_Data, "m_takedamage", 2);
-		SetEntProp( ent, Prop_Data, "m_iHealth", heal);	
-		Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
-		
-		SetEntityMoveType(ent, MOVETYPE_VPHYSICS); 
 		TeleportEntity(ent, position, ang_ent, NULL_VECTOR);
-		rp_AcceptEntityInput(ent, "DisableMotion");
-		rp_ScheduleEntityInput(ent, 0.6, "EnableMotion");
 		
 		ServerCommand("sm_effect_fading %i 0.5", ent);
-		
-		rp_SetBuildingData(ent, BD_owner, client);
-		rp_SetBuildingData(ent, BD_item_id, item_id);
 		rp_Effect_BeamBox(client, ent, NULL_VECTOR, 0, 64, 255);
-		
-		SDKHook(ent, SDKHook_OnTakeDamage, OnPropDamage);
-		rp_ClientGiveItem(client,item_id,-1);
+		rp_ClientGiveItem(client,ITEM_PROP_APPART,-1);
 	}
 	else if( action == MenuAction_End ) {
 		CloseHandle(menu);
@@ -559,7 +1010,7 @@ public Action Cmd_ItemPropOutdoor(int args){
 	int client = GetCmdArgInt(1);
 	int item_id = GetCmdArgInt(args);
 	rp_ClientGiveItem(client,item_id);
-	g_PropsOutdoorItemId = item_id;
+
 	int zone = rp_GetPlayerZone(client);
 	int zoneBIT = rp_GetZoneBit(zone);
 
@@ -587,7 +1038,7 @@ public int MenuPropOutdoor(Handle menu, MenuAction action, int client, int param
 	if( action == MenuAction_Select ) {
 		char model[128];
 		GetMenuItem(menu, param2, model, 127);
-		int item_id = g_PropsOutdoorItemId;
+
 		int zone = rp_GetPlayerZone(client);
 		int zoneBIT = rp_GetZoneBit(zone);
 
@@ -646,11 +1097,11 @@ public int MenuPropOutdoor(Handle menu, MenuAction action, int client, int param
 		ServerCommand("sm_effect_fading %i 0.5", ent);
 		
 		rp_SetBuildingData(ent, BD_owner, client);
-		rp_SetBuildingData(ent, BD_item_id, item_id);
+		rp_SetBuildingData(ent, BD_item_id, ITEM_PROP_EXTRER);
 		rp_Effect_BeamBox(client, ent, NULL_VECTOR, 0, 64, 255);
 		
 		SDKHook(ent, SDKHook_OnTakeDamage, OnPropDamage);
-		rp_ClientGiveItem(client,item_id,-1);
+		rp_ClientGiveItem(client,ITEM_PROP_EXTRER,-1);
 	}
 	else if( action == MenuAction_End ) {
 		CloseHandle(menu);
