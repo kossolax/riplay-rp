@@ -321,6 +321,12 @@ public void EndAnimation(const char[] output, int caller, int activator, float d
 		stopEmote(client);
 }
 void stopEmote(int client) {
+
+	Call_StartForward(rp_GetForwardHandle(client, RP_OnPlayerEmote));
+	Call_PushCell(client);
+	Call_PushString(g_szCurrentEmote[client]);
+	Call_PushCell( GetGameTime() - g_flEmoteStart[client] );
+	Call_Finish();
 	
 	int caller = EntRefToEntIndex(g_iEmoteEnt[client]);
 	int EntEffects = GetEntProp(client, Prop_Send, "m_fEffects") & (~EF_NODRAW) & (~EF_BONEMERGE) & (~EF_NOSHADOW) & (~EF_NOINTERP) & (~EF_BONEMERGE_FASTCULL) & (~EF_PARENT_ANIMATES);
@@ -331,15 +337,9 @@ void stopEmote(int client) {
 	if( rp_GetClientInt(client, i_ThirdPerson) == 0 ) {
 		ClientCommand(client, "firstperson");
 	}
-	
 	AcceptEntityInput(caller, "Kill");
 	
-	g_iEmoteEnt[client] = 0;
-	g_iEmoteClient[caller] = 0;
 	
-	Call_StartForward(rp_GetForwardHandle(client, RP_OnPlayerEmote));
-	Call_PushCell(client);
-	Call_PushString(g_szCurrentEmote[client]);
-	Call_PushCell( GetGameTime() - g_flEmoteStart[client] );
-	Call_Finish();
+	g_iEmoteEnt[client] = 0;
+	g_iEmoteClient[caller] = 0;	
 }

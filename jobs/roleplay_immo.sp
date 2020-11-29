@@ -30,17 +30,23 @@ int g_cBeam, g_cGlow;
 #define ITEM_PROP_APPART 77
 #define ITEM_PROP_EXTRER 184
 
-
+// -----
 float g_flMinsMax[MAX_ZONES][3][3];
 int g_iRayCount[MAX_ZONES][2];
 int g_sCount[MAXPLAYERS][64], g_iHealth[MAXPLAYERS][64][64];
 float g_vecOrigin[MAXPLAYERS][64][64][3], g_vecAngle[MAXPLAYERS][64][64][3];
 char g_szModel[MAXPLAYERS][64][64][PLATFORM_MAX_PATH];
 bool g_bDataLoaded[MAXPLAYERS];
-
 bool g_bAppartCanBeSaved[64];
-int g_iEntitycount = 0;
+// -----
 
+int g_iDirtyCount[200];
+int g_iDirtType[200][16];
+float g_flDirtPos[200][16][3];
+int g_cDirt[5];
+// -----
+
+int g_iEntitycount = 0;
 char g_PropsAppart[][128] = {
 	"models/props_office/desk_01.mdl",
 	"models/props_interiors/tv.mdl",
@@ -132,9 +138,18 @@ public Action saveProps(Handle timer, any none) {
 				}
 				else {
 					if( rp_GetAppartementInt(appartID, appart_proprio) > 0 ) {
-						saveAppart(i, appartID, GetRandomInt(0, 100) != 50 );
+						saveAppart(i, appartID, GetRandomInt(0, 100) == 50 );
 					}
 				}
+			}
+		}
+	}
+	
+	for (int i = 0; i < sizeof(g_iDirtyCount); i++) {
+		if( GetRandomFloat() > 0.75 ) {
+			for (int j = 0; j < g_iDirtyCount[i]; j++) {
+				TE_SetupWorldDecal(g_flDirtPos[i][j], g_cDirt[ g_iDirtType[i][j] ]);
+				TE_SendToAll();
 			}
 		}
 	}
@@ -460,6 +475,13 @@ public void OnMapStart() {
 	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt", true);
 	g_cGlow = PrecacheModel("materials/sprites/glow01.vmt", true);
 	PrecacheModel(MODEL_GRAVE, true);
+	
+	char tmp[128];
+	
+	for (int i = 0; i < sizeof(g_cDirt); i++) {
+		Format(tmp, sizeof(tmp), "decals/trashdecal0%da.vmt", i);
+		g_cDirt[i] = PrecacheDecal(tmp);
+	}
 }
 public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbose) {
 	int appart = rp_GetPlayerZoneAppart(client);
@@ -470,9 +492,23 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 		if( multi <= 1.5 && rp_GetClientJobID(client) == 61 && !rp_GetClientBool(client, b_GameModePassive) )
 			multi = 1.5;
 		
+		if( HasImmo() ) {
+			multi -= 1.5 * (float(g_iDirtyCount[appart]) / 10.0);
+			if( multi < 0.0 )
+				multi = 0.0;
+		}
+		
 		int sum = RoundToCeil(float(salary) * multi);
 		
-		if( verbose )
+		if( verbose && HasImmo() ) {
+			if( g_iDirtyCount[appart] < 10 ) {
+				Entity_GetGroundOrigin(client, g_flDirtPos[appart][g_iDirtyCount[appart]]);
+				g_iDirtType[appart][g_iDirtyCount[appart]] = GetRandomInt(1, sizeof(g_cDirt) - 1);
+				g_iDirtyCount[appart]++;
+			}
+		}
+		
+		if( verbose && multi > 0 )
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Pay_Bonus_Appart", client, sum);
 		
 		topay += sum;
@@ -484,6 +520,7 @@ public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 	rp_HookEvent(client, RP_OnPlayerDataLoaded, fwdLoaded);
 	rp_HookEvent(client, RP_OnPlayerBuild,	fwdOnPlayerBuild);
+	rp_HookEvent(client, RP_OnPlayerUse, fwdOnPlayerUse);
 	
 	g_bDataLoaded[client] = false;
 	for (int i = 0; i < 64; i++) {
@@ -563,6 +600,7 @@ public void OnClientDisconnect(int client) {
 		}
 		else {
 			rp_SetAppartementInt(a, appart_proprio, 0);
+			g_iDirtyCount[a] = 0;
 		}
 	}
 }
@@ -576,6 +614,66 @@ public Action fwdLoaded(int client) {
 	if( rp_GetClientGroupID(client) > 0 && rp_GetCaptureInt(cap_bunker) == rp_GetClientGroupID(client) ) {
 		rp_SetClientKeyAppartement(client, 51, true );
 		rp_SetClientInt(client, i_AppartCount, rp_GetClientInt(client, i_AppartCount) + 1);
+	}
+}
+public Action fwdOnPlayerUse(int client) {
+	if( rp_GetClientJobID(client) != 61 )
+		return Plugin_Continue;
+	
+	int appart = rp_GetPlayerZoneAppart(client);
+	
+	if( appart > 0 ) {
+		float src[3];
+		GetClientAbsOrigin(client, src);
+		
+		bool exist = false;
+		for (int j = 0; j < g_iDirtyCount[appart]; j++) {
+			if( GetVectorDistance(g_flDirtPos[appart][j], src) <= 128.0 )
+				exist = true;
+		}
+		
+		if( exist && rp_ClientEmote(client, "Emote_Snap") ) {
+			rp_HookEvent(client, RP_OnPlayerEmote, OnEmote);
+			return Plugin_Handled;
+		}
+	}
+	return Plugin_Continue;
+}
+public Action OnEmote(int client, const char[] emote, float time) {
+	if( StrEqual(emote, "Emote_Snap") && time >= 0.0 ) {
+		
+		if( time >= 1.95 ) {
+			int parent = Entity_GetParent(client);
+			int appart = rp_GetPlayerZoneAppart(parent);
+			
+			if( appart > 0 ) {
+				float src[3];
+				Entity_GetAbsOrigin(parent, src);
+				
+				for (int j = 0; j < g_iDirtyCount[appart]; j++) {
+					if( GetVectorDistance(g_flDirtPos[appart][j], src) <= 128.0 ) {
+						
+						for (float f = 0.0; f < 0.3; f+= 0.1) {
+							TE_SetupWorldDecal(g_flDirtPos[appart][j], g_cDirt[ 0 ]);
+							TE_SendToAll(f);
+						}
+						
+						for (int k = j+1; k < g_iDirtyCount[appart]; k++) {
+							g_flDirtPos[appart][j] = g_flDirtPos[appart][j + 1];
+						}
+						
+						g_iDirtyCount[appart]--;
+						j--;
+					}
+				}
+				
+				if( g_iDirtyCount[appart] == 0 ) {
+					// maybe r_cleardecals?
+				}
+			}
+		}
+		
+		rp_UnhookEvent(client, RP_OnPlayerEmote, OnEmote);
 	}
 }
 public Action fwdOnPlayerBuild(int client, float& cooldown) {
@@ -617,9 +715,9 @@ public Action Cmd_ItemGiveAppart(int args) {
 		rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
 		
 		if( appart > 100 )
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Appart_AlreadySell", client);
-		else
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Garage_AlreadySell", client);
+		else
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Appart_AlreadySell", client);
 		
 		return Plugin_Continue;
 	}
@@ -637,6 +735,7 @@ public Action Cmd_ItemGiveAppart(int args) {
 		rp_SetClientInt(client, i_AppartCount, rp_GetClientInt(client, i_AppartCount) + 1);
 		rp_SetClientKeyAppartement(client, appart, true);
 		rp_SetAppartementInt(appart, appart_proprio, client);
+		g_iDirtyCount[appart] = 0;
 		
 		if( appart > 100 )
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Garage_Buy", client, appart-100);
@@ -1681,4 +1780,63 @@ void dispatchToJob(int gain) {
 		if( rp_GetJobInt(i, job_type_isboss) == 1 && rp_GetJobCapital(i) <= fraction )
 			rp_SetJobCapital(i, rp_GetJobCapital(i) + (gain / jobCount));
 	}
+}
+// ----------------------------------------------------------------------------
+stock void TE_SetupWorldDecal(float origin[3], int index) {
+	TE_Start("World Decal");
+	TE_WriteVector("m_vecOrigin", origin);
+	TE_WriteNum("m_nIndex", index);
+}
+stock int Entity_GetGroundOrigin(int entity, float pos[3]) {
+	static float source[3], target[3];
+	Entity_GetAbsOrigin(entity, source);
+	target[0] = source[0];
+	target[1] = source[1];
+	target[2] = source[2] - 999999.9;
+	
+	Handle tr;
+	tr = TR_TraceRayFilterEx(source, target, MASK_SOLID_BRUSHONLY, RayType_EndPoint, PVE_Filter, entity);
+	if (tr)
+		TR_GetEndPosition(pos, tr);
+	delete tr;
+}
+public bool PVE_Filter(int entity, int contentsMask, any data) {
+	if( entity == 0 )
+		return true;
+	if( entity == data || entity < MaxClients )
+		return false;
+	return true;
+}
+
+bool HasImmo() {	
+	
+	static float g_flLastCheck = 0.0;
+	static bool g_bLastData = false;
+	
+	if( g_flLastCheck > GetGameTime() ) {
+		return g_bLastData;
+	}
+
+
+	g_flLastCheck = GetGameTime() + 5.0;
+	g_bLastData = false;
+	
+	for(int i=1;i<=MaxClients;i++) {
+		if( !IsValidClient(i) )
+			continue;
+		if( rp_GetClientBool(i, b_IsAFK) ) 
+			continue;
+		if( rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_EVENT ) 
+			continue;
+		if( rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_JAIL ) 
+			continue;
+		
+		if( rp_GetClientJobID(i) == 61 ) {
+			g_bLastData = true;
+			break;
+		}
+	}
+	
+	
+	return g_bLastData;
 }

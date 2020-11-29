@@ -47,6 +47,7 @@ stock bool HasDoctor(int client) {
 				continue;
 			
 			g_bLastData[client] = true;
+			break;
 		}
 	}
 	
