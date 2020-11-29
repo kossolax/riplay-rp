@@ -325,6 +325,12 @@
 		"fr"	"Vous avez récupéré: {1}x {green}{2}{default}."
 		"en"	"You have retrieved: {1}x {green}{2}{default}."
 	}
+	"Item_Disposite"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"	"Vous avez déposé: {1}x {red}{2}{default}."
+		"en"	"You have deposit: {1}x {red}{2}{default}."
+	}
 	"Item_Found"
 	{
 		"#format"	"{1:d},{2:s}"

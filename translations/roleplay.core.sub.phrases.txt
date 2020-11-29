@@ -57,12 +57,12 @@
 	"BankATM_transfer_disposite"
 	{
 		"#format"	"{1:s}"
-		"fr"	"Combien souhaitez-vous déposer? ({1}$"
+		"fr"	"Combien souhaitez-vous déposer? ({1}$)"
 	}
 	"BankATM_transfer_withdraw"
 	{
 		"#format"	"{1:s}"
-		"fr"	"Combien souhaitez-vous retirer? ({1}$"
+		"fr"	"Combien souhaitez-vous retirer? ({1}$)"
 	}
 	"BankATM_transfer_all"
 	{
@@ -79,6 +79,7 @@
 	}
 	"DrawBankTransfer_account_all"
 	{
+		"#format"	"{1:s},{2:d}"
 		"fr"	"Tous {1} ({2})"
 	}
 	"DrawBankTransfer_to_bank"

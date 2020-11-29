@@ -42,11 +42,11 @@ void BankATM_transfer(int client, int type) {
 			SetMenuTitle(menu, szMoney);
 		}
 		
-		AddMenuItem(menu, "1",		"      1$"); 	// 1
-		AddMenuItem(menu, "10",		"     10$"); 	// 2
-		AddMenuItem(menu, "100",	"    100$"); 	// 3
-		AddMenuItem(menu, "1000",	"  1 000$");	// 4
-		AddMenuItem(menu, "10000",	" 10 000$"); 	// 5
+		AddMenuItem(menu, "1",		"           1$"); 	// 1
+		AddMenuItem(menu, "10",		"         10$"); 	// 2
+		AddMenuItem(menu, "100",	"       100$"); 	// 3
+		AddMenuItem(menu, "1000",	"    1 000$");	// 4
+		AddMenuItem(menu, "10000",	"  10 000$"); 	// 5
 		AddMenuItem(menu, "100000",	"100 000$"); 	// 6
 		if( type < 3  ) {
 			Format(tmp, sizeof(tmp), "%T", "BankATM_transfer_all", client); AddMenuItem(menu, "0", "Tout mon argent"); // 9 
@@ -72,7 +72,7 @@ void DrawBankTransfer(int client) {
 	SetMenuTitle(menu, "%T\n ", "DrawBankTransfer", client);
 	
 	Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_to_bank", client, canDisposit ? "Empty_String" : "DrawBankTransfer_full");
-	AddMenuItem(menu, "to_bank", tmp, (g_iUserData[client][i_ItemCount] && canDisposit) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+	AddMenuItem(menu, "to_bank", tmp, (g_iUserData[client][i_ItemCount] > 0 && canDisposit) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 	
 	Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_to_inve", client);
 	AddMenuItem(menu, "to_inve", tmp, g_iUserData[client][i_ItemBankCount] > 0 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
@@ -553,7 +553,8 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 			if( StrEqual(szMenuItem, "to_bank", false) ) {
 				type = 1;
 				
-				if( g_iUserData[client][i_ItemCount] == 0 ) {
+				amount = g_iUserData[client][i_ItemCount];
+				if( amount == 0 ) {
 					DrawBankTransfer(client);
 					return;
 				}
@@ -565,7 +566,8 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 			else if( StrEqual(szMenuItem, "to_inve", false) ) {
 				type = 2;
 				
-				if( g_iUserData[client][i_ItemBankCount] == 0 ) {
+				amount = g_iUserData[client][i_ItemBankCount];
+				if( amount == 0 ) {
 					DrawBankTransfer(client);
 					return;
 				}
@@ -704,16 +706,16 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 					SetMenuTitle(menu2, "%T\n ", "DrawBankTransfer_trier", client);
 					
 					Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_trier_AZ_ASC", client);	AddMenuItem(menu2, "trier 1", tmp);
-					Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_trier_AZ_DESC", client); 	AddMenuItem(menu2, "trier 2", tmp);
+					Format(tmp, sizeof(tmp), "%T\n ", "DrawBankTransfer_trier_AZ_DESC", client); 	AddMenuItem(menu2, "trier 2", tmp);
 					
 					Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_trier_PX_ASC", client); 	AddMenuItem(menu2, "trier 3", tmp);
-					Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_trier_PX_DESC", client); 	AddMenuItem(menu2, "trier 4", tmp);
+					Format(tmp, sizeof(tmp), "%T\n ", "DrawBankTransfer_trier_PX_DESC", client); 	AddMenuItem(menu2, "trier 4", tmp);
 					
 					Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_trier_TY_ASC", client); 	AddMenuItem(menu2, "trier 5", tmp);
-					Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_trier_TY_DESC", client); 	AddMenuItem(menu2, "trier 6", tmp);
+					Format(tmp, sizeof(tmp), "%T\n ", "DrawBankTransfer_trier_TY_DESC", client); 	AddMenuItem(menu2, "trier 6", tmp);
 					
 					Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_trier_JB_ASC", client); 	AddMenuItem(menu2, "trier 7", tmp);
-					Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_trier_JB_DESC", client); 	AddMenuItem(menu2, "trier 8", tmp);
+					Format(tmp, sizeof(tmp), "%T\n ", "DrawBankTransfer_trier_JB_DESC", client); 	AddMenuItem(menu2, "trier 8", tmp);
 					
 					SetMenuPagination(menu2, false); 
 					SetMenuExitButton(menu2, true);
@@ -866,10 +868,14 @@ public int DrawBankTransfer_4(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 			g_iUserData[p_iParam1][i_LastForcedSave] = (GetTime()+5);
 		}
 		
-		if( transfer_type == 1 )
+		if( transfer_type == 1 ) {
+			CPrintToChat(p_iParam1, ""...MOD_TAG..." %T", "Item_Disposite", p_iParam1, amount, g_szItemList[id][item_type_name]);
 			LogToGame("[TSX-RP] [BANK-ITEM] %L a déposé: %d %s", p_iParam1, amount, g_szItemList[id][item_type_name]);
-		else
+		}
+		else {
+			CPrintToChat(p_iParam1, ""...MOD_TAG..." %T", "Item_Take", p_iParam1, amount, g_szItemList[id][item_type_name]);
 			LogToGame("[TSX-RP] [BANK-ITEM] %L a retiré: %d %s", p_iParam1, amount, g_szItemList[id][item_type_name]);
+		}
 	
 		StoreUserData(p_iParam1);
 		DrawBankTransfer(p_iParam1);

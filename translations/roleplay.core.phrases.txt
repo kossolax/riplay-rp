@@ -28,7 +28,7 @@
 	"AFK_End"
 	{
 		"#format"	"{1:d}"
-		"fr"	"Vous n'êtes plus considéré comme {green}AFK{default} ({1} minute(s))."
+		"fr"	"Vous n'êtes plus considéré comme {green}AFK{default} ({1} minutes)."
 	}
 	"AFK_Braquage"
 	{
