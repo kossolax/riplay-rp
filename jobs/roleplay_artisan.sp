@@ -256,7 +256,7 @@ public Action Cmd_ChooseSpec(int client, int confirm) {
 		String_WordWrap(tmp1, 50);
 		String_WordWrap(tmp2, 50);
 		
-		Format(tmp1, sizeof(tmp1), "%T\n%s\n \n%s\n ", "Artisan_Menu", client, "Empty_String", tmp1, tmp2);
+		Format(tmp1, sizeof(tmp1), "%T\n \n%s\n \n%s\n ", "Artisan_Menu", client, "Empty_String", tmp1, tmp2);
 		
 		Handle menu = CreateMenu(eventChooseSpec);
 		SetMenuTitle(menu, tmp1);
