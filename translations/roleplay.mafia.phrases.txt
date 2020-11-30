@@ -10,6 +10,16 @@
 	{
 		"fr"		"Marché noir de la Mafia:"
 	}
+	"Mafia_BlackMarket_Item"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Objets ({1})"
+	}
+	"Mafia_BlackMarket_Weapon"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Armes ({1})"
+	}
 	// ----------------------------------------------------------------------------------------------
 	"Mafia_Deguise_Failed"
 	{

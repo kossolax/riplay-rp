@@ -150,7 +150,7 @@ public Action CmdBreakCadenas(int args) {
 	return Plugin_Handled;
 }
 public Action Cmd_GetStoreItem(int args) {
-	Cmd_BuyItemMenu(GetCmdArgInt(1), true);
+	Cmd_Buy(GetCmdArgInt(1), true);
 }
 public Action Cmd_ItemDoorProtect(int args) {
 	int client = GetCmdArgInt(1);
@@ -186,6 +186,8 @@ public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerSteal,	fwdOnPlayerSteal);
 	rp_HookEvent(client, RP_OnPlayerBuild,	fwdOnPlayerBuild);
 	rp_HookEvent(client, RP_OnAssurance,	fwdAssurance);
+	rp_HookEvent(client, RP_PostStealWeapon, fwdOnStealWeapon);
+	
 	rp_SetClientBool(client, b_MaySteal, true);
 	g_bCanUseCB[client] = true;
 }
@@ -196,6 +198,13 @@ public Action fwdAssurance(int client, int& amount) {
 	}
 	
 	return Plugin_Changed;
+}
+public Action fwdOnStealWeapon(int client, int target, int weaponID) {
+	if( client == target && rp_GetClientJobID(client) == 91 ) {
+		rp_WeaponMenu_Add(g_hBuyMenu_Weapons, weaponID, GetEntProp(weaponID, Prop_Send, "m_OriginalOwnerXuidHigh"));
+		
+		AcceptEntityInput(weaponID, "Kill");
+	}
 }
 public void OnClientDisconnect(int client) {
 	for(int i=0; i<2049; i++){
@@ -461,7 +470,7 @@ public Action fwdOnPlayerUse(int client) {
 	float vecOrigin[3];
 	GetClientAbsOrigin(client, vecOrigin);
 	if( GetVectorDistance(vecOrigin, MARCHEMAFIA_POS) < 150.0 ) {
-		Cmd_BuyItemMenu(client, false);
+		Cmd_Buy(client, false);
 	}
 }
 // ----------------------------------------------------------------------------
@@ -1428,7 +1437,50 @@ void addBuyMenu(int client, int target, int itemID) {
 	g_hBuyMenu_Items.Reset();
 	g_hBuyMenu_Items.WriteCell(pos);
 }
-void Cmd_BuyItemMenu(int client, bool free) {
+void Cmd_Buy(int client, bool free) {
+	
+	char tmp1[128], tmp2[128];
+	Menu menu = new Menu(Menu_BuyMarket);
+	menu.SetTitle("%T\n ", "Mafia_BlackMarket", client);
+	
+	int itemCount = view_as<int>(g_hBuyMenu_Items.ReadCell());
+	int weaponCount = view_as<int>(g_hBuyMenu_Items.ReadCell());
+	
+	Format(tmp1, sizeof(tmp1), "item %d", free);
+	Format(tmp2, sizeof(tmp2), "%T", "Mafia_BlackMarket_Item", client, itemCount);
+	menu.AddItem(tmp1, tmp2);
+
+	Format(tmp1, sizeof(tmp1), "weapon %d", free);
+	Format(tmp2, sizeof(tmp2), "%T", "Mafia_BlackMarket_Weapon", client, weaponCount);
+	menu.AddItem(tmp1, tmp2);
+	
+	menu.Display(client, 60);
+	return;
+}
+
+public int Menu_BuyMarket(Handle p_hMenu, MenuAction p_oAction, int client, int p_iParam2) {
+	if (p_oAction == MenuAction_Select) {
+		
+		char szMenu[64], buffer[2][32];
+		if (GetMenuItem(p_hMenu, p_iParam2, szMenu, sizeof(szMenu))) {
+			ExplodeString(szMenu, " ", buffer, sizeof(buffer), sizeof(buffer[]));
+			
+			if( StrEqual(buffer[0], "item") ) {
+				Cmd_BuyItem(client, StrEqual(buffer[1], "1"));
+			}
+			if( StrEqual(buffer[0], "weapon") ) {
+				Cmd_BuyWeapon(client, StrEqual(buffer[1], "1"));
+			}
+			
+		}
+	}
+	else if (p_oAction == MenuAction_End) {
+		CloseHandle(p_hMenu);
+	}
+	return 0;
+}
+
+void Cmd_BuyItem(int client, bool free) {
 	g_hBuyMenu_Items.Reset();
 	DataPackPos max = g_hBuyMenu_Items.ReadCell();
 	DataPackPos position = g_hBuyMenu_Items.Position;
@@ -1547,6 +1599,125 @@ public int Menu_BuyBlackMarket(Handle p_hMenu, MenuAction p_oAction, int client,
 	}
 	return 0;
 }
+
+
+void Cmd_BuyWeapon(int client, bool free) {
+	DataPackPos max = rp_WeaponMenu_GetMax(g_hBuyMenu_Weapons);
+	DataPackPos position = rp_WeaponMenu_GetPosition(g_hBuyMenu_Weapons);
+	char name[BM_WeaponNameSize], tmp[8], tmp2[129];
+	int[] data = new int[BM_Max];
+	
+	if (position >= max) {
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_NoItemToSellForNow", client);
+		return;
+	}
+	
+	Menu menu = new Menu(Menu_BuyWeapon);
+	Format(tmp2, sizeof(tmp2), "%T\n ", "Mafia_BlackMarket", client);
+	menu.SetTitle(tmp2);
+	
+	while (position < max) {
+		
+		rp_WeaponMenu_Get(g_hBuyMenu_Weapons, position, name, data);
+		Format(tmp, sizeof(tmp), "%d %d", position, free);
+		
+		if (data[BM_PvP] > 0)
+			Format(tmp2, sizeof(tmp2), "[PvP] ");
+		else
+			Format(tmp2, sizeof(tmp2), "");
+		
+		if (data[BM_Munition] == -1)
+			Format(tmp2, sizeof(tmp2), "%s %s (1) ", tmp2, name);
+		else
+			Format(tmp2, sizeof(tmp2), "%s %s (%d/%d) ", tmp2, name, data[BM_Munition], data[BM_Chargeur]);
+		
+		switch (view_as<enum_ball_type>(data[BM_Type])) {
+			case ball_type_fire: 			Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_fire", client, tmp2);
+			case ball_type_caoutchouc:		Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_caoutchouc", client, tmp2);
+			case ball_type_poison:			Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_poison", client, tmp2);
+			case ball_type_vampire:			Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_vampire", client, tmp2);
+			case ball_type_paintball:		Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_paintball", client, tmp2);
+			case ball_type_reflexive:		Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_reflexive", client, tmp2);
+			case ball_type_explode:			Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_explode", client, tmp2);
+			case ball_type_revitalisante:	Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_revitalisante", client, tmp2);
+			case ball_type_nosteal:			Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_nosteal", client, tmp2);
+			case ball_type_notk:			Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_notk", client, tmp2);
+			case ball_type_braquage:		Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_braquage", client, tmp2);
+		}
+		
+		Format(tmp2, sizeof(tmp2), "%s - %d$", tmp2, (free ? 0:data[BM_Prix]));
+		menu.AddItem(tmp, tmp2);
+		
+		position = rp_WeaponMenu_GetPosition(g_hBuyMenu_Weapons);
+	}
+	
+	menu.Display(client, 60);
+	return;
+}
+public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int p_iParam2) {
+	if (p_oAction == MenuAction_Select) {
+		
+		char szMenu[64], buffer[2][32];
+		if (GetMenuItem(p_hMenu, p_iParam2, szMenu, sizeof(szMenu))) {
+			ExplodeString(szMenu, " ", buffer, sizeof(buffer), sizeof(buffer[]));
+			
+			char name[BM_WeaponNameSize];
+			int[] data = new int[BM_Max];
+			DataPackPos position = view_as<DataPackPos>(StringToInt(buffer[0]));
+			rp_WeaponMenu_Get(g_hBuyMenu_Weapons, position, name, data);
+			
+			float vecOrigin[3];
+			GetClientAbsOrigin(client, vecOrigin);
+			
+			if (GetVectorDistance(vecOrigin, MARCHEMAFIA_POS) > 150.0)
+				return 0;
+			if (StringToInt(buffer[1]) == 1) {
+				rp_SetClientInt(client, i_LastVolAmount, 100 + data[BM_Prix]);
+				data[BM_Prix] = 0;
+			}
+			
+			if (rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money) < data[BM_Prix])
+				return 0;
+			Format(name, sizeof(name), "weapon_%s", name);
+			
+			if( Weapon_ShouldBeEquip(name) && Client_HasWeapon(client, name) )
+				return 0;
+				
+			int wepid = GivePlayerItem(client, name);
+			if( Weapon_ShouldBeEquip(name) )
+				EquipPlayerWeapon(client, wepid);
+			
+			rp_SetWeaponBallType(wepid, view_as<enum_ball_type>(data[BM_Type]));
+			if (data[BM_PvP] > 0)
+				rp_SetWeaponGroupID(wepid, rp_GetClientGroupID(client));
+			
+			if (data[BM_Munition] != -1) {
+				SetEntProp(wepid, Prop_Send, "m_iClip1", data[BM_Munition]);
+				SetEntProp(wepid, Prop_Send, "m_iPrimaryReserveAmmoCount", data[BM_Chargeur]);
+			}
+			
+			rp_WeaponMenu_Delete(g_hBuyMenu_Weapons, position);
+			rp_ClientMoney(client, i_Money, -data[BM_Prix]);
+			
+			rp_SetJobCapital(91, rp_GetJobCapital(91) + data[BM_Prix]);
+			LogToGame("[TSX-RP] [ITEM-VENDRE] %L a vendu 1 %s a %L", client, name, client);
+			
+			Call_StartForward(rp_GetForwardHandle(client, RP_OnBlackMarket));
+			Call_PushCell(client);
+			Call_PushCell(91);
+			Call_PushCell(client);
+			Call_PushCell(client);
+			Call_PushCellRef(data[BM_Prix]);
+			Call_PushCell(rp_GetClientInt(client, i_LastVolAmount) - 100);
+			Call_Finish();
+		}
+	}
+	else if (p_oAction == MenuAction_End) {
+		CloseHandle(p_hMenu);
+	}
+	return 0;
+}
+
 int zoneToAppartID(int zoneID) {
 	char tmp[64];
 	rp_GetZoneData(zoneID, zone_type_type, tmp, sizeof(tmp));

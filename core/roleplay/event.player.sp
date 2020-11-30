@@ -185,12 +185,6 @@ public Action CS_OnCSWeaponDrop(int client, int weapon) {
 				return Plugin_Handled;
 			}
 		}
-
-		if((job >= 91 && job <= 99)){
-			if( g_iWeaponFromStore[weapon] == 1 ) {
-				return Plugin_Handled;
-			}
-		}
 		
 		char classname[64];
 		GetEdictClassname(weapon, classname, sizeof(classname));
@@ -199,7 +193,6 @@ public Action CS_OnCSWeaponDrop(int client, int weapon) {
 		}
 		
 		g_iWeaponStolen[weapon] = GetTime();
-		g_iWeaponFromStore[weapon] = 0;
 	}
 
 	return Plugin_Continue;

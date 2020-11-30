@@ -298,7 +298,7 @@
 	}
 	"Cmd_Passive_Enabled"
 	{
-		"fr"	"Le mode de jeu {green}passif{default} est {greed}activé{default}!"
+		"fr"	"Le mode de jeu {green}passif{default} est {green}activé{default}!"
 	}
 	"Cmd_Passive_Disabled"
 	{

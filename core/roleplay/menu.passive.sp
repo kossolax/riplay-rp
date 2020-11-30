@@ -33,7 +33,7 @@ public int Menu_Passive(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 		
 		if( StrEqual(szMenuItem, "1") ) {
 			Menu menu = new Menu(Menu_Passive);
-			menu.SetTitle("%T\n ", "Cmd_Passive_Confirm", client);
+			menu.SetTitle("%T\n ", "Cmd_Passive_Enable_Confirm", client);
 			
 			Format(tmp, sizeof(tmp), "%T", "No", client);	menu.AddItem("0", tmp);
 			Format(tmp, sizeof(tmp), "%T", "Yes", client);	menu.AddItem("3", tmp);

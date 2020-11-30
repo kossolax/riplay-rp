@@ -492,15 +492,6 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 						break;
 					}
 				}
-				if( data[BM_Prix] == 0 ) {
-					if( iWeaponSlot == -1 ) {
-						return;
-					}
-					if( GetPlayerWeaponSlot( client, iWeaponSlot) != -1 ) {
-						return;
-					}
-				}
-				
 					
 				int wepid = GivePlayerItem(client, name);
 				
@@ -516,10 +507,8 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 					SetEntProp(wepid, Prop_Send, "m_iClip1", data[BM_Munition]);
 					SetEntProp(wepid, Prop_Send, "m_iPrimaryReserveAmmoCount", data[BM_Chargeur]);
 				}
-
-				if( data[BM_Prix] == 0 ){
-					g_iWeaponFromStore[wepid] = 1;
-				}
+				
+				g_iWeaponFromStore[weapon] = data[BM_Store];
 				
 				rp_WeaponMenu_Delete(g_iCustomBank[target], view_as<DataPackPos>(StringToInt(expl[1])));
 					

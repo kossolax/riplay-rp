@@ -83,10 +83,7 @@ public int Native_rp_WeaponMenu_Add(Handle plugin, int numParams) {
 	data[view_as<int>(BM_Chargeur)] = GetEntProp(weaponID, Prop_Send, "m_iPrimaryReserveAmmoCount");
 	data[view_as<int>(BM_PvP)] = rp_GetWeaponGroupID(weaponID);
 	data[view_as<int>(BM_Type)] = view_as<int>(rp_GetWeaponBallType(weaponID));
-
-	if(rp_GetWeaponStorage(weaponID)){
-		data[view_as<int>(BM_Prix)] = 0;
-	}
+	data[view_as<int>(BM_Store)] = g_iWeaponFromStore[weaponID];
 	
 	hBuyMenu.Reset();
 	DataPackPos pos = hBuyMenu.ReadCell();

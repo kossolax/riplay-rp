@@ -210,6 +210,12 @@ public int eventAmmunitionPickup(Handle p_hBuyMenu, MenuAction p_oAction, int cl
 				if( StrContains(explo[1], "caouchouc", false) >= 0) {
 					g_iWeaponsBallType[id] = ball_type_caoutchouc;
 				}
+				
+				Call_StartForward(rp_GetForwardHandle(client, RP_PostStealWeapon));
+				Call_PushCell(client);
+				Call_PushCell(client);
+				Call_PushCell(id);
+				Call_Finish();
 			}
 		}
 	}
