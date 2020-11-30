@@ -299,6 +299,8 @@ public int eventChooseSpec(Handle menu, MenuAction action, int client, int param
 	
 	if( action == MenuAction_Select ) {
 		char options[64];
+		GetMenuItem(menu, param2, options, sizeof(options));
+		
 		Cmd_ChooseSpec(client, StringToInt(options));
 	}
 	else if( action == MenuAction_End ) {
