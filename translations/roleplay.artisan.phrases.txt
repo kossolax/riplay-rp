@@ -37,9 +37,13 @@
 		"en"		"Point(s) of expertise: {1}"
 	}
 	// ----------------------------------------------------------------------------------------------
-	"Artisan_Spec"
+	"Artisan_SpecA"
 	{
-		"fr"		"Vous avez la possibilité de choisir de maîtriser une spécialitée d'artisanat. Vous resterez capable de recycler et craft les objets classiques, mais pas ceux d'une maitrise.\n \nUne fois votre spécialitée choisie, vous débloquerez une partie des nouveaux crafts. Ce choix est définitif et ne peut être changé. Vous devrez donc collaborer avec d'autres personnes maitrisant une autre spécialité pour obtenir l'objet final."
+		"fr"		"Vous avez la possibilité de choisir de maîtriser une spécialitée d'artisanat. Vous resterez capable de recycler et craft les objets classiques, mais pas ceux d'une maitrise."
+	}
+	"Artisan_SpecB"
+	{
+		"fr"		"Une fois votre spécialitée choisie, vous débloquerez une partie des nouveaux crafts. Ce choix est définitif et ne peut être changé. Vous devrez donc collaborer avec d'autres personnes maitrisant une autre spécialité pour obtenir l'objet final."
 	}
 	"Artisan_Confirm"
 	{

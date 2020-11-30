@@ -248,19 +248,22 @@ public Action fwdUse(int client) {
 	return Plugin_Continue;
 }
 public Action Cmd_ChooseSpec(int client, int confirm) {
-	char tmp1[512], tmp2[128];
+	char tmp1[512], tmp2[256];
 	
 	if( confirm == 0 ) {
-		Format(tmp1, sizeof(tmp1), "%T", "Artisan_Spec", client);
+		Format(tmp1, sizeof(tmp1), "%T", "Artisan_SpecA", client);
+		Format(tmp2, sizeof(tmp2), "%T", "Artisan_SpecB", client);
 		String_WordWrap(tmp1, 50);
+		String_WordWrap(tmp2, 50);
 		
+		Format(tmp1, sizeof(tmp1), "%T\n%s\n \n%s\n ", "Artisan_Menu", client, "Empty_String", tmp1, tmp2);
 		
 		Handle menu = CreateMenu(eventChooseSpec);
 		SetMenuTitle(menu, tmp1);
 		
-		Format(tmp1, sizeof(tmp1), "%T", "Artisan_Spec_1"); AddMenuItem(menu, "-1", tmp1);
-		Format(tmp1, sizeof(tmp1), "%T", "Artisan_Spec_2"); AddMenuItem(menu, "-2", tmp1);
-		Format(tmp1, sizeof(tmp1), "%T", "Artisan_Spec_3"); AddMenuItem(menu, "-3", tmp1);
+		Format(tmp1, sizeof(tmp1), "%T", "Artisan_Spec_1", client); AddMenuItem(menu, "-1", tmp1);
+		Format(tmp1, sizeof(tmp1), "%T", "Artisan_Spec_2", client); AddMenuItem(menu, "-2", tmp1);
+		Format(tmp1, sizeof(tmp1), "%T", "Artisan_Spec_3", client); AddMenuItem(menu, "-3", tmp1);
 		
 		DisplayMenu(menu, client, MENU_TIME_DURATION);
 	}
@@ -276,9 +279,11 @@ public Action Cmd_ChooseSpec(int client, int confirm) {
 		
 		Format(tmp1, sizeof(tmp1), "%d", confirm); 
 		Format(tmp2, sizeof(tmp2), "%T", "Yes", client);
+		AddMenuItem(menu, tmp1, tmp2);
 		
 		Format(tmp1, sizeof(tmp1), "0", confirm); 
 		Format(tmp2, sizeof(tmp2), "%T", "No", client);
+		AddMenuItem(menu, tmp1, tmp2);
 		
 		DisplayMenu(menu, client, MENU_TIME_DURATION);
 	}
