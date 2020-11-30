@@ -508,7 +508,7 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 					SetEntProp(wepid, Prop_Send, "m_iPrimaryReserveAmmoCount", data[BM_Chargeur]);
 				}
 				
-				g_iWeaponFromStore[weapon] = data[BM_Store];
+				g_iWeaponFromStore[wepid] = data[BM_Store];
 				
 				rp_WeaponMenu_Delete(g_iCustomBank[target], view_as<DataPackPos>(StringToInt(expl[1])));
 					
