@@ -649,6 +649,7 @@ public Action OnEmote(int client, const char[] emote, float time) {
 			if( appart > 0 ) {
 				float src[3];
 				Entity_GetAbsOrigin(parent, src);
+				int xp = 0;
 				
 				for (int j = 0; j < g_iDirtyCount[appart]; j++) {
 					if( GetVectorDistance(g_flDirtPos[appart][j], src) <= 128.0 ) {
@@ -662,10 +663,15 @@ public Action OnEmote(int client, const char[] emote, float time) {
 							g_flDirtPos[appart][j] = g_flDirtPos[appart][j + 1];
 						}
 						
+						xp += 100;
+						
 						g_iDirtyCount[appart]--;
 						j--;
 					}
 				}
+				
+				if( xp > 0 )
+					rp_ClientXPIncrement(client, xp);
 				
 				if( g_iDirtyCount[appart] == 0 ) {
 					// maybe r_cleardecals?
