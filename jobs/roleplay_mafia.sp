@@ -282,6 +282,10 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 			if( job == 51 && !(rp_GetClientItem(target, i) >= 1 && Math_GetRandomInt(0, 1) == 1) ) // TODO: Double vérif voiture
 				continue;
 			
+			rp_GetItemData(i, item_type_extra_cmd, tmp, sizeof(tmp));
+			if( StrContains(tmp, "rp_item_raw") == 0 )
+				continue;
+			
 			RandomItem[amount++] = i;
 		}
 		
