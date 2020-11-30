@@ -363,8 +363,8 @@
 	"Market_Sell"
 	{
 		"#format"	"{1:d},{2:s},{3:d}"
-		"fr"		"Vous avez vendu {red}{1} {2}{default}, pour {red}{3}{default}$."
-		"en"		"You sold {red}{1} {2}{default}, for {red}{3}{default}$."
+		"fr"		"Vous avez vendu {green}{1} {2}{default}, pour {green}{3}{default}$."
+		"en"		"You sold {green}{1} {2}{default}, for {green}{3}{default}$."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Build_CannotHere"

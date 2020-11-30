@@ -37,6 +37,33 @@
 		"en"		"Point(s) of expertise: {1}"
 	}
 	// ----------------------------------------------------------------------------------------------
+	"Artisan_Spec"
+	{
+		"fr"		"Vous avez la possibilité de choisir de maîtriser une spécialitée d'artisanat. Vous resterez capable de recycler et craft les objets classiques, mais pas ceux d'une maitrise.\n \nUne fois votre spécialitée choisie, vous débloquerez une partie des nouveaux crafts. Ce choix est définitif et ne peut être changé. Vous devrez donc collaborer avec d'autres personnes maitrisant une autre spécialité pour obtenir l'objet final."
+	}
+	"Artisan_Confirm"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Attention, ce choix est définitif et ne peut être changé.\nÊtes vous sûre de vouloir être {1}?"
+	}
+	"Artisan_Spec_1"
+	{
+		"fr"		"Forgeron"
+	}
+	"Artisan_Spec_2"
+	{
+		"fr"		"Ingénieur"
+	}
+	"Artisan_Spec_3"
+	{
+		"fr"		"Alchimiste"
+	}
+	"Artisan_Change"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Vous êtes maintenant: {green}{1}{default}!"
+	}
+	// ----------------------------------------------------------------------------------------------
 	"Artisan_Build"
 	{
 		"fr"	"Construire"

@@ -1572,7 +1572,7 @@ public int Menu_BuyBlackMarket(Handle p_hMenu, MenuAction p_oAction, int client,
 			if( IsValidClient(data[IM_Owner]) && rp_GetClientJobID(data[IM_Owner]) == 91 )
 				LogToGame("[TSX-RP] [ITEM-VENDRE] %L a vendu 1 %s a %L", data[IM_Owner], tmp, client);
 			
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Market_Buy", 1, tmp, data[IM_Prix]);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Market_Buy", client, 1, tmp, data[IM_Prix]);
 			
 			if( data[IM_Owner] == client ) {
 				rp_SetJobCapital(91, rp_GetJobCapital(91) + RoundToCeil(float(data[IM_Prix]*10) * 0.5));

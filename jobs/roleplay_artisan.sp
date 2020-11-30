@@ -41,7 +41,7 @@ bool g_bCanCraft[65][MAX_ITEMS];
 bool g_bInCraft[65];
 float g_flClientBook[65][view_as<int>(book_max)];
 
-
+#define MENU_POS			view_as<float>({-1592.0, -2942.0, -2008.0})
 
 int lstJOB[] =  { 11, 21, 31, 41, 51, 61, 71, 81, 111, 131, 171, 211, 221 };
 
@@ -238,7 +238,67 @@ public Action fwdUse(int client) {
 		return Plugin_Handled;
 	}
 	
+	float vecOrigin[3];
+	GetClientAbsOrigin(client, vecOrigin);
+	
+	if( rp_GetClientInt(client, i_ArtisanSpeciality) == 0 && GetVectorDistance(vecOrigin, MENU_POS) < 150.0) {
+		Cmd_ChooseSpec(client, 0);
+	}
+	
 	return Plugin_Continue;
+}
+public Action Cmd_ChooseSpec(int client, int confirm) {
+	char tmp1[512], tmp2[128];
+	
+	if( confirm == 0 ) {
+		Format(tmp1, sizeof(tmp1), "%T", "Artisan_Spec", client);
+		String_WordWrap(tmp1, 50);
+		
+		
+		Handle menu = CreateMenu(eventChooseSpec);
+		SetMenuTitle(menu, tmp1);
+		
+		Format(tmp1, sizeof(tmp1), "%T", "Artisan_Spec_1"); AddMenuItem(menu, "-1", tmp1);
+		Format(tmp1, sizeof(tmp1), "%T", "Artisan_Spec_2"); AddMenuItem(menu, "-2", tmp1);
+		Format(tmp1, sizeof(tmp1), "%T", "Artisan_Spec_3"); AddMenuItem(menu, "-3", tmp1);
+		
+		DisplayMenu(menu, client, MENU_TIME_DURATION);
+	}
+	else if( confirm < 0 ) {
+		confirm = -confirm;
+		
+		Format(tmp1, sizeof(tmp1), "Artisan_Spec_%d", confirm);
+		Format(tmp1, sizeof(tmp1), "%T", "Artisan_Confirm", client, tmp1);
+		
+		
+		Handle menu = CreateMenu(eventChooseSpec);
+		SetMenuTitle(menu, tmp1);
+		
+		Format(tmp1, sizeof(tmp1), "%d", confirm); 
+		Format(tmp2, sizeof(tmp2), "%T", "Yes", client);
+		
+		Format(tmp1, sizeof(tmp1), "0", confirm); 
+		Format(tmp2, sizeof(tmp2), "%T", "No", client);
+		
+		DisplayMenu(menu, client, MENU_TIME_DURATION);
+	}
+	else if( confirm > 0 ) {
+		rp_SetClientInt(client, i_ArtisanSpeciality, confirm);
+		rp_ClientSave(client);
+		
+		Format(tmp1, sizeof(tmp1), "Artisan_Spec_%d", confirm);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Artisan_Change", client, tmp1);
+	}
+}
+public int eventChooseSpec(Handle menu, MenuAction action, int client, int param2) {
+	
+	if( action == MenuAction_Select ) {
+		char options[64];
+		Cmd_ChooseSpec(client, StringToInt(options));
+	}
+	else if( action == MenuAction_End ) {
+		CloseHandle(menu);
+	}
 }
 public Action fwdOnPlayerBuild(int client, float& cooldown) {
 	if( rp_GetClientJobID(client) != 31 )
