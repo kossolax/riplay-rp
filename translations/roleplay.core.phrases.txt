@@ -165,6 +165,15 @@
 	{
 		"fr"		"Informations"
 	}
+	"Cmd_Note_remove"
+	{
+		"fr"		"Note à supprimer"
+	}
+	"Cmd_Note_time"
+	{
+		"#format"	"{1:s},{2:s}"
+		"fr"		"{1} il y'a {2} heure(s)"
+	}
 	
 	// ----------------------------------------------------------------------------------------------
 	"Cmd_Reload"
