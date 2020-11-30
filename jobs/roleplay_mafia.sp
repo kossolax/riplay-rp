@@ -1682,6 +1682,7 @@ public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int 
 				data[BM_Prix] = 0;
 			}
 			
+			
 			if (rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money) < data[BM_Prix])
 				return 0;
 			Format(name, sizeof(name), "weapon_%s", name);
@@ -1702,13 +1703,19 @@ public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int 
 				SetEntProp(wepid, Prop_Send, "m_iPrimaryReserveAmmoCount", data[BM_Chargeur]);
 			}
 			rp_SetWeaponStorage(wepid, data[BM_Store] == 1);
-			
 			rp_WeaponMenu_Delete(g_hBuyMenu_Weapons, position);
+			
+			
 			rp_ClientMoney(client, i_Money, -data[BM_Prix]);
 			
 			if( IsValidClient(data[BM_Owner]) && rp_GetClientJobID(data[BM_Owner]) == 91 ) {
-				rp_ClientMoney(data[BM_Owner], i_AddToPay, data[BM_Prix]/2);
-				rp_SetJobCapital(91, rp_GetJobCapital(91) + data[BM_Prix]/2);
+				float taxe = data[BM_Owner] == client ? getTaxe(client) : 0.5;
+				
+				int payClient = RoundToCeil(float(data[BM_Prix]) * (1.0 - taxe));
+				int payCapital = RoundToCeil(float(data[BM_Prix]) * (taxe));
+				
+				rp_ClientMoney(data[BM_Owner], i_AddToPay, payClient);
+				rp_SetJobCapital(91, rp_GetJobCapital(91) + payCapital);
 			}
 			else {
 				rp_SetJobCapital(91, rp_GetJobCapital(91) + data[BM_Prix]);
@@ -1744,4 +1751,20 @@ int zoneToAppartID(int zoneID) {
 	}
 	
 	return res;
+}
+
+float getTaxe(int client) {
+	int job = rp_GetClientInt(client, i_Job);
+	float val = 0.5;
+	switch(job) {
+		case 91: val = 0.10;
+		case 92: val = 0.15;
+		case 93: val = 0.20;
+		case 94: val = 0.25;
+		case 95: val = 0.30;
+		case 96: val = 0.35;
+		case 97: val = 0.40;
+		case 98: val = 0.45;
+	}
+	return val;
 }
