@@ -17,15 +17,17 @@ public int menuShowNote_Client(Handle owner, Handle req, const char[] error, any
 	}
 	// Setup menu
 	Handle menu = CreateMenu(MenuSelectNote);
-	SetMenuTitle(menu, "Informations\n ");
+	SetMenuTitle(menu, "%T\n ", "Cmd_Note", client);
 	
 	char tmp1[256], tmp2[256];
 	while( SQL_FetchRow(req) ) {
 		
 		SQL_FetchString(req, 0, tmp1, sizeof(tmp1));
-		SQL_FetchString(req, 1, tmp2, sizeof(tmp2));
-		
-		Format(tmp1, sizeof(tmp1), "%s - il y'a %s heure(s)", tmp2);
+
+		if( SQL_GetFieldCount(req) == 2 ) {
+			SQL_FetchString(req, 1, tmp2, sizeof(tmp2));
+			Format(tmp1, sizeof(tmp1), "%T", "Cmd_Note_time", client, tmp1, tmp2);
+		}
 		AddMenuItem(menu, tmp1, tmp1, ITEMDRAW_DISABLED);
 	}
 	
@@ -35,7 +37,7 @@ public int menuShowNote_Client(Handle owner, Handle req, const char[] error, any
 public int menuDeleteNote_Client(Handle owner, Handle req, const char[] error, any client) {
 	// Setup menu
 	Handle menu = CreateMenu(MenuSelectNote);
-	SetMenuTitle(menu, "Note à supprimer\n ");
+	SetMenuTitle(menu, "%T\n ", "Cmd_Note_remove", client);
 	
 	char tmp[256];
 	char tmp2[256];
@@ -64,7 +66,6 @@ public int MenuSelectNote(Handle p_hHireMenu, MenuAction p_oAction, int p_iParam
 			char query[1024];
 			Format(query, 1023, "DELETE FROM `rp_notes` WHERE `id`='%s';", szMenuItem);
 			SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-			CPrintToChat(p_iParam1, "" ...MOD_TAG... " La note a été supprimée.");
 		}
 	}
 	else if (p_oAction == MenuAction_End) {

@@ -148,6 +148,25 @@
 	}
 	
 	// ----------------------------------------------------------------------------------------------
+	"Cmd_Item"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez utilisé: {green}{1}{default}."
+	}
+	"Cmd_Item_None"
+	{
+		"fr"		"Vous n'avez {red}pas d'objet{default} à utiliser."
+	}
+	"Cmd_Item_Choose"
+	{
+		"fr"		"Sélectionner un objet à utiliser:"
+	}
+	"Cmd_Note"
+	{
+		"fr"		"Informations"
+	}
+	
+	// ----------------------------------------------------------------------------------------------
 	"Cmd_Reload"
 	{
 		"fr"		"La configuration du serveur a été rechargée."

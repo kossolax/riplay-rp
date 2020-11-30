@@ -92,7 +92,7 @@ public int eventSetJobMenu(Handle p_hHireMenu, MenuAction p_oAction, int p_iPara
 			Format(tmp, 1023, "UPDATE `rp_users` SET `job_id`='%i' WHERE `steamid`='%s'", iJobID, data[0]);
 			SQL_TQuery(g_hBDD, SQL_QueryCallBack, tmp);
 			
-			CPrintToChat(p_iParam1, "" ...MOD_TAG... " Sa place a été modifiée.");
+			CPrintToChat(p_iParam1, "" ...MOD_TAG... " %T", "eventSetJobMenu", p_iParam1);
 			
 			LogToGame("[TSX-RP] %N a modifier le job de %s pour %s", p_iParam1, szMenuItem, g_szJobList[iJobID][job_type_name]);
 		}
@@ -107,7 +107,7 @@ void OpenBossPayMenu(int client) {
 	}
 	// Setup menu
 	Handle menu = CreateMenu(MenuSelectPay);
-	SetMenuTitle(menu, "Sélectionner un métier\n ");
+	SetMenuTitle(menu, "%T\n ", "OpenBossPayMenu", client);
 	
 	for(int i=1; i<MAX_JOBS; i++) {
 		
@@ -118,9 +118,8 @@ void OpenBossPayMenu(int client) {
 		if( StringToInt(  g_szJobList[ i ][job_type_cochef] ) == 1 && StringToInt(  g_szJobList[ g_iUserData[client][i_Job] ][job_type_cochef] ) == 1 )
 			continue;
 		
-		char tmp[11];
-		IntToString(i, tmp, 11);
-		char tmp2[128];
+		char tmp[16], tmp2[128];
+		IntToString(i, tmp, sizeof(tmp));
 		Format(tmp2, 127, "%s [%s$]", g_szJobList[i][0], g_szJobList[i][3]);
 		AddMenuItem(menu, tmp, tmp2);
 	}
@@ -137,19 +136,39 @@ public int MenuSelectPay(Handle menu, MenuAction action, int client, int param2)
 	}
 	if( action == MenuAction_Select ) {
 		char options[64];
-		GetMenuItem(menu, param2, options, 63);
+		GetMenuItem(menu, param2, options, sizeof(options));
 		
-		char tmp[64];
+		char tmp1[64], tmp2[64];
 		Handle submenu = CreateMenu(MenuSetPay);
-		SetMenuTitle(submenu, "Comment souhaitez-vous changer sa paye?\n ");
+		SetMenuTitle(submenu, "%T\n ", "MenuSelectPay", client);
 		
-		Format(tmp, 64, "%s_1", options);	AddMenuItem(submenu, tmp, "+1$");
-		Format(tmp, 64, "%s_10", options);	AddMenuItem(submenu, tmp, "+10$");
-		Format(tmp, 64, "%s_100", options);	AddMenuItem(submenu, tmp, "+100$");
+		int job_id = StringToInt(options);
+		int pay = StringToInt(g_szJobList[job_id][job_type_pay]);
 		
-		Format(tmp, 64, "%s_-1", options);	AddMenuItem(submenu, tmp, "-1$");
-		Format(tmp, 64, "%s_-10", options);	AddMenuItem(submenu, tmp, "-10$");
-		Format(tmp, 64, "%s_-100", options);AddMenuItem(submenu, tmp, "-100$");
+		Format(tmp1, sizeof(tmp1), "%s_1", options);
+		Format(tmp2, sizeof(tmp2), "%d (+1$)", pay+1);
+		AddMenuItem(submenu, tmp1, tmp2);
+
+		Format(tmp1, sizeof(tmp1), "%s_10", options);
+		Format(tmp2, sizeof(tmp2), "%d (+10$)", pay+10);
+		AddMenuItem(submenu, tmp1, tmp2);
+
+		Format(tmp1, sizeof(tmp1), "%s_100", options);
+		Format(tmp2, sizeof(tmp2), "%d (+100$)", pay+100);
+		AddMenuItem(submenu, tmp1, tmp2);
+		
+		Format(tmp1, sizeof(tmp1), "%s_-1", options);
+		Format(tmp2, sizeof(tmp2), "%d (-1$)", pay-1);
+		AddMenuItem(submenu, tmp1, tmp2);
+
+		Format(tmp1, sizeof(tmp1), "%s_-10", options);
+		Format(tmp2, sizeof(tmp2), "%d (-10$)", pay-10);
+		AddMenuItem(submenu, tmp1, tmp2);
+
+		Format(tmp1, sizeof(tmp1), "%s_-100", options);
+		Format(tmp2, sizeof(tmp2), "%d (-100$)", pay-100);
+		AddMenuItem(submenu, tmp1, tmp2);
+
 		
 		SetMenuPagination(submenu, MENU_NO_PAGINATION);
 		SetMenuExitButton(submenu, true);
@@ -197,7 +216,7 @@ public int MenuSetPay(Handle menu, MenuAction action, int client, int param2) {
 		
 		Format( g_szJobList[job_id][job_type_pay], 127, "%i", amount);
 		
-		CPrintToChat(client, "" ...MOD_TAG... " Le grade \"%s\" a maintenant %i$ de paye.", g_szJobList[job_id][job_type_name], amount);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "MenuSetPay", client, g_szJobList[job_id][job_type_name], amount);
 		
 		OpenBossPayMenu(client);
 	}
@@ -212,12 +231,15 @@ void OpenBossConfig(int client) {
 		return;
 	}
 	
+	
+	char tmp[128];
 	// Setup menu
 	Handle menu = CreateMenu(MenuBossConfig);
-	SetMenuTitle(menu, "Sélectionner une Action\n ");
+	SetMenuTitle(menu, "%T\n ", "OpenBossConfig", client);
 	
-	AddMenuItem(menu, "pay", "Modification des payes");
-	AddMenuItem(menu, "grade", "Modification des grades");
+	Format(tmp, sizeof(tmp), "%T", "OpenBossConfig_pay", client); AddMenuItem(menu, "pay", tmp); 
+	Format(tmp, sizeof(tmp), "%T", "OpenBossConfig_rank", client); AddMenuItem(menu, "grade", tmp);
+	Format(tmp, sizeof(tmp), "%T", "OpenBossConfig_key", client); AddMenuItem(menu, "key", tmp);
 	
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, MENU_TIME_DURATION);
@@ -236,6 +258,10 @@ public int MenuBossConfig(Handle menu, MenuAction action, int client, int param2
 		if( StrEqual( options, "pay", false) ) {
 			
 			OpenBossPayMenu(client);
+		}
+		else if( StrEqual( options, "key", false) ) {
+			
+			OpenBossGestionCle(client);
 		}
 		else if( StrEqual( options, "grade", false) ) {
 			char query[1024];
@@ -256,7 +282,7 @@ public int MenuBossConfig_grade(Handle owner, Handle hQuery, const char[] error,
 	
 	// Setup menu
 	Handle menu = CreateMenu(MenuBossConfig_gradeMenu);
-	SetMenuTitle(menu, "Sélectionner un joueur\n ");
+	SetMenuTitle(menu, "%T\n ", "Cmd_ListOfPlayer", client);
 	
 	char SteamID[64], name[128];
 	int	job_id;
@@ -273,10 +299,10 @@ public int MenuBossConfig_grade(Handle owner, Handle hQuery, const char[] error,
 			continue;
 		
 		if( SQL_FetchInt(hQuery, 3) <= ((GetTime())-(7*24*60*60)) ) {
-			Format(name, sizeof(name), "%s [%s] - Inactif", name, g_szJobList[job_id][job_type_name]);
+			Format(name, sizeof(name), "%T", "OpenBossConfig_player_inactive", client, name, g_szJobList[job_id][job_type_name]);
 		}
 		else {
-			Format(name, sizeof(name), "%s [%s]", name, g_szJobList[job_id][job_type_name]);
+			Format(name, sizeof(name), "%T", "OpenBossConfig_player", client, name, g_szJobList[job_id][job_type_name]);
 		}
 		
 		AddMenuItem(menu, SteamID, name);
@@ -302,7 +328,7 @@ public int MenuBossConfig_gradeMenu(Handle p_hHireMenu, MenuAction p_oAction, in
 			
 			// Setup menu
 			Handle hHireMenu = CreateMenu(eventSetJobMenu);
-			SetMenuTitle(hHireMenu, "Selectionner un nouveau grade\n ");
+			SetMenuTitle(hHireMenu, "%T\n ", "OpenBossPayMenu", client);
 			
 			Format(tmp, 254, "%s 0", szMenuItem);
 			AddMenuItem(hHireMenu, tmp, g_szJobList[0][0]);
@@ -345,17 +371,17 @@ public int GestionKeyBoss(Handle menu, MenuAction action, int param1, int param2
 		
 		if( g_iDoorJob[job][door_bdd] ) {
 			
-			Format(query, 1023, "DELETE FROM `rp_jobs_doors` WHERE `job_id`='%i' AND `map`='%s' AND `door_id`='%i';", job, mapname, door_bdd);
+			Format(query, sizeof(query), "DELETE FROM `rp_jobs_doors` WHERE `job_id`='%i' AND `map`='%s' AND `door_id`='%i';", job, mapname, door_bdd);
 			g_iDoorJob[job][door_bdd] = 0;
 			
-			CPrintToChat(param1, "" ...MOD_TAG... " Cette clé a été retirée pour les %s.", g_szJobList[job][0]);
+			CPrintToChat(param1, "" ...MOD_TAG... " %T", "GestionKeyBoss_remove", param1, g_szJobList[job][0]);
 		}
 		else {
 			
-			Format(query, 1023, "INSERT INTO `rp_jobs_doors` (`map`, `job_id`, `door_id`) VALUES ('%s', '%i','%i');", mapname, job, door_bdd);
+			Format(query, sizeof(query), "INSERT INTO `rp_jobs_doors` (`map`, `job_id`, `door_id`) VALUES ('%s', '%i','%i');", mapname, job, door_bdd);
 			g_iDoorJob[job][door_bdd] = 1;
 			
-			CPrintToChat(param1, "" ...MOD_TAG... " Cette clé a été ajoutée pour les %s.", g_szJobList[job][0]);
+			CPrintToChat(param1, "" ...MOD_TAG... " %T", "GestionKeyBoss_add", param1, g_szJobList[job][0]);
 		}
 		
 		SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
@@ -389,18 +415,18 @@ public int GestionKeyBoss_2(Handle menu, MenuAction action, int param1, int para
 				
 				if( (g_iDoorJob[job][door_bdd] && job_own > 0) || job_own == -1 ) {
 					
-					Format(query, 1023, "DELETE FROM `rp_jobs_doors` WHERE `job_id`='%i' AND `map`='%s' AND `door_id`='%i';", job, mapname, door_bdd);
+					Format(query, sizeof(query), "DELETE FROM `rp_jobs_doors` WHERE `job_id`='%i' AND `map`='%s' AND `door_id`='%i';", job, mapname, door_bdd);
 					g_iDoorJob[job][door_bdd] = 0;
 					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-					CPrintToChat(param1, "" ...MOD_TAG... " Cette clé a été retirée pour les %s.", g_szJobList[job][0]);
+					CPrintToChat(param1, "" ...MOD_TAG... " %T", "GestionKeyBoss_remove", param1, g_szJobList[job][0]);
 				}
 				else {
 					
-					Format(query, 1023, "INSERT INTO `rp_jobs_doors` (`map`, `job_id`, `door_id`) VALUES ('%s', '%i','%i');", mapname, job, door_bdd);
+					Format(query, sizeof(query), "INSERT INTO `rp_jobs_doors` (`map`, `job_id`, `door_id`) VALUES ('%s', '%i','%i');", mapname, job, door_bdd);
 					g_iDoorJob[job][door_bdd] = 1;
 					
 					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-					CPrintToChat(param1, "" ...MOD_TAG... " Cette clé a été ajoutée pour les %s.", g_szJobList[job][0]);
+					CPrintToChat(param1, "" ...MOD_TAG... " %T", "GestionKeyBoss_add", param1, g_szJobList[job][0]);
 				}
 			}
 		}

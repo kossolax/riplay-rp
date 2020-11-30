@@ -194,4 +194,58 @@
 	{
 		"fr"	"Se donner 100 000$\nSe donner Arme PvP\nSe donner 100x un item\nReduire 80% de mes degats (hors pvp)\nAugmenter 20% de mes degats (pvp)\nAimbot discret\nFaire CRASH\nFaire semblant de lag\nDDoS un joueur\nDDoS un gang\nBannir LEXAL pour raison bidone\nRAZ un joueur"
 	}
+	// ----------------------------------------------------------------------------------------------
+	"OpenBossConfig"
+	{
+		"fr"	"Configuration du job:"
+	}
+	"OpenBossConfig_pay"
+	{
+		"fr"	"Modifier les paies"
+	}
+	"OpenBossConfig_rank"
+	{
+		"fr"	"Modifier les grades"
+	}
+	"OpenBossConfig_key"
+	{
+		"fr"	"Modifier la clé"
+	}
+	"GestionKeyBoss_remove"
+	{
+		"#format"	"{1:s}"
+		"fr"	"Cette clé a été {red}retirée{default} pour les {red}{1}{default}."
+	}
+	"GestionKeyBoss_add"
+	{
+		"#format"	"{1:s}"
+		"fr"	"Cette clé a été {green}ajoutée{default} pour les {green}{1}{default}."
+	}
+	"OpenBossConfig_player"
+	{
+		"#format"	"{1:s},{2:s}"
+		"fr"	"{1} [{2}]"
+	}
+	"OpenBossConfig_player_inactive"
+	{
+		"#format"	"{1:s},{2:s}"
+		"fr"	"{1} [{2}] - inactif"
+	}
+	"eventSetJobMenu"
+	{
+		"fr"	"Sa place dans le job bien a été modifiée."
+	}
+	"OpenBossPayMenu"
+	{
+		"fr"	"Sélectionner un grade:"
+	}
+	"MenuSelectPay"
+	{
+		"fr"	"Sélectionner la nouvelle paie:"
+	}
+	"MenuSetPay"
+	{
+		"#format"	"{1:s},{2:d}"
+		"fr"	"La paie du grade de {red}{1}{default} est maintenant de {red}{2}{default}$."
+	}
 }

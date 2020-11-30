@@ -14,12 +14,12 @@ public int eventItemMenu(Handle p_hItemMenu, MenuAction p_oAction, int p_iParam1
 	if (p_oAction == MenuAction_Select) {
 		
 		if( GetConVarInt(g_hAllowItem) == 0 ) {
-			CPrintToChat(p_iParam1, "" ...MOD_TAG... " Un admin a désactivé l'utilisation des items pour le moment.");
+			CPrintToChat(p_iParam1, "" ...MOD_TAG... " %T", "Error_Command_ForNow", p_iParam1);
 			return;
 		}
 		
 		if( IsValidClient(p_iParam1) && IsPlayerAlive(p_iParam1) && IsClientInJail(p_iParam1) && g_iUserData[p_iParam1][i_JailTime] > 0 ) {
-			CPrintToChat(p_iParam1, "" ...MOD_TAG... " Il est impossible d'utiliser un objet en jail.");
+			CPrintToChat(p_iParam1, "" ...MOD_TAG... " %T", "Error_CannotUseItemHere", p_iParam1);
 			return;
 		}
 		
@@ -27,7 +27,7 @@ public int eventItemMenu(Handle p_hItemMenu, MenuAction p_oAction, int p_iParam1
 		
 		if(	bit & BITZONE_JUSTICEITEM	) {
 			if( !IsPolice(p_iParam1) && !IsJuge(p_iParam1) ) {
-				CPrintToChat(p_iParam1, "" ...MOD_TAG... " Les items sont interdit dans cette zone.");
+				CPrintToChat(p_iParam1, "" ...MOD_TAG... " %T", "Error_CannotUseItemHere", p_iParam1);
 				return;
 			}
 		}
@@ -35,12 +35,12 @@ public int eventItemMenu(Handle p_hItemMenu, MenuAction p_oAction, int p_iParam1
 		if( bit & BITZONE_BLOCKITEM	) {
 			if( GetConVarInt(g_hAllowItem) == 2 ) {
 				if( !(bit & (BITZONE_EVENT|BITZONE_LACOURS)) ) {
-					CPrintToChat(p_iParam1, "" ...MOD_TAG... " Les items sont interdit dans cette zone.");
+					CPrintToChat(p_iParam1, "" ...MOD_TAG... " %T", "Error_CannotUseItemHere", p_iParam1);
 					return;
 				}
 			}
 			else {
-				CPrintToChat(p_iParam1, "" ...MOD_TAG... " Les items sont interdit dans cette zone.");
+				CPrintToChat(p_iParam1, "" ...MOD_TAG... " %T", "Error_CannotUseItemHere", p_iParam1);
 				return;
 			}
 		}
@@ -52,7 +52,7 @@ public int eventItemMenu(Handle p_hItemMenu, MenuAction p_oAction, int p_iParam1
 				continue;
 			
 			if( g_iGrabbing[i] == p_iParam1 ) {
-				CPrintToChat(p_iParam1, "" ...MOD_TAG... " Il est impossible d'utiliser un objet quand quelqu'un vous tiens.");
+				CPrintToChat(p_iParam1, "" ...MOD_TAG... " %T", "Error_Command_ForNow", p_iParam1);
 				return;
 			}
 		}
@@ -67,24 +67,23 @@ public int eventItemMenu(Handle p_hItemMenu, MenuAction p_oAction, int p_iParam1
 			int id = StringToInt(data[0]);
 			
 			if( g_bIsInCaptureMode && g_iServerRules[rules_ItemsDisabled][rules_Enabled] == 1 && rp_GetClientGroupID(p_iParam1) > 0 && g_iServerRules[rules_ItemsDisabled][rules_Target] == id ) {
-				CPrintToChat(p_iParam1, "" ...MOD_TAG... " Cet item a été interdit par le Maire lors cette capture PvP.");
+				CPrintToChat(p_iParam1, "" ...MOD_TAG... " %T", "Error_CannotUseItemInPvP", p_iParam1);
 				return;
 			}
 			
 			if( g_flUserData[p_iParam1][fl_CoolDown] > GetGameTime() ) {
-				CPrintToChat(p_iParam1, "" ...MOD_TAG... " Vous ne pouvez rien utiliser pour encore %.2f seconde(s).", (g_flUserData[p_iParam1][fl_CoolDown]-GetGameTime()) );
+				CPrintToChat(p_iParam1, "" ...MOD_TAG... " %T", "Error_ItemCooldown", p_iParam1, (g_flUserData[p_iParam1][fl_CoolDown]-GetGameTime())+0.05 );
 				OpenItemMenu( p_iParam1);
 				return;
 			}
 			
 			if( StringToInt(g_szItemList[id][item_type_dead]) == 0 && !IsPlayerAlive(p_iParam1) ) {
-				CPrintToChat(p_iParam1, "" ...MOD_TAG... " Vous êtes mort.");
 				OpenItemMenu( p_iParam1);
 				return;
 			}
 			
 			if( ! Client_CanUseItem(p_iParam1, id) ) {
-				CPrintToChat(p_iParam1, "" ...MOD_TAG... " Cet item est temporairement interdit.");
+				CPrintToChat(p_iParam1, "" ...MOD_TAG... " %T", "Error_CannotUseItemNow", p_iParam1);
 				return;
 			}
 			
@@ -123,11 +122,9 @@ public int eventItemMenu(Handle p_hItemMenu, MenuAction p_oAction, int p_iParam1
 			g_iUserStat[p_iParam1][i_ItemUsed]++;
 			g_iUserStat[p_iParam1][i_ItemUsedPrice] += StringToInt(g_szItemList[id][item_type_prix]);
 			rp_ClientGiveItem(p_iParam1, id, -1);
-			CPrintToChat(p_iParam1, "" ...MOD_TAG... " Vous avez utilisé: %s", g_szItemList[id][item_type_name] );
+			CPrintToChat(p_iParam1, "" ...MOD_TAG... " %T", "Cmd_Item", p_iParam1, g_szItemList[id][item_type_name] );
 			
-			if( !StrEqual(g_szItemList[ id ][item_type_extra_cmd], "rp_item_loto") && !StrEqual(g_szItemList[ id ][item_type_extra_cmd], "rp_item_preserv") ) {					
-				LogToGame("[TSX-RP] [ITEM] %L a utilisé: %s", p_iParam1, g_szItemList[id][item_type_name] );
-			}
+			LogToGame("[TSX-RP] [ITEM] %L a utilisé: %s", p_iParam1, g_szItemList[id][item_type_name] );
 			
 			if( g_bUserData[p_iParam1][b_Invisible] ) {
 				CopSetVisible(p_iParam1);
@@ -152,14 +149,14 @@ void OpenItemMenu(int client, bool no_message = false) {
 	
 	if( amount == 0 ) {
 		if( !no_message )
-			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas d'objet à utiliser.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_Item_None", client);
 		
 		return;
 	}
 	
 	// Setup menu
 	Handle hItemMenu = CreateMenu(eventItemMenu);
-	SetMenuTitle(hItemMenu, "Sélectionner un objet à utiliser\n ");
+	SetMenuTitle(hItemMenu, "%T\n ", "Cmd_Item_Choose", client);
 	
 	for (int i = 0; i < amount; i++) {
 		id = g_iItems[client][i][STACK_item_id];
