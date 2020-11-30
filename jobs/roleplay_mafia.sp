@@ -201,9 +201,10 @@ public Action fwdAssurance(int client, int& amount) {
 }
 public Action fwdOnStealWeapon(int client, int target, int weaponID) {
 	if( client == target && rp_GetClientJobID(client) == 91 ) {
-		rp_WeaponMenu_Add(g_hBuyMenu_Weapons, weaponID, GetEntProp(weaponID, Prop_Send, "m_OriginalOwnerXuidHigh"));
-		
-		AcceptEntityInput(weaponID, "Kill");
+		if( rp_WeaponMenu_Add(g_hBuyMenu_Weapons, weaponID, client) ) {
+			AcceptEntityInput(weaponID, "Kill");
+			FakeClientCommand(client, "use weapon_fists");
+		}
 	}
 }
 public void OnClientDisconnect(int client) {
@@ -1443,8 +1444,9 @@ void Cmd_Buy(int client, bool free) {
 	Menu menu = new Menu(Menu_BuyMarket);
 	menu.SetTitle("%T\n ", "Mafia_BlackMarket", client);
 	
-	int itemCount = view_as<int>(g_hBuyMenu_Items.ReadCell());
-	int weaponCount = view_as<int>(g_hBuyMenu_Items.ReadCell());
+	g_hBuyMenu_Items.Reset();
+	int itemCount = (view_as<int>(g_hBuyMenu_Items.ReadCell()) - 1) / view_as<int>(IM_Max);
+	int weaponCount = (view_as<int>(rp_WeaponMenu_GetMax(g_hBuyMenu_Weapons)) - 1) / view_as<int>(BM_Max);
 	
 	Format(tmp1, sizeof(tmp1), "item %d", free);
 	Format(tmp2, sizeof(tmp2), "%T", "Mafia_BlackMarket_Item", client, itemCount);
@@ -1695,11 +1697,19 @@ public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int 
 				SetEntProp(wepid, Prop_Send, "m_iClip1", data[BM_Munition]);
 				SetEntProp(wepid, Prop_Send, "m_iPrimaryReserveAmmoCount", data[BM_Chargeur]);
 			}
+			rp_SetWeaponStorage(wepid, data[BM_Store] == 1);
 			
 			rp_WeaponMenu_Delete(g_hBuyMenu_Weapons, position);
 			rp_ClientMoney(client, i_Money, -data[BM_Prix]);
 			
-			rp_SetJobCapital(91, rp_GetJobCapital(91) + data[BM_Prix]);
+			if( IsValidClient(data[BM_Owner]) && rp_GetClientJobID(data[BM_Owner]) == 91 ) {
+				rp_ClientMoney(data[BM_Owner], i_AddToPay, data[BM_Prix]/2);
+				rp_SetJobCapital(91, rp_GetJobCapital(91) + data[BM_Prix]/2);
+			}
+			else {
+				rp_SetJobCapital(91, rp_GetJobCapital(91) + data[BM_Prix]);
+			}
+			
 			LogToGame("[TSX-RP] [ITEM-VENDRE] %L a vendu 1 %s a %L", client, name, client);
 			
 			Call_StartForward(rp_GetForwardHandle(client, RP_OnBlackMarket));
