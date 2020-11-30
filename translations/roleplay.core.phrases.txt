@@ -145,36 +145,7 @@
 	"Force_Cannot_Prop"
 	{
 		"fr"	"Vous n'êtes pas autorisé à déplacer ce props."
-	}
-	
-	// ----------------------------------------------------------------------------------------------
-	"Cmd_Item"
-	{
-		"#format"	"{1:s}"
-		"fr"		"Vous avez utilisé: {green}{1}{default}."
-	}
-	"Cmd_Item_None"
-	{
-		"fr"		"Vous n'avez {red}pas d'objet{default} à utiliser."
-	}
-	"Cmd_Item_Choose"
-	{
-		"fr"		"Sélectionner un objet à utiliser:"
-	}
-	"Cmd_Note"
-	{
-		"fr"		"Informations"
-	}
-	"Cmd_Note_remove"
-	{
-		"fr"		"Note à supprimer"
-	}
-	"Cmd_Note_time"
-	{
-		"#format"	"{1:s},{2:s}"
-		"fr"		"{1} il y'a {2} heure(s)"
-	}
-	
+	}	
 	// ----------------------------------------------------------------------------------------------
 	"Cmd_Reload"
 	{

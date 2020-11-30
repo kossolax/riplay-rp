@@ -56,13 +56,13 @@
 	}
 	"BankATM_transfer_disposite"
 	{
-		"#format"	"{1:s}"
-		"fr"	"Combien souhaitez-vous déposer? ({1}$)"
+		"#format"	"{1:s},{2:s}"
+		"fr"	"Combien souhaitez-vous déposer?\nSur sois: {1}$\nEn Banque: {2}$\n "
 	}
 	"BankATM_transfer_withdraw"
 	{
-		"#format"	"{1:s}"
-		"fr"	"Combien souhaitez-vous retirer? ({1}$)"
+		"#format"	"{1:s},{2:s}"
+		"fr"	"Combien souhaitez-vous retirer?\nSur sois: {1}$\nEn Banque: {2}$\n "
 	}
 	"BankATM_transfer_all"
 	{
@@ -248,4 +248,147 @@
 		"#format"	"{1:s},{2:d}"
 		"fr"	"La paie du grade de {red}{1}{default} est maintenant de {red}{2}{default}$."
 	}
+	// ----------------------------------------------------------------------------------------------
+	"Cmd_Item"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez utilisé: {green}{1}{default}."
+	}
+	"Cmd_Item_None"
+	{
+		"fr"		"Vous n'avez {red}pas d'objet{default} à utiliser."
+	}
+	"Cmd_Item_Choose"
+	{
+		"fr"		"Sélectionner un objet à utiliser:"
+	}
+	"Cmd_Note"
+	{
+		"fr"		"Informations"
+	}
+	"Cmd_Note_remove"
+	{
+		"fr"		"Note à supprimer"
+	}
+	"Cmd_Note_time"
+	{
+		"#format"	"{1:s},{2:s}"
+		"fr"		"{1} il y'a {2} heure(s)"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Cmd_Passive"
+	{
+		"fr"	"Quel est votre mode de jeu préféré?"
+	}
+	"Cmd_Passive_Kill"
+	{
+		"fr"	"Ayant commis un meurtre récement, vous ne pouvez passer en mode passif tant que vous avez des meurtres à votre actif."
+	}
+	"Cmd_Passive_Aggress"
+	{
+		"fr"	"Ayant commis une agression physique récement, vous ne pouvez pas activer ce mode."
+	}
+	"Cmd_Passive_Enabling"
+	{
+		"fr"	"Le mode de jeu {green}passif{default} va être activé dans {green}une{default} minute."
+	}
+	"Cmd_Passive_Disabling"
+	{
+		"fr"	"Le mode de jeu {red}actif{default} va être activé dans {red}une{default} minute."
+	}
+	"Cmd_Passive_Enabled"
+	{
+		"fr"	"Le mode de jeu {green}passif{default} est {greed}activé{default}!"
+	}
+	"Cmd_Passive_Disabled"
+	{
+		"fr"	"Le mode de jeu {red}actif{default} est {red}activé{default}!"
+	}
+	"Cmd_Passive_Enable"
+	{
+		"fr"	"Activer le mode passif:\n- Vous ne pouvez mourir qu'en cas de légitime défense.\n- Ce mode est récommandé."
+	}
+	"Cmd_Passive_Enable_Confirm"
+	{
+		"fr"	"Vous avez choisi le mode passif :\n \n- Vous ne pouvez attaquer qu'en cas de légitime défense.\n- Vous ne pouvez mourir que par légitime défense.\n \n Ce mode s'activera dans 1 minute."
+	}
+	"Cmd_Passive_Disable"
+	{
+		"fr"	"Activer le mode actif:\n- Vous autorisez les autres joueurs à vous freekill.\n- Vous avez le droit de freekill."
+	}
+	"Cmd_Passive_Disable_Confirm"
+	{
+		"#format"	"{1:t}"
+		"fr"	"Vous avez choisi le mode actif :\n \n- Vous pouvez attaquer quand vous le souhaitez.\n- Vous pouvez tuer sans justification.\n- Vous risquez de mourir sans raison.\n- Votre vitalité augmente chaques secondes\n{1}\n \n Ce mode s'activera dans 1 minute."
+	}
+	"Cmd_Passive_Disable_Confirm_1"
+	{
+		"fr"	"- Double les gains liés aux amendes."
+	}
+	"Cmd_Passive_Disable_Confirm_11"
+	{
+		"fr"	"- Immunité à l'overdose et aux poisons."
+	}
+	"Cmd_Passive_Disable_Confirm_21"
+	{
+		"fr"	"- Double le bonus de la vitalité."
+	}
+	"Cmd_Passive_Disable_Confirm_31"
+	{
+		"fr"	"- Vous trouvez des M.P. en marchant."
+	}
+	"Cmd_Passive_Disable_Confirm_41"
+	{
+		"fr"	"- +25%% de vitesse de déplacement en contrat."
+	}
+	"Cmd_Passive_Disable_Confirm_51"
+	{
+		"fr"	"- Vos meurtres en voiture sont retiré des logs."
+	}
+	"Cmd_Passive_Disable_Confirm_61"
+	{
+		"fr"	"- Tous les bonus d'appartement sont gratuit."
+	}
+	"Cmd_Passive_Disable_Confirm_71"
+	{
+		"fr"	"- Votre précision de tir augmente en marchant."
+	}
+	"Cmd_Passive_Disable_Confirm_81"
+	{
+		"fr"	"- +50%% de vitesse de déplacement après un vol."
+	}
+	"Cmd_Passive_Disable_Confirm_191"
+	{
+		"fr"	"- +50%% de vitesse de déplacement après un vol."
+	}
+	"Cmd_Passive_Disable_Confirm_101"
+	{
+		"fr"	"- +5 regénération de vie chaques secondes"
+	}
+	"Cmd_Passive_Disable_Confirm_111"
+	{
+		"fr"	"- +25%% de dégât supplémentaire via les armes à feux."
+	}
+	"Cmd_Passive_Disable_Confirm_131"
+	{
+		"fr"	"- +50%% de dégât supplémentaire via les explosifs."
+	}
+	"Cmd_Passive_Disable_Confirm_171"
+	{
+		"fr"	"- Vous trouvez des jetons rouge en marchant."
+	}
+	"Cmd_Passive_Disable_Confirm_191"
+	{
+		"fr"	"- +50%% de dégât et de portée de la sucette-duo."
+	}
+	"Cmd_Passive_Disable_Confirm_211"
+	{
+		"fr"	"- L'hôtel des ventes est gratuit."
+	}
+	"Cmd_Passive_Disable_Confirm_221"
+	{
+		"fr"	"- Vos machines produisent plus rapidement."
+	}
+	// ----------------------------------------------------------------------------------------------
+
 }

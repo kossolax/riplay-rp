@@ -15,11 +15,12 @@ void BankATM_transfer(int client, int type) {
 	if( IsAtBankPoint(client) ) {
 		Handle menu;
 		
-		char szMoney[128], szBank[128], tmp[128];
-		String_NumberFormat(g_iUserData[client][i_Money],	szMoney,sizeof(szMoney));
-		String_NumberFormat(g_iUserData[client][i_Bank],	szBank,	sizeof(szBank));
-		Format(szMoney, sizeof(szMoney), "%T\n ", "BankATM_transfer_disposite", client, szMoney);
-		Format(szBank, sizeof(szBank), "%T\n ", "BankATM_transfer_withdraw", client, szBank);
+		char szMoney[256], szBank[256], tmp1[128], tmp2[128];
+		String_NumberFormat(g_iUserData[client][i_Money],	tmp1,sizeof(tmp1));
+		String_NumberFormat(g_iUserData[client][i_Bank],	tmp2,	sizeof(tmp2));
+		
+		Format(szMoney, sizeof(szMoney), "%T\n ", "BankATM_transfer_disposite", client, tmp1, tmp2);
+		Format(szBank, sizeof(szBank), "%T\n ", "BankATM_transfer_withdraw", client, tmp1, tmp2);
 		
 		if( type == 1) {
 			menu = CreateMenu(BankATM_retrait);
@@ -42,14 +43,14 @@ void BankATM_transfer(int client, int type) {
 			SetMenuTitle(menu, szMoney);
 		}
 		
-		AddMenuItem(menu, "1",		"           1$"); 	// 1
-		AddMenuItem(menu, "10",		"         10$"); 	// 2
-		AddMenuItem(menu, "100",	"       100$"); 	// 3
-		AddMenuItem(menu, "1000",	"    1 000$");	// 4
-		AddMenuItem(menu, "10000",	"  10 000$"); 	// 5
+		AddMenuItem(menu, "1",		"1$"); 	// 1
+		AddMenuItem(menu, "10",		"10$"); 	// 2
+		AddMenuItem(menu, "100",	"100$"); 	// 3
+		AddMenuItem(menu, "1000",	"1 000$");	// 4
+		AddMenuItem(menu, "10000",	"10 000$"); 	// 5
 		AddMenuItem(menu, "100000",	"100 000$"); 	// 6
 		if( type < 3  ) {
-			Format(tmp, sizeof(tmp), "%T", "BankATM_transfer_all", client); AddMenuItem(menu, "0", "Tout mon argent"); // 9 
+			Format(tmp1, sizeof(tmp1), "%T", "BankATM_transfer_all", client); AddMenuItem(menu, "0", "Tout mon argent"); // 9 
 		}
 		
 		SetMenuPagination(menu, false); // ...
