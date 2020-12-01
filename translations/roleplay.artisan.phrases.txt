@@ -68,11 +68,21 @@
 		"fr"		"Vous êtes maintenant: {green}{1}{default}!"
 	}
 	// ----------------------------------------------------------------------------------------------
-	
 	"Artisan_Ask"
 	{
 		"fr"	"Demander à construire"
 		"en"	"Ask to build"
+	}
+	"Artisan_Ask_None"
+	{
+		"fr"	"Il n'y a {red}pas{default} d'artisan {red}spécialisé{default} disponible aux alentours."
+		"en"	"There is {red}no{default} skilled craftsman available around."
+	}
+	"Artisan_Ask_Line"
+	{
+		"#format"	"{1:s},{2:d},{3:.0f}"
+		"fr"	"{1} - (lvl: {2}, fatigue: {3}%%)"
+		"en"	"{1} - (lvl: {2}, sleepness: {3}%%)
 	}
 	"Artisan_Ask_Confirm"
 	{

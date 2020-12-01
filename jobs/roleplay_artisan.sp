@@ -365,14 +365,11 @@ void displayArtisanMenu(int client) {
 	}
 	else {
 		
-		if( type == rp_GetClientInt(client, i_ArtisanSpeciality) ) {
-			Format(tmp, sizeof(tmp), "%T", "Artisan_Build", client);
-			AddMenuItem(menu, "build -1", tmp);
-		}
-		else {
-			Format(tmp, sizeof(tmp), "%T", "Artisan_Ask", client);
-			AddMenuItem(menu, "ask -1", tmp);
-		}
+		Format(tmp, sizeof(tmp), "%T", "Artisan_Build", client);
+		AddMenuItem(menu, "build -1", tmp, rp_GetClientInt(client, i_ArtisanSpeciality) == type ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
+
+		Format(tmp, sizeof(tmp), "%T", "Artisan_Ask", client);
+		AddMenuItem(menu, "ask -1", tmp);
 	}	
 	
 	Format(tmp, sizeof(tmp), "%T", "Artisan_Infos", client);
@@ -398,7 +395,7 @@ int getNumberOfCraftInJob(int client, int jobID) {
 	}
 	return cpt;
 }
-void displayBuild2Menu(int client, int jobID, int itemID, int amount, int target, int pay, int confirm) {
+void displayBuild2Menu(int client, int jobID, int target, int itemID, int amount, int pay, int confirm) {
 	if( isNearTable(client) == 0 )
 		return;
 	
@@ -413,7 +410,37 @@ void displayBuild2Menu(int client, int jobID, int itemID, int amount, int target
 	ArrayList magic;
 	
 	Handle menu = CreateMenu(eventArtisanMenu);
-	if( itemID == 0 ) {
+	if( target == 0 ) {
+		SetMenuTitle(menu, "%T\n ", "Artisan_Menu", client, "Artisan_Ask");
+		
+		int cpt = 0;
+		for (int i = 1; i < MaxClients; i++) {
+			if( !IsValidClient(i) )
+				continue;
+			if( rp_GetClientInt(i, i_ArtisanSpeciality) != type )
+				continue;
+			if( !isNearTable(i) )
+				continue;
+			if( g_bInCraft[i] )
+				continue;
+			if( i == client )
+				continue;
+			
+			Format(tmp, sizeof(tmp), "ask %d %d", jobID, i);
+			
+			GetClientName2(i, tmp2, sizeof(tmp2), true);
+			Format(tmp2, sizeof(tmp2), "%T", "Artisan_Ask_Line", client, tmp2, rp_GetClientInt(i, i_ArtisanLevel), rp_GetClientFloat(i, fl_ArtisanFatigue) * 100.0);
+			AddMenuItem(menu, tmp, tmp2);
+			cpt++;
+		}
+		
+		if( cpt == 0 ) {
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Artisan_Ask_None", client);
+			delete menu;
+			return;
+		}
+	}
+	else if( itemID == 0 ) {
 		SetMenuTitle(menu, "%T\n ", "Artisan_Menu", client, "Artisan_Build");
 		
 		for(int i = 0; i < MAX_ITEMS; i++) {
@@ -436,7 +463,7 @@ void displayBuild2Menu(int client, int jobID, int itemID, int amount, int target
 			
 			rp_GetItemData(i, item_type_name, tmp2, sizeof(tmp2)); 
 			if( can ) {
-				Format(tmp, sizeof(tmp), "ask %d %d", jobID, i);
+				Format(tmp, sizeof(tmp), "ask %d %d %d", jobID, target, i);
 				Format(tmp2, sizeof(tmp2), "[> %s <]", tmp2);
 			}
 			else {
@@ -457,7 +484,7 @@ void displayBuild2Menu(int client, int jobID, int itemID, int amount, int target
 			return;
 		
 		int min = 999999999, delta;
-		float duration = getDuration(client, itemID);
+		float duration = getDuration(target, itemID);
 		
 		for (int j = 0; j < magic.Length; j++) { // Pour chaque items de la recette:
 			magic.GetArray(j, data);
@@ -467,9 +494,7 @@ void displayBuild2Menu(int client, int jobID, int itemID, int amount, int target
 				min = delta;
 		}
 		
-		min += doRP_CanClientCraftForFree(client, itemID);
-		
-		Format(tmp, sizeof(tmp), "ask %d %d %d", jobID, itemID, min);
+		Format(tmp, sizeof(tmp), "ask %d %d %d %d", jobID, target, itemID, min);
 		Format(tmp2, sizeof(tmp2), "%T", "Artisan_Build_All", client, min, duration*min + (min*GetTickInterval()));
 		AddMenuItem(menu, tmp, tmp2);
 			
@@ -479,33 +504,15 @@ void displayBuild2Menu(int client, int jobID, int itemID, int amount, int target
 			AddMenuItem(menu, tmp, tmp2);
 		}
 	}
-	else if( target == 0 ) {
-		SetMenuTitle(menu, "%T\n ", "Artisan_Menu", client, "Artisan_Ask");
-		
-		for (int i = 1; i < MaxClients; i++) {
-			if( !IsValidClient(i) )
-				continue;
-			if( rp_GetClientInt(i, i_ArtisanSpeciality) != type )
-				continue;
-			if( !isNearTable(i) )
-				continue;
-			
-			
-			Format(tmp, sizeof(tmp), "ask %d %d %d %d", jobID, itemID, amount, i);
-			GetClientName2(i, tmp2, sizeof(tmp2), true);
-			AddMenuItem(menu, tmp, tmp2);
-		}
-	}
 	else if( pay == 0 ) {
 		SetMenuTitle(menu, "%T\n ", "Artisan_Menu", client, "Artisan_Ask");
 		
 		int toPay[] = {-1, 1, 5, 10, 25, 50, 100, 250, 500, 1000};
 		
 		for (int i = 0; i < sizeof(toPay); i++) {			
-			
-			Format(tmp, sizeof(tmp), "ask %d %d %d %d %d", jobID, itemID, amount, target, toPay[i]);
-			Format(tmp2, sizeof(tmp2), "%dx%d$ = %d$", amount, toPay[i] > 0 ? toPay[i] : 0, amount* (toPay[i] > 0 ? toPay[i] : 0));
-			AddMenuItem(menu, tmp, tmp2);
+			Format(tmp, sizeof(tmp), "ask %d %d %d %d %d", jobID, target, itemID, amount, toPay[i]);
+			Format(tmp2, sizeof(tmp2), "%dx%d$ = %d$", amount, toPay[i] > 0 ? toPay[i] : 0, amount * (toPay[i] > 0 ? toPay[i] : 0));
+			AddMenuItem(menu, tmp, tmp2, (rp_GetClientInt(client, i_Money) >= (amount * toPay[i])) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 		}
 	}
 	else if( confirm == 0 ) {
@@ -516,7 +523,7 @@ void displayBuild2Menu(int client, int jobID, int itemID, int amount, int target
 		
 		SetMenuTitle(menu, "%T\n ", "Artisan_Menu", target, "Artisan_Ask_Confirm", client_name, pay > 0 ? pay : 0, amount, item_name);
 		
-		Format(tmp, sizeof(tmp), "ask %d %d %d %d %d 1", jobID, itemID, amount, client, pay);
+		Format(tmp, sizeof(tmp), "ask %d %d %d %d %d 1", jobID, client, itemID, amount, pay);
 		Format(tmp2, sizeof(tmp2), "%T", "Yes", target);
 		AddMenuItem(menu, tmp, tmp2);
 		
@@ -889,13 +896,16 @@ public Action stopBuilding(Handle timer, Handle dp) {
 		g_bInCraft[client] = g_bInCraft[target] = false;
 		return Plugin_Stop;
 	}
-	
-	if( isNearTable(client) == 0 || isNearTable(target) == 0 ) {
+	if( isNearTable(client) == 0 ) {
 		CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
 		g_bInCraft[client] = g_bInCraft[target] = false;
 		return Plugin_Stop;
 	}
-	
+	if( isNearTable(target) == 0 ) {
+		CPrintToChat(target, ""...MOD_TAG..." %T", "Build_CannotHere", target);
+		g_bInCraft[client] = g_bInCraft[target] = false;
+		return Plugin_Stop;
+	}
 	if( client != target && price > 0 ) {
 		if( rp_GetClientInt(target, i_Money) < price ) {
 			CPrintToChat(target, ""...MOD_TAG..." %T", "Error_NotEnoughtMoney", client);
