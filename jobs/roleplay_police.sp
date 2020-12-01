@@ -62,7 +62,7 @@ char g_szWeaponList[][] = {
 };
 
 float g_flLastPos[65][3];
-DataPack g_hBuyMenu;
+DataPack g_hBuyMenu = null;
 char g_szTribunal[65][65];
 bool g_bBlockJail[65];
 
@@ -118,7 +118,7 @@ public void OnAllPluginsLoaded() {
 	g_hBuyMenu = rp_WeaponMenu_Create();
 }
 public void OnPluginEnd() {
-	if (g_hBuyMenu)
+	if( g_hBuyMenu )
 		rp_WeaponMenu_Clear(g_hBuyMenu);
 	
 	for (int i = 1; i <= MaxClients; i++)
