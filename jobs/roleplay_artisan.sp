@@ -51,12 +51,14 @@ public Plugin myinfo = {
 	version = __LAST_REV__, url = "https://www.ts-x.eu"
 };
 int doRP_CanClientCraftForFree(int client, int itemID) {
-	int a;
-	Call_StartForward(rp_GetForwardHandle(client, RP_PreClientCraft));
-	Call_PushCell(client);
-	Call_PushCell(itemID);
-	Call_PushCellRef(a);
-	Call_Finish();
+	int a = 0;
+	if( g_iItemCraftType[itemID] == 0 ) {
+		Call_StartForward(rp_GetForwardHandle(client, RP_PreClientCraft));
+		Call_PushCell(client);
+		Call_PushCell(itemID);
+		Call_PushCellRef(a);
+		Call_Finish();
+	}
 	return a;
 }
 public Action Cmd_Reload(int args) {
@@ -334,17 +336,19 @@ public Action fwdCanStealItem(int client, int target) {
 }
 // ----------------------------------------------------------------------------
 void displayArtisanMenu(int client) {
+	if( isNearTable(client) == 0 )
+		return;
 	
 	if( rp_GetClientInt(client, i_ArtisanLevel) == 0 ) {
 		rp_SetClientInt(client, i_ArtisanLevel, 1);
 	}
+	
 	
 	int type = rp_GetBuildingData(isNearTable(client), BD_item_id);
 	
 	char tmp[128];
 	Handle menu = CreateMenu(eventArtisanMenu);
 	SetMenuTitle(menu, "%T\n ", "Artisan_Menu", client, "Empty_String");
-	
 	
 	if( type == 0 ) {
 		Format(tmp, sizeof(tmp), "%T", "Artisan_Build", client);
@@ -360,11 +364,16 @@ void displayArtisanMenu(int client) {
 		AddMenuItem(menu, "book", tmp);
 	}
 	else {
-		Format(tmp, sizeof(tmp), "%T", "Artisan_Build", client);
-		AddMenuItem(menu, "build -1", tmp);
-	}
-	
-	
+		
+		if( type == rp_GetClientInt(client, i_ArtisanSpeciality) ) {
+			Format(tmp, sizeof(tmp), "%T", "Artisan_Build", client);
+			AddMenuItem(menu, "build -1", tmp);
+		}
+		else {
+			Format(tmp, sizeof(tmp), "%T", "Artisan_Ask", client);
+			AddMenuItem(menu, "ask -1", tmp);
+		}
+	}	
 	
 	Format(tmp, sizeof(tmp), "%T", "Artisan_Infos", client);
 	AddMenuItem(menu, "stats", tmp);
@@ -388,6 +397,142 @@ int getNumberOfCraftInJob(int client, int jobID) {
 		cpt++;
 	}
 	return cpt;
+}
+void displayBuild2Menu(int client, int jobID, int itemID, int amount, int target, int pay, int confirm) {
+	if( isNearTable(client) == 0 )
+		return;
+	
+	int type = rp_GetBuildingData(isNearTable(client), BD_item_id);
+	int clientItem[MAX_ITEMS];
+	int[] data = new int[craft_type_max];
+	for(int i = 0; i < MAX_ITEMS; i++)
+		clientItem[i] = rp_GetClientItem(client, i);
+	
+	char tmp[64], tmp2[64];
+	bool can;
+	ArrayList magic;
+	
+	Handle menu = CreateMenu(eventArtisanMenu);
+	if( itemID == 0 ) {
+		SetMenuTitle(menu, "%T\n ", "Artisan_Menu", client, "Artisan_Build");
+		
+		for(int i = 0; i < MAX_ITEMS; i++) {
+			if( type != g_iItemCraftType[i] )
+				continue;
+			
+			Format(tmp, sizeof(tmp), "%d", i);
+			if( !g_hReceipe.GetValue(tmp, magic) )
+				continue;
+						
+			can = true;
+			for (int j = 0; j < magic.Length; j++) {
+				magic.GetArray(j, data);
+				
+				if( clientItem[data[craft_raw]] < data[craft_amount] ) {
+					can = false;
+					break;
+				}
+			}
+			
+			rp_GetItemData(i, item_type_name, tmp2, sizeof(tmp2)); 
+			if( can ) {
+				Format(tmp, sizeof(tmp), "ask %d %d", jobID, i);
+				Format(tmp2, sizeof(tmp2), "[> %s <]", tmp2);
+			}
+			else {
+				Format(tmp, sizeof(tmp), "book %d %d", jobID, i);
+				Format(tmp2, sizeof(tmp2), "%s", tmp2);
+			}
+			
+			AddMenuItem(menu, tmp, tmp2);
+		}
+	}
+	else if( amount == 0 ) {
+		
+		rp_GetItemData(itemID, item_type_name, tmp2, sizeof(tmp2));
+		SetMenuTitle(menu, "%T: %s\n ", "Artisan_Menu", client, "Artisan_Build", tmp2);
+		
+		Format(tmp, sizeof(tmp), "%d", itemID);
+		if( !g_hReceipe.GetValue(tmp, magic) )
+			return;
+		
+		int min = 999999999, delta;
+		float duration = getDuration(client, itemID);
+		
+		for (int j = 0; j < magic.Length; j++) { // Pour chaque items de la recette:
+			magic.GetArray(j, data);
+			
+			delta = clientItem[data[craft_raw]] / data[craft_amount];
+			if( delta < min )
+				min = delta;
+		}
+		
+		min += doRP_CanClientCraftForFree(client, itemID);
+		
+		Format(tmp, sizeof(tmp), "ask %d %d %d", jobID, itemID, min);
+		Format(tmp2, sizeof(tmp2), "%T", "Artisan_Build_All", client, min, duration*min + (min*GetTickInterval()));
+		AddMenuItem(menu, tmp, tmp2);
+			
+		for (int i = 1; i <= min; i++) {
+			Format(tmp, sizeof(tmp), "ask %d %d %d", jobID, itemID, i);
+			Format(tmp2, sizeof(tmp2), "%T", "Artisan_Build_Count", client, i, duration*i + (i*GetTickInterval()));
+			AddMenuItem(menu, tmp, tmp2);
+		}
+	}
+	else if( target == 0 ) {
+		SetMenuTitle(menu, "%T\n ", "Artisan_Menu", client, "Artisan_Ask");
+		
+		for (int i = 1; i < MaxClients; i++) {
+			if( !IsValidClient(i) )
+				continue;
+			if( rp_GetClientInt(i, i_ArtisanSpeciality) != type )
+				continue;
+			if( !isNearTable(i) )
+				continue;
+			
+			
+			Format(tmp, sizeof(tmp), "ask %d %d %d %d", jobID, itemID, amount, i);
+			GetClientName2(i, tmp2, sizeof(tmp2), true);
+			AddMenuItem(menu, tmp, tmp2);
+		}
+	}
+	else if( pay == 0 ) {
+		SetMenuTitle(menu, "%T\n ", "Artisan_Menu", client, "Artisan_Ask");
+		
+		int toPay[] = {-1, 1, 5, 10, 25, 50, 100, 250, 500, 1000};
+		
+		for (int i = 0; i < sizeof(toPay); i++) {			
+			
+			Format(tmp, sizeof(tmp), "ask %d %d %d %d %d", jobID, itemID, amount, target, toPay[i]);
+			Format(tmp2, sizeof(tmp2), "%dx%d$ = %d$", amount, toPay[i] > 0 ? toPay[i] : 0, amount* (toPay[i] > 0 ? toPay[i] : 0));
+			AddMenuItem(menu, tmp, tmp2);
+		}
+	}
+	else if( confirm == 0 ) {
+		char client_name[128], item_name[128];
+		GetClientName2(client, client_name, sizeof(client_name), true);
+		rp_GetItemData(itemID, item_type_name, item_name, sizeof(item_name));
+		
+		
+		SetMenuTitle(menu, "%T\n ", "Artisan_Menu", target, "Artisan_Ask_Confirm", client_name, pay > 0 ? pay : 0, amount, item_name);
+		
+		Format(tmp, sizeof(tmp), "ask %d %d %d %d %d 1", jobID, itemID, amount, client, pay);
+		Format(tmp2, sizeof(tmp2), "%T", "Yes", target);
+		AddMenuItem(menu, tmp, tmp2);
+		
+		Format(tmp2, sizeof(tmp2), "%T", "No", target);
+		AddMenuItem(menu, "", tmp2);
+		
+		DisplayMenu(menu, target, 30);
+		return;
+	}
+	else {
+		delete menu;
+		startBuilding(client, target, itemID, amount, amount, 1, pay > 0 ? pay : 0);
+		return;
+	}
+	
+	DisplayMenu(menu, client, 30);
 }
 void displayBuildMenu(int client, int jobID, int itemID) {
 	
@@ -449,7 +594,7 @@ void displayBuildMenu(int client, int jobID, int itemID) {
 			}
 			
 			rp_GetItemData(i, item_type_name, tmp2, sizeof(tmp2)); 
-			if( can || doRP_CanClientCraftForFree(client, i) ) {
+			if( can || (type == 0 && doRP_CanClientCraftForFree(client, i)) ) {
 				Format(tmp, sizeof(tmp), "build %d %d", jobID, i);
 				Format(tmp2, sizeof(tmp2), "[> %s <]", tmp2);
 			}
@@ -616,7 +761,7 @@ void displayStatsMenu(int client) {
 	Handle menu = CreateMenu(eventArtisanMenu);
 	SetMenuTitle(menu, "%T:\n ", "Artisan_Menu", client, "Artisan_Infos");
 	
-	addStatsToMenu(client, menu);
+	addStatsToMenu(client, client, menu);
 	
 	char tmp[64];
 	
@@ -651,7 +796,7 @@ void displayStatsMenu(int client) {
 public int eventArtisanMenu(Handle menu, MenuAction action, int client, int param2) {
 	
 	if( action == MenuAction_Select ) {
-		char options[64], buffer[4][16];
+		char options[64], buffer[7][16];
 		ArrayList magic;
 		
 		GetMenuItem(menu, param2, options, sizeof(options));
@@ -661,13 +806,13 @@ public int eventArtisanMenu(Handle menu, MenuAction action, int client, int para
 			if( StringToInt(buffer[3]) == 0 )
 				displayBuildMenu(client, StringToInt(buffer[1]), StringToInt(buffer[2]));
 			else if( g_hReceipe.GetValue(buffer[2], magic) )		
-				startBuilding(client, StringToInt(buffer[2]), StringToInt(buffer[3]), StringToInt(buffer[3]), 1);
+				startBuilding(client, client, StringToInt(buffer[2]), StringToInt(buffer[3]), StringToInt(buffer[3]), 1, 0);
 		}
 		else if( StrContains(options, "recycl", false) == 0 ) {
 			if( StringToInt(buffer[2]) == 0 )
 				displayRecyclingMenu(client, StringToInt(buffer[1]));
 			else if( g_hReceipe.GetValue(buffer[1], magic) )
-				startBuilding(client, StringToInt(buffer[1]), StringToInt(buffer[2]), StringToInt(buffer[2]), -1);
+				startBuilding(client, client, StringToInt(buffer[1]), StringToInt(buffer[2]), StringToInt(buffer[2]), -1, 0);
 		}
 		else if( StrContains(options, "learn", false) == 0 ) {
 			if( StringToInt(buffer[3]) == 0 )
@@ -694,49 +839,69 @@ public int eventArtisanMenu(Handle menu, MenuAction action, int client, int para
 		else if( StrContains(options, "stats", false) == 0 ) {
 			displayStatsMenu(client);
 		}
+		else if( StrContains(options, "ask", false) == 0 ) {
+			displayBuild2Menu(client, StringToInt(buffer[1]), StringToInt(buffer[2]), StringToInt(buffer[3]), StringToInt(buffer[4]), StringToInt(buffer[5]), StringToInt(buffer[6]));
+		}
 	}
 	else if( action == MenuAction_End ) {
 		CloseHandle(menu);
 	}
 }
 // ----------------------------------------------------------------------------
-void startBuilding(int client, int itemID, int total, int amount, int positive) {
+void startBuilding(int client, int target, int itemID, int total, int amount, int positive, int price) {
 	
 	float duration = getDuration(client, itemID);
-	g_bInCraft[client] = true;
+	g_bInCraft[client] = g_bInCraft[target] = true;
+	
 //	ServerCommand("sm_effect_particles %d dust_embers %f facemask", client, duration);
 	
-	MENU_ShowCraftin(client, total, amount, positive, 0);
+	MENU_ShowCraftin(client, client, total, amount, positive, 0, RoundToCeil(duration));
+	if( client != target )
+		MENU_ShowCraftin(target, client, total, amount, positive, 0, RoundToCeil(duration));
 	
 	if( amount > 0 && duration >= -0.0001 ) {
 		Handle dp;
 		CreateDataTimer(duration, stopBuilding, dp, TIMER_DATA_HNDL_CLOSE|TIMER_REPEAT);
 		WritePackCell(dp, client);
+		WritePackCell(dp, target);
 		WritePackCell(dp, itemID);
 		WritePackCell(dp, total);
 		WritePackCell(dp, amount);
 		WritePackCell(dp, positive);
+		WritePackCell(dp, price);
 		WritePackCell(dp, 0);
 	}
 }
 public Action stopBuilding(Handle timer, Handle dp) {
 	ResetPack(dp);
 	int client = ReadPackCell(dp);
+	int target = ReadPackCell(dp);
 	int itemID = ReadPackCell(dp);
 	int total = ReadPackCell(dp);
 	int amount = ReadPackCell(dp);
 	int positive = ReadPackCell(dp);
+	int price = ReadPackCell(dp);
 	int fatigue = ReadPackCell(dp);
 	bool failed = false;
 	bool free = (doRP_CanClientCraftForFree(client, itemID) > 0);
 	
-	if( !IsValidClient(client) ) {
+	if( !IsValidClient(client) || !IsValidClient(target) ) {
+		g_bInCraft[client] = g_bInCraft[target] = false;
 		return Plugin_Stop;
 	}
-	if( isNearTable(client) == 0 ) {
+	
+	if( isNearTable(client) == 0 || isNearTable(target) == 0 ) {
 		CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
-		g_bInCraft[client] = false;
+		g_bInCraft[client] = g_bInCraft[target] = false;
 		return Plugin_Stop;
+	}
+	
+	if( client != target && price > 0 ) {
+		if( rp_GetClientInt(target, i_Money) < price ) {
+			CPrintToChat(target, ""...MOD_TAG..." %T", "Error_NotEnoughtMoney", client);
+			g_bInCraft[client] = g_bInCraft[target] = false;
+			return Plugin_Stop;
+		}
 	}
 	
 	int pc = RoundFloat(rp_GetClientFloat(client, fl_ArtisanFatigue) * 100.0) * RoundFloat(rp_GetClientFloat(client, fl_ArtisanFatigue) * 100.0);
@@ -757,7 +922,7 @@ public Action stopBuilding(Handle timer, Handle dp) {
 	Format(tmp, sizeof(tmp), "%d", itemID);
 	
 	if( !g_hReceipe.GetValue(tmp, magic) ) {
-		g_bInCraft[client] = false;
+		g_bInCraft[client] = g_bInCraft[target] = false;
 		return Plugin_Stop;
 	}
 		
@@ -766,16 +931,16 @@ public Action stopBuilding(Handle timer, Handle dp) {
 			for (int j = 0; j < magic.Length; j++) { // Pour chaque items de la recette:
 				magic.GetArray(j, data);
 				
-				if( data[craft_amount] > rp_GetClientItem(client,data[craft_raw]) ) {
-					g_bInCraft[client] = false;
+				if( data[craft_amount] > rp_GetClientItem(target, data[craft_raw]) ) {
+					g_bInCraft[client] = g_bInCraft[target] = false;
 					return Plugin_Stop;
 				}
 			}
 		}
 	}
 	else {
-		if( rp_GetClientItem(client, itemID) <= 0 ) {
-			g_bInCraft[client] = false;
+		if( rp_GetClientItem(target, itemID) <= 0 ) {
+			g_bInCraft[client] = g_bInCraft[target] = false;
 			return Plugin_Stop;
 		}
 	}
@@ -795,7 +960,11 @@ public Action stopBuilding(Handle timer, Handle dp) {
 	
 	if( positive > 0 ) { // Craft
 		if( !failed ) { // Si on échoue pas on give l'item
-			rp_ClientGiveItem(client, itemID, positive);
+			rp_ClientGiveItem(target, itemID, positive);
+			if( client != target && price > 0 ) {
+				rp_ClientMoney(target, i_Money, -price);
+				rp_ClientMoney(client, i_Money, price);
+			}
 
 			Call_StartForward(rp_GetForwardHandle(client, RP_PostClientCraft));
 			Call_PushCell(client);
@@ -804,7 +973,7 @@ public Action stopBuilding(Handle timer, Handle dp) {
 		}
 		
 		if( g_flClientBook[client][book_luck] > GetTickedTime() && Math_GetRandomInt(0, 1000) < 50 )
-			rp_ClientGiveItem(client, itemID, positive);
+			rp_ClientGiveItem(target, itemID, positive);
 		
 		for (int i = 0; i < magic.Length; i++) {  // Pour chaque items de la recette:
 			magic.GetArray(i, data);
@@ -812,13 +981,13 @@ public Action stopBuilding(Handle timer, Handle dp) {
 			if( !failed )
 				ClientGiveXP(client, rp_GetItemInt(data[craft_raw], item_type_prix) *  data[craft_amount]);
 			if( !free )
-				rp_ClientGiveItem(client, data[craft_raw], -data[craft_amount]);		
+				rp_ClientGiveItem(target, data[craft_raw], -data[craft_amount]);		
 		}
 	}
 	else if( !failed ) { // Recyclage, si on le rate pas on prend l'item.
-		rp_ClientGiveItem(client, itemID, positive);
+		rp_ClientGiveItem(target, itemID, positive);
 		if( g_flClientBook[client][book_luck] > GetTickedTime() && Math_GetRandomInt(0, 1000) < 50 )
-			rp_ClientGiveItem(client, itemID, -positive);
+			rp_ClientGiveItem(target, itemID, -positive);
 		
 		int focus = 0;
 		if( g_flClientBook[client][book_focus] > GetTickedTime() )
@@ -831,7 +1000,7 @@ public Action stopBuilding(Handle timer, Handle dp) {
 			
 				if( (float(data[craft_rate]) + (float(level) / 100.0 * float(data[craft_rate])) + float(focus)) >= Math_GetRandomFloat(0.0, 100.0) ) { // De facon aléatoire
 					//ClientGiveXP(client, rp_GetItemInt(data[craft_raw], item_type_prix));
-					rp_ClientGiveItem(client, data[craft_raw]);
+					rp_ClientGiveItem(target, data[craft_raw]);
 				}
 			}	
 		}
@@ -839,16 +1008,22 @@ public Action stopBuilding(Handle timer, Handle dp) {
 	
 	ResetPack(dp);
 	WritePackCell(dp, client);
+	WritePackCell(dp, target);
 	WritePackCell(dp, itemID);
 	WritePackCell(dp, total);
 	WritePackCell(dp, --amount);
 	WritePackCell(dp, positive);
+	WritePackCell(dp, price);
 	WritePackCell(dp, fatigue);
 	
-	MENU_ShowCraftin(client, total, amount, positive, fatigue);
+	float duration = getDuration(client, itemID);
+	MENU_ShowCraftin(client, client, total, amount, positive, fatigue, RoundToCeil(duration));
+	if( client != target )
+		MENU_ShowCraftin(target, client, total, amount, positive, fatigue, RoundToCeil(duration));
+	
 	
 	if( amount <= 0 ) {
-		g_bInCraft[client] = false;
+		g_bInCraft[client] = g_bInCraft[target] = false;
 		return Plugin_Stop;
 	}
 //	ServerCommand("sm_effect_particles %d dust_embers %f facemask", client, getDuration(client, itemID));
@@ -856,7 +1031,7 @@ public Action stopBuilding(Handle timer, Handle dp) {
 	return Plugin_Continue;
 }
 // ----------------------------------------------------------------------------
-void MENU_ShowCraftin(int client, int total, int amount, int positive, int fatigue) {
+void MENU_ShowCraftin(int client, int target, int total, int amount, int positive, int fatigue, int time) {
 	char tmp[64];
 	Handle menu = CreateMenu(eventArtisanMenu);
 	
@@ -870,9 +1045,9 @@ void MENU_ShowCraftin(int client, int total, int amount, int positive, int fatig
 	Format(tmp, sizeof(tmp), "%T", "Artisan_Status", client, total-amount-fatigue, total, fatigue);
 	AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	
-	addStatsToMenu(client, menu);
+	addStatsToMenu(client, target, menu);
 	
-	DisplayMenu(menu, client, 1);
+	DisplayMenu(menu, client, time+1);
 }
 float getDuration(int client, int itemID) {
 	if( rp_GetItemInt(itemID, item_type_job_id) == 91 )
@@ -894,12 +1069,22 @@ float getDuration(int client, int itemID) {
 		if( g_iItemCraftType[itemID] == 0 )
 			duration += 0.02 * data[craft_amount];
 		else
-			duration += 0.5 * data[craft_amount];
+			duration += 1.0 * data[craft_amount];
 	}
 	
-	if( g_flClientBook[client][book_speed] > GetTickedTime() )
-		duration -= (duration / 2.0);
+	if( g_iItemCraftType[itemID] == 0 ) {	
+		if( g_flClientBook[client][book_speed] > GetTickedTime() )
+			duration -= (duration / 2.0);
+	}
+	else {
+		if( g_flClientBook[client][book_speed] > GetTickedTime() )
+			duration -= (duration / 4.0);
+		
+		//duration = Logarithm(float(rp_GetClientInt(client, i_ArtisanLevel)), 2.0) - duration;
+	}
 	
+	if( duration < 0.01 )
+		duration = 0.01;
 	return duration;
 }
 int getNextLevel(int level) {
@@ -935,12 +1120,12 @@ int isNearTable(int client) {
 	return 0;
 }
 
-void addStatsToMenu(int client, Handle menu) {
+void addStatsToMenu(int client, int target, Handle menu) {
 	char tmp[128], tmp2[32];
-	Format(tmp, sizeof(tmp), "Niveau: %d", rp_GetClientInt(client, i_ArtisanLevel));
+	Format(tmp, sizeof(tmp), "Niveau: %d", rp_GetClientInt(target, i_ArtisanLevel));
 	AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	
-	float pc = rp_GetClientInt(client, i_ArtisanXP) / float(getNextLevel(rp_GetClientInt(client, i_ArtisanLevel)));
+	float pc = rp_GetClientInt(target, i_ArtisanXP) / float(getNextLevel(rp_GetClientInt(target, i_ArtisanLevel)));
 	if( pc != pc )
 		pc = 0.0;
 	
@@ -948,12 +1133,12 @@ void addStatsToMenu(int client, Handle menu) {
 	Format(tmp, sizeof(tmp), "%T", "Artisan_XP", client, tmp2, pc*100.0 );
 	AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	
-	tmp2[0] = 0; pc = rp_GetClientFloat(client, fl_ArtisanFatigue);
+	tmp2[0] = 0; pc = rp_GetClientFloat(target, fl_ArtisanFatigue);
 	rp_Effect_LoadingBar(tmp2, sizeof(tmp2),  pc );
 	Format(tmp, sizeof(tmp), "%T", "Artisan_SLEEP", client, tmp2, pc*100.0 );
 	AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	
-	Format(tmp, sizeof(tmp), "%T", "Artisan_POINTS", client, rp_GetClientInt(client, i_ArtisanPoints));
+	Format(tmp, sizeof(tmp), "%T", "Artisan_POINTS", client, rp_GetClientInt(target, i_ArtisanPoints));
 	AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 }
 // ----------------------------------------------------------------------------
