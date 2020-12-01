@@ -24,7 +24,8 @@ public int Native_rp_WeaponMenu_Create(Handle plugin, int numParams) {
 public int Native_rp_WeaponMenu_Clear(Handle plugin, int numParams) {
 	DataPack hBuyMenu = view_as<DataPack>(GetNativeCellRef(1));
 	
-	if( hBuyMenu )
+	
+	if( hBuyMenu != null && IsValidHandle(hBuyMenu) )
 		delete hBuyMenu;
 	
 	hBuyMenu = null;

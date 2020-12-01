@@ -81,7 +81,8 @@ public void OnPluginStart() {
 	for (int i = 1; i <= MaxClients; i++)
 		if( IsValidClient(i) )
 			OnClientPostAdminCheck(i);
-
+}
+public void OnAllPluginsLoaded() {
 	SQL_TQuery(rp_GetDatabase(), SQL_LoadReceipe, "\
 	( \
 	    SELECT `itemid`, `raw`, `amount`, SUBSTRING_INDEX(`extra_cmd`, ' ', -1) `rate` FROM `rp_craft` C INNER JOIN `rp_items` I ON C.`raw`=I.`id` WHERE `extra_cmd` LIKE 'rp_item_primal%' \

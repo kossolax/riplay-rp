@@ -17,6 +17,9 @@
 #include <smlib>		// https://github.com/bcserv/smlib
 #include <colors_csgo>	// https://forums.alliedmods.net/showthread.php?p=2205447#post2205447
 #include <emitsoundany> // https://forums.alliedmods.net/showthread.php?t=237045
+#include <audio>
+#include <sdktools_voice>
+#include <sdktools_functions>
 
 #pragma newdecls required
 #include <roleplay.inc>	// https://www.ts-x.eu
@@ -35,6 +38,7 @@
 #define MODEL_BUCKET1		"models/props_junk/trafficcone001a.mdl"
 #define MODEL_BUCKET2		"models/props_junk/metalbucket01a.mdl"
 #define MODEL_SENTRY		"models/props_survival/dronegun/dronegun.mdl"
+#define SENTRY_ANGLE		0.5
 
 Handle g_hOnSentryAttack;
 
@@ -45,8 +49,7 @@ enum {
 
 char g_szTrees[][] = {
 	"models/props/hr_massive/hr_foliage/birch_tree_01.mdl",
-	"models/props/hr_massive/hr_foliage/birch_tree_02.mdl",
-	"models/props/de_inferno/tree_large.mdl"
+	"models/props/hr_massive/hr_foliage/birch_tree_02.mdl"
 };
 char g_szWoodGibs[][] = {
 	"models/props/de_inferno/hr_i/wood_beam_a/wood_beam_a1.mdl"
@@ -85,16 +88,19 @@ public Action Cmd_Reload(int args) {
 	ServerCommand("sm plugins reload %s", name);
 	return Plugin_Continue;
 }
+AudioPlayer api;
 
 public void OnPluginStart() {
+	api = new AudioPlayer();
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	
 	RegServerCmd("rp_item_fish", 		Cmd_Fish,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_sentry", 		Cmd_Sentry,			"RP-ITEM",	FCVAR_UNREGISTERED);
+	RegConsoleCmd("sm_audio", 		Cmd_Audio);
 	
 	
 	HookEvent("round_start", 		EventRoundStart, 	EventHookMode_Post);
-	OnRoundStart();
+	
 	
 	g_iMaxRandomMineral = 0;
 	for (int i = 0; i < sizeof(g_szStone); i++) {
@@ -144,6 +150,32 @@ public void OnPluginStart() {
 			}
 		}
 	}
+}
+public void OnAllPluginsLoaded() {
+	OnRoundStart();
+}
+public Action Cmd_Audio(int client, int args) {
+	
+	char url[256];
+	GetCmdArgString(url, sizeof(url));
+	TrimString(url);
+	
+	if( strlen(url) < 10 )
+		Format(url, sizeof(url), "https://www.youtube.com/watch?v=NnhLfHNcB-o");
+	
+	int bot = CreateFakeClient("bot");
+	CS_SwitchTeam(bot, GetClientTeam(client));
+	CS_RespawnPlayer(bot);
+	
+	float pos[3];
+	Entity_GetAbsOrigin(client, pos);
+	TeleportEntity(bot, pos, NULL_VECTOR, NULL_VECTOR);
+	
+	//api.AddArg("-filter:a 'volume=0.2'");
+	api.SetFrom(5.0);
+	api.PlayAsClient(bot, url);
+	
+	return Plugin_Handled;
 }
 public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error, int err_max) {	
 	g_hOnSentryAttack = CreateGlobalForward("RP_OnSentryAttack", ET_Hook, Param_Cell, Param_Cell);
@@ -523,6 +555,10 @@ public Action OnPlayerRunCmd(int client) {
 	if( lvl >= 0 ) {
 		SpawnMineral();
 	}
+	
+	if( !api.IsFinished && api.PlayedSecs > 0.1 ) {
+		//PrintToChatAll("%.1f", api.PlayedSecs);
+	}
 }
 public bool FilterToNone(int entity, int mask, any data) {
 	return false;
@@ -775,11 +811,11 @@ int getEnemy(int ent, float src[3], float ang[3], float& tilt, float threshold) 
 			continue;
 		if( appart > 0 && rp_GetClientKeyAppartement(i, appart) )
 			continue;
-		if( zone == 1 && rp_GetClientJobID(i) == 101 || zone == 101 && rp_GetClientJobID(i) == 1 )
+		if( (zone == 1 && rp_GetClientJobID(i) == 101) || (zone == 101 && rp_GetClientJobID(i) == 1) )
 			continue;
 		if( rp_ClientCanAttack(owner, i) == false )
 			continue;
-		if( GetEntProp(i, Prop_Data, "m_takedamage") == 0 )
+		if( GetEntProp(i, Prop_Data, "m_takedamage") != 2 )
 			continue;
 		
 		Action a;
@@ -798,7 +834,7 @@ int getEnemy(int ent, float src[3], float ang[3], float& tilt, float threshold) 
 		if( tmp < dist ) {
 			float tilt2, yaw2;
 			getTargetAngle(ent, i, tilt2, yaw2);
-			if( FloatAbs(tilt-tilt2) <= threshold ) {
+			if( tilt2 > 0.5 - SENTRY_ANGLE/2 && tilt2 < 0.5 + SENTRY_ANGLE/2 && FloatAbs(tilt-tilt2) <= threshold ) {
 				
 				Handle trace = TR_TraceRayFilterEx(src, dst, MASK_SHOT, RayType_EndPoint, TraceEntityFilterSelf, ent);
 
@@ -892,8 +928,8 @@ public void OnThink(int ent) {
 		if( state == STATE_TURN_LEFT ) {
 			tilt += speed;
 			
-			if( tilt > 1.0 ) {
-				tilt = 1.0;
+			if( tilt > 0.5 + SENTRY_ANGLE/2 ) {
+				tilt = 0.5 + SENTRY_ANGLE/2;
 				state = STATE_TURN_RIGHT;
 				EmitAmbientSoundAny("survival/turret_idle_01.wav", NULL_VECTOR, ent);
 			}
@@ -901,8 +937,8 @@ public void OnThink(int ent) {
 		else {
 			tilt -= speed;
 			
-			if( tilt < 0.0 ) {
-				tilt = 0.0;
+			if( tilt < 0.5 - SENTRY_ANGLE/2 ) {
+				tilt = 0.5 - SENTRY_ANGLE/2;
 				state = STATE_TURN_LEFT;
 				EmitAmbientSoundAny("survival/turret_idle_01.wav", NULL_VECTOR, ent);
 			}
