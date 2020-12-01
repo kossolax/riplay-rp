@@ -81,6 +81,12 @@ float g_flAnimStart[2049];
 int g_iAnimState[2049];
 int g_iAnimEntity[65][3];
 
+public Plugin myinfo = {
+	name = "CRAFTING", author = "KoSSoLaX",
+	description = "RolePlay - CRAFTING",
+	version = __LAST_REV__, url = "https://www.ts-x.eu"
+};
+
 // ----------------------------------------------------------------------------
 public Action Cmd_Reload(int args) {
 	char name[64];
@@ -117,38 +123,6 @@ public void OnPluginStart() {
 		}
 		
 		//PrintToChatAll("%s -- %f %%", g_szStone[i][0], StringToInt(g_szStone[i][1]) / float(g_iMaxRandomMineral) * 100.0);
-	}
-	
-	if( true ) {
-		char model[PLATFORM_MAX_PATH];
-		float dst[3];
-		for (int i = 0; i < sizeof(g_szStone); i++) {
-			for (int type = 0; type < 3; type++ ) {
-				Format(model, sizeof(model), "%s", g_szStone[i][0]);
-				if( type > 0 ) {
-					if( type == 1 )
-						ReplaceString(model, sizeof(model), ".mdl", "2.mdl");
-					if( type == 2 )
-						ReplaceString(model, sizeof(model), ".mdl", "3.mdl");
-				}
-				int ent = CreateEntityByName("prop_physics");
-				DispatchKeyValue(ent, "model", model);
-				DispatchKeyValue(ent, "solid", "6");
-				DispatchKeyValue(ent, "classname", "rp_stone");
-				DispatchSpawn(ent);
-				ActivateEntity(ent);
-				rp_AcceptEntityInput(ent, "DisableMotion");
-				
-				dst[0] = -6837 - 80.0 * type;
-				dst[1] = 128.0 + 64.0 * i;
-				dst[2] = -2328.0;
-				
-				rp_SetBuildingData(ent, BD_item_id, StringToInt(g_szStone[i][3]));
-				SDKHook(ent, SDKHook_OnTakeDamage, OnPropDamage);
-				
-				TeleportEntity(ent, dst, NULL_VECTOR, NULL_VECTOR);
-			}
-		}
 	}
 }
 public void OnAllPluginsLoaded() {
@@ -415,6 +389,38 @@ public void OnRoundStart() {
 		
 		if( StrEqual(tmp, "tree") ) {
 			CreateTimer(GetRandomFloat(0.0, 3.0), SpawnTree, i);
+		}
+	}
+	
+	if( true ) {
+		char model[PLATFORM_MAX_PATH];
+		float dst[3];
+		for (int i = 0; i < sizeof(g_szStone); i++) {
+			for (int type = 0; type < 3; type++ ) {
+				Format(model, sizeof(model), "%s", g_szStone[i][0]);
+				if( type > 0 ) {
+					if( type == 1 )
+						ReplaceString(model, sizeof(model), ".mdl", "2.mdl");
+					if( type == 2 )
+						ReplaceString(model, sizeof(model), ".mdl", "3.mdl");
+				}
+				int ent = CreateEntityByName("prop_physics");
+				DispatchKeyValue(ent, "model", model);
+				DispatchKeyValue(ent, "solid", "6");
+				DispatchKeyValue(ent, "classname", "rp_stone");
+				DispatchSpawn(ent);
+				ActivateEntity(ent);
+				rp_AcceptEntityInput(ent, "DisableMotion");
+				
+				dst[0] = -6837 - 80.0 * type;
+				dst[1] = 128.0 + 64.0 * i;
+				dst[2] = -2328.0;
+				
+				rp_SetBuildingData(ent, BD_item_id, StringToInt(g_szStone[i][3]));
+				SDKHook(ent, SDKHook_OnTakeDamage, OnPropDamage);
+				
+				TeleportEntity(ent, dst, NULL_VECTOR, NULL_VECTOR);
+			}
 		}
 	}
 }
