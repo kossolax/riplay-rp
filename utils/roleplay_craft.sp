@@ -183,7 +183,11 @@ public Action Cmd_Sentry(int args) {
 	Entity_GetAbsOrigin(client, pos);
 	Entity_GetAbsAngles(client, ang);
 	
-	CreateSentry(client, pos, ang);
+	int ent = CreateSentry(client, pos, ang);
+	rp_SetBuildingData(ent, BD_owner, client);
+	SetEntProp( ent, Prop_Data, "m_iHealth", 100000);
+	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
+	
 }
 public Action Cmd_Fish(int args) {
 	int client = GetCmdArgInt(1);
@@ -703,7 +707,7 @@ stock int getMineLevel(int zone) {
 	return level[zone];
 }
 // ------------------------------------------------------------------------------------------------
-void CreateSentry(int owner, float pos[3], float ang[3]) {	
+int CreateSentry(int owner, float pos[3], float ang[3]) {	
 	int ent = CreateEntityByName("monster_generic");
 	DispatchKeyValue(ent, "classname", "rp_sentry");
 	DispatchKeyValue(ent, "model", MODEL_SENTRY);
@@ -717,6 +721,7 @@ void CreateSentry(int owner, float pos[3], float ang[3]) {
 	
 	TeleportEntity(ent, pos, ang, NULL_VECTOR);
 	SDKHook(ent, SDKHook_Think, OnThink);
+	return ent;
 }
 void getTargetAngle(int ent, int target, float& tilt, float& yaw) {
 	float src[3], dst[3], dir[3], ang[3];

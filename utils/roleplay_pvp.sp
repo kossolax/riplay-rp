@@ -195,7 +195,7 @@ public void OnPluginStart() {
 	
 	char szDayOfWeek[12];
 	FormatTime(szDayOfWeek, 11, "%w");
-	if( StringToInt(szDayOfWeek) == 5 ) { // Vendredi
+	if( StringToInt(szDayOfWeek) == 0 ) { // Vendredi --- TODO: Change back
 		ServerCommand("tv_enable 1");
 	}
 	
@@ -207,7 +207,7 @@ public void OnConfigsExecuted() {
 	}
 	char szDayOfWeek[12];
 	FormatTime(szDayOfWeek, 11, "%w");
-	if( StringToInt(szDayOfWeek) == 5 ) { // Vendredi
+	if( StringToInt(szDayOfWeek) == 0 ) { // Vendredi --- TODO: Change back
 		ServerCommand("tv_enable 1");
 		ServerCommand("mp_restartgame 1");
 		ServerCommand("spec_replay_enable 1");
@@ -252,6 +252,28 @@ public void OnClientPostAdminCheck(int client) {
 }
 public void OnClientDisconnect(int client) {
 	removeClientTeam(client);
+}
+
+public Action RP_OnSentryAttack(int entity, int target) {
+	int client = Entity_GetOwner(entity);
+	
+	if( rp_GetPlayerZone(entity) & BITZONE_PVP ) {
+		if( g_iCurrentState != view_as<int>(ps_none) ) {
+			if( g_iPlayerTeam[client] == view_as<int>(TEAM_RED) ) {
+				if( g_iPlayerTeam[target] != view_as<int>(TEAM_BLUE) )
+					return Plugin_Stop;
+			}
+			else {
+				return Plugin_Stop;
+			}
+		}
+		else {
+			if( rp_GetClientGroupID(client) == rp_GetClientGroupID(target) )
+				return Plugin_Stop;
+		}
+	}
+	
+	return Plugin_Continue;
 }
 // -----------------------------------------------------------------------------------------------------------------
 public Action Cmd_SpawnTag(int args) {
@@ -816,19 +838,19 @@ void STATE_ENTER_MATCH() {
 			continue;
 		
 		GetEdictClassname(i, classname, sizeof(classname));
-		if( !StrEqual(classname, "ctf_flag") )
-			continue;
-
-		int owner = g_iFlagData[i][data_owner];
-
-		if( owner == 0 || !IsValidClient(owner) ) {
-			rp_AcceptEntityInput(i, "KillHierarchy");
-			continue;
+		if( StrEqual(classname, "ctf_flag") ) {
+	
+			int owner = g_iFlagData[i][data_owner];
+	
+			if( owner == 0 || !IsValidClient(owner) ) {
+				rp_AcceptEntityInput(i, "KillHierarchy");
+				continue;
+			}
+			if( owner > 0 && g_iPlayerTeam[i] != view_as<int>(TEAM_BLUE) ) {
+				rp_AcceptEntityInput(i, "KillHierarchy");
+				continue;
+			}
 		}
-		if( owner > 0 && g_iPlayerTeam[i] != view_as<int>(TEAM_BLUE) ) {
-			rp_AcceptEntityInput(i, "KillHierarchy");
-			continue;
-		}		
 	}
 	
 	if( g_iCurrentState == view_as<int>(ps_match1) ) {

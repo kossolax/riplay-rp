@@ -545,6 +545,10 @@ public Action Cmd_ItemHamburger(int args) {
 				continue;
 			if( StrContains(cmd, "rp_chirurgie") == 0 )
 				continue;
+			if( StrContains(cmd, "rp_item_raw") == 0 )
+				continue;
+			if( rp_GetItemInt(i, item_type_prix) == 0 )
+				continue;
 			
 			rp_GetItemData(i, item_type_name, cmd, sizeof(cmd));
 			if( StrContains(cmd, "BETA", false) == 0 )

@@ -955,9 +955,15 @@ public void CRON_TIMER() {
 		
 		CreateTimer(0.1, RebootServer);
 	}
-	
+	/*
 	if( StringToInt(szDayOfWeek) == 5 ) { // Vendredi
 		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
+			ServerCommand("rp_capture 1");
+		}
+	}
+	*/
+	if( StringToInt(szDayOfWeek) == 0 ) { // Dimanche, temporaire --- TODO: TO REMOVE.
+		if( StringToInt(szHours) == 17 && StringToInt(szMinutes) == 30 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
 			ServerCommand("rp_capture 1");
 		}
 	}
