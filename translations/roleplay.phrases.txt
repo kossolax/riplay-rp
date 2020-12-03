@@ -600,6 +600,11 @@
 		"fr"	"un prop"
 		"en"	"a prop"
 	}
+	"rp_sentry"
+	{
+		"fr"	"une tourelle"
+		"en"	"a sentry"
+	}
 	"rp_sign"
 	{
 		"fr"	"un panneau"

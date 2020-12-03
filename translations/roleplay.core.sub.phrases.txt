@@ -390,5 +390,28 @@
 		"fr"	"- Vos machines produisent plus rapidement."
 	}
 	// ----------------------------------------------------------------------------------------------
-
+	"Menu_DisplayPhone"
+	{
+		"fr"	"Cabine téléphonique"
+	}
+	"Menu_DisplayPhone_pickup"
+	{
+		"fr"	"Décrocher le téléphone"
+	}
+	"Menu_DisplayPhone_quest"
+	{
+		"fr"	"Prendre une quête"
+	}
+	"Menu_DisplayPhone_mail"
+	{
+		"fr"	"Lire mes emails"
+	}
+	"Menu_DisplayPhone_call"
+	{
+		"fr"	"Appeler un joueur"
+	}
+	"Menu_DisplayPhone_report"
+	{
+		"fr"	"Rapporter un mauvais comportement"
+	}
 }
