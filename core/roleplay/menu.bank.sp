@@ -79,7 +79,7 @@ void DrawBankTransfer(int client) {
 	AddMenuItem(menu, "to_inve", tmp, g_iUserData[client][i_ItemBankCount] > 0 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 	
 	Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_hdv", client);
-	AddMenuItem(menu, "hdv", tmp, g_iUserData[client][i_ItemCount] > 0 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+	AddMenuItem(menu, "hdv", tmp, g_bUserData[client][b_HaveAccount] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 	
 	Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_save", client);
 	AddMenuItem(menu, "save", tmp, g_bUserData[client][b_HaveAccount] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
