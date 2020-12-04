@@ -1125,7 +1125,7 @@ float getDuration(int client, int itemID) {
 		if( g_flClientBook[client][book_speed] > GetTickedTime() )
 			duration -= (duration / 4.0);
 		
-		//duration = Logarithm(float(rp_GetClientInt(client, i_ArtisanLevel)), 2.0) - duration;
+		duration = duration / ((float(rp_GetClientInt(client, i_ArtisanLevel)) / 25.0) + 1.0);
 	}
 	
 	if( duration < 0.01 )
