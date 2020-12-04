@@ -780,7 +780,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 				AddMenuItem(menu, tmp, tmp2);
 			}
 			
-			DisplayMenu(menu, client, MENU_TIME_DURATION);
+			DisplayMenu(menu, client, MENU_TIME_DURATION*5);
 			
 		}
 	}
