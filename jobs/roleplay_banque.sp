@@ -42,13 +42,15 @@ public void OnPluginStart() {
 	LoadTranslations("roleplay.items.phrases");
 	LoadTranslations("roleplay.banque.phrases");
 	
-	RegServerCmd("rp_quest_reload", Cmd_Reload);
+	RegServerCmd("rp_quest_reload", 	Cmd_Reload);
 	RegServerCmd("rp_bankcard",			Cmd_ItemBankCard,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_bankkey",			Cmd_ItemBankKey,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_bankswap",			Cmd_ItemBankSwap,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_assurance",	Cmd_ItemAssurance,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_forward",		Cmd_ItemForward,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_noAction",	Cmd_ItemNoAction,		"RP-ITEM",	FCVAR_UNREGISTERED);
+	RegServerCmd("rp_item_raw",			Cmd_ItemNoAction,		"RP-ITEM",	FCVAR_UNREGISTERED);
+	RegServerCmd("UNKNOWN",				Cmd_ItemNoAction,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_primal",		Cmd_ItemForward,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_cheque",		Cmd_ItemCheque,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_packdebutant",Cmd_ItemPackDebutant, 	"RP-ITEM", 	FCVAR_UNREGISTERED);
