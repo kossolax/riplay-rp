@@ -30,7 +30,7 @@ public Plugin myinfo = {
 int g_iLastDoor[65][3];
 int g_iDoorDefine_LOCKER[2049];
 int g_iAppartPickLockCount[200];
-int g_iAppartNewPickLock[200];
+float g_flAppartNewPickLock[200];
 float g_flAppartProtection[200];
 bool g_bCanUseCB[MAXPLAYERS+1];
 Handle g_vCapture;
@@ -956,9 +956,9 @@ public Action Cmd_ItemPickLock(int args) {
 			return Plugin_Handled;
 		}
 
-		if (g_iAppartNewPickLock[appartID] > GetTime()) {
+		if (g_flAppartNewPickLock[appartID] > GetGameTime()) {
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_iAppartNewPickLock[appartID] - GetGameTime()) / 60.0);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartNewPickLock[appartID] - GetGameTime()) / 60.0);
 			return Plugin_Handled;
 		}
 		
@@ -970,7 +970,7 @@ public Action Cmd_ItemPickLock(int args) {
 		}
 
 		if(g_iAppartPickLockCount[appartID] == appartPickThreshold) {
-			g_iAppartNewPickLock[appartID] = GetTime() + newPickTime;
+			g_flAppartNewPickLock[appartID] = GetGameTime() + float(newPickTime);
 			g_iAppartPickLockCount[appartID] = 0;
 		}
 	}

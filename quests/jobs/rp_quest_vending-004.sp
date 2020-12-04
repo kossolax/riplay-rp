@@ -192,6 +192,9 @@ public void Q2_Frame(int objectiveID, int client)
 	}
 	
 	int nearest = getNearestEligible(client);
+	
+	if(nearest == -1)
+		p_QuestStepFail(client, objectiveID);
 
 	if (IsValidClient(nearest))
 	{
@@ -428,6 +431,10 @@ int getNearestEligible(int client)
 	int target = -1;
 	float src[3], dst[3], tmp, delta = 9999999.9;
 	bool isAlreadyClient = false;
+	
+	if(!IsValidEntity(g_iTaxi[client])
+		return -1;
+	
 	Entity_GetAbsOrigin(g_iTaxi[client], src);
 	
 	for (int i = 1; i <= MaxClients; i++) {

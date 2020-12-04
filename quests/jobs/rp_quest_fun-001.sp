@@ -240,7 +240,7 @@ public void Q2_Done(int objectiveID, int client)
 		return;
 	}
 	
-	Entity_SetCollisionGroup(g_iVehicle[client], COLLISION_GROUP_DEBRIS);
+	//Entity_SetCollisionGroup(g_iVehicle[client], COLLISION_GROUP_DEBRIS);
 	
 	float angle[3];
 	

@@ -98,6 +98,7 @@ public void OnPluginStart() {
 	LoadTranslations("core.phrases");
 	LoadTranslations("common.phrases");
 	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.core.phrases");
 	LoadTranslations("roleplay.items.phrases");
 	LoadTranslations("roleplay.police.phrases");
 	
@@ -1766,7 +1767,7 @@ public Action Cmd_ItemRatio(int args) {
 }
 public Action task_GPS(Handle timer, any client) {
 	Handle menu = CreateMenu(MenuTribunal_GPS);
-	SetMenuTitle(menu, "%T:\n ", "rp_item_ratio gps", client);
+	SetMenuTitle(menu, "%T:\n ", "Cmd_ListOfPlayer", client);
 	char tmp1[255], tmp2[255];
 	
 	for (int i = 1; i <= MaxClients; i++) {

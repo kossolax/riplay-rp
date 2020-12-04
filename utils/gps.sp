@@ -15,7 +15,7 @@ public Plugin myinfo = {
 };
 
 #define	MAX_NODE	2048
-#define MAX_ARC		MAX_NODE*2
+#define MAX_ARC		MAX_NODE
 #define SERV_IP		"5.196.39.48"
 //#define SERV_IP		"109.88.12.57"
 
@@ -25,8 +25,8 @@ float g_flNode[MAX_NODE][3];
 int g_iArc[MAX_ARC][4], g_cLaser, g_cBeam, g_iMarked[65];
 int g_iTarget[65];
 Handle g_hTimer[65];
-char loadNode[] = "SELECT `id`, `x`, `y`, `z` FROM `fireblue`.`rp_gps_node`;";
-char loadArc[] = "SELECT A.`id`, `src`, `dst`, `length`, length(`zone_type`) as `private` FROM `fireblue`.`rp_gps_arc` A INNER JOIN `rp_csgo`.`rp_location_zones` Z ON Z.`id`=A.`zoneID`;";
+char loadNode[] = "SELECT `id`, `x`, `y`, `z`, `zoneid` FROM `fireblue`.`rp_gps_node`;";
+char loadArc[] = "SELECT A.`id`, `src`, `dst`, `length`, length(`zone_type`) as `private`, A.`zoneID` FROM `fireblue`.`rp_gps_arc` A INNER JOIN `rp_csgo`.`rp_location_zones` Z ON Z.`id`=A.`zoneID`;";
 
 public void OnPluginStart() {
 	
@@ -64,8 +64,8 @@ public void OnMapStart() {
 	if (g_hBDD == INVALID_HANDLE) {
 		SetFailState("Connexion impossible: %s", g_szQuery);
 	}
+	
 	SQL_TQuery(g_hBDD, SQL_LoadNode, loadNode);
-	SQL_TQuery(g_hBDD, SQL_LoadArc, loadArc);
 }
 public void SQL_LoadNode(Handle owner, Handle hQuery, const char[] error, any none) {
 	int i;
@@ -75,7 +75,17 @@ public void SQL_LoadNode(Handle owner, Handle hQuery, const char[] error, any no
 		g_flNode[i][0] = SQL_FetchFloat(hQuery, 1);
 		g_flNode[i][1] = SQL_FetchFloat(hQuery, 2);
 		g_flNode[i][2] = SQL_FetchFloat(hQuery, 3);
+		
+		int zone1 = SQL_FetchInt(hQuery, 4);
+		int zone2 = rp_GetZoneFromPoint(g_flNode[i]);
+		
+		if( zone1 != zone2 ) {
+			Format(g_szQuery, sizeof(g_szQuery), "UPDATE `fireblue`.`rp_gps_node` SET `zoneid`='%d' WHERE `id`= %d;", zone2, i);
+			SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
+		}
 	}
+	
+	SQL_TQuery(g_hBDD, SQL_LoadArc, loadArc);
 }
 public void SQL_LoadArc(Handle owner, Handle hQuery, const char[] error, any none) {
 	int i;
@@ -86,6 +96,15 @@ public void SQL_LoadArc(Handle owner, Handle hQuery, const char[] error, any non
 		g_iArc[i][1] = SQL_FetchInt(hQuery, 2);
 		g_iArc[i][2] = SQL_FetchInt(hQuery, 3);
 		g_iArc[i][3] = SQL_FetchInt(hQuery, 4);
+		
+		int zone1 = SQL_FetchInt(hQuery, 5);
+		int zone2 = rp_GetZoneFromPoint(g_flNode[g_iArc[i][0]]);
+		int zone3 = rp_GetZoneFromPoint(g_flNode[g_iArc[i][1]]);
+		
+		if( !(zone1 == zone2 || zone1 == zone3) ) {
+			Format(g_szQuery, sizeof(g_szQuery), "UPDATE `fireblue`.`rp_gps_arc` SET `zoneid`='%d' WHERE `id`= %d;", zone2, i);
+			SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
+		}
 	}
 }
 // ----------------------------------------- EVENT
