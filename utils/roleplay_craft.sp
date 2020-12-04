@@ -25,7 +25,7 @@
 #include <roleplay.inc>	// https://www.ts-x.eu
 
 #define	STONE_HP			1
-#define TREE_HP				1
+#define TREE_HP				2
 #define TREE_RESPAWN_MIN	3.0
 #define TREE_RESPAWN_MAX	5.0
 #define STONE_MAX			64
@@ -55,21 +55,21 @@ char g_szWoodGibs[][] = {
 	"models/props/de_inferno/hr_i/wood_beam_a/wood_beam_a1.mdl"
 };
 char g_szStone[][][] = {
-	{"models/custom_prop/minerals/coal/coal.mdl",						"15",	"1", "0"},
-	{"models/custom_prop/minerals/granite/granite.mdl",					"14",	"1", "0"},
-	{"models/custom_prop/minerals/ironstone/ironstone.mdl", 			"13",	"1", "289"}, // fer
-	{"models/custom_prop/minerals/mineral6/mineral6.mdl", 				"12",	"1", "325"}, // alluminium
-	{"models/custom_prop/minerals/mica/mica.mdl", 						"11",	"1", "0"},
-	{"models/custom_prop/minerals/mineral7/mineral7.mdl", 				"10",	"2", "0"},
+//	{"models/custom_prop/minerals/coal/coal.mdl",						"15",	"1", "0"},
+//	{"models/custom_prop/minerals/granite/granite.mdl",					"14",	"1", "0"},
+	{"models/custom_prop/minerals/mineral10/mineral10.mdl", 			"9",	"1", "317"},  // sable
+	{"models/custom_prop/minerals/mineral7/mineral7.mdl", 				"9",	"1", "341"}, // azote
+	{"models/custom_prop/minerals/ironstone/ironstone.mdl", 			"9",	"1", "289"}, // fer
+	{"models/custom_prop/minerals/mineral6/mineral6.mdl", 				"9",	"2", "325"}, // alluminium
+//	{"models/custom_prop/minerals/mica/mica.mdl", 						"11",	"1", "0"},
 	{"models/custom_prop/minerals/mineral8/mineral8.mdl", 				"9",	"2", "311"}, // cuivre
 	{"models/custom_prop/minerals/mineral9/mineral9.mdl", 				"8",	"2", "290"}, // zinc
-	{"models/custom_prop/minerals/mineral10/mineral10.mdl", 			"7",	"2", "317"}, // sable
-	{"models/custom_prop/minerals/mineral11/mineral11.mdl", 			"6",	"3", "303"},   // or
-	{"models/custom_prop/minerals/mineral12/mineral12.mdl", 			"5",	"3", "0"},
-	{"models/custom_prop/minerals/mineral13/mineral13.mdl",		 		"4",	"3", "0"},
-	{"models/custom_prop/minerals/mineral_green/mineral_green.mdl", 	"3",	"3", "323"},  // uranium
-	{"models/custom_prop/minerals/mineral_orange/mineral_orange.mdl",	"2",	"4", "0"},
-	{"models/custom_prop/minerals/quartz/quartz.mdl", 					"1",	"4", "299"}   // souffre
+	{"models/custom_prop/minerals/quartz/quartz.mdl", 					"5",	"2", "299"},   // souffre
+	{"models/custom_prop/minerals/mineral11/mineral11.mdl", 			"2",	"3", "303"},   // or
+//	{"models/custom_prop/minerals/mineral12/mineral12.mdl", 			"5",	"3", "0"},
+	{"models/custom_prop/minerals/mineral13/mineral13.mdl",		 		"5",	"3", "342"},  // amoniac
+	{"models/custom_prop/minerals/mineral_green/mineral_green.mdl", 	"5",	"4", "323"}  // uranium
+//	{"models/custom_prop/minerals/mineral_orange/mineral_orange.mdl",	"2",	"4", "0"},
 };
 int g_iTreeID[2049], g_iStoneID[2049];
 int g_iStoneCount = 0;
@@ -396,7 +396,7 @@ public void OnRoundStart() {
 		}
 	}
 	
-	if( true ) {
+	if( false ) {
 		char model[PLATFORM_MAX_PATH];
 		float dst[3];
 		for (int i = 0; i < sizeof(g_szStone); i++) {
