@@ -354,42 +354,104 @@ public Action Command_DebugBF(int client, int args) {
 	ReplyToCommand(client, "BF DATE : %i (%s)", g_iBlackFriday[0], szDate);
 	ReplyToCommand(client, "BF REDUCTION : %i", g_iBlackFriday[1]);
 }
-
-/*public void OnAllPluginsLoaded() {
-	if( GetConVarInt(FindConVar("hostport")) != 27015 ) {
-		AddCommandOverride("sm_rcon", Override_Command, ReadFlagString("c"));
-		AddCommandOverride("sm_noclip", Override_Command, ReadFlagString("c"));
-		AddCommandOverride("sm_noclipme", Override_Command, 0);
-		AddCommandOverride("sm_force", Override_Command, 0);
-		
-		AddCommandOverride("sm_block", Override_Command, 0);
-		AddCommandOverride("sm_blocks", Override_Command, 0);
-		
-		AddCommandOverride("db_create_dynamic", Override_Command, 0);
-		AddCommandOverride("db_rotate", Override_Command, 0);
-		AddCommandOverride("db_remove", Override_Command, 0);
-		AddCommandOverride("db_info", Override_Command, 0);
-		
-		AddCommandOverride("rp_givemejob", Override_Command, 0);
-		AddCommandOverride("rp_givemegroup", Override_Command, 0);
-		AddCommandOverride("rp_giveitems", Override_Command, 0);
-		AddCommandOverride("rp_givemexp", Override_Command, 0);
-		AddCommandOverride("rp_clean", Override_Command, 0);
-		AddCommandOverride("rp_debug", Override_Command, 0);
-	}
-}*/
 public void OnConfigsExecuted() {
-	ServerCommand("weapon_accuracy_nospread 0");
-	ServerCommand("sv_usercmd_custom_random_seed 0");
-	ServerCommand("spec_freeze_deathanim_time 999999");
-	ServerCommand("mp_forcecamera 1");	
-	ServerCommand("mp_radar_showall 2");
-	ServerCommand("weapon_recoil_scale 1");
+	/* Armes*/
 	ServerCommand("ammo_grenade_limit_snowballs 1");
-	ServerCommand("sv_shield_hitpoints 5000");
-	
+	ServerCommand("healthshot_health 250");
+	ServerCommand("sv_extract_ammo_from_dropped_weapons 0");
+	ServerCommand("sv_infinite_ammo 0");
+	ServerCommand("mp_molotovusedelay 0");
+	ServerCommand("mp_weapons_allow_map_placed 1");
+	ServerCommand("mp_t_default_secondary \"\"");
+	ServerCommand("mp_ct_default_secondary \"\"");
+	ServerCommand("weapon_accuracy_nospread 0");
+	ServerCommand("weapon_recoil_scale 1");
+	ServerCommand("weapon_reticle_knife_show 1");
+	ServerCommand("weapon_auto_cleanup_time 60");
+	ServerCommand("weapon_max_before_cleanup 128");
+	/* Config round */
+	ServerCommand("mp_ignore_round_win_conditions 0");
+	ServerCommand("mp_do_warmup_period 0");
+	ServerCommand("mp_warmuptime 0");
+	ServerCommand("mp_timelimit 0");
+	ServerCommand("mp_fraglimit 0");
+	ServerCommand("mp_match_can_clinch 0");
+	ServerCommand("mp_freezetime 0");
+	ServerCommand("mp_respawn_immunitytime 0");
+	ServerCommand("mp_randomspawn 0");
+	ServerCommand("mp_match_end_restart 0");
+	ServerCommand("mp_roundtime 0");
+	ServerCommand("mp_backup_round_file \"\"");
+	ServerCommand("mp_backup_round_auto 0");
+	ServerCommand("mp_randomspawn 0");
+	/* Config caméra */
+	ServerCommand("mp_forcecamera 2");
+	ServerCommand("mp_radar_showall 2");
+	/* Config damage */
+	ServerCommand("mp_friendlyfire 1");
+	ServerCommand("mp_autokick 0");
+	ServerCommand("mp_teammates_are_enemies 1");
+	ServerCommand("mp_tkpunish 0");
+	ServerCommand("sv_disable_immunity_alpha 1");
+	/* Config HUD */		
+	ServerCommand("mp_playerid 2");
+	ServerCommand("mp_playerid_delay 0");
+	ServerCommand("mp_playerid_hold 0");
+	/* Config log */	
+	ServerCommand("mp_logdetail 3");
+	ServerCommand("mp_logdetail_items 1");
+	ServerCommand("sv_logflush 1");
+	/* Config team */
+	ServerCommand("mp_humanteam T");
+	ServerCommand("mp_solid_teammates 1");
+	ServerCommand("mp_limitteams 0");
+	ServerCommand("mp_playercashawards 0");
+	ServerCommand("mp_teamcashawards 0");
+	ServerCommand("mp_spectators_max 10 ");
+	ServerCommand("spec_freeze_deathanim_time 999999");
+	ServerCommand("cs_enable_player_physics_box 1");
+	/* Config drop */
+	ServerCommand("mp_death_drop_breachcharge  1");
+	ServerCommand("mp_death_drop_gun 1");
+	ServerCommand("mp_death_drop_healthshot  1");
+	ServerCommand("mp_death_drop_taser 1");
+	ServerCommand("mp_drop_knife_enable 1");
+	/* Config message */
+	ServerCommand("sv_damage_print_enable 0");
+	ServerCommand("sv_ignoregrenaderadio 1");
+	ServerCommand("sv_ignoregrenaderadio 1");
+	ServerCommand("sv_allow_votes 0");
+	ServerCommand("sv_gameinstructor_disable 1");	
+	/* Config server */
+	ServerCommand("sv_usercmd_custom_random_seed 0");
+	ServerCommand("sv_allow_thirdperson 1");
+	ServerCommand("sv_cheats 1");
+	ServerCommand("sv_dc_friends_reqd 0");
+	ServerCommand("sv_kick_players_with_cooldown 0");
+	ServerCommand("sv_vote_kick_ban_duration 1");
+	ServerCommand("sv_disable_motd 0");
+	ServerCommand("sv_force_transmit_players 1");
+	ServerCommand("sv_steamauth_enforce 0");
+	/* Config all-talk */
+	ServerCommand("sv_alltalk 1");
+	ServerCommand("sv_full_alltalk 1");
+	ServerCommand("sv_talk_enemy_alive 1");
+	ServerCommand("sv_talk_enemy_living 1");
+	/* Config cash */
+	ServerCommand("cash_player_killed_enemy_factor 0");
+	ServerCommand("cash_player_killed_enemy_default 0");
+	/* Config Steam */
+	ServerCommand("host_name_store 1");
+	ServerCommand("host_info_show 2");
+	ServerCommand("host_players_show 2");
+	ServerCommand("sv_tags \"roleplay,rp,ba-jail,ba_jail,bajail,jail\"");
+	ServerCommand("sv_steamgroup 1454657");
+	/* Config autre plugins */
+	ServerCommand("cheatcontrol_enablewarnings 0");
+
+	/* Restart */
+	ServerCommand("mp_restartgame 1");
 	ServerCommand("ent_remove_all prop_vehicle_driveable");
-	
 	//g_hWeaponScale = FindConVar("weapon_recoil_scale");
 }
 public Action SwitchOFF(Handle timer, any omg) {
