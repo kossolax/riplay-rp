@@ -48,7 +48,7 @@ Action TextMsgHintTextHook(UserMsg msg_id, Protobuf msg, const int[] players, in
 		return Plugin_Continue;
 	}
 		
-	if(StrContains(sBuf, "<font") != -1 || StrContains(sBuf, "<span") != -1 || true ) // only hook msg with colored tags
+	if(StrContains(sBuf, "<font") != -1 || StrContains(sBuf, "<span") != -1 || StrContains(sBuf, "<b") != -1 ) // only hook msg with colored tags
 	{
 		DataPack hPack = new DataPack();
 		
