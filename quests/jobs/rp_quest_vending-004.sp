@@ -401,7 +401,7 @@ int spawnVehicle(int client)
 		if (g_flStartPos[rnd[i]][2] < -2200.0)
 			ang[1] = 90.0;
 		
-		ent = rp_CreateVehicle(g_flStartPos[rnd[i]], ang, "models/natalya/vehicles/police_crown_victoria_csgo_v2.mdl", 0, 0, true);
+		ent = rp_CreateVehicle(g_flStartPos[rnd[i]], ang, "models/natalya/vehicles/police_crown_victoria_csgo_v2.mdl", 0, 0);
 		if (ent > 0 && rp_IsValidVehicle(ent)) {
 			break;
 		}
