@@ -85,7 +85,6 @@ public void OnAllPluginsLoaded()
 
 public bool fwdCanStart(int client)
 {
-	return false;
 	for (int i = 0; i < MaxClients; i++) {
 		if(!IsValidClient(i))
 			continue;
@@ -94,7 +93,7 @@ public bool fwdCanStart(int client)
 			return true;
 	}
 	
-	return true; // return false
+	return false; // return false
 }
 
 int BeamSpriteCircle;
