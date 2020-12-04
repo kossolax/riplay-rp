@@ -1208,7 +1208,7 @@ int BuidlingTABLE(int client, int type) {
 		
 		if( StrEqual(classname, tmp) && rp_GetBuildingData(i, BD_owner) == client ) {
 			count++;
-			if( count >= 1 ) {
+			if( count >= 2 ) {
 				CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
 				return 0;
 			}
