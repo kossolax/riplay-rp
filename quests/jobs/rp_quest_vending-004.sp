@@ -78,7 +78,6 @@ public void OnAllPluginsLoaded() {
 
 public bool fwdCanStart(int client)
 {
-	return false;
 	if (rp_GetClientJobID(client) == 91 || rp_GetClientJobID(client) == 81) 
 		return false;
 		
@@ -194,7 +193,7 @@ public void Q2_Frame(int objectiveID, int client)
 	int nearest = getNearestEligible(client);
 	
 	if(nearest == -1)
-		p_QuestStepFail(client, objectiveID);
+		rp_QuestStepFail(client, objectiveID);
 
 	if (IsValidClient(nearest))
 	{
@@ -432,7 +431,7 @@ int getNearestEligible(int client)
 	float src[3], dst[3], tmp, delta = 9999999.9;
 	bool isAlreadyClient = false;
 	
-	if(!IsValidEntity(g_iTaxi[client])
+	if(!IsValidEntity(g_iTaxi[client]) )
 		return -1;
 	
 	Entity_GetAbsOrigin(g_iTaxi[client], src);

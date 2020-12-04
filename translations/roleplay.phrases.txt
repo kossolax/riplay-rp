@@ -13,7 +13,6 @@
 	}
 	"Error_Command_Here"
 	{
-		"#format"	"{1:s}"
 		"fr"		"Vous ne pouvez pas utiliser cette commande ici."
 		"en"		"You cannot use this command here."
 	}
