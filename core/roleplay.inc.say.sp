@@ -1258,10 +1258,10 @@ public Action Command_Say(int client, int args) {
 		
 		char clientname[64], targetname[64];
 		GetClientName2(client, clientname, sizeof(clientname), false);
-		GetClientName2(target, clientname, sizeof(clientname), false);
+		GetClientName2(target, targetname, sizeof(targetname), false);
 		
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_Out_Target", client, targetname);
-		CPrintToChat(target, ""...MOD_TAG..." %T", "Cmd_Out_Target", target, clientname);
+		CPrintToChat(target, ""...MOD_TAG..." %T", "Cmd_Out_Self", target, clientname);
 		LogToGame("[OUT] %L a sorti %L", client, target);
 		
 		SendPlayerToSpawn(target, true);
