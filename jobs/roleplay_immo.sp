@@ -674,7 +674,11 @@ public Action OnEmote(int client, const char[] emote, float time) {
 					rp_ClientXPIncrement(client, xp);
 				
 				if( g_iDirtyCount[appart] == 0 ) {
-					// maybe r_cleardecals?
+					ClientCommand(client, "r_cleardecals");
+					for (int i = 1; i <= MaxClients; i++) {
+						if( IsValidClient(i) && rp_GetClientKeyAppartement(i, appart) )
+							ClientCommand(i, "r_cleardecals");
+					}
 				}
 			}
 		}
