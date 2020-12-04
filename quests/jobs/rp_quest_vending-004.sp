@@ -90,6 +90,7 @@ public bool fwdCanStart(int client)
 public void Q1_Start(int objectiveID, int client)
 {
 	g_iTaxi[client] = spawnVehicle(client);
+	
 	Format(g_CurrentDestination[client], sizeof(g_CurrentDestination), "");
 	g_iNbClient[client] = 0;
 	
@@ -110,7 +111,6 @@ public void Q1_Start(int objectiveID, int client)
 	
 	g_iDuration[client] = 2 * 60;
 }
-
 public void Q1_Frame(int objectiveID, int client)
 {
 	g_iDuration[client]--;
@@ -163,28 +163,30 @@ public void Q2_Frame(int objectiveID, int client)
 	{
 		if(!IsValidClient(i))
 			continue;
-			
-		for (int k = 0; k < 3; k++)
-		{
-			if (g_iPastClient[client][k] == i)
-			{
-				isAlreadyClient = true;
-				break;
-			}
-		}
+		
+		if(i == client)
+			continue;
 		
 		if (rp_GetClientVehiclePassager(i) > 0)
 		{
+			for (int k = 0; k < 3; k++)
+			{
+				if (g_iPastClient[client][k] == i)
+				{
+					isAlreadyClient = true;
+					break;
+				}
+			}
+			
 			if(isAlreadyClient)
 			{
 				rp_ClientVehiclePassagerExit(i, g_iTaxi[client]);
 			}
 			else
-			{		
+			{        
 				g_iCurrentClient[client] = i;
 				rp_QuestStepComplete(client, objectiveID);
 			}
-
 		}
 	}
 	
@@ -325,6 +327,7 @@ public void Q4_Done(int objectiveID, int client)
 		rp_ClientVehiclePassagerExit(client, g_iTaxi[client]);
 		rp_SetVehicleInt(g_iTaxi[client], car_health, -1);
 		
+		
 		Menu menu = new Menu(MenuNothing);
 		menu.SetTitle("Quête: %s", QUEST_NAME);
 		menu.ExitButton = false;
@@ -398,7 +401,7 @@ int spawnVehicle(int client)
 		if (g_flStartPos[rnd[i]][2] < -2200.0)
 			ang[1] = 90.0;
 		
-		ent = rp_CreateVehicle(g_flStartPos[rnd[i]], ang, "models/natalya/vehicles/police_crown_victoria_csgo_v2.mdl", 0, 0);
+		ent = rp_CreateVehicle(g_flStartPos[rnd[i]], ang, "models/natalya/vehicles/police_crown_victoria_csgo_v2.mdl", 0, 0, true);
 		if (ent > 0 && rp_IsValidVehicle(ent)) {
 			break;
 		}

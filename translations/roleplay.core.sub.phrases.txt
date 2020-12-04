@@ -357,7 +357,7 @@
 	{
 		"fr"	"- +50%% de vitesse de déplacement après un vol."
 	}
-	"Cmd_Passive_Disable_Confirm_191"
+	"Cmd_Passive_Disable_Confirm_91"
 	{
 		"fr"	"- +50%% de vitesse de déplacement après un vol."
 	}

@@ -618,6 +618,11 @@
 		"#format"	"{1:d},{2:.2f}"
 		"fr"		"Bois\nHP {1} - {2}%"
 	}
+	"Hint_Bois"
+	{
+		"#format"	"{1:d},{2:.2f}"
+		"fr"		"Bois\nHP {1} - {2}%"
+	}
 	"Hint_Stone"
 	{
 		"#format"	"{1:s},{2:d},{3:.2f}"
