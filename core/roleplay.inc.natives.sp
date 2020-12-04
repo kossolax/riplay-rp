@@ -991,7 +991,6 @@ public int Native_rp_SetClientVehiclePassager(Handle plugin, int numParams ) {
 	g_iCarPassager1[car][offset] = client;
 	g_iCarPassager2[client] = car;
 	Format(tmp, sizeof(tmp), "vehicle_feet_passenger%d", offset);
-	PrintToChatAll("about to attach %d on %s", client, tmp);
 	
 	int ent = CreateEntityByName("prop_dynamic");	
 	if( version == 2 )

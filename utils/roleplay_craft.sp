@@ -26,8 +26,8 @@
 
 #define	STONE_HP			1
 #define TREE_HP				2
-#define TREE_RESPAWN_MIN	3.0
-#define TREE_RESPAWN_MAX	5.0
+#define TREE_RESPAWN_MIN	30.0
+#define TREE_RESPAWN_MAX	60.0
 #define STONE_MAX			64
 
 #define ITEM_BOIS			293
@@ -717,10 +717,11 @@ int CreateSentry(int owner, float pos[3], float ang[3]) {
 	Entity_SetOwner(ent, owner);
 	SetEntityFlags(ent, 262144);
 	SetEntityMoveType(ent, MOVETYPE_FLYGRAVITY);
-	SetEntProp(ent, Prop_Data, "m_lifeState", 2);
+	SetEntProp(ent, Prop_Data, "m_lifeState", 0);
 	
 	TeleportEntity(ent, pos, ang, NULL_VECTOR);
 	SDKHook(ent, SDKHook_Think, OnThink);
+	
 	return ent;
 }
 void getTargetAngle(int ent, int target, float& tilt, float& yaw) {

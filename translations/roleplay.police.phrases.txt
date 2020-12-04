@@ -142,8 +142,8 @@
 	"JailArrest_By"
 	{
 		"#format"	"{1:s},{2:d},{3:t}"
-		"fr"		"Vous avez été arreté {1} heure(s) par {2} pour {red}{3}{default}."
-		"en"		"You have been stopped {1} hour(s) by {2} for {red}{3}{default}."
+		"fr"		"Vous avez été arreté {2} heure(s) par {1} pour {red}{3}{default}."
+		"en"		"You have been stopped {2} hour(s) by {1} for {red}{3}{default}."
 	}
 	"JailWait_Target"
 	{

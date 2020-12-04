@@ -54,7 +54,7 @@ public Plugin myinfo = {
 };
 int doRP_CanClientCraftForFree(int client, int itemID) {
 	int a = 0;
-	if( g_iItemCraftType[itemID] == 0 ) {
+	if( g_iItemCraftType[itemID] == -2 && g_iItemCraftGoal[itemID] == 0 ) {
 		Call_StartForward(rp_GetForwardHandle(client, RP_PreClientCraft));
 		Call_PushCell(client);
 		Call_PushCell(itemID);
@@ -1111,13 +1111,13 @@ float getDuration(int client, int itemID) {
 	for (int i = 0; i < magic.Length; i++) {
 		magic.GetArray(i, data);
 		
-		if( g_iItemCraftType[itemID] == 0 )
+		if( g_iItemCraftType[itemID] == -2 && g_iItemCraftGoal[itemID] == 0 )
 			duration += 0.02 * data[craft_amount];
 		else
 			duration += 1.0 * data[craft_amount];
 	}
 	
-	if( g_iItemCraftType[itemID] == 0 ) {	
+	if( g_iItemCraftType[itemID] == -2 && g_iItemCraftGoal[itemID] == 0 ) {
 		if( g_flClientBook[client][book_speed] > GetTickedTime() )
 			duration -= (duration / 2.0);
 	}

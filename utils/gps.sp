@@ -14,7 +14,7 @@ public Plugin myinfo = {
 	version = "1.0", url = "https://www.ts-x.eu"
 };
 
-#define	MAX_NODE	1024
+#define	MAX_NODE	2048
 #define MAX_ARC		MAX_NODE*2
 #define SERV_IP		"5.196.39.48"
 //#define SERV_IP		"109.88.12.57"
@@ -188,6 +188,21 @@ public int MenuGps(Handle menu, MenuAction action, int client, int param2) {
 				RoundFloat(vec[0]), RoundFloat(vec[1]), RoundFloat(vec[2]), rp_GetZoneFromPoint(vec));
 				
 				SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
+				SQL_TQuery(g_hBDD, SQL_LoadNode, loadNode);
+			}
+			else if( StrEqual(szMenu, "delNode") ) {
+				float vec[3];
+				GetClientAbsOrigin(client, vec);
+				vec[2] += 32.0;
+				
+				int node = findNearestNode(vec);
+				PrintToChatAll("%d", node);
+				
+				Format(g_szQuery, sizeof(g_szQuery), "DELETE FROM `fireblue`.`rp_gps_arc` WHERE `src`=%d OR `dst`= %d;", node, node);
+				SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
+				Format(g_szQuery, sizeof(g_szQuery), "DELETE FROM `fireblue`.`rp_gps_node` WHERE `id`= %d;", node);
+				SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
+				
 				SQL_TQuery(g_hBDD, SQL_LoadNode, loadNode);
 			}
 			else if( StrEqual(szMenu, "markNode") ) {

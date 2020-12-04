@@ -65,7 +65,7 @@ char szGeneralMenu[64];
 char DeniedCMD[][] = {"coverme", "takepoint", "holdpos", "regroup", "followme", "takingfire", "go", "fallback", "sticktog",
 	"getinpos", "stormfront", "report", "roger", "enemyspot", "needbackup", "sectorclear", "inposition", "reportingin",
 	"getout", "negative","enemydown", "radio1", "radio2", "radio3", "cheer", "compliment", "thanks", "explode", "kill", "r_screenoverlay",
-	"chooseteam", "chooseclass", "joinclass", "spectate", "spec_mode", "cl_spec_mode", "killvector", "teammenu" };
+	"chooseteam", "chooseclass", "joinclass", "spectate", "spec_mode", "cl_spec_mode", "killvector", "teammenu", "chatwheel_ping" };
 
 
 

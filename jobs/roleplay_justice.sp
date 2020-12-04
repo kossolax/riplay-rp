@@ -1019,7 +1019,7 @@ public Action Timer_AUDIENCE(Handle timer, any type) {
 	mid = getZoneMiddle(jail);
 	
 	ServerCommand("sm_effect_gps %d %f %f %f", target, mid[0], mid[1], mid[2]);
-	PrintHintText(target, "Tribunal_Menu_Audiance_Target", target, type, g_szCondamnation[timeToSeverity(time)]);
+	PrintHintText(target, "%T", "Tribunal_Menu_Audiance_Target", target, type, g_szCondamnation[timeToSeverity(time)]);
 	
 	g_iTribunalData[type][td_Time]++;
 	return Plugin_Continue;
