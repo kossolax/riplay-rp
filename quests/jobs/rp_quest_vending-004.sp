@@ -78,6 +78,7 @@ public void OnAllPluginsLoaded() {
 
 public bool fwdCanStart(int client)
 {
+	return false;
 	if (rp_GetClientJobID(client) == 91 || rp_GetClientJobID(client) == 81) 
 		return false;
 		
