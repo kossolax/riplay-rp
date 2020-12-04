@@ -37,6 +37,8 @@ enum craft_book {
 
 StringMap g_hReceipe;
 int g_iItemCraftType[MAX_ITEMS];
+int g_iItemCraftGoal[MAX_ITEMS];
+
 bool g_bCanCraft[65][MAX_ITEMS];
 bool g_bInCraft[65];
 float g_flClientBook[65][view_as<int>(book_max)];
@@ -91,6 +93,17 @@ public void OnAllPluginsLoaded() {
 	    UNION \
 	    SELECT `itemid`, `raw`, `amount`, 0 as `rate` FROM `rp_craft` C INNER JOIN `rp_items` I ON C.`raw`=I.`id` WHERE `extra_cmd` LIKE 'rp_item_raw%' \
 	) ORDER BY `itemid`, `raw`", 0, DBPrio_Low);
+	
+	SQL_TQuery(rp_GetDatabase(), SQL_LoadReceipe2, "\
+		SELECT * FROM ( \
+			SELECT DISTINCT \
+				I.id, I.nom, I.`extra_cmd`, I.description  \
+				FROM `rp_craft` A INNER JOIN `rp_items` I ON A.`itemid`=I.`id`  \
+				WHERE A.itemid NOT IN (  \
+					SELECT raw FROM rp_craft  \
+				)  \
+				AND A.itemid IN (SELECT itemid FROM rp_craft C INNER JOIN rp_items I ON I.id=C.raw WHERE I.extra_cmd LIKE 'rp_item_raw%')  \
+			) A WHERE `extra_cmd`<>'UNKNOWN'", 0, DBPrio_Low);
 }
 public Action CmdSetFatigue(int client, int args) {
 	float f = GetCmdArgFloat(2);
@@ -160,6 +173,15 @@ public Action Cmd_ItemCraftBook(int args) {
 	displayStatsMenu(client);
 	return Plugin_Handled;
 }
+public void SQL_LoadReceipe2(Handle owner, Handle hQuery, const char[] error, any client) {
+	for (int i = 0; i < MAX_ITEMS; i++) {
+		g_iItemCraftGoal[i] = 0;
+	}
+	while( SQL_FetchRow(hQuery) ) {
+		int itemID = SQL_FetchInt(hQuery, 0);
+		g_iItemCraftGoal[itemID] = 1;
+	}
+}
 public void SQL_LoadReceipe(Handle owner, Handle hQuery, const char[] error, any client) {
 	PrintToChatAll(error);
 	if( g_hReceipe ) {
@@ -191,11 +213,11 @@ public void SQL_LoadReceipe(Handle owner, Handle hQuery, const char[] error, any
 		ExplodeString(tmp, " ", tmp2, sizeof(tmp2), sizeof(tmp2[]));
 		
 		if( StrContains(tmp, "rp_item_primal") == 0 )
-			g_iItemCraftType[i] = 0;
+			g_iItemCraftType[i] = -1;
 		else if( StrContains(tmp, "rp_item_raw") == 0 )
 			g_iItemCraftType[i] = StringToInt(tmp2[1]);
 		else
-			g_iItemCraftType[i] = -1;
+			g_iItemCraftType[i] = -2;
 	}
 	return;
 }
@@ -444,7 +466,7 @@ void displayBuild2Menu(int client, int jobID, int target, int itemID, int amount
 		SetMenuTitle(menu, "%T\n ", "Artisan_Menu", client, "Artisan_Build");
 		
 		for(int i = 0; i < MAX_ITEMS; i++) {
-			if( type != g_iItemCraftType[i] )
+			if( g_iItemCraftType[i] > 0 && type != g_iItemCraftType[i] )
 				continue;
 			
 			Format(tmp, sizeof(tmp), "%d", i);
@@ -542,7 +564,6 @@ void displayBuild2Menu(int client, int jobID, int target, int itemID, int amount
 	DisplayMenu(menu, client, 30);
 }
 void displayBuildMenu(int client, int jobID, int itemID) {
-	
 	int type = rp_GetBuildingData(isNearTable(client), BD_item_id);
 	int clientItem[MAX_ITEMS];
 	int[] data = new int[craft_type_max];
@@ -576,13 +597,23 @@ void displayBuildMenu(int client, int jobID, int itemID) {
 		SetMenuTitle(menu, "%T\n ", "Artisan_Menu", client, "Artisan_Build");
 		
 		for(int i = 0; i < MAX_ITEMS; i++) {
-			if( type != g_iItemCraftType[i] )
-				continue;
-
+	
 			if( type == 0 ) {
+				if( g_iItemCraftType[i] == -2 && g_iItemCraftGoal[i] == 1 )
+					continue;
+				if( g_iItemCraftType[i] >= 0 )
+					continue;
 				if( !g_bCanCraft[client][i] && !doRP_CanClientCraftForFree(client, i) )
 					continue;
 				if( rp_GetItemInt(i, item_type_job_id) != jobID && jobID != -1 )
+					continue;
+			}
+			else {
+				if( g_iItemCraftType[i] == -1 )
+					continue;
+				if( g_iItemCraftType[i] >= 0 && type != g_iItemCraftType[i] )
+					continue;
+				if( g_iItemCraftType[i] == -2 && g_iItemCraftGoal[i] != 1 )
 					continue;
 			}
 			
@@ -988,8 +1019,12 @@ public Action stopBuilding(Handle timer, Handle dp) {
 		for (int i = 0; i < magic.Length; i++) {  // Pour chaque items de la recette:
 			magic.GetArray(i, data);
 			
+			int prix = rp_GetItemInt(data[craft_raw], item_type_prix);
+			if( prix < 0 )
+				prix = 25;
+			
 			if( !failed )
-				ClientGiveXP(client, rp_GetItemInt(data[craft_raw], item_type_prix) *  data[craft_amount]);
+				ClientGiveXP(client, prix *  data[craft_amount]);
 			if( !free )
 				rp_ClientGiveItem(target, data[craft_raw], -data[craft_amount]);		
 		}
