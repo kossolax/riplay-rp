@@ -922,8 +922,10 @@ public void OnThink(int ent) {
 					
 					AddVectors(vel, dir, dir);
 					TeleportEntity(victim, NULL_VECTOR, NULL_VECTOR, dir);
-					if( damage > 0 )
-						rp_ClientDamage(victim, damage, Entity_GetOwner(ent), "rp_sentry");
+					if( damage > 0 ) {
+						rp_SetClientInt(victim, i_LastInflictor, ent);
+						SDKHooks_TakeDamage(victim, ent, Entity_GetOwner(ent), float(damage), ent);
+					}
 				}
 				
 				TE_SetupBeamPoints(src, dst, g_cBeam, 0, 0, 0, 0.1, 0.25, 0.25, 0, 0.0, { 64, 64, 64, 64 }, 0);

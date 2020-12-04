@@ -721,6 +721,7 @@ enum int_user_data {
 	i_Esquive,
 	i_LastKilled,
 	i_LastKilled_Reverse,
+	i_LastInflictor,
 	i_Client,
 	i_LastForcedSave,
 	i_ToKill,

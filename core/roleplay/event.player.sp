@@ -449,14 +449,17 @@ public void ClientConVar(QueryCookie cookie, int client, ConVarQueryResult resul
 	}
 	if( StrEqual(cvarName, "cl_join_advertise", false) ) {
 		if( StrEqual(cvarValue, "2") == false && Math_GetRandomInt(0, 4) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Entrez cl_join_advertise 2 pour que vos amis puissent vous rejoindre facilement.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "cl_join_advertise", client);
 		}
 	}
 	
 }
 public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
+	static char weapon[64], client_name[128], target_name[128];
 	int Client = GetClientOfUserId(GetEventInt(ev, "userid"));
 	int Attacker = GetClientOfUserId(GetEventInt(ev, "attacker"));
+	GetEventString(ev, "weapon", weapon, sizeof(weapon));
+	
 	float time = GetGameTime();
 	float respawn = float(g_iUserData[Client][i_KillJailDuration]) + 5.0;
 	
@@ -469,7 +472,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 		respawn *= 0.75;
 	
 	
-	float killAcceleration = getKillAcceleration(Attacker, Client);
+	float killAcceleration = getKillAcceleration(Attacker, Client, g_iUserData[Client][i_LastInflictor], weapon);
 	int killDuration = 5;
 	if( g_iKillLegitime[Attacker][Client] >= GetTime() || rp_GetZoneBit(rp_GetPlayerZone(Client)) & BITZONE_LEGIT ) {
 		killDuration = 0;
@@ -489,8 +492,8 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 	g_iUserStat[Client][i_Deaths]++;
 	showGraveMenu(Client);
 	
-	char weapon[64], client_name[128], target_name[128];
-	GetEventString(ev, "weapon", weapon, sizeof(weapon));
+	
+	
 	GetClientName2(Client, client_name, sizeof(client_name), false);
 	if( IsValidClient(Attacker) )
 		GetClientName2(Attacker, target_name, sizeof(target_name), false);

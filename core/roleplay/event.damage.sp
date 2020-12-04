@@ -15,6 +15,8 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 	int victim_zone = GetPlayerZone(victim);
 	int attacker_zone = GetPlayerZone(attacker);
 	
+	g_iUserData[victim][i_LastInflictor] = inflictor;
+	
 	if( IsValidClient(victim) && attacker > MaxClients && attacker == inflictor && weapon == -1 && damagetype == DMG_NEVERGIB|DMG_CLUB ) {
 		char tmp[64];
 		GetEdictClassname(inflictor, tmp, sizeof(tmp));
@@ -101,6 +103,7 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 	
 	
 #endif
+	
 	if( attacker == 0 && inflictor == 0 && damagetype == DMG_FALL ) {
 		if( g_flUserData[victim][fl_Alcool] >= 1.0 ) {
 			damage *= 0.0;

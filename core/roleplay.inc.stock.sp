@@ -32,11 +32,16 @@ int getNextReboot() {
 	
 	return next;
 }
-float getKillAcceleration(int attack, int victim) {
+float getKillAcceleration(int attack, int victim, int inflictor, const char[] weapon) {
 	int zoneID, attackID, victimID;
 	
+	int src = victim;
+	if( StrEqual(weapon, "rp_sentry") ) {
+		src = inflictor;
+	}
+	
 	// ---- dans les planques
-	zoneID = rp_GetZoneInt(rp_GetPlayerZone(victim), zone_type_type);
+	zoneID = rp_GetZoneInt(rp_GetPlayerZone(src), zone_type_type);
 	if( zoneID > 0 ) {
 		if( rp_GetClientJobID(victim) == 1 )
 			return 0.7;
@@ -44,7 +49,7 @@ float getKillAcceleration(int attack, int victim) {
 	}
 	
 	// ---- dans les appart
-	zoneID = rp_GetPlayerZoneAppart(victim);
+	zoneID = rp_GetPlayerZoneAppart(src);
 	if( zoneID > 0 ) {
 		if( rp_GetClientJobID(victim) == 1 || rp_ClientFloodTriggered(attack, victim, fd_freekill) )
 			return 1.0;
