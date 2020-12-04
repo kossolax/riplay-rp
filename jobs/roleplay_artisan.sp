@@ -466,7 +466,7 @@ void displayBuild2Menu(int client, int jobID, int target, int itemID, int amount
 		SetMenuTitle(menu, "%T\n ", "Artisan_Menu", client, "Artisan_Build");
 		
 		for(int i = 0; i < MAX_ITEMS; i++) {
-			if( g_iItemCraftType[i] > 0 && type != g_iItemCraftType[i] )
+			if( type != g_iItemCraftType[i] )
 				continue;
 			
 			Format(tmp, sizeof(tmp), "%d", i);
