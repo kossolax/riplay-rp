@@ -1353,7 +1353,7 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 					rp_ClientMoney(target, i_AddToPay, -rp_GetClientInt(target, i_LastVolAmount));
 					
 					CPrintToChat(target, "" ...MOD_TAG... " %T", "Police_RefundThief", target, rp_GetClientInt(target, i_LastVolAmount));
-					CPrintToChat(tg, "" ...MOD_TAG... " %T", "Police_RefundThief", tg, rp_GetClientInt(target, i_LastVolAmount));
+					CPrintToChat(tg, "" ...MOD_TAG... " %T", "Police_RefundVictim", tg, rp_GetClientInt(target, i_LastVolAmount));
 				}
 			}
 			else {

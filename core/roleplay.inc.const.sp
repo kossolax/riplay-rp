@@ -50,11 +50,11 @@
 char g_szSuperAdmin[][] = {
 	"76561197987342816", // Gozer
 	"76561197976095234", // Genesys
-	"76561198018935404", // Kriax
 	"76561198078500771", // Cubartiste
 	"76561197985083039", // Loolie
 	"76561197975247242", // Kosso
 	"76561197975262643", // sky
+	"76561198086680839" // CBKKK
 };
 
 int g_iPlayerCount;
@@ -66,8 +66,6 @@ char DeniedCMD[][] = {"coverme", "takepoint", "holdpos", "regroup", "followme", 
 	"getinpos", "stormfront", "report", "roger", "enemyspot", "needbackup", "sectorclear", "inposition", "reportingin",
 	"getout", "negative","enemydown", "radio1", "radio2", "radio3", "cheer", "compliment", "thanks", "explode", "kill", "r_screenoverlay",
 	"chooseteam", "chooseclass", "joinclass", "spectate", "spec_mode", "cl_spec_mode", "killvector", "teammenu", "chatwheel_ping" };
-
-
 
 bool g_bEvent_Kidnapping = false;
 
