@@ -492,7 +492,7 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 		if( multi <= 1.5 && rp_GetClientJobID(client) == 61 && !rp_GetClientBool(client, b_GameModePassive) )
 			multi = 1.5;
 		
-		if( HasImmo() ) {
+		if( HasImmo() && !rp_GetClientBool(client, b_IsAFK) ) {
 			multi -= 1.5 * (float(g_iDirtyCount[appart]) / 10.0);
 			if( multi < 0.0 )
 				multi = 0.0;
@@ -500,7 +500,7 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 		
 		int sum = RoundToCeil(float(salary) * multi);
 		
-		if( verbose && HasImmo() ) {
+		if( verbose && HasImmo() && !rp_GetClientBool(client, b_IsAFK) ) {
 			if( g_iDirtyCount[appart] < 10 ) {
 				Entity_GetGroundOrigin(client, g_flDirtPos[appart][g_iDirtyCount[appart]]);
 				g_iDirtType[appart][g_iDirtyCount[appart]] = GetRandomInt(1, sizeof(g_cDirt) - 1);
@@ -647,17 +647,26 @@ public Action OnEmote(int client, const char[] emote, float time) {
 			int appart = rp_GetPlayerZoneAppart(parent);
 			
 			if( appart > 0 ) {
-				float src[3];
+				float src[3], dst[3];
 				Entity_GetAbsOrigin(parent, src);
 				int xp = 0;
 				
 				for (int j = 0; j < g_iDirtyCount[appart]; j++) {
 					if( GetVectorDistance(g_flDirtPos[appart][j], src) <= 128.0 ) {
 						
-						for (float f = 0.0; f < 0.3; f+= 0.1) {
-							TE_SetupWorldDecal(g_flDirtPos[appart][j], g_cDirt[ 0 ]);
-							TE_SendToAll(f);
+						
+						TE_SetupWorldDecal(g_flDirtPos[appart][j], g_cDirt[ 0 ]);
+						TE_SendToAll();
+						
+						for (float t = 0.0; t < 1.0; t+= 0.1) {
+							dst = g_flDirtPos[appart][j];
+							dst[0] += GetRandomFloat(-4.0, 4.0);
+							dst[1] += GetRandomFloat(-4.0, 4.0);
+							TE_SetupWorldDecal(dst, g_cDirt[ 0 ]);
+							TE_SendToAll(t);
 						}
+						
+						
 						
 						for (int k = j+1; k < g_iDirtyCount[appart]; k++) {
 							g_flDirtPos[appart][j] = g_flDirtPos[appart][j + 1];
