@@ -308,6 +308,13 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 					ServerCommand("rp_item_redraw %i 74", client);
 				}
 				else if(StrEqual(type, "sanandreas")){
+
+					char classname[64];
+					
+					GetEdictClassname(wep_id, classname, sizeof(classname));
+					if(StrContains(classname, "weapon_breachcharge") == 0)
+						return;
+					
 					int ammo = Weapon_GetPrimaryClip(wep_id);
 					if( ammo >= 150 ) {
 						CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_sanAndreas", client, ammo);
@@ -553,7 +560,7 @@ public Action Cmd_ItemSanAndreas(int args) {
 	
 	GetEdictClassname(wepid, classname, sizeof(classname));
 		
-	if( StrContains(classname, "weapon_bayonet") == 0 || StrContains(classname, "weapon_knife") == 0 ) {
+	if( StrContains(classname, "weapon_bayonet") == 0 || StrContains(classname, "weapon_knife") == 0 || StrContains(classname, "weapon_breachcharge") == 0 ) {
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}

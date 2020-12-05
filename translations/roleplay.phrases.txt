@@ -233,7 +233,7 @@
 	"Steal_Nearby"
 	{
 		"#format"	"{1:d}"
-		"fr"		"Policier(s) proche: {1}"
+		"fr"		"Gendarme(s) proche: {1}"
 		"en"		"Police officer close by: {1}"
 	}
 	"Difficulty_Failed"
@@ -329,11 +329,23 @@
 		"fr"	"Vous avez récupéré: {1}x {green}{2}{default}."
 		"en"	"You have retrieved: {1}x {green}{2}{default}."
 	}
+	"Item_NotEnough"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"	"Il vous {green}manque{default} {1} {2} dans votre banque."
+		"en"	"You {green}lack{default} {1} {2} in your bank."
+	}
+	"Item_NoMore"
+	{
+		"#format"	"{1:s},{2:d}"
+		"fr"	"Vous {red}n'avez plus de{default} {1} ({2}) dans votre banque."
+		"en"	"You {red}no longer have{default} any {1} ({2}) in your bank."
+	}
 	"Item_Disposite"
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"	"Vous avez déposé: {1}x {red}{2}{default}."
-		"en"	"You have deposit: {1}x {red}{2}{default}."
+		"en"	"You have deposited: {1}x {red}{2}{default}."
 	}
 	"Item_Found"
 	{

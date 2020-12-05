@@ -1442,12 +1442,18 @@ public void itemSave_Withdraw_2(Handle owner, Handle hQuery, const char[] error,
 			continue;
 
 		inBank = rp_GetClientItem(client, objet_id, true);
-		if( inBank < objet_amount ){			
+		
+		rp_GetItemData(objet_id, item_type_name, tmp, sizeof(tmp));
+
+		if( inBank < objet_amount ){
+			if(inBank > 0)
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Item_NotEnough", objet_amount-inBank, tmp);
+			else
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Item_NoMore", tmp, objet_amount-inBank);
+			
 			objet_amount = inBank;
 		}
 		
-		rp_GetItemData(objet_id, item_type_name, tmp, sizeof(tmp));
-		CPrintToChat(client, ""...MOD_TAG..." %T", "Item_Take", client, objet_id, tmp);
 		rp_ClientGiveItem(client, objet_id, -objet_amount, true);
 		rp_ClientGiveItem(client, objet_id, objet_amount, false);
 		
