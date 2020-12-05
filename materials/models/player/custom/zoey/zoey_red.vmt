@@ -1,0 +1,11 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/player/custom/zoey/zoey_red"
+	"$bumpmap"	"models/player/custom/zoey/zoey_red_n"
+	"$phong" "1"
+        "$phongboost" "0.05"
+        "$phongexponent" "5"
+        "$phongtint" "[.85 .85 1]"
+        "$phongfresnelranges" "[.5 .85 30]"
+        "$ambientocclusion" "1"
+}

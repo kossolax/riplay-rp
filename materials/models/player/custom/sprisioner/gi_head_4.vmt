@@ -1,0 +1,19 @@
+vertexlitgeneric
+{
+$baseTexture "models/player/custom/sprisioner/gi_head_4"
+$bumpmap "models/player/custom/sprisioner/GI_head_nml"
+
+$phong 1
+$phongboost "2"
+$phongexponent 10
+$phongtint "[.85 .85 1]"
+$phongfresnelranges "[.2 .5 5]"
+$BasemapAlphaPhongMask 1
+$ambientocclusion 1
+$halflambert 0
+$diffuseexp "1.5"
+	"$detail" "models/player/custom/sprisioner/skin_detail"
+	"$detailscale"        "8"
+	"$detailblendfactor"  ".7"
+	"$detailblendmode"    "0"
+}

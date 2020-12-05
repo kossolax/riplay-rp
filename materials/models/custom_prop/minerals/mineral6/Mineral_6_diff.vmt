@@ -1,0 +1,9 @@
+"VertexlitGeneric"
+{
+	"$basetexture" 				"models/custom_prop/minerals/mineral6/Mineral_6_diff"
+	"$bumpmap" 				"models/custom_prop/minerals/mineral6/Mineral_6_normal"	
+	"$phong" 1
+	"$phongboost" ".3"
+	"$phongfresnelranges" "[0.5 1.3 1]"
+ 
+}

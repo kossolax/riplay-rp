@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/mosi/fallout4/furniture/workstations/armor_dirt"
+	"$bumpmap" "models/mosi/fallout4/furniture/workstations/armor_dirt_n"
+	
+	"$lightwarptexture" "models\mosi\fallout4\furniture\workstations\shared\warp2"
+}

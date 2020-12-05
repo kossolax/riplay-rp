@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$basetexture" "ex/ionlaser"
+	"$additive" 1
+	"$translucent" 1
+	"$vertexcolor" 1
+}

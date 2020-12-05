@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/player/custom/aiden_pearce/Aiden_lash_d"
+	"$halflambert" 1
+	$translucent 1
+	$nocull 1
+}

@@ -1,0 +1,18 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models\props\crates\colors"
+	"$bumpmap" "models\props\crates\skin_nm"
+	"Proxies"
+	{
+		"Equals"
+		{
+			srcVar1 $colorfix
+			resultVar	$color
+		}
+	}
+	"$detail" "models\props\crates\carpet"
+	"$detailscale" "200"
+	"$detailblendfactor" "0.4"
+	"$detailblendmode" "1"
+}
+

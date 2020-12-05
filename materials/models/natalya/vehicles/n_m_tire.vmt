@@ -1,0 +1,11 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/natalya/vehicles/n_m_tire"
+	"$bumpmap" "models/natalya/vehicles/n_m_tire_bump"
+	"$blendtintbybasealpha" 1
+	"$phong" "1"
+	"$phongexponent" "20"
+	"$phongboost" ".5"	
+	"$phongfresnelranges"	"[.3 1 8]"
+	"$halflambert" "1"
+}

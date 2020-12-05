@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models/player/custom/redfield/pl00_hairall_BM"
+$translucent "1"
+}

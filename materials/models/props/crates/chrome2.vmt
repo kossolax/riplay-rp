@@ -1,0 +1,33 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models\props\crates\chrome2"
+	"$bumpmap" "models\props\crates\skin_nm"
+
+	"$normalmapalphaenvmapmask" 1
+	"$nocull" "1"
+	"$nodecal" "1"
+   	"$surfaceprop" "metal"
+
+    	$envmap "env_cubemap"
+    	$envmaptint "[4 4 4]"
+    	$envmapfresnel "1"
+
+
+
+	"$rimlight" "1"
+	"$rimlightexponent" "1"
+	"$rimlightboost" "1"
+	"$rimmask" "1"
+
+	"$colorfix" "{255 255 255}"
+	"Proxies"
+	{
+		"Equals"
+		{
+			srcVar1 $colorfix
+			resultVar	$color
+		}
+	}
+}
+
+

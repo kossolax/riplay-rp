@@ -1,0 +1,14 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/mosi/fallout4/furniture/workstations/armor_misc"
+	"$bumpmap" "models/mosi/fallout4/furniture/workstations/armor_misc_n"
+	"$surfaceprop" "Metal"
+	"$alphatest" 1
+	
+	"$phong"	"1"
+	"$phongexponent"	"1"
+	"$phongalbedotint"	"1"
+	"$phongboost"	"1"
+	"$phongfresnelranges"	"[1 3 8]"
+	"$phongexponenttexture" "models\mosi\fallout4\furniture\workstations\shared\white"
+}

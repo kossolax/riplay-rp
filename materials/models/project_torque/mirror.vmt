@@ -1,0 +1,6 @@
+vertexlitgeneric
+{
+$envmap "env_cubemap"
+$envmaptint "{ 255 255 255 }"
+$envmapcontrast 0
+}

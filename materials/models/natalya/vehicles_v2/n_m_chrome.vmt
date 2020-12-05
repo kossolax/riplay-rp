@@ -1,0 +1,8 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/natalya/vehicles_v2/n_m_chrome"
+	"$envmap" "env_cubemap"
+	"$nocull" 1
+	"$model" 1
+	"$envmaptint"			"[.35 .35 .35]"
+}

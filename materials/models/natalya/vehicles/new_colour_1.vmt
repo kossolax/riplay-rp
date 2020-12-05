@@ -1,0 +1,12 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/natalya/vehicles/new_colour_1" 
+	"$model" 1 
+	"$nocull" 1
+	"$envmap" "env_cubemap"
+	"$normalmap" "models/natalya/vehicles/new_defref"
+	"$normalmapalphaenvmapmask" 1
+	"$envmaptint" "[ .20 .20 .20 ]"
+	"$envmapsaturation" 0.1
+
+}

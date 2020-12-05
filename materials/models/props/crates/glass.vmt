@@ -1,0 +1,31 @@
+"VertexlitGeneric"
+{
+	"$basetexturetransform" "center 0 0 scale 70 70 rotate 0 translate 0 0"
+	"$basetexture" "models\props\crates\glass"
+	"$bumpmap" "models\props\crates\skin_nm"
+
+	"$translucent" 1
+	"$normalmapalphaenvmapmask" 1
+	"$nodecal" "1"
+
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[2 2.4 2]"
+	"$envmapfresnel" "1"
+
+
+	
+	"$rimlight" "1"
+	"$rimlightexponent" "4"
+	"$rimlightboost" "0.1"
+//	"$rimmask" "1"
+
+	"$colorfix" "{255 255 255}"
+	"Proxies"
+	{
+		"Equals"
+		{
+			srcVar1 $colorfix
+			resultVar	$color
+		}
+	}
+}

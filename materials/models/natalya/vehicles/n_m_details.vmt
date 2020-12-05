@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/natalya/vehicles/n_m_details"
+	"$bumpmap"    "models/natalya/vehicles/n_m_details_nrm"
+	"$nocull"	1
+	"$alphatest"	1
+}

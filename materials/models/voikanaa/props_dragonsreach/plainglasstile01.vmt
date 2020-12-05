@@ -1,0 +1,19 @@
+"VertexLitGeneric"
+{
+// File Created by Wall Worm ( http://dev.wallworm.com )
+	// Get Wall Worm Pro to remove this comment ( https://wallworm.com/store/index.php?route=product/product&product_id=54 )
+
+// BEGIN Textures
+	$basetexture "models/voikanaa/props_dragonsreach/plainglasstile01"
+	$bumpmap "models/voikanaa/props_dragonsreach/plainglasstile01_n"
+// END Textures
+
+	"$phong" "1"
+	"$phongexponent" "15"
+	"$phongboost" "20"
+	"$phongfresnelranges" "[0.1 0.2 0.5]"
+	
+	$envmap env_cubemap
+	$normalmapalphaenvmapmask 1
+	$envmaptint "[.06 .22 0]"
+}

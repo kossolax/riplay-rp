@@ -1,0 +1,27 @@
+"vertexlitgeneric"
+{
+	"$basetexturetransform" "center .3 .3 scale 280 280 rotate 0 translate 0 0"
+
+	"$basetexture" "models\props\crates\carbonfiber"
+	"$bumpmap" "models\props\crates\carbonfibernormal"
+
+	"$nodecal" "1"
+	"$normalmapalphaenvmapmask" 1
+
+
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[0.008 0.008 0.008]"
+
+	"$colorfix" "{190 190 190}"
+	"Proxies"
+	{
+		"Equals"
+		{
+			srcVar1 $colorfix
+			resultVar	$color
+		}
+	}
+}
+
+
+

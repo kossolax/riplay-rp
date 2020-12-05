@@ -1,0 +1,13 @@
+"VertexLitGeneric"
+{
+     "$baseTexture" "models/custom_prop/marijuana/ot_can1"
+     // "$envmap" "env_cubemap"
+     // "$normalmapalphaenvmapmask" 1
+     // "$envmapcontrast" 1
+	// "$translucent" 1
+     "$model" 1
+	"$surfaceprop" "foliage"
+     // "$selfillum" 1
+	"$nocull" 1
+	"$alphatest" 1
+}

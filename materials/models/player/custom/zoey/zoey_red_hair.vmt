@@ -1,0 +1,6 @@
+VertexLitGeneric
+{
+	"$basetexture" "models/player/custom/zoey/zoey_red_hair"
+        "$translucent" "1"
+        "$nocull" "1"
+}

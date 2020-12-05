@@ -1,0 +1,17 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"models\natalya\vehicles_v2\cv_wheel"
+	"$bumpmap"	      "models\natalya\vehicles_v2\cv_wheel_n"
+	"$nodecal" "1"
+	"$phong" "1" //this turns on the phong effect
+        "$phongexponent" 200
+	"$phongboost" "1" //use this to increase/decrease the highlight intensity
+	"$phongfresnelranges" "[.3 .5 1]" //this are the highlight intensities at different incidence angles from the camera (first value is perpendicular to the camera and the 3rd value is away from the camera)
+//	"$phongexponenttexture"  "Models/vehicle/musclecar_specexponent"
+
+	"$envmap" "env_cubemap"
+	"$envmapfrensel" "1"
+	"$envmaptint" "[.02 .02 .02]"
+	"$normalmapalphaenvmapmask" 1
+
+}

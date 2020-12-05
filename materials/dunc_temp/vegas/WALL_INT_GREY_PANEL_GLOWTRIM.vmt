@@ -1,0 +1,8 @@
+"LightMappedGeneric"
+{
+	"$baseTexture"			"dunc_temp\vegas\wall_int_grey_panel_glowtrim"
+	"$surfaceprop" 			"wood"
+
+	"$alpha"			"1.0"
+	"$selfillum"			"1.0"
+}

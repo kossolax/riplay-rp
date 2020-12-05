@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models/player/custom/lara/Lara_Eyebrows_Eyelashes_D"	
+$translucent "1"
+}

@@ -1,0 +1,6 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models\props\crates\genericdetail"
+	"$bumpmap" "models\props\crates\skin_nm"
+
+}

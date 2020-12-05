@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\player\custom\nick\gambler_hair"
+       // "$envmap" 			"env_cubemap"
+$translucent "1"
+}
