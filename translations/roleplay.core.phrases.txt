@@ -845,7 +845,7 @@
 	}
 	"HUD_Sick"
 	{
-		"fr"		"/!\ Maladie /!\"
+		"fr"		"Vous êtes malade"
 	}
 	"HUD_Admin"
 	{

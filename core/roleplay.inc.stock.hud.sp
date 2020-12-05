@@ -136,7 +136,7 @@ void PrintSick(int client, char[] szReturn, int size) {
 		Format(szReturn, size, "");
 	}
 	else {
-		Format(szReturn, size, "\n %T", "HUD_Sick", client);
+		Format(szReturn, size, "\n%T", "HUD_Sick", client);
 	}
 }
 void PrintAdmin( int client, char[] szAdmin, int size) {	

@@ -57,12 +57,12 @@
 	"BankATM_transfer_disposite"
 	{
 		"#format"	"{1:s},{2:s}"
-		"fr"	"Combien souhaitez-vous déposer?\nSur sois: {1}$\nEn Banque: {2}$\n "
+		"fr"	"Combien souhaitez-vous déposer?\nSur soi: {1}$\nEn Banque: {2}$\n "
 	}
 	"BankATM_transfer_withdraw"
 	{
 		"#format"	"{1:s},{2:s}"
-		"fr"	"Combien souhaitez-vous retirer?\nSur sois: {1}$\nEn Banque: {2}$\n "
+		"fr"	"Combien souhaitez-vous retirer?\nSur soi: {1}$\nEn Banque: {2}$\n "
 	}
 	"BankATM_transfer_all"
 	{
