@@ -745,7 +745,9 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 				g_bUserData[client][b_LicenseSell] = false;
 			}
 			else {
-				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Fire", client);
+				if( IsValidClient(invoker) )
+					GetClientName2(invoker, szPseudo, sizeof(szPseudo), false);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Fire", client, szPseudo);
 			}
 		}
 		
