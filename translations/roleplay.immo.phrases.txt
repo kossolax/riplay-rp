@@ -56,7 +56,7 @@
 	}
 	"Appart_KeyRemovedSelf"
 	{
-		"#format"	"{1:d},{2:s}"
+		"#format"	"{1:d}"
 		"fr"		"Vous avez quitté l'appartement n°{red}{1}{default}."
 		"en"		"You have left apartment n°{red}{1}{default}."
 	}

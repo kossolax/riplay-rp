@@ -233,7 +233,7 @@
 	"Steal_Nearby"
 	{
 		"#format"	"{1:d}"
-		"fr"		"Policier(s) proche: {1}"
+		"fr"		"Gendarme(s) proche: {1}"
 		"en"		"Police officer close by: {1}"
 	}
 	"Difficulty_Failed"
@@ -333,7 +333,7 @@
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"	"Vous avez déposé: {1}x {red}{2}{default}."
-		"en"	"You have deposit: {1}x {red}{2}{default}."
+		"en"	"You have deposited: {1}x {red}{2}{default}."
 	}
 	"Item_Found"
 	{
