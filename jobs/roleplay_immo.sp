@@ -1264,7 +1264,7 @@ public Action Cmd_ItemPropTrap(int args) {
 		return Plugin_Handled;
 	}
 	
-	if( rp_GetBuildingData(target, BD_Trapped) == 0 ) {
+	if( rp_GetBuildingData(target, BD_Trapped) != 0 ) {
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Prop_AlreadyTrap", client);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;

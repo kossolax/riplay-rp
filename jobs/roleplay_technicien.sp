@@ -38,6 +38,7 @@ public Action Cmd_Reload(int args) {
 public void OnPluginStart() {
 	LoadTranslations("core.phrases");
 	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.technicien.phrases");
 	
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	// Technicien

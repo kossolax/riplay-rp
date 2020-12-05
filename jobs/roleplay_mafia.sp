@@ -1651,7 +1651,13 @@ void Cmd_BuyWeapon(int client, bool free) {
 			case ball_type_braquage:		Format(tmp2, sizeof(tmp2), "%T", "wpn_ball_type_braquage", client, tmp2);
 		}
 		
-		Format(tmp2, sizeof(tmp2), "%s - %d$", tmp2, (free ? 0:data[BM_Prix]));
+		
+		if( IsValidClient(data[BM_Owner]) && rp_GetClientJobID(data[BM_Owner]) == 91 && data[BM_Owner] == client ) {
+			Format(tmp2, sizeof(tmp2), "[ %s - %d$ ]", tmp2, (free ? 0:data[BM_Prix]));
+		}
+		else {
+			Format(tmp2, sizeof(tmp2), "%s - %d$", tmp2, (free ? 0:data[BM_Prix]));
+		}
 		menu.AddItem(tmp, tmp2);
 		
 		position = rp_WeaponMenu_GetPosition(g_hBuyMenu_Weapons);
