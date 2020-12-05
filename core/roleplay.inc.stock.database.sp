@@ -503,7 +503,7 @@ void StoreUserData(int client) {
 	for (int i = 0; i < max; i++)
 		Format(in_bank, size, "%s%d,%d;", in_bank, g_iItems_BANK[client][i][STACK_item_id], g_iItems_BANK[client][i][STACK_item_amount]);
 	
-	max = (g_bUserData[client][b_Assurance] || g_iClient_OLD[client] == 0) ? g_iUserData[client][i_ItemCount] : 0;
+	max = (g_bUserData[client][b_Assurance] || g_iClient_OLD[client] == 0 || true) ? g_iUserData[client][i_ItemCount] : 0;
 	size = max * 18 + 1;
 	char[] in_item = new char[ size ];
 	
