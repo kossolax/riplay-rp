@@ -1671,7 +1671,7 @@ void OpenBedMenu(int client) {
 	
 	AddMenuItem(menu, "_", " ", ITEMDRAW_SPACER);
 	
-	Format(tmp, sizeof(tmp), "%T", client, "Back");
+	Format(tmp, sizeof(tmp), "%T", "Back", client);
 	AddMenuItem(menu, "back",	tmp);
 	
 	SetMenuPagination(menu, MENU_NO_PAGINATION);
