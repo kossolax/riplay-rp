@@ -1447,9 +1447,9 @@ public void itemSave_Withdraw_2(Handle owner, Handle hQuery, const char[] error,
 
 		if( inBank < objet_amount ){
 			if(inBank > 0)
-				CPrintToChat(client, ""...MOD_TAG..." %T", "Item_NotEnough", objet_amount-inBank, tmp);
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Item_NotEnough", client, objet_amount-inBank, tmp);
 			else
-				CPrintToChat(client, ""...MOD_TAG..." %T", "Item_NoMore", tmp, objet_amount-inBank);
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Item_NoMore", client, tmp, objet_amount-inBank);
 			
 			objet_amount = inBank;
 		}
