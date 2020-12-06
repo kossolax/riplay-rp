@@ -521,7 +521,7 @@ void displayBuild2Menu(int client, int jobID, int target, int itemID, int amount
 		AddMenuItem(menu, tmp, tmp2);
 			
 		for (int i = 1; i <= min; i++) {
-			Format(tmp, sizeof(tmp), "ask %d %d %d", jobID, itemID, i);
+			Format(tmp, sizeof(tmp), "ask %d %d %d %d", jobID, target, itemID, i);
 			Format(tmp2, sizeof(tmp2), "%T", "Artisan_Build_Count", client, i, duration*i + (i*GetTickInterval()));
 			AddMenuItem(menu, tmp, tmp2);
 		}

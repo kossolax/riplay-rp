@@ -866,8 +866,8 @@ public int eventKidnapping(Handle p_hItemMenu, MenuAction p_oAction, int client,
 			char client_name[128];
 			GetClientName2(client, client_name, sizeof(client_name), false);
 			
-			CPrintToChat(from, "" ...MOD_TAG... " %T", "Tueur_Kidnapping_Pay", from, client_name, pay);
-			CPrintToChat(target, "" ...MOD_TAG... " %T", "Tueur_Kidnapping_Pay", target, client_name, pay);
+			CPrintToChat(from, "" ...MOD_TAG... " %T", "Tueur_Kidnapping_Pay_Target", from, client_name, pay);
+			CPrintToChat(target, "" ...MOD_TAG... " %T", "Tueur_Kidnapping_Pay_Target", target, client_name, pay);
 			
 			rp_IncrementSuccess(from, success_list_kidnapping);
 			
