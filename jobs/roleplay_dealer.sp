@@ -1247,6 +1247,17 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 		
 		return Plugin_Stop;
 	}
+	
+	if( type == 7 ) {
+		for (int i = 1; i <= MaxClients; i++) {
+			if( !IsValidClient(i) )
+				continue;
+			
+			if( rp_GetClientJobID(i) == 91 )
+				rp_ClientAggroIncrement(client, i, 1000);
+		}
+	}
+	
 	if( percent >= 1.0 ) {
 		rp_ClientColorize(client);
 		

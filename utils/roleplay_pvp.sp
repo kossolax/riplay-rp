@@ -30,7 +30,7 @@ enum quest_teams {
 	
 	TEAM_MAX
 };
-#define		ACCELERATION_FACTOR	4
+#define		ACCELERATION_FACTOR	1
 #define		LEAVING_TIME		(30/ACCELERATION_FACTOR)
 
 // -----------------------------------------------------------------------------------------------------------------
@@ -209,7 +209,7 @@ public void OnConfigsExecuted() {
 	FormatTime(szDayOfWeek, 11, "%w");
 	if( StringToInt(szDayOfWeek) == 0 ) { // Vendredi --- TODO: Change back
 		ServerCommand("tv_enable 1");
-		ServerCommand("mp_restartgame 1");
+		//ServerCommand("mp_restartgame 1");
 		ServerCommand("spec_replay_enable 1");
 		ServerCommand("tv_snapshotrate 64");
 		ServerCommand("rp_wallhack 0");

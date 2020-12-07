@@ -17,7 +17,6 @@
 #include <smlib>		// https://github.com/bcserv/smlib
 #include <colors_csgo>	// https://forums.alliedmods.net/showthread.php?p=2205447#post2205447
 #include <emitsoundany> // https://forums.alliedmods.net/showthread.php?t=237045
-#include <audio>
 #include <sdktools_voice>
 #include <sdktools_functions>
 
@@ -94,15 +93,12 @@ public Action Cmd_Reload(int args) {
 	ServerCommand("sm plugins reload %s", name);
 	return Plugin_Continue;
 }
-AudioPlayer api;
 
 public void OnPluginStart() {
-	api = new AudioPlayer();
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	
 	RegServerCmd("rp_item_fish", 		Cmd_Fish,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_sentry", 		Cmd_Sentry,			"RP-ITEM",	FCVAR_UNREGISTERED);
-	RegConsoleCmd("sm_audio", 		Cmd_Audio);
 	
 	
 	HookEvent("round_start", 		EventRoundStart, 	EventHookMode_Post);
@@ -127,29 +123,6 @@ public void OnPluginStart() {
 }
 public void OnAllPluginsLoaded() {
 	OnRoundStart();
-}
-public Action Cmd_Audio(int client, int args) {
-	
-	char url[256];
-	GetCmdArgString(url, sizeof(url));
-	TrimString(url);
-	
-	if( strlen(url) < 10 )
-		Format(url, sizeof(url), "https://www.youtube.com/watch?v=NnhLfHNcB-o");
-	
-	int bot = CreateFakeClient("bot");
-	CS_SwitchTeam(bot, GetClientTeam(client));
-	CS_RespawnPlayer(bot);
-	
-	float pos[3];
-	Entity_GetAbsOrigin(client, pos);
-	TeleportEntity(bot, pos, NULL_VECTOR, NULL_VECTOR);
-	
-	//api.AddArg("-filter:a 'volume=0.2'");
-	api.SetFrom(5.0);
-	api.PlayAsClient(bot, url);
-	
-	return Plugin_Handled;
 }
 public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error, int err_max) {	
 	g_hOnSentryAttack = CreateGlobalForward("RP_OnSentryAttack", ET_Hook, Param_Cell, Param_Cell);
@@ -564,10 +537,6 @@ public Action OnPlayerRunCmd(int client) {
 	
 	if( lvl >= 0 ) {
 		SpawnMineral();
-	}
-	
-	if( !api.IsFinished && api.PlayedSecs > 0.1 ) {
-		//PrintToChatAll("%.1f", api.PlayedSecs);
 	}
 }
 public bool FilterToNone(int entity, int mask, any data) {

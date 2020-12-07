@@ -33,7 +33,7 @@ bool GotPvPKey(int client, int target) {
 			return true;
 	}
 	if( group == g_iCapture[cap_villa]  ) {
-		if( StrContains(g_szZoneList[zone][zone_type_type], "villa") != -1 )
+		if( StrContains(g_szZoneList[zone][zone_type_type], "appart_51") != -1 )
 			return true;
 	}
 	

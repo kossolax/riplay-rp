@@ -385,8 +385,7 @@ void showPlayerHintBox(int client, int target) {
 				PrintHintText(client, "%T", "Hint_Villa", client, clientname);
 			}
 			else if( appart == 51 ) {
-				rp_GetServerString(maireName, clientname, sizeof(clientname));
-				PrintHintText(client, "%T", "Hint_Villa", client, clientname); 
+				PrintHintText(client, "%T", "Hint_Villa", client, g_szGroupList[g_iCapture[cap_villa]][group_type_name]); 
 			}
 			else {
 				PrintHintText(client, "%T", (appart < 100 ? "Hint_Appart_Sell" : "Hint_Garage_Sell"), client, appart > 100 ? appart - 100 : appart, StringToInt(g_szSellingKeys[appart][key_type_prix]));
