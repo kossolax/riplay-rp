@@ -28,6 +28,7 @@
 #define TREE_RESPAWN_MIN	30.0
 #define TREE_RESPAWN_MAX	60.0
 #define STONE_MAX			64
+#define MELEE_HP			250
 
 #define ITEM_BOIS			293
 #define ITEM_LATEX			309
@@ -74,6 +75,8 @@ int g_iTreeID[2049], g_iStoneID[2049];
 int g_iStoneCount = 0;
 int g_cBeam;
 int g_iMaxRandomMineral;
+int g_iMeleeHP[65][3]; // 0 = canne, 1 = marteau, 2 = hache
+
 ArrayList g_iSpawn;
 
 float g_flAnimStart[2049];
@@ -99,6 +102,7 @@ public void OnPluginStart() {
 	
 	RegServerCmd("rp_item_fish", 		Cmd_Fish,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_sentry", 		Cmd_Sentry,			"RP-ITEM",	FCVAR_UNREGISTERED);
+	RegServerCmd("rp_giveitem_melee",		Cmd_GiveItem,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	
 	
 	HookEvent("round_start", 		EventRoundStart, 	EventHookMode_Post);
@@ -111,7 +115,7 @@ public void OnPluginStart() {
 	
 	if( g_iSpawn != INVALID_HANDLE )
 		g_iSpawn.Clear();
-		
+	
 	g_iSpawn = new ArrayList(1, 0);
 	for (int i = 0; i < sizeof(g_szStone); i++) {
 		for (int j = 0; j < StringToInt(g_szStone[i][1]); j++) {
@@ -128,7 +132,9 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 	g_hOnSentryAttack = CreateGlobalForward("RP_OnSentryAttack", ET_Hook, Param_Cell, Param_Cell);
 	return APLRes_Success;
 }
-
+public void OnClientPostAdminCheck(int client) {
+	g_iMeleeHP[client][0] = g_iMeleeHP[client][1] = g_iMeleeHP[client][2] = MELEE_HP;
+}
 public void OnMapStart() {
 	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt");
 	
@@ -161,6 +167,31 @@ public Action Cmd_Sentry(int args) {
 	SetEntProp( ent, Prop_Data, "m_iHealth", 100000);
 	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
 	
+}
+public Action Cmd_GiveItem(int args) {
+	char Arg1[64];
+	GetCmdArg(1, Arg1, sizeof(Arg1));
+	int client = GetCmdArgInt(2);
+	int item_id = GetCmdArgInt(args);
+	
+	if( Weapon_ShouldBeEquip(Arg1) && Client_HasWeapon(client, Arg1) ) {
+		ITEM_CANCEL(client, item_id);
+		return Plugin_Handled;
+	}
+	
+	int ent = GivePlayerItem(client, Arg1);
+	
+	if( Weapon_ShouldBeEquip(Arg1) )
+		EquipPlayerWeapon(client, ent);
+	
+	if( StrEqual(Arg1, "weapon_hammer") ) {
+		g_iMeleeHP[client][1] = MELEE_HP;
+	}
+	if( StrEqual(Arg1, "weapon_axe") ) {
+		g_iMeleeHP[client][2] = MELEE_HP;
+	}
+	
+	return Plugin_Handled;
 }
 public Action Cmd_Fish(int args) {
 	int client = GetCmdArgInt(1);
@@ -321,10 +352,13 @@ public Action Animate(Handle timer, any target) {
 public Action OnEmote(int client, const char[] emote, float time) {
 	if( StrEqual(emote, "Emote_Fishing") && time >= 0.0 ) {
 		if( time >= 4.0 && g_iAnimEntity[client][2]) {
-			if( GetRandomInt(0, 100) != 42 ) {
+			g_iMeleeHP[client][0]--;
+			
+			if( g_iMeleeHP[client][0] > 0 ) {
 				rp_ClientGiveItem(client, ITEM_CANNE);
 			}
 			else {
+				g_iMeleeHP[client][0] = MELEE_HP;
 				CPrintToChat(client, "" ...MOD_TAG... " Votre canne à eau s'est {red}brisée{default}.");
 			}
 			
@@ -626,8 +660,9 @@ public Action OnPropDamage(int victim, int& attacker, int& inflictor, float& dam
 				if( itemID > 0 ) {
 					rp_ClientGiveItem(attacker, itemID, rp_GetBuildingData(victim, BD_count));
 					
-					if( GetRandomInt(0, 100) == 42 ) {
-						AcceptEntityInput(weapon, "Kill");
+					g_iMeleeHP[attacker][1]--;
+					if( g_iMeleeHP[attacker][1] <= 0 ) {
+						rp_ScheduleEntityInput(weapon, 0.1, "Kill");
 						FakeClientCommand(attacker, "use weapon_fists");
 					}
 				}
@@ -637,8 +672,9 @@ public Action OnPropDamage(int victim, int& attacker, int& inflictor, float& dam
 			rp_ClientGiveItem(attacker, ITEM_BOIS);
 			AcceptEntityInput(victim, "Break");
 			
-			if( GetRandomInt(0, 100) == 42 ) {
-				AcceptEntityInput(weapon, "Kill");
+			g_iMeleeHP[attacker][2]--;
+			if( g_iMeleeHP[attacker][2] <= 0 ) {
+				rp_ScheduleEntityInput(weapon, 0.1, "Kill");
 				FakeClientCommand(attacker, "use weapon_fists");
 			}
 		}
