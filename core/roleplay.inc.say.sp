@@ -196,7 +196,7 @@ public Action Command_Say(int client, int args) {
 		if( g_iUserData[client][i_PlayerLVL] < 2 ) {
 			char tmp[128];
 			rp_GetLevelData(level_2, rank_type_name, tmp, sizeof(tmp));
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_Level", 2, tmp);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_Level", client, 2, tmp);
 			return Plugin_Handled;
 		}
 		

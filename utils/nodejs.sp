@@ -39,7 +39,7 @@ public void OnPluginStart() {
 }
 public void OnAllPluginsLoaded() {
 	if(g_hListenSocket == INVALID_WEBSOCKET_HANDLE)
-		g_hListenSocket = Websocket_Open("0.0.0.0", 27020, OnWebsocketIncoming, OnWebsocketMasterError, OnWebsocketMasterClose);
+		g_hListenSocket = Websocket_Open("0.0.0.0", GetConVarInt(FindConVar("hostport"))+1, OnWebsocketIncoming, OnWebsocketMasterError, OnWebsocketMasterClose);
 }
 public void OnPluginEnd() {
 	if(g_hListenSocket != INVALID_WEBSOCKET_HANDLE)

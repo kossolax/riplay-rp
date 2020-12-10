@@ -243,3 +243,10 @@ int GetJobPrimaryID(int client) {
 	
 	return job_id;
 }
+int GetJobID(int int_id) {	
+	if( StringToInt( g_szJobList[ job_id ][job_type_isboss] ) != 1 ) {
+		job_id = StringToInt( g_szJobList[ job_id ][job_type_ownboss] );
+	}
+	
+	return job_id;
+}

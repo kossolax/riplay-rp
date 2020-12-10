@@ -458,6 +458,9 @@ public void OnConfigsExecuted() {
 	ServerCommand("sv_steamgroup 1454657");
 	/* Config autre plugins */
 	ServerCommand("cheatcontrol_enablewarnings 0");
+	/* RP Config */
+	ServerCommand("rp_max_car 20");
+	ServerCommand("rp_fireworks 10");
 
 	/* Restart */
 	ServerCommand("mp_restartgame 1");

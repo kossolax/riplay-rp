@@ -691,11 +691,11 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 			if( IsValidClient(invoker) )
 				GetClientName2(invoker, szPseudo, sizeof(szPseudo), false);
 
-			if( from_id == 0 )
+			if( from_id == 0 || GetJobID(from_id) != GetJobID(to_id) )
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Hire", client, g_szJobList[to_id][job_type_name], szPseudo);
 			else if( from_id > to_id )
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Upgrade", client, g_szJobList[to_id][job_type_name], szPseudo);
-			else
+			else if( from_id < to_id )
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Downgrade", client, g_szJobList[to_id][job_type_name], szPseudo);
 			
 			if( invoker > 0 && !g_iClient_OLD[client] ) {
@@ -1030,7 +1030,7 @@ int GetAssurence(int client, bool forced = false) {
 			if( wepIdx <= 0 || !IsValidEdict(wepIdx) || !IsValidEntity(wepIdx) )
 				continue;
 			
-			if( IsPolice(client) && rp_GetWeaponStorage(wepIdx) )
+			if( rp_GetWeaponStorage(wepIdx) )
 				continue;
 			
 			amount += RoundFloat( float(rp_GetWeaponPrice(wepIdx)) * 0.5);

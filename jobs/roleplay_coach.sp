@@ -115,8 +115,7 @@ char g_szColor[][] = {
 	"255 0 128",
 	
 	"255 255 255",
-	"128 128 128",
-	"0 0 0"
+	"128 128 128"
 };
 int g_cBeam, g_cGlow, g_cExplode;
 Handle g_hCigarette[65];

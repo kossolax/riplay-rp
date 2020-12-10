@@ -770,7 +770,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 					
 					int sub = rp_GetBuildingData(target, BD_item_id);
 					int prix = rp_GetItemInt(sub, item_type_prix);
-					int max = 1000 / (prix * count);
+					int max = 1000 / prix;
 					
 					if( count > max )
 						count = max;

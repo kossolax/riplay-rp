@@ -198,8 +198,8 @@
 	// ----------------------------------------------------------------------------------------------
 	"Steal_Starting"
 	{
-		"fr"		"<font color='#ff0000'>Attention!</font> Quelqu'un essaye de vous voler!"
-		"en"		"<font color='#ff0000'>Attention!</font> Someone is trying to steal from you!"
+		"fr"		"{red}Attention!{default} Quelqu'un essaye de vous voler!"
+		"en"		"{red}Attention!{default} Someone is trying to steal from you!"
 	}
 	"Steal_Money_Target"
 	{

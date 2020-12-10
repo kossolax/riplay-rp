@@ -781,9 +781,12 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 	int wepid = findPlayerWeapon(client, target);
 	
 	if( VOL_MAX > 0 && wepid != -1 && rp_GetClientInt(client, i_Job) <= 84 && !rp_IsClientNew(target) && CanClientStealItem(client, target) ) {
-				
 		CPrintToChat(target, ""...MOD_TAG..." %T", "Steal_Starting", target);
-		PrintHintText(target, ""...MOD_TAG..." %T", "Steal_Starting", target);
+		
+		Format(tmp, sizeof(tmp), "%T", "Steal_Starting", target);
+		String_ColorsToHTML(tmp, sizeof(tmp));
+		PrintHintText(target, tmp);
+		
 		LogToGame("[TSX-RP] [VOL] %L a commencé un vol d'arme sur %L.", client, target);
 		
 		char wepname[64];
