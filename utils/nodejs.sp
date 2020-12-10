@@ -38,8 +38,15 @@ public void OnPluginStart() {
 	AddGameLogHook(	GameLogHook );
 }
 public void OnAllPluginsLoaded() {
-	if(g_hListenSocket == INVALID_WEBSOCKET_HANDLE)
-		g_hListenSocket = Websocket_Open("0.0.0.0", GetConVarInt(FindConVar("hostport"))+1, OnWebsocketIncoming, OnWebsocketMasterError, OnWebsocketMasterClose);
+	char strIP[128];
+	Handle hostip = FindConVar("hostip");
+	int longip = GetConVarInt(hostip);
+	Format(strIP, sizeof(strIP),"%d.%d.%d.%d", (longip >> 24) & 0xFF, (longip >> 16) & 0xFF, (longip >> 8 )	& 0xFF, longip & 0xFF);
+	
+	if(g_hListenSocket == INVALID_WEBSOCKET_HANDLE) {
+		LogToGame("NODEJS - listening to %s:%d", strIP, GetConVarInt(FindConVar("hostport")) + 1);
+		g_hListenSocket = Websocket_Open(strIP, GetConVarInt(FindConVar("hostport"))+1, OnWebsocketIncoming, OnWebsocketMasterError, OnWebsocketMasterClose);
+	}
 }
 public void OnPluginEnd() {
 	if(g_hListenSocket != INVALID_WEBSOCKET_HANDLE)
