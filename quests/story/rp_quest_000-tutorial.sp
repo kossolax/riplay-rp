@@ -37,6 +37,8 @@ char qualif[][] =  	{ "Recommandé", "Amusant", "Difficile", "Métier de vente",
 int g_iJob[] =  			{ 16, 26, 36, 46, 56, 65, 76, 87, 96, 116, 135, 176, 216, 226};
 int g_iRecom[MAX_JOBS];
 int g_iDefaultJob[MAXPLAYERS];
+
+int g_iDisableAsk[65];
 #define FREE_JOB	5
 	
 // TODO: Déplacer les récompenses dans les fonctions appropriées
@@ -88,9 +90,10 @@ public void OnAllPluginsLoaded() {
 public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 	rp_HookEvent(client, RP_OnFrameSeconde, fwdFrame);
+	g_iDisableAsk[client] = 0;
 }
 public Action fwdFrame(int client) {
-	if( rp_IsTutorialOver(client) && rp_GetClientInt(client, i_AllowedDismiss) > 0 && rp_GetClientInt(client, i_Job) == 0 && rp_ClientCanDrawPanel(client) ) {
+	if( rp_IsTutorialOver(client) && rp_GetClientInt(client, i_AllowedDismiss) > 0 && rp_GetClientInt(client, i_Job) == 0 && rp_ClientCanDrawPanel(client) && g_iDisableAsk[client] < GetTime() ) {
 		drawJobMenu(client);
 	}
 }
@@ -693,7 +696,10 @@ public int MenuSelectJob(Handle menu, MenuAction action, int client, int param2)
 		GetMenuItem(menu, param2, options, sizeof(options));
 		int job = StringToInt(options);
 		
-		if( job > 1000 ) {
+		if( job == -1  ) {
+			g_iDisableAsk[client] = GetTime() + 6 * 60;
+		}
+		else if( job > 1000 ) {
 			job -= 1000;
 			rp_GetJobData(job, job_type_name, options, sizeof(options));
 			
@@ -776,6 +782,8 @@ void drawJobMenu(int client) {
 		AddMenuItem(menu, tmp2, tmp);
 		cpt++;
 	}
+	
+	AddMenuItem(menu, "-1", "Quelqu'un a un autre job pour moi");
 	
 	SetMenuExitButton(menu, true);
 	
