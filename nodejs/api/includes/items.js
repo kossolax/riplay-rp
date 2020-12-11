@@ -10,14 +10,25 @@ exports = module.exports = function(server){
  */
 server.get('/items/craft/:id', function (req, res, next) {
     try {
-        if( req.params['id'] == 0 )
-            return res.send(new ERR.BadRequestError("InvalidParam"));
-
-        var sql = "WITH RECURSIVE rp_craft_recursive as (";
-	sql += "        SELECT rp_craft.itemid, rp_craft.raw, rp_craft.amount FROM rp_craft WHERE itemid=?";
-	sql += "        UNION";
-	sql += "        SELECT rp_craft.itemid, rp_craft.raw, rp_craft.amount FROM rp_craft, rp_craft_recursive WHERE rp_craft_recursive.raw=rp_craft.itemid";
-	sql += ") SELECT R.itemid, R.raw, R.amount, I.nom FROM rp_craft_recursive R INNER JOIN rp_items I ON R.raw = I.id";
+	var sql = "";
+        if( req.params['id'] == 0 ) {
+		sql = "SELECT * FROM (";
+		sql += "SELECT DISTINCT ";
+		sql += "I.id, I.nom, I.`extra_cmd`, I.description ";
+		sql += "FROM `rp_craft` A INNER JOIN `rp_items` I ON A.`itemid`=I.`id` ";
+		sql += "WHERE A.itemid NOT IN ( ";
+		sql += " SELECT raw FROM rp_craft ";
+		sql += ") ";
+		sql += "AND A.itemid IN (SELECT itemid FROM rp_craft C INNER JOIN rp_items I ON I.id=C.raw WHERE I.extra_cmd LIKE 'rp_item_raw%') ";
+		sql += " ) A WHERE `extra_cmd`<>'UNKNOWN'";
+	}
+	else {
+	        sql = "WITH RECURSIVE rp_craft_recursive as (";
+		sql += "        SELECT rp_craft.itemid, rp_craft.raw, rp_craft.amount FROM rp_craft WHERE itemid=?";
+		sql += "        UNION";
+		sql += "        SELECT rp_craft.itemid, rp_craft.raw, rp_craft.amount FROM rp_craft, rp_craft_recursive WHERE rp_craft_recursive.raw=rp_craft.itemid";
+		sql += ") SELECT R.itemid, R.raw, R.amount, I.nom, I.`extra_cmd`, I.description FROM rp_craft_recursive R INNER JOIN rp_items I ON R.raw = I.id";
+	}
 
         server.conn.query(sql, [req.params['id']], function(err, rows) {
            if( err )

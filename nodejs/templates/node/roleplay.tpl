@@ -26,6 +26,10 @@
     <img class="pull-left img-circle" width="64" height="64" src="/images/icons/map.jpg" />
     <div><strong>La carte</strong><br />vue satellite</div>
   </a>
+  <a class="col-md-3 col-sm-6 btn btn-default" href="#/craft/0" >
+    <img class="pull-left img-circle" width="64" height="64" src="/images/icons/map.jpg" />
+    <div><strong>Les craft</strong><br />et les maitrises</div>
+  </a>
   <a class="col-md-3 col-sm-6 btn btn-default" href="#/graph/0" >
     <img class="pull-left img-circle" width="64" height="64" src="/images/icons/nuke.jpg" />
     <div><strong>Graphique</strong><br />Des meilleurs jobs</div>

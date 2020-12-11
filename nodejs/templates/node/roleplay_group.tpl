@@ -25,7 +25,7 @@
             <a ng-show="$parent.isAdmin" style="cursor:pointer;" data-ng-click="$parent.steamid = player.steamid; $parent.updateSteamID(); $parent.toggleModal();">{{player.name}} <i class="fa fa-wrench"></i></a>
             <span ng-hide="$parent.isAdmin">{{player.name}}</span>
           </td>
-          <td>{{player.point}}</td>
+          <td>{{player.points}}</td>
         </tr>
         <tr ng-show="isAdmin">
           <td></td><td></td>

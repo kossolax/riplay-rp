@@ -134,8 +134,8 @@ server.get('/user/admin', function (req, res, next) {
 
     var sql = "SELECT id, REPLACE(COALESCE(N.`SteamID`, tmp.`SteamID`), 'STEAM_0', 'STEAM_1') as `SteamID`, COALESCE(`uname2`, N.`SteamID`, tmp.`SteamID`) as `nick`, `BanReason` as `reason`, `Length`, `game`, `banned`, `StartTime`, `is_unban` as `unban` FROM (";
     sql += " SELECT *, '1' as banned FROM `rp_csgo`.`srv_bans` WHERE `is_hidden`='0' AND ((`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0') ";
-    sql += "   UNION ";
-    sql += "   SELECT *, '0' as banned FROM `rp_csgo`.`srv_bans` WHERE `is_hidden`='0' AND NOT ((`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0') ";
+//    sql += "   UNION ";
+//    sql += "   SELECT *, '0' as banned FROM `rp_csgo`.`srv_bans` WHERE `is_hidden`='0' AND NOT ((`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0') ";
     sql += " ) AS tmp LEFT JOIN `rp_csgo`.`srv_nicks` N ON REPLACE(tmp.`SteamID`, 'STEAM_0', 'STEAM_1')=N.`SteamID` ORDER BY id DESC LIMIT ?,100;";
 
     server.conn.query(sql, [req.params['page']*100], function(err, rows) {

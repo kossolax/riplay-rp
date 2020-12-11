@@ -29,13 +29,12 @@ if( !empty($member->steamid) )
     <script type="text/javascript" src="/js/bootstrap.js"></script>
     <script type="text/javascript" src="/js/heatmap.min.js"></script>
     <script type="text/javascript" src="/js/jquery.maphilight.js"></script>
+    <script type="text/javascript" src="/js/non-layered-tidy-tree-layout.js"></script>
     <script type="text/javascript" src="/js/highcharts.js"></script>
     <script type="text/javascript" src="/js/highcharts-more.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.js"></script>
-    <script type="text/javascript"
-        src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular-route.js"></script>
-    <script type="text/javascript"
-        src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular-resource.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular-route.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular-resource.js"></script>
     <script type="text/javascript" src="/js/angular.dnd.min.js"></script>
 
     <script type="text/javascript">

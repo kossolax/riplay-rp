@@ -69,7 +69,7 @@ function handleDisconnect() {
 }
 handleDisconnect();
 
-var dir = "/home/serveurs/csgo/roleplay_windows/csgo/logs/";
+var dir = "/home/serveurs/csgo/roleplay_prod/csgo/logs/";
 
 var files = fs.readdirSync(dir).sort();
 var filter = {
@@ -215,6 +215,10 @@ function parseNewFile(file, cb) {
 		last = parseDate(data[i]);
 		if( last )
 			break;
+	}
+
+	if( first === undefined ) {
+		console.log(file);
 	}
 
 	data = data.map( i => parseLine(i) ).filter(Boolean);
