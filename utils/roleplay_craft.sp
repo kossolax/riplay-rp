@@ -75,7 +75,7 @@ int g_iTreeID[2049], g_iStoneID[2049];
 int g_iStoneCount = 0;
 int g_cBeam;
 int g_iMaxRandomMineral;
-int g_iMeleeHP[65][3]; // 0 = canne, 1 = marteau, 2 = hache
+int g_iMeleeHP[65][4]; // 0 = canne, 1 = marteau, 2 = hache, 3 = spanner
 
 ArrayList g_iSpawn;
 
@@ -104,9 +104,12 @@ public void OnPluginStart() {
 	RegServerCmd("rp_item_sentry", 		Cmd_Sentry,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_giveitem_melee",		Cmd_GiveItem,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	
-	
 	HookEvent("round_start", 		EventRoundStart, 	EventHookMode_Post);
+	HookEvent("weapon_fire",		EventPlayerFire,	EventHookMode_Post);
 	
+	for (int i = 1; i <= MaxClients; i++)
+		if( IsValidClient(i) )
+			OnClientPostAdminCheck(i);
 	
 	g_iMaxRandomMineral = 0;
 	for (int i = 0; i < sizeof(g_szStone); i++) {
@@ -121,9 +124,44 @@ public void OnPluginStart() {
 		for (int j = 0; j < StringToInt(g_szStone[i][1]); j++) {
 			g_iSpawn.Push(i);
 		}
-		
-		//PrintToChatAll("%s -- %f %%", g_szStone[i][0], StringToInt(g_szStone[i][1]) / float(g_iMaxRandomMineral) * 100.0);
 	}
+}
+public Action EventPlayerFire(Handle ev, const char[] name, bool  bd) {
+	int client = GetClientOfUserId(GetEventInt(ev, "userid"));
+	char weapon[64];
+	GetEventString(ev, "weapon", weapon, sizeof(weapon));
+	
+	if( !IsPlayerAlive(client) )
+		return Plugin_Continue;
+	
+	int wpnid = Client_GetActiveWeapon(client);	
+	if( rp_GetClientBool(client, b_WeaponIsMelee) && StrContains(weapon, "weapon_spanner") == 0 && IsMeleeSpanner(wpnid) ) {
+	
+		float hit[3];
+		int target = rp_GetTargetHull(client, hit, 56.0);
+		if( target > MaxClients && rp_GetBuildingData(target, BD_owner) > 0 ) {
+			RequestFrame(Task_Heal, target);
+			
+			g_iMeleeHP[client][3]--;
+			if( g_iMeleeHP[client][3] <= 0 ) {
+				rp_ScheduleEntityInput(wpnid, 0.1, "Kill");
+				FakeClientCommand(client, "use weapon_fists");
+			}
+		}
+	}
+	
+	return Plugin_Continue;	
+}
+public void Task_Heal(any target) {
+	
+	int max = Entity_GetMaxHealth(target);
+	int health = max / 50 + GetEntProp(target, Prop_Data, "m_iHealth") + 10;
+	
+	if( health > Entity_GetMaxHealth(target) ) {
+		health = max;
+	}
+	
+	SetEntProp(target, Prop_Data, "m_iHealth", health);
 }
 public void OnAllPluginsLoaded() {
 	OnRoundStart();
@@ -133,7 +171,7 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 	return APLRes_Success;
 }
 public void OnClientPostAdminCheck(int client) {
-	g_iMeleeHP[client][0] = g_iMeleeHP[client][1] = g_iMeleeHP[client][2] = MELEE_HP;
+	g_iMeleeHP[client][0] = g_iMeleeHP[client][1] = g_iMeleeHP[client][2] = g_iMeleeHP[client][3] = MELEE_HP;
 	
 	rp_HookEvent(client, RP_OnPlayerUse, 	fwdUse);
 }
@@ -212,6 +250,9 @@ public Action Cmd_GiveItem(int args) {
 	}
 	if( StrEqual(Arg1, "weapon_axe") ) {
 		g_iMeleeHP[client][2] = MELEE_HP;
+	}
+	if( StrEqual(Arg1, "weapon_spanner") ) {
+		g_iMeleeHP[client][3] = MELEE_HP;
 	}
 	
 	return Plugin_Handled;
