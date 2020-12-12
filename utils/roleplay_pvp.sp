@@ -897,6 +897,21 @@ void STATE_ENTER_SWITCH() {
 	g_iTeamScore[TEAM_BLUE] = g_iTeamScore[TEAM_RED];
 	g_iTeamScore[TEAM_RED] = tmp;
 	
+	char classname[64];
+	for(int i=MaxClients; i<MAX_ENTITIES; i++) {
+		if( !IsValidEdict(i) )
+			continue;
+		if( !IsValidEntity(i) )
+			continue;
+		if( !(rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_PVP) )
+			continue;
+		
+		GetEdictClassname(i, classname, sizeof(classname));		
+		if( StrEqual(classname, "rp_props") ) {
+			rp_AcceptEntityInput(i, "Kill");
+		}
+	}
+	
 	announceSound(0, snd_EndOfRound);
 	
 	CAPTURE_CHANGE_STATE(ps_warmup2);
@@ -1439,6 +1454,10 @@ public Action fwdZoneChange(int client, int newZone, int oldZone) {
 	
 	if( g_iPlayerTeam[client] == view_as<int>(TEAM_BLUE) && (g_iCurrentState == view_as<int>(ps_warmup1)||g_iCurrentState == view_as<int>(ps_warmup2)) && (rp_GetZoneBit(newZone) & BITZONE_PVP) ) {
 		teleportToZone(client, METRO_BELMON);
+	}
+	
+	if( (newZone == 197 || newZone == 198) && g_iPlayerTeam[client] == view_as<int>(TEAM_RED) && (rp_GetZoneBit(newZone) & BITZONE_PVP) ) {
+		teleportToZone(client, ZONE_RESPAWN);
 	}
 	
 	return Plugin_Continue;
