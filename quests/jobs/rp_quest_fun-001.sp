@@ -27,10 +27,10 @@
 #define CHECKPOINTS			18
 
 
-int g_iQuest, g_iDuration[MAXPLAYERS + 1], g_iStep[MAXPLAYERS + 1], g_iVehicle[MAXPLAYERS+1], g_iEssai[MAXPLAYERS + 1], g_iQ2[MAXPLAYERS + 1];
+int g_iQuest, g_iDuration[MAXPLAYERS + 1], g_iStep[MAXPLAYERS + 1], g_iVehicle[MAXPLAYERS+1], g_iEssai[MAXPLAYERS + 1], g_iQ2[MAXPLAYERS + 1], g_iSkip[MAXPLAYERS+1];
 float g_flTemps[MAXPLAYERS + 1], g_flBestTime[MAXPLAYERS + 1];
 
-bool g_bIsSkip[MAXPLAYERS + 1], g_bVerif[MAXPLAYERS + 1];
+bool g_bVerif[MAXPLAYERS + 1], g_bRecompense[MAXPLAYERS + 1];
 
 // Pos, 0 = départ;1 = checkpoint;2 = arrivée; L'angle
 float g_fPos[CHECKPOINTS][3][3] =  {
@@ -79,6 +79,8 @@ public void OnAllPluginsLoaded()
 		rp_QuestAddStep(g_iQuest, i++, Q2_Start, Q2_Frame, Q1_Abort, Q2_Done);
 		rp_QuestAddStep(g_iQuest, i++, Q3_Start, Q3_Frame, Q1_Abort, Q3_Done);
 	}
+	
+	rp_QuestAddStep(g_iQuest, i++, Q4_Start, Q4_Frame, Q1_Abort, QUEST_NULL);
 }
 
 // ----------------------------------------------------------------------------
@@ -118,7 +120,8 @@ public void Q1_Start(int objectiveID, int client)
 	String_WordWrap(s, 40);
 	
 	g_iEssai[client] = 3;
-	g_bIsSkip[client] = false;
+	g_iSkip[client] = 0; // 0 = course, 1 = en attente d'un choix, 2 = Pas d'autre essai, 3 = déjà reçu la récompense
+	g_bRecompense[client] = false;
 	
 	Menu menu = new Menu(MenuNothing);
 	
@@ -127,20 +130,23 @@ public void Q1_Start(int objectiveID, int client)
 	menu.ExitButton = false;
 	menu.Display(client, MENU_TIME_FOREVER);
 	
-	g_iDuration[client] = 2 * 60;
+	g_iDuration[client] = 10 * 60;
 	
 	char tmp[64], query[512];
 	GetClientAuthId(client, AUTH_TYPE, tmp, sizeof(tmp));
 	Format(query, sizeof(query), "SELECT MIN(`duration`) FROM `rp_course` WHERE `steamid`='%s';", tmp);
 	SQL_TQuery(rp_GetDatabase(), SQL_GetBestTime, query, client, DBPrio_Low);
 }
-public void SQL_GetBestTime(Handle owner, Handle hQuery, const char[] error, any client) {
+
+public void SQL_GetBestTime(Handle owner, Handle hQuery, const char[] error, any client) 
+{
 	g_flBestTime[client] = 9999999.9;
 	
 	if( SQL_FetchRow(hQuery) ) {
 		g_flBestTime[client] = SQL_FetchFloat(hQuery, 0);
 	}
 }
+
 public void Q1_Frame(int objectiveID, int client)
 {
 	g_iDuration[client]--;
@@ -166,7 +172,7 @@ public void Q1_Abort(int objectiveID, int client)
 
 public void Q2_Start(int objectiveID, int client)
 {	
-	if(g_bIsSkip[client])
+	if(g_iSkip[client] != 0)
 	{
 		rp_QuestStepComplete(client, objectiveID);
 	}
@@ -188,6 +194,7 @@ public void Q2_Start(int objectiveID, int client)
 			menu.Display(client, MENU_TIME_FOREVER);
 			
 			g_iQ2[client] = objectiveID;
+			g_iSkip[client] = 1;
 		}
 		else
 		{
@@ -221,7 +228,7 @@ public void Q2_Frame(int objectiveID, int client)
 	{
 		Entity_GetAbsOrigin(g_iVehicle[client], origin);
 		
-		if (GetVectorDistance(g_fPos[0][0], origin) < 256)
+		if (GetVectorDistance(g_fPos[0][0], origin) < 256 && g_iSkip[client] != 1)
 		{
 			rp_QuestStepComplete(client, objectiveID);
 		}
@@ -235,10 +242,8 @@ public void Q2_Frame(int objectiveID, int client)
 
 public void Q2_Done(int objectiveID, int client)
 {
-	if(g_bIsSkip[client])
-	{
+	if(g_iSkip[client] != 0)
 		return;
-	}
 	
 	//Entity_SetCollisionGroup(g_iVehicle[client], COLLISION_GROUP_DEBRIS);
 	
@@ -265,7 +270,7 @@ public void Q2_Done(int objectiveID, int client)
 
 public void Q3_Start(int objectiveID, int client)
 {
-	if(g_bIsSkip[client])
+	if(g_iSkip[client] != 0)
 	{
 		rp_QuestStepComplete(client, objectiveID);
 	}
@@ -307,18 +312,19 @@ public void Q3_Frame(int objectiveID, int client)
 }
 
 public void Q3_Done(int objectiveID, int client)
-{
-	if(g_bIsSkip[client])
+{	
+	if(g_bRecompense[client])
 		return;
 	
 	bool record = false;
-	// TODO : Rembourser si il bat son record et donner le temps du record pour comparer	
+
 	float time = GetGameTime() - g_flTemps[client];
 	if( g_flBestTime[client] > time ) {
 		g_flBestTime[client] = time;
 		record = true;
 		CPrintToChat(client, ""...MOD_TAG..." Nouveau record!");
 	}
+	
 	CPrintToChat(client, ""...MOD_TAG..." Temps final = %.1f secondes, meilleur temps: %.1f.", time, g_flBestTime[client]);
 	
 	char tmp[64], query[512];
@@ -326,17 +332,38 @@ public void Q3_Done(int objectiveID, int client)
 	Format(query, sizeof(query), "INSERT INTO `rp_course` (`steamid`, `time`, `duration`) VALUES ('%s', UNIX_TIMESTAMP(), '%f');", tmp, time);
 	SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query, 0, DBPrio_Low);
 	
-	g_iEssai[client]--;
-	
-	if( record ) {
+	if( record ) 
+	{
 		giveGain(client);
-	}
+	}	
+	
+	g_iEssai[client]--;
+}
+
+// ----------------------------------------------------------------------------
+
+public void Q4_Start(int objectiveID, int client)
+{
+	// On donne 1000 dans tous les cas
+	int cap = rp_GetRandomCapital(1);
+	rp_SetJobCapital(cap, rp_GetJobCapital(cap) - 1000);
+	rp_ClientXPIncrement(client, 250);
+	rp_ClientMoney(client, i_AddToPay, 1000);
+	CPrintToChat(client, ""...MOD_TAG..." Vous venez de recevoir {lightgreen}%d${default}.", 1000);
 	
 	Menu menu = new Menu(MenuNothing);
 	menu.SetTitle("Quête: %s", QUEST_NAME);
 	menu.ExitButton = false;
 	menu.Display(client, 1);
+	
+	g_iDuration[client] = 1 * 60;
 }
+
+public void Q4_Frame(int objectiveID, int client)
+{
+	rp_QuestStepComplete(client, objectiveID);
+}
+
 
 // ----------------------------------------------------------------------------
 
@@ -359,13 +386,19 @@ public int MenuEssai(Handle menu, MenuAction action, int client, int param2) {
 		
 		if(StrEqual(options, "1"))
 		{		
-			g_bIsSkip[client] = true;
+			g_iSkip[client] = 2;
 			
 			SDKUnhook(g_iVehicle[client], SDKHook_Think, OnThink);
 			
 			g_iEssai[client] = 0;
+			g_bRecompense[client] = true;
 			
 			rp_QuestStepComplete(client, g_iQ2[client]);
+		}
+		else
+		{
+			// Le joueur veut re-tenter
+			g_iSkip[client] = 0;
 		}
 	
 	}
@@ -475,8 +508,8 @@ public void OnThink(int entity)
 void giveGain(int client)
 {
 	int cap = rp_GetRandomCapital(1);
-	rp_SetJobCapital(cap, rp_GetJobCapital(cap) - 2500);
+	rp_SetJobCapital(cap, rp_GetJobCapital(cap) - 3000);
 	rp_ClientXPIncrement(client, 750);
-	rp_ClientMoney(client, i_AddToPay, 2500);
-	CPrintToChat(client, ""...MOD_TAG..." Vous venez de recevoir %d$.", 2500);
+	rp_ClientMoney(client, i_AddToPay, 3000);
+	CPrintToChat(client, ""...MOD_TAG..." Vous venez de recevoir {lightgreen}%d${default}.", 3000);
 }
