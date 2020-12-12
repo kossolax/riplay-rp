@@ -19,18 +19,34 @@
                 <form id="ppBtnForm" action="https://www.paypal.com/cgi-bin/webscr" method="POST">
                         <input type="hidden" name="cbt" value="">
                         <input type="hidden" name="cmd" value="_xclick">
-                        <input type="hidden" name="receiver_email" value="donations@riplay.fr">
-                        <input type="hidden" name="business" value="donations@riplay.fr">
+                        <input type="hidden" name="receiver_email" value="riplay.fr@hotmail.com">
+                        <input type="hidden" name="business" value="riplay.fr@hotmail.com">
                         <input type="hidden" name="quantity" value="1">
-                        <input type="hidden" name="item_name" value="Achat de {{(ppAmount*0.966-0.35)*5000}}$RP">
-
+                        <input type="hidden" name="item_name" value="Achat de {{(ppAmount*0.966-0.35)*5000 | number: 0 }}$RP">
+<!--
+                        <input type="hidden" name="item_name" value="Achat de {{ppReward(ppAmount).amount}}$RP, {{ppReward(ppAmount).cadeau}} cadeau, {{ppReward(ppAmount).xp}} XP">
+-->
                         <div class="row">
                                 <div class="form-inline text-center">
                                         <input autocomplete="off" class="form-control" type="number" name="amount" value="{{ppAmount}}" ng-model="ppAmount" min="1" ng-min="1"/>
+
+                                        <button class="btn form-control" type="submit">
+                                                Envoyer {{ppAmount}}€ pour recevoir {{(ppAmount*0.966-0.35)*5000 | number: 0 }} $RP
+                                        </button>
+
+<!--
                                        
-                                        <input class="form-control" type="submit" value="Envoyer {{ppAmount}}€ pour recevoir {{(ppAmount*0.966-0.35)*5000}} $RP" />
+                                        <button class="btn form-control" type="submit">
+						Envoyer {{ppAmount}}€ pour recevoir
+						<strike style='color:red;  '>{{(ppAmount*0.966-0.35)*5000 | number: 0 }}</strike>$RP
+						<strong style='color:green;'>{{ppReward(ppAmount).amount | number }}</strong>$RP,
+						<strong style='color:green;'>{{ppReward(ppAmount).cadeau}}</strong> cadeaux,
+						<strong style='color:green;'>{{ppReward(ppAmount).xp | number }}</strong> XP
+					</button>
+-->
                                 </div>
                         </div>
+
                         <input type="hidden" name="return" value="https://rpweb.riplay.fr/index.php?page=money&paypal_done=1">
                         <input type="hidden" name="cancel_return" value="https://rpweb.riplay.fr/index.php?page=money&paypal_cancel=1">
                         <input type="hidden" name="on1" value="SteamID">

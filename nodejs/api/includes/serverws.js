@@ -75,7 +75,7 @@ exports = module.exports = function(server) {
     }
     lastReconnect = new Date();
     console.log("Connecting to server websocket");
-    serverWs = new WebSocket("ws://5.196.39.50:27020");
+    serverWs = new WebSocket("ws://5.196.39.50:27016");
     serverWs.onerror = () => { setTimeout(reconnect, 4000) };
     serverWs.onmessage = wsMessage;
   };

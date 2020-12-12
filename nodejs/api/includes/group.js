@@ -85,7 +85,7 @@ server.get('/groups/:id/users', function (req, res, next) {
 
   var now = (new Date()) - (7*24*60*60*1000);
 
-  server.conn.query("SELECT `steamid`, U.`name` as `nick`, LEFT(G.`name`, LOCATE(' - ', G.`name`)-1) as `name`, `is_chef`+`co_chef` as `is_admin`, `point`, UNIX_TIMESTAMP(`last_connected`) as `active` FROM `rp_users` U INNER JOIN `rp_groups` G ON G.`id`=U.`group_id` WHERE U.`group_id`>0 AND (G.`id`=? OR `owner`=?) ORDER BY G.`id` ASC", [req.params['id'], req.params['id']], function(err, rows) {
+  server.conn.query("SELECT `steamid`, U.`name` as `nick`, LEFT(G.`name`, LOCATE(' - ', G.`name`)-1) as `name`, `is_chef`+`co_chef` as `is_admin`, `points`, UNIX_TIMESTAMP(`last_connected`) as `active` FROM `rp_users` U INNER JOIN `rp_groups` G ON G.`id`=U.`group_id` WHERE U.`group_id`>0 AND (G.`id`=? OR `owner`=?) ORDER BY G.`id` ASC", [req.params['id'], req.params['id']], function(err, rows) {
     if( rows.length == 0 ) return res.send(new ERR.NotFoundError("GroupNotFound"));
     for(var i=0; i<rows.length; i++) {
       rows[i].active = (new Date(parseInt(rows[i].active)*1000)) > now;
