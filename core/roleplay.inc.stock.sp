@@ -1081,7 +1081,7 @@ int RunMapCleaner(bool full = false, bool admin = false, int zone = 0) {
 				}
 				
 				if( StrContains(classname, "cfe_player_decal") == 0 ) {
-			}
+				}
 				
 				if( zone == 0 || GetPlayerZone(i) == zone ) {
 					PrintToServer("[CLEANER-1] Supprimé: [%d] %s (full=%b admin=%b zone=%d) %s", i, classname, full, admin, zone, path);
@@ -1159,7 +1159,7 @@ int CleanUp(bool full = false, int zone = 0) {
 			
 		GetEdictClassname(i, name, sizeof(name));
 		
-		if( (StrContains(name, "weapon_") == -1 && StrContains(name, "item_") == -1) || StrContains(name, "weapon_c4") == 0)
+		if( (StrContains(name, "weapon_") == -1 && StrContains(name, "item_") == -1) && StrContains(name, "bumpmine_projectile") == -1 || StrContains(name, "weapon_c4") == 0)
 			continue;
 		if( Weapon_GetOwner(i) > 0 )
 			continue;
