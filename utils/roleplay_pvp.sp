@@ -636,6 +636,7 @@ void STATE_TICK_WARMUP(int timeLeft) {
 		
 		if( g_stkTeamCount[TEAM_PENDING] > 0 ) {
 			addClientToTeam(g_stkTeam[TEAM_PENDING][0], getWorstTeam());
+			GDM_SaveTeam(g_stkTeam[TEAM_PENDING][0]);
 		}
 	}
 	
@@ -670,6 +671,7 @@ void STATE_TICK_MATCH(int timeLeft) {
 		
 		if( g_stkTeamCount[TEAM_PENDING] > 0 ) {
 			addClientToTeam(g_stkTeam[TEAM_PENDING][0], getWorstTeam());
+			GDM_SaveTeam(g_stkTeam[TEAM_PENDING][0]);
 		}
 	}
 
@@ -813,8 +815,11 @@ void STATE_ENTER_WARMUP() {
 		if( !IsPlayerAlive(i) )
 			continue;
 		
-		if( rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_PVP ) {
-			teleportToZone(i, g_iPlayerTeam[i] == view_as<int>(TEAM_RED) ? ZONE_RESPAWN : METRO_BELMON);
+		if( rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_PVP || rp_IsInBunkerArea(i) ) {
+			if( g_iPlayerTeam[i] == view_as<int>(TEAM_RED) )
+				teleportToZone(i, ZONE_RESPAWN);
+			if( g_iPlayerTeam[i] == view_as<int>(TEAM_BLUE) )
+				teleportToZone(i, METRO_BELMON);
 		}
 	}
 	
@@ -1637,6 +1642,17 @@ void GDM_Init(int client) {
 	
 	g_hGlobalSteamID.SetString(szSteamID, tmp, true);
 }
+void GDM_SaveTeam(int client) {
+	char szSteamID[32];
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
+	
+	int[] array = new int[gdm_max];
+	g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
+	
+	array[gdm_team] = g_iPlayerTeam[client];
+	g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
+	
+}
 void GDM_RegisterHit(int client, int damage=0, int hitbox=0) {
 	char szSteamID[32];
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
@@ -2068,6 +2084,7 @@ void shuffleTeams() {
 	
 	for (int i = 0; i < pCount; i++) {
 		addClientToTeam(sPlayers[i][0], teams[lastTeam++ % sizeof(teams)]);
+		GDM_SaveTeam(sPlayers[i][0]);
 	}
 }
 int getWorstTeam() {
