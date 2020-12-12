@@ -182,6 +182,12 @@ public void Q2_Start(int objectiveID, int client)
 		
 		char s[512];
 		
+		if(!IsValidEntity(g_iVehicle[client]))
+		{
+			rp_QuestStepFail(client, objectiveID);
+			return;
+		}
+		
 		SDKHook(g_iVehicle[client], SDKHook_Think, OnThink);
 		
 		if(g_iEssai[client] < 3 && g_iEssai[client] >= 1)
@@ -226,6 +232,12 @@ public void Q2_Frame(int objectiveID, int client)
 	
 	if (rp_GetClientVehicle(client) > 0 && g_iEssai[client] != 0)
 	{
+		if(!IsValidEntity(g_iVehicle[client]))
+		{
+			rp_QuestStepFail(client, objectiveID);
+			return;
+		}
+		
 		Entity_GetAbsOrigin(g_iVehicle[client], origin);
 		
 		if (GetVectorDistance(g_fPos[0][0], origin) < 256 && g_iSkip[client] != 1)
@@ -480,7 +492,10 @@ public Action Timer_3(Handle timer, any client)
 
 public void OnThink(int entity)
 {
+	
 	int client = rp_GetVehicleInt(entity, car_owner);
+	if(!IsValidEntity(g_iVehicle[client]))
+		return;
 	
 	if(!IsValidClient(client) || g_iStep[client] == CHECKPOINTS)
 	{
@@ -491,6 +506,7 @@ public void OnThink(int entity)
 	float pos[3], origin[3];
 	
 	pos = g_fPos[g_iStep[client]][0];
+	
 	Entity_GetAbsOrigin(g_iVehicle[client], origin);
 
 	if (GetVectorDistance(pos, origin) < 128 && !g_bVerif[client])

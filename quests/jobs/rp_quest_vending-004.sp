@@ -117,6 +117,12 @@ public void Q1_Frame(int objectiveID, int client)
 	
 	float pos[3], origin[3];
 	
+	if(!IsValidEntity(g_iTaxi[client]))
+	{
+		rp_QuestStepFail(client, objectiveID);
+		return;
+	}
+	
 	Entity_GetAbsOrigin(g_iTaxi[client], pos);
 	
 	ServerCommand("sm_effect_gps %d %f %f %f", client, pos[0], pos[1], pos[2]);
@@ -159,6 +165,12 @@ public void Q2_Frame(int objectiveID, int client)
 	g_iDuration[client]--;
 	bool isAlreadyClient = false;
 	
+	if(!IsValidEntity(g_iTaxi[client]))
+	{
+		rp_QuestStepFail(client, objectiveID);
+		return;
+	}
+	
 	for (int i = 1; i <= MaxClients; i++)
 	{
 		if(!IsValidClient(i))
@@ -167,7 +179,7 @@ public void Q2_Frame(int objectiveID, int client)
 		if(i == client)
 			continue;
 		
-		if (rp_GetClientVehiclePassager(i) > 0)
+		if (rp_GetClientVehiclePassager(i) == g_iTaxi[client])
 		{
 			for (int k = 0; k < 3; k++)
 			{
@@ -191,9 +203,6 @@ public void Q2_Frame(int objectiveID, int client)
 	}
 	
 	int nearest = getNearestEligible(client);
-	
-	if(nearest == -1)
-		rp_QuestStepFail(client, objectiveID);
 
 	if (IsValidClient(nearest))
 	{
@@ -282,6 +291,12 @@ public void Q4_Frame(int objectiveID, int client)
 	
 	float pos[3];
 	
+	if(!IsValidEntity(g_iTaxi[client]))
+	{
+		rp_QuestStepFail(client, objectiveID);
+		return;
+	}
+	
 	Entity_GetAbsOrigin(g_iTaxi[client], pos);
 	
 	if (isNearBy(pos, g_CurrentDestination[client]))
@@ -329,7 +344,6 @@ public void Q4_Done(int objectiveID, int client)
 		
 		rp_ClientVehiclePassagerExit(client, g_iTaxi[client]);
 		rp_SetVehicleInt(g_iTaxi[client], car_health, -1);
-		
 		
 		Menu menu = new Menu(MenuNothing);
 		menu.SetTitle("Quête: %s", QUEST_NAME);
@@ -431,13 +445,12 @@ int getNearestEligible(int client)
 	float src[3], dst[3], tmp, delta = 9999999.9;
 	bool isAlreadyClient = false;
 	
-	if(!IsValidEntity(g_iTaxi[client]) )
-		return -1;
-	
 	Entity_GetAbsOrigin(g_iTaxi[client], src);
 	
-	for (int i = 1; i <= MaxClients; i++) {
-		if (IsValidClient(i) && IsPlayerAlive(i) && i != client) {
+	for (int i = 1; i <= MaxClients; i++) 
+	{
+		if (IsValidClient(i) && IsPlayerAlive(i) && i != client)
+		{
 			
 			Entity_GetAbsOrigin(i, dst);
 			
