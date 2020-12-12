@@ -134,6 +134,25 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 }
 public void OnClientPostAdminCheck(int client) {
 	g_iMeleeHP[client][0] = g_iMeleeHP[client][1] = g_iMeleeHP[client][2] = MELEE_HP;
+	
+	rp_HookEvent(client, RP_OnPlayerUse, 	fwdUse);
+}
+public Action fwdUse(int client) {
+	char classname[65];
+	int target = rp_GetClientTarget(client);
+	if( IsValidEdict(target) && IsValidEntity(target) ) {
+		GetEdictClassname(target, classname, sizeof(classname));
+		if( StrContains(classname, "rp_sentry") == 0 && rp_IsEntitiesNear(client, target, true) ) {
+			if( rp_GetBuildingData(target, BD_owner) == client && Entity_GetMaxHealth(target) <= Entity_GetHealth(target) ) {
+				rp_ClientGiveItem(client, rp_GetBuildingData(target, BD_item_id));
+				AcceptEntityInput(target, "Kill");
+				
+				return Plugin_Continue;
+			}
+		}
+	}
+	
+	return Plugin_Continue;
 }
 public void OnMapStart() {
 	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt");
@@ -158,12 +177,16 @@ public void OnMapStart() {
 }
 public Action Cmd_Sentry(int args) {
 	int client = GetCmdArgInt(1);
+	int item_id = GetCmdArgInt(args);
+	
 	float pos[3], ang[3];
 	Entity_GetAbsOrigin(client, pos);
 	Entity_GetAbsAngles(client, ang);
 	
 	int ent = CreateSentry(client, pos, ang);
 	rp_SetBuildingData(ent, BD_owner, client);
+	rp_SetBuildingData(ent, BD_item_id, item_id);
+	
 	SetEntProp( ent, Prop_Data, "m_iHealth", 100000);
 	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
 	
