@@ -1061,18 +1061,16 @@ void CAPTURE_Reward() {
 			g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
 			
 			if( gID == rp_GetCaptureInt(cap_bunker) && g_iPlayerTeam[client] == bestTeam ) {
-				amount = 10;
-				rp_IncrementSuccess(client, success_list_pvpkill, 50);
+				amount = (array[gdm_score] / 50) + 10;
 				EmitSoundToClientAny(client, g_szSoundList[snd_FlawlessVictory], _, 6, _, _, 1.0);
 			}
 			else if( gID == rp_GetCaptureInt(cap_bunker) || g_iPlayerTeam[client] == bestTeam ) {
-				amount = 5;
-				rp_IncrementSuccess(client, success_list_pvpkill, 25);
+				amount = (array[gdm_score] / 50) + 5;
 				EmitSoundToClientAny(client, g_szSoundList[snd_Congratulations], _, 6, _, _, 1.0);
 			}
 			else {
-				if( array[gdm_score] >= 100 && (array[gdm_flag] >= 1 || array[gdm_kill] >= 1) ) {
-					amount = 1;
+				if( array[gdm_flag] >= 1 || array[gdm_kill] >= 1 ) {
+					amount = (array[gdm_score] / 50) + 1;
 					EmitSoundToClientAny(client, g_szSoundList[snd_YouHaveLostTheMatch], _, 6, _, _, 1.0);
 				}
 				else {
@@ -1085,6 +1083,7 @@ void CAPTURE_Reward() {
 				char tmp[128];
 				rp_ClientGiveItem(client, 215, amount, true);
 				rp_GetItemData(215, item_type_name, tmp, sizeof(tmp));
+				rp_IncrementSuccess(client, success_list_pvpkill, amount);
 				CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu %d %s, en récompense de la capture.", amount, tmp);
 			}
 			

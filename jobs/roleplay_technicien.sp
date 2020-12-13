@@ -307,10 +307,18 @@ public Action Cmd_ItemNano(int args) {
 		}
 	}
 	else if( StrEqual(arg1, "unprop") ) {
-		
 		int target = rp_GetClientTarget(client);
-		// TODO: Move this fonction to here
-		rp_ClientRemoveProp(client, target, item_id);
+		
+		if( target > 0 ) {
+		
+			if( (rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PVP) || rp_GetBuildingData(target, BD_owner) == client ) {
+				rp_ClientRemoveProp(client, target, item_id);
+				return Plugin_Handled;
+			}
+		}
+		
+		ITEM_CANCEL(client, item_id);
+		return Plugin_Handled;
 	}
 	
 	return Plugin_Handled;

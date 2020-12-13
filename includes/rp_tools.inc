@@ -486,9 +486,6 @@ stock int rp_GetServerInt(rp_serv typeID) {
 }
 
 stock bool rp_IsRemoveAble(int target) {
-	#if defined DEBUG
-	PrintToServer("IsRemoveAble");
-	#endif
 	if (!IsValidEdict(target))
 		return false;
 	if (!IsValidEntity(target))
@@ -525,6 +522,15 @@ stock bool rp_IsRemoveAble(int target) {
 		return true;
 	}
 	if (StrEqual(classname, "rp_grave")) {
+		return true;
+	}
+	if (StrEqual(classname, "rp_table")) {
+		return true;
+	}
+	if (StrEqual(classname, "rp_bank") && rp_GetBuildingData(target, BD_owner) > 0 ) {
+		return true;
+	}
+	if (StrEqual(classname, "rp_sentry")) {
 		return true;
 	}
 	
@@ -677,6 +683,9 @@ public Action rp_ClientRemoveProp(int client, int target, int item_id) {
 					rp_AcceptEntityInput(target, "Kill");
 					CPrintToChat(client, "" ...MOD_TAG... " Le props a été supprime.");
 				}
+			}
+			else if (StrContains(name, "rp_sentry") == 0) {
+				SDKHooks_TakeDamage(target, client, client, 10000.0);
 			}
 			else {
 				rp_AcceptEntityInput(target, "Kill");
