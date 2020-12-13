@@ -55,10 +55,11 @@ char g_PropsAppart[][128] = {
 	"models/props_interiors/chair_office2.mdl",
 	"models/props_interiors/couch.mdl",
 	"models/props_interiors/coffee_table_rectangular.mdl",
-	"models/props/cs_assault/box_stack1.mdl",
+//	"models/props/cs_assault/box_stack1.mdl",
 	"models/props/cs_militia/bar01.mdl",
 	"models/props/de_house/bed_rustic.mdl",
-	"models/props_interiors/tv_cabinet.mdl"
+	"models/props_interiors/tv_cabinet.mdl",
+	"models/models_kit/xmas/xmastree_mini.mdl"
 };
 char g_PropsOutdoor[][128] = {
 	"models/props/DeadlyDesire/blocks/32x32.mdl",
@@ -1089,32 +1090,34 @@ public int MenuPropAppart(Handle menu, MenuAction action, int client, int param2
 		float distance = 50.0;
 		
 		int ent = SpawnProp(client, position, ang_eye, model);
-		
 		GetEntPropVector( ent, Prop_Send, "m_vecMins", min );
 		GetEntPropVector( ent, Prop_Send, "m_vecMaxs", max );
 		
 		distance += SquareRoot( (max[0] - min[0]) * (max[0] - min[0]) + (max[1] - min[1]) * (max[1] - min[1]) ) * 0.5;
 		
-		GetClientFrontLocationData( client, position, ang_eye, distance );
-		normal[0] = 0.0;
-		normal[1] = 0.0;
-		normal[2] = 1.0;
+		GetClientFrontLocationData(client, position, ang_eye, distance );
+		position[2] = position[2] - min[2] + 0.05;
 		
-		NegateVector( normal );
-		GetVectorAngles( normal, ang_ent );
-
-		position[2] += max[2];
-		Handle trace = TR_TraceHullEx(position, position, min, max, MASK_SOLID);
+		max[2] -= min[2];
+		max[2] -= 1.0;
+		min[2] = 0.0;
+		
+		Handle trace = TR_TraceHullFilterEx(position, position, min, max, MASK_SOLID_BRUSHONLY, FilterToOne, ent);
 		if( TR_DidHit(trace) ) {
-			delete trace;
+			float tmp[3];
+			TR_GetEndPosition(tmp, trace);
+			
+			PrintToChat(28, "%f %f %f", min[0], min[1], min[2]);
+			PrintToChat(28, "%f %f %f", max[0], max[1], max[2]);
 			
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Build_CannotHere", client);
 			rp_AcceptEntityInput(ent, "Kill");
+			delete trace;
 			return;
 		}
 		delete trace;
 		
-		TeleportEntity(ent, position, ang_ent, NULL_VECTOR);
+		TeleportEntity(ent, position, ang_eye, NULL_VECTOR);
 		
 		ServerCommand("sm_effect_fading %i 0.5", ent);
 		rp_Effect_BeamBox(client, ent, NULL_VECTOR, 0, 64, 255);
@@ -1429,10 +1432,9 @@ public Action fwdAssurance2(int client, int& amount) {
 // ----------------------------------------------------------------------------
 void GetClientFrontLocationData( int client, float position[3], float angles[3], float distance = 50.0 ) {
 	
-	float _origin[3], _angles[3], direction[3];
+	float _origin[3], _angles[3], direction[3], target[3];
 	GetClientAbsOrigin( client, _origin );
 	GetClientEyeAngles( client, _angles );
-	
 	
 	GetAngleVectors( _angles, direction, NULL_VECTOR, NULL_VECTOR );
 	
@@ -1443,6 +1445,21 @@ void GetClientFrontLocationData( int client, float position[3], float angles[3],
 	angles[0] = 0.0;
 	angles[1] = _angles[1];
 	angles[2] = 0.0;
+	
+	target[0] = position[0];
+	target[1] = position[1];
+	target[2] = position[2] - 999999.9;
+	
+	Handle tr;
+	tr = TR_TraceRayFilterEx(position, target, MASK_SOLID_BRUSHONLY, RayType_EndPoint, PVE_Filter, client);
+	if (tr) {
+		TR_GetEndPosition(target, tr);
+		
+		if( GetVectorDistance(position, target) < distance ) {
+			position[2] = target[2];
+		}
+	}
+	delete tr;
 }
 
 public Action Cmd_InfoColoc(int client){
@@ -1480,17 +1497,19 @@ public Action Cmd_InfoColoc(int client){
 			
 			Format(tmp, sizeof(tmp), "%T", "appart_bonus", client, tmp);
 			AddMenuItem(menu, tmp, tmp,	ITEMDRAW_DISABLED);
-
+			
 			proprio = rp_GetAppartementInt(i, appart_proprio);
-			GetClientName2(proprio, tmp, sizeof(tmp), true);
-			Format(tmp, sizeof(tmp), "%T", "appart_owner", client, tmp);
-			AddMenuItem(menu, tmp, tmp,	ITEMDRAW_DISABLED);
+			if( IsValidClient(proprio) ) {
+				GetClientName2(proprio, tmp, sizeof(tmp), true);
+				Format(tmp, sizeof(tmp), "%T", "appart_owner", client, tmp);
+				AddMenuItem(menu, tmp, tmp,	ITEMDRAW_DISABLED);
+			}
 
 			for(int j=1; j<=MAXPLAYERS; j++){
 				if( !IsValidClient(j) )
 					continue;
-				if(rp_GetClientKeyAppartement(j, i) && j != proprio){
-					GetClientName2(i, tmp, sizeof(tmp), true);
+				if(rp_GetClientKeyAppartement(j, i) && j != proprio) {
+					GetClientName2(j, tmp, sizeof(tmp), true);
 					AddMenuItem(menu, tmp, tmp,	ITEMDRAW_DISABLED);
 				}
 			}
