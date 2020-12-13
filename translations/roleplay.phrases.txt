@@ -945,6 +945,11 @@
 		"fr"	"Planche en bois"
 		"en"	"Wooden board"
 	}
+	"models/models_kit/xmas/xmastree_mini.mdl"
+	{
+		"fr"	"Sapin de Noel"
+		"en"	"Chistmas tree"
+	}
 	// ----------------------------------------------------------------------------------------------
 	"weapon_knife"
 	{
