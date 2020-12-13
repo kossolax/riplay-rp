@@ -24,7 +24,7 @@
 #include <roleplay.inc>	// https://www.ts-x.eu
 
 #define	STONE_HP			1
-#define TREE_HP				2
+#define TREE_HP				1
 #define TREE_RESPAWN_MIN	30.0
 #define TREE_RESPAWN_MAX	60.0
 #define STONE_MAX			64
@@ -139,13 +139,16 @@ public Action EventPlayerFire(Handle ev, const char[] name, bool  bd) {
 	
 		float hit[3];
 		int target = rp_GetTargetHull(client, hit, 56.0);
-		if( target > MaxClients && rp_GetBuildingData(target, BD_owner) > 0 ) {
-			RequestFrame(Task_Heal, target);
-			
-			g_iMeleeHP[client][3]--;
-			if( g_iMeleeHP[client][3] <= 0 ) {
-				rp_ScheduleEntityInput(wpnid, 0.1, "Kill");
-				FakeClientCommand(client, "use weapon_fists");
+		
+		if( target > 0 ) {
+			if( IsValidClient(target) ) {
+				RequestFrame(Task_Heal, target);
+			}
+			else if( rp_GetBuildingData(target, BD_owner) > 0 ) {
+				RequestFrame(Task_Heal, target);
+			}
+			else if( rp_IsValidVehicle(target) ) {
+				RequestFrame(Task_Heal, target);
 			}
 		}
 	}
@@ -153,15 +156,31 @@ public Action EventPlayerFire(Handle ev, const char[] name, bool  bd) {
 	return Plugin_Continue;	
 }
 public void Task_Heal(any target) {
-	
-	int max = Entity_GetMaxHealth(target);
-	int health = max / 50 + GetEntProp(target, Prop_Data, "m_iHealth") + 10;
-	
-	if( health > Entity_GetMaxHealth(target) ) {
-		health = max;
+	if( IsValidClient(target) ) {
+		int armor = rp_GetClientInt(target, i_Kevlar) + 25;
+		if( armor > 250 ) {
+			armor = 250;
+			SetEntProp(target, Prop_Send, "m_bHasHelmet", 1);
+		}
+		
+		rp_SetClientInt(target, i_Kevlar, armor);
 	}
-	
-	SetEntProp(target, Prop_Data, "m_iHealth", health);
+	else if( rp_GetBuildingData(target, BD_owner) > 0 ) {
+		int max = Entity_GetMaxHealth(target);
+		int health = max / 50 + GetEntProp(target, Prop_Data, "m_iHealth") + 10;
+		
+		if( health > Entity_GetMaxHealth(target) ) {
+			health = max;
+		}
+		
+		SetEntProp(target, Prop_Data, "m_iHealth", health);
+	}
+	else if( rp_IsValidVehicle(target) ) {
+		int health = rp_GetVehicleInt(target, car_health) + 100;
+		if( health > 2500 )
+			health = 2500;
+		rp_SetVehicleInt(target, car_health, health);
+	}
 }
 public void OnAllPluginsLoaded() {
 	OnRoundStart();
@@ -174,6 +193,18 @@ public void OnClientPostAdminCheck(int client) {
 	g_iMeleeHP[client][0] = g_iMeleeHP[client][1] = g_iMeleeHP[client][2] = g_iMeleeHP[client][3] = MELEE_HP;
 	
 	rp_HookEvent(client, RP_OnPlayerUse, 	fwdUse);
+	rp_HookEvent(client, RP_PreTakeDamage,	fwdOnDamage);
+}
+
+public Action fwdOnDamage(int victim, int attacker, float& damage, int damagetype) {
+	int wpnid = Client_GetActiveWeapon(attacker);	
+	if( rp_GetClientBool(attacker, b_WeaponIsMelee) && IsMeleeSpanner(wpnid) ) {
+		if( IsValidClient(victim) ) {
+			return Plugin_Stop;
+		}
+	}
+	
+	return Plugin_Continue;
 }
 public Action fwdUse(int client) {
 	char classname[65];
@@ -659,10 +690,11 @@ public void OnEntityDestroyed(int entity) {
 }
 public void OnTreeThink(int entity) {
 	static float lastMove[2048][3];
-	float ang[3], vel[3], src[3], dst[3], min[3], max[3];
+	float ang[3], vel[3], src[3], dst[3], min[3], max[3], tst[3];
 	Entity_GetAbsAngles(entity, ang);
 	Entity_GetAbsOrigin(entity, dst);
-	GetAngleVectors(ang, NULL_VECTOR, NULL_VECTOR, vel);
+	GetAngleVectors(ang, tst, NULL_VECTOR, vel);
+	GetVectorAngles(vel, tst);
 	
 	if( FloatAbs(vel[2]) < 0.5 && Entity_GetHealth(entity) <= 0 ) {		
 		if( GetVectorDotProduct(lastMove[entity], vel) < 0.999999999 ) {
@@ -673,11 +705,26 @@ public void OnTreeThink(int entity) {
 		int rnd = GetRandomInt(0, sizeof(g_szWoodGibs) - 1);
 
 		float dist = 0.0;
-		while( dist < float(Entity_GetMaxHealth(entity)/TREE_HP)-128.0 ) {
+		float max_dist = float(Entity_GetMaxHealth(entity) / TREE_HP) - 128.0;
+		
+		Handle tr = TR_TraceRayFilterEx(dst, tst, MASK_SOLID_BRUSHONLY, RayType_Infinite, FilterToOne, entity);
+		if( TR_DidHit(tr) ) {
+			float pos[3];
+			TR_GetEndPosition(pos, tr);
+			float tmp = GetVectorDistance(pos, dst) - 128.0;
+			
+			if( tmp < max_dist )
+				max_dist = tmp;
+		}
+		
+		delete tr;
+		
+		while( dist < max_dist ) {
 			int ent = CreateEntityByName("prop_physics");
 			DispatchKeyValue(ent, "model", g_szWoodGibs[rnd]);
 			DispatchKeyValue(ent, "classname", "rp_wood");
 			DispatchSpawn(ent);
+			Entity_SetCollisionGroup(ent, COLLISION_GROUP_DEBRIS|COLLISION_GROUP_PLAYER);
 			ActivateEntity(ent);
 			
 			Entity_GetMinSize(ent, min);
@@ -693,12 +740,13 @@ public void OnTreeThink(int entity) {
 			AddVectors(src, dst, src);
 			
 			TeleportEntity(ent, src, ang, NULL_VECTOR);
+			
 			rp_ScheduleEntityInput(ent, 60.0, "Break");
-			Entity_SetCollisionGroup(ent, COLLISION_GROUP_DEBRIS|COLLISION_GROUP_PLAYER);
 			SDKHook(ent, SDKHook_OnTakeDamage, OnPropDamage);
 		}
 		
-		Entity_SetSolidType(entity, SOLID_NONE);
+		Entity_SetCollisionGroup(entity, COLLISION_GROUP_DEBRIS);
+
 		ServerCommand("sm_effect_fading %d 1 1", entity);
 		rp_ScheduleEntityInput(entity, 1.0, "Kill");
 		SDKUnhook(entity, SDKHook_VPhysicsUpdate, OnTreeThink);

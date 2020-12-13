@@ -700,6 +700,8 @@ public bool IsMoveAble(int ent) {
 		return true;
 	if( StrContains(classname, "chicken", false) == 0 )
 		return true;
+	if( StrContains(classname, "rp_", false) == 0 )
+		return true;
 	
 	return false;
 }
