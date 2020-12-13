@@ -580,13 +580,13 @@ public void OnClientDisconnect(int client) {
 		}
 	}
 	
-	for(int a=1; a<200; a++) {
+	for(int a=1; a<50; a++) { // vllontairement fixé à 50.
 		if( rp_GetAppartementInt(a, appart_proprio) != client )
 			continue;
 		
 		cleanAppart(a);
 		int stack[64], count;
-		for(int i=1; i<=64; i++) {
+		for(int i=1; i<=MaxClients; i++) {
 			if( !IsValidClient(i) || i == client )
 				continue;
 			
