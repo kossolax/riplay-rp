@@ -783,7 +783,8 @@ void drawJobMenu(int client) {
 		cpt++;
 	}
 	
-	AddMenuItem(menu, "-1", "Quelqu'un a un autre job pour moi");
+	if( rp_IsTutorialOver(client) )
+		AddMenuItem(menu, "-1", "Quelqu'un a un autre job pour moi");
 	
 	SetMenuExitButton(menu, true);
 	
