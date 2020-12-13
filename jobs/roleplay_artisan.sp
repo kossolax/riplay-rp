@@ -336,12 +336,43 @@ public Action fwdOnPlayerBuild(int client, float& cooldown) {
 	if( rp_GetClientJobID(client) != 31 )
 		return Plugin_Continue;
 	
-	int ent = BuidlingTABLE(client, 0);
-	rp_SetBuildingData(ent, BD_FromBuild, 1);
-	SetEntProp(ent, Prop_Data, "m_iHealth", GetEntProp(ent, Prop_Data, "m_iHealth")/5);
-	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
+	bool recyc, spec;
+
+	char classname[64], tmp[64];
+	
+	Format(classname, sizeof(classname), "rp_table");	
+	int count;
+	for(int i=1; i<=2048; i++) {
+		if( !IsValidEdict(i) )
+			continue;
+		if( !IsValidEntity(i) )
+			continue;
+		
+		GetEdictClassname(i, tmp, sizeof(tmp));
+		
+		if( StrEqual(classname, tmp) && rp_GetBuildingData(i, BD_owner) == client ) {
+			count++;
+			
+			if( rp_GetBuildingData(i, BD_item_id) == 0 )
+				recyc = true;
+			if( rp_GetBuildingData(i, BD_item_id) != 0 )
+				spec = true;
+		}
+	}
+	
+	int ent = 0;
+	
+	if( !recyc )
+		ent = BuidlingTABLE(client, 0);
+	else if( !spec && rp_GetClientInt(client, i_ArtisanSpeciality) > 0  )
+		ent = BuidlingTABLE(client, rp_GetClientInt(client, i_ArtisanSpeciality));
+
 	
 	if( ent > 0 ) {
+		rp_SetBuildingData(ent, BD_FromBuild, 1);
+		SetEntProp(ent, Prop_Data, "m_iHealth", GetEntProp(ent, Prop_Data, "m_iHealth")/5);
+		Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
+		
 		rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
 		rp_ScheduleEntityInput(ent, 300.0, "Kill");
 		cooldown = 120.0;
