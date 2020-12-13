@@ -279,7 +279,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 			job = rp_GetItemInt(i, item_type_job_id);
 			if( job == 0|| job == 91 || job == 101 || job == 181 )
 				continue;
-			if( job == 51 && !(rp_GetClientItem(target, i) >= 1 && Math_GetRandomInt(0, 1) == 1) ) // TODO: Double vérif voiture
+			if( Math_GetRandomInt(0, rp_GetItemInt(i, item_type_prix)+100) < 100 ) 
 				continue;
 			
 			rp_GetItemData(i, item_type_extra_cmd, tmp, sizeof(tmp));
