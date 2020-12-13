@@ -494,10 +494,8 @@ public void OnThink(int entity)
 {
 	
 	int client = rp_GetVehicleInt(entity, car_owner);
-	if(!IsValidEntity(g_iVehicle[client]))
-		return;
 	
-	if(!IsValidClient(client) || g_iStep[client] == CHECKPOINTS)
+	if( !IsValidClient(client) || g_iStep[client] == CHECKPOINTS )
 	{
 		SDKUnhook(entity, SDKHook_Think, OnThink);
 		return;
