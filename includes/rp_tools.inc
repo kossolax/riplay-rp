@@ -20,6 +20,7 @@
 stock float Math_Lerp(float a, float b, float n) {
 	return (1 - n) * a + n * b;
 }
+
 stock void String_TimeFormat(int time, char[] str, int len, bool full = true) {
 	str[0] = 0;
 	int t, d, s;
@@ -52,6 +53,32 @@ stock void String_TimeFormat(int time, char[] str, int len, bool full = true) {
 		Format(str, len, "%s%d seconde%s", str, d, d > 1 ? "s" : "");
 		t -= (d * s);
 	}
+}
+stock int rp_GetZoneByType(const char[] zoneType) {
+	static float lastCheck;
+	static StringMap zoneMap = null;
+	static char zone[64];
+	
+	if(zoneMap == null)
+		zoneMap = new StringMap();
+
+	int zoneID = -1;
+	if(lastCheck > GetGameTime() && zoneMap.GetValue(zoneType, zoneID))
+		return zoneID;
+	
+	for (int j = 1; j < MAX_ZONES; j++) {
+		rp_GetZoneData(j, zone_type_type, zone, sizeof(zone));
+		
+		if (!StrEqual(zone, zoneType))
+			continue;
+		
+		zoneID = j;
+		break;
+	}
+	
+	zoneMap.SetValue(zoneType, zoneID);
+	lastCheck = GetGameTime() + 30.0;
+	return zoneID;
 }
 stock void rp_CANCEL_AUTO_ITEM(int client, int vendeur, int item_id) {
 	float prix = float(rp_GetItemInt(item_id, item_type_prix));
