@@ -1161,7 +1161,7 @@ int CleanUp(bool full = false, int zone = 0) {
 		
 		if( (StrContains(name, "weapon_") == -1 && StrContains(name, "item_") == -1) && StrContains(name, "bumpmine_projectile") == -1 || StrContains(name, "weapon_c4") == 0)
 			continue;
-		if( Weapon_GetOwner(i) > 0 )
+		if( StrContains(name, "weapon_") == 0 && Weapon_GetOwner(i) > 0 )
 			continue;
 		
 		if( full ) {

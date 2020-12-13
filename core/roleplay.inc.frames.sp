@@ -64,6 +64,9 @@ void OnGameFrame_01(float time) {
 		Entity_GetAbsOrigin(i, pos);
 		
 		if( pos[2] <= -10000.0 ) {
+			char tmp[128];
+			GetEdictClassname(i, tmp, sizeof(tmp));
+			PrintToChatAll("%s est hors map", tmp);
 			rp_AcceptEntityInput(i, "Kill");
 		}
 	}
