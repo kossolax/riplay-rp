@@ -24,3 +24,4 @@ report.txt
 upload.bat
 upload.sh
 .vscode
+*.driveupload
