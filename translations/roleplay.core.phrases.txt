@@ -323,7 +323,7 @@
 	}
 	"Cmd_Give_Double"
 	{
-		"fr"		"Vous ne pouvez pas donner d'argnet à l'un de vos double compte. S'il ne s'agit pas d'un double compte, vous pouvez contester cette déicision sur ce lien:"
+		"fr"		"Vous ne pouvez pas donner d'argent à l'un de vos doubles comptes. S'il ne s'agit pas d'un double compte, vous pouvez contester cette décision sur ce lien:"
 	}
 	"Cmd_Give_Target"
 	{
