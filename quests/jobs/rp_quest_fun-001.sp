@@ -73,9 +73,9 @@ public void OnAllPluginsLoaded()
 		SetFailState("Erreur lors de la création de la quête %s %s", QUEST_UNIQID, QUEST_NAME);
 	
 	int i;
-	rp_QuestAddStep(g_iQuest, i++, Q1_Start, Q1_Frame, Q1_Abort, QUEST_NULL);
 	
 	for (int j = 0; j < 3; j++) {
+		rp_QuestAddStep(g_iQuest, i++, Q1_Start, Q1_Frame, Q1_Abort, QUEST_NULL);
 		rp_QuestAddStep(g_iQuest, i++, Q2_Start, Q2_Frame, Q1_Abort, Q2_Done);
 		rp_QuestAddStep(g_iQuest, i++, Q3_Start, Q3_Frame, Q1_Abort, Q3_Done);
 	}
@@ -110,32 +110,39 @@ public void OnMapStart()
 
 public void Q1_Start(int objectiveID, int client)
 {
-	char s[512];
-	Format(s, sizeof(s), "Fournissez-vous une mustang auprès d'un carshop.");
-	if(rp_IsClientNew(client))
+	if(rp_GetClientVehicle(client) > 0)
 	{
-		Format(s, sizeof(s), "%s\nAstuce : utilisez /job pour appeller un carshop.", s);
+		rp_QuestStepComplete(client, objectiveID);
 	}
-	
-	String_WordWrap(s, 40);
-	
-	g_iEssai[client] = 3;
-	g_iSkip[client] = 0; // 0 = course, 1 = en attente d'un choix, 2 = Pas d'autre essai, 3 = déjà reçu la récompense
-	g_bRecompense[client] = false;
-	
-	Menu menu = new Menu(MenuNothing);
-	
-	menu.SetTitle("Quête: %s", QUEST_NAME);
-	menu.AddItem("", s, ITEMDRAW_DISABLED);
-	menu.ExitButton = false;
-	menu.Display(client, MENU_TIME_FOREVER);
-	
-	g_iDuration[client] = 10 * 60;
-	
-	char tmp[64], query[512];
-	GetClientAuthId(client, AUTH_TYPE, tmp, sizeof(tmp));
-	Format(query, sizeof(query), "SELECT MIN(`duration`) FROM `rp_course` WHERE `steamid`='%s';", tmp);
-	SQL_TQuery(rp_GetDatabase(), SQL_GetBestTime, query, client, DBPrio_Low);
+	else
+	{
+		char s[512];
+		Format(s, sizeof(s), "Fournissez-vous une mustang auprès d'un carshop.");
+		if(rp_IsClientNew(client))
+		{
+			Format(s, sizeof(s), "%s\nAstuce : utilisez /job pour appeller un carshop.", s);
+		}
+		
+		String_WordWrap(s, 40);
+		
+		g_iEssai[client] = 3;
+		g_iSkip[client] = 0; // 0 = course, 1 = en attente d'un choix, 2 = Pas d'autre essai, 3 = déjà reçu la récompense
+		g_bRecompense[client] = false;
+		
+		Menu menu = new Menu(MenuNothing);
+		
+		menu.SetTitle("Quête: %s", QUEST_NAME);
+		menu.AddItem("", s, ITEMDRAW_DISABLED);
+		menu.ExitButton = false;
+		menu.Display(client, MENU_TIME_FOREVER);
+		
+		g_iDuration[client] = 10 * 60;
+		
+		char tmp[64], query[512];
+		GetClientAuthId(client, AUTH_TYPE, tmp, sizeof(tmp));
+		Format(query, sizeof(query), "SELECT MIN(`duration`) FROM `rp_course` WHERE `steamid`='%s';", tmp);
+		SQL_TQuery(rp_GetDatabase(), SQL_GetBestTime, query, client, DBPrio_Low);
+	}
 }
 
 public void SQL_GetBestTime(Handle owner, Handle hQuery, const char[] error, any client) 
@@ -153,7 +160,6 @@ public void Q1_Frame(int objectiveID, int client)
 	
 	if (rp_GetClientVehicle(client) > 0)
 	{
-		g_iVehicle[client] = rp_GetClientVehicle(client);
 		rp_QuestStepComplete(client, objectiveID);
 	}
 	else if (g_iDuration[client] <= 0)
@@ -181,9 +187,17 @@ public void Q2_Start(int objectiveID, int client)
 		g_iStep[client] = 0;
 		
 		char s[512];
+
+		g_iVehicle[client] = rp_GetClientVehicle(client);
 		
 		if(!IsValidEntity(g_iVehicle[client]))
 		{
+			Menu menu = new Menu(MenuNothing);
+			menu.SetTitle("");
+			menu.AddItem("", "", ITEMDRAW_DISABLED);
+			menu.ExitButton = false;
+			menu.Display(client, MENU_TIME_FOREVER);
+			
 			rp_QuestStepFail(client, objectiveID);
 			return;
 		}
@@ -216,39 +230,46 @@ public void Q2_Start(int objectiveID, int client)
 		}
 		
 		g_iDuration[client] = 6 * 60;
-	
 	}
 }
 
 public void Q2_Frame(int objectiveID, int client)
-{
-	g_iDuration[client]--;
-	
-	float pos[3], origin[3];
-	
-	pos = g_fPos[0][0];
-	
-	ServerCommand("sm_effect_gps %d %f %f %f", client, pos[0], pos[1], pos[2]);
-	
-	if (rp_GetClientVehicle(client) > 0 && g_iEssai[client] != 0)
+{	
+	if(rp_GetClientVehicle(client) != g_iVehicle[client])
 	{
-		if(!IsValidEntity(g_iVehicle[client]))
-		{
-			rp_QuestStepFail(client, objectiveID);
-			return;
-		}
-		
-		Entity_GetAbsOrigin(g_iVehicle[client], origin);
-		
-		if (GetVectorDistance(g_fPos[0][0], origin) < 256 && g_iSkip[client] != 1)
-		{
-			rp_QuestStepComplete(client, objectiveID);
-		}
+		g_iSkip[client] = 2;
+		rp_QuestStepComplete(client, objectiveID);
 	}
-	else if (g_iDuration[client] <= 0)
-		rp_QuestStepFail(client, objectiveID);
-	else {
-		PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME1);
+	else
+	{
+		g_iDuration[client]--;
+		
+		float pos[3], origin[3];
+		
+		pos = g_fPos[0][0];
+		
+		ServerCommand("sm_effect_gps %d %f %f %f", client, pos[0], pos[1], pos[2]);
+		
+		if (rp_GetClientVehicle(client) > 0 && g_iEssai[client] != 0)
+		{
+			if(!IsValidEntity(g_iVehicle[client]))
+			{
+				rp_QuestStepFail(client, objectiveID);
+				return;
+			}
+			
+			Entity_GetAbsOrigin(g_iVehicle[client], origin);
+			
+			if (GetVectorDistance(g_fPos[0][0], origin) < 256 && g_iSkip[client] != 1)
+			{
+				rp_QuestStepComplete(client, objectiveID);
+			}
+		}
+		else if (g_iDuration[client] <= 0)
+			rp_QuestStepFail(client, objectiveID);
+		else {
+			PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME1);
+		}
 	}
 }
 
@@ -256,8 +277,6 @@ public void Q2_Done(int objectiveID, int client)
 {
 	if(g_iSkip[client] != 0)
 		return;
-	
-	//Entity_SetCollisionGroup(g_iVehicle[client], COLLISION_GROUP_DEBRIS);
 	
 	float angle[3];
 	
@@ -304,27 +323,42 @@ public void Q3_Start(int objectiveID, int client)
 }
 
 public void Q3_Frame(int objectiveID, int client)
-{
-	g_iDuration[client]--;
-	
-	if (g_iStep[client] == CHECKPOINTS)
+{	
+	if(rp_GetClientVehicle(client) != g_iVehicle[client])
 	{
+		g_iSkip[client] = 2;
 		rp_QuestStepComplete(client, objectiveID);
 	}
-	else if (g_iDuration[client] <= 0)
-		rp_QuestStepFail(client, objectiveID);
-	else {
-		Circle(client, g_iStep[client]);
+	else
+	{
+		g_iDuration[client]--;
+		
+		if (g_iStep[client] == CHECKPOINTS)
+		{
+			rp_QuestStepComplete(client, objectiveID);
+		}
+		else if (g_iDuration[client] <= 0)
+			rp_QuestStepFail(client, objectiveID);
+		else {
+			Circle(client, g_iStep[client]);
+		
+			if (g_iStep[client] != CHECKPOINTS - 1)
+				Circle(client, g_iStep[client] + 1);
 	
-		if (g_iStep[client] != CHECKPOINTS - 1)
-			Circle(client, g_iStep[client] + 1);
-
-		PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME1);
+			PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME1);
+		}
 	}
 }
 
 public void Q3_Done(int objectiveID, int client)
 {	
+	if(rp_GetClientVehicle(client) != g_iVehicle[client])
+	{
+		g_iEssai[client]--;
+		g_iSkip[client] = 0;
+		return;
+	}
+	
 	if(g_bRecompense[client])
 		return;
 	
@@ -494,8 +528,10 @@ public void OnThink(int entity)
 {
 	
 	int client = rp_GetVehicleInt(entity, car_owner);
+	if(!IsValidEntity(g_iVehicle[client]))
+		return;
 	
-	if( !IsValidClient(client) || g_iStep[client] == CHECKPOINTS )
+	if(!IsValidClient(client) || g_iStep[client] == CHECKPOINTS)
 	{
 		SDKUnhook(entity, SDKHook_Think, OnThink);
 		return;
