@@ -1140,9 +1140,9 @@ int GetMaxKit(int client, int itemID) {
 		default:	max = 0;
 	}
 	
-	if( itemID == ITEM_PIEDBICHE || itemID == ITEM_MAGNETCB)
+	if( itemID == ITEM_MAGNETCB)
 		max = 1;
-	if( itemID == ITEM_KITEXPLOSIF )
+	if( itemID == ITEM_PIEDBICHE || itemID == ITEM_KITEXPLOSIF )
 		max = RoundToCeil(max / 3.0);
 	
 	return max;

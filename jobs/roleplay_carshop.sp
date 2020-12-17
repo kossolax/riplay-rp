@@ -1439,10 +1439,12 @@ void displayNeonMenu(int client) {
 	Handle menu2 = CreateMenu(eventGarageMenu);
 	SetMenuTitle(menu2, "%T\n ", "Garage", client);
 				
-	char tmp[64];
+	char tmp[64], tmp2[64];
 	for (int i = 0; i < sizeof(g_szColor); i++) {
 		Format(tmp, sizeof(tmp), "neon %s", g_szColor[i][0]);
-		AddMenuItem(menu2, tmp, g_szColor[i][1]);
+		Format(tmp2, sizeof(tmp2), "%T", g_szColor[i][1], client);
+		
+		AddMenuItem(menu2, tmp, tmp2);
 	}
 			
 	SetMenuExitButton(menu2, true);

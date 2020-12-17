@@ -638,10 +638,6 @@ void CashMachine_Destroy(int entity) {
 		GetEdictClassname(entity, tmp, sizeof(tmp));
 		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Build_Destroyed", owner, tmp);
 		rp_ClientOverlays(owner, o_Action_DestroyMachine, 10.0);
-		
-		if( rp_GetBuildingData(entity, BD_started)+120 < GetTime() ) {
-			rp_ClientMoney(owner, i_Bank, -25);
-		}
 	}
 }
 void ExplodeProp(int ent) {

@@ -107,8 +107,8 @@
 	"Vehicle_Battery_Tick"
 	{
 		"#format"	"{1:d}"
-		"fr"		"Votre batterie est chargée à {red}{1}%{default}."
-		"en"		"Your battery is charged to {red}{1}%{default}."
+		"fr"		"Votre batterie est chargée à {red}{1}%%{default}."
+		"en"		"Your battery is charged to {red}{1}%%{default}."
 	}
 	"Vehicle_Battery_Give"
 	{

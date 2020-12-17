@@ -165,6 +165,7 @@
 	}
 	"Tueur_Kidnapping_Call"
 	{
+		"#format"	"{1:s},{2:s}"
 		"fr"		"Un enlèvement a eu lieu. Vous devez libérer {red}{1}{default} dans {red}{2}{default}."
 	}
 	"Tueur_Kidnapping_Cry"

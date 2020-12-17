@@ -74,7 +74,7 @@
 	"Metro_Paid"
 	{
 		"#format"	"{1:d}"
-		"fr"	"Le métro vous a couté {red}{1}${default}, pensez à acheter des tickets à un banquier pour que le trajet vous coûte moins chère."
+		"fr"	"Le métro vous a coûté {red}{1}${default}, pensez à acheter des tickets à un banquier pour que le trajet vous coûte moins cher."
 		"en"	"The metro costs you {red}{1}${default}, think about buying tickets from a banker to make the trip cheaper."
 	}
 	// ----------------------------------------------------------------------------------------------

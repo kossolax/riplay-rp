@@ -46,6 +46,7 @@
 	}
 	"Lockpad_Open"
 	{
+		"#format"	"{1:s}"
 		"fr"	"Votre cadenas placé sur la porte {red}{1}{default}, a été {red}forcé{default}."
 	}
 	"Lockpad_Already"
