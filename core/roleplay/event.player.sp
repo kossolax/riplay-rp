@@ -595,7 +595,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 					
 					if( killDuration > 1 ) {
 						if( killAcceleration >= 0.75 ) {
-							if( rp_ClientFloodTriggered(Attacker, victim, fd_freekill1) )
+							if( rp_ClientFloodTriggered(Attacker, Client, fd_freekill1) )
 								rp_ClientFloodIncrement(Attacker, Client, fd_freekill2, float(FREEKILL_TIME));
 							rp_ClientFloodIncrement(Attacker, Client, fd_freekill1, float(FREEKILL_TIME));
 						}

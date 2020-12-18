@@ -819,7 +819,7 @@ Menu AUDIENCE_Identity(int& client, int a, int b, int c) {
 		client = b;
 		
 		subMenu = new Menu(MenuTribunal);
-		subMenu.SetTitle("%T", "Tribunal_Menu_Sexe_Confirm", client);
+		subMenu.SetTitle("%T\n ", "Tribunal_Menu_Sexe_Confirm", client, 2500);
 		Format(tmp, sizeof(tmp), "identity %d %d 1", a, b); Format(tmp2, sizeof(tmp2), "%T", "No", client); subMenu.AddItem(tmp, tmp2);
 		Format(tmp, sizeof(tmp), "identity %d %d 2", a, b); Format(tmp2, sizeof(tmp2), "%T", "Yes", client); subMenu.AddItem(tmp, tmp2);
 		

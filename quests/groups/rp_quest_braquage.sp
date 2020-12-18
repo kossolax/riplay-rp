@@ -1351,6 +1351,10 @@ void updateTeamPolice() {
 		
 		if( g_iPlayerTeam[i] == TEAM_POLICE && GetClientTeam(i) == CS_TEAM_T ) {
 			CS_SwitchTeam(i, CS_TEAM_CT);
+			SetEntityHealth(i, 500);
+			rp_SetClientInt(i, i_Kevlar, 250);
+			SetEntProp(i, Prop_Send, "m_bHasHelmet", 1);
+			rp_ClientResetSkin(i);
 		}
 	}
 }

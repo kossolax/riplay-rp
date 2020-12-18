@@ -29,7 +29,7 @@
 
 #define USING_VEHICLE
 //#define EVENT_APRIL
-//#define EVENT_NOEL
+#define EVENT_NOEL
 //#define EVENT_BIRTHDAY
 
 #if defined GAME_CSGO
