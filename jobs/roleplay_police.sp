@@ -157,8 +157,9 @@ public void OnClientDisconnect(int client) {
 }
 public Action fwdOnFrame(int client) {
 	
-	if( rp_GetClientInt(Attacker, i_KillJailDuration) ) {
+	if( rp_GetClientInt(client, i_KillJailDuration) ) {
 		if( GetEntProp(client, Prop_Send, "m_bDrawViewmodel") == 1 ) {
+			Handle hud = CreateHudSynchronizer();
 			SetHudTextParams(0.0125, 0.0125, 1.1, 213, 19, 45, 255, 2, 0.0, 0.0, 0.0);
 			ShowSyncHudText(client, hud, "%T", "Jail_Auto", client);
 		}
