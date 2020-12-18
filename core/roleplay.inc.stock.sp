@@ -51,14 +51,14 @@ float getKillAcceleration(int attack, int victim, int inflictor, const char[] we
 	// ---- dans les appart
 	zoneID = rp_GetPlayerZoneAppart(src);
 	if( zoneID > 0 ) {
-		if( rp_GetClientJobID(victim) == 1 || rp_ClientFloodTriggered(attack, victim, fd_freekill) )
+		if( GetClientTeam(victim) == CS_TEAM_CT || (rp_ClientFloodTriggered(attack, victim, fd_freekill1) && rp_ClientFloodTriggered(attack, victim, fd_freekill2)) )
 			return 1.0;
 		return 0.8;
 	}
 	
-	if( rp_ClientFloodTriggered(attack, victim, fd_freekill) )
+	if( rp_ClientFloodTriggered(attack, victim, fd_freekill1) && rp_ClientFloodTriggered(attack, victim, fd_freekill2) )
 		return 1.45;
-	if( rp_GetClientJobID(victim) == 1 )
+	if( GetClientTeam(victim) == CS_TEAM_CT )
 		return 1.3;
 	return 1.1;
 }

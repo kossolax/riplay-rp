@@ -156,19 +156,28 @@ public void OnClientDisconnect(int client) {
 	delete g_UsedWeapon[client];
 }
 public Action fwdOnFrame(int client) {
-	if( rp_GetClientJobID(client) == 101 && GetClientTeam(client) == CS_TEAM_CT && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 101 ) {
-		
+	
+	if( rp_GetClientInt(Attacker, i_KillJailDuration) ) {
 		if( GetEntProp(client, Prop_Send, "m_bDrawViewmodel") == 1 ) {
-			Handle hud = CreateHudSynchronizer();
-			if( jugeCanJail() ) {
-				SetHudTextParams(0.0125, 0.0125, 1.1, 19, 213, 45, 255, 2, 0.0, 0.0, 0.0);
-				ShowSyncHudText(client, hud, "%T", "Jail_IsAllowed", client);
+			SetHudTextParams(0.0125, 0.0125, 1.1, 213, 19, 45, 255, 2, 0.0, 0.0, 0.0);
+			ShowSyncHudText(client, hud, "%T", "Jail_Auto", client);
+		}
+	}
+	else {
+		if( rp_GetClientJobID(client) == 101 && GetClientTeam(client) == CS_TEAM_CT && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 101 ) {
+			
+			if( GetEntProp(client, Prop_Send, "m_bDrawViewmodel") == 1 ) {
+				Handle hud = CreateHudSynchronizer();
+				if( jugeCanJail() ) {
+					SetHudTextParams(0.0125, 0.0125, 1.1, 19, 213, 45, 255, 2, 0.0, 0.0, 0.0);
+					ShowSyncHudText(client, hud, "%T", "Jail_IsAllowed", client);
+				}
+				else {
+					SetHudTextParams(0.0125, 0.0125, 1.1, 213, 19, 45, 255, 2, 0.0, 0.0, 0.0);
+					ShowSyncHudText(client, hud, "%T", "Jail_IsDenied", client);
+				}
+				CloseHandle(hud);
 			}
-			else {
-				SetHudTextParams(0.0125, 0.0125, 1.1, 213, 19, 45, 255, 2, 0.0, 0.0, 0.0);
-				ShowSyncHudText(client, hud, "%T", "Jail_IsDenied", client);
-			}
-			CloseHandle(hud);
 		}
 	}
 }

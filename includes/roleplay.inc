@@ -880,7 +880,8 @@ enum fd_user_data {
 	fd_job,
 	fd_kidnapping,
 	fd_ruban,
-	fd_freekill,
+	fd_freekill1,
+	fd_freekill2,
 
 	fd_udata_max
 };

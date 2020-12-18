@@ -42,6 +42,11 @@
 		"fr"		"/jail non autorisé"
 		"en"		"/jail not authorized"
 	}
+	"Jail_Auto"
+	{
+		"fr"		"FREEKILL MASSIF: Autojail à 500 TDM."
+		"en"		"MASSIVE FREEKILL DETECTED."
+	}
 	// ----------------------------------------------------------------------------------------------
 	"JailReason"
 	{

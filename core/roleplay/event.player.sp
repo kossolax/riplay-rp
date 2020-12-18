@@ -594,8 +594,11 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 				if( !(GetZoneBit( GetPlayerZone(Client) ) & BITZONE_EVENT || GetZoneBit( GetPlayerZone(Client) ) & BITZONE_PVP) ) {
 					
 					if( killDuration > 1 ) {
-						if( killAcceleration >= 0.75 )
-							rp_ClientFloodIncrement(Attacker, Client, fd_freekill, float(FREEKILL_TIME));
+						if( killAcceleration >= 0.75 ) {
+							if( rp_ClientFloodTriggered(attack, victim, fd_freekill1) )
+								rp_ClientFloodIncrement(Attacker, Client, fd_freekill2, float(FREEKILL_TIME));
+							rp_ClientFloodIncrement(Attacker, Client, fd_freekill1, float(FREEKILL_TIME));
+						}
 						g_iUserData[Attacker][i_KillingSpread]++;
 					}
 					
@@ -631,16 +634,12 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 			
 			if( g_iHideNextLog[Attacker][Client] == 0 ) {
 				
-				int max = rp_CountPolice() > 0 ? AUTOKICK_TDM_WITH : AUTOKICK_TDM_WITHOUT;
-				if( g_iUserData[Attacker][i_KillJailDuration] >= max ) {
+				if( g_iUserData[Attacker][i_KillJailDuration] >= AUTOKICK_TDM ) {
 					g_bUserData[Attacker][b_IsFreekiller] = true;
 					ServerCommand("rp_SendToJail %d 0", Attacker);
 					
 					if( rp_GetClientInt(Attacker, i_JailTime) < g_iUserData[Attacker][i_KillJailDuration] * 60 )
 						rp_SetClientInt(Attacker, i_JailTime, g_iUserData[Attacker][i_KillJailDuration] * 60);
-					
-					if( g_iUserData[Attacker][i_KillJailDuration] >= AUTOKICK_TDM_WITH && g_iUserData[Attacker][i_KillJailDuration] >= AUTOKICK_TDM_WITHOUT )
-						KickClient(Attacker, "%T", "Kill_Kick", Attacker);
 				}
 			}
 			
