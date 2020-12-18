@@ -77,7 +77,10 @@ public void OnMapStart() {
 	
 	g_cModel = PrecacheModel("materials/sprites/water_drop.vmt");
 	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt");
-	g_cSnow = PrecacheDecal("DeadlyDesire/maps/snow.vmt");	
+	g_cSnow = PrecacheDecal("decals/snow2.vmt");	
+	AddFileToDownloadsTable("materials/decals/snow2.vmt");
+	AddFileToDownloadsTable("materials/decals/snow01.vtf");
+	
 	
 	PrecacheSoundAny("ambient/weather/thunder1.wav");
 	PrecacheSoundAny("ambient/weather/thunder2.wav");

@@ -702,6 +702,8 @@ public bool IsMoveAble(int ent) {
 		return true;
 	if( StrContains(classname, "rp_", false) == 0 )
 		return true;
+	if( StrContains(classname, "bonbon_entity", false) == 0 )
+		return true;
 	
 	return false;
 }

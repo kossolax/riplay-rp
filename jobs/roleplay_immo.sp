@@ -1360,7 +1360,7 @@ int BuildingTomb(int client) {
 	
 	SetEntityModel(ent, MODEL_GRAVE);
 	
-	SetEntProp( ent, Prop_Data, "m_iHealth", 25000);
+	SetEntProp( ent, Prop_Data, "m_iHealth", 500);
 	SetEntProp( ent, Prop_Data, "m_takedamage", 0);
 	
 	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
