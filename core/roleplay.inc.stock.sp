@@ -928,6 +928,10 @@ void RP_SpawnBank() {
 void SpawnRandomBonbon() {
 	
 	ServerCommand("sm_effect_weather snow 100");
+	
+	return;
+	// Deprecated?
+	
 	for( int i=MaxClients; i<=GetMaxEntities(); i++ ) {
 		if( !IsValidEdict(i) )
 			continue;
