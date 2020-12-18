@@ -600,6 +600,7 @@ public Action Cmd_ItemVehicle(int args) {
 		rp_SetVehicleInt(car, car_light_b, 32);
 		rp_SetVehicleInt(car, car_boost, 1);
 		rp_SetVehicleInt(car, car_donateur, 1);
+		rp_SetVehicleInt(car, car_can_jump, 1);
 
 		DispatchKeyValue(car, "vehiclescript", 	"scripts/vehicles/natalya_mustang_csgo_20163.txt");
 		ServerCommand("vehicle_flushscript");
@@ -1685,8 +1686,7 @@ public int eventGarageMenu(Handle menu, MenuAction action, int client, int param
 					}
 					
 					if( rp_GetVehicleInt(target, car_donateur) == 1 && rp_GetVehicleInt(target, car_battery) == -1 ) {
-						LogToGame("[CHEATING] %L a tenté de ranger sa voiture donateur, sans batterie.", client);
-						CPrintToChat(client, ""...MOD_TAG..." %T", "Vehicle_CantWithdraw", client);
+						CPrintToChat(client, ""...MOD_TAG..." %T", "Vehicle_CantWithdrawBattery", client);
 						continue;
 					}		
 					

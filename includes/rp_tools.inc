@@ -142,15 +142,15 @@ bool rp_IsInBunkerArea(int client) {
 	
 	return false;
 }
-stock bool rp_IsClientSafe(int client) {
+stock bool rp_IsClientSafe(int client, bool withAFK=true) {
 	if( client <= 0 )
 		return false;
 	
 	if( rp_IsClientNew(client) )
 		return true;
-	if( rp_GetClientBool(client, b_IsAFK) )
+	if( withAFK && rp_GetClientBool(client, b_IsAFK) )
 		return true;
-	if( rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_EVENT )
+	if( withAFK && rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_EVENT )
 		return true;
 	if( GetConVarInt(FindConVar("rp_capture")) == 1 && rp_IsInBunkerArea(client) )
 		return true;
@@ -543,6 +543,9 @@ stock bool rp_IsRemoveAble(int target) {
 		return true;
 	}
 	if (StrEqual(classname, "rp_plant")) {
+		return true;
+	}
+	if (StrEqual(classname, "rp_props")) {
 		return true;
 	}
 	if (StrContains(classname, "prop_physics") == 0) {

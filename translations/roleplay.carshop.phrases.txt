@@ -21,6 +21,11 @@
 		"fr"		"Il n'est pas possible de ranger ce véhicule."
 		"en"		"It's not possible to store this vehicle."
 	}
+	"Vehicle_CantWithdrawBattery"
+	{
+		"fr"		"Il n'est pas possible de ranger ce véhicule, car il lui manque sa batterie."
+		"en"		"It's not possible to store this vehicle because it is missing a battery."
+	}
 	"Vehicle_CantWithdrawDamage"
 	{
 		"fr"		"Il n'est pas possible de ranger ce véhicule, car il est endommagé."
