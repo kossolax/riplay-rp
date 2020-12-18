@@ -1207,6 +1207,11 @@ public Action Command_Say(int client, int args) {
 			return Plugin_Handled;
 		}
 		
+		if( Entity_GetDistance(client, target) > MAX_AREA_DIST ) {
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_TargetIsToFar", client);
+			return Plugin_Handled;
+		}
+		
 		if( g_iUserData[target][i_KidnappedBy] > 0 ) {
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_Out_Cannot_Kidnap", client);
 			return Plugin_Handled;
@@ -1268,10 +1273,7 @@ public Action Command_Say(int client, int args) {
 		rp_ClientColorize(target);
 		
 		g_bUserData[client][b_MaySteal] = false;
-		if( GetClientTeam(target) == CS_TEAM_CT )
-			CreateTimer(10.0, AllowStealing, client);
-		else
-			CreateTimer(0.01, AllowStealing, client);
+		CreateTimer(GetClientTeam(target) == CS_TEAM_CT ? 10.0 : 2.5, AllowStealing, client);
 
 		return Plugin_Handled;
 	}

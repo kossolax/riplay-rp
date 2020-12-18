@@ -275,11 +275,11 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 			
 			if( rp_GetClientItem(target, i) <= 0 )
 				continue;
-				
+			
 			job = rp_GetItemInt(i, item_type_job_id);
 			if( job == 0|| job == 91 || job == 101 || job == 181 )
 				continue;
-			if( Math_GetRandomInt(0, rp_GetItemInt(i, item_type_prix)+100) < 100 ) 
+			if( Math_GetRandomInt(0, rp_GetItemInt(i, item_type_prix)+100) > 100 ) 
 				continue;
 			
 			rp_GetItemData(i, item_type_extra_cmd, tmp, sizeof(tmp));
@@ -595,25 +595,10 @@ public Action Cmd_ItemPiedBiche(int args) {
 	float start = 0.0;
 	
 	if( type == 3 || type == 4  )
-		start = Math_GetRandomFloat(0.5, 0.66);
-	
-	int owner = rp_GetBuildingData(target, BD_owner);
-	if( IsValidClient(owner) ) {
-		if( type == 4 || type == 5 ) {
-			CPrintToChat(owner, "" ...MOD_TAG... " %T", "Crowbar_FauxBillet", owner);
-		}
-		else if( type == 7 ) {
-			CPrintToChat(owner, "" ...MOD_TAG... " %T", "Crowbar_Drugs", owner);
-		}
-		else if( type == 8 ) {
-			CPrintToChat(owner, "" ...MOD_TAG... " %T", "Crowbar_Distrib", owner);
-		}
-	}
-		
+		start = Math_GetRandomFloat(0.5, 0.66);		
 	
 	rp_SetClientStat(client, i_JobFails, rp_GetClientStat(client, i_JobFails) + 1);
 
-	rp_ClientGiveItem(client, item_id, -rp_GetClientItem(client, item_id));
 	rp_SetClientBool(client, b_MaySteal, false);
 	rp_SetClientInt(client, i_LastVolTime, GetTime());
 	rp_SetClientInt(client, i_LastVolAmount, 100);
@@ -701,7 +686,6 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				return Plugin_Stop;
 			}
 		}
-
 		
 		rp_SetClientStat(client, i_JobSucess, rp_GetClientStat(client, i_JobSucess) + 1);
 		rp_SetClientStat(client, i_JobFails, rp_GetClientStat(client, i_JobFails) - 1);
@@ -1025,12 +1009,10 @@ public Action ItemPickLockOver_frame(Handle timer, Handle dp) {
 		difficulte += 1;
 	if( rp_GetZoneBit( tzone ) & BITZONE_HAUTESECU || rp_GetZoneInt(tzone, zone_type_type) == 101 )
 		difficulte += 1;
-	
 	if( g_iDoorDefine_LOCKER[doorID] && rp_GetZoneInt(tzone, zone_type_type) == 1 )
 		difficulte += 1;
 	if( g_iDoorDefine_LOCKER[doorID] && rp_GetZoneInt(tzone, zone_type_type) != 1 )
 		difficulte += 2;
-	
 	if( appartID > 0 && appartID < 50 )
 		difficulte += 2;
 	
@@ -1178,10 +1160,10 @@ int getDistrib(int client, int& type) {
 	else if( StrEqual(classname, "rp_weaponbox") )
 		type = 3;
 	else if( (StrEqual(classname, "rp_cashmachine") ) && rp_GetClientJobID(owner) != 91 &&
-		!rp_IsClientSafe(owner) && (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target)) > 0.75) && rp_GetBuildingData(target, BD_HackedTime)+6*60 < GetTime() )
+		!rp_IsClientSafe(owner, false) && (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target)) > 0.75) && rp_GetBuildingData(target, BD_HackedTime)+6*60 < GetTime() )
 		type = 4;
 	else if( (StrEqual(classname, "rp_bigcashmachine") ) && rp_GetClientJobID(owner) != 91 &&
-		!rp_IsClientSafe(owner) && (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target)) > 0.75) && rp_GetBuildingData(target, BD_HackedTime)+6*60 < GetTime() )
+		!rp_IsClientSafe(owner, false) && (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target)) > 0.75) && rp_GetBuildingData(target, BD_HackedTime)+6*60 < GetTime() )
 		type = 5;
 	else if( StrEqual(classname, "rp_phone") )
 		type = 6;
@@ -1328,10 +1310,19 @@ bool disapear(int client) {
 	}
 	else {
 		for (int i = 1; i <= MaxClients; i++) {
-			if( IsValidClient(i) && GetClientTeam(i) != CS_TEAM_CT && !IsFakeClient(i) && rp_GetClientJobID(i) != 91 && i != client ) {
+			if( IsValidClient(i) && GetClientTeam(i) != CS_TEAM_CT && !IsFakeClient(i) && rp_GetClientJobID(i) == zoneJob && i != client ) {
 				Entity_GetModel(i, model, sizeof(model));
 				if( StrContains(model, "sprisioner", false) == -1 )
 					rndClient[rndCount++] = i;
+			}
+		}
+		if( rndCount == 0 ) {
+			for (int i = 1; i <= MaxClients; i++) {
+				if( IsValidClient(i) && GetClientTeam(i) != CS_TEAM_CT && !IsFakeClient(i) && rp_GetClientJobID(i) != 91 && i != client ) {
+					Entity_GetModel(i, model, sizeof(model));
+					if( StrContains(model, "sprisioner", false) == -1 )
+						rndClient[rndCount++] = i;
+				}
 			}
 		}
 	}
