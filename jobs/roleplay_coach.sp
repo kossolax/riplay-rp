@@ -32,8 +32,23 @@ char g_szSkinsList[][][] = {
 	{"models/player/custom_player/riplay/wick/wick.mdl", 				"(Donateur) Wick",		"2", "0", "3"},
 	{"models/player/custom_player/legacy/aiden_pearce/aiden_pearce.mdl","(Donateur) Aiden",		"2", "0", "4"},
 	
+	{"models/player/custom_player/legacy/tm_professional_varg.mdl", 	"Punky's", 			"1", "3", "0"},
+	{"models/player/custom_player/legacy/tm_professional_varj.mdl", 	"Natacha", 			"1", "3", "0"},
+	
+	{"models/player/custom_player/legacy/tm_professional_varh.mdl", 	"Franck", 			"0", "3", "0"},
+	
+	{"models/player/custom_player/legacy/tm_balkan_variantg.mdl", 		"Matt - A", 		"0", "3", "0"},
+	{"models/player/custom_player/legacy/tm_balkan_variantk.mdl", 		"Matt - B", 		"0", "3", "0"},
+	
+	{"models/player/custom_player/legacy/tm_balkan_varianth.mdl", 		"Robotnik", 		"0", "3", "0"},
+	{"models/player/custom_player/legacy/tm_balkan_varianti.mdl", 		"Yvan", 			"0", "3", "0"},
+	{"models/player/custom_player/legacy/tm_balkan_variantj.mdl", 		"Ronon", 			"0", "3", "0"},
+	{"models/player/custom_player/legacy/tm_balkan_variantl.mdl", 		"Anatoli", 			"0", "3", "0"},
+	
+	{"models/player/custom_player/legacy/tm_leet_variantf.mdl", 		"Red Scarf", 		"0", "3", "0"},
+	
 	{"models/player/custom_player/legacy/lara/lara.mdl", 				"Lara", 			"1", "6", "0"},
-	//{"models/player/custom_player/legacy/eva/eva.mdl", 					"Eva", 				"1", "5", "0"},
+	//{"models/player/custom_player/legacy/eva/eva.mdl", 				"Eva", 				"1", "5", "0"},
 	{"models/player/custom_player/legacy/misty/misty.mdl", 				"Misty", 			"1", "5", "0"},
 	{"models/player/custom_player/legacy/swagirl/swagirl.mdl", 			"Désirée",			"1", "4", "0"},
 	{"models/player/custom_player/legacy/zoey/zoey.mdl", 				"Zoey", 			"1", "3", "0"},
@@ -44,13 +59,13 @@ char g_szSkinsList[][][] = {
 	//{"models/player/custom_player/legacy/hitman/hitman.mdl", 			"Hitman", 			"0", "6", "0"},
 	{"models/player/custom_player/legacy/50cent/50cent.mdl", 			"50cent", 			"0", "6", "0"},
 	//{"models/player/custom_player/legacy/wuzimu/wuzimu.mdl", 			"Pong", 			"0", "5", "0"},
-	//{"models/player/custom_player/legacy/lloyd/lloyd.mdl", 				"Loyd", 			"0", "5", "0"},
+	//{"models/player/custom_player/legacy/lloyd/lloyd.mdl", 			"Loyd", 			"0", "5", "0"},
 	{"models/player/custom_player/legacy/bzsoap/bzsoap.mdl", 			"BZ-Soap", 			"0", "5", "0"},
 	//{"models/player/custom_player/legacy/leon/leon.mdl", 				"Leon", 			"0", "5", "0"},
 
 	{"models/player/custom_player/legacy/nick/nick.mdl", 				"Nick", 			"0", "5", "0"},
-	//{"models/player/custom_player/legacy/vmaff/vmaff.mdl", 				"Marco", 			"0", "4", "0"},
-	//{"models/player/custom_player/legacy/duke2/duke2.mdl", 				"Duke Nukem", 		"0", "3", "0"},
+	//{"models/player/custom_player/legacy/vmaff/vmaff.mdl", 			"Marco", 			"0", "4", "0"},
+	//{"models/player/custom_player/legacy/duke2/duke2.mdl", 			"Duke Nukem", 		"0", "3", "0"},
 	
 /*
 	{"models/player/custom_player/legacy/tm_anarchist.mdl", 			"Anarchist", 		"0", "1", "0"},
@@ -64,12 +79,16 @@ char g_szSkinsList[][][] = {
 	{"models/player/custom_player/legacy/tm_balkan_variantc.mdl", 		"Balkan - B", 		"0", "1", "0"},
 	{"models/player/custom_player/legacy/tm_balkan_variantd.mdl", 		"Balkan - C", 		"0", "1", "0"},
 	{"models/player/custom_player/legacy/tm_balkan_variante.mdl", 		"Balkan - D", 		"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_balkan_variantf.mdl", 		"Balkan - E", 		"0", "1", "0"},
 	
 	{"models/player/custom_player/legacy/tm_leet_varianta.mdl", 		"Leet", 			"0", "1", "0"},
 	{"models/player/custom_player/legacy/tm_leet_variantb.mdl", 		"Leet - A", 		"0", "1", "0"},
-	{"models/player/custom_player/legacy/tm_leet_variantc.mdl", 		"Leet - B", 		"0", "1", "0"},
-	{"models/player/custom_player/legacy/tm_leet_variantd.mdl", 		"Leet - C", 		"0", "1", "0"},
-	{"models/player/custom_player/legacy/tm_leet_variante.mdl", 		"Leet - D", 		"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_leet_variantc.mdl", 		"Leet - B1", 		"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_leet_varianti.mdl", 		"Leet - B2", 		"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_leet_variantd.mdl", 		"Leet - C1", 		"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_leet_variante.mdl", 		"Leet - C2", 		"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_leet_variantg.mdl", 		"Leet - D", 		"0", "1", "0"},
+	{"models/player/custom_player/legacy/tm_leet_varianth.mdl", 		"Leet - E", 		"0", "1", "0"},
 	
 	{"models/player/custom_player/legacy/tm_phoenix.mdl",				"Phoenix", 			"0", "1", "0"},
 	{"models/player/custom_player/legacy/tm_phoenix_varianta.mdl", 		"Phoenix - A", 		"0", "1", "0"},
