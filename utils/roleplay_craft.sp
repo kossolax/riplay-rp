@@ -55,20 +55,20 @@ char g_szWoodGibs[][] = {
 	"models/props/de_inferno/hr_i/wood_beam_a/wood_beam_a1.mdl"
 };
 char g_szStone[][][] = {
-//	{"models/custom_prop/minerals/coal/coal.mdl",						"15",	"1", "0"},
-//	{"models/custom_prop/minerals/granite/granite.mdl",					"14",	"1", "0"},
-	{"models/custom_prop/minerals/mineral10/mineral10.mdl", 			"9",	"1", "317"},  // sable
-	{"models/custom_prop/minerals/mineral7/mineral7.mdl", 				"9",	"1", "341"}, // azote
-	{"models/custom_prop/minerals/ironstone/ironstone.mdl", 			"9",	"1", "289"}, // fer
-	{"models/custom_prop/minerals/mineral6/mineral6.mdl", 				"9",	"2", "325"}, // alluminium
+//	{"models/custom_prop/minerals/coal/coal.mdl",						"15",	"1", "0", "1"},
+//	{"models/custom_prop/minerals/granite/granite.mdl",					"14",	"1", "0", "1"},
+	{"models/custom_prop/minerals/mineral10/mineral10.mdl", 			"9",	"1", "317", "1"}, // sable
+	{"models/custom_prop/minerals/mineral7/mineral7.mdl", 				"9",	"1", "341", "1"}, // azote
+	{"models/custom_prop/minerals/ironstone/ironstone.mdl", 			"9",	"1", "289", "2"}, // fer
+	{"models/custom_prop/minerals/mineral6/mineral6.mdl", 				"9",	"2", "325", "1"}, // alluminium
 //	{"models/custom_prop/minerals/mica/mica.mdl", 						"11",	"1", "0"},
-	{"models/custom_prop/minerals/mineral8/mineral8.mdl", 				"9",	"2", "311"}, // cuivre
-	{"models/custom_prop/minerals/mineral9/mineral9.mdl", 				"8",	"2", "290"}, // zinc
-	{"models/custom_prop/minerals/quartz/quartz.mdl", 					"5",	"2", "299"},   // souffre
-	{"models/custom_prop/minerals/mineral11/mineral11.mdl", 			"2",	"3", "303"},   // or
+	{"models/custom_prop/minerals/mineral8/mineral8.mdl", 				"9",	"2", "311", "1"}, // cuivre
+	{"models/custom_prop/minerals/mineral9/mineral9.mdl", 				"8",	"2", "290", "1"}, // zinc
+	{"models/custom_prop/minerals/quartz/quartz.mdl", 					"5",	"2", "299", "1"}, // souffre
+	{"models/custom_prop/minerals/mineral11/mineral11.mdl", 			"2",	"3", "303", "1"}, // or
 //	{"models/custom_prop/minerals/mineral12/mineral12.mdl", 			"5",	"3", "0"},
-	{"models/custom_prop/minerals/mineral13/mineral13.mdl",		 		"5",	"3", "342"},  // amoniac
-	{"models/custom_prop/minerals/mineral_green/mineral_green.mdl", 	"5",	"4", "323"}  // uranium
+	{"models/custom_prop/minerals/mineral13/mineral13.mdl",		 		"5",	"3", "342", "1"}, // amoniac
+	{"models/custom_prop/minerals/mineral_green/mineral_green.mdl", 	"5",	"4", "323", "1"}  // uranium
 //	{"models/custom_prop/minerals/mineral_orange/mineral_orange.mdl",	"2",	"4", "0"},
 };
 int g_iTreeID[2049], g_iStoneID[2049];
@@ -647,7 +647,7 @@ void SpawnMineral() {
 			rp_AcceptEntityInput(ent, "DisableCollision" );
 			rp_AcceptEntityInput(ent, "EnableCollision" );
 			rp_SetBuildingData(ent, BD_item_id, StringToInt(g_szStone[rnd][3]));
-			rp_SetBuildingData(ent, BD_count, type + 1);
+			rp_SetBuildingData(ent, BD_count, (type + 1) * StringToInt(g_szStone[rnd][4]));
 
 			GetVectorAngles(tmp, nrm);
 			nrm[0] += 90.0;
