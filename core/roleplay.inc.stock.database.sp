@@ -879,6 +879,9 @@ public void Check_2(Handle owner, Handle handle, const char[] error, any data) {
 		g_iClient_OLD[data] = 0;
 	}
 	
+	if( g_iUserData[client][i_PlayerLVL] > 12 )
+		g_iClient_OLD[data] = 1;
+	
 	if(  handle != INVALID_HANDLE )
 		CloseHandle(handle);
 }
