@@ -1450,6 +1450,12 @@ public void OnGameFrame() {
 						for (int j = 1; j <= MaxClients; j++) {
 							if( !IsValidClient(j) )
 								continue;
+							
+							if( g_iWeatherSpeed >= 100 && !Client_HasWeapon(j, "weapon_snowball") ) {
+								if( GetClientButtons(j) & IN_USE && !(rp_GetZoneBit(rp_GetPlayerZone(j)) & BITZONE_EVENT) )
+									GivePlayerItem(j, "weapon_snowball");
+							}
+							
 							GetClientAbsOrigin(j, client);
 							if( GetVectorDistance(client, dstOrigin) > 512.0 )
 								continue;
