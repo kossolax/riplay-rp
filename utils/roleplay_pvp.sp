@@ -30,7 +30,7 @@ enum quest_teams {
 	
 	TEAM_MAX
 };
-#define		ACCELERATION_FACTOR	1
+#define		ACCELERATION_FACTOR	10
 #define		LEAVING_TIME		(30/ACCELERATION_FACTOR)
 
 // -----------------------------------------------------------------------------------------------------------------
@@ -44,9 +44,9 @@ Handle g_hGodTimer[65], g_hKillTimer[65];
 bool g_bIsInCaptureMode = false;
 int g_cBeam;
 StringMap g_hGlobalDamage, g_hGlobalSteamID;
-enum damage_data { gdm_shot, gdm_touch, gdm_damage, gdm_hitbox, gdm_elo, gdm_flag, gdm_kill, gdm_team, gdm_score, gdm_area, gdm_max };
+enum damage_data { gdm_shot, gdm_touch, gdm_damage, gdm_hitbox, gdm_elo, gdm_flag, gdm_kill, gdm_dead, gdm_team, gdm_score, gdm_area, gdm_max };
 TopMenu g_hStatsMenu;
-TopMenuObject g_hStatsMenu_Shoot, g_hStatsMenu_Head, g_hStatsMenu_Damage, g_hStatsMenu_Flag, g_hStatsMenu_ELO, g_hStatsMenu_SCORE, g_hStatsMenu_KILL;
+TopMenuObject g_hStatsMenu_Shoot, g_hStatsMenu_Head, g_hStatsMenu_Damage, g_hStatsMenu_Flag, g_hStatsMenu_ELO, g_hStatsMenu_SCORE, g_hStatsMenu_KILL, g_hStatsMenu_DEAD, g_hStatsMenu_RATIO;
 int g_iPlayerTeam[2049], g_stkTeam[view_as<int>(TEAM_MAX)][MAXPLAYERS + 1], g_stkTeamCount[view_as<int>(TEAM_MAX)], g_iTeamScore[view_as<int>(TEAM_MAX)];
 int g_iScores[MAX_GROUPS];
 int g_iLeaving[65];
@@ -483,7 +483,6 @@ void CAPTURE_Start() {
 void CAPTURE_Stop() {
 	CAPTURE_CHANGE_STATE(ps_end);
 }
-
 public Action CAPTURE_STATE_TICK(Handle timer, any none) {
 	
 	if( GetTime() % 3 == 0 ) {
@@ -632,12 +631,9 @@ public int MenuInvite(Handle menu, MenuAction action, int client, int param2) {
 	}
 }
 void STATE_TICK_WARMUP(int timeLeft) {
-	if( timeLeft % 5 == 0 ) {
 		
-		if( g_stkTeamCount[TEAM_PENDING] > 0 ) {
-			addClientToTeam(g_stkTeam[TEAM_PENDING][0], getWorstTeam());
-			GDM_SaveTeam(g_stkTeam[TEAM_PENDING][0]);
-		}
+	if( g_stkTeamCount[TEAM_PENDING] > 0 ) {
+		addClientToTeam(g_stkTeam[TEAM_PENDING][0], getWorstTeam());
 	}
 	
 	if( !g_b30SecondsLeft && timeLeft <= 30 ) {
@@ -658,21 +654,17 @@ void STATE_TICK_WARMUP(int timeLeft) {
 	}
 }
 void STATE_TICK_MATCH(int timeLeft) {
-	if( timeLeft % 5 == 0 ) {
+	for (int i = 0; i < g_stkTeamCount[TEAM_BLUE]; i++) {
+		int client = g_stkTeam[TEAM_BLUE][i];
 		
-		for (int i = 0; i < g_stkTeamCount[TEAM_BLUE]; i++) {
-			int client = g_stkTeam[TEAM_BLUE][i];
-			
-			if( rp_GetPlayerZone(client) == ZONE_BUNKER ) {
-				GDM_RegisterArea(client);
-				g_iTeamScore[TEAM_BLUE]++;
-			}
+		if( rp_GetPlayerZone(client) == ZONE_BUNKER ) {
+			GDM_RegisterArea(client);
+			g_iTeamScore[TEAM_BLUE]++;
 		}
-		
-		if( g_stkTeamCount[TEAM_PENDING] > 0 ) {
-			addClientToTeam(g_stkTeam[TEAM_PENDING][0], getWorstTeam());
-			GDM_SaveTeam(g_stkTeam[TEAM_PENDING][0]);
-		}
+	}
+	
+	if( g_stkTeamCount[TEAM_PENDING] > 0 ) {
+		addClientToTeam(g_stkTeam[TEAM_PENDING][0], getWorstTeam());
 	}
 
 	if( !g_b5MinutesLeft && timeLeft <= 5*60 ) {
@@ -700,7 +692,6 @@ void STATE_TICK_MATCH(int timeLeft) {
 		CAPTURE_CHANGE_STATE(g_iCurrentState == view_as<int>(ps_match1) ? ps_end_of_round1 : ps_end_of_round2);
 	}
 }
-
 void CAPTURE_CHANGE_STATE(int state) {
 	g_iCurrentState = state;
 	g_iCurrentTimer = g_iRoundTime[state] * 60 / ACCELERATION_FACTOR;
@@ -897,20 +888,21 @@ void STATE_ENTER_SWITCH() {
 	g_iTeamScore[TEAM_BLUE] = g_iTeamScore[TEAM_RED];
 	g_iTeamScore[TEAM_RED] = tmp;
 	
+	
+	/*
 	char classname[64];
 	for(int i=MaxClients; i<MAX_ENTITIES; i++) {
 		if( !IsValidEdict(i) )
 			continue;
 		if( !IsValidEntity(i) )
 			continue;
-		if( !(rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_PVP) )
-			continue;
 		
 		GetEdictClassname(i, classname, sizeof(classname));		
-		if( StrEqual(classname, "rp_props") ) {
+		if( StrEqual(classname, "rp_props") && rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_PVP )
+				continue;
 			rp_AcceptEntityInput(i, "Kill");
 		}
-	}
+	}*/
 	
 	announceSound(0, snd_EndOfRound);
 	
@@ -984,8 +976,10 @@ void STATE_ENTER_END() {
 			rp_UnhookEvent(i, RP_OnPlayerZoneChange, fwdZoneChange);
 			rp_UnhookEvent(i, RP_PreClientStealItem, fwdStealItem);
 	
-			if( IsPlayerAlive(i) )
+			if( IsPlayerAlive(i) ) {
 				rp_ClientColorize(i);
+				rp_ClientResetSkin(i);
+			}
 	
 			removeClientTeam(i);
 		}
@@ -1146,6 +1140,8 @@ public Action fwdDead(int victim, int attacker, float& respawn, int& tdm, float&
 
 	if( victim != attacker && (rp_GetZoneBit(rp_GetPlayerZone(victim)) & BITZONE_PVP || rp_GetZoneBit(rp_GetPlayerZone(attacker)) & BITZONE_PVP) ) {
 		GDM_RegisterKill(attacker);
+		GDM_RegisterDie(victim);
+		
 		
 		int points = GDM_ELOKill(attacker, victim, dropped);
 		if( dropped )
@@ -1167,6 +1163,7 @@ public Action fwdDead(int victim, int attacker, float& respawn, int& tdm, float&
 		CyclAnnouncer(attacker);
 	}
 	if( victim == attacker ) {
+		GDM_RegisterDie(victim);
 		GDM_ELOSuicide(victim);
 	}
 	
@@ -1259,7 +1256,6 @@ public Action fwdFrame(int client) {
 			PrintHintText(client, "Vous êtes en spawn-protection");
 		}
 		else if( g_iPlayerTeam[client] == view_as<int>(TEAM_RED) ) {
-			rp_ClientColorize(client, { 255, 64, 0, 255 } );
 			if( g_iCurrentState == view_as<int>(ps_warmup1) || g_iCurrentState == view_as<int>(ps_warmup2) ) {
 				PrintHintText(client, "Vous êtes en <font color='#ff3333'>défense</font>.\n     <font color='#33ff33'>Préparez-vous à l'assaut</font>");
 			}
@@ -1268,7 +1264,6 @@ public Action fwdFrame(int client) {
 			}
 		}
 		else {
-			rp_ClientColorize(client, { 0, 64, 255, 255 } );
 			if( g_iCurrentState == view_as<int>(ps_warmup1) || g_iCurrentState == view_as<int>(ps_warmup2) ) {
 				PrintHintText(client, "Vous êtes en <font color='#3333ff'>attaque</font>.\n     <font color='#33ff33'>Préparez-vous à l'assaut</font>");
 			}
@@ -1669,7 +1664,6 @@ void GDM_SaveTeam(int client) {
 	
 	array[gdm_team] = g_iPlayerTeam[client];
 	g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
-	
 }
 void GDM_RegisterHit(int client, int damage=0, int hitbox=0) {
 	char szSteamID[32];
@@ -1716,6 +1710,15 @@ void GDM_RegisterKill(int client) {
 	array[gdm_kill]++;
 	g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
 }
+void GDM_RegisterDie(int client) {
+	char szSteamID[32];
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
+	
+	int[] array = new int[gdm_max];
+	g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
+	array[gdm_dead]++;
+	g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
+}
 int GDM_GetFlagCount(int client) {
 	char szSteamID[32];
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
@@ -1733,7 +1736,7 @@ void GDM_RegisterShoot(int client) {
 	array[gdm_shot]++;
 	g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
 }
-stock int GDM_ELOKill(int client, int target, bool flag = false) {
+int GDM_ELOKill(int client, int target, bool flag = false) {
 	
 	char szSteamID[32], szSteamID2[32];
 	int[] attacker = new int[gdm_max];
@@ -1807,6 +1810,8 @@ void GDM_Resume() {
 	g_hStatsMenu_ELO = g_hStatsMenu.AddCategory("elo", MenuPvPResume);
 	g_hStatsMenu_SCORE = g_hStatsMenu.AddCategory("score", MenuPvPResume);
 	g_hStatsMenu_KILL = g_hStatsMenu.AddCategory("kill", MenuPvPResume);
+	g_hStatsMenu_DEAD = g_hStatsMenu.AddCategory("dead", MenuPvPResume);
+	g_hStatsMenu_RATIO = g_hStatsMenu.AddCategory("ratio", MenuPvPResume);
 	
 	for (int i = 0; i < nbrParticipant; i++) {
 		KeyList.GetKey(i, szSteamID, sizeof(szSteamID));
@@ -1848,6 +1853,19 @@ void GDM_Resume() {
 			Format(key, sizeof(key), "k%06d_%s", 1000000 + delta, szSteamID); 
 			Format(tmp, sizeof(tmp), "%6d - %s", delta, name);
 			g_hStatsMenu.AddItem(key, MenuPvPResume, g_hStatsMenu_KILL, "", 0, tmp);
+		}
+		if( array[gdm_dead] != 0 ) {
+			delta = array[gdm_dead];
+			Format(key, sizeof(key), "d%06d_%s", 1000000 + delta, szSteamID); 
+			Format(tmp, sizeof(tmp), "%6d - %s", delta, name);
+			g_hStatsMenu.AddItem(key, MenuPvPResume, g_hStatsMenu_DEAD, "", 0, tmp);
+		}
+		if( array[gdm_kill] != 0 || array[gdm_dead] != 0 ) {
+			delta = RoundFloat(float(array[gdm_kill]) / float(array[gdm_dead]+1) * 1000.0);
+			Format(key, sizeof(key), "s%08d_%s", GetRandomInt(1, 100), szSteamID); 
+			Format(tmp, sizeof(tmp), "%4.1f - %s", float(delta)/1000.0, name);
+			
+			g_hStatsMenu.AddItem(key, MenuPvPResume, g_hStatsMenu_RATIO, "", 0, tmp);
 		}
 		
 		if( array[gdm_score] != 0 ) {
@@ -1891,12 +1909,7 @@ void Client_SetSpawnProtect(int client, bool status) {
 		SetEntProp(client, Prop_Data, "m_takedamage", 2);
 		CPrintToChat(client, "" ...MOD_TAG... " Votre spawn-protection a expirée.");
 		
-		if( g_iPlayerTeam[client] == view_as<int>(TEAM_RED) )
-			rp_ClientColorize(client, { 255, 64, 64, 255 } );
-		else if( g_iPlayerTeam[client] == view_as<int>(TEAM_BLUE) )
-			rp_ClientColorize(client, { 64, 64, 255, 255 } );
-		else
-			rp_ClientColorize(client);
+		setTeamSkin(client);
 	}
 }
 public Action fwdGodThink(int client) {
@@ -1945,6 +1958,10 @@ public void MenuPvPResume(Handle topmenu, TopMenuAction action, TopMenuObject to
 			Format(buffer, maxlength, "Le plus de dégâts");
 		else if( topobj_id == g_hStatsMenu_KILL )
 			Format(buffer, maxlength, "Le plus de meurtre");
+		else if( topobj_id == g_hStatsMenu_DEAD )
+			Format(buffer, maxlength, "Le plus de fois mort");
+		else if( topobj_id == g_hStatsMenu_RATIO )
+			Format(buffer, maxlength, "Le meilleur ratio");
 		else if( topobj_id == g_hStatsMenu_Flag )
 			Format(buffer, maxlength, "Le plus de drapeaux posés");
 		else if( topobj_id == g_hStatsMenu_ELO )
@@ -2063,6 +2080,8 @@ void addClientToTeam(int client, int team) {
 		g_stkTeam[team][ g_stkTeamCount[team]++ ] = client;
 	
 	g_iPlayerTeam[client] = team;
+	GDM_SaveTeam(client);
+	setTeamSkin(client);
 }
 void removeClientTeam(int client) {
 	if( g_iPlayerTeam[client] != view_as<int>(TEAM_NONE) ) {
@@ -2102,7 +2121,6 @@ void shuffleTeams() {
 	
 	for (int i = 0; i < pCount; i++) {
 		addClientToTeam(sPlayers[i][0], teams[lastTeam++ % sizeof(teams)]);
-		GDM_SaveTeam(sPlayers[i][0]);
 	}
 }
 int getWorstTeam() {
@@ -2119,4 +2137,12 @@ int getWorstTeam() {
 }
 public int Sort_ByELO(int[] a, int[] b, const int[][] array, Handle hndl) {
 	return b[1] - a[1];
+}
+
+void setTeamSkin(int client) {
+	if( g_iPlayerTeam[client] == view_as<int>(TEAM_RED) )
+		SetEntityModel(client, "models/player/custom_player/legacy/ctm_sas.mdl");
+	else if( g_iPlayerTeam[client] == view_as<int>(TEAM_BLUE) )
+		SetEntityModel(client, "models/player/custom_player/legacy/tm_phoenix.mdl");
+	rp_ClientColorize(client);
 }
