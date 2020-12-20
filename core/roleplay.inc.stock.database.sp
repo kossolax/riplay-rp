@@ -881,6 +881,8 @@ public void Check_2(Handle owner, Handle handle, const char[] error, any data) {
 	
 	if( g_iUserData[data][i_PlayerLVL] >= 12 )
 		g_iClient_OLD[data] = 1;
+	if( g_iDoubleCompte[data].Length() >= 1 )
+		g_iClient_OLD[data] = 1;
 	
 	if(  handle != INVALID_HANDLE )
 		CloseHandle(handle);
@@ -1257,6 +1259,7 @@ public int OnSteamWorksHTTPComplete(Handle HTTPRequest, bool fail, bool success,
 			
 			GetRegexSubString(regex, 1, tmp2, sizeof(tmp2));
 			g_iDoubleCompte[client].PushString(tmp2);
+			g_iClient_OLD[client] = 1;
 			
 			ReplaceString(tmp, size, tmp2, "");
 		}
