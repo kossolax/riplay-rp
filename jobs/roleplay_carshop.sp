@@ -1443,7 +1443,7 @@ void displayNeonMenu(int client) {
 	char tmp[64], tmp2[64];
 	for (int i = 0; i < sizeof(g_szColor); i++) {
 		Format(tmp, sizeof(tmp), "neon %s", g_szColor[i][0]);
-		Format(tmp2, sizeof(tmp2), "%T", g_szColor[i][1], client);
+		Format(tmp2, sizeof(tmp2), "%T", g_szColor[i][0], client);
 		
 		AddMenuItem(menu2, tmp, tmp2);
 	}
@@ -1881,7 +1881,7 @@ public int SpawnVehicle(Handle menu, MenuAction action, int client, int param) {
 			rp_SetVehicleInt(car, car_item_id, -1);
 			rp_SetVehicleInt(car, car_maxPassager, max);
 			rp_SetClientKeyVehicle(client, car, true);	
-			CreateTimer(360.0, Timer_VehicleRemove, EntIndexToEntRef(car));
+			CreateTimer(24.0 * 60.0, Timer_VehicleRemove, EntIndexToEntRef(car));
 		}
 	}
 }
