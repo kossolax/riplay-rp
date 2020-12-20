@@ -1556,9 +1556,9 @@ public int eventPayForLeaving(Handle menu, MenuAction action, int client, int pa
 		
 		
 		if (IsValidClient(target)) {
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Police_Jail_AmendeTo", client, amende, target, g_szJailRaison[type][jail_raison]);
-			CPrintToChat(target, "" ...MOD_TAG... " %T", "Police_Jail_Amende", target, amende, g_szJailRaison[type][jail_raison]);
+			CPrintToChat(target, "" ...MOD_TAG... " %T", "Police_Jail_AmendeTo", target, amende, target, g_szJailRaison[type][jail_raison]);
 		}
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Police_Jail_Amende", client, amende, g_szJailRaison[type][jail_raison]);
 		
 		time_to_spend *= 60;
 		rp_SetClientInt(client, i_JailTime, time_to_spend);
