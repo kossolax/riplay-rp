@@ -88,12 +88,19 @@ public void OnPluginStart() {
 		for(int i=1; i<=MaxClients; i++) {
 			if( !IsValidClient(i) )
 				continue;
+			
 			rp_HookEvent(i, RP_OnPlayerZoneChange, fwdZoneChange);
 			if( rp_GetZoneBit( rp_GetPlayerZone(i) ) & BITZONE_PVP || rp_GetZoneBit( rp_GetPlayerZone(i) ) & BITZONE_EVENT ) {
 				g_bInPVP[i] = true;
 				SDKHook(i, SDKHook_SetTransmit, Hook_Transmit);
 			}
 		}
+	}
+	
+	for(int i=1; i<=MaxClients; i++) {
+		if( !IsValidClient(i) )
+			continue;
+		OnClientPostAdminCheck(i)
 	}
 	
 	int flag = GetConVarFlags(FindConVar("weapon_recoil_scale"));
@@ -130,10 +137,12 @@ public void OnCvarChange(Handle cvar, const char[] oldVal, const char[] newVal) 
 }
 public void OnClientPostAdminCheck(int client) {
 	int flags = GetUserFlagBits(client);
-	if ( !(flags & ADMFLAG_CHEATS || flags & ADMFLAG_ROOT) && GetConVarInt(FindConVar("hostport")) != 27015 ) {
+	
+	if ( !(flags & ADMFLAG_CHEATS || flags & ADMFLAG_ROOT) && GetConVarInt(FindConVar("hostport")) == 27015 ) {
 		SendConVarValue(client, g_cVarCheat, "0");
 		CreateTimer(60.0, task_ClientCheckConVar, GetClientUserId(client));
 	}
+	
 	g_iAimDetections[client] = g_iTriggerDetections[client] = g_iCmdDetections[client] = g_iSpeedDetections[client] = 0;
 	g_iPrevCmdNum[client] = g_iPrevTickCount[client] = 0;
 	g_iTicksLeft[client] = g_iMaxTicks;
@@ -294,6 +303,7 @@ public Action task_ClientCheckConVar(Handle timer, any client) {
 	client = GetClientOfUserId(client);
 	if( client == 0 )
 		return Plugin_Handled;
+	
 	
 	//QueryClientConVar(client, "sv_cheats", ClientConVar, 0);
 	QueryClientConVar(client, "r_drawothermodels",ClientConVar, 1);
