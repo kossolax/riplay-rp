@@ -182,6 +182,7 @@ public void OnPluginStart() {
 	RegAdminCmd("rp_create_point",		CmdSpawn2_Add,		ADMFLAG_ROOT);
 	RegAdminCmd("rp_reloadSQL",			Cmd_ReloadSQL,		ADMFLAG_ROOT);
 	RegServerCmd("rp_start_quest",		Cmd_StartQuest);
+	RegServerCmd("rp_stop_quest",		Cmd_StopQuest);
 	RegServerCmd("rp_quest_reload", 	CmdReloadQuest);
 	RegServerCmd("rp_zombie_die",		CmdSpawnCadeau);
 	RegServerCmd("rp_blackfriday", 		CmdBlackFriday);

@@ -48,6 +48,12 @@ public Action Cmd_StartQuest(int args) {
 	StartQuest(client, arg);
 	return Plugin_Handled;
 }
+public Action Cmd_StopQuest(int args) {
+	int client = GetCmdArgInt(1);
+	QuestClean(client);
+	
+	return Plugin_Handled;
+}
 public void StartQuest(int client, char uniqID[32]) {
 	
 	char query[1024];
