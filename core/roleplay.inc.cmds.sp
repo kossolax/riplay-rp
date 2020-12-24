@@ -252,6 +252,11 @@ public Action cmd_NoclipVip(int client, int args) {
 				PrintToChatZone(zone, "%T", "Toggled noclip on target", LANG_SERVER, "_s", target_name);
 				rp_HookEvent(target, RP_OnPlayerZoneChange, fwdZoneChange);
 			}
+			else {
+				SetEntityMoveType(target, MOVETYPE_WALK);
+				GetClientName2(target, target_name, sizeof(target_name), false);
+				PrintToChatZone(zone, "%T", "Toggled noclip on target", LANG_SERVER, "_s", target_name);
+			}
 			
 		} 
 		else {
