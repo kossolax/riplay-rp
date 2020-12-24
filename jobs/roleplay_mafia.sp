@@ -410,7 +410,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		}
 		rp_ClientFloodIncrement(client, target, fd_vol, 2.0 * cooldown);
 
-		if(amount >= 25) {
+		if(amount >= 1) {
 			rp_Effect_Cashflow(client, Math_Clamp(RoundToNearest(Pow(amount*2.0, 0.85)), 1, 1000)  );
 		}
 
@@ -526,7 +526,7 @@ public Action Cmd_ItemHack(int args) {
 
 	if( target <= 0 || type != 8) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_YouMustAim", client, "prop_door_rotating");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_YouMustAim", client, "rp_bank");
 		return Plugin_Handled;
 	}
 
@@ -848,7 +848,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 	if( Math_GetRandomInt(1, 500) == 42 )
 		CreateTimer(0.01, timerAlarm, target); 
 	
-	float ratio = 15.0 / 2500.0;
+	float ratio = getKitDuration(client) / 500.0;
 	
 	if( type )
 		ratio *= 2.0;
@@ -1196,12 +1196,13 @@ int getKitDuration(int client) {
 	int job = rp_GetClientInt(client, i_Job);
 	int ratio = 0;
 	switch( job ) {
-		case 91: ratio = 75;	// Chef
-		case 92: ratio = 80;	// Co-chef
-		case 93: ratio = 85; 	// Parrain
-		case 94: ratio = 90;	// Pro
-		case 95: ratio = 95;	// Mafieu
-		case 96: ratio = 100;	// Apprenti
+		case 91: ratio = 50;	// Chef
+		case 92: ratio = 55;	// Co-chef
+		case 93: ratio = 60; 	// Parrain
+		case 94: ratio = 65;	// Pro
+		case 95: ratio = 70;	// Mafieu
+		case 96: ratio = 75;	// Apprenti
+		default: ratio = 100;
 	}
 	return ratio;
 }
