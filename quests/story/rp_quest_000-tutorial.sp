@@ -361,8 +361,11 @@ public void Q7_Frame(int objectiveID, int client) {
 	
 	if( GetVectorDistance(target, origin) < 64.0 ) {
 		
-		rp_ClientGiveItem(client, 81);
-		rp_ClientGiveItem(client, 103);
+		if( rp_GetClientItem(client, 81, false) + rp_GetClientItem(client, 81, true) <= 0 )
+			rp_ClientGiveItem(client, 81);
+		
+		if( rp_GetClientItem(client, 103, false) + rp_GetClientItem(client, 103, true) <= 0 )
+			rp_ClientGiveItem(client, 103);
 		
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu en récompense 1 Plant de drogue et 1 Machine à faux-billets.");
 		
