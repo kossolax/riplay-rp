@@ -506,6 +506,8 @@ public Action Cmd_SpawnVehicle(int client, int args) {
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Build_CannotHere", client);
 		return Plugin_Handled;
 	}
+	char model[128];
+	GetCmdArg(1, model, sizeof(model));
 	
 	float vecOrigin[3], vecAngles[3];
 	GetClientAbsOrigin(client, vecOrigin);
@@ -515,7 +517,20 @@ public Action Cmd_SpawnVehicle(int client, int args) {
 	vecAngles[0] = vecAngles[2] = 0.0;
 	vecAngles[1] -= 90.0;
 	
-	int car = rp_CreateVehicle(vecOrigin, vecAngles, "models/natalya/vehicles/natalya_mustang_csgo_2016.mdl", 1, client);
+	int car; 
+	if( StrContains(model, "mustang", false) >= 0 )
+		car = rp_CreateVehicle(vecOrigin, vecAngles, "models/natalya/vehicles/natalya_mustang_csgo_2016.mdl", 1, client);
+	else if( StrContains(model, "moto", false) >= 0 )
+		car = rp_CreateVehicle(vecOrigin, vecAngles, "models/natalya/vehicles/dirtbike.mdl", 1, client);
+	else if( StrContains(model, "victoria", false) >= 0 )
+		car = rp_CreateVehicle(vecOrigin, vecAngles, "models/natalya/vehicles/police_crown_victoria_csgo_v2.mdl", 0, client);
+	else if( StrContains(model, "ambulance", false) >= 0 )
+		car = rp_CreateVehicle(vecOrigin, vecAngles, "models/props/crates/csgo_drop_crate_spectrum_v7.mdl", 6);
+	else if( StrContains(model, "police", false) >= 0 )
+		car = rp_CreateVehicle(vecOrigin, vecAngles, "models/natalya/vehicles/police_crown_victoria_csgo_v2.mdl", 6);
+	else
+		car = rp_CreateVehicle(vecOrigin, vecAngles, "models/natalya/vehicles/natalya_mustang_csgo_2016.mdl", 1, client);
+			
 	if( !car ) {
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Build_CannotHere", client);
 		return Plugin_Handled;
@@ -526,6 +541,13 @@ public Action Cmd_SpawnVehicle(int client, int args) {
 	rp_SetVehicleInt(car, car_maxPassager, 3);
 	rp_SetVehicleInt(car, car_donateur, 0);
 	rp_SetVehicleInt(car, car_boost, 1);
+	
+	if( StrContains(model, "police", false) >= 0 )
+		SetEntProp(car, Prop_Send, "m_nBody", 3);
+	if( StrContains(model, "moto", false) >= 0 )
+		rp_SetVehicleInt(car, car_maxPassager, 0);
+	if( StrContains(model, "ambulance", false) >= 0 )
+		rp_SetVehicleInt(car, car_maxPassager, 1);
 	
 	return Plugin_Handled;
 	
