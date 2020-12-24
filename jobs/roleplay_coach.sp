@@ -1711,7 +1711,7 @@ public Action Cmd_ItemCigarette(int args) {
 	if( StrEqual(Arg1, "deg") ) {
 		if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
 			char item_name[128];
-			rp_GetItemData(ITEM_NEONS, item_type_name, item_name, sizeof(item_name));
+			rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
 			CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
