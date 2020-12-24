@@ -58,8 +58,7 @@ char g_PropsAppart[][128] = {
 //	"models/props/cs_assault/box_stack1.mdl",
 	"models/props/cs_militia/bar01.mdl",
 	"models/props/de_house/bed_rustic.mdl",
-	"models/props_interiors/tv_cabinet.mdl",
-	"models/models_kit/xmas/xmastree_mini.mdl"
+	"models/props_interiors/tv_cabinet.mdl"
 };
 char g_PropsOutdoor[][128] = {
 	"models/props/DeadlyDesire/blocks/32x32.mdl",
@@ -580,11 +579,13 @@ public void OnClientDisconnect(int client) {
 		}
 	}
 	
-	for(int a=1; a<50; a++) { // vllontairement fixé à 50.
+	for(int a=1; a<200; a++) {
 		if( rp_GetAppartementInt(a, appart_proprio) != client )
 			continue;
 		
-		cleanAppart(a);
+		if( a < 50 )
+			cleanAppart(a);
+		
 		int stack[64], count;
 		for(int i=1; i<=MaxClients; i++) {
 			if( !IsValidClient(i) || i == client )
@@ -760,7 +761,7 @@ public Action Cmd_ItemGiveAppart(int args) {
 		if( appart > 100 )
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Garage_Buy", client, appart-100);
 		else
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Appart_Buy", client,appart);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Appart_Buy", client, appart);
 		
 		
 		if( appart > 0 && appart < 50 ) {

@@ -13,14 +13,14 @@
 	"Appart_Buy"
 	{
 		"#format"	"{1:d}"
-		"fr"		"Vous êtes maintenant le propriétaire de l'appartement n°{red}{1}{default}."
-		"en"		"You are now the owner of the apartment n°{red}{1}{default}."
+		"fr"		"Vous êtes maintenant le propriétaire de l'appartement nº{red}{1}{default}."
+		"en"		"You are now the owner of the apartment nº{red}{1}{default}."
 	}
 	"Garage_Buy"
 	{
 		"#format"	"{1:d}"
-		"fr"		"Vous êtes maintenant le propriétaire du garage n°{red}{1}{default}."
-		"en"		"You are now the owner of the garage n°{red}{1}{default}."
+		"fr"		"Vous êtes maintenant le propriétaire du garage nº{red}{1}{default}."
+		"en"		"You are now the owner of the garage nº{red}{1}{default}."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Appart_MustBeOwner"
