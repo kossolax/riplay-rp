@@ -525,7 +525,7 @@ public Action Cmd_SpawnVehicle(int client, int args) {
 	else if( StrContains(model, "victoria", false) >= 0 )
 		car = rp_CreateVehicle(vecOrigin, vecAngles, "models/natalya/vehicles/police_crown_victoria_csgo_v2.mdl", 0, client);
 	else if( StrContains(model, "ambulance", false) >= 0 )
-		car = rp_CreateVehicle(vecOrigin, vecAngles, "models/props/crates/csgo_drop_crate_spectrum_v7.mdl", 6);
+		car = rp_CreateVehicle(vecOrigin, vecAngles, "models/props/crates/csgo_drop_crate_spectrum_v7.mdl", 0);
 	else if( StrContains(model, "police", false) >= 0 )
 		car = rp_CreateVehicle(vecOrigin, vecAngles, "models/natalya/vehicles/police_crown_victoria_csgo_v2.mdl", 6);
 	else
