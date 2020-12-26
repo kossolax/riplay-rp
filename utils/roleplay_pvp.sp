@@ -888,8 +888,6 @@ void STATE_ENTER_SWITCH() {
 	g_iTeamScore[TEAM_BLUE] = g_iTeamScore[TEAM_RED];
 	g_iTeamScore[TEAM_RED] = tmp;
 	
-	
-	/*
 	char classname[64];
 	for(int i=MaxClients; i<MAX_ENTITIES; i++) {
 		if( !IsValidEdict(i) )
@@ -899,10 +897,8 @@ void STATE_ENTER_SWITCH() {
 		
 		GetEdictClassname(i, classname, sizeof(classname));		
 		if( StrEqual(classname, "rp_props") && rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_PVP )
-				continue;
 			rp_AcceptEntityInput(i, "Kill");
-		}
-	}*/
+	}
 	
 	announceSound(0, snd_EndOfRound);
 	
@@ -2112,15 +2108,21 @@ void shuffleTeams() {
 		if ( g_iPlayerTeam[i] != view_as<int>(TEAM_PENDING) )
 			continue;
 		
-		sPlayers[pCount][0] = i;
-		sPlayers[pCount][1] = rp_GetClientInt(i, i_ELO) + GetRandomInt(-50, 50);
-		pCount++;
+		if( rp_GetClientGroupID(i) == rp_GetCaptureInt(cap_bunker) ) {
+			addClientToTeam(i, TEAM_RED);
+		}
+		else {
+			sPlayers[pCount][0] = i;
+			sPlayers[pCount][1] = rp_GetClientInt(i, i_ELO) + GetRandomInt(-50, 50);
+			pCount++;
+		}
 	}
 	
 	SortCustom2D(sPlayers, pCount, Sort_ByELO);
 	
 	for (int i = 0; i < pCount; i++) {
-		addClientToTeam(sPlayers[i][0], teams[lastTeam++ % sizeof(teams)]);
+		// addClientToTeam(sPlayers[i][0], teams[lastTeam++ % sizeof(teams)]);
+		addClientToTeam(sPlayers[i][0], getWorstTeam());
 	}
 }
 int getWorstTeam() {
