@@ -328,8 +328,7 @@ public Action Cmd_ItemStuffPvP(int args) {
 	
 	int item_id = ItemRand[ Math_GetRandomInt(0, amount-1) ];
 	
-	int cpt = 1;
-	rp_ClientGiveItem(client, item_id);
+	int cpt = 2;
 	if( item_id == 35 )
 		cpt = 5;
 	
