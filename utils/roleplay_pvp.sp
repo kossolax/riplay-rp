@@ -30,7 +30,7 @@ enum quest_teams {
 	
 	TEAM_MAX
 };
-#define		ACCELERATION_FACTOR	10
+#define		ACCELERATION_FACTOR	1
 #define		LEAVING_TIME		(30/ACCELERATION_FACTOR)
 
 // -----------------------------------------------------------------------------------------------------------------
@@ -1256,7 +1256,7 @@ public Action fwdFrame(int client) {
 				PrintHintText(client, "Vous êtes en <font color='#ff3333'>défense</font>.\n     <font color='#33ff33'>Préparez-vous à l'assaut</font>");
 			}
 			else {
-				PrintHintText(client, "Vous êtes en <font color='#ff3333'>défense</font>.\n     Tuez les BLEUS</font>");
+				PrintHintText(client, "Vous êtes en <font color='#ff3333'>défense</font>.\n     Tuez les Terroristes</font>");
 			}
 		}
 		else {
@@ -1264,7 +1264,7 @@ public Action fwdFrame(int client) {
 				PrintHintText(client, "Vous êtes en <font color='#3333ff'>attaque</font>.\n     <font color='#33ff33'>Préparez-vous à l'assaut</font>");
 			}
 			else {
-				PrintHintText(client, "Vous êtes en <font color='#3333ff'>attaque</font>.\n     Tuez les ROUGES</font>");
+				PrintHintText(client, "Vous êtes en <font color='#3333ff'>attaque</font>.\n     Tuez les CT</font>");
 			}
 		}
 	}
