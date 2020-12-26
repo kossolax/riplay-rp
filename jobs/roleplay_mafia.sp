@@ -646,18 +646,21 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 		return Plugin_Stop;
 	}
 	
+	int difficulty = 2;
 	switch(type) {
 		case 4: { // Imprimante
 			int owner = rp_GetBuildingData(target, BD_owner);
 			if( IsValidClient(owner) ) {				
 				rp_ClientAggroIncrement(client, owner, 1000);
 			}
+			difficulty = 1;
 		}
 		case 5: { // Photocopieuse
 			int owner = rp_GetBuildingData(target, BD_owner);
 			if( IsValidClient(owner) ) {				
 				rp_ClientAggroIncrement(client, owner, 1000);
 			}
+			difficulty = 4;
 		}
 		case 7: { // Plant de drogue
 			int count = rp_GetBuildingData(target, BD_count);
@@ -667,12 +670,14 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 					rp_ClientAggroIncrement(client, owner, 1000);
 				}
 			}
+			difficulty = 5;
 		}
 		case 8: { // Distrib Perso
 			int owner = rp_GetBuildingData(target, BD_owner);
 			if( IsValidClient(owner) ) {
 				rp_ClientAggroIncrement(client, owner, 1000);
 			}
+			difficulty = 1;
 		}
 	}
 			
@@ -848,10 +853,8 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 	if( Math_GetRandomInt(1, 500) == 42 )
 		CreateTimer(0.01, timerAlarm, target); 
 	
-	float ratio = getKitDuration(client) / 500.0;
-	
-	if( type )
-		ratio *= 2.0;
+	float ratio = getKitDuration(client) / 5000.0;
+	ratio = ratio / float(difficulty);
 	
 	rp_SetClientFloat(client, fl_CoolDown, GetGameTime() + 0.15);
 	
@@ -860,7 +863,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 	WritePackCell(dp, target);
 	WritePackCell(dp, percent + ratio);
 	WritePackCell(dp, type);
-	MENU_ShowPickLock(client, percent, 0, type);
+	MENU_ShowPickLock(client, percent, difficulty, type);
 	return Plugin_Continue;
 }
 public Action SpawnMoney(Handle timer, any target) {
@@ -1196,13 +1199,13 @@ int getKitDuration(int client) {
 	int job = rp_GetClientInt(client, i_Job);
 	int ratio = 0;
 	switch( job ) {
-		case 91: ratio = 50;	// Chef
-		case 92: ratio = 55;	// Co-chef
-		case 93: ratio = 60; 	// Parrain
-		case 94: ratio = 65;	// Pro
-		case 95: ratio = 70;	// Mafieu
-		case 96: ratio = 75;	// Apprenti
-		default: ratio = 100;
+		case 91: ratio = 100;	// Chef
+		case 92: ratio = 100;	// Co-chef
+		case 93: ratio = 95; 	// Parrain
+		case 94: ratio = 90;	// Pro
+		case 95: ratio = 85;	// Mafieu
+		case 96: ratio = 80;	// Apprenti
+		default: ratio = 75;
 	}
 	return ratio;
 }
@@ -1227,13 +1230,16 @@ void MENU_ShowPickLock(int client, float percent, int difficulte, int type) {
 	
 	switch( difficulte ) {
 		case  -1: Format(tmp, sizeof(tmp), "%T", "Difficulty_Failed", client);
+		case   0: Format(tmp, sizeof(tmp), "%T", "Difficulty_VeryEasy", client);
 		case   1: Format(tmp, sizeof(tmp), "%T", "Difficulty_Easy", client);
+		case   2: Format(tmp, sizeof(tmp), "%T", "Difficulty_Average", client);
 		case   3: Format(tmp, sizeof(tmp), "%T", "Difficulty_Hard", client);
 		case   4: Format(tmp, sizeof(tmp), "%T", "Difficulty_VeryHard", client);
 		case   5: Format(tmp, sizeof(tmp), "%T", "Difficulty_Impossible", client);
 		
 		default: Format(tmp, sizeof(tmp), "%T", "Difficulty_Average", client);
 	}
+	AddMenuItem(menu, ".", tmp, ITEMDRAW_DISABLED);
 	
 	Format(tmp, sizeof(tmp), "%T", "Steal_Nearby", client, rp_CountPoliceNear(client));
 	AddMenuItem(menu, ".", tmp, ITEMDRAW_DISABLED);

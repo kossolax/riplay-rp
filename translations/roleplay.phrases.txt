@@ -241,6 +241,11 @@
 		"fr"		"Difficulté: Échec"
 		"en"		"Difficulty: Failed" 
 	}
+	"Difficulty_VeryEasy"
+	{
+		"fr"		"Difficulté: Très facile"
+		"en"		"Difficulty: Very easy"
+	}
 	"Difficulty_Easy"
 	{
 		"fr"		"Difficulté: Facile"
