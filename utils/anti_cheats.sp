@@ -45,9 +45,17 @@ float g_flGameTime;
 float g_flSpawnOrigin[65][3];
 
 public void OnPluginStart() {
-	if( GetConVarInt(FindConVar("hostport")) != 27015 ) {
-		SetFailState("test serv");
-		return;
+	
+	char strIP[128];
+	Handle hostip = FindConVar("hostip");
+	int longip = GetConVarInt(hostip);
+	Format(strIP, sizeof(strIP),"%d.%d.%d.%d", (longip >> 24) & 0xFF, (longip >> 16) & 0xFF, (longip >> 8 )	& 0xFF, longip & 0xFF);
+	
+	if( StrEqual(strIP, "5.196.39.50") ) { 
+		if( GetConVarInt(FindConVar("hostport")) != 27015 ) {
+			SetFailState("test serv");
+			return;
+		}
 	}
 	
 	AddCommandListener(OnCheatCommand, "noclip");
