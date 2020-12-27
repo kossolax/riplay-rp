@@ -25,3 +25,4 @@ upload.bat
 upload.sh
 .vscode
 *.driveupload
+maps/**

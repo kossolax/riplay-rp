@@ -159,7 +159,7 @@ public Action Cmd_ItemDoorProtect(int args) {
 	
 	int appartID = rp_GetPlayerZoneAppart(client);
 	if( appartID > 0 && rp_GetClientKeyAppartement(client, appartID) ) {
-		float time = (appartID == 50 || appartID == 51 ? 8.0:24.0);
+		float time = (appartID == 50 || appartID == 51) ? 8.0 : 24.0;
 		
 		if( g_flAppartProtection[appartID] <= GetGameTime() ) {
 			g_flAppartProtection[appartID] = GetGameTime() + (time * 60.0);
