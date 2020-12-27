@@ -258,12 +258,12 @@ void START_PERQUIZ(int zone) {
 	rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
 	LogToGame("[PERQUIZ] Une perquisition est lancée dans %s.", tmp);
 	
-	PrintToChatPoliceSearch(array[PQ_resp], "{red} =================================={default} ");
+	PrintToChatPoliceZone(zone, "{red} =================================={default} ");
 	if( array[PQ_target] > 0 && IsValidClient(array[PQ_target]) )
-		PrintToChatPoliceSearch(array[PQ_resp], ""... MOD_TAG ..." {red}[POLICE]{default} La perquisition dans %s pour un recherché %N commence.", tmp, array[PQ_target]);
+		PrintToChatPoliceZone(zone, ""... MOD_TAG ..." {red}[POLICE]{default} La perquisition dans %s pour un recherché %N commence.", tmp, array[PQ_target]);
 	if( array[PQ_target] == 0 )
-		PrintToChatPoliceSearch(array[PQ_resp], ""... MOD_TAG ..." {red}[POLICE]{default} La perquisition dans %s pour du traffic illégal commence, %N est le responsable.", tmp, array[PQ_resp]);
-	PrintToChatPoliceSearch(array[PQ_resp], "{red} =================================={default} ");	
+		PrintToChatPoliceZone(zone, ""... MOD_TAG ..." {red}[POLICE]{default} La perquisition dans %s pour du traffic illégal commence, %N est le responsable.", tmp, array[PQ_resp]);
+	PrintToChatPoliceZone(zone, "{red} =================================={default} ");	
 	
 	if( IsValidClient(array[PQ_target]) ) {
 		rp_HookEvent(array[PQ_target], RP_OnPlayerDead, fwdHookDead);
@@ -297,9 +297,9 @@ void END_PERQUIZ(int zone, bool abort) {
 	
 	rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
 	LogToGame("[PERQUIZ] Une perquisition est terminée dans %s.", tmp);
-	PrintToChatPoliceSearch(array[PQ_resp], "{red} =================================={default} ");
-	PrintToChatPoliceSearch(array[PQ_resp], "{red}[TSX-RP] [POLICE]{default} La perquisition dans %s est %s.", tmp, abort ? "annulée" : "terminée");
-	PrintToChatPoliceSearch(array[PQ_resp], "{red} =================================={default} ");
+	PrintToChatPoliceZone(zone, "{red} =================================={default} ");
+	PrintToChatPoliceZone(zone, "{red}[TSX-RP] [POLICE]{default} La perquisition dans %s est %s.", tmp, abort ? "annulée" : "terminée");
+	PrintToChatPoliceZone(zone, "{red} =================================={default} ");
 	
 	if( !abort ) {
 		FakeClientCommand(array[PQ_client], "say /addnote %s - %s - %s", tmp, date, array[PQ_target] > 0 ? "recherché" : "traffic");
@@ -411,9 +411,9 @@ public Action TIMER_PERQUIZ(Handle timer, any zone) {
 		
 		if( array[PQ_timeout] == 20 ) {
 			rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
-			PrintToChatPoliceSearch(array[PQ_resp], "{red} =================================={default} ");
-			PrintToChatPoliceSearch(array[PQ_resp], "{red}[TSX-RP] [POLICE]{default} La perquisition dans %s sera annulée, si aucun flic n'est présent dans les 10 secondes.", tmp);
-			PrintToChatPoliceSearch(array[PQ_resp], "{red} =================================={default} ");
+			PrintToChatPoliceZone(zone, "{red} =================================={default} ");
+			PrintToChatPoliceZone(zone, "{red}[TSX-RP] [POLICE]{default} La perquisition dans %s sera annulée, si aucun flic n'est présent dans les 10 secondes.", tmp);
+			PrintToChatPoliceZone(zone, "{red} =================================={default} ");
 		}
 		else if( array[PQ_timeout] >= 30 ) {
 			END_PERQUIZ(zone, true);
@@ -444,10 +444,10 @@ public Action TIMER_PERQUIZ_LOOKUP(Handle timer, any zone) {
 		if( array[PQ_timeout] % 10 == 0 && array[PQ_timeout] != 60 ) {
 			rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
 			
-			PrintToChatPoliceSearch(array[PQ_resp], "{red} =================================={default} ");
-			PrintToChatPoliceSearch(array[PQ_resp], "{red}[TSX-RP] [POLICE]{default} une perquisition commencera dans: %i secondes", 60 - array[PQ_timeout]);
-			PrintToChatPoliceSearch(array[PQ_resp], "{red}[TSX-RP] [POLICE]{default} %N{default} est prié de se présenter à %s.", array[PQ_resp], tmp);
-			PrintToChatPoliceSearch(array[PQ_resp], "{red} =================================={default} ");
+			PrintToChatPoliceZone(zone, "{red} =================================={default} ");
+			PrintToChatPoliceZone(zone, "{red}[TSX-RP] [POLICE]{default} une perquisition commencera dans: %i secondes", 60 - array[PQ_timeout]);
+			PrintToChatPoliceZone(zone, "{red}[TSX-RP] [POLICE]{default} %N{default} est prié de se présenter à %s.", array[PQ_resp], tmp);
+			PrintToChatPoliceZone(zone, "{red} =================================={default} ");
 		}
 		
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));

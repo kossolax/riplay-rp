@@ -405,17 +405,31 @@ stock void PrintToChatZone(int zoneID, const char[] message, any...) {
 		}
 	}
 }
-stock void PrintToChatPoliceSearch(int target, const char[] message, any...) {
+stock void PrintToChatPoliceZone(int zone, const char[] message, any...) {
 	char buffer[MAX_MESSAGE_LENGTH];
+	char tmp[128];
 	VFormat(buffer, sizeof(buffer), message, 3);
 	
-	for (int i = 1; i <= MaxClients; i++) {
-		if (!IsValidClient(i))
-			continue;
-		
-		if (i == target || rp_GetClientJobID(i) == 1 || rp_GetClientJobID(i) == 101) {
-			CPrintToChat(i, buffer);
+	
+	int jobID = rp_GetZoneInt(zone, zone_type_type);
+	if( jobID > 0 ) {
+		PrintToChatPoliceJob(jobID, buffer);
+		return;
+	}
+
+	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	if( StrContains(tmp, "appart_") == 0 ) {
+		ReplaceString(tmp, sizeof(tmp), "appart_", "");
+		int appartID = StringToInt(tmp);
+		if( appartID > 0 ) {
+			PrintToChatPoliceAppart(appartID, buffer);
+			return;
 		}
+	}
+	
+	if( StrContains(tmp, "bunker") == 0 ) {
+		PrintToChatPoliceGroup(rp_GetCaptureInt(cap_bunker), buffer);
+		return;
 	}
 }
 stock void PrintToChatPoliceJob(int target, const char[] message, any...) {
@@ -429,6 +443,38 @@ stock void PrintToChatPoliceJob(int target, const char[] message, any...) {
 			continue;
 		
 		if (rp_GetClientJobID(i) == 1 || rp_GetClientJobID(i) == 101 || rp_GetClientJobID(i) == target) {
+			CPrintToChat(i, buffer);
+		}
+	}
+}
+stock void PrintToChatPoliceAppart(int target, const char[] message, any...) {
+	char buffer[MAX_MESSAGE_LENGTH];
+	VFormat(buffer, sizeof(buffer), message, 3);
+	
+	for (int i = 1; i <= MaxClients; i++) {
+		if (!IsValidClient(i))
+			continue;
+		if (!IsPlayerAlive(i))
+			continue;
+		
+		
+		if (rp_GetClientJobID(i) == 1 || rp_GetClientJobID(i) == 101 || rp_GetClientKeyAppartement(i, target) ) {
+			CPrintToChat(i, buffer);
+		}
+	}
+}
+stock void PrintToChatPoliceGroup(int target, const char[] message, any...) {
+	char buffer[MAX_MESSAGE_LENGTH];
+	VFormat(buffer, sizeof(buffer), message, 3);
+	
+	for (int i = 1; i <= MaxClients; i++) {
+		if (!IsValidClient(i))
+			continue;
+		if (!IsPlayerAlive(i))
+			continue;
+		
+		
+		if (rp_GetClientJobID(i) == 1 || rp_GetClientJobID(i) == 101 || rp_GetClientGroupID(i) == target ) {
 			CPrintToChat(i, buffer);
 		}
 	}
