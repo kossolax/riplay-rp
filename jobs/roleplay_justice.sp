@@ -301,7 +301,7 @@ Action Draw_Menu(int client) {
 			Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Enquete", client);	menu.AddItem("enquete", tmp, (injail) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 			
 			Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Condamner", client);	menu.AddItem("condamner -1", tmp, (injail) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
-			Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Dedo", client);		menu.AddItem("dedomager -1", tmp, (g_iTribunalData[type][td_DoneDedommagement] == 0 && injail && (g_iTribunalData[type][td_AvocatPlaignant] > 0 || g_iTribunalData[type][td_AvocatSuspect] > 0)) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
+			Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Dedo", client);		menu.AddItem("dedomager -1", tmp, (g_iTribunalData[type][td_DoneDedommagement] == 0 && injail /*&& (g_iTribunalData[type][td_AvocatPlaignant] > 0 || g_iTribunalData[type][td_AvocatSuspect] > 0)*/) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
 			Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Acquitter", client);	menu.AddItem("acquitter -1", tmp, (injail) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
 			Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Cancel", client);		menu.AddItem("stop 1", tmp, (!injail) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 			Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Switch", client);		menu.AddItem("inverser", tmp, (injail) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);

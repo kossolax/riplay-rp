@@ -335,11 +335,13 @@
 	}
 	"Tribunal_Forum_Confirm_Condamn"
 	{
+		"#format"	"{1:s}"
 		"fr"	"Afin de confirmer votre jugement, tappez maintenant /jgmt {red}{1}{default} heure amende raison"
 		"en"	"In order to confirm your judgment, type /jgmt {red}{1}{default} hour penalty reason"
 	}
 	"Tribunal_Forum_Confirm_Acquitter"
 	{
+		"#format"	"{1:s}"
 		"fr"	"Afin de confirmer votre jugement, tappez maintenant /jgmt {red}{1}{default} raison"
 		"en"	"In order to confirm your judgment, type /jgmt {red}{1}{default} reason"
 	}
