@@ -31,7 +31,7 @@
 	"Tueur_Menu"
 	{
 		"#format"	"{1:d}"
-		"fr"	"Sélectionner les compétences à utiliser (%i)"
+		"fr"	"Sélectionner les compétences à utiliser ({1})"
 	}
 	"Tueur_Menu_Knife"
 	{
