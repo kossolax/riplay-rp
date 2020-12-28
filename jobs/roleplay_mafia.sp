@@ -816,6 +816,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 
 					rp_ClientMoney(owner, i_Bank, -stealAmount);
 					rp_ClientMoney(client, i_AddToPay, stealAmount);
+					LogToGame("[TSX-RP] [VOL] %L a vole %L %i$", client, owner, stealAmount);
 
 					rp_SetClientStat(owner, i_MoneySpent_Stolen, rp_GetClientStat(owner, i_MoneySpent_Stolen) + stealAmount);
 
