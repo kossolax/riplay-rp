@@ -1207,7 +1207,7 @@ public Action Command_Say(int client, int args) {
 			return Plugin_Handled;
 		}
 		
-		if( Entity_GetDistance(client, target) > MAX_AREA_DIST ) {
+		if( Entity_GetDistance(client, target) > MAX_AREA_DIST/2 ) {
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_TargetIsToFar", client);
 			return Plugin_Handled;
 		}
@@ -1261,6 +1261,11 @@ public Action Command_Say(int client, int args) {
 			}
 		}
 		
+		if( rp_GetClientBool(target, b_Lube) && Math_GetRandomInt(1, 5) != 5) {
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_TargetIsSlippy", client);
+			return Plugin_Handled;
+		}
+		
 		char clientname[64], targetname[64];
 		GetClientName2(client, clientname, sizeof(clientname), false);
 		GetClientName2(target, targetname, sizeof(targetname), false);
@@ -1273,7 +1278,7 @@ public Action Command_Say(int client, int args) {
 		rp_ClientColorize(target);
 		
 		g_bUserData[client][b_MaySteal] = false;
-		CreateTimer(GetClientTeam(target) == CS_TEAM_CT ? 10.0 : 2.5, AllowStealing, client);
+		CreateTimer(GetClientTeam(target) == CS_TEAM_CT ? 10.0 : 5.0, AllowStealing, client);
 
 		return Plugin_Handled;
 	}
