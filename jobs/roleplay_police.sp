@@ -2085,7 +2085,7 @@ bool canWeaponBeAddedInPoliceStore(int weaponID) {
 	
 	char classname[64];
 	GetEdictClassname(weaponID, classname, sizeof(classname));
-	if (StrContains(classname, "default") >= 0 || StrContains(classname, "fists") >= 0)
+	if (StrContains(classname, "default") >= 0 || StrContains(classname, "fists") >= 0 || StrContains(classname, "snowball") >= 0)
 		return false;
 	
 	int index = GetEntProp(weaponID, Prop_Send, "m_iItemDefinitionIndex");
