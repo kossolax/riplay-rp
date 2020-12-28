@@ -18,6 +18,7 @@
 // ----------------------------------------------------------------------------
 forward Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbose);
 forward Action RP_OnSentryAttack(int sentry, int client);
+
 // ----------------------------------------------------------------------------
 enum rp_event {
 	RP_PreTakeDamage,			     /* Le joueur recoit des dégats, quelques soit l'arme. Attention, n'est jamais appelé en zone EVENT */
@@ -72,7 +73,7 @@ enum rp_event {
 	RP_OnJugementOver,			/* Lorsqu'un jugement est prononcé */
 	RP_OnPlayerPay,
 	RP_OnPlayerEmote,
-
+	RP_OnPlayerGotRaw,
 	
 	RP_EventMax
 }
@@ -128,6 +129,7 @@ typeset rp_event_enum {
 	function Action(int client, int data[6], int charges[28]);								/* RP_OnJugementOver */
 	function Action(int client, int base, int& amount, bool verbose);						/* RP_OnPlayerPay */
 	function Action(int client, const char[] emote, float step);							/* RP_OnPlayerEmote */
+	function Action(int client, int type, int itemID, int& amount); 						/* RP_OnPlayerGotRaw */
 };
 /**
  * Hook un évenement d'un joueur

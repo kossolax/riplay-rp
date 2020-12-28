@@ -267,7 +267,9 @@ public Action Cmd_GiveItem(int args) {
 	int item_id = GetCmdArgInt(args);
 	
 	if( Weapon_ShouldBeEquip(Arg1) && Client_HasWeapon(client, Arg1) ) {
-		ITEM_CANCEL(client, item_id);
+		if( item_id > 0 ) {
+			ITEM_CANCEL(client, item_id);
+		}
 		return Plugin_Handled;
 	}
 	
@@ -457,8 +459,17 @@ public Action OnEmote(int client, const char[] emote, float time) {
 				CPrintToChat(client, "" ...MOD_TAG... " Votre canne à eau s'est {red}brisée{default}.");
 			}
 			
-			rp_ClientGiveItem(client, ITEM_EAU);
 			
+			int amount = 1;
+			Action a;
+			Call_StartForward(rp_GetForwardHandle(client, RP_OnPlayerGotRaw));
+			Call_PushCell(client);
+			Call_PushCell(0);
+			Call_PushCell(ITEM_EAU);
+			Call_PushCellRef(amount);
+			Call_Finish(a);
+			
+			rp_ClientGiveItem(client, ITEM_EAU, amount);
 		}
 		else {
 			rp_ClientGiveItem(client, ITEM_CANNE);
@@ -770,7 +781,15 @@ public Action OnPropDamage(int victim, int& attacker, int& inflictor, float& dam
 				
 				int itemID = rp_GetBuildingData(victim, BD_item_id);
 				if( itemID > 0 ) {
-					rp_ClientGiveItem(attacker, itemID, rp_GetBuildingData(victim, BD_count));
+					int amount = rp_GetBuildingData(victim, BD_count);
+					Action a;
+					Call_StartForward(rp_GetForwardHandle(attacker, RP_OnPlayerGotRaw));
+					Call_PushCell(attacker);
+					Call_PushCell(1);
+					Call_PushCell(itemID);
+					Call_PushCellRef(amount);
+					Call_Finish(a);
+					rp_ClientGiveItem(attacker, itemID, amount);
 					
 					g_iMeleeHP[attacker][1]--;
 					if( g_iMeleeHP[attacker][1] <= 0 ) {
@@ -781,7 +800,17 @@ public Action OnPropDamage(int victim, int& attacker, int& inflictor, float& dam
 			}
 		}
 		if( StrEqual(tmp, "rp_wood") && IsMeleeAxe(weapon) ) {
-			rp_ClientGiveItem(attacker, ITEM_BOIS);
+			
+			int amount = 1;
+			Action a;
+			Call_StartForward(rp_GetForwardHandle(attacker, RP_OnPlayerGotRaw));
+			Call_PushCell(attacker);
+			Call_PushCell(2);
+			Call_PushCell(ITEM_BOIS);
+			Call_PushCellRef(amount);
+			Call_Finish(a);
+			
+			rp_ClientGiveItem(attacker, ITEM_BOIS, amount);
 			AcceptEntityInput(victim, "Break");
 			
 			g_iMeleeHP[attacker][2]--;
@@ -793,7 +822,17 @@ public Action OnPropDamage(int victim, int& attacker, int& inflictor, float& dam
 		if( StrEqual(tmp, "rp_tree") && IsMeleeAxe(weapon) ) {
 			SetEntProp(victim, Prop_Data, "m_iHealth", Entity_GetHealth(victim) - RoundFloat(damage));
 			if( Entity_GetHealth(victim) <= 0 ) {
-				rp_ClientGiveItem(attacker, ITEM_LATEX);
+				
+				int amount = 1;
+				Action a;
+				Call_StartForward(rp_GetForwardHandle(attacker, RP_OnPlayerGotRaw));
+				Call_PushCell(attacker);
+				Call_PushCell(2);
+				Call_PushCell(ITEM_BOIS);
+				Call_PushCellRef(amount);
+				Call_Finish(a);
+				
+				rp_ClientGiveItem(attacker, ITEM_LATEX, amount);
 				SetEntProp(victim, Prop_Data, "m_iHealth", 0);
 				AcceptEntityInput(victim, "EnableMotion");
 				SDKUnhook(victim, SDKHook_OnTakeDamage, OnPropDamage);
@@ -1073,6 +1112,15 @@ public void OnThink(int ent) {
 				state = STATE_TURN_LEFT;
 				EmitAmbientSoundAny("survival/turret_idle_01.wav", NULL_VECTOR, ent);
 			}
+		}
+		
+		int max = Entity_GetMaxHealth(ent);
+		int health = GetEntProp(ent, Prop_Data, "m_iHealth");
+		if( health < max ) {
+			health += 1;
+			if( health > max )
+				health = max;
+			SetEntProp(ent, Prop_Data, "m_iHealth", health);
 		}
 		
 		if( yaw+speed > 0.5 && yaw-speed < 0.5 )
