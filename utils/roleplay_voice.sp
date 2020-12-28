@@ -413,6 +413,10 @@ public int MenuJobs2(Handle p_hItemMenu, MenuAction p_oAction, int client, int p
 				Format(tmp2, sizeof(tmp2), "%i_-6", target);
 				AddMenuItem(menu, tmp2, "Demander un Appartement");
 				amount++;
+				
+				Format(tmp2, sizeof(tmp2), "%i_-7", target);
+				AddMenuItem(menu, tmp2, "Demander un nettoyage");
+				amount++;
 			}
 			else{
 				for(int i=1;i<MAX_ITEMS;i++){
@@ -469,6 +473,7 @@ public int MenuJobs3(Handle p_hItemMenu, MenuAction p_oAction, int client, int p
 				}
 				case -5: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} a besoin d'un avocat, il est actuellement: %s", client, zoneName);
 				case -6: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} souhaiterait acheter un appartement. Il est actuellement: %s", client, zoneName);
+				case -7: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} souhaiterait nettoyer son appartement. Il est actuellement: %s", client, zoneName);
 				default: {
 					rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
 					CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} a besoin de {lime}%s{default}, il est actuellement: %s", client, tmp, zoneName);
