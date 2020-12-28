@@ -313,6 +313,7 @@ public void OnPluginStart() {
 		view_as<Handle>(g_hRPNative[i][RP_OnJugementOver]) = CreateForward(ET_Hook, Param_Cell, Param_Array, Param_Array);
 		view_as<Handle>(g_hRPNative[i][RP_OnPlayerPay]) = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_CellByRef, Param_Cell);
 		view_as<Handle>(g_hRPNative[i][RP_OnPlayerEmote]) = CreateForward(ET_Hook, Param_Cell, Param_String, Param_Cell);
+		view_as<Handle>(g_hRPNative[i][RP_OnPlayerGotRaw]) = CreateForward(ET_Hook, Param_Cell, Param_Cell, Param_Cell, Param_CellByRef);
 		
 		g_iChatData[i] = new ArrayList(1);
 		g_iDoubleCompte[i] = new ArrayList(64);
@@ -443,6 +444,7 @@ public void OnConfigsExecuted() {
 	ServerCommand("sv_disable_motd 0");
 	ServerCommand("sv_force_transmit_players 1");
 	ServerCommand("sv_steamauth_enforce 0");
+	ServerCommand("sv_quota_stringcmdspersecond 128");
 	/* Config all-talk */
 	ServerCommand("sv_alltalk 1");
 	ServerCommand("sv_full_alltalk 1");
