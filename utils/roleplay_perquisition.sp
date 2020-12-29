@@ -755,6 +755,8 @@ void countBadThing(char[] zone, int& weapon, int& plant, int& machine) {
 		GetEdictClassname(i, tmp, sizeof(tmp));
 		if( StrContains(tmp, "weapon_") == -1 && StrContains(tmp, "rp_") == -1 )
 			continue;
+		if( StrContains(tmp, "snowball") >= 0 )
+			continue;
 		
 		Entity_GetAbsOrigin(i, vecOrigin);
 		vecOrigin[2] += 16.0;
