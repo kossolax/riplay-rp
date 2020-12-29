@@ -25,6 +25,7 @@
 #define QUEST_TYPE      quest_daily
 #define QUEST_RESUME1   "Coupez du bois"
 #define QUEST_WEAPON	"weapon_axe"
+#define QUEST_MAX		200
 
 int g_iQuest, g_iStep[MAXPLAYERS + 1];
 
@@ -55,8 +56,8 @@ public void Q1_Start(int objectiveID, int client) {
 	rp_HookEvent(client, RP_OnPlayerGotRaw, OnPlayerGotRaw);
 }
 public void Q1_Frame(int objectiveID, int client) {
-	PrintHintText(client, "%s: %d/100", QUEST_RESUME1, g_iStep[client]);
-	if( g_iStep[client] >= 100 ) {
+	PrintHintText(client, "%s: %d/%d", QUEST_RESUME1, g_iStep[client], QUEST_MAX);
+	if( g_iStep[client] >= QUEST_MAX ) {
 		rp_QuestStepComplete(client, objectiveID);
 	}
 }
@@ -64,7 +65,7 @@ public void Q1_Frame(int objectiveID, int client) {
 public Action OnPlayerGotRaw(int client, int type, int itemID, int& amount) {
 	if( type == 2 ) {
 		amount *= 2;
-		g_iStep[client]++;
+		g_iStep[client] += amount;
 	}
 }
 public void Q1_Abort(int objectiveID, int client) {
