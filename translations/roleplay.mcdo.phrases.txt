@@ -2,31 +2,37 @@
 {
 	"Knife_Menu"
 	{
-		"fr"	"Quel couteau voulez-vous utiliser?"
+		"fr"		"Quel couteau voulez-vous utiliser?"
+		"en"		"Which knife do you want to use?"		
 	}
 	"Burger_Menu"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Vous avez {1} Hamburger vitaux.\nCombien voulez-vous en manger?"
+		"en"		"You have {1} Hamburger (vital).\nHow much do you want to eat?"		
 	}
 	"Burger_Menu_NextLevel"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Manger {1} burgers pour atteindre le niveau suivant"
+		"en"		"Eat {1} burgers to reach the next level"				
 	}
 	"Burger_Menu_All"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Manger tout mes {1} burgers"
+		"en"		"Eat all my {1} burgers"		
 	}
 	"Burger_Menu_Count"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Manger {1} burgers"
+		"en"		"Eat {1} burgers"		
 	}
 	
 	"Microwave_Ready"
 	{
 		"fr"		"Votre micro-ondes vient de sonner!"
+		"en"		"Your microwave is ready!"		
 	}
 }
