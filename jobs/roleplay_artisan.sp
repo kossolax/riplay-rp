@@ -558,7 +558,10 @@ void displayBuild2Menu(int client, int jobID, int target, int itemID, int amount
 		}
 	}
 	else if( pay == 0 ) {
-		SetMenuTitle(menu, "%T\n ", "Artisan_Menu", client, "Artisan_Ask");
+		char title[256];
+		Format(title, sizeof(title), "%T\n%T\n ", "Artisan_Menu", client, "Artisan_Ask", "Artisan_Ask_Money", client, rp_GetClientInt(client, i_Money));
+		
+		SetMenuTitle(menu, title);
 		
 		int toPay[] = {-1, 1, 5, 10, 25, 50, 100, 250, 500, 1000};
 		
@@ -1064,7 +1067,6 @@ public Action stopBuilding(Handle timer, Handle dp) {
 		
 		if( xp > 0 ) {
 			ClientGiveXP(client, xp);
-			PrintToConsole(client, "xp: %d", xp);
 		}
 	}
 	else if( !failed ) { // Recyclage, si on le rate pas on prend l'item.
