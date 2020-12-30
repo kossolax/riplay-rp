@@ -1346,7 +1346,7 @@ public int Native_rp_GetWeaponFireRate(Handle plugin, int numParams) {
 	return view_as<int>(g_flWeaponFireRate[GetNativeCell(1)]);
 }
 public int Native_rp_SetWeaponFireRate(Handle plugin, int numParams) {
-	g_flWeaponFireRate[GetNativeCell(1)] = GetNativeCell(2);
+	g_flWeaponFireRate[GetNativeCell(1)] = view_as<float>(GetNativeCell(2));
 	return 1;
 }
 public int Native_rp_GetWeaponGroupID(Handle plugin, int numParams) {

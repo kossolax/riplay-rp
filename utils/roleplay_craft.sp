@@ -263,7 +263,8 @@ public Action Cmd_Sentry(int args) {
 public Action Cmd_GiveItem(int args) {
 	char Arg1[64];
 	GetCmdArg(1, Arg1, sizeof(Arg1));
-	int client = GetCmdArgInt(2);
+	float rof = GetCmdArgFloat(2);
+	int client = GetCmdArgInt(3);
 	int item_id = GetCmdArgInt(args);
 	
 	if( Weapon_ShouldBeEquip(Arg1) && Client_HasWeapon(client, Arg1) ) {
@@ -286,6 +287,10 @@ public Action Cmd_GiveItem(int args) {
 	}
 	if( StrEqual(Arg1, "weapon_spanner") ) {
 		g_iMeleeHP[client][3] = MELEE_HP;
+	}
+	
+	if( rof > 1.0 ) {
+		rp_SetWeaponFireRate(ent, rof);
 	}
 	
 	return Plugin_Handled;
