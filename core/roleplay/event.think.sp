@@ -39,6 +39,16 @@ public Action OnSetTransmit(int entity, int client) {
 */
 public void OnPreThink(int client) {
 	setRecoil(client);
+	float GameTime = GetGameTime();
+	int btn = GetClientButtons(client);
+	
+	if( btn & IN_ATTACK ) {
+		int wpnid = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
+		if( wpnid > 0 && g_flWeaponFireRate[wpnid] > 0.0 ) {
+			SetEntPropFloat(wpnid, Prop_Send, "m_flPlaybackRate", g_flWeaponFireRate[wpnid]);
+			g_bWeaponFireRate[wpnid] = true;
+		}
+	}
 }
 public void OnPostThinkPost(int client) {
 	static int m_flFlashDuration = -1, m_flFlashMaxAlpha = -1;
@@ -51,6 +61,18 @@ public void OnPostThinkPost(int client) {
 	if( g_flUserData[client][fl_Alcool] > 0.0 ) {
 		SetEntDataFloat(client, m_flFlashDuration, GetGameTime()+0.1,true);
 		SetEntDataFloat(client, m_flFlashMaxAlpha, g_flUserData[client][fl_Alcool] * 10.0 + 20.0, true);
+	}
+	
+	float GameTime = GetGameTime();
+	int wpnid = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
+	
+	if( wpnid > 0 && g_bWeaponFireRate[wpnid] ) {		
+		float next = GetEntPropFloat(wpnid, Prop_Send, "m_flNextPrimaryAttack");
+		float rateOfFire = next - GameTime;
+		
+		SetEntPropFloat(wpnid, Prop_Send, "m_flPlaybackRate", g_flWeaponFireRate[wpnid]);
+		SetEntPropFloat(wpnid, Prop_Send, "m_flNextPrimaryAttack", GameTime + rateOfFire/g_flWeaponFireRate[wpnid]);
+		g_bWeaponFireRate[wpnid] = false;
 	}
 }
 public void OnPostThink(int client) {

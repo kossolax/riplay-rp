@@ -249,6 +249,8 @@ public void OnEntityCreated(int entity, const char[] classname)  {
 		return;
 	
 	g_iOriginOwner[entity] = -1;
+	g_flWeaponFireRate[entity] = 0.0;
+	g_bWeaponFireRate[entity] = false;
 	g_iEntityCount++;
 	
 	if( StrEqual(classname, "smokegrenade_projectile") || StrEqual(classname, "flashbang_projectile") ) {

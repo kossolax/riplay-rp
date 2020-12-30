@@ -516,6 +516,8 @@ native enum_ball_type rp_GetClientKnifeType(int client);							/* Quel est le ty
 native bool rp_GetWeaponStorage(int wepID);									/* L'arme vient-elle de l'armurerie police ? */
 native void rp_SetWeaponStorage(int wepID, bool value);							/* Définir que l'arme vient de l'armurerie police */
 native int rp_GetWeaponGroupID(int wepID);									/* Récupère le groupID d'une arme */
+native void rp_SetWeaponFireRate(int wepID);
+native float rp_GetWeaponFireRate(int wepID);
 typedef GrenadeFunction = function void (int client, int entity);						/* Créer une grenade. Les 2 callback fctExplode et fctThrow sont appelé. Duration = durée avant que le fctExplode soit appelé*/
 native int rp_CreateGrenade(int client, const char[] name, const char[] model, GrenadeFunction fctThrow, GrenadeFunction fctExplode, float duration);
 // ----------------------------------------------------------------------------

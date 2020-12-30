@@ -73,6 +73,9 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 	CreateNative("rp_IsInPVP",			Native_rp_IsInPVP);
 	CreateNative("rp_IsBuildingAllowed", Native_rp_IsBuildingAllowed);
 	
+	CreateNative("rp_SetWeaponFireRate",		Native_rp_SetWeaponFireRate);
+	CreateNative("rp_GetWeaponFireRate",		Native_rp_GetWeaponFireRate);
+	
 	CreateNative("rp_GetWeaponGroupID",		Native_rp_GetWeaponGroupID);
 	CreateNative("rp_SetWeaponGroupID",		Native_rp_SetWeaponGroupID);
 	
@@ -1337,6 +1340,13 @@ public int Native_rp_GetWeaponBallType(Handle plugin, int numParams) {
 }
 public int Native_rp_SetWeaponBallType(Handle plugin, int numParams) {
 	g_iWeaponsBallType[GetNativeCell(1)] = GetNativeCell(2);
+	return 1;
+}
+public int Native_rp_GetWeaponFireRate(Handle plugin, int numParams) {
+	return view_as<int>(g_flWeaponFireRate[GetNativeCell(1)]);
+}
+public int Native_rp_SetWeaponFireRate(Handle plugin, int numParams) {
+	g_flWeaponFireRate[GetNativeCell(1)] = GetNativeCell(2);
 	return 1;
 }
 public int Native_rp_GetWeaponGroupID(Handle plugin, int numParams) {

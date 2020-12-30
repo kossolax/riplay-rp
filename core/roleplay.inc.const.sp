@@ -144,6 +144,9 @@ float g_flClientFloodTime[MAX_PLAYERS + 1][MAX_PLAYERS + 1][view_as<int>(fd_udat
 Handle g_iClientFloodTimer[MAX_PLAYERS + 1][MAX_PLAYERS + 1][view_as<int>(fd_udata_max)];
 
 float g_flEntityData[MAX_ENTITIES + 1][view_as<int>(building_prop_data_max)];
+float g_flWeaponFireRate[MAX_ENTITIES + 1];
+bool g_bWeaponFireRate[MAX_ENTITIES + 1];
+
 //
 int g_iDoorKnowed[MAX_ENTITIES];
 int g_iDoorCannotForce[MAX_ENTITIES];
