@@ -50,7 +50,7 @@ public bool fwdCanStart(int client) {
 
 public void Q1_Start(int objectiveID, int client) {
 	if( !Client_HasWeapon(client, QUEST_WEAPON) ) {
-		ServerCommand("rp_giveitem_melee %s %d 0", QUEST_WEAPON, client);
+		ServerCommand("rp_giveitem_melee %s 0 %d 0", QUEST_WEAPON, client);
 	}
 	
 	rp_HookEvent(client, RP_OnPlayerGotRaw, OnPlayerGotRaw);
