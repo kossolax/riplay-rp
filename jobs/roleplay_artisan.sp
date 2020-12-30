@@ -1046,18 +1046,25 @@ public Action stopBuilding(Handle timer, Handle dp) {
 		
 		if( g_flClientBook[client][book_luck] > GetTickedTime() && Math_GetRandomInt(0, 1000) < 50 )
 			rp_ClientGiveItem(target, itemID, positive);
-		
+
+		int xp = 0;
 		for (int i = 0; i < magic.Length; i++) {  // Pour chaque items de la recette:
 			magic.GetArray(i, data);
 			
 			int prix = rp_GetItemInt(data[craft_raw], item_type_prix);
-			if( prix < 0 )
+			if( prix <= 0 )
 				prix = 25;
 			
 			if( !failed )
-				ClientGiveXP(client, prix *  data[craft_amount]);
+				xp = xp + (prix * data[craft_amount]);
+			
 			if( !free )
 				rp_ClientGiveItem(target, data[craft_raw], -data[craft_amount]);		
+		}
+		
+		if( xp > 0 ) {
+			ClientGiveXP(client, prix *  data[craft_amount]);
+			PrintToConsole(client, "xp: %d", xp);
 		}
 	}
 	else if( !failed ) { // Recyclage, si on le rate pas on prend l'item.
