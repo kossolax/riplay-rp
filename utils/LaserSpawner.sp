@@ -5,16 +5,9 @@
 
 #pragma newdecls required
 
-#define MAX_LASER		50
 #define MAX_CUBES		10
 #define	MAX_CUBES_SUP	50
 #define TICK_RATE		1.0
-
-float g_fLaserStarts[MAX_LASER][3];
-float g_fLaserEnds[MAX_LASER][3];
-int g_iHaveStart[MAX_LASER];
-int g_iHaveEnd[MAX_LASER];
-int g_iLaserSpawned[MAX_LASER];
 
 float g_fLaserCubeMins[MAX_CUBES][MAX_CUBES];
 float g_fLaserCubeMaxs[MAX_CUBES][MAX_CUBES];
@@ -151,13 +144,6 @@ public Action Cmd_LaserCube_size(int client, int args) {
 	return Plugin_Handled;
 }
 public void OnMapStart() {
-	
-	for(int i=0; i<MAX_LASER; i++) {
-		g_iHaveStart[i] = 0;
-		g_iHaveEnd[i] = 0;
-		g_iLaserSpawned[i] = 0;
-		
-	}
 	
 	if( GetUserMessageType() == UM_Protobuf ) {
 		// CSGO
@@ -328,15 +314,6 @@ public void OnGameFrame() {
 			
 			if( g_flLaserCubeTick[id][0] < GetGameTime() ) 
 				g_flLaserCubeTick[id][0] = GetGameTime() + TICK_RATE;
-		}
-	}
-	for(int i=0; i<MAX_LASER; i++) {
-		if( g_iLaserSpawned[i] ) {
-			
-			TraceKillingBeam( i, g_fLaserStarts[i], g_fLaserEnds[i] );
-			
-			if( g_flLaserCubeTick[i][1] < GetGameTime() ) 
-				g_flLaserCubeTick[i][1] = GetGameTime() + TICK_RATE;
 		}
 	}
 	
@@ -562,6 +539,16 @@ public int EditingLaserHandler(Handle menu, MenuAction action, int client, int p
 			}
 			else {
 				g_iLaserCubePeaceFULL[g_iClientCubeID[client]] = 0;
+			}
+			EditingLaser(client);
+		}
+		else if( StrEqual( options, "corde", false) ) {
+			
+			if( g_iLaserCubeCORD[g_iClientCubeID[client]] == 0 ) {
+				g_iLaserCubeCORD[g_iClientCubeID[client]] = GetGameTickCount();
+			}
+			else {
+				g_iLaserCubeCORD[g_iClientCubeID[client]] = 0;
 			}
 			EditingLaser(client);
 		}
