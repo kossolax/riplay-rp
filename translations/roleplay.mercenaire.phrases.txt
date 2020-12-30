@@ -3,183 +3,224 @@
 	"Tueur_TargetLeft"
 	{
 		"fr"		"Votre cible a quitté la ville."
+		"en"		"Your target has left town."		
 	}
 	"Tueur_TargetHint"
 	{
 		"#format"	"{1:s},{2:s}"
 		"fr"		"<b>Cible</b>: {1}\n<b>Zone</b>: {2}"
+		"en"		"<b>Target</b>: {1}\n<b>Zone</b>: {2}"		
 	}
 	"Tueur_ContratDone_Self"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Vous avez rempli votre contrat pour avoir tué {1}."
+		"en"		"You have fulfilled your contract for killing  {1}."		
 	}
 	"Tueur_ContratDone_Target"
 	{
 		"#format"	"{1:s},{2:s}"
 		"fr"		"{1} a rempli son contrat en tuant {2}."
+		"en"		"{1} fulfilled his contract by killing {2}."		
 	}
 	"Tueur_Lupin"
 	{
 		"fr"		"Quelqu'un a fouillé vos poches et a volé votre carte bancaire."
+		"en"		"Someone picked your pockets and stole your bank card."		
 	}
 	"Tueur_ProtectOver"
 	{
 		"fr"		"Le contrat de protection est terminé."
+		"en"		"The protection contract has ended."		
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tueur_Menu"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Sélectionner les compétences à utiliser ({1})"
+		"en"	"Select the skills to use ({1})"		
 	}
 	"Tueur_Menu_Knife"
 	{
 		"fr"	"Entrainement au couteau"
+		"en"	"Knife training"		
 	}
 	"Tueur_Menu_Weapon"
 	{
 		"fr"	"Entrainement aux armes"
+		"en"	"Weapons training"		
 	}
 	"Tueur_Menu_Weapon_M4_USP"
 	{
 		"fr"	"M4 / USP"
+		"en"	"M4 / USP"		
 	}
 	"Tueur_Menu_Weapon_AWP_CZ75"
 	{
 		"fr"	"AWP / CZ75"
+		"en"	"AWP / CZ75"		
 	}
 	"Tueur_Menu_Weapon_NOVA_DEAGLE"
 	{
 		"fr"	"NOVA / DEAGLE"
+		"en"	"NOVA / DEAGLE"		
 	}
 	"Tueur_Menu_Invisible"
 	{
 		"fr"	"Invisibilité"
+		"en"	"Invisibility"		
 	}
 	"Tueur_Menu_Vie"
 	{
 		"fr"	"Vie et Kevlar maximum"
+		"en"	"Maximum health and Kevlar"	
 	}
 	"Tueur_Menu_Vitesse"
 	{
 		"fr"	"Vitesse augmentée"
+		"en"	"Increased speed"		
 	}
 	"Tueur_Menu_Cancel"
 	{
-		"fr"	"Annuler mon contrat"
+		"fr"	"Annuler mon contrat"	
+		"en"	"Cancel my contract"		
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tueur_Fail_Time"
 	{
 		"fr"	"Vous n'avez pas rempli votre contrat à temps."
+		"en"	"You did not fulfill your contract on time."		
 	}
 	"Tueur_Fail_Time_Target"
 	{
 		"#format"	"{1:s}"
 		"fr"	"{1} n'a pas rempli votre contrat à temps."
+		"en"	"{1} did not fulfill your contract on time.."		
 	}
 	"Tueur_Fail_Cancel"
 	{
 		"fr"	"Vous avez annulé votre contrat."
+		"en"	"You have canceled your contract."		
 	}
 	"Tueur_Fail_Cancel_Target"
 	{
 		"#format"	"{1:s}"
 		"fr"	"{1} a annulé votre contrat."
+		"en"	"{1} canceled your contract."		
 	}
 	"Tueur_Fail_Lost"
 	{
 		"fr"	"Vous avez raté votre contrat."
+		"en"	"You missed your contract."		
 	}
 	"Tueur_Fail_Lost_Target"
 	{
 		"#format"	"{1:s}"
 		"fr"	"{1} a raté votre contrat."
+		"en"	"{1} has failed your contract."		
 	}
 	"Tueur_Client_Disconnect"
 	{
 		"fr"	"Votre employeur a quitté la ville, vous ne le remboursez donc pas."
+		"en"	"Your employer has left town, so you are not reimbursing him."		
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tueur_Kidnapping_Menu"
 	{
 		"fr"	"Vous avez été enlevé ! Que faire ?"
+		"en"	"You have been kidnapped! What will you do?"		
 	}
 	"Tueur_Kidnapping_Menu_Pay"
 	{
 		"fr"	"Payer la rançon de 2500$"
+		"en"	"Pay the ransom of $2500"		
 	}
 	"Tueur_Kidnapping_Menu_Evade"
 	{
 		"fr"	"Tenter l'évasion"
+		"en"	"Try to escape"		
 	}
 	"Tueur_Kidnapping_Menu_CallPolice"
 	{
 		"fr"	"Appeler la police"
+		"en"	"Call the police"		
 	}
 	"Tueur_Kidnapping_Menu_CallMafia"
 	{
 		"fr"	"Appeler la mafia"
+		"en"	"Call the mafia"		
 	}
 	"Tueur_Kidnapping_Menu_Cry"
 	{
 		"fr"	"Crier"
+		"en"	"Yell and scream"		
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tueur_Kidnapping"
 	{
 		"fr"	"Vous avez entendu dire que vos ravisseurs comptent vous libérer dans {red}6{default} heures. Vous pouvez tenter autre chose..."
+		"en"	"You have heard that your captors plan to release you in {red}6{default} hours. You can try something else..."
 	}
 	"Tueur_Kidnapping_Free"
 	{
-		"fr"	"Vous avez pris la fuite, vous êtes libres !"
+ 		"fr"	"Vous avez pris la fuite, vous êtes libres !"
+ 		"en"	"You have fled, you are free!"		
 	}
 	"Tueur_Kidnapping_Free_Target"
 	{
 		"#format"	"{1:s}"
 		"fr"		"{1} s'est échappé."
+		"en"		"{1} escaped!"		
 	}
 	"Tueur_Kidnapping_End"
 	{
 		"fr"		"Vos ravisseurs vous ont finalement libéré."
+		"en"		"Your captors have finally freed you."		
 	}
 	"Tueur_Kidnapping_End_Target"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Vous avez libéré {1}."
+		"en"		"You released {1}."		
 	}
 	"Tueur_Kidnapping_Pay"
 	{
 		"#format"	"{1:d}"
-		"fr"		"Vous avez payé la rançon de {1}$"
+		"fr"		"Vous avez payé la rançon de {1}$."
+		"en"		"You have paid the ransom of ${1}."		
 	}
 	"Tueur_Kidnapping_Pay_Target"
 	{
 		"#format"	"{1:s},{2:d}"
-		"fr"		"{1} a payé la rançon de {green}{2}{default}$."
+		"fr"		"{1} a payé la rançon de {green}{2}{default}$"
+		"en"		"{1} paid the random of ${green}{2}{default}"		
 	}
 	"Tueur_Kidnapping_Door"
 	{
 		"fr"		"Vous avez réussi à ouvrir la porte, vous n'avez qu'une seule chance de vous en sortir. Foncez !"
+		"en"		"You've managed to open the door and only have one chance to get out. Go for it!!!"		
 	}
 	"Tueur_Kidnapping_Call"
 	{
 		"#format"	"{1:s},{2:s}"
 		"fr"		"Un enlèvement a eu lieu. Vous devez libérer {red}{1}{default} dans {red}{2}{default}."
+		"en"		"A kidnapping has taken place. You must free {red}{1}{default} in {red}{2}{default}."		
 	}
 	"Tueur_Kidnapping_Cry"
 	{
 		"fr"		"Au secours, j'ai été enlevé !!!"
+		"en"		"Help! I have been kidnapped!!!"		
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Crypto_Blocked"
 	{
 		"fr"		"Le Tribunal de princeton a {red}gelé vos achats{default} de pot de vin, car vous êtes recherché depuis trop longtemps."
+		"en"		"The Princeton Court has {red}blocked your bribes{default} because you've been WANTED too much!"
 	}
 	"Crypto_Done"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Les mercenaires vous couvrent, vous avez désormais {1}% de chance d'être caché."
+		"en"		"The Mercenaries are covering you and you now have a {1}% chance to be hidden."		
 	}
 }
