@@ -1063,7 +1063,7 @@ public Action stopBuilding(Handle timer, Handle dp) {
 		}
 		
 		if( xp > 0 ) {
-			ClientGiveXP(client, prix *  data[craft_amount]);
+			ClientGiveXP(client, xp);
 			PrintToConsole(client, "xp: %d", xp);
 		}
 	}
