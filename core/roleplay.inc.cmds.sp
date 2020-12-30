@@ -401,6 +401,13 @@ public Action cmd_Damage(int client, int args) {
 	
 	g_Client_AMP[client] = StringToFloat(arg1);
 }
+public Action cmd_ROF(int client, int args) {
+	char arg1[12];
+	GetCmdArg(1, arg1, sizeof(arg1));
+	
+	int wpnid = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
+	g_flWeaponFireRate[wpnid] = StringToFloat(arg1);
+}
 public Action Cmd_ReloadSQL(int client, int args) {
 	LoadServerDatabase();
 	LoadDoors();

@@ -157,6 +157,7 @@ public void OnPluginStart() {
 	RegAdminCmd("rp_give_assu",			cmd_GiveAssurance,	ADMFLAG_ROOT);
 	RegAdminCmd("rp_force_pay",			CmdForcePay,		ADMFLAG_ROOT);
 	RegAdminCmd("rp_damage",			cmd_Damage,			ADMFLAG_ROOT);
+	RegAdminCmd("rp_rof",				cmd_ROF,			ADMFLAG_ROOT);
 	RegAdminCmd("rp_spawner_add",		CmdBank_add,		ADMFLAG_ROOT);
 	RegAdminCmd("rp_force_clean", 		cmd_CleanMapForce,	ADMFLAG_ROOT);
 	RegAdminCmd("rp_rebuildmap", 		cmd_Rebuild,		ADMFLAG_ROOT);
