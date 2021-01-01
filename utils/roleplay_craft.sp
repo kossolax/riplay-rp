@@ -765,8 +765,7 @@ public void OnTreeThink(int entity) {
 		}
 		delete tr;
 		
-		entity = rp_CloneAndFade(entity);
-		g_iNoCollisionEntity[entity] = 1;
+		entity = rp_CloneAndFade(entity, false);
 		
 		while( dist < max_dist ) {
 			int ent = CreateEntityByName("prop_physics");
@@ -799,6 +798,13 @@ public void OnTreeThink(int entity) {
 		
 	}
 }
+public void RemoveStone(int ref) {
+	int entity = EntRefToEntIndex(ref);
+	
+	if( IsValidEdict(entity) ) {
+		entity = rp_CloneAndFade(entity, true, 10.0);
+	}
+}
 public Action OnPropDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& weapon, float damageForce[3], float damagePosition[3]) {
 	static char tmp[128];
 
@@ -809,11 +815,8 @@ public Action OnPropDamage(int victim, int& attacker, int& inflictor, float& dam
 			SetEntProp(victim, Prop_Data, "m_iHealth", Entity_GetHealth(victim) - RoundFloat(damage));
 			if( Entity_GetHealth(victim) <= 0 ) {
 				SetEntProp(victim, Prop_Data, "m_iHealth", 0);
-				rp_AcceptEntityInput(victim, "EnableMotion");
 				
-				g_iNoCollisionEntity[victim] = 1;
-				rp_ScheduleEntityInput(victim, 10.0, "Break");
-				ServerCommand("sm_effect_fading %d 10 1", victim);
+				RequestFrame(RemoveStone, EntIndexToEntRef(victim));
 				
 				int itemID = rp_GetBuildingData(victim, BD_item_id);
 				if( itemID > 0 ) {
@@ -880,7 +883,7 @@ public Action OnPropDamage(int victim, int& attacker, int& inflictor, float& dam
 		}
 	}
 }
-stock int rp_CloneAndFade(int entity, float time=1.0) {
+stock int rp_CloneAndFade(int entity, bool physics=false, float time=1.0) {
 	char classname[128], model[PLATFORM_MAX_PATH];
 	float pos[3], ang[3];
 	
@@ -890,10 +893,20 @@ stock int rp_CloneAndFade(int entity, float time=1.0) {
 	Entity_GetAbsAngles(entity, ang);
 	AcceptEntityInput(entity, "Kill");
 	
-	int ent = CreateEntityByName("prop_dynamic_override");
+	int ent;
+	if( physics )
+		ent = CreateEntityByName("prop_physics_override");
+	else
+		ent = CreateEntityByName("prop_dynamic_override");
+	
 	DispatchKeyValue(ent, "classname", classname);
 	DispatchKeyValue(ent, "model", model);
 	DispatchKeyValue(ent, "solid", "0");
+	if( physics )
+		DispatchKeyValue(ent, "spawnflags", "4");
+	else
+		DispatchKeyValue(ent, "spawnflags", "256");
+	
 	DispatchSpawn(ent);
 	ActivateEntity(ent);
 	
