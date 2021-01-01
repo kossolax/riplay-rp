@@ -80,7 +80,7 @@ ArrayList g_iSpawn;
 
 float g_flAnimStart[2049];
 int g_iAnimState[2049];
-int g_iAnimEntity[65][3];
+int g_iAnimEntity[65][4];
 
 int g_iNoCollisionEntity[2049];
 int g_iNoCollisionPlayer[2049];
@@ -326,6 +326,7 @@ public Action Cmd_GiveItem(int args) {
 }
 public Action Cmd_Fish(int args) {
 	int client = GetCmdArgInt(1);
+	int item_id = GetCmdArgInt(args);
 	
 	float eye[3], ang[3], src[3], pos[3];
 	GetClientEyePosition(client, eye);
@@ -381,12 +382,13 @@ public Action Cmd_Fish(int args) {
 		g_iAnimEntity[client][0] = ent;
 		g_iAnimEntity[client][1] = rope;
 		g_iAnimEntity[client][2] = 0;
+		g_iAnimEntity[client][3] = item_id;
+		
 		
 		ServerCommand("sm_effect_fading %d 0.2 0", ent);
 		CreateTimer(0.01, Animate, EntIndexToEntRef(ent), TIMER_REPEAT);
 	}
 	else {
-		int item_id = GetCmdArgInt(args);
 		if( item_id > 0 ) {
 			rp_ClientGiveItem(client, item_id);
 		}
@@ -486,7 +488,8 @@ public Action OnEmote(int client, const char[] emote, float time) {
 			g_iMeleeHP[client][0]--;
 			
 			if( g_iMeleeHP[client][0] > 0 ) {
-				rp_ClientGiveItem(client, ITEM_CANNE);
+				if( g_iAnimEntity[client][3] > 0 )
+					rp_ClientGiveItem(client, g_iAnimEntity[client][3]);
 			}
 			else {
 				g_iMeleeHP[client][0] = MELEE_HP;
@@ -506,7 +509,8 @@ public Action OnEmote(int client, const char[] emote, float time) {
 			rp_ClientGiveItem(client, ITEM_EAU, amount);
 		}
 		else {
-			rp_ClientGiveItem(client, ITEM_CANNE);
+			if( g_iAnimEntity[client][3] > 0 )
+				rp_ClientGiveItem(client, g_iAnimEntity[client][3]);
 		}
 		
 		FakeClientCommand(client, "say /i");

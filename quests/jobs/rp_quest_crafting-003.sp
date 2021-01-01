@@ -6,7 +6,7 @@
  * http://creativecommons.org/licenses/by-nc-sa/4.0/ .
  *
  * Merci de respecter le travail fourni par le ou les auteurs 
- * https://riplay.fr/ - pasty.bully@gmail.com
+ * https://www.ts-x.eu/ - kossolax@ts-x.eu
  */
 #pragma semicolon 1
 
@@ -29,7 +29,7 @@
 int g_iQuest, g_iStep[MAXPLAYERS + 1];
 
 public Plugin myinfo =  {
-	name = "Quête: "...QUEST_NAME, author = "PastyBully", 
+	name = "Quête: "...QUEST_NAME, author = "KoSSoLaX`", 
 	description = "RolePlay - Quête:"...QUEST_NAME, 
 	version = __LAST_REV__, url = "https://rpweb.riplay.fr/#/"
 };
@@ -48,7 +48,7 @@ public bool fwdCanStart(int client) {
 }
 
 public void Q1_Start(int objectiveID, int client) {
-	rp_ClientGiveItem(client, 330);
+	rp_ClientGiveItem(client, 355);
 	rp_HookEvent(client, RP_OnPlayerGotRaw, OnPlayerGotRaw);
 }
 public void Q1_Frame(int objectiveID, int client) {
