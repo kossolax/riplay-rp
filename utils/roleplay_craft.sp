@@ -802,7 +802,9 @@ public void RemoveStone(int ref) {
 	int entity = EntRefToEntIndex(ref);
 	
 	if( IsValidEdict(entity) ) {
+		int itemID = rp_GetBuildingData(entity, BD_item_id);
 		entity = rp_CloneAndFade(entity, true, 10.0);
+		rp_SetBuildingData(entity, BD_item_id, itemID);
 	}
 }
 public Action OnPropDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& weapon, float damageForce[3], float damagePosition[3]) {
