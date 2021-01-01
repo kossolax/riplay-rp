@@ -66,6 +66,8 @@ public Action OnPlayerGotRaw(int client, int type, int itemID, int& amount) {
 }
 public void Q1_Abort(int objectiveID, int client) {
 	rp_UnhookEvent(client, RP_OnPlayerGotRaw, OnPlayerGotRaw);
+	if( rp_GetClientItem(client, 355) > 0 )
+		rp_ClientGiveItem(client, 355, -rp_GetClientItem(client, 355));
 }
 public void Q1_Done(int objectiveID, int client) {
 	Q1_Abort(objectiveID, client);
