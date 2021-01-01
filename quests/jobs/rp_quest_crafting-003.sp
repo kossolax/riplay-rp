@@ -68,6 +68,6 @@ public void Q1_Abort(int objectiveID, int client) {
 	rp_UnhookEvent(client, RP_OnPlayerGotRaw, OnPlayerGotRaw);
 }
 public void Q1_Done(int objectiveID, int client) {
-	rp_UnhookEvent(client, RP_OnPlayerGotRaw, OnPlayerGotRaw);
-	rp_ClientXPIncrement(client, 1500);
+	Q1_Abort(objectiveID, client);
+	rp_ClientXPIncrement(client, 2500);
 }

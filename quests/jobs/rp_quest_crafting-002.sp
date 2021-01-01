@@ -6,7 +6,7 @@
  * http://creativecommons.org/licenses/by-nc-sa/4.0/ .
  *
  * Merci de respecter le travail fourni par le ou les auteurs 
- * https://riplay.fr/ - pasty.bully@gmail.com
+ * https://www.ts-x.eu/ - kossolax@ts-x.eu
  */
 #pragma semicolon 1
 
@@ -30,7 +30,7 @@
 int g_iQuest, g_iStep[MAXPLAYERS + 1];
 
 public Plugin myinfo =  {
-	name = "Quête: "...QUEST_NAME, author = "PastyBully", 
+	name = "Quête: "...QUEST_NAME, author = "KoSSoLaX`", 
 	description = "RolePlay - Quête:"...QUEST_NAME, 
 	version = __LAST_REV__, url = "https://rpweb.riplay.fr/#/"
 };
@@ -45,6 +45,10 @@ public void OnAllPluginsLoaded() {
 }
 // ----------------------------------------------------------------------------
 public bool fwdCanStart(int client) {
+	if( Client_HasWeapon(client, "weapon_hammer") || Client_HasWeapon(client, "weapon_axe") || Client_HasWeapon(client, "weapon_spanner") ) {
+		if( !Client_HasWeapon(client, QUEST_WEAPON) )
+			return false;
+	}
 	return true;
 }
 
@@ -72,6 +76,6 @@ public void Q1_Abort(int objectiveID, int client) {
 	rp_UnhookEvent(client, RP_OnPlayerGotRaw, OnPlayerGotRaw);
 }
 public void Q1_Done(int objectiveID, int client) {
-	rp_UnhookEvent(client, RP_OnPlayerGotRaw, OnPlayerGotRaw);
-	rp_ClientXPIncrement(client, 1500);
+	Q1_Abort(objectiveID, client);
+	rp_ClientXPIncrement(client, 2500);
 }
