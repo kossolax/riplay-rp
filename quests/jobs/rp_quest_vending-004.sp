@@ -24,10 +24,13 @@
 #define QUEST_NAME      "Joe le taxi"
 #define QUEST_TYPE      quest_daily
 #define QUEST_RESUME1   "Faites le tour de la ville et inviter les gens à monter dans votre taxi"
+#define MAX_CLIENT 		3
 
-int g_iQuest, g_iDuration[MAXPLAYERS + 1], g_iTaxi[MAXPLAYERS + 1], g_iCurrentClient[MAXPLAYERS + 1], g_iNbClient[MAXPLAYERS + 1], g_iPastClient[MAXPLAYERS + 1][3];
+int g_iQuest, g_iDuration[MAXPLAYERS + 1], g_iTaxi[MAXPLAYERS + 1], g_iCurrentClient[MAXPLAYERS + 1];
 
-char g_CurrentDestination[MAXPLAYERS + 1][256];
+int g_CurrentDestination[MAXPLAYERS + 1];
+
+ArrayList g_aPastClient[MAXPLAYERS + 1];
 
 char g_destination[][][256] =  {
 	{ "Commisariat", "1" }, 
@@ -87,29 +90,26 @@ public bool fwdCanStart(int client)
 	return true;
 }
 
+// -----------------------------------STEP 1------------------------------------
+
 public void Q1_Start(int objectiveID, int client)
 {
 	g_iTaxi[client] = spawnVehicle(client);
 	
-	Format(g_CurrentDestination[client], sizeof(g_CurrentDestination), "");
-	g_iNbClient[client] = 0;
+	if(!IsValidEntity(g_iTaxi[client]))
+	{
+		clearQuest(client);
+		rp_QuestStepFail(client, objectiveID);
+		return;
+	}
 	
-	float pos[3];
+	g_aPastClient[client] = new ArrayList(MAX_CLIENT, 0);
 	
-	Entity_GetAbsOrigin(g_iTaxi[client], pos);
+	g_CurrentDestination[client] = -1;
 	
-	char s[256];
-	Format(s, sizeof(s), "Aller récupérer votre taxi afin d'effectuer le tour de la ville.");
-	String_WordWrap(s, 40);
+	sendTextePanel("Aller récupérer votre taxi afin d'effectuer le tour de la ville.", client);
 	
-	Menu menu = new Menu(MenuNothing);
-	
-	menu.SetTitle("Quête: %s", QUEST_NAME);
-	menu.AddItem("", s, ITEMDRAW_DISABLED);
-	menu.ExitButton = false;
-	menu.Display(client, 60);
-	
-	g_iDuration[client] = 2 * 60;
+	g_iDuration[client] = 4 * 60;
 }
 public void Q1_Frame(int objectiveID, int client)
 {
@@ -132,41 +132,36 @@ public void Q1_Frame(int objectiveID, int client)
 	if (GetVectorDistance(pos, origin) < 64)
 		rp_QuestStepComplete(client, objectiveID);
 	else if (g_iDuration[client] <= 0)
+	{
+		clearQuest(client);
 		rp_QuestStepFail(client, objectiveID);
+	}
 	else {
 		PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME1);
 	}
 }
 
 public void Q1_Abort(int objectiveID, int client) {
+	clearQuest(client);
 	PrintHintText(client, "<b>Quête</b>: %s\nLa quête est terminée.", QUEST_NAME);
 }
 
-// ----------------------------------------------------------------------------
+// -----------------------------------STEP 2------------------------------------
 
 public void Q2_Start(int objectiveID, int client)
 {
-	char s[256];
-	Format(s, sizeof(s), "Faites le tour de la ville avec votre taxi et récupérer un maximum de client.");
-	String_WordWrap(s, 40);
-	
-	Menu menu = new Menu(MenuNothing);
-	
-	menu.SetTitle("Quête: %s", QUEST_NAME);
-	menu.AddItem("", s, ITEMDRAW_DISABLED);
-	menu.ExitButton = false;
-	menu.Display(client, MENU_TIME_FOREVER);
-	
+	sendTextePanel("Faites le tour de la ville avec votre taxi et récupérer un maximum de client.", client);
+
 	g_iDuration[client] = 10 * 60;
 }
 
 public void Q2_Frame(int objectiveID, int client)
 {
 	g_iDuration[client]--;
-	bool isAlreadyClient = false;
 	
 	if(!IsValidEntity(g_iTaxi[client]))
 	{
+		clearQuest(client);
 		rp_QuestStepFail(client, objectiveID);
 		return;
 	}
@@ -180,17 +175,8 @@ public void Q2_Frame(int objectiveID, int client)
 			continue;
 		
 		if (rp_GetClientVehiclePassager(i) == g_iTaxi[client])
-		{
-			for (int k = 0; k < 3; k++)
-			{
-				if (g_iPastClient[client][k] == i)
-				{
-					isAlreadyClient = true;
-					break;
-				}
-			}
-			
-			if(isAlreadyClient)
+		{			
+			if(g_aPastClient[client].FindValue(i) != -1) // déjà client
 			{
 				rp_ClientVehiclePassagerExit(i, g_iTaxi[client]);
 			}
@@ -198,6 +184,7 @@ public void Q2_Frame(int objectiveID, int client)
 			{        
 				g_iCurrentClient[client] = i;
 				rp_QuestStepComplete(client, objectiveID);
+				return;
 			}
 		}
 	}
@@ -210,7 +197,9 @@ public void Q2_Frame(int objectiveID, int client)
 	}
 	
 	if (g_iDuration[client] <= 0)
+	{
 		rp_QuestStepFail(client, objectiveID);
+	}
 	else {
 		PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME1);
 	}
@@ -223,33 +212,11 @@ public void Q2_Done(int objectiveID, int client) {
 	CPrintToChat(newClient, ""...MOD_TAG..." Vous venez de monter dans le taxi de %N.", client);
 }
 
-// ----------------------------------------------------------------------------
+// -----------------------------------STEP 3------------------------------------
 
 public void Q3_Start(int objectiveID, int client)
 {
-	char s[256];
-	Format(s, sizeof(s), "Veuillez attendre que votre client fasse un choix de destination.");
-	String_WordWrap(s, 40);
-	
-	Menu menu = new Menu(MenuNothing);
-	
-	menu.SetTitle("Quête: %s", QUEST_NAME);
-	menu.AddItem("", s, ITEMDRAW_DISABLED);
-	menu.ExitButton = false;
-	menu.Display(client, 60);
-	
-	Menu menuClient = new Menu(MenuDestination);
-	menuClient.SetTitle("Choix d'une destination :");
-	
-	for (int j = 0; j < sizeof(g_destination); j++)
-	{
-		char data[256];
-		Format(data, sizeof(data), "%s_%d_%s", g_destination[j][1], client, g_destination[j][0]);
-		menuClient.AddItem(data, g_destination[j][0]);
-	}
-	
-	menuClient.ExitButton = true;
-	menuClient.Display(g_iCurrentClient[client], 60);
+	sendTextePanel("Veuillez attendre que votre client fasse un choix de destination.", client);
 	
 	g_iDuration[client] = 10 * 60;
 }
@@ -258,29 +225,30 @@ public void Q3_Frame(int objectiveID, int client)
 {
 	g_iDuration[client]--;
 	
-	if (!StrEqual(g_CurrentDestination[client], ""))
+	if(!IsValidEntity(g_iTaxi[client]))
+	{
+		rp_QuestStepFail(client, objectiveID);
+		return;
+	}
+	
+	sendMenuDestination(client);
+	
+	if (g_CurrentDestination[client] != -1)
 		rp_QuestStepComplete(client, objectiveID);
 	else if (g_iDuration[client] <= 0)
+	{
 		rp_QuestStepFail(client, objectiveID);
+	}
 	else {
 		PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME1);
 	}
 }
 
-// ----------------------------------------------------------------------------
+// -----------------------------------STEP 4------------------------------------
 
 public void Q4_Start(int objectiveID, int client)
 {
-	char s[256];
-	Format(s, sizeof(s), "Veuillez vous rendre jusqu'à la destination choisie par le client.");
-	String_WordWrap(s, 40);
-	
-	Menu menu = new Menu(MenuNothing);
-	
-	menu.SetTitle("Quête: %s", QUEST_NAME);
-	menu.AddItem("", s, ITEMDRAW_DISABLED);
-	menu.ExitButton = false;
-	menu.Display(client, 60);
+	sendTextePanel("Veuillez vous rendre jusqu'à la destination choisie par le client.", client);
 	
 	g_iDuration[client] = 10 * 60;
 }
@@ -303,8 +271,10 @@ public void Q4_Frame(int objectiveID, int client)
 	{
 		rp_QuestStepComplete(client, objectiveID);
 	}
-	if (g_iDuration[client] <= 0)
+	else if (g_iDuration[client] <= 0)
+	{
 		rp_QuestStepFail(client, objectiveID);
+	}
 	else {
 		PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME1);
 	}
@@ -312,16 +282,22 @@ public void Q4_Frame(int objectiveID, int client)
 
 public void Q4_Done(int objectiveID, int client)
 {
-	int newClient = g_iCurrentClient[client];
-	
-	g_iPastClient[client][g_iNbClient[client]] = newClient;
-	
-	g_iNbClient[client]++;
+	if(!IsValidEntity(g_iTaxi[client]))
+	{
+		rp_QuestStepFail(client, objectiveID);
+		return;
+	}
 	
 	char tmp[64];
-	Format(tmp, sizeof(tmp), "Il vous reste %d client%s à trouver.", 3 - g_iNbClient[client], 3 - g_iNbClient[client] > 1 ? "s" : "");
+	int newClient = g_iCurrentClient[client];
 	
-	CPrintToChat(client, ""...MOD_TAG..." Vous êtes arrivé à destination. %s", g_iNbClient[client] < 3 ? tmp : "Vous avez terminé toutes vos courses.");
+	g_aPastClient[client].Push(newClient);
+	
+	int nbClient = g_aPastClient[client].Length;
+	
+	Format(tmp, sizeof(tmp), "Il vous reste %d client%s à trouver.", 3 - nbClient, 3 - nbClient > 1 ? "s" : "");
+	
+	CPrintToChat(client, ""...MOD_TAG..." Vous êtes arrivé à destination. %s", nbClient < 3 ? tmp : "Vous avez terminé toutes vos courses.");
 	CPrintToChat(newClient, ""...MOD_TAG..." Vous êtes arrivé à destination.");
 	
 	rp_ClientVehiclePassagerExit(newClient, g_iTaxi[client]);
@@ -329,21 +305,20 @@ public void Q4_Done(int objectiveID, int client)
 	rp_ClientXPIncrement(newClient, 250);
 	rp_ClientXPIncrement(client, 100);
 	
-	rp_ClientMoney(client, i_AddToPay, 200);
+	giveMoney(client, 200);
 	CPrintToChat(client, ""...MOD_TAG..." Vous venez de recevoir %d$.", 200);
 	
-	Format(g_CurrentDestination[client], sizeof(g_CurrentDestination), "");
+	g_CurrentDestination[client] = -1;
 	
-	if (g_iNbClient[client] == 3)
-	{
-		int cap = rp_GetRandomCapital(1);
-   		rp_SetJobCapital(cap, rp_GetJobCapital(cap) - 1600); // 3 * 200 + 1000
-		rp_ClientMoney(client, i_AddToPay, 1000);
+	if (nbClient == 3)
+	{	
 		rp_ClientXPIncrement(client, 500);
-		CPrintToChat(client, ""...MOD_TAG..." Bravo, vous avez conduit tous vos clients à bon port ! Vous venez de recevoir %d$.", 1000);
+		giveMoney(client, 1500);
+		CPrintToChat(client, ""...MOD_TAG..." Bravo, vous avez conduit tous vos clients à bon port ! Vous venez de recevoir %d$.", 1500);
 		
 		rp_ClientVehiclePassagerExit(client, g_iTaxi[client]);
-		rp_SetVehicleInt(g_iTaxi[client], car_health, -1);
+	
+		clearQuest(client);
 		
 		Menu menu = new Menu(MenuNothing);
 		menu.SetTitle("Quête: %s", QUEST_NAME);
@@ -352,7 +327,7 @@ public void Q4_Done(int objectiveID, int client)
 	}
 }
 
-// ----------------------------------------------------------------------------
+// --------------------------------Menu----------------------------------------
 
 public int MenuNothing(Handle menu, MenuAction action, int client, int param2) {
 	if (action == MenuAction_Select) {
@@ -377,14 +352,67 @@ public int MenuDestination(Handle menu, MenuAction action, int client, int param
 		ExplodeString(options, "_", expl, sizeof(expl), sizeof(expl[]));
 		
 		int conducteur = StringToInt(expl[1]);
+		int indice = StringToInt(expl[0]);
 		
-		Format(g_CurrentDestination[conducteur], sizeof(g_CurrentDestination), "%s", expl[0]);
+		g_CurrentDestination[conducteur] = indice;
 		
-		CPrintToChat(conducteur, ""...MOD_TAG..." %N veut se rendre à la destination suivante : %s.", client, expl[2]);
-		CPrintToChat(client, ""...MOD_TAG..." Votre chauffeur va vous conduire à la destination suivante : %s.", expl[2]);
+		CPrintToChat(conducteur, ""...MOD_TAG..." %N veut se rendre à la destination suivante : %s.", client, g_destination[indice][0]);
+		CPrintToChat(client, ""...MOD_TAG..." Votre chauffeur va vous conduire à la destination suivante : %s.", g_destination[indice][0]);
 	}
 	
 	return 0;
+}
+
+// --------------------------------Fonctions----------------------------------------
+
+void giveMoney(int client, int money)
+{
+	int cap = rp_GetRandomCapital(1);
+	rp_SetJobCapital(cap, rp_GetJobCapital(cap) - money);
+	rp_ClientMoney(client, i_AddToPay, money);
+}
+
+void sendMenuDestination(int client)
+{
+	int destinataire = g_iCurrentClient[client];
+	
+	if(rp_ClientCanDrawPanel(destinataire))
+	{
+		char data[256];
+		
+		Menu menuClient = new Menu(MenuDestination);
+		menuClient.SetTitle("Choix d'une destination :");
+		
+		for (int j = 0; j < sizeof(g_destination); j++)
+		{
+			Format(data, sizeof(data), "%d_%d", j, client);
+			menuClient.AddItem(data, g_destination[j][0]);
+		}
+		
+		menuClient.ExitButton = true;
+		menuClient.Display(destinataire, 30);
+	}
+}
+
+void clearQuest(int client)
+{
+	if(!IsValidEntity(g_iTaxi[client]))
+		rp_SetVehicleInt(g_iTaxi[client], car_health, -1);
+		
+	g_aPastClient[client].Clear();
+	g_aPastClient[client] = null;
+}
+
+void sendTextePanel(char[] text, int client)
+{
+	String_WordWrap(text, 40);
+	
+	Menu menu = new Menu(MenuNothing);
+	
+	menu.SetTitle("Quête: %s", QUEST_NAME);
+	menu.AddItem("", text, ITEMDRAW_DISABLED);
+	menu.ExitButton = false;
+	menu.Display(client, 60);
 }
 
 int spawnVehicle(int client)
@@ -443,7 +471,9 @@ int getNearestEligible(int client)
 {
 	int target = -1;
 	float src[3], dst[3], tmp, delta = 9999999.9;
-	bool isAlreadyClient = false;
+	
+	if(!IsValidEntity(g_iTaxi[client]))
+		return -1;
 	
 	Entity_GetAbsOrigin(g_iTaxi[client], src);
 	
@@ -451,24 +481,14 @@ int getNearestEligible(int client)
 	{
 		if (IsValidClient(i) && IsPlayerAlive(i) && i != client)
 		{
-			
 			Entity_GetAbsOrigin(i, dst);
 			
 			tmp = GetVectorDistance(src, dst);
 			
 			
 			if (tmp < delta && tmp < 1000.0) 
-			{
-				for (int k = 0; k < 3; k++)
-				{
-					if (g_iPastClient[client][k] == i)
-					{
-						isAlreadyClient = true;
-						break;
-					}
-				}
-				
-				if(isAlreadyClient)
+			{	
+				if(g_aPastClient[client].FindValue(i) != -1)
 					continue;
 				
 				delta = tmp;
@@ -480,8 +500,12 @@ int getNearestEligible(int client)
 	return target;
 }
 
-bool isNearBy(float src[3], char[] zone, float threshold = 200000.0)
+bool isNearBy(float src[3], int z, float threshold = 200000.0)
 {
+	char zone[256];
+	
+	Format(zone, sizeof(zone), "%s", g_destination[z][1]);
+	
 	float min[3], max[3], center[3], size[3], delta[3];
 	
 	for (int i = 1; i < MAX_ZONES; i++) {
