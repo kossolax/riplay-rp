@@ -499,15 +499,25 @@ void StoreUserData(int client) {
 	int max = g_iUserData[client][i_ItemBankCount], size = max * 18 + 1;
 	char[] in_bank = new char[ size ];
 	
-	for (int i = 0; i < max; i++)
-		Format(in_bank, size, "%s%d,%d;", in_bank, g_iItems_BANK[client][i][STACK_item_id], g_iItems_BANK[client][i][STACK_item_amount]);
+	for (int i = 0; i < max; i++) {
+		int object_id = g_iItems_BANK[client][i][STACK_item_id];
+		if( StringToInt(g_szItemList[object_id][item_type_no_bank]) == 1 )
+			continue;
+		
+		Format(in_bank, size, "%s%d,%d;", in_bank, object_id, g_iItems_BANK[client][i][STACK_item_amount]);
+	}
 	
 	max = (g_bUserData[client][b_Assurance] || g_iClient_OLD[client] == 0 || true) ? g_iUserData[client][i_ItemCount] : 0;
 	size = max * 18 + 1;
 	char[] in_item = new char[ size ];
 	
-	for (int i = 0; i < max; i++)
-		Format(in_item, size, "%s%d,%d;", in_item, g_iItems[client][i][STACK_item_id], g_iItems[client][i][STACK_item_amount]);
+	for (int i = 0; i < max; i++) {
+		int object_id = g_iItems[client][i][STACK_item_id];
+		if( StringToInt(g_szItemList[object_id][item_type_no_bank]) == 1 )
+			continue;
+			
+		Format(in_item, size, "%s%d,%d;", in_item, object_id, g_iItems[client][i][STACK_item_amount]);
+	}
 
 	
 	max = MAX_JOBS;
