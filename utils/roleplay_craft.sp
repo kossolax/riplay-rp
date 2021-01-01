@@ -17,8 +17,7 @@
 #include <smlib>		// https://github.com/bcserv/smlib
 #include <colors_csgo>	// https://forums.alliedmods.net/showthread.php?p=2205447#post2205447
 #include <emitsoundany> // https://forums.alliedmods.net/showthread.php?t=237045
-#include <sdktools_voice>
-#include <sdktools_functions>
+#include <collisionhook> // https://forums.alliedmods.net/showthread.php?t=197815
 
 #pragma newdecls required
 #include <roleplay.inc>	// https://www.ts-x.eu
@@ -83,6 +82,9 @@ float g_flAnimStart[2049];
 int g_iAnimState[2049];
 int g_iAnimEntity[65][3];
 
+int g_iNoCollisionEntity[2049];
+int g_iNoCollisionPlayer[2049];
+
 public Plugin myinfo = {
 	name = "CRAFTING", author = "KoSSoLaX",
 	description = "RolePlay - CRAFTING",
@@ -94,6 +96,33 @@ public Action Cmd_Reload(int args) {
 	char name[64];
 	GetPluginFilename(INVALID_HANDLE, name, sizeof(name));
 	ServerCommand("sm plugins reload %s", name);
+	return Plugin_Continue;
+}
+
+public Action CH_ShouldCollide(int ent1, int ent2, bool& result) {
+	PrintToChatAll("collide - %d -- %d -- %d", ent1, ent2, result);
+	return Plugin_Continue;
+}
+public Action CH_PassFilter(int ent1, int ent2, bool& result) {
+	static char classname1[128], classname2[128];
+	GetEdictClassname(ent1, classname1, sizeof(classname1));
+	GetEdictClassname(ent2, classname2, sizeof(classname2));
+	
+	if( g_iNoCollisionEntity[ent1] == 1 || g_iNoCollisionEntity[ent2] == 1 ) {
+		result = false;
+		return Plugin_Handled;
+	}
+	
+	
+	if( g_iNoCollisionPlayer[ent1] == 1 && ent2 > MaxClients ) {
+		result = false;
+		return Plugin_Handled;
+	}
+	if( g_iNoCollisionPlayer[ent2] == 1 && ent1 > MaxClients ) {
+		result = false;
+		return Plugin_Handled;
+	}
+//	PrintToChatAll("filter - %d -- %d -- %d", ent1, ent2, result);
 	return Plugin_Continue;
 }
 
@@ -691,6 +720,8 @@ public void OnEntityCreated(int entity, const char[] classname) {
 	if( entity > 0 ) {
 		g_iTreeID[entity] = 0;
 		g_iStoneID[entity] = 0;
+		g_iNoCollisionEntity[entity] = 0;
+		g_iNoCollisionPlayer[entity] = 0;
 	}
 }
 public void OnEntityDestroyed(int entity) {
@@ -732,16 +763,21 @@ public void OnTreeThink(int entity) {
 			if( tmp < max_dist )
 				max_dist = tmp;
 		}
-		
 		delete tr;
+		
+		entity = rp_CloneAndFade(entity);
+		g_iNoCollisionEntity[entity] = 1;
 		
 		while( dist < max_dist ) {
 			int ent = CreateEntityByName("prop_physics");
 			DispatchKeyValue(ent, "model", g_szWoodGibs[rnd]);
 			DispatchKeyValue(ent, "classname", "rp_wood");
 			DispatchSpawn(ent);
-			Entity_SetCollisionGroup(ent, COLLISION_GROUP_DEBRIS|COLLISION_GROUP_PLAYER);
+			
+			Entity_SetCollisionGroup(ent, COLLISION_GROUP_DEBRIS_TRIGGER);
+			g_iNoCollisionPlayer[ent] = 1;
 			ActivateEntity(ent);
+
 			
 			Entity_GetMinSize(ent, min);
 			Entity_GetMaxSize(ent, max);
@@ -761,11 +797,6 @@ public void OnTreeThink(int entity) {
 			SDKHook(ent, SDKHook_OnTakeDamage, OnPropDamage);
 		}
 		
-		Entity_SetCollisionGroup(entity, COLLISION_GROUP_DEBRIS);
-
-		ServerCommand("sm_effect_fading %d 1 1", entity);
-		rp_ScheduleEntityInput(entity, 1.0, "Kill");
-		SDKUnhook(entity, SDKHook_VPhysicsUpdate, OnTreeThink);
 	}
 }
 public Action OnPropDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& weapon, float damageForce[3], float damagePosition[3]) {
@@ -780,7 +811,7 @@ public Action OnPropDamage(int victim, int& attacker, int& inflictor, float& dam
 				SetEntProp(victim, Prop_Data, "m_iHealth", 0);
 				rp_AcceptEntityInput(victim, "EnableMotion");
 				
-				Entity_SetCollisionGroup(victim, COLLISION_GROUP_DEBRIS);
+				g_iNoCollisionEntity[victim] = 1;
 				rp_ScheduleEntityInput(victim, 10.0, "Break");
 				ServerCommand("sm_effect_fading %d 10 1", victim);
 				
@@ -848,6 +879,29 @@ public Action OnPropDamage(int victim, int& attacker, int& inflictor, float& dam
 			}
 		}
 	}
+}
+stock int rp_CloneAndFade(int entity, float time=1.0) {
+	char classname[128], model[PLATFORM_MAX_PATH];
+	float pos[3], ang[3];
+	
+	GetEdictClassname(entity, classname, sizeof(classname));
+	Entity_GetModel(entity, model, sizeof(model));
+	Entity_GetAbsOrigin(entity, pos);
+	Entity_GetAbsAngles(entity, ang);
+	AcceptEntityInput(entity, "Kill");
+	
+	int ent = CreateEntityByName("prop_dynamic_override");
+	DispatchKeyValue(ent, "classname", classname);
+	DispatchKeyValue(ent, "model", model);
+	DispatchKeyValue(ent, "solid", "0");
+	DispatchSpawn(ent);
+	ActivateEntity(ent);
+	
+	TeleportEntity(ent, pos, ang, NULL_VECTOR);
+	ServerCommand("sm_effect_fading %d %f 1", ent, time);
+	rp_ScheduleEntityInput(ent, time, "Kill");
+	
+	return ent;
 }
 stock int getMineLevel(int zone) {
 	static int level[MAX_ZONES] =  { -2, ... };
