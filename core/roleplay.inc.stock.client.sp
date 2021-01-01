@@ -641,15 +641,14 @@ int GivePlayerPay(int i, bool calculator = false) {
 	}
 	
 	if( g_iUserData[i][i_AddToPay] > 0 ) {
-		to_pay += g_iUserData[i][i_AddToPay];
-				
 		if( !calculator ) {
+			
 			CPrintToChat(i, "" ...MOD_TAG... " %T", "Pay_Work", i, g_iUserData[i][i_AddToPay]);
 			g_iUserStat[i][i_MoneyEarned_Pay] += g_iUserData[i][i_AddToPay];
 				
 			int tmp = g_iUserData[i][i_AddToPay];
 			g_iUserData[i][i_AddToPay] =  0;
-			rp_ClientMoney(i, i_Bank, tmp);
+			rp_ClientMoney(i, g_bUserData[i][b_PayToBank] ? i_Bank : i_Money, tmp);
 				
 		}
 	}

@@ -182,7 +182,7 @@ void LoadServerDatabase() {
 	}
 	//
 	// Chargement des items
-	if ((hQuery = SQL_Query(g_hBDD, "SELECT `id`, `nom`, `extra_cmd`, `reuse_delay`, `give_hp`, `job_id`, `prix`, `auto_use`, `dead`, `taxes` FROM `rp_items` ORDER BY `job_id` ASC, `prix` ASC, `id` ASC;")) == INVALID_HANDLE) {
+	if ((hQuery = SQL_Query(g_hBDD, "SELECT `id`, `nom`, `extra_cmd`, `reuse_delay`, `give_hp`, `job_id`, `prix`, `auto_use`, `dead`, `taxes`, `no_bank` FROM `rp_items` ORDER BY `job_id` ASC, `prix` ASC, `id` ASC;")) == INVALID_HANDLE) {
 		SetFailState("ERREUR FATAL: Impossible de recupérer la liste des objects: %s", g_szError);
 	}
 	i=0;
@@ -199,10 +199,8 @@ void LoadServerDatabase() {
 		SQL_FetchString(hQuery, 7, g_szItemList[id][item_type_auto], sizeof(g_szItemList[][]));
 		SQL_FetchString(hQuery, 8, g_szItemList[id][item_type_dead], sizeof(g_szItemList[][]));
 		SQL_FetchString(hQuery, 9, g_szItemList[id][item_type_taxes], sizeof(g_szItemList[][]));
+		SQL_FetchString(hQuery, 10, g_szItemList[id][item_type_no_bank], sizeof(g_szItemList[][]));
 		
-
-
-
 		SQL_FetchString(hQuery, 0, g_szItemListOrdered[i][item_type_ordered_id], sizeof(g_szItemListOrdered[][]));
 		SQL_FetchString(hQuery, 1, g_szItemListOrdered[i][item_type_name], sizeof(g_szItemListOrdered[][]));
 		SQL_FetchString(hQuery, 2, g_szItemListOrdered[i][item_type_extra_cmd], sizeof(g_szItemListOrdered[][]));
@@ -213,6 +211,7 @@ void LoadServerDatabase() {
 		SQL_FetchString(hQuery, 7, g_szItemListOrdered[i][item_type_auto], sizeof(g_szItemListOrdered[][]));
 		SQL_FetchString(hQuery, 8, g_szItemListOrdered[i][item_type_dead], sizeof(g_szItemListOrdered[][]));
 		SQL_FetchString(hQuery, 9, g_szItemListOrdered[i][item_type_taxes], sizeof(g_szItemListOrdered[][]));
+		SQL_FetchString(hQuery, 10, g_szItemListOrdered[i][item_type_no_bank], sizeof(g_szItemListOrdered[][]));
 	}
 
 	//
@@ -530,7 +529,7 @@ void StoreUserData(int client) {
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
 		"UPDATE `rp_users` SET `name`='%s', `money`='%i', `bank`='%i', `job_id`='%i', `jailled`='%i', `train`='%i',", 
-		nickbuffer, g_iUserData[client][i_Money], g_iUserData[client][i_Bank], g_iUserData[client][i_Job], g_iUserData[client][i_JailTime], g_iUserData[client][i_KnifeTrain]);
+		nickbuffer, g_iUserData[client][i_Money], g_iUserData[client][i_Bank]+g_iUserData[client][i_AddToPay], g_iUserData[client][i_Job], g_iUserData[client][i_JailTime], g_iUserData[client][i_KnifeTrain]);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
 		"%s `permi_lege`='%i', `permi_lourd`='%i', `permi_vente`='%i', `permi_lege_start`='%i', `permi_lourd_start`='%i', `train_weapon`='%f', `group_id`='%i',",
@@ -1195,6 +1194,9 @@ void loadItem_Bank(int Client, Handle hQuery) {
 		
 		if( objet_id <= 0 || objet_id > MAX_ITEMS || rp_GetItemInt(objet_id, item_type_auto) == 1 )
 			continue;
+		if( rp_GetItemInt(objet_id, item_type_no_bank) == 1 )
+			continue;
+		
 		if( StrEqual(g_szItemList[objet_id][item_type_extra_cmd], "UNKNOWN") ) {
 			g_iUserData[Client][i_Bank] += StringToInt(g_szItemList[objet_id][item_type_prix]) * objet_amount;
 			continue;
@@ -1234,6 +1236,8 @@ void loadItem_Item(int Client, Handle hQuery) {
 		int objet_amount = StringToInt(szData[1]);
 		
 		if( objet_id <= 0 || objet_id > MAX_ITEMS || rp_GetItemInt(objet_id, item_type_auto) == 1 )
+			continue;
+		if( rp_GetItemInt(objet_id, item_type_no_bank) == 1 )
 			continue;
 	
 		rp_ClientGiveItem(Client, objet_id, objet_amount);
@@ -1367,8 +1371,13 @@ void ItemSave_SetItems(int client, int saveid){
 
 	Format(query, size, "UPDATE rp_itemsaves SET save='");
 
-	for (int i = 0; i < max; i++)
-		Format(query, size, "%s%d,%d;", query, g_iItems[client][i][STACK_item_id], g_iItems[client][i][STACK_item_amount]);
+	for (int i = 0; i < max; i++) {
+		int object_id = g_iItems[client][i][STACK_item_id];
+		if( StringToInt(g_szItemList[objet_id][item_type_no_bank]) == 1 )
+			continue;
+		
+		Format(query, size, "%s%d,%d;", query, object_id, g_iItems[client][i][STACK_item_amount]);
+	}
 
 	Format(query, size, "%s' WHERE steamid='%s' AND slot=%d", query, SteamID, saveid);
 
@@ -1424,8 +1433,13 @@ public void itemSave_Withdraw_2(Handle owner, Handle hQuery, const char[] error,
 	//
 	amount = g_iUserData[client][i_ItemCount];
 	for (int pos=0; pos < amount ; pos++) {
-		rp_ClientGiveItem(client, g_iItems[client][pos][STACK_item_id], g_iItems[client][pos][STACK_item_amount], true);
-		LogToGame("[TSX-RP] [BANK-ITEM] %L a déposé: %d %s", client, g_iItems[client][pos][STACK_item_amount], g_szItemList[g_iItems[client][pos][STACK_item_id]][item_type_name]);
+		int objet_id = g_iItems[client][pos][STACK_item_id];
+		
+		if( StringToInt(g_szItemList[objet_id][item_type_no_bank]) == 1 )
+			continue;
+		
+		rp_ClientGiveItem(client, objet_id, g_iItems[client][pos][STACK_item_amount], true);
+		LogToGame("[TSX-RP] [BANK-ITEM] %L a déposé: %d %s", client, g_iItems[client][pos][STACK_item_amount], g_szItemList[objet_id][item_type_name]);
 		g_iItems[client][pos][STACK_item_id] = g_iItems[client][pos][STACK_item_amount] = 0;
 	}
 	
@@ -1441,6 +1455,8 @@ public void itemSave_Withdraw_2(Handle owner, Handle hQuery, const char[] error,
 		int objet_amount = StringToInt(szData[1]);
 			
 		if( objet_id <= 0 || objet_id > MAX_ITEMS)
+			continue;
+		if( StringToInt(g_szItemList[objet_id][item_type_no_bank]) == 1 )
 			continue;
 		if( StrEqual(g_szItemList[objet_id][item_type_extra_cmd], "UNKNOWN") )
 			continue;
