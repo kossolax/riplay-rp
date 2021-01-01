@@ -1373,7 +1373,7 @@ void ItemSave_SetItems(int client, int saveid){
 
 	for (int i = 0; i < max; i++) {
 		int object_id = g_iItems[client][i][STACK_item_id];
-		if( StringToInt(g_szItemList[objet_id][item_type_no_bank]) == 1 )
+		if( StringToInt(g_szItemList[object_id][item_type_no_bank]) == 1 )
 			continue;
 		
 		Format(query, size, "%s%d,%d;", query, object_id, g_iItems[client][i][STACK_item_amount]);
