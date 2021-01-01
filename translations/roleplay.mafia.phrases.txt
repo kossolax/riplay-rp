@@ -28,7 +28,7 @@
 	"Mafia_Deguise_Failed"
 	{
 		"fr"	"Impossible de se déguiser pour le moment."
-		"en"	"Unable to disguise at the moment.""		
+		"en"	"Unable to disguise at the moment."
 	}
 	"Mafia_Deguise_Target"
 	{
@@ -62,7 +62,7 @@
 	"Lockpad_Already"
 	{
 		"fr"	"Un cadenas est déja présent sur cette porte."
-		"en"	"A padlock is already on this door.""		
+		"en"	"A padlock is already on this door."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Mafia_Crowbar"
