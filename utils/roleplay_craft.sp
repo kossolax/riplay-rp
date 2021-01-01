@@ -100,7 +100,7 @@ public Action Cmd_Reload(int args) {
 }
 
 public Action CH_ShouldCollide(int ent1, int ent2, bool& result) {
-	PrintToChatAll("collide - %d -- %d -- %d", ent1, ent2, result);
+//	PrintToChatAll("collide - %d -- %d -- %d", ent1, ent2, result);
 	return Plugin_Continue;
 }
 public Action CH_PassFilter(int ent1, int ent2, bool& result) {
