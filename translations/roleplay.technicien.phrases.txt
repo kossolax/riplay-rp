@@ -3,5 +3,6 @@
 	"Machine_Max"
 	{
 		"fr"		"Vous ne pouvez pas avoir de {red}machine{default} supplémentaire."
+		"en"		"You cannot have an additional {red}printer{default}."		
 	}
 }

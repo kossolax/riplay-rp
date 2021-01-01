@@ -3,261 +3,305 @@
 	"Act_KillAtt"
 	{
 		"fr"		"Meurtre avec circonstances atténuantes"
+		"en"		"Murder with legitimate circumstances"		
 	}
 	"Act_KillAttDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Toute atteinte involontaire à la vie d’un citoyen est condamnée à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Any unintentional attack on the life of a citizen is sentenced to a maximum sentence of {red}{1}{default} hours in prison and a {red}${2}{default} fine."		
 	}
 
 	"Act_Kill"
 	{
 		"fr"		"Meurtre"
+		"en"		"Murder"		
 	}
 	"Act_KillDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Toute atteinte volontaire à la vie d’un citoyen est condamnée à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Any willful attack on the life of a citizen is sentenced to a maximum sentence of {red}{1}{default} hours in prison and a {red}${2}{default} fine."		
 	}
 
 	"Act_KillAggr"
 	{
 		"fr"		"Meurtre avec circonstances aggravantes"
+		"en"		"Murder with aggravating circumstances"		
 	}
 	"Act_KillAggrDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Toute atteinte volontaire et préméditée à la vie d’un citoyen est condamnée à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Any willful and premeditated attack on the life of a citizen is condemned to a maximum penalty of {red}{1}{default} hours in prison and a {red}${2}{default} fine."		
 	}
 
 	"Act_KillCT"
 	{
 		"fr"		"Meurtre d'un policier"
+		"en"		"Murder of a policeman"		
 	}
 	"Act_KillCTDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Toute atteinte volontaire à la vie d’un officier des forces de l’ordre est condamnée à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Any intentional attack on the life of a law enforcement officer is sentenced to a maximum penalty of {red}{1}{default} hours in prison and a {red}${2}{default} fine."		
 	}
-
 	"Act_Aggr"
 	{
 		"fr"		"Agression physique"
+		"en"		"Physical assault"		
 	}
 	"Act_AggrDesc"
 	{
 		"#format"	"{1:d},{2:d}"
-		"fr"		"Les coups et blessures involontaires n’ayant pas provoqué des lésions corporelles sont condamnés à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"fr"		"Les coups et blessures involontaires n’ayant pas provoqué des lésions corporelles sont condamnés à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."			
+		"en"		"Unintentional assault and battery not causing bodily harm are sentenced to a maximum penalty of {red}{1}{default} hours in prison and a {red}${2}{default} fine."	
 	}
 
 	"Act_Vol"
 	{
 		"fr"		"Vol"
+		"en"		"Vol"		
 	}
 	"Act_VolDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Tout vol est un acte punis d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Any theft is an act punishable by a maximum penalty of {red}{1}{default} hours in prison and a {red}${2}{default} fine."		
 	}
-
 	"Act_MqConvoc"
 	{
 		"fr"		"Manquement convocation"
+		"en"		"Failure to convene"		
 	}
 	"Act_MqConvocDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Tout manquement à une convocation devant les tribunaux sans motif valable est puni d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Any breach of a summons to court without valid reason is punishable by a maximum penalty of {red}{1}{default} hours in prison and a {red}${2}{default} fine."		
 	}
-
 	"Act_Fake"
 	{
 		"fr"		"Faux aveux / Dénonciations calomnieuses"
+		"en"		"False confessions / Slanderous denunciations"		
 	}
 	"Act_FakeDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Tout faux aveux ou dénonciation calomnieuse est puni d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Any false confession or slanderous denunciation is punishable by a maximum penalty of {red}{1}{default} hours in prison and a {red}${2}{default} fine."		
 	}
 
 	"Act_NuisaSono"
 	{
 		"fr"		"Nuisances sonores"
+		"en"		"Noise nuisance"		
 	}
 	"Act_NuisaSonoDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Toute nuisance sonore est punie d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Any noise nuisance is punishable by a maximum penalty of {red}{1}{default} hours in prison and a {red}${2}{default} fine."		
 	}
-
 	"Act_Insult"
 	{
 		"fr"		"Insultes / irrespect"
+		"en"		"Insults / disrespect"		
 	}
 	"Act_InsultDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Toute insulte est passible d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Any insult is punishable by a maximum sentence of {red}{1}{default} hours in prison and a {red}${2}{default} fine."		
 	}
-
 	"Act_HarcMen"
 	{
 		"fr"		"Harcèlements / Menaces"
+		"en"		"Harassments / Threats"		
 	}
 	"Act_HarcMenDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Tout acte de harcèlement et/ou menaces sont passibles d'une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Any act of harassment and or threats are punishable by a maximum penalty of {red}{1}{default} hours in prison and a {red}${2}{default} fine."		
 	}
 
 	"Act_Obstru"
 	{
 		"fr"		"Obstruction"
+		"en"		"Obstruction"		
 	}
 	"Act_ObstruDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Tout acte obstruant les forces de l’ordre (Masque/Suicide/Pilule/Pots de vins, que ce soit avant ou pendant l’audience/Changement de pseudo délibéré, pendant la recherche du criminel et GHB), ou la fuite délibérée, ou mutinerie, sont passibles d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Any act obstructing the police (such as Mask / Suicide / Drugs / Bribes), whether before or during the hearing / deliberately change of nickname, during the search as well as escaping or mutiny, is punishable by a maximum sentence of {red}{1}{default} hours in prison and a {red}${2}{default} fine."		
 	}
 
 	"Act_BavuPol"
 	{
 		"fr"		"Bavure policière"
+		"en"		"Police abuse"		
 	}
 	"Act_BavuPolDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Tout acte de maltraitance policière (taser, balle perdue, jail/déjail répétitif...) pourra être rapporté devant les tribunaux. La maltraitance est passible de {red}{1}{default}h de prison au maximum, et d'une amende de {red}{2}{default}$ au maximum."
+		"en"		"Any act of police mistreatment (taser, stray bullet, jail / repetitive jail ...) may be reported to the courts. Mistreatment is punishable by {red}{1}{default} hours in prison at most, and a fine of up to ${red}{2}{default}"		
 	}
 
 	"Act_AssocMalf"
 	{
 		"fr"		"Association de malfaiteurs"
+		"en"		"Criminal association"		
 	}
 	"Act_AssocMalfDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Toute association de malfaiteurs (Défense lors de perquisitions notamment) est punissable d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Any association of criminals (Defense during searches in particular) is punishable by a maximum penalty of {red}{1}{default}hours in prison and a {red}${2}{default} fine."		
 	}
 
 	"Act_ProfitVulne"
 	{
 		"fr"		"Profiter de la vulnérabilité d’une personne"
+		"en"		"Taking advantage of a person's vulnerability"		
 	}
 	"Act_ProfitVulneDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Le fait de soumettre une personne à un acte criminel en abusant de sa vulnérabilité ou de sa dépendance à son travail est punis d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende en plus de la peine du crime commis."
+		"en"		"The fact of subjecting a person to a criminal act by abusing his vulnerability or his dependence on his work is punished with a maximum penalty of {red}{1}{default} hours in prison and a {red}${2}{default} fine in addition to the sentence for the crime committed."		
 	}
 
 	"Act_Destruct"
 	{
 		"fr"		"Destruction de biens d’autrui"
+		"en"		"Destruction of property of others"		
 	}
 	"Act_DestructDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Tout acte volontaire ou involontaire de destruction de biens d'autrui et ce quelque soit les méthodes de destruction utilisées, peut-être condamné par {red}{1}{default}h de prison et {red}{2}{default}$ au maximum."
+		"en"		"Any voluntary or involuntary act of destruction of other people's property, whatever the destruction methods used, may be condemned by {red}{1}{default} hours in prison and a maximum fine of {red}${2}{default}."		
 	}
 
 	"Act_ViePrv"
 	{
 		"fr"		"Atteinte à la vie privée"
+		"en"		"Invasion of privacy"		
 	}
 	"Act_ViePrvDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Toute atteinte à la vie privée telle que l’espionnage, ou l’enregistrement d’une conversation intime est punie d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Toute atteinte à la vie privée telle que l’espionnage, ou l’enregistrement d’une conversation intime est punie d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."		
 	}
 
 	"Act_Vol"
 	{
 		"fr"		"Vol"
+		"en"		"Steal"		
 	}
 	"Act_VolDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Tout vol est un acte punis d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Any invasion of privacy such as espionage, or the recording of an intimate conversation is punished with a maximum penalty of {red}{1}{default} hours in prison and a {red}${2}{default} fine."		
 	}
 
 	"Act_IntrusiPrv"
 	{
 		"fr"		"Intrusion dans une propriété privée"
+		"en"		"Trespassing on private property"		
 	}
 	"Act_IntrusiPrvDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Toute violation d’une propriété privée est punie d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Any violation of private property is punishable by a maximum sentence of {red}{1}{default} hours in prison and a ${red}{2}{default} fine."		
 	}
 
 	"Act_IntrusiFede"
 	{
 		"fr"		"Intrusion dans un batiment fédéral"
+		"en"		"Trespassing in a federal building"		
 	}
 	"Act_IntrusiFedeDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Toute violation d’un batiment fédéral est punie d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Any violation of a federal building is punishable by a maximum sentence of {red}{1}{default} hours in prison and a {red}${2}{default} fine."		
 	}
 
 	"Act_UseDrug"
 	{
 		"fr"		"Usage de produits illicites"
+		"en"		"Use of illicit drugs"		
 	}
 	"Act_UseDrugDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Droguer ou alcooliser une personne à son insu est un acte punis d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Drugging or alcoholizing a person without their knowledge is an act punishable by a maximum penalty of {red}{1}{default} hours in prison and a {red}${2}{default} fine."		
 	}
 
 	"Act_IllegTrafc"
 	{
 		"fr"		"Trafic illégal"
+		"en"		"Illegal trafficking"		
 	}
 	"Act_IllegTrafcDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Tout trafic illégal est punis d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Any illegal trafficking is punishable by a maximum sentence of {red}{1}{default} hours in prison and a {red}${2}{default} fine."	
 	}
-
 	"Act_TCorrup"
 	{
 		"fr"		"Tentative de corruption"
+		"en"		"Corruption attempt"		
 	}
 	"Act_TCorrupDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Tout acte de corruption ou de tentative de corruption, est puni d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Any act of corruption or attempted corruption is punishable by a maximum penalty of {red}{1}{default} hours in prison and a {red}${2}{default} fine."		
 	}
-
 	"Act_Escroq"
 	{
 		"fr"		"Escroquerie"
+		"en"		"Fraud"		
 	}
 	"Act_EscroqDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Tout acte d’escroquerie est puni d’une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Any act of fraud is punishable by a maximum penalty of {red}{1}{default} hours in prison and a {red}${2}{default} fine."		
 	}
-
 	"Act_Seq"
 	{
 		"fr"		"Séquestration"
+		"en"		"Sequestration"		
 	}
 	"Act_SeqDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Tout acte de séquestration est passible d'une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Any act of forcible confinement is punishable by a maximum penalty o {red}{1}{default} hours in prison and a {red}${2}{default} fine."		
 	}
 
 	"Act_Pute"
 	{
 		"fr"		"Acte de proxénétisme / prostitution"
+		"en"		"Act of pimping / prostitution"		
 	}
 	"Act_PuteDesc"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Tout acte de proxénétisme ou de prostitution est passible d'une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Any act of pimping or prostitution is punishable by a maximum sentence of {red}{1}{default} hours in prison and a {red}${2}{default} fine."		
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Justice_Acquittement_NonCoupable"
@@ -571,6 +615,7 @@
 	{
 		"#format"	"{1:s}"
 		"fr"	"{1} a été jugé {red}coupable{default} des articles suivant:"
+		"en"	"{1} was found {red}guilty{default} of the following crimes:"		
 	}
 	"Tribunal_Menu_Condamner_Given"
 	{

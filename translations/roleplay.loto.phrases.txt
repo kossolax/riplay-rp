@@ -25,13 +25,13 @@
 	{
 		"#format"	"{1:d}"
 		"fr"	"{red}BANKRUPT!{default} Vous avez perdu {red}{1}{default}$!"
-		"en"	"{red}BANKRUPT!{default} You have lost {red}{1}{default}$!"
+		"en"	"{red}BANKRUPT!{default} You have lost {red}${1}{default}!"
 	}
 	"SlotMachine_WinCash"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Vous avez gagné {green}{1}{default}$!"
-		"en"	"You have won {green}{1}{default}$!"
+		"en"	"You have won {green}${1}{default}!"
 	}
 	"SlotMachine_Menu"
 	{
@@ -86,7 +86,7 @@
 	{
 		"#format"	"{1:s},{2:d},{3:s},{4:d}"
 		"fr"	"{1} lance {2} dés et fait {3}, soit un total de {green}{4}{default}!"
-		"fr"	"{1} rolls {2} dice and gets {3}, for a total of {green}{4}{default}!"
+		"en"	"{1} rolls {2} dice and gets {3}, for a total of {green}{4}{default}!"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"YouFeelLuck"
@@ -103,7 +103,7 @@
 	"Lotery_OnlyOne_Validated"
 	{
 		"fr"	"Votre ticket a été validé! Un tirage exceptionnel pour la brocante de Noël aura lieu mercredi vers 21h30."
-		"en"	"Your ticket has been validated! A special raffle for the Christmas flea market will take place on Wednesday around 9:30 p.m."
+		"en"	"Your ticket has been validated! A special raffle for the Christmas flea market will take place on Wednesday around 9:30 pm."
 	}
 	"Lotery_OnlyOne_Refund"
 	{
@@ -119,7 +119,7 @@
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Vous avez gratté {green}{1}{default} ticket(s), la cagnotte totale est de: {green}{2}{default}$."
-		"en"		"You have scratched {green}{1}{default} ticket(s), the total amount of the cagnotte is: {green}{2}{default}$."
+		"en"		"You have scratched {green}{1}{default} ticket(s), the total amount of the cagnotte is: {green}${2}{default}."
 	}
 	"Lotery_Cagnotte"
 	{
@@ -131,7 +131,7 @@
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"	"Vous avez {1} ticket(s) de {2}$.\nCombien voulez-vous en gratter?"
-		"en"	"You have {1} ticket(s) for {2}$.\nHow many do you want to scratch?"
+		"en"	"You have {1} ticket(s) for ${2}.\nHow many do you want to scratch?"
 	}
 	"Lotery_UntilWin"
 	{
@@ -152,7 +152,7 @@
 	"Lotery_Validated"
 	{
 		"fr"	"Votre ticket a été validé. Les tirages ont lieu le {red}mardi{default} et le {red}samedi{default} à {red}21h{default}."
-		"en"	"Your ticket has been validated. Draws take place on {red}tuesday{default} and {red}saturday{default} at {red}9:00p.m.{default}."
+		"en"	"Your ticket has been validated. Draws take place on {red}tuesday{default} and {red}saturday{default} at {red}9:00pm.{default}."
 	}
 	"Lotery_Win"
 	{
@@ -169,18 +169,18 @@
 	{
 		"#format"	"{1:s},{2:d}"
 		"fr"	"Le gagnant de la loterie est... {1}{default} et remporte {green}{2}{default}$!"
-		"en"	"The winner of the lottery is... {1}{default} and wins {green}{2}{default}$!"
+		"en"	"The winner of the lottery is... {1}{default} and wins {green}${2}{default}!"
 	}
 	"Lotery_Cagnotte_Second"
 	{
 		"#format"	"{1:s},{2:d}"
 		"fr"	"suivi de.... {1}{default} qui remporte {yellow}{2}{default}$!"
-		"en"	"followed by.... {1}{default} who wins {yellow}{2}{default}$!"
+		"en"	"followed by.... {1}{default} who wins {yellow}${2}{default}!"
 	}
 	"Lotery_Cagnotte_Third"
 	{
 		"#format"	"{1:s},{2:d}"
-		"fr"	"{1}{default} remporte le lot de consolation de {red}{2}{default}$!"
+		"fr"	"{1}{default} remporte le lot de consolation de {red}${2}{default}!"
 		"en"	"{1}{default} wins the consolation prize of {red}{2}{default}$!"
 	}
 	// ----------------------------------------------------------------------------------------------
@@ -210,7 +210,7 @@
 	"Jeton_Which_Money_Give"
 	{
 		"fr"	"Vous avez reçu {green}{1}{default}$!"
-		"en"	"You have received {green}{1}{default}$!"
+		"en"	"You have received {green}${1}{default}!"
 	}
 	"Jeton_Which_Item_Amount"
 	{

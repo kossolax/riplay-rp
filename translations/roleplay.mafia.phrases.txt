@@ -4,107 +4,131 @@
 	{
 		"#format"	"{1:.1f}"
 		"fr"	"Impossible de crocheter cette porte pour encore {red}{1}{default} minute(s)"
+		"en"	"Cannot pick this door for another {red}{1}{default} minute(s)"		
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Mafia_BlackMarket"
 	{
 		"fr"		"Marché noir de la Mafia:"
+		"en"		"Mafia Black Market:"		
 	}
 	"Mafia_BlackMarket_Item"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Objets ({1})"
+		"en"		"Items ({1})"	
 	}
 	"Mafia_BlackMarket_Weapon"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Armes ({1})"
+		"en"		"Weapons ({1})"		
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Mafia_Deguise_Failed"
 	{
 		"fr"	"Impossible de se déguiser pour le moment."
+		"en"	"Unable to disguise at the moment.""		
 	}
 	"Mafia_Deguise_Target"
 	{
 		"#format"	"{1:s}"
 		"fr"	"Vous vous êtes déguisé en tant que {red}{1}{default}."
+		"en"	"You disguised yourself as {red}{1}{default}."		
 	}
 	"Mafia_Deguise_Ended"
 	{
 		"fr"	"Vous n'êtes plus déguisé."
+		"en"	"You are no longer in disguise."		
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Lockpad_Broken"
 	{
 		"fr"	"Le cadenas a été détruit."
+		"en"	"The padlock has been destroyed."		
 	}
 	"Lockpad_BrokenYours"
 	{
 		"#format"	"{1:s}"
 		"fr"	"Votre cadenas placé sur la porte {red}{1}{default}, a été {red}détruit{default}."
+		"en"	"Your lock placed on the door {red}{1}{default}, has been {red}destroyed{default}."		
 	}
 	"Lockpad_Open"
 	{
 		"#format"	"{1:s}"
 		"fr"	"Votre cadenas placé sur la porte {red}{1}{default}, a été {red}forcé{default}."
+		"en"	"Your lock placed on the door {red}{1}{default}, has been {red}forced open{default}."		
 	}
 	"Lockpad_Already"
 	{
 		"fr"	"Un cadenas est déja présent sur cette porte."
+		"en"	"A padlock is already on this door.""		
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Mafia_Crowbar"
 	{
 		"fr"		"Le pied de biche est utilisable uniquement sur un {red}distributeur{default}, sur un {red}téléphone{default}, {red}l'armurerie{default} police, un {red}plant{default} de drogue, ou une {red}imprimante{default}."
+		"en"		"The crowbar can only be used on a {red}ATM{default}, {red}payphone{default}, {red}police armory{default}, {red}drug plants{default} or a {red}printer{default}."		
 	}
 	"Crowbar_FauxBillet"
 	{
 		"fr"		"Quelqu'un vole vos {red}faux-billets{default}."
+		"en"		"Someone is stealing your {red}fake tickets{default}."		
 	}
 	"Crowbar_Drugs"
 	{
 		"fr"		"Quelqu'un vole votre {red}drogue{default}."
+		"en"		"Someone is stealing your {red}drug{default}."		
 	}
 	"Crowbar_Distrib"
 	{
 		"fr"		"Quelqu'un vole votre {red}distributeur{default}."
+		"en"		"Someone is stealing your {red}ATM money{default}."		
 	}
 	"Crowbar_Distrib_Failed"
 	{
 		"fr"		"Ce distributeur est vide!"
+		"en"		"The ATM is empty!"		
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Mafia_Crowbar_Door"
 	{
 		"fr"		"== Mafia: Ouverture d'une porte"
+		"en"		"== Mafia: Opening a door"		
 	}
 	"Mafia_Crowbar_Distrib"
 	{
 		"fr"		"== Mafia: Crochetage d'un distributeur"
+		"en"		"== Mafia: Breaking into a ATM"		
 	}
 	"Mafia_Crowbar_Armurerie"
 	{
 		"fr"		"== Mafia: Crochetage d'une armurerie"
+		"en"		"== Mafia: Breaking into an armory"		
 	}
 	"Mafia_Crowbar_Imprimante"
 	{
 		"fr"		"== Mafia: Crochetage d'une imprimante"
+		"en"		"== Mafia: Breaking into a printer"		
 	}
 	"Mafia_Crowbar_Photocop"
 	{
 		"fr"		"== Mafia: Crochetage d'une photocopieuse"
+		"en"		"== Mafia: Breaking into a photocopier"		
 	}
 	"Mafia_Crowbar_Phone"
 	{
 		"fr"		"== Mafia: Crochetage d'un téléphone"
+		"en"		"== Mafia: Breaking into a payphone"		
 	}
 	"Mafia_Crowbar_Plant"
 	{
 		"fr"		"== Mafia: Crochetage d'un plant de drogue"
+		"en"		"== Mafia: Breaking into a drug plant"		
 	}
 	"Mafia_Crowbar_Hack"
 	{
 		"fr"		"== Mafia: Hack d'un distributeur personnel"
+		"en"		"== Mafia: Hacking an ATM"		
 	}
 }

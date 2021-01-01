@@ -40,32 +40,39 @@
 	"Artisan_SpecA"
 	{
 		"fr"		"Vous avez la possibilité de choisir de maîtriser une spécialitée d'artisanat. Vous resterez capable de recycler et craft les objets classiques, mais pas ceux d'une maitrise."
+		"en"		"You have the option of choosing to master a crafting class. You will still be able to recycle and craft classic items, but not mastery items."		
 	}
 	"Artisan_SpecB"
 	{
 		"fr"		"Une fois votre spécialitée choisie, vous débloquerez une partie des nouveaux crafts. Ce choix est définitif et ne peut être changé. Vous devrez donc collaborer avec d'autres personnes maitrisant une autre spécialité pour obtenir l'objet final."
+		"en"		"Once you have chosen your class, you will unlock some new crafts. This choice is final and cannot be changed. You will therefore have to collaborate with other people mastering another class to obtain the final item."		
 	}
 	"Artisan_Confirm"
 	{
 		"#format"	"{1:t}"
 		"fr"		"Attention, ce choix est définitif et ne peut être changé.\nÊtes vous sûre de vouloir être {1}?"
+		"en"		"Please note, this choice is final and cannot be changed. \nAre you sure you want to be  {1}?"		
 	}
 	"Artisan_Spec_1"
 	{
 		"fr"		"Forgeron"
+		"en"		"Blacksmith"		
 	}
 	"Artisan_Spec_2"
 	{
 		"fr"		"Ingénieur"
+		"en"		"Engineer"		
 	}
 	"Artisan_Spec_3"
 	{
 		"fr"		"Alchimiste"
+		"en"		"Alchemist"		
 	}
 	"Artisan_Change"
 	{
 		"#format"	"{1:t}"
 		"fr"		"Vous êtes maintenant: {green}{1}{default}!"
+		"en"		"You are now: {green}{1}{default}!"		
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Artisan_Ask"
@@ -76,7 +83,7 @@
 	"Artisan_Ask_None"
 	{
 		"fr"	"Il n'y a {red}pas{default} d'artisan {red}spécialisé{default} disponible aux alentours."
-		"en"	"There is {red}no{default} skilled craftsman available around."
+		"en"	"There is {red}no{default} skilled craftsman available."
 	}
 	"Artisan_Ask_Line"
 	{

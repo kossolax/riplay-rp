@@ -151,15 +151,18 @@
 	"Error_YouMustBeAliveToTalk"
 	{
 		"fr"	"Vous devez être en vie pour parler."
+		"en"	"You must be alive to speak."		
 	}
 	"Error_YouMustWaitToTalk"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Vous devez attendre encore {1} seconde(s), avant d'utiliser à nouveau le chat général."
+		"en"	"You must wait another {1} second(s), before using general chat again."		
 	}
 	"Error_YouMustNotSpam"
 	{
 		"fr"	"Votre message a été bloqué afin d'éviter d'éventuel spam."
+		"en"	"Your message has been blocked to avoid possible spam."		
 	}
 	"Error_WrongCode"
 	{
@@ -184,16 +187,19 @@
 	{
 		"#format"	"{1:d}"
 		"fr"		"Vous avez gagné {green}{1}{default} points d'expérience."
+		"en"		"You have gained {green}{1}{default} experience point(s)."		
 	}
 	"LEVEL_UP"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Vous avez atteint le niveau {green}{1}{default}."
+		"en"		"You have reached level {green}{1}{default}."		
 	}
 	"LEVEL_RANK"
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"		"Vous avez atteint le niveau {green}{1}{default}, vous êtes maintenant {green}{2}{default}!"
+		"en"		"You have reached level {green}{1}{default}, you are now {green}{2}{default}!"		
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Steal_Starting"
@@ -579,7 +585,8 @@
 	}
 	"rp_gyrophare"
 	{
-		"fr"	"un gyrophrase"
+		"fr"	"un gyrophare"
+		"en"	"lights"		
 	}
 	"rp_healbox"
 	{
@@ -959,6 +966,7 @@
 	"weapon_knife"
 	{
 		"fr"	"Couteau"
+		"fr"	"Knife"		
 	}
 	"weapon_knife_css"
 	{
