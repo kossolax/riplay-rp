@@ -1200,7 +1200,8 @@ public Action fwdStealItem(int client, int target) {
 	return Plugin_Continue;
 }
 public Action fwdFrame(int client) {
-	static float fLast[65][3], count[65];
+	static float fLast[65][3];
+	static int count[65];
 	
 	if( g_iCurrentState == view_as<int>(ps_begin) ) {
 		
@@ -1232,9 +1233,9 @@ public Action fwdFrame(int client) {
 			if( GetVectorDistance(fNow, fLast[client]) > 50.0 ) {
 				count[client]++;
 				
-				if( count >= 5 ) {
+				if( count[client] >= 5 ) {
 					GDM_RegisterWalking(client);
-					count = 0;
+					count[client] = 0;
 				}
 			}
 			
