@@ -296,17 +296,7 @@ public Action Cmd_GiveItem(int args) {
 	int client = GetCmdArgInt(3);
 	int item_id = GetCmdArgInt(args);
 	
-	if( Weapon_ShouldBeEquip(Arg1) && Client_HasWeapon(client, Arg1) ) {
-		if( item_id > 0 ) {
-			ITEM_CANCEL(client, item_id);
-		}
-		return Plugin_Handled;
-	}
-	
 	int ent = GivePlayerItem(client, Arg1);
-	
-	if( Weapon_ShouldBeEquip(Arg1) )
-		EquipPlayerWeapon(client, ent);
 	
 	if( StrEqual(Arg1, "weapon_hammer") ) {
 		g_iMeleeHP[client][1] = MELEE_HP;
