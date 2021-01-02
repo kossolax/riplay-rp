@@ -521,6 +521,7 @@ public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerDataLoaded, fwdLoaded);
 	rp_HookEvent(client, RP_OnPlayerBuild,	fwdOnPlayerBuild);
 	rp_HookEvent(client, RP_OnPlayerUse, fwdOnPlayerUse);
+	rp_HookEvent(client, RP_OnFrameSeconde, fwdOnFrame);
 	
 	g_bDataLoaded[client] = false;
 	for (int i = 0; i < 64; i++) {
@@ -531,8 +532,28 @@ public void OnClientPostAdminCheck(int client) {
 	GetClientAuthId(client, AUTH_TYPE, steamid, sizeof(steamid));
 	Format(query, sizeof(query), "SELECT `appartid`, `props` FROM `rp_appart` WHERE `steamid`='%s';", steamid);
 	SQL_TQuery(rp_GetDatabase(), SQL_QueryProps, query, client, DBPrio_Low);
+}
+public Action fwdOnFrame(int client) {
+	int appart = rp_GetPlayerZoneAppart(client);
+	float src[3], dst[3];
 	
-	
+	if( appart > 0 && rp_GetClientKeyAppartement(client, appart) ) {
+		for (int j = 0; j < g_iDirtyCount[appart]; j++) {
+			dst = g_flDirtPos[appart][j];
+			dst[2] += 8.0;
+			
+			TE_SetupBeamRingPoint(dst, 32.0, 33.0, g_cBeam, g_cGlow, 0, 0, 1.0, 8.0, 0.0, {200, 32, 32, 50}, 0, 0);
+			TE_SendToClient(client);
+			
+			if( GetRandomInt(0, 10) ) {
+				GetClientAbsOrigin(client, src);
+				src[2] += 32.0;
+				
+				TE_SetupBeamPoints(src, dst, g_cBeam, g_cGlow, 0, 0, 1.0, 8.0, 8.0, 0, 0.0, { 200, 32, 32, 50 }, 0);
+				TE_SendToClient(client);
+			}
+		}
+	}
 }
 public void SQL_QueryProps(Handle owner, Handle hQuery, const char[] error, any client) {
 	static char save[PLATFORM_MAX_PATH * 1 * 64 + 1024], data[64][PLATFORM_MAX_PATH + 256], row[8][PLATFORM_MAX_PATH];
