@@ -5,25 +5,12 @@ var async = require('async')
 var stream = require('stream')
 var es = require("event-stream")
 var mysql = require('mysql2');
-var chokidar = require('chokidar');
-var Tail = require('tail').Tail;
+var hound = require('hound');
 
 var server = {};
 require('./auth.js')(server);
 var conn;
 
-function chunk(array, size) {
-	const chunked_arr = [];
-	for (let i = 0; i < array.length; i++) {
-		const last = chunked_arr[chunked_arr.length - 1];
-		if (!last || last.length === size) {
-			chunked_arr.push([array[i]]);
-		} else {
-			last.push(array[i]);
-		}
-	}
-	return chunked_arr;
-}
 function steamIDToProfile(steamID) {
 	if( steamID == undefined ) return null;
 
@@ -102,142 +89,124 @@ var CollectEnabled = 0;
 var sql1 = "INSERT INTO `rp_bigdata` (`date`, `steamid`, `target`, `amount`, `line`, `type`, `fileId`) VALUES ?";
 var sql2 = "INSERT INTO `rp_bigdata` (`date`, `steamid`, `target`, `amount`, `line`, `type`, `fileId`) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-function parseDate(line) {
-	var time = filter["date"].exec(line);
-	if( time )
-		return new Date(time[3], time[1]-1, time[2], time[4], time[5], time[6], 0);
+
+collect(files);
+function collect(files) {
+  if( CollectEnabled == 1 ) return;
+  CollectEnabled = 1;
+  conn.query("SELECT * FROM `rp_bigdata_files`", function(err, row) {
+
+    var fData = {};
+    for(var i in row) { fData[row[i].name] = row[i]; }
+
+    async.each(files, function(file, callback) {
+      var fi  = fs.statSync(dir+file);
+
+      if( fi["size"] < 8400 ) return callback();
+      if( fData[file] && (fi['mtime'] <= fData[file].stop || fi['size'] <= fData[file]['size']) ) { /*console.log("skip");*/ return callback(); }
+
+      var data = new Array();
+      var type, time, steamID, m, first, last = [], target, amount, i = 0;
+
+      var s = fs.createReadStream(dir+file).pipe(es.split()) .pipe(es.mapSync(function(line) {
+        if( line != "" ) {
+          i++;
+          if( !fData[file] || (fData[file] && i>fData[file].line) ) {
+            if( first === undefined )
+              first = line;
+            last[0] = last[1];
+            last[1] = line;
+            time = filter["dateSteamID"].exec(line);
+            if( time ) {
+              //console.log("new     : " +line);
+              m = new Date(time[3], time[1]-1, time[2], time[4], time[5], time[6], 0);
+              steamID = time[7];
+              type = 'notfound';
+              for(var j=2; j<Object.keys(filter).length; j++) {
+
+                time = filter[Object.keys(filter)[j]].exec(line);
+
+                if( time ) {
+
+                  type = Object.keys(filter)[j];
+                  if( type == 'other2' )
+                    type = 'other'
+
+                  target = (time[2] ? time[2] : time[1]);
+                  amount = parseInt(time[2] ? time[1] : null);
+		  if( isNaN(amount) )
+			amount = null;
+                  break;
+                }
+              }
+              if( type != 'notfound' ) {
+                data.push([m, steamIDToProfile(steamID), steamIDToProfile(target), amount, line, type]);
+                //console.log("data found" + [m, steamID, target, amount, line, type] );
+              }
+            }
+          }
+          else {
+            if( i+10 > fData[file].line ) {
+              //console.log("skipped : " + (fData[file]) + "   " + (i>=fData[file].line) + "   "+ line);
+            }
+          }
+        }
+      })
+      .on('end', function() {
+        if( data.length > 0 ) {
+            try {
+              var time = filter["date"].exec(first);
+              first = new Date(time[3], time[1]-1, time[2], time[4], time[5], time[6], 0);
+              time = filter["date"].exec( (last[1].length > "L 11/21/2015 - 23:35:53:".length ?last[1]:last[0]) );
+              last = new Date(time[3], time[1]-1, time[2], time[4], time[5], time[6], 0);
+
+              if( fData[file] ) {
+                conn.query("UPDATE `rp_bigdata_files` SET `stop`=?, `size`=?, `line`=? WHERE `id`=?;", [last, fi['size'], i, fData[file].id], function(err, row) {
+                  for(var i in data) {
+			data[i].push(fData[file].id);
+		  }
+                  conn.query(sql1, [data], function(err, row) {
+			console.log(err);
+			return callback();
+	 	 });
+                });
+              }
+              else {
+                conn.query("INSERT INTO `rp_bigdata_files` (`name`, `start`, `stop`, `size`, `line`) VALUES (?, ?, ?, ?, ?);", [file, first, last, fi['size'], i], function(err, row) {
+                  for(var i in data) { data[i].push(row.insertId);  }
+                  conn.query(sql1, [data], function(err, row) { return callback(); });
+                });
+              }
+            } catch ( err ) {
+              console.log("something happen while parsing date:");
+              console.log(err);
+              return callback();
+            }
+        }
+        else
+          return callback();
+      }));
+    }, function(err) {
+//      console.log("parsing ended");
+      if( files.length > 1 )
+        watchUpdate();
+      CollectEnabled = 0;
+    });
+  });
 }
-function parseLine(line) {
-	var time = filter["dateSteamID"].exec(line);
-	if( time ) {
-		var m = new Date(time[3], time[1]-1, time[2], time[4], time[5], time[6], 0);
-		var steamID = time[7];
-		var type = 'notfound';
-		var target;
-		var amount;
 
-		for(var j=2; j<Object.keys(filter).length; j++) {
+function watchUpdate() {
+//  return;
+  if( WatchEnabled == 1 ) return;
+  WatchEnabled = 1;
+  var watcher = hound.watch(dir);
 
-			time = filter[Object.keys(filter)[j]].exec(line);
-
-			if( time ) {
-
-				type = Object.keys(filter)[j];
-				if( type == 'other2' )
-					type = 'other'
-
-				target = (time[2] ? time[2] : time[1]);
-				amount = parseInt(time[2] ? time[1] : null);
-				if( isNaN(amount) )
-					amount = null;
-				break;
-			}
-		}
-		if( type != 'notfound' && type != 'debug' )
-			return [m, steamIDToProfile(steamID), steamIDToProfile(target), amount, line.slice(0, 250).trim(), type]
-	}
+  watcher.on('create', cb);
+  watcher.on('change', cb);
+  watcher.on('delete', cb);
+  function cb(file, stat) {
+    file = file.replace(dir+"/", "");
+    collect([file]);
+  }
 }
 
-var files = {};
-conn.query("SELECT * FROM `rp_bigdata_files`", function(err, row) {
-	for(const i in row) {
-		files[row[i]["name"]] = row[i];
-	}
-
-	var yesterday = new Date().getTime() - (1 * 6 * 60 * 60 * 1000)
-	var fileToParse = [];
-	var fileToWatch = [];
-	fs.readdirSync(dir).sort().map( i => {
-		if( files[i] == undefined ) {
-			fileToParse.push(i);
-			if( (fs.statSync(dir + i).mtime).getTime() > yesterday ) {
-				fileToWatch.push(i);
-			}
-		}
-		else if( (fs.statSync(dir + i).mtime).getTime() > yesterday ) {
-			fileToWatch.push(i);
-		}
-	});
-
-	var loading = fileToParse.length;
-
-	function cb() {
-		loading--;
-
-		if( loading <= 0 ) {
-			fileToWatch.sort().map( i => watchFile(i) );
-			var watcher = chokidar.watch(dir+"*.log", {usePolling: true, interval: 100, ignoreInitial: true});
-			watcher.on('add', (ev, file) => {
-				console.log("New file to watch: ", file);
-				watchFile(file.replace(dir, ""));
-			});
-		}
-	}
-
-	fileToParse.sort().map( i => parseNewFile(i, cb) );
-	if( fileToParse.length == 0 )
-		cb();
-});
-
-function watchFile(file) {
-	function callback(fileId) {
-		console.log("Watching", file);
-
-		var watcher = chokidar.watch(dir + file, {usePolling: true, interval: 100, ignoreInitial: true});
-		watcher.on("change", path => {
-			const lines = fs.readFileSync(dir+file, 'utf8').split("\n");
-			const data = lines.slice(files[file]["line"]).map( i => parseLine(i) ).filter(Boolean);
-
-			if( data.length > 0 ) {
-                        	for(var i in data) { data[i].push(fileId);}
-
-				var q = conn.query(sql1, [data]);
-
-				files[file]["line"] = lines.length;
-				conn.query("UPDATE `rp_bigdata_files` SET `stop`=?, `line`=? WHERE `id`=?", [data[data.length-1][0], files[file]["line"], fileId]);
-			}
-		});
-	}
-
-	if( files[file] == undefined )
-		parseNewFile(file, callback);
-	else
-		callback(files[file]["id"]);
-
-}
-function parseNewFile(file, cb) {
-	let data = fs.readFileSync(dir+file, 'utf8').split("\n");
-	let length = data.length
-
-	let first = parseDate(data[0]);
-	let last =  null;
-	for( let i = length -1; i>=0; i--) {
-		last = parseDate(data[i]);
-		if( last )
-			break;
-	}
-
-	if( first === undefined ) {
-		console.log(file);
-	}
-
-	data = data.map( i => parseLine(i) ).filter(Boolean);
-
-	conn.query("INSERT INTO `rp_bigdata_files` (`name`, `start`, `stop`, `size`, `line`) VALUES (?, ?, ?, ?, ?);", [file, first, last, 0, length], function(err, row) {
-
-		files[file] = {
-			start: first,
-			stop: last,
-			line: length,
-			id: row.insertId
-		}
-
-		if( data.length > 0 ) {
-			for(var i in data) { data[i].push(row.insertId);}
-			chunk(data, 4096).map( i => { conn.query(sql1, [i]) });
-		}
-
-		if( cb )
-			cb(row.insertId);
-	});
-}

@@ -422,8 +422,6 @@ server.get('/user/admin', function (req, res, next) {
    * @apiParam {String} reason
    */
   server.put('/user/double/deny/:target/:reason', function (req, res, next) {
-    if( req.params['id'] == 0 )
-      return res.send(new ERR.BadRequestError("InvalidParam"));
 
     server.conn.query(server.getAuthSteamID, [req.headers.auth], function(err, row) {
       if( err ) return res.send(new ERR.InternalServerError(err));
@@ -435,7 +433,7 @@ server.get('/user/admin', function (req, res, next) {
       server.conn.query("INSERT INTO `rp_double_contest` (`steamid`, `target`, `approuved`) VALUES (?, ?, ?);", [SteamID, req.params['target'], parseInt(req.params['reason'])], function(err, rows) {
 	if( err ) return res.send(new ERR.BadRequestError("Impossible de contester ce double-compte."));
 
-        sendmail({from: 'account@ts-x.eu', to: 'gozer@riplay.fr', subject: 'Double compte: '+ UserName, html: mail }, function(err, reply) {
+        sendmail({from: 'noreply@riplay.fr', to: 'genesys@riplay.fr', subject: 'Double compte: '+ UserName, html: mail }, function(err, reply) {
           return res.send("Votre contestation va être annalysée sous les 24 heures.");
         });
       });
