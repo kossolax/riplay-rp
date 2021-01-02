@@ -233,7 +233,7 @@
 	}
 	"eventSetJobMenu"
 	{
-		"fr"	"Sa place dans le job bien a été modifiée."
+		"fr"	"Sa place dans le job a bien été modifiée."
 	}
 	"OpenBossPayMenu"
 	{
