@@ -169,6 +169,15 @@ public Action OnWeaponCanUse(int client, int weapon) {
 	if( (g_iWeaponStolen[weapon]+30) > GetTime() ) {
 		g_flUserData[client][fl_LastStolen] = GetGameTime();
 	}
+	
+	char classname[64];
+	GetEntityClassname(weapon, classname, sizeof(classname));
+	if( StrEqual(classname, "weapon_knife") ) {
+		if( !Client_HasWeapon(client, classname) ) {
+			EquipPlayerWeapon(client, weapon);
+			return Plugin_Continue;
+		}
+	}
 
 	return Plugin_Continue;
 }
