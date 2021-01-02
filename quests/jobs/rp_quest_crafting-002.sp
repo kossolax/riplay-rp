@@ -45,15 +45,26 @@ public void OnAllPluginsLoaded() {
 }
 // ----------------------------------------------------------------------------
 public bool fwdCanStart(int client) {
-	if( Client_HasWeapon(client, "weapon_hammer") || Client_HasWeapon(client, "weapon_axe") || Client_HasWeapon(client, "weapon_spanner") ) {
-		if( !Client_HasWeapon(client, QUEST_WEAPON) )
-			return false;
+	char model1[PLATFORM_MAX_PATH], model2[PLATFORM_MAX_PATH], tmp[32];
+	
+	if( Client_HasWeapon(client, "weapon_knife") )
+		return false;
+	
+	int wpnid = Client_GetWeapon(client, "weapon_melee");
+	if( wpnid > 0 ) {
+		Entity_GetModel(wpnid, model1, sizeof(model1));
+		
+		Format(tmp, sizeof(tmp), "%s", QUEST_WEAPON);
+		ReplaceString(tmp, sizeof(tmp), "weapon_", "v_");
+		Format(model2, sizeof(model2), "models/weapons/%s.mdl", tmp);
+		
+		return StrEqual(model1, model2);
 	}
 	return true;
 }
 
 public void Q1_Start(int objectiveID, int client) {
-	if( !Client_HasWeapon(client, QUEST_WEAPON) ) {
+	if( !Client_HasWeapon(client, "weapon_melee") ) {
 		ServerCommand("rp_giveitem_melee %s 0 %d 0", QUEST_WEAPON, client);
 	}
 	
