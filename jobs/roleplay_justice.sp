@@ -836,7 +836,7 @@ Menu AUDIENCE_Identity(int& client, int a, int b, int c) {
 			
 			rp_SetClientBool(client, b_isFemale, !rp_GetClientBool(client, b_isFemale));
 			
-			PrintToChatZone( rp_GetPlayerZone(client) , "%T", "Tribunal_Menu_Sexe_Given", client_name, rp_GetClientBool(client, b_isFemale) ? "a_female" : "a_male");
+			PrintToChatZone( rp_GetPlayerZone(client) , "" ...MOD_TAG... " %T", "Tribunal_Menu_Sexe_Given", client_name, rp_GetClientBool(client, b_isFemale) ? "a_female" : "a_male");
 		}
 		else {
 			CPrintToChat(a, "" ...MOD_TAG... " %T", "Tribunal_Menu_Sexe_Deny", client_name);			

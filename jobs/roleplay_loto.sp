@@ -261,9 +261,9 @@ public Action Cmd_de(int client, char[] arg) {
 	GetClientName2(client, client_name, sizeof(client_name), false);
 	
 	if( count == 1 )
-		PrintToChatClientArea(client, "%T", "Dice_One", client, client_name, k);
+		PrintToChatClientArea(client, "" ...MOD_TAG... " %T", "Dice_One", client, client_name, k);
 	else
-		PrintToChatClientArea(client, "%T", "Dice_Multiple", client, client_name, count, tmp, k);
+		PrintToChatClientArea(client, "" ...MOD_TAG... " %T", "Dice_Multiple", client, client_name, count, tmp, k);
 	
 	return Plugin_Handled;
 }
