@@ -367,7 +367,7 @@ stock int DateToTimestamp(const char[] szDate) {
 }
 // ----------------------------------------------------------------------------
 stock void PrintToChatClientArea(int client, const char[] message, any...) {
-	char buffer[250];
+	char buffer[MAX_MESSAGE_LENGTH];
 	VFormat(buffer, sizeof(buffer), message, 3);
 	
 	for (int i = 1; i <= MaxClients; i++) {
@@ -377,7 +377,7 @@ stock void PrintToChatClientArea(int client, const char[] message, any...) {
 			continue;
 		
 		if (rp_IsTargetHear(i, client)) {
-			CPrintToChat(i, "" ...MOD_TAG... " %s", buffer);
+			CPrintToChat(i, buffer);
 		}
 	}
 }
@@ -392,7 +392,7 @@ stock void PrintToChatZone(int zoneID, const char[] message, any...) {
 			continue;
 		
 		if (rp_GetPlayerZone(i) == zoneID) {
-			CPrintToChat(i, "" ...MOD_TAG... " %s", buffer);
+			CPrintToChat(i, buffer);
 		}
 	}
 }
