@@ -314,17 +314,11 @@ public Action cmd_GiveWeaponEvent(int client, int args) {
 	
 		if( GetZoneBit( GetPlayerZone(target) ) & BITZONE_EVENT) {
 			
-			if( Weapon_ShouldBeEquip(Arg2) && Client_HasWeapon(target, Arg2) )
-				continue;
-			
 			if( (StrContains(Arg2, "weapon_knife") == 0 || StrContains(Arg2, "weapon_bayonet") == 0) && Client_HasWeapon(target, "weapon_knife") )
 				continue;
 			
 			int analyse = 3;
 			int wepId = GivePlayerItem(target, Arg2);
-			
-			if( Weapon_ShouldBeEquip(Arg2) )
-				EquipPlayerWeapon(target, wepId);
 			
 			CreateTimer(0.1, Timer_CheckWeapon, wepId, TIMER_REPEAT);
 			
