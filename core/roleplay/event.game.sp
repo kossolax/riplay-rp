@@ -253,8 +253,8 @@ public void OnEntityCreated(int entity, const char[] classname)  {
 	g_bWeaponFireRate[entity] = false;
 	g_iEntityCount++;
 	
-	if( StrEqual(classname, "smokegrenade_projectile") || StrEqual(classname, "flashbang_projectile") ) {
-		SDKHook(entity, SDKHook_Think, THINK_Grenade);
+	if( StrEqual(classname, "smokegrenade_projectile") || StrEqual(classname, "flashbang_projectile") || StrEqual(classname, "hegrenade_projectile") || StrEqual(classname, "flashbang_projectile") ) {
+		RequestFrame(CB_Nade, EntIndexToEntRef(entity));
 	}
 	
 	strcopy(g_szEntityName[entity], sizeof(g_szEntityName[]), classname);
@@ -265,14 +265,29 @@ public void OnEntityCreated(int entity, const char[] classname)  {
 	rp_SetBuildingData(entity, BD_owner, 0);
 	//g_iWeaponsBallType
 }
+public void CB_Nade(any ref) {
+	char classname[128];
+	int entity = EntRefToEntIndex(ref);
+	if( IsValidEdict(entity) && IsValidEntity(entity) ) {
+		GetEdictClassname(entity, classname, sizeof(classname));
+		
+		if( StrEqual(classname, "smokegrenade_projectile") || StrEqual(classname, "flashbang_projectile") || StrEqual(classname, "hegrenade_projectile") || StrEqual(classname, "flashbang_projectile") ) {
+			if( rp_GetZoneBit(rp_GetPlayerZone(entity)) & BITZONE_PEACEFULL ) {
+				AcceptEntityInput(entity, "Kill");
+			}
+			else {
+				Entity_SetSolidType(entity, SOLID_VPHYSICS);
+				Entity_SetSolidFlags(entity, FSOLID_TRIGGER );
+				Entity_SetCollisionGroup(entity, COLLISION_GROUP_PLAYER);
+				
+				SDKHook(entity, SDKHook_Think, THINK_Grenade);
+			}
+		}
+	}
+}
 public void THINK_Grenade(int entity) {
-	if( StrEqual(g_szEntityName[entity], "smokegrenade_projectile") || StrEqual(g_szEntityName[entity], "flashbang_projectile") ) {
-		if( rp_GetZoneBit(rp_GetPlayerZone(entity)) & BITZONE_PEACEFULL ) 
-			rp_AcceptEntityInput(entity, "Kill");
-	}
-	else {
-		SDKUnhook(entity, SDKHook_Think, THINK_Grenade);
-	}
+	if( rp_GetZoneBit(rp_GetPlayerZone(entity)) & BITZONE_PEACEFULL ) 
+		rp_AcceptEntityInput(entity, "Kill");
 }
 public Action EventRoundEnd(Handle ev, const char[] name, bool  bd) {
 	OnRoundEnd();

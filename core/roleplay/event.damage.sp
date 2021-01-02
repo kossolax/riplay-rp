@@ -103,6 +103,16 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 	
 	
 #endif
+	if(  inflictor != attacker && inflictor > 0 && attacker > 0 ) {
+		char classname[128];
+		GetEdictClassname(inflictor, classname, sizeof(classname));
+		
+		if( StrEqual(classname, "snowball_projectile") ) {
+			damage = 0.0;
+			g_iUserData[attacker][i_LastAgression] = GetTime();
+			return Plugin_Changed;
+		}
+	}
 	
 	if( attacker == 0 && inflictor == 0 && damagetype == DMG_FALL ) {
 		if( g_flUserData[victim][fl_Alcool] >= 1.0 ) {
