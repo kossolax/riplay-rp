@@ -31,10 +31,10 @@ exports = module.exports = function (server) {
     });
 
 
-    var parainnageCash = 30000;
-    var parainnageExp = 18000;
-    var filleulCash = 30000;
-    var filleulExp = 0;
+    var parainnageCash = 300000;
+    var parainnageExp = 3600*35;
+    var filleulCash = 300000;
+    var filleulExp = 3600*5;
 
     /**
    * @api {post} /parrain/:steamidfilleul/validate ValideParainnage
