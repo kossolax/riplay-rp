@@ -153,6 +153,9 @@ int GetPlayerZone(int client, float cacheTime = 0.15) {
 		else
 			GetEntPropVector(client, Prop_Send, "m_vecOrigin", f_ClientOrigin);
 	}
+	else if( Entity_GetParent(client) > 0 ) {
+		GetEntPropVector(Entity_GetParent(client), Prop_Send, "m_vecOrigin", f_ClientOrigin);
+	}
 	else {
 		GetEntPropVector(client, Prop_Send, "m_vecOrigin", f_ClientOrigin);
 	}
