@@ -290,11 +290,14 @@ public void DisplayRTStats(int client){
 		Format(tmp, sizeof(tmp), "Au même grade depuis: %.2f heures", float(rp_GetClientPlaytimeJob(client, rp_GetClientInt(client, i_Job), false))/3600.0);
 		AddMenuItem(menu, "", tmp, ITEMDRAW_DISABLED);
 	}
-
-	if( !Weapon_ShouldBeEquip(tmp) ) {
-		AddMenuItem(menu, "", "------ Votre Arme ------", ITEMDRAW_DISABLED);
-		Format(tmp, sizeof(tmp), "Nombre de balles: %d", Weapon_GetPrimaryClip(wep_id));
-		AddMenuItem(menu, "", tmp, ITEMDRAW_DISABLED);
+	
+	if( wep_id > 0 ) {
+		GetEdictClassname(wep_id, tmp, sizeof(tmp));
+		if( !StrEqual(tmp, "weapon_knife") ) {
+			AddMenuItem(menu, "", "------ Votre Arme ------", ITEMDRAW_DISABLED);
+			Format(tmp, sizeof(tmp), "Nombre de balles: %d", Weapon_GetPrimaryClip(wep_id));
+			AddMenuItem(menu, "", tmp, ITEMDRAW_DISABLED);
+		}
 	}
 
 	DisplayMenu(menu, client, 60);

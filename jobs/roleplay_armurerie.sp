@@ -73,21 +73,12 @@ public Action Cmd_GiveItem(int args) {
 		return Plugin_Handled;
 	}
 	
-	if( Weapon_ShouldBeEquip(Arg1) && Client_HasWeapon(client, Arg1) ) {
-		ITEM_CANCEL(client, item_id);
-		return Plugin_Handled;
-	}
-	
 	if( (StrContains(Arg1, "weapon_knife") == 0 || StrContains(Arg1, "weapon_bayonet") == 0) && Client_HasWeapon(client, "weapon_knife") ) {
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	
-	int ent = GivePlayerItem(client, Arg1);
-	
-	if( Weapon_ShouldBeEquip(Arg1) )
-		EquipPlayerWeapon(client, ent);
-	
+	int ent = GivePlayerItem(client, Arg1);	
 	
 	if( StrContains(Arg1, "weapon_taser") == 0 ) {
 		Weapon_SetPrimaryClip(ent, 1000);
@@ -125,7 +116,7 @@ public Action Cmd_ItemBallType(int args) {
 	
 	char classname[64];
 	GetEdictClassname(wepid, classname, sizeof(classname));
-	if( Weapon_ShouldBeEquip(classname) ) {
+	if( StrEqual(classname, "weapon_knife") ) {
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
@@ -193,7 +184,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	char wep_name[32], tmp1[128], tmp2[128];
 	GetEdictClassname(wep_id, wep_name, sizeof(wep_name));
 	
-	if( Weapon_ShouldBeEquip(wep_name) ) {
+	if( StrEqual(wep_name, "weapon_knife") ) {
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
 		return Plugin_Stop;
 	}
@@ -245,7 +236,7 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 			char wep_name[32];
 			GetEdictClassname(wep_id, wep_name, sizeof(wep_name));
 
-			if( Weapon_ShouldBeEquip(wep_name) ) {
+			if( StrEqual(wep_name, "weapon_knife") ) {
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
 				return;
 			}
@@ -371,7 +362,7 @@ public int ModifyWeaponPVP(Handle p_hItemMenu, MenuAction p_oAction, int client,
 			char wep_name[32];
 			GetEdictClassname(wep_id, wep_name, 31);
 
-			if( Weapon_ShouldBeEquip(wep_name) ) {
+			if( StrEqual(wep_name, "weapon_knife") ) {
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
 				return;
 			}
