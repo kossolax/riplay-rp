@@ -138,8 +138,6 @@ char g_szColor[][] = {
 };
 int g_cBeam, g_cGlow, g_cExplode;
 Handle g_hCigarette[65];
-Handle g_vKnife, g_vWepaon;
-float g_vShieldPos[2][3];
 
 // ----------------------------------------------------------------------------
 public Action Cmd_Reload(int args) {
@@ -182,16 +180,6 @@ public void OnPluginStart() {
 	RegServerCmd("rp_item_cig", 		Cmd_ItemCigarette,		"RP-ITEM",	FCVAR_UNREGISTERED);	
 	RegServerCmd("rp_item_ruban",		Cmd_ItemRuban,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_disco",		Cmd_ItemDisco,			"RP-ITEM",	FCVAR_UNREGISTERED);
-
-	g_vKnife = CreateConVar("rp_riot_knife", "240 270 0");
-	g_vWepaon = CreateConVar("rp_riot_weapon", "150 270 120");
-	
-	g_vShieldPos[0] = view_as<float>( { 240.0, 270.0, 0.0 } );
-	g_vShieldPos[1] = view_as<float>( { 150.0, 270.0, 120.0 } );
-	
-	
-	HookConVarChange(g_vKnife, OnConVarChange);
-	HookConVarChange(g_vWepaon, OnConVarChange);	
 	
 	for (int i = 1; i <= MaxClients; i++) 
 		if( IsValidClient(i) )
@@ -215,15 +203,6 @@ public void OnPluginStart() {
 		}
 	}
 
-}
-public void OnConVarChange(Handle cvar, const char[] oldVal, const char[] newVal) {
-	if( cvar == g_vKnife || cvar == g_vWepaon ) {
-		char buffer[3][32];
-		ExplodeString(newVal, " ", buffer, sizeof(buffer), sizeof(buffer[]));
-		
-		for (int i = 0; i < 3; i++)
-			g_vShieldPos[cvar == g_vKnife ? 0 : 1][i] = StringToFloat(buffer[i]);
-	}
 }
 public void OnMapStart() {
 	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt", true);
@@ -411,6 +390,7 @@ public Action Cmd_ItemCutThrow(int args) {
 	
 	int entity = CreateEntityByName("hegrenade_projectile");
 	DispatchSpawn(entity);
+	RequestFrame(CB_Nade, EntIndexToEntRef(entity));
 	
 	SetEntityModel(entity, MODEL_KNIFE);
 	SetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity", client);
@@ -424,6 +404,14 @@ public Action Cmd_ItemCutThrow(int args) {
 	
 	SDKHook(entity, SDKHook_Touch, Cmd_ItemCutThrow_TOUCH);
 	
+}
+public void CB_Nade(any ref) {
+	int entity = EntRefToEntIndex(ref);
+	if( IsValidEdict(entity) && IsValidEntity(entity) ) {
+		Entity_SetSolidType(entity, SOLID_VPHYSICS);
+		Entity_SetSolidFlags(entity, FSOLID_TRIGGER );
+		Entity_SetCollisionGroup(entity, COLLISION_GROUP_PLAYER);
+	}
 }
 public void Cmd_ItemCutThrow_TOUCH(int rocket, int entity) {
 	
