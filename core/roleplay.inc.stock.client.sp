@@ -320,7 +320,7 @@ void showPlayerHintBox(int client, int target) {
 		
 		PrintHintText(client, "%T", "Hint_Props", client, clientname, Entity_GetHealth(target), (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target))) * 100.0);
 	}
-	else if( StrContains(classname, "vehicle") >= 0 && IsValidClient(g_iVehicleData[target][car_owner]) ) {
+	else if( StrEqual(classname, "prop_vehicle_driveable") && IsValidClient(g_iVehicleData[target][car_owner]) ) {
 		
 		int target2 = g_iVehicleData[target][car_owner];
 		
@@ -343,7 +343,7 @@ void showPlayerHintBox(int client, int target) {
 			PrintHintText(client, "%T", "Hint_Vehicle", client, clientname, rp_GetVehicleInt(target, car_health));
 		}
 	}
-	else if( StrContains(classname, "vehicle") >= 0 && g_iVehicleData[target][car_owner] < 0 ) {
+	else if( StrEqual(classname, "prop_vehicle_driveable") && g_iVehicleData[target][car_owner] < 0 ) {
 		
 		int target3 = GetEntPropEnt(target, Prop_Send, "m_hPlayer");
 		char fmt[128];
@@ -410,10 +410,10 @@ void showPlayerHintBox(int client, int target) {
 			PrintHintText(client, "%T", "Hint_Door", client, clientname, clientname2, classname);
 		}
 	}
-	else if( StrContains(classname, "bank") >= 0 ) {
+	else if( StrEqual(classname, "rp_bank") ) {
 		PrintHintText(client, "\n %T", "Hint_ATM", client);
 	}
-	else if( StrContains(classname, "mail") >= 0 ) {
+	else if( StrContains(classname, "rp_mail") >= 0 ) {
 		char tmp3[2][64];
 		
 		ReplaceString(classname, sizeof(classname), "rp_mail_", "");
@@ -431,21 +431,24 @@ void showPlayerHintBox(int client, int target) {
 		PrintHintText(client, "%T", "Hint_MAIL", client, classname);
 
 	}
-	else if( StrContains(classname, "phone") >= 0 ) {
+	else if( StrEqual(classname, "rp_phone") ) {
 		PrintHintText(client, "%T", "Hint_Phone", client);
 	}
-	else if( StrContains(classname, "tree") >= 0 ) {
+	else if( StrEqual(classname, "rp_tree") ) {
 		PrintHintText(client, "%T", "Hint_Arbre", client, Entity_GetHealth(target), (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target))) * 100.0);
 	}
-	else if( StrContains(classname, "wood") >= 0 ) {
+	else if( StrEqual(classname, "rp_wood") ) {
 		PrintHintText(client, "%T", "Hint_Bois", client, Entity_GetHealth(target), (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target))) * 100.0);
 	}
-	else if( StrContains(classname, "stone") >= 0 ) {
+	else if( StrEqual(classname, "rp_stone") ) {
 		int to_id = rp_GetBuildingData(target, BD_item_id);
 		
 		Format(clientname, sizeof(clientname), "%s", to_id > 0 ? g_szItemList[to_id][item_type_name] : "??????");
 		
 		PrintHintText(client, "%T", "Hint_Stone", client, clientname, Entity_GetHealth(target), (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target))) * 100.0);
+	}
+	else if( StrEqual(classname, "rp_crate") ) {
+		PrintHintText(client, "%T", "Hint_Stuff", client, classname, Entity_GetHealth(target), (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target))) * 100.0);
 	}
 }
 

@@ -158,7 +158,8 @@ int createCrate(float dst[3], float mass, int idx, int health) {
 	ActivateEntity(parent);
 	
 	SetEntProp(parent, Prop_Data, "m_takedamage", 2);
-	SetEntProp(parent, Prop_Data, "m_iHealth", health+10000);
+	SetEntProp(parent, Prop_Data, "m_iHealth", health+1);
+	Entity_SetMaxHealth(parent, health + 1);
 	SDKHook(parent, SDKHook_OnTakeDamage, OnCrateDamage);
 	
 	SetEntityGravity(parent, 0.1);
@@ -178,7 +179,7 @@ int createCrate(float dst[3], float mass, int idx, int health) {
 	return parent;
 }
 public Action OnCrateDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype) {
-	if( IsValidClient(attacker) && Entity_GetHealth(victim)-RoundFloat(damage) < 10000 ) {
+	if( IsValidClient(attacker) && Entity_GetHealth(victim)-RoundFloat(damage) < 1 ) {
 		
 		float vecPos[3];
 		Entity_GetAbsOrigin(victim, vecPos);
@@ -219,7 +220,7 @@ public Action CrateThink(Handle timer, any data) {
 					if( StrEqual(tmp, g_szCaseModels[i]) ) {
 						int parent = createCrate(src, 50.0, i, 500);
 						TeleportEntity(parent, src, dst, view_as<float>( { 0.0, 0.0, -200.0 }) );
-						rp_ScheduleEntityInput(parent, 25.0, "Kill");
+						rp_ScheduleEntityInput(parent, 60.0, "Kill");
 					}
 				}
 				return Plugin_Handled;

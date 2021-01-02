@@ -469,6 +469,7 @@ public void OnConfigsExecuted() {
 	/* Restart */
 	ServerCommand("mp_restartgame 1");
 	ServerCommand("ent_remove_all prop_vehicle_driveable");
+	ServerCommand("exec performance.cfg");
 	//g_hWeaponScale = FindConVar("weapon_recoil_scale");
 }
 public Action SwitchOFF(Handle timer, any omg) {
