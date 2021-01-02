@@ -525,6 +525,11 @@
 		"#format"	"{1:s},{2:d},{3:.2f}"
 		"fr"		"Props de {1}\nHP: {2} - {3}%"
 	}
+	"Hint_Stuff"
+	{
+		"#format"	"{1:t},{2:d},{3:.2f}"
+		"fr"		"{1}\nHP: {2} - {3}%"
+	}
 	"Hint_Vehicle"
 	{
 		"#format"	"{1:s},{2:d}"
