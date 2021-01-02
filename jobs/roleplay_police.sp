@@ -1999,14 +1999,8 @@ public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int 
 			if (rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money) < data[BM_Prix])
 				return 0;
 			Format(name, sizeof(name), "weapon_%s", name);
-			
-			if( Weapon_ShouldBeEquip(name) && Client_HasWeapon(client, name) )
-				return 0;
 				
-			int wepid = GivePlayerItem(client, name);
-			if( Weapon_ShouldBeEquip(name) )
-				EquipPlayerWeapon(client, wepid);
-			
+			int wepid = GivePlayerItem(client, name);			
 			rp_SetWeaponBallType(wepid, view_as<enum_ball_type>(data[BM_Type]));
 			if (data[BM_PvP] > 0)
 				rp_SetWeaponGroupID(wepid, rp_GetClientGroupID(client));
