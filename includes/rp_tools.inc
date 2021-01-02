@@ -213,15 +213,6 @@ stock bool rp_AcceptEntityInput(int dest, const char[] input, int activator=-1, 
 	}
 }
 // ----------------------------------------------------------------------------
-stock bool Weapon_ShouldBeEquip(const char[] weapon) {
-	if( StrContains(weapon, "weapon_knife") == 0 || StrEqual(weapon, "weapon_bayonet") ) // TODO: Add missing
-		return true;
-	
-	if( StrEqual(weapon, "weapon_fists") ) // || StrEqual(weapon, "weapon_axe") || StrEqual(weapon, "weapon_hammer") || StrEqual(weapon, "weapon_spanner") || StrEqual(weapon, "weapon_melee") )
-		return true;
-	
-	return false;
-}
 stock int Math_GetRandomPow(int min, int max) {
 	return RoundToFloor(float(max - min) * Pow(GetURandomFloat(), 2.0)) + min;
 }

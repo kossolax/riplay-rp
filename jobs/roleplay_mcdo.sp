@@ -142,10 +142,8 @@ public int MenuKnife(Handle p_hItemMenu, MenuAction p_oAction, int client, int p
 		}
 		
 		int wpn = GivePlayerItem(client, option);
-		SetEntProp(wpn, Prop_Send, "m_iItemDefinitionIndex", CSGO_GetItemDefinitionIndexByName(option));
-		EquipPlayerWeapon(client, wpn);
-		Client_SetActiveWeapon(client, wpn);
-		
+		//SetEntProp(wpn, Prop_Send, "m_iItemDefinitionIndex", CSGO_GetItemDefinitionIndexByName(option));
+		FakeClientCommand(client, "use weapon_knife; use weapon_bayonet"); 
 		rp_ClientGiveItem(client, ITEM_KNIFE, -1);
 	}
 	else if (p_oAction == MenuAction_End) {

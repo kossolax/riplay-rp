@@ -495,10 +495,6 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 					
 				int wepid = GivePlayerItem(client, name);
 				
-				if( Weapon_ShouldBeEquip(name) )
-					EquipPlayerWeapon(client, wepid);
-				
-				
 				rp_SetWeaponBallType(wepid, view_as<enum_ball_type>(data[BM_Type]));
 				if(data[BM_PvP] > 0)
 					rp_SetWeaponGroupID(wepid, rp_GetClientGroupID(client));

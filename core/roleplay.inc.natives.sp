@@ -1305,10 +1305,7 @@ public int Native_rp_SetClientKnifeType(Handle plugin, int numParams) {
 	
 	char classname[64];
 	GetEdictClassname(wepid, classname, sizeof(classname));
-	if( !Weapon_ShouldBeEquip(classname) ) {
-		return view_as<int>(false);
-	}
-	if( StrEqual(classname, "weapon_fists") ) {
+	if( !StrEqual(classname, "weapon_knife") ) {
 		return view_as<int>(false);
 	}
 	
@@ -1329,7 +1326,7 @@ public int Native_rp_GetClientKnifeType(Handle plugin, int numParams) {
 	
 	char classname[64];
 	GetEdictClassname(wepid, classname, sizeof(classname));
-	if( !Weapon_ShouldBeEquip(classname) ) {
+	if( !StrEqual(classname, "weapon_knife") ) {
 		return 0;
 	}
 	
