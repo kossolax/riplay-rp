@@ -502,9 +502,6 @@ public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
 	while( g_iUserData[client][i_PlayerXP] >= (g_iUserData[client][i_PlayerLVL] * 3600) ) {
 		g_iUserData[client][i_PlayerLVL]++;
 		
-		if( !g_bUserData[client][b_IsFirstSpawn] && IsPlayerAlive(client) )
-			ServerCommand("sm_effect_particles %d levelup 10", client);
-		
 		int a = RoundToFloor(SquareRoot(float(g_iUserData[client][i_PlayerLVL])));
 		int b = a * (a + 1);
 		if( b >= 992 )
@@ -523,6 +520,8 @@ public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
 				rp_ClientGiveItem(client, ITEM_CADEAU, 25);
 			}
 			
+			if( !g_bUserData[client][b_IsFirstSpawn] && IsPlayerAlive(client) )
+				ServerCommand("sm_effect_particles %d levelup 10", client);
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "LEVEL_RANK", client, g_iUserData[client][i_PlayerLVL], g_szLevelList[ g_iUserData[client][i_PlayerRank] ][rank_type_name]);
 		}
 		else {
