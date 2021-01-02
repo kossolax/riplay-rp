@@ -634,7 +634,7 @@ public Action Cmd_ItemHamburger(int args) {
 		}
 		
 		GetEdictClassname(wepid, classname, sizeof(classname));
-		if( !Weapon_ShouldBeEquip(classname) ) {
+		if( !StrEqual(classname, "weapon_knife") ) {
 			ITEM_CANCEL(client, item_id);
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_KnifeInHands");
 			return Plugin_Handled;
