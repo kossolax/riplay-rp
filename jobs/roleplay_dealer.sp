@@ -1068,6 +1068,11 @@ public Action BuildingPlant_post(Handle timer, any entity) {
 	return Plugin_Handled;
 }
 public Action DamagePlant(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
+	if( IsBadGuy(attacker) ) {
+		damage = 0.0;
+		return Plugin_Changed;
+	}
+	
 	if( IsValidClient(attacker) && attacker == inflictor ) {
 		
 		char sWeapon[32];

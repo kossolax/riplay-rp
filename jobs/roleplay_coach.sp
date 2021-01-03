@@ -1557,10 +1557,18 @@ public Action BuildingKevlarBox_post(Handle timer, any entity) {
 	
 	SetEntProp( entity, Prop_Data, "m_takedamage", 2);
 	HookSingleEntityOutput(entity, "OnBreak", BuildingKevlarBox_break);
+	SDKHook(entity, SDKHook_OnTakeDamage, DamageMachine);
 	
 	CreateTimer(1.0, Frame_KevlarBox, EntIndexToEntRef(entity));
 	
 	return Plugin_Handled;
+}
+public Action DamageMachine(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
+	if( IsBadGuy(attacker) ) {
+		damage = 0.0;
+		return Plugin_Changed;
+	}
+	return Plugin_Continue;
 }
 public void BuildingKevlarBox_break(const char[] output, int caller, int activator, float delay) {
 	

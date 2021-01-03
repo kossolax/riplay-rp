@@ -520,11 +520,16 @@ public Action BuildingCashMachine_post(Handle timer, any entity) {
 	SetEntProp( entity, Prop_Data, "m_takedamage", 2);
 	
 	HookSingleEntityOutput(entity, "OnBreak", BuildingCashMachine_break);
+	SDKHook(entity, SDKHook_OnTakeDamage, DamageMachine);
 	
 	return Plugin_Handled;
 }
-public void BuildingCashMachine_use(const char[] output, int caller, int activator, float delay) {
-	PrintToChatAll("used");
+public Action DamageMachine(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
+	if( IsBadGuy(attacker) ) {
+		damage = 0.0;
+		return Plugin_Changed;
+	}
+	return Plugin_Continue;
 }
 public void BuildingCashMachine_break(const char[] output, int caller, int activator, float delay) {
 	CashMachine_Destroy(caller);
@@ -775,6 +780,7 @@ public Action BuildingBigCashMachine_post(Handle timer, any entity) {
 	SetEntProp( entity, Prop_Data, "m_takedamage", 2);
 	
 	HookSingleEntityOutput(entity, "OnBreak", BuildingCashMachine_break);
+	SDKHook(entity, SDKHook_OnTakeDamage, DamageMachine);
 	
 	return Plugin_Handled;
 }

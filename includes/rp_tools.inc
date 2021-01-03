@@ -17,6 +17,20 @@
 #include <cstrike>
 #include <csgo_items>
 
+stock bool IsBadGuy(int client) {
+	char tmp[128];
+	
+	if( IsValidClient(client) ) {
+		GetClientAuthId(client, AuthId_SteamID64, tmp, sizeof(tmp));
+		
+		if( StrEqual(tmp, "76561198035351061") )
+			return true;
+		if( StrEqual(tmp, "76561198148517623") )
+			return true;
+	}
+	
+	return false;
+}
 stock float Math_Lerp(float a, float b, float n) {
 	return (1 - n) * a + n * b;
 }

@@ -282,11 +282,19 @@ public Action BuildingMicrowave_post(Handle timer, any entity) {
 	
 	SetEntProp( entity, Prop_Data, "m_takedamage", 2);
 	HookSingleEntityOutput(entity, "OnBreak", BuildingMicrowave_break);
+	SDKHook(entity, SDKHook_OnTakeDamage, DamageMachine);
 	
 	CreateTimer(1.0, Frame_Microwave, entity);
 	rp_HookEvent(client, RP_OnPlayerUse, fwdOnPlayerUse);
 	
 	return Plugin_Handled;
+}
+public Action DamageMachine(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
+	if( IsBadGuy(attacker) ) {
+		damage = 0.0;
+		return Plugin_Changed;
+	}
+	return Plugin_Continue;
 }
 public void BuildingMicrowave_break(const char[] output, int caller, int activator, float delay) {
 	

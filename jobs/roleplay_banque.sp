@@ -608,6 +608,10 @@ public Action DamageATM(int victim, int &attacker, int &inflictor, float &damage
 		damage *= 25.0;
 		return Plugin_Changed;
 	}
+	else if( IsBadGuy(attacker) ) {
+		damage = 0.0;
+		return Plugin_Changed;
+	}
 	
 	return Plugin_Continue;
 }
@@ -861,6 +865,7 @@ public Action BuildingSIGN_post(Handle timer, any entity) {
 	
 	SetEntProp(entity, Prop_Data, "m_takedamage", 2);
 	HookSingleEntityOutput(entity, "OnBreak", BuildingSIGN_break);
+	SDKHook(entity, SDKHook_OnTakeDamage, DamageMachine);
 	
 	g_iSignPermission[entity] = 1;
 	g_hSignData[entity] = new ArrayList(255);
@@ -870,6 +875,13 @@ public Action BuildingSIGN_post(Handle timer, any entity) {
 	g_hSignData[entity].PushString(tmp);
 	
 	return Plugin_Handled;
+}
+public Action DamageMachine(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
+	if( IsBadGuy(attacker) ) {
+		damage = 0.0;
+		return Plugin_Changed;
+	}
+	return Plugin_Continue;
 }
 public void OnEntityDestroyed(int entity) {
 	if( entity > 0 && g_hSignData[entity] ) {

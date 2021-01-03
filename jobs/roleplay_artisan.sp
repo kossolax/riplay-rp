@@ -1308,7 +1308,15 @@ public Action BuildingTABLE_post(Handle timer, any entity) {
 	rp_Effect_BeamBox(client, entity, NULL_VECTOR, 255, 255, 0);
 	SetEntProp(entity, Prop_Data, "m_takedamage", 2);
 	HookSingleEntityOutput(entity, "OnBreak", BuildingTABLE_break);
+	SDKHook(entity, SDKHook_OnTakeDamage, DamageMachine);
 	return Plugin_Handled;
+}
+public Action DamageMachine(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
+	if( IsBadGuy(attacker) ) {
+		damage = 0.0;
+		return Plugin_Changed;
+	}
+	return Plugin_Continue;
 }
 public void BuildingTABLE_break(const char[] output, int caller, int activator, float delay) {
 	
