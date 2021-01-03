@@ -407,12 +407,10 @@ public void OnCvarChange(Handle cvar, const char[] oldVal, const char[] newVal) 
 		g_flVehicleDamage = StringToFloat(newVal);
 	}
 	else if( cvar == g_hEVENT_HIDE ) {
-		if( StrEqual(oldVal, "0") && StrEqual(newVal, "1") ) {
-			EVENT_HIDE = 1;
-		}
-		else if( StrEqual(oldVal, "1") && StrEqual(newVal, "0") ){
-			EVENT_HIDE = 0;
-		}
+		EVENT_HIDE = StringToInt(newVal);
+	}
+	else if( cvar == g_hEVENT_3RD ) {
+		EVENT_3RD = StringToInt(newVal);
 	}
 }
 
