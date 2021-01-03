@@ -196,6 +196,7 @@ public void OnPluginStart() {
 	g_hSick				= CreateConVar("rp_sick", "1");
 	g_hMAX_ENT 			= CreateConVar("rp_max_entity",	"1800", "PAS TOUCHE", FCVAR_UNREGISTERED, true, 1000.0, true, 2000.0);
 	g_hEVENT			= CreateConVar("rp_event",	"0");
+	g_hEVENT_3RD		= CreateConVar("rp_event_3rd",	"1");
 	g_hEVENT_HIDE			= CreateConVar("rp_hide",	"0");
 	#if defined EVENT_NOEL
 	g_hEVENT_NOEL		= CreateConVar("rp_event_noel", "1");
@@ -212,6 +213,7 @@ public void OnPluginStart() {
 	HookConVarChange(g_hCapturable, OnCvarChange);
 	HookConVarChange(g_hEVENT_HIDE, OnCvarChange);
 	HookConVarChange(g_hAllowDamage, OnCvarChange);	
+	HookConVarChange(g_hEVENT_3RD, OnCvarChange);	
 	//
 	RegConsoleCmd("jointeam", 			cmd_Jointeam);
 	//

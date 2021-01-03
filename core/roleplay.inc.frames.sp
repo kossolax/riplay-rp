@@ -148,6 +148,11 @@ void OnGameFrame_01(float time) {
 			CPrintToChat(Client, "" ...MOD_TAG... " %T", "Passive_Disabled", Client);
 		}
 		
+		if( EVENT_3RD == 0 && rp_GetZoneBit( rp_GetPlayerZone(Client) ) & BITZONE_EVENT ) {
+			ClientCommand(Client, "firstperson");
+			g_iUserData[Client][i_ThirdPerson] = 0;
+		}
+		
 		if( !(rp_GetZoneBit( rp_GetPlayerZone(Client) ) & BITZONE_PVP) && !(rp_GetZoneBit( rp_GetPlayerZone(Client) ) & BITZONE_EVENT)	) {
 			if( !g_bUserData[Client][b_GameModePassive] && rp_GetClientJobID(Client) == 41 && g_iUserData[Client][i_ToKill] > 0 )
 				speed += 0.25;
