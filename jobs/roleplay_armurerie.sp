@@ -320,7 +320,13 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 				rp_ClientMoney(client, i_Money, -price);
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
 				rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
-				rp_SetJobCapital( 111, rp_GetJobCapital(111)+price );
+				
+				if( StrEqual(type, "fire") || StrEqual(type, "explode") || StrEqual(type, "paintball") ){
+					rp_SetJobCapital( 131, rp_GetJobCapital(131)+price );
+				}
+				else {
+					rp_SetJobCapital( 111, rp_GetJobCapital(111)+price );
+				}
 				FakeClientCommand(client, "say /build");
 
 			}
