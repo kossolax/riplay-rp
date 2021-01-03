@@ -192,7 +192,7 @@ public void OnPluginStart() {
 	//
 	// Cvar:
 	//
-	g_hAllowItem 		= CreateConVar("rp_allow_item", "1", "Autorise ou non l'utilisation des items.", _, true, 0.0, false, 1.0);
+	g_hAllowItem 		= CreateConVar("rp_allow_item", "1", "Autorise ou non l'utilisation des items.", _, true, 0.0, false, 2.0);
 	g_hSick				= CreateConVar("rp_sick", "1");
 	g_hMAX_ENT 			= CreateConVar("rp_max_entity",	"1800", "PAS TOUCHE", FCVAR_UNREGISTERED, true, 1000.0, true, 2000.0);
 	g_hEVENT			= CreateConVar("rp_event",	"0");
