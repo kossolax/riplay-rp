@@ -941,8 +941,7 @@ public void CRON_TIMER() {
 	}
 	
 	
-	if( (StringToInt(szHours) ==  5 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 30) ) 
-		) {	
+	if( (StringToInt(szHours) ==  5 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 30) ) {	
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
