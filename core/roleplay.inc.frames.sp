@@ -600,7 +600,7 @@ void OnGameFrame_10(float time) {
 					SDKHooks_TakeDamage(i, i, i, 5000.0);
 				}
 				
-				if(jobID == 101 && !g_bUserData[i][b_GameModePassive] && !(GetZoneBit(GetPlayerZone(i)) & (BITZONE_PVP|BITZONE_EVENT)) ) {			
+				if(jobID == 101 && !g_bUserData[i][b_GameModePassive] && !(GetZoneBit(GetPlayerZone(i)) & (BITZONE_PVP|BITZONE_EVENT)) ) {
 					int heal = GetClientHealth(i) + Math_GetRandomInt(1, 5);
 					if( heal > 500 )
 						heal = 500;
@@ -941,20 +941,17 @@ public void CRON_TIMER() {
 	}
 	
 	
-	if( (StringToInt(szHours) ==  4 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 30) ||
-		(StringToInt(szHours) == 16 && StringToInt(szMinutes) == 29 && StringToInt(szSecondes) == 30) 
+	if( (StringToInt(szHours) ==  5 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 30) ) 
 		) {	
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
 		ServerCommand("rp_give_assu");
 	}
-	if( (StringToInt(szHours) ==  4 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 59) ||
-		(StringToInt(szHours) == 16 && StringToInt(szMinutes) == 29 && StringToInt(szSecondes) == 59) ) {
+	if( (StringToInt(szHours) ==  5 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 59) ) {
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootNow", LANG_SERVER);
 	}
-	if( (StringToInt(szHours) ==  5 && StringToInt(szMinutes) ==  0 && StringToInt(szSecondes) == 0) ||
-		(StringToInt(szHours) == 16 && StringToInt(szMinutes) == 30 && StringToInt(szSecondes) == 0) ) {
+	if( (StringToInt(szHours) ==  6 && StringToInt(szMinutes) ==  0 && StringToInt(szSecondes) == 0) ) {
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootNow", LANG_SERVER);
 		
 		for(int i = 1; i <= MaxClients; i++)
@@ -963,15 +960,14 @@ public void CRON_TIMER() {
 		
 		CreateTimer(0.1, RebootServer);
 	}
-	/*
-	if( StringToInt(szDayOfWeek) == 5 ) { // Vendredi
-		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
+	
+	if( StringToInt(szDayOfWeek) == 3 ) { // mercredi
+		if( StringToInt(szHours) == 18 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 18h00m00s
 			ServerCommand("rp_capture 1");
 		}
 	}
-	*/
-	if( StringToInt(szDayOfWeek) == 0 ) { // Dimanche, temporaire --- TODO: TO REMOVE.
-		if( StringToInt(szHours) == 17 && StringToInt(szMinutes) == 30 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
+	if( StringToInt(szDayOfWeek) == 0 ) { // Dimanche
+		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 00 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
 			ServerCommand("rp_capture 1");
 		}
 	}
