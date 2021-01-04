@@ -298,7 +298,7 @@ void END_PERQUIZ(int zone, bool abort) {
 	rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
 	LogToGame("[PERQUIZ] Une perquisition est terminée dans %s.", tmp);
 	PrintToChatPoliceZone(zone, "{red} =================================={default} ");
-	PrintToChatPoliceZone(zone, "{red}[TSX-RP] [POLICE]{default} La perquisition dans %s est %s.", tmp, abort ? "annulée" : "terminée");
+	PrintToChatPoliceZone(zone, "{red}"... MOD_TAG ..." [POLICE]{default} La perquisition dans %s est %s.", tmp, abort ? "annulée" : "terminée");
 	PrintToChatPoliceZone(zone, "{red} =================================={default} ");
 	
 	if( !abort ) {
@@ -412,7 +412,7 @@ public Action TIMER_PERQUIZ(Handle timer, any zone) {
 		if( array[PQ_timeout] == 20 ) {
 			rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
 			PrintToChatPoliceZone(zone, "{red} =================================={default} ");
-			PrintToChatPoliceZone(zone, "{red}[TSX-RP] [POLICE]{default} La perquisition dans %s sera annulée, si aucun flic n'est présent dans les 10 secondes.", tmp);
+			PrintToChatPoliceZone(zone, "{red}"... MOD_TAG ..." [POLICE]{default} La perquisition dans %s sera annulée, si aucun flic n'est présent dans les 10 secondes.", tmp);
 			PrintToChatPoliceZone(zone, "{red} =================================={default} ");
 		}
 		else if( array[PQ_timeout] >= 30 ) {
@@ -445,8 +445,8 @@ public Action TIMER_PERQUIZ_LOOKUP(Handle timer, any zone) {
 			rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
 			
 			PrintToChatPoliceZone(zone, "{red} =================================={default} ");
-			PrintToChatPoliceZone(zone, "{red}[TSX-RP] [POLICE]{default} une perquisition commencera dans: %i secondes", 60 - array[PQ_timeout]);
-			PrintToChatPoliceZone(zone, "{red}[TSX-RP] [POLICE]{default} %N{default} est prié de se présenter à %s.", array[PQ_resp], tmp);
+			PrintToChatPoliceZone(zone, "{red}"... MOD_TAG ..." [POLICE]{default} une perquisition commencera dans: %i secondes", 60 - array[PQ_timeout]);
+			PrintToChatPoliceZone(zone, "{red}"... MOD_TAG ..." [POLICE]{default} %N{default} est prié de se présenter à %s.", array[PQ_resp], tmp);
 			PrintToChatPoliceZone(zone, "{red} =================================={default} ");
 		}
 		
