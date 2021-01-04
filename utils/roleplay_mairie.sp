@@ -745,6 +745,8 @@ public int Handle_Mairie(Handle menu, MenuAction action, int client, int param2)
 					PrintHintText(client, "Vous êtes enregistré à la mairie, merci !");
 					CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 10 cadeaux dans votre banque.");
 					rp_ClientGiveItem(client, ITEM_CADEAU, 10, true);
+					
+					
 				}
 				
 			}
@@ -757,6 +759,13 @@ public int Handle_Mairie(Handle menu, MenuAction action, int client, int param2)
 				rp_SetClientBool(client, b_PassedRulesTest, true);
 				CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 10 cadeaux dans votre banque.");
 				rp_ClientGiveItem(client, ITEM_CADEAU, 10, true);
+				
+				char query[1024], steamid[64];
+				GetClientAuthId(client, AUTH_TYPE, steamid, sizeof(steamid));
+				
+				Format(query, sizeof(query), "UPDATE `rp_users` SET `no_pyj`=1 WHERE `steamid`='%s'", steamid);
+				SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
+				rp_SetClientBool(client, b_IsNoPyj, true);
 			}
 			else if( c == 1 ) {
 				if( b != 0 )
