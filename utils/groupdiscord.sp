@@ -18,11 +18,16 @@ public void OnPluginEnd() {
 public void OnPluginStart() {
 	RegServerCmd("sm_force_discord_group", cmdForceDiscordGroup);
 	
+	
 	g_hQueue = new ArrayList(64);
 	CreateTimer(10.0, Timer_Process, _, TIMER_REPEAT);
+	
+	for (int i = 1; i <= MaxClients; i++)
+		if( IsValidClient(i) )
+			OnClientPostAdminCheck(i);
 }
 
-public void OnClientPutInServer(int client) {
+public void OnClientPostAdminCheck(int client) {
 	if(IsFakeClient(client)) {
 		return;
 	}
