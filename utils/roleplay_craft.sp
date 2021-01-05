@@ -1184,11 +1184,15 @@ public void OnThink(int ent) {
 		
 		int max = Entity_GetMaxHealth(ent);
 		int health = GetEntProp(ent, Prop_Data, "m_iHealth");
-		if( health < max ) {
-			health += 1;
-			if( health > max )
-				health = max;
-			SetEntProp(ent, Prop_Data, "m_iHealth", health);
+		if( health < max && health > max*9/10 ) {
+			
+			if( GetRandomInt(0, 1) == 0 ) {
+				health += 1;
+				if( health > max )
+					health = max;
+			
+				SetEntProp(ent, Prop_Data, "m_iHealth", health);
+			}
 		}
 		
 		if( yaw+speed > 0.5 && yaw-speed < 0.5 )
