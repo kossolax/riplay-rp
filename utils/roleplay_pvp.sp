@@ -44,11 +44,10 @@ Handle g_hGodTimer[65], g_hKillTimer[65];
 bool g_bIsInCaptureMode = false;
 int g_cBeam;
 StringMap g_hGlobalDamage, g_hGlobalSteamID;
-enum damage_data { gdm_shot, gdm_touch, gdm_damage, gdm_hitbox, gdm_elo, gdm_flag, gdm_kill, gdm_dead, gdm_team, gdm_score, gdm_area, gdm_max };
+enum damage_data { gdm_shot, gdm_touch, gdm_damage, gdm_hitbox, gdm_elo, gdm_flag, gdm_kill, gdm_dead, gdm_team, gdm_score, gdm_area, gdm_group, gdm_max };
 TopMenu g_hStatsMenu;
 TopMenuObject g_hStatsMenu_Shoot, g_hStatsMenu_Head, g_hStatsMenu_Damage, g_hStatsMenu_Flag, g_hStatsMenu_ELO, g_hStatsMenu_SCORE, g_hStatsMenu_KILL, g_hStatsMenu_DEAD, g_hStatsMenu_RATIO;
 int g_iPlayerTeam[2049], g_stkTeam[view_as<int>(TEAM_MAX)][MAXPLAYERS + 1], g_stkTeamCount[view_as<int>(TEAM_MAX)], g_iTeamScore[view_as<int>(TEAM_MAX)];
-int g_iScores[MAX_GROUPS];
 int g_iLeaving[65];
 
 // -----------------------------------------------------------------------------------------------------------------
@@ -739,9 +738,6 @@ void STATE_ENTER_BEGIN() {
 	g_bIsInCaptureMode = true;
 	bool botFound = false;
 	
-	for(int i=0; i<MAX_GROUPS; i++)
-		g_iScores[i] = 0;
-	
 	g_iTeamScore[TEAM_RED] = g_iTeamScore[TEAM_BLUE] = 0;
 
 	for(int i=1; i<=MaxClients; i++) {
@@ -919,14 +915,28 @@ void STATE_ENTER_END_OF_ROUND() {
 }
 void STATE_ENTER_REWARD() {
 	char tmp[64], optionsBuff[2][64];
+	
+	int gScore[MAX_GROUPS];
+	StringMapSnapshot KeyList = g_hGlobalDamage.Snapshot();
+	int[] array = new int[gdm_max];
+	int nbrParticipant = KeyList.Length;
+	
+	for (int i = 0; i < nbrParticipant; i++) {
+		KeyList.GetKey(i, tmp, sizeof(tmp));
+		g_hGlobalDamage.GetArray(tmp, array, gdm_max);
+		
+		gScore[array[gdm_group]] += array[gdm_score];
+	}
+	
+	
 	int winner, maxPoint, totalPoints;
 	for(int i=1; i<MAX_GROUPS; i++) {
-		if( maxPoint > g_iScores[i] )
+		if( maxPoint > gScore[i] )
 			continue;
 
 		winner = i;
-		maxPoint = g_iScores[i];
-		totalPoints += g_iScores[i];
+		maxPoint = gScore[i];
+		totalPoints += gScore[i];
 	}
 			
 	rp_GetGroupData(winner, group_type_name, tmp, sizeof(tmp));
@@ -1242,6 +1252,7 @@ public Action fwdFrame(int client) {
 			fLast[client] = fNow;
 		}
 		else if( IsPlayerAlive(client) ) {
+
 			g_iLeaving[client]++;
 			
 			if( g_iLeaving[client] >= LEAVING_TIME+60 ) {
@@ -1251,8 +1262,10 @@ public Action fwdFrame(int client) {
 			else if( g_iLeaving[client] >= LEAVING_TIME && g_iLeaving[client] % 10 == 0 ) {
 				EmitSoundToClientAny(client, g_szSoundList[snd_YouAreLeavingTheBattlefield], _, _, _, _, ANNONCES_VOLUME);
 				warnLeaving(client);
-			}
+			}			
 		}
+		
+		setTeamSkin(client);
 		
 		if( rp_GetClientVehicle(client) <= 0 ) {
 			ClientCommand(client, "firstperson");
@@ -1673,6 +1686,8 @@ void GDM_SaveTeam(int client) {
 	g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
 	
 	array[gdm_team] = g_iPlayerTeam[client];
+	array[gdm_group] = rp_GetClientGroupID(client);
+	
 	g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
 }
 void GDM_RegisterHit(int client, int damage=0, int hitbox=0) {
@@ -1695,7 +1710,6 @@ void GDM_RegisterFlag(int client, int score) {
 	g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
 	array[gdm_flag]++;
 	array[gdm_score] += score;
-	g_iScores[rp_GetClientGroupID(client)] += score;
 	
 	g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
 }
@@ -1717,7 +1731,6 @@ void GDM_RegisterArea(int client) {
 	g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
 	array[gdm_area]++;
 	array[gdm_score]++;
-	g_iScores[rp_GetClientGroupID(client)]++;
 	
 	g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
 }
@@ -1777,12 +1790,14 @@ int GDM_ELOKill(int client, int target, bool flag = false) {
 	tElo = RoundFloat(float(victim[gdm_elo]) + ELO_FACTEUR_K * (0.0 - tDelta));
 	
 	int tmp = cElo - attacker[gdm_elo];
+	
 	g_iTeamScore[ g_iPlayerTeam[client] ] += tmp;
+	
 	attacker[gdm_score] += tmp;
 	attacker[gdm_elo] = cElo;
+	
 	victim[gdm_elo] = tElo;
 	
-	g_iScores[rp_GetClientGroupID(client)] += tmp;
 	rp_SetClientInt(client, i_ELO, cElo);
 	rp_SetClientInt(target, i_ELO, tElo);
 	
@@ -2157,7 +2172,7 @@ void shuffleTeams() {
 			}
 			else {
 				sPlayers[pCount][0] = i;
-				sPlayers[pCount][1] = rp_GetClientInt(i, i_ELO) + GetRandomInt(-50, 50);
+				sPlayers[pCount][1] = rp_GetClientInt(i, i_ELO);
 				pCount++;
 			}
 		}
@@ -2165,7 +2180,6 @@ void shuffleTeams() {
 		SortCustom2D(sPlayers, pCount, Sort_ByELO);
 		
 		for (int i = 0; i < pCount; i++) {
-			// addClientToTeam(sPlayers[i][0], teams[lastTeam++ % sizeof(teams)]);
 			addClientToTeam(sPlayers[i][0], getWorstTeam());
 		}
 	}
