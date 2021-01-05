@@ -17,6 +17,18 @@
 #include <cstrike>
 #include <csgo_items>
 
+stock int rp_GetClientEntity(int client) {
+	
+	int source = GetEntPropEnt(client, Prop_Send, "m_hVehicle");
+	if( source <= 0 )
+		source = rp_GetClientVehiclePassager(client);
+	if( source <= 0 )
+		source = Entity_GetParent(client);
+	if( source <= 0 )
+		source = client;
+	
+	return source;
+}
 stock bool IsBadGuy(int client) {
 	char tmp[128];
 	

@@ -502,9 +502,10 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 		
 		if( verbose && HasImmo() && !rp_GetClientBool(client, b_IsAFK) ) {
 			if( g_iDirtyCount[appart] < 10 ) {
-				Entity_GetGroundOrigin(client, g_flDirtPos[appart][g_iDirtyCount[appart]]);
-				g_iDirtType[appart][g_iDirtyCount[appart]] = GetRandomInt(1, sizeof(g_cDirt) - 1);
-				g_iDirtyCount[appart]++;
+				Handle dp;
+				CreateDataTimer(0.1, task_AddDirt, dp, TIMER_DATA_HNDL_CLOSE);
+				WritePackCell(dp, client);
+				WritePackCell(dp, appart);
 			}
 		}
 		
@@ -515,6 +516,19 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 		return Plugin_Changed;
 	}
 	return Plugin_Continue;
+}
+public Action task_AddDirt(Handle timer, Handle dp) {
+	ResetPack(dp);
+	int client = ReadPackCell(dp);
+	int appart = ReadPackCell(dp);
+	
+	if( IsValidClient(client) && g_iDirtyCount[appart] < 10 ) {
+		
+		Entity_GetGroundOrigin(rp_GetClientEntity(client), g_flDirtPos[appart][g_iDirtyCount[appart]]);
+		 
+		g_iDirtType[appart][g_iDirtyCount[appart]] = GetRandomInt(1, sizeof(g_cDirt) - 1);
+		g_iDirtyCount[appart]++;
+	}
 }
 public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
