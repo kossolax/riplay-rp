@@ -1,0 +1,143 @@
+#pragma semicolon 1
+
+#include <sourcemod>
+#include <sdktools>
+#include <sdkhooks>
+#include <smlib>
+#include <emitsoundany>
+#include <colors_csgo>
+
+#include <roleplay>
+#include <custom_weapon_mod.inc>
+
+char g_szFullName[PLATFORM_MAX_PATH] =	"Tronçoneuse";
+char g_szName[PLATFORM_MAX_PATH] 	 =	"chainsaw";
+char g_szReplace[PLATFORM_MAX_PATH]  =	"weapon_axe";
+
+char g_szVModel[PLATFORM_MAX_PATH] =	"models/weapons/tsx/chainsaw/v_chainsaw.mdl";
+char g_szWModel[PLATFORM_MAX_PATH] =	"models/weapons/tsx/chainsaw/w_chainsaw.mdl";
+
+char g_szMaterials[][PLATFORM_MAX_PATH] = {
+	"materials/models/weapons/tsx/chainsaw/chainsaw.vmt",
+	"materials/models/weapons/tsx/chainsaw/chainsaw.vtf",
+	"materials/models/weapons/tsx/chainsaw/chainsaw_chain.vmt",
+	"materials/models/weapons/tsx/chainsaw/chainsaw_chain.vtf",
+	"materials/models/weapons/tsx/chainsaw/chainsaw_exp.vtf"	
+};
+char g_szSounds[][PLATFORM_MAX_PATH] = {
+	"physics/metal/metal_solid_strain5.wav"
+};
+public void OnPluginStart() {
+	RegServerCmd("sm_cwm_reload", Cmd_PluginReloadSelf);
+}
+public void OnAllPluginsLoaded() {
+	int id = CWM_Create(g_szFullName, g_szName, g_szReplace, g_szVModel, g_szWModel);
+	
+	CWM_SetInt(id, WSI_AttackType,		view_as<int>(WSA_Automatic));
+	CWM_SetInt(id, WSI_ReloadType,		view_as<int>(WSR_Automatic));
+	CWM_SetInt(id, WSI_AttackDamage, 	25);
+	CWM_SetInt(id, WSI_AttackBullet, 	1);
+	CWM_SetInt(id, WSI_MaxBullet, 		250);
+	CWM_SetInt(id, WSI_MaxAmmunition, 	500);
+	
+	CWM_SetFloat(id, WSF_Speed,			300.0);
+	CWM_SetFloat(id, WSF_ReloadSpeed,	65/30.0);
+	CWM_SetFloat(id, WSF_AttackSpeed,	0.1);
+	CWM_SetFloat(id, WSF_AttackRange,	RANGE_MELEE + 16.0);
+	CWM_SetFloat(id, WSF_Spread, 		0.0);
+	
+	CWM_AddAnimation(id, WAA_Idle, 		3,	64, 30);
+	CWM_AddAnimation(id, WAA_Draw, 		7,	65, 30);
+	CWM_AddAnimation(id, WAA_Reload, 	7,	65, 30);
+	CWM_AddAnimation(id, WAA_Attack, 	1,  30, 60);
+	
+	CWM_RegHook(id, WSH_Draw,			OnDraw);
+	CWM_RegHook(id, WSH_Attack,			OnAttack);
+	CWM_RegHook(id, WSH_Idle,			OnIdle);
+	CWM_RegHook(id, WSH_Reload,			OnReload);
+}
+public void OnDraw(int client, int entity) {
+	CWM_RunAnimation(entity, WAA_Draw);
+}
+public void OnIdle(int client, int entity) {
+	CWM_RunAnimation(entity, WAA_Idle);
+}
+public void OnReload(int client, int entity) {
+	CWM_RunAnimation(entity, WAA_Reload);
+}
+public Action OnAttack(int client, int entity) {
+	static float size = 10.0;
+	float hit[3], src[3], ang[3], dst[3], min[3], max[3];
+	CWM_RunAnimation(entity, WAA_Attack);
+	EmitSoundToAllAny("physics/metal/metal_solid_strain5.wav", entity, _, _, _, 0.2);
+	
+	int target = CWM_ShootHull(client, entity, size, hit);
+	if( target >= 0 ) {
+		
+		GetClientEyePosition(client, src);
+		for (int i = 0; i <= 2; i++)
+			src[i] = hit[i] - src[i];
+		
+		// NormalizeVector(src, src);	// Si on normalise pas, on peut pousser plus fort si on est "loin" de la tronco
+		ScaleVector(src, 10.0);			// Ca a du sens, car quand on est "en plein dedans" c'est plus dur de s'en retirer :-)
+		src[2] += 50.0;
+		
+		if( target > 0)
+			TeleportEntity(target, NULL_VECTOR, NULL_VECTOR, src);
+		
+		NegateVector(src);
+		NormalizeVector(src, src);
+		TE_SetupSparks(hit, src, 1, 0);
+		TE_SendToAll();
+		
+		
+		if ( rp_GetBuildingData(target, BD_owner) > 0 ) {
+			CWM_ShootHull(client, entity, size, hit);
+			CWM_ShootHull(client, entity, size, hit);
+			CWM_ShootHull(client, entity, size, hit);
+		}
+		
+		if( GetRandomFloat() > 0.8 && rp_GetClientJobID(client) == 91 ) {
+			GetClientEyePosition(client, src);
+			GetClientEyeAngles(client, ang);
+			GetAngleVectors(ang, dst, NULL_VECTOR, NULL_VECTOR);
+			ScaleVector(dst, 10000.0);
+			AddVectors(src, dst, dst);
+			
+			for (int i = 0; i < 3; i++) {
+				min[i] = -size;
+				max[i] =  size;
+			}
+			Handle trace = TR_TraceHullFilterEx(src, dst, min, max, MASK_SHOT, TraceEntityFilterSelf, client);
+			
+			if (TR_DidHit(trace)) {
+				TR_GetEndPosition(hit, trace);
+				target = TR_GetEntityIndex(trace);
+		
+				if (GetVectorDistance(src, hit) < RANGE_MELEE && rp_IsValidDoor(target) ) {
+					ServerCommand("rp_door_breakcadenas %d %d", client, target);
+				}
+			}
+			
+			delete trace;			
+		}
+	}
+	
+	return Plugin_Continue;
+}
+public bool TraceEntityFilterSelf(int entity, int contentsMask, any data) {
+	return entity != data;
+}
+public void OnMapStart() {
+	
+	AddModelToDownloadsTable(g_szVModel);
+	AddModelToDownloadsTable(g_szWModel);
+	
+	for (int i = 0; i < sizeof(g_szSounds); i++) {
+		AddSoundToDownloadsTable(g_szSounds[i]);
+		PrecacheSoundAny(g_szSounds[i]);
+	}
+	for (int i = 0; i < sizeof(g_szMaterials); i++) {
+		AddFileToDownloadsTable(g_szMaterials[i]);
+	}
+}

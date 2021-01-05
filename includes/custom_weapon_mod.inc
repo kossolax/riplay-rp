@@ -269,6 +269,8 @@ stock void AddSoundToDownloadsTable(char file[PLATFORM_MAX_PATH]) {
 	if( FileExists(tmp, true) )
 		AddFileToDownloadsTable(tmp);
 }
+#if defined _tsxrp_included_
+#else
 public Action Cmd_PluginReloadSelf(int args) {
 	static char name[64];
 	GetPluginFilename(INVALID_HANDLE, name, sizeof(name));
@@ -294,6 +296,7 @@ stock bool IsValidClient(int client) {
 	
 	return true;
 }
+#endif
 stock bool IsClientZooming(int client) {
 	int fov = GetEntProp(client, Prop_Send, "m_iFOV");
 	if( fov == 0 || fov == 90 )
