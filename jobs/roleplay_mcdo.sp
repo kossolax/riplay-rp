@@ -630,7 +630,7 @@ public Action Cmd_ItemHamburger(int args) {
 		rp_ClientGiveItem(client, rand, rnd, true);
 		
 		rp_GetItemData(rand, item_type_name, cmd, sizeof(cmd));
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Free", client, 1, cmd);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Free", client, rnd, cmd);
 	}
 	else if( StrEqual(arg1, "spacy") ) {
 		
