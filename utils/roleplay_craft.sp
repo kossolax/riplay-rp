@@ -1095,6 +1095,7 @@ public void OnThink(int ent) {
 	float last = GetEntPropFloat(ent, Prop_Data, "m_flLastAttackTime");
 	int state = GetEntProp(ent, Prop_Data, "m_iInteractionState");
 	int oldEnemy = GetEntPropEnt(ent, Prop_Data, "m_hInteractionPartner");
+	bool disabled = rp_GetBuildingData(ent, BD_HackedTime) > GetTime();
 
 	int damage = 10;
 	float push = 128.0;
@@ -1106,6 +1107,15 @@ public void OnThink(int ent) {
 	Entity_GetAbsOrigin(ent, src);
 	Entity_GetAbsAngles(ent, ang);
 	src[2] += 43.0; 
+	
+	if( disabled ) {
+		if( GetRandomInt(0, 3) == 0 ) {
+			GetAngleVectors(ang, dir, NULL_VECTOR, NULL_VECTOR);
+			TE_SetupSparks(src, dir, 1, 0);
+			TE_SendToAll();
+		}
+		return;
+	}
 	
 	ang[0] = ang[0] + (yaw-0.5) * 90.0;
 	ang[1] = ang[1] + AngleMod(180.0 + (tilt * 360.0));
@@ -1149,7 +1159,12 @@ public void OnThink(int ent) {
 					TeleportEntity(victim, NULL_VECTOR, NULL_VECTOR, dir);
 					if( damage > 0 ) {
 						rp_SetClientInt(victim, i_LastInflictor, ent);
-						SDKHooks_TakeDamage(victim, ent, Entity_GetOwner(ent), float(damage), ent);
+						
+						if( rp_IsInPVP(victim) )
+							SDKHooks_TakeDamage(victim, ent, Entity_GetOwner(ent), float(damage)*2.5, ent);
+						else
+							SDKHooks_TakeDamage(victim, ent, Entity_GetOwner(ent), float(damage), ent);
+						
 					}
 				}
 				
