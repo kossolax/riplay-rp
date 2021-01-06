@@ -12,7 +12,7 @@
 
 char g_szFullName[PLATFORM_MAX_PATH] =	"Tronçoneuse";
 char g_szName[PLATFORM_MAX_PATH] 	 =	"chainsaw";
-char g_szReplace[PLATFORM_MAX_PATH]  =	"weapon_axe";
+char g_szReplace[PLATFORM_MAX_PATH]  =	"weapon_glock";
 
 char g_szVModel[PLATFORM_MAX_PATH] =	"models/weapons/tsx/chainsaw/v_chainsaw.mdl";
 char g_szWModel[PLATFORM_MAX_PATH] =	"models/weapons/tsx/chainsaw/w_chainsaw.mdl";
@@ -89,7 +89,6 @@ public Action OnAttack(int client, int entity) {
 		NormalizeVector(src, src);
 		TE_SetupSparks(hit, src, 1, 0);
 		TE_SendToAll();
-		
 		
 		if ( rp_GetBuildingData(target, BD_owner) > 0 ) {
 			CWM_ShootHull(client, entity, size, hit);
