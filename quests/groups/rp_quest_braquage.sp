@@ -96,6 +96,24 @@ public void OnAllPluginsLoaded() {
 public void OnMapStart() {
 	PrecacheSoundAny("ui/beep22.wav");
 }
+public Action RP_OnSentryAttack(int entity, int target) {
+	int client = Entity_GetOwner(entity);
+	
+	if( g_bDoingQuest ) {
+		if( rp_GetZoneInt(rp_GetPlayerZone(entity), zone_type_type) == g_iPlanque ) {
+			if( (g_iPlayerTeam[client] == TEAM_BRAQUEUR || g_iPlayerTeam[client] == TEAM_BRAQUEUR_DEAD) && !(g_iPlayerTeam[target] == TEAM_POLICE) ) {
+				return Plugin_Stop;
+			}
+			
+			if( (g_iPlayerTeam[client] == TEAM_POLICE) && !(g_iPlayerTeam[target] == TEAM_BRAQUEUR || g_iPlayerTeam[target] == TEAM_BRAQUEUR_DEAD) ) {
+				return Plugin_Stop;
+			}
+		}
+	}
+	
+	return Plugin_Continue;
+}
+
 // ----------------------------------------------------------------------------
 public bool fwdCanStart(int client) {
 	if( g_bDoingQuest == true )
