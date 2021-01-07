@@ -21,6 +21,7 @@
 
 #pragma newdecls required
 #include <roleplay.inc>	// https://www.ts-x.eu
+#include <custom_weapon_mod.inc>
 
 #define	STONE_HP			1
 #define TREE_HP				1
@@ -803,7 +804,15 @@ public void RemoveStone(int ref) {
 }
 public Action OnPropDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& weapon, float damageForce[3], float damagePosition[3]) {
 	static char tmp[128];
-
+	
+	if( weapon == -1 && attacker != inflictor && IsValidClient(attacker) ) {
+		weapon = GetEntPropEnt(attacker, Prop_Data, "m_hActiveWeapon");
+		if( IsMeleeChainSaw(weapon) ) {
+			inflictor = attacker;
+		}
+	}
+	
+	
 	if( attacker == inflictor && damagetype & DMG_SLASH ) {
 		GetEdictClassname(victim, tmp, sizeof(tmp));
 		
@@ -834,7 +843,8 @@ public Action OnPropDamage(int victim, int& attacker, int& inflictor, float& dam
 				}
 			}
 		}
-		if( StrEqual(tmp, "rp_wood") && IsMeleeAxe(weapon) ) {
+		
+		if( StrEqual(tmp, "rp_wood") && (IsMeleeAxe(weapon)||IsMeleeChainSaw(weapon)) ) {
 			
 			int amount = 1;
 			Action a;
@@ -848,13 +858,21 @@ public Action OnPropDamage(int victim, int& attacker, int& inflictor, float& dam
 			rp_ClientGiveItem(attacker, ITEM_BOIS, amount);
 			AcceptEntityInput(victim, "Break");
 			
-			g_iMeleeHP[attacker][2]--;
-			if( g_iMeleeHP[attacker][2] <= 0 ) {
-				rp_ScheduleEntityInput(weapon, 0.1, "Kill");
-				FakeClientCommand(attacker, "use weapon_fists");
+			if( IsMeleeAxe(weapon) ) {
+				g_iMeleeHP[attacker][2]--;
+				if( g_iMeleeHP[attacker][2] <= 0 ) {
+					rp_ScheduleEntityInput(weapon, 0.1, "Kill");
+					FakeClientCommand(attacker, "use weapon_fists");
+				}
 			}
 		}
-		if( StrEqual(tmp, "rp_tree") && IsMeleeAxe(weapon) ) {
+		
+
+		if( StrEqual(tmp, "rp_tree") && (IsMeleeAxe(weapon)||IsMeleeChainSaw(weapon)) ) {
+			if( IsMeleeChainSaw(weapon) ) {
+				damage *= 5.0;
+			}
+			
 			SetEntProp(victim, Prop_Data, "m_iHealth", Entity_GetHealth(victim) - RoundFloat(damage));
 			if( Entity_GetHealth(victim) <= 0 ) {
 				
@@ -1258,6 +1276,18 @@ bool IsMeleeSpanner(int weapon) {
 		if( StrEqual(tmp, "models/weapons/v_spanner.mdl") ) {
 			return true;
 		}
+	}
+	return false;
+}
+stock bool IsMeleeChainSaw(int weapon) {
+	static char tmp[PLATFORM_MAX_PATH];
+	
+	if( CWM_IsCustom(weapon) ) {
+		int id = CWM_GetEntityInt(weapon, WSI_Identifier);
+		CWM_GetName(id, tmp);
+		
+		if( StrEqual(tmp, "chainsaw") )
+			return true;
 	}
 	return false;
 }

@@ -173,6 +173,7 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 	CreateNative("CWM_GetId", Native_CWM_GetId);
 	CreateNative("CWM_RefreshHUD", Native_CWM_RefreshHUD);
 	CreateNative("CWM_IsCustom", Native_CWM_IsCustom);
+	CreateNative("CWM_GetName", Native_CWM_GetName);
 	
 	CreateNative("CWM_ZoomIn", Native_CWM_ZoomIn);
 	CreateNative("CWM_ZoomOut", Native_CWM_ZoomOut);
@@ -446,7 +447,7 @@ public int Native_CWM_Spawn(Handle plugin, int numParams) {
 #endif
 
 #if CSGO_RENAME_WEAPON == 1
-	//SetEntDataString(entity, FindSendPropInfo("CBaseAttributableItem", "m_szCustomName"), g_sStack[id][WSS_Fullname], 128);
+	SetEntDataString(entity, FindSendPropInfo("CBaseAttributableItem", "m_szCustomName"), g_sStack[id][WSS_Fullname], 128);
 #endif
 
 #if CSGO_FIX_STARTRAK == 1
@@ -557,7 +558,7 @@ public int Native_CWM_ShootHull(Handle plugin, int numParams) {
 
 			if (IsBreakable(target)) {
 				
-				Entity_Hurt(target, g_iStack[id][WSI_AttackDamage], client, DMG_CRUSH, g_sStack[id][WSS_Name]);
+				Entity_Hurt(target, g_iStack[id][WSI_AttackDamage], client, DMG_CRUSH|DMG_SLASH, g_sStack[id][WSS_Name]);
 				
 				if (IsValidClient(target)) {
 					TE_SetupBloodSprite(hit, view_as<float>( { 0.0, 0.0, 0.0 } ), { 255, 0, 0, 255 }, 16, 0, 0);
@@ -821,6 +822,10 @@ public int Native_CWM_RefreshHUD(Handle plugin, int numParams) {
 public int Native_CWM_IsCustom(Handle plugin, int numParams) {
 	int entity = GetNativeCell(1);
 	return view_as<int>(g_iEntityData[entity][WSI_Identifier] >= 0);
+}
+public int Native_CWM_GetName(Handle plugin, int numParams) {
+	int id = GetNativeCell(1);
+	SetNativeString(2, g_sStack[id][WSS_Name], sizeof(g_sStack[][]));
 }
 public int Native_CWM_ZoomIn(Handle plugin, int numParams) {
 	int client = GetNativeCell(1);
@@ -1669,6 +1674,8 @@ public bool IsBreakable(int ent) {
 	if (StrContains(classname, "chicken", false) == 0)
 		return true;
 	if (StrContains(classname, "monster_generic", false) == 0)
+		return true;
+	if (StrContains(classname, "rp_", false) == 0)
 		return true;
 	
 	return false;
