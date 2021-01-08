@@ -18,7 +18,7 @@
 #define MOD_URL					"https://rpweb.riplay.fr/"
 
 //#define DEBUG
-#define MAX_LOCATIONS			160
+#define MAX_LOCATIONS			175
 #define MAX_ZONES				350
 #define MAX_GROUPS				150
 #define MAX_AREA_DIST			500
