@@ -91,7 +91,7 @@ public void OnAllPluginsLoaded() {
 	( \
 	    SELECT `itemid`, `raw`, `amount`, SUBSTRING_INDEX(`extra_cmd`, ' ', -1) `rate` FROM `rp_craft` C INNER JOIN `rp_items` I ON C.`raw`=I.`id` WHERE `extra_cmd` LIKE 'rp_item_primal%' \
 	    UNION \
-	    SELECT `itemid`, `raw`, `amount`, 0 as `rate` FROM `rp_craft` C INNER JOIN `rp_items` I ON C.`raw`=I.`id` WHERE `extra_cmd` LIKE 'rp_item_raw%' \
+	    SELECT `itemid`, `raw`, `amount`, 0 as `rate` FROM `rp_craft` C INNER JOIN `rp_items` I ON C.`raw`=I.`id` \
 	) ORDER BY `itemid`, `raw`", 0, DBPrio_Low);
 	
 	SQL_TQuery(rp_GetDatabase(), SQL_LoadReceipe2, "\

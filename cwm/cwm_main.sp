@@ -202,16 +202,28 @@ public Action Cmd_Spawn(int client, int args) {
 	int id;
 	if (g_hNamedIdentified.GetValue(tmp, id)) {
 		
-		if( args == 2 ) {
-			int target_list[MAXPLAYERS], target_count; bool tn_is_ml;
-			if ( (target_count = ProcessTargetString(tmp2, client, target_list, MAXPLAYERS,
-				COMMAND_FILTER_ALIVE|COMMAND_FILTER_NO_IMMUNITY, tmp3, sizeof(tmp3), tn_is_ml)) <= 0) {
-				ReplyToTargetError(client, target_count);
-				return Plugin_Handled;
-			}
+		if( args >= 2 ) {
 			
-			for (int i = 0; i < target_count; i++)
-				CWM_Spawn(id, target_list[i], pos, ang);
+			if (StrContains(tmp2, "#") == 0 ) {
+				ReplaceString(tmp2, sizeof(tmp2), "#", "");
+				int target = GetClientOfUserId(StringToInt(tmp2));
+				if( IsValidClient(target) )
+					CWM_Spawn(id, target, pos, ang);
+			}
+			else if( IsValidClient(StringToInt(tmp2)) ) {
+				CWM_Spawn(id, StringToInt(tmp2), pos, ang);
+			}
+			else {
+				int target_list[MAXPLAYERS], target_count; bool tn_is_ml;
+				if ( (target_count = ProcessTargetString(tmp2, client, target_list, MAXPLAYERS,
+					COMMAND_FILTER_ALIVE|COMMAND_FILTER_NO_IMMUNITY, tmp3, sizeof(tmp3), tn_is_ml)) <= 0) {
+					ReplyToTargetError(client, target_count);
+					return Plugin_Handled;
+				}
+				
+				for (int i = 0; i < target_count; i++)
+					CWM_Spawn(id, target_list[i], pos, ang);
+			}
 		}
 		else if (client > 0) {
 			GetClientAimedLocation(client, pos, ang);

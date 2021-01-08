@@ -656,10 +656,10 @@ void DisplayMetroMenu(int client) {
 	AddMenuItem(menu, "metro_pvp", 		tmp, (zone == 200) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	
 	Format(tmp, sizeof(tmp), "%T", "Metro_Hell", client);
-	AddMenuItem(menu, "metro_event", tmp, GetConVarInt(g_hEVENT) != 5? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+	AddMenuItem(menu, "metro_mine", tmp, (zone == 155) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	
 	if( rp_GetClientKeyAppartement(client, 50) ) {
-		Format(tmp, sizeof(tmp), "%T", "Metro_Event", client);
+		Format(tmp, sizeof(tmp), "%T", "Metro_Villa", client);
 		AddMenuItem(menu, "metro_villa", tmp, (zone == 245) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	}
 	

@@ -75,7 +75,7 @@ int g_iTreeID[2049], g_iStoneID[2049];
 int g_iStoneCount = 0;
 int g_cBeam;
 int g_iMaxRandomMineral;
-int g_iMeleeHP[65][4]; // 0 = canne, 1 = marteau, 2 = hache, 3 = spanner
+int g_iMeleeHP[2049][4]; // 0 = canne, 1 = marteau, 2 = hache, 3 = spanner
 
 ArrayList g_iSpawn;
 
@@ -300,13 +300,13 @@ public Action Cmd_GiveItem(int args) {
 	int ent = GivePlayerItem(client, Arg1);
 	
 	if( StrEqual(Arg1, "weapon_hammer") ) {
-		g_iMeleeHP[client][1] = MELEE_HP;
+		g_iMeleeHP[ent][1] = MELEE_HP;
 	}
 	if( StrEqual(Arg1, "weapon_axe") ) {
-		g_iMeleeHP[client][2] = MELEE_HP;
+		g_iMeleeHP[ent][2] = MELEE_HP;
 	}
 	if( StrEqual(Arg1, "weapon_spanner") ) {
-		g_iMeleeHP[client][3] = MELEE_HP;
+		g_iMeleeHP[ent][3] = MELEE_HP;
 	}
 	
 	if( rof > 1.0 ) {
@@ -835,8 +835,8 @@ public Action OnPropDamage(int victim, int& attacker, int& inflictor, float& dam
 					Call_Finish(a);
 					rp_ClientGiveItem(attacker, itemID, amount);
 					
-					g_iMeleeHP[attacker][1]--;
-					if( g_iMeleeHP[attacker][1] <= 0 ) {
+					g_iMeleeHP[weapon][1]--;
+					if( g_iMeleeHP[weapon][1] <= 0 ) {
 						rp_ScheduleEntityInput(weapon, 0.1, "Kill");
 						FakeClientCommand(attacker, "use weapon_fists");
 					}
@@ -859,8 +859,8 @@ public Action OnPropDamage(int victim, int& attacker, int& inflictor, float& dam
 			AcceptEntityInput(victim, "Break");
 			
 			if( IsMeleeAxe(weapon) ) {
-				g_iMeleeHP[attacker][2]--;
-				if( g_iMeleeHP[attacker][2] <= 0 ) {
+				g_iMeleeHP[weapon][2]--;
+				if( g_iMeleeHP[weapon][2] <= 0 ) {
 					rp_ScheduleEntityInput(weapon, 0.1, "Kill");
 					FakeClientCommand(attacker, "use weapon_fists");
 				}

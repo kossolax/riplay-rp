@@ -27,6 +27,7 @@ AudioPlayer api;
 public void OnPluginStart() {
 	RegConsoleCmd("sm_audio2", 		Cmd_Audio);
 	RegConsoleCmd("player_ping", block);
+	RegConsoleCmd("chatwheel_ping", block);
 	HookUserMessage(GetUserMessageId("RadioText"), BlockRadio, true);
 	
 	AddNormalSoundHook(sound_hook);

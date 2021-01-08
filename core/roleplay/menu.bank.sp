@@ -876,6 +876,7 @@ public int DrawBankTransfer_4(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 
 public void fwdBankSetSaveName(int client, int save, char[] message) {
 	char tmp[32];
+	TrimString(message);
 	SQL_EscapeString(g_hBDD, message, tmp, sizeof(tmp));
 	
 	if( strlen(message) >= 3 ) {
