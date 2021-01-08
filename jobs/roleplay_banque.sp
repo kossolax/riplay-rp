@@ -683,7 +683,7 @@ public int eventMetroMenu(Handle menu, MenuAction action, int client, int param2
 		
 		int Max, i, hours, min, iLocation[MAX_LOCATIONS];
 		
-		for( i=0; i<150; i++ ) {
+		for( i=0; i<MAX_LOCATIONS; i++ ) {
 			rp_GetLocationData(i, location_type_base, tmp, sizeof(tmp));
 			
 			if( StrEqual(tmp, options, false) ) {
