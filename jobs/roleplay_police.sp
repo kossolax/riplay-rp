@@ -772,7 +772,7 @@ public Action Cmd_Tazer(int client) {
 				}
 			}
 		}
-		else if (StrContains(tmp2, "rp_") == 0 && rp_GetZoneBit(Tzone, 1.0) & BITZONE_PERQUIZ ) {
+		else if (StrContains(tmp2, "rp_") == 0 && !StrEqual(tmp2, "rp_sentry") && rp_GetZoneBit(Tzone, 1.0) & BITZONE_PERQUIZ ) {
 			rp_GetZoneData(Tzone, zone_type_name, tmp, sizeof(tmp));
 			LogToGame("[TSX-RP] [TAZER] %L a retiré %T de %L dans %s", client, tmp2, LANG_SERVER, owner, tmp);
 			
@@ -937,7 +937,7 @@ public Action Cmd_Jail(int client) {
 		
 		GetClientName2(client, target_name, sizeof(target_name), false);
 		rp_ClientVehicleExit(client2, target, true);
-		CPrintToChat(client2, ""...MOD_TAG..." %T", "Cmd_OutOf_Car_By", target_name);
+		CPrintToChat(client2, ""...MOD_TAG..." %T", "Cmd_OutOf_Car_By", client2, target_name);
 		return Plugin_Handled;
 	}
 	else if (!IsValidClient(target)) {
@@ -955,7 +955,7 @@ public Action Cmd_Jail(int client) {
 			
 			GetClientName2(client, target_name, sizeof(target_name), false);
 			rp_ClientVehicleExit(target, Client_GetVehicle(target), true);
-			CPrintToChat(target, ""...MOD_TAG..." %T", "Cmd_OutOf_Car_By", target_name);
+			CPrintToChat(target, ""...MOD_TAG..." %T", "Cmd_OutOf_Car_By", target, target_name);
 		}
 		return Plugin_Handled;
 	}

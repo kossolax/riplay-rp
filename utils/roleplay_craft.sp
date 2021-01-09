@@ -141,6 +141,17 @@ public void OnPluginStart() {
 		if( IsValidClient(i) )
 			OnClientPostAdminCheck(i);
 	
+	char tmp[128];
+	for (int i = 1; i <= 2048; i++) {
+		if( !IsValidEdict(i) || !IsValidEntity(i) )
+			continue;
+		
+		GetEdictClassname(i, tmp, sizeof(tmp));
+		if( StrEqual(tmp, "rp_sentry") ) {
+			SDKHook(i, SDKHook_Think, OnThink);
+		}
+	}
+	
 	g_iMaxRandomMineral = 0;
 	for (int i = 0; i < sizeof(g_szStone); i++) {
 		g_iMaxRandomMineral += StringToInt(g_szStone[i][1]);
@@ -1107,6 +1118,25 @@ int getEnemy(int ent, float src[3], float ang[3], float& tilt, float threshold) 
 	
 	return nearest;
 }
+public bool enumerator(int entity, any data) {
+	if( entity == data )
+		return true;
+	
+	
+	if( data == 465 ) {
+		PrintToChat(30, "%d", entity);
+	}
+	
+	if( entity == 1299 ) {
+		PrintToChat(30, "oui!");
+	}
+	
+	if( entity == 0 )
+		return false;
+	
+	return true;
+}
+
 public void OnThink(int ent) {
 	float tilt = GetEntPropFloat(ent, Prop_Send, "m_flPoseParameter", 0);
 	float yaw = GetEntPropFloat(ent, Prop_Send, "m_flPoseParameter", 1);
@@ -1161,7 +1191,7 @@ public void OnThink(int ent) {
 			EmitAmbientSoundAny("weapons/m249/m249-1.wav", NULL_VECTOR, ent, _, _, _, SNDPITCH_HIGH);
 			SetEntPropFloat(ent, Prop_Data, "m_flLastAttackTime", GetGameTime());
 			
-			Handle trace = TR_TraceRayFilterEx(src, ang, MASK_SHOT, RayType_Infinite, TraceEntityFilterSelf, ent);
+			Handle trace = TR_TraceRayFilterEx(src, ang, MASK_SHOT|CONTENTS_HITBOX, RayType_Infinite, TraceEntityFilterSentry, ent);
 			if( TR_DidHit(trace) ) {
 				TR_GetEndPosition(dst, trace);
 				int victim = TR_GetEntityIndex(trace);
@@ -1190,6 +1220,9 @@ public void OnThink(int ent) {
 				TE_SendToAll();
 			}
 			delete trace;
+			
+			//TR_EnumerateEntities(src, ang, MASK_ALL, RayType_Infinite, enumerator, ent);
+			
 		}
 	}
 	else {
@@ -1297,4 +1330,14 @@ float AngleMod(float flAngle) {
 }
 public bool TraceEntityFilterSelf(int entity, int contentsMask, any data) {
 	return entity != data;
+}
+public bool TraceEntityFilterSentry(int entity, int contentsMask, any data) {
+	if( entity == 0 )
+		return true;
+	if( entity == data )
+		return false;
+	if( rp_IsMoveAble(entity) )
+		return true;
+	
+	return false;
 }

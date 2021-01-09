@@ -7,7 +7,6 @@
 	}
 	"Error_Command_ForNow"
 	{
-		"#format"	"{1:s}"
 		"fr"		"Vous ne pouvez pas utiliser cette commande pour le moment."
 		"en"		"You cannot use this command for now."
 	}
