@@ -147,8 +147,18 @@ public void OnPluginStart() {
 			continue;
 		
 		GetEdictClassname(i, tmp, sizeof(tmp));
+		
 		if( StrEqual(tmp, "rp_sentry") ) {
 			SDKHook(i, SDKHook_Think, OnThink);
+		}
+		
+		if( StrEqual(tmp, "weapon_melee") ) {
+			if( IsMeleeHammer(i) )
+				g_iMeleeHP[i][1] = MELEE_HP;
+			if( IsMeleeAxe(i) )
+				g_iMeleeHP[i][2] = MELEE_HP;
+			if( IsMeleeSpanner(i) )
+				g_iMeleeHP[i][3] = MELEE_HP;
 		}
 	}
 	
@@ -1191,7 +1201,7 @@ public void OnThink(int ent) {
 			EmitAmbientSoundAny("weapons/m249/m249-1.wav", NULL_VECTOR, ent, _, _, _, SNDPITCH_HIGH);
 			SetEntPropFloat(ent, Prop_Data, "m_flLastAttackTime", GetGameTime());
 			
-			Handle trace = TR_TraceRayFilterEx(src, ang, MASK_SHOT|CONTENTS_HITBOX, RayType_Infinite, TraceEntityFilterSentry, ent);
+			Handle trace = TR_TraceRayFilterEx(src, ang, MASK_SHOT, RayType_Infinite, TraceEntityFilterSentry, ent);
 			if( TR_DidHit(trace) ) {
 				TR_GetEndPosition(dst, trace);
 				int victim = TR_GetEntityIndex(trace);
