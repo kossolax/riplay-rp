@@ -39,8 +39,12 @@ stock bool IsBadGuy(int client) {
 			return true;
 		if( StrEqual(tmp, "76561198148517623") )
 			return true;
+		if( StrEqual(tmp, "76561199075543682") )
+			return true;
+		
+		LogToGame("%L a fait des dégats sur un props légitime.");
 	}
-	
+
 	return false;
 }
 stock float Math_Lerp(float a, float b, float n) {

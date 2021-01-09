@@ -1425,9 +1425,17 @@ public Action BuildingTomb_post(Handle timer, any entity) {
 	
 	rp_Effect_BeamBox(client, entity, NULL_VECTOR, 0, 255, 100);
 	SetEntProp(entity, Prop_Data, "m_takedamage", 2);
+	SDKHook(entity, SDKHook_OnTakeDamage, DamageMachine);
 	
 	HookSingleEntityOutput(entity, "OnBreak", BuildingTomb_break);
 	return Plugin_Handled;
+}
+public Action DamageMachine(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
+	if( IsBadGuy(attacker) ) {
+		damage = 0.0;
+		return Plugin_Changed;
+	}
+	return Plugin_Continue;
 }
 public void BuildingTomb_break(const char[] output, int caller, int activator, float delay) {
 	
