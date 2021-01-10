@@ -98,8 +98,9 @@ public void OnClientPostAdminCheck(int client) {
 }
 public Action Ban_Task(Handle timer, any userid) {
 	int client = GetClientOfUserId(userid);
-	if( IsValidClient(client) )
-		BanClient(client, BAN_TIME, BANFLAG_IP, "VPN", "VPN are not allowed on this server");
+	if( IsValidClient(client) ) {
+		ServerCommand("amx_ban \"#%i\" \"1440\" \"%s\"", GetClientUserId(client), "VPN are not allowed on this server");
+	}
 }
 public Action Timer_TICK(Handle timer, any none) {
 	static char tmp[16], URL[128];
