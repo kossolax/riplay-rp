@@ -227,6 +227,10 @@ public Action Cmd_ItemContrat(int args) {
 public Action fwdTueurCanKill(int attacker, int victim) {
 	if( victim == rp_GetClientInt(attacker, i_ToKill) || attacker == rp_GetClientInt(victim, i_ToKill) )
 		return Plugin_Handled;
+
+	if( rp_GetClientJobID(attacker) == 41 && rp_GetZoneInt(rp_GetPlayerZone(victim), zone_type_type) == 41 )
+		return Plugin_Handled;
+	
 	return Plugin_Continue;
 }
 public Action fwdFrame(int client) {
