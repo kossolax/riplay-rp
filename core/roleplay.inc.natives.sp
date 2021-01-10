@@ -478,6 +478,7 @@ public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
 	char tmp[128];
 	int client = view_as<int>(GetNativeCell(1));
 	int xp = view_as<int>(GetNativeCell(2));
+	bool verbose = view_as<bool>(GetNativeCell(3));
 	
 	if( !IsTutorialOver(client) )
 		return 0;
@@ -496,7 +497,7 @@ public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
 
 	g_iUserData[client][i_PlayerXP] += xp;
 
-	if( xp >= 100 )
+	if( xp >= 100 || verbose )
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "LEVEL_XP", client, xp);
 	
 	while( g_iUserData[client][i_PlayerXP] >= (g_iUserData[client][i_PlayerLVL] * 3600) ) {
