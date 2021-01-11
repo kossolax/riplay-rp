@@ -801,7 +801,7 @@ public Action Command_Say(int client, int args) {
 		}
 		
 		rp_ClientMoney(client, i_Money, -100);
-		SetJobCapital(141,	(GetJobCapital(41)+50) );
+		SetJobCapital(41,	(GetJobCapital(41)+50) );
 		SetJobCapital(1,	(GetJobCapital(1)+50) );
 
 		LogToGame("[TSX-RP] [ENQUETE] %L a regardé %L", client, target);

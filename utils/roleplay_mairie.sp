@@ -136,20 +136,6 @@ public void QUERY_SetMaire(Handle owner, Handle handle, const char[] error, any 
 		for (serverRules i = rules_Amendes; i < server_rules_max; i++)
 			rp_SetServerRules(i, rules_Enabled, 0);
 		rp_StoreServerRules();
-		
-		for (int i = 1; i <= MaxClients; i++) {
-			if( !IsValidClient(i) )
-				continue;
-			if( rp_GetClientKeyAppartement(i, 51) ) {
-				rp_SetClientKeyAppartement(i, 51, false );
-				rp_SetClientInt(i, i_AppartCount, rp_GetClientInt(i, i_AppartCount) - 1);
-			}
-			GetClientAuthId(i, AUTH_TYPE, tmp, sizeof(tmp));
-			if( StrEqual(tmp, tmp2) ) {
-				rp_SetClientKeyAppartement(i, 51, true );
-				rp_SetClientInt(i, i_AppartCount, rp_GetClientInt(i, i_AppartCount) + 1);
-			}
-		}
 	}
 }
 public void OnClientPostAdminCheck(int client) {

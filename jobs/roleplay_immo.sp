@@ -537,6 +537,7 @@ public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerUse, fwdOnPlayerUse);
 	rp_HookEvent(client, RP_OnFrameSeconde, fwdOnFrame);
 	
+	fwdLoaded(client);
 	g_bDataLoaded[client] = false;
 	for (int i = 0; i < 64; i++) {
 		g_sCount[client][i] = 0;
@@ -652,6 +653,7 @@ public Action fwdLoaded(int client) {
 		rp_SetClientKeyAppartement(client, 51, true );
 		rp_SetClientInt(client, i_AppartCount, rp_GetClientInt(client, i_AppartCount) + 1);
 	}
+	
 }
 public Action fwdOnPlayerUse(int client) {
 	if( rp_GetClientJobID(client) != 61 )
@@ -1508,7 +1510,7 @@ void GetClientFrontLocationData( int client, float position[3], float angles[3],
 
 public Action Cmd_InfoColoc(int client){
 	if(rp_GetClientInt(client, i_AppartCount) == 0){
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "Appart_None");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Appart_None", client);
 		return Plugin_Handled;
 	}
 	char tmp[128];
