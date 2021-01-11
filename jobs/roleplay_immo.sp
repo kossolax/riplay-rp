@@ -1117,7 +1117,7 @@ public int MenuPropAppart(Handle menu, MenuAction action, int client, int param2
 				return;
 			}
 		}
-		if( g_bAppartCanBeSaved[appart] == false ) {
+		if( appart < 50 && g_bAppartCanBeSaved[appart] == false ) {
 			char item_name[128];
 			rp_GetItemData(ITEM_PROP_APPART, item_type_name, item_name, sizeof(item_name));
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
