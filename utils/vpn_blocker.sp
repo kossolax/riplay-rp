@@ -52,7 +52,7 @@ public void OnPluginStart() {
 	g_bProcessing = false;
 	
 	CreateTimer(QUEUE_SPEED, Timer_TICK, _, TIMER_REPEAT);
-	g_hCvarScore = CreateConVar("sv_autoban_vpn_score", "0.991");
+	g_hCvarScore = CreateConVar("sv_autoban_vpn_score", "0.997");
 	
 	RegAdminCmd("sm_vpn_reload", Cmd_ReloadWhiteList, ADMFLAG_BAN);
 	RegServerCmd("rp_quest_reload", Cmd_Reload);

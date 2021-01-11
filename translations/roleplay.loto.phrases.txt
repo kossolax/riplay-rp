@@ -174,8 +174,8 @@
 	"Lotery_Cagnotte_Second"
 	{
 		"#format"	"{1:s},{2:d}"
-		"fr"	"suivi de.... {1}{default} qui remporte {yellow}{2}{default}$!"
-		"en"	"followed by.... {1}{default} who wins {yellow}${2}{default}!"
+		"fr"	"suivi de.... {1}{default} qui remporte {orange}{2}{default}$!"
+		"en"	"followed by.... {1}{default} who wins {orange}${2}{default}!"
 	}
 	"Lotery_Cagnotte_Third"
 	{

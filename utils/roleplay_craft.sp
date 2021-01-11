@@ -17,7 +17,7 @@
 #include <smlib>		// https://github.com/bcserv/smlib
 #include <colors_csgo>	// https://forums.alliedmods.net/showthread.php?p=2205447#post2205447
 #include <emitsoundany> // https://forums.alliedmods.net/showthread.php?t=237045
-#include <collisionhook> // https://forums.alliedmods.net/showthread.php?t=197815
+//#include <collisionhook> // https://forums.alliedmods.net/showthread.php?t=197815
 
 #pragma newdecls required
 #include <roleplay.inc>	// https://www.ts-x.eu
@@ -41,6 +41,7 @@
 #define SENTRY_ANGLE		0.5
 
 Handle g_hOnSentryAttack;
+bool g_bBuilding[65];
 
 enum {
 	STATE_TURN_LEFT,
@@ -101,7 +102,7 @@ public Action Cmd_Reload(int args) {
 }
 
 public Action CH_ShouldCollide(int ent1, int ent2, bool& result) {
-//	PrintToChatAll("collide - %d -- %d -- %d", ent1, ent2, result);
+	
 	return Plugin_Continue;
 }
 public Action CH_PassFilter(int ent1, int ent2, bool& result) {
@@ -128,6 +129,10 @@ public Action CH_PassFilter(int ent1, int ent2, bool& result) {
 }
 
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("common.phrases");
+	LoadTranslations("roleplay.phrases");
+	
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	
 	RegServerCmd("rp_item_fish", 		Cmd_Fish,			"RP-ITEM",	FCVAR_UNREGISTERED);
@@ -299,6 +304,64 @@ public Action Cmd_Sentry(int args) {
 	int client = GetCmdArgInt(1);
 	int item_id = GetCmdArgInt(args);
 	
+	if( !rp_IsBuildingAllowed(client) ) {
+		ITEM_CANCEL(client, item_id);
+		return Plugin_Handled;
+	}
+	
+	int zone = rp_GetPlayerZone(client);
+	int job = rp_GetZoneInt(zone, zone_type_type);
+	int appart = rp_GetPlayerZoneAppart(client);
+	int group = rp_GetClientGroupID(client);
+	
+	bool pvp = rp_IsInPVP(client);
+	
+	char classname[64], tmp[64];
+	Format(classname, sizeof(classname), "rp_sentry");
+	
+	int pvpGangCount = 0;
+	
+	for(int i=1; i<=2048; i++) {
+		if( !IsValidEdict(i) )
+			continue;
+		if( !IsValidEntity(i) )
+			continue;
+			
+		GetEdictClassname(i, tmp, sizeof(tmp));
+		
+		if( StrEqual(classname, tmp) ) {
+			if( rp_GetBuildingData(i, BD_owner) == client ) {
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
+				ITEM_CANCEL(client, item_id);
+				return Plugin_Handled;
+			}
+			if( job > 0 && rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type) == job ) {
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
+				ITEM_CANCEL(client, item_id);
+				return Plugin_Handled;
+			}
+			if( appart > 0 && rp_GetPlayerZoneAppart(i) == appart ) {
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
+				ITEM_CANCEL(client, item_id);
+				return Plugin_Handled;
+			}
+			if( pvp && Entity_GetDistance(client, i) <= 512.0 ) {
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
+				ITEM_CANCEL(client, item_id);
+				return Plugin_Handled;
+			}
+			if( pvp && rp_IsInPVP(i) && rp_GetClientGroupID(rp_GetBuildingData(i, BD_owner)) == group ) {
+				pvpGangCount++;
+			}
+		}
+	}
+	
+	if( pvpGangCount >= 2 ) {
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
+		ITEM_CANCEL(client, item_id);
+		return Plugin_Handled;
+	}	
+
 	float pos[3], ang[3];
 	Entity_GetAbsOrigin(client, pos);
 	Entity_GetAbsAngles(client, ang);
@@ -306,10 +369,47 @@ public Action Cmd_Sentry(int args) {
 	int ent = CreateSentry(client, pos, ang);
 	rp_SetBuildingData(ent, BD_owner, client);
 	rp_SetBuildingData(ent, BD_item_id, item_id);
-	
-	SetEntProp( ent, Prop_Data, "m_iHealth", 100000);
+	SetEntProp( ent, Prop_Data, "m_iHealth", 50000);
 	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
 	
+	ServerCommand("sm_effect_fading \"%i\" \"5.0\" \"0\"", ent);
+	EmitSoundToAllAny("player/ammo_pack_use.wav", client, _, _, _, 0.66);
+	
+	rp_HookEvent(client, RP_OnPlayerDead, fwdDead, 5.0);
+	rp_HookEvent(client, RP_PrePlayerPhysic, fwdFrozen, 5.0);
+	rp_SetClientFloat(client, fl_TazerTime, GetGameTime() + 5.0);
+	rp_SetClientFloat(client, fl_FrozenTime, GetGameTime() + 5.0);
+	
+	SetEntityMoveType(ent, MOVETYPE_NONE);
+	CreateTimer(5.0, BuildingSentry_post, ent);
+	g_bBuilding[client] = true;
+	
+	return Plugin_Handled;
+}
+public Action fwdDead(int client) {
+	g_bBuilding[client] = false;
+}
+public Action fwdFrozen(int client, float& speed, float& gravity) {
+	speed = 0.0;
+	gravity = 0.0; 
+	return Plugin_Stop;
+}
+public Action BuildingSentry_post(Handle timer, any ent) {
+	if( !IsValidEdict(ent) && !IsValidEntity(ent) ) {
+		return Plugin_Handled;
+	}
+	
+	int client = rp_GetBuildingData(ent, BD_owner);
+	if( g_bBuilding[client] == false ) {
+		int item_id = rp_GetBuildingData(ent, BD_item_id);
+		ITEM_CANCEL(client, item_id);
+		AcceptEntityInput(ent, "Kill");
+		return Plugin_Handled;
+	}
+
+	SDKHook(ent, SDKHook_Think, OnThink);
+	g_bBuilding[client] = false;
+	return Plugin_Handled;
 }
 public Action Cmd_GiveItem(int args) {
 	char Arg1[64];
@@ -982,9 +1082,7 @@ int CreateSentry(int owner, float pos[3], float ang[3]) {
 	SetEntityMoveType(ent, MOVETYPE_FLYGRAVITY);
 	SetEntProp(ent, Prop_Data, "m_lifeState", 0);
 	
-	TeleportEntity(ent, pos, ang, NULL_VECTOR);
-	SDKHook(ent, SDKHook_Think, OnThink);
-	
+	TeleportEntity(ent, pos, ang, NULL_VECTOR);	
 	return ent;
 }
 void getTargetAngle(int ent, int target, float& tilt, float& yaw) {
@@ -1193,12 +1291,12 @@ public void OnThink(int ent) {
 	int newEnemy = getEnemy(ent, src, ang, tilt, threshold);
 	if( newEnemy > 0 ) {
 		if( oldEnemy == 0 )
-			EmitAmbientSoundAny("survival/turret_sawplayer_01.wav", NULL_VECTOR, ent);
+			EmitSoundToAllAny("survival/turret_sawplayer_01.wav", ent);
 		
 		moveToTarget(ent, newEnemy, speed, tilt, yaw);
 		
 		if( last+fire < GetGameTime() ) {
-			EmitAmbientSoundAny("weapons/m249/m249-1.wav", NULL_VECTOR, ent, _, _, _, SNDPITCH_HIGH);
+			EmitSoundToAllAny("weapons/m249/m249-1.wav", ent, _, _, _, 0.5, SNDPITCH_HIGH);
 			SetEntPropFloat(ent, Prop_Data, "m_flLastAttackTime", GetGameTime());
 			
 			Handle trace = TR_TraceRayFilterEx(src, ang, MASK_SHOT, RayType_Infinite, TraceEntityFilterSentry, ent);
@@ -1219,7 +1317,7 @@ public void OnThink(int ent) {
 						rp_SetClientInt(victim, i_LastInflictor, ent);
 						
 						if( rp_IsInPVP(victim) )
-							SDKHooks_TakeDamage(victim, ent, Entity_GetOwner(ent), float(damage)*2.5, ent);
+							SDKHooks_TakeDamage(victim, ent, Entity_GetOwner(ent), float(damage)*1.5, ent);
 						else
 							SDKHooks_TakeDamage(victim, ent, Entity_GetOwner(ent), float(damage), ent);
 						
@@ -1237,7 +1335,7 @@ public void OnThink(int ent) {
 	}
 	else {
 		if( oldEnemy > 0 )
-			EmitAmbientSoundAny("survival/turret_lostplayer_03.wav", NULL_VECTOR, ent);
+			EmitSoundToAllAny("survival/turret_lostplayer_03.wav", ent);
 		
 		if( state == STATE_TURN_LEFT ) {
 			tilt += speed;
@@ -1245,7 +1343,7 @@ public void OnThink(int ent) {
 			if( tilt > 0.5 + SENTRY_ANGLE/2 ) {
 				tilt = 0.5 + SENTRY_ANGLE/2;
 				state = STATE_TURN_RIGHT;
-				EmitAmbientSoundAny("survival/turret_idle_01.wav", NULL_VECTOR, ent);
+				EmitSoundToAllAny("survival/turret_idle_01.wav", ent);
 			}
 		}
 		else {
