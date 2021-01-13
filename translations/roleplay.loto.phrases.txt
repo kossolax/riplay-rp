@@ -72,8 +72,8 @@
 	"SlotMachine_Win_Jeton"
 	{
 		"#format"	"{1:d}"
-		"fr"	"Vous avez gagné {green}{1}{default} jeton(s)!"
-		"en"	"You won {green}{1}{default} token(s)!"
+		"fr"	"Vous avez gagné {1} jeton(s)!"
+		"en"	"You won {1} token(s)!"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Dice_One"
