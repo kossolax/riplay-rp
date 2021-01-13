@@ -645,13 +645,17 @@ public void OnClientDisconnect(int client) {
 public Action fwdLoaded(int client) {
 	
 	if( rp_GetClientBool(client, b_HasVilla) ) {
-		rp_SetClientKeyAppartement(client, 50, true);
-		rp_SetClientInt(client, i_AppartCount, rp_GetClientInt(client, i_AppartCount) + 1);
+		if( rp_GetClientKeyAppartement(client, 50) == false ) {
+			rp_SetClientKeyAppartement(client, 50, true);
+			rp_SetClientInt(client, i_AppartCount, rp_GetClientInt(client, i_AppartCount) + 1);
+		}
 	}
 	
 	if( rp_GetClientGroupID(client) > 0 && rp_GetCaptureInt(cap_bunker) == rp_GetClientGroupID(client) ) {
-		rp_SetClientKeyAppartement(client, 51, true );
-		rp_SetClientInt(client, i_AppartCount, rp_GetClientInt(client, i_AppartCount) + 1);
+		if( rp_GetClientKeyAppartement(client, 51) == false ) {
+			rp_SetClientKeyAppartement(client, 51, true );
+			rp_SetClientInt(client, i_AppartCount, rp_GetClientInt(client, i_AppartCount) + 1);
+		}
 	}
 	
 }

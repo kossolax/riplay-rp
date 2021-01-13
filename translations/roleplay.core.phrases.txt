@@ -702,7 +702,7 @@
 	"Pay_Work"
 	{
 		"#format"	"{1:d}"
-		"fr"		"Vous avez reçu {green}{1}{default}$ pour votre travail d'ajourd'hui."
+		"fr"		"Vous avez reçu {green}{1}{default}$ pour votre travail d'aujourd'hui."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Syn_Hire"

@@ -43,8 +43,11 @@ stock bool IsBadGuy(int client) {
 			return true;
 		if( StrEqual(tmp, "76561198308059058") )
 			return true;
+		if( StrEqual(tmp, "76561198341781285") )
+			return true;
 		
-		LogToGame("%L a fait des dégats sur un props légitime.", client);
+		if( GetRandomInt(0, 10) == 0 )
+			LogToGame("%L a fait des dégats sur un props légitime.", client);
 	}
 
 	return false;

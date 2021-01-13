@@ -3,32 +3,32 @@
 	"Info_TrainTarget"
 	{
 		"#format"	"{1:s},{2:d},{3:d},{4:d}"
-		"fr"	"{1} a {red}{2}%{default} d'entraînement au couteau, {red}{3}%{default} d'ésquive et {red}{4}%{default} de précision de tir."
-		"en"	"{1} has {red}{2}%{default} in knife training, {red}{3}%{default} in dodging and {red}{4}%{default} in shooting accuracy."
+		"fr"	"{1} a {red}{2}%%{default} d'entraînement au couteau, {red}{3}%%{default} d'ésquive et {red}{4}%%{default} de précision de tir."
+		"en"	"{1} has {red}{2}%%{default} in knife training, {red}{3}%%{default} in dodging and {red}{4}%%{default} in shooting accuracy."
 	}
 	"Info_TrainSelf"
 	{
 		"#format"	"{1:d},{2:d},{3:d}"
-		"fr"	"Vous avez {red}{1}%{default} d'entraînement au couteau, {red}{2}%{default} d'ésquive et {red}{3}%{default} de précision de tir."
-		"en"	"You have {red}{1}%{default} in knife training, {red}{2}%{default} in dodging and {red}{3}%{default} in shooting accuracy."
+		"fr"	"Vous avez {red}{1}%%{default} d'entraînement au couteau, {red}{2}%%{default} d'ésquive et {red}{3}%%{default} de précision de tir."
+		"en"	"You have {red}{1}%%{default} in knife training, {red}{2}%%{default} in dodging and {red}{3}%%{default} in shooting accuracy."
 	}
 	"Train_Knife"
 	{
 		"#format"	"{1:d}"
-		"fr"	"Votre entraînement au couteau est maintenant de {red}{1}%{default}."
-		"en"	"Your knife training is now {red}{1}%{default}."
+		"fr"	"Votre entraînement au couteau est maintenant de {red}{1}%%{default}."
+		"en"	"Your knife training is now {red}{1}%%{default}."
 	}
 	"Train_Weapon"
 	{
 		"#format"	"{1:d}"
-		"fr"	"Votre entraînement aux armes est maintenant de {red}{1}%{default}."
-		"en"	"Your weapons training is now {red}{1}%{default}."
+		"fr"	"Votre entraînement aux armes est maintenant de {red}{1}%%{default}."
+		"en"	"Your weapons training is now {red}{1}%%{default}."
 	}
 	"Train_Esquive"
 	{
 		"#format"	"{1:d}"
-		"fr"	"Votre entraînement à l'auto-défense est maintenant de {red}{1}%{default}."
-		"en"	"Your self-defense training is now {red}{1}%{default}."
+		"fr"	"Votre entraînement à l'auto-défense est maintenant de {red}{1}%%{default}."
+		"en"	"Your self-defense training is now {red}{1}%%{default}."
 	}
 	"Train_Max"
 	{

@@ -944,6 +944,21 @@ void STATE_ENTER_REWARD() {
 	
 	if( rp_GetCaptureInt(cap_bunker) != winner ) {
 		rp_SetCaptureInt(cap_pvpRow, 1);
+		
+		for (int i = 1; i <= MaxClients; i++) {
+			if( !IsValidClient(i) )
+				continue;
+			
+			if( rp_GetClientKeyAppartement(i, 51) ) {
+				rp_SetClientKeyAppartement(i, 51, false);
+				rp_SetClientInt(i, i_AppartCount, rp_GetClientInt(i, i_AppartCount) - 1);
+			}
+			
+			if( rp_GetClientGroupID(i) == winner ) {
+				rp_SetClientKeyAppartement(i, 51, true );
+				rp_SetClientInt(i, i_AppartCount, rp_GetClientInt(i, i_AppartCount) + 1);
+			}
+		}
 	}
 	else {
 		rp_SetCaptureInt(cap_pvpRow, rp_GetCaptureInt(cap_pvpRow)+1);
@@ -2192,7 +2207,7 @@ void shuffleTeams() {
 				continue;
 			
 			sPlayers[pCount][0] = i;
-			sPlayers[pCount][1] = rp_GetClientInt(i, i_ELO) + GetRandomInt(-50, 50);
+			sPlayers[pCount][1] = rp_GetClientInt(i, i_ELO);
 			pCount++;
 		}
 		
