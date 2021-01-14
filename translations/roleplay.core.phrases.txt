@@ -488,7 +488,7 @@
 	"BlackFriday_ADS"
 	{
 		"#format"	"{1:d}"
-		"fr"		"Journée exceptionnelle du Black Friday ! Profitez d'une réduction de {green}-{1}%{default} sur tous vos achats !"
+		"fr"		"Journée exceptionnelle du Black Friday ! Profitez d'une réduction de {green}-{1}%%{default} sur tous vos achats !"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"HUD_RespawnIn"
