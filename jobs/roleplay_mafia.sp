@@ -621,6 +621,17 @@ public Action Cmd_ItemPiedBiche(int args) {
 	
 	return Plugin_Handled;
 }
+public Action callHacked(Handle timer, any target) {
+	target = EntRefToEntIndex(target);
+	if( IsValidEdict(target) && IsValidEntity(target) ) {
+		int owner = rp_GetBuildingData(target, BD_owner);
+		int hacked = rp_GetBuildingData(target, BD_HackedBy);
+		
+		if( IsValidClient(owner) && IsValidClient(hacked) && rp_GetClientJobID(hacked) == 91 ) {
+			CPrintToChat(owner, "" ...MOD_TAG... " %T", "Crowbar_FauxBillet", owner);
+		}
+	}
+}
 public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 	ResetPack(dp);
 	int client = ReadPackCell(dp);
@@ -728,7 +739,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				if( IsValidClient(owner) ) {
 					rp_SetBuildingData(target, BD_HackedBy, client);
 					rp_SetBuildingData(target, BD_HackedTime, GetTime());
-					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Crowbar_FauxBillet", owner);
+					CreateTimer(1.0 * 60.0, callHacked, EntIndexToEntRef(target));
 				}
 				
 				Entity_SetHealth(target, Entity_GetHealth(target) - Entity_GetMaxHealth(target) / 10);
@@ -740,7 +751,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				if( IsValidClient(owner) ) {
 					rp_SetBuildingData(target, BD_HackedBy, client);
 					rp_SetBuildingData(target, BD_HackedTime, GetTime());
-					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Crowbar_FauxBillet", owner);
+					CreateTimer(1.0 * 60.0, callHacked, EntIndexToEntRef(target));
 				}
 				
 				Entity_SetHealth(target, Entity_GetHealth(target) - Entity_GetMaxHealth(target) / 10);
@@ -1307,6 +1318,7 @@ bool disapear(int client) {
 		return false;
 
 	int zoneJob = rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type);
+	int appart = rp_GetPlayerZoneAppart(client);
 	
 	int rndClient[65], rndCount;
 	if( zoneJob == 1 ) {
@@ -1316,7 +1328,7 @@ bool disapear(int client) {
 			}
 		}
 	}
-	else {
+	if( zoneJob > 1 ) {
 		for (int i = 1; i <= MaxClients; i++) {
 			if( IsValidClient(i) && GetClientTeam(i) != CS_TEAM_CT && !IsFakeClient(i) && rp_GetClientJobID(i) == zoneJob && i != client ) {
 				Entity_GetModel(i, model, sizeof(model));
@@ -1324,16 +1336,26 @@ bool disapear(int client) {
 					rndClient[rndCount++] = i;
 			}
 		}
-		if( rndCount == 0 ) {
-			for (int i = 1; i <= MaxClients; i++) {
-				if( IsValidClient(i) && GetClientTeam(i) != CS_TEAM_CT && !IsFakeClient(i) && rp_GetClientJobID(i) != 91 && i != client ) {
-					Entity_GetModel(i, model, sizeof(model));
-					if( StrContains(model, "sprisioner", false) == -1 )
-						rndClient[rndCount++] = i;
-				}
+	}
+	if( appart > 0 ) {
+		for (int i = 1; i <= MaxClients; i++) {
+			if( IsValidClient(i) && GetClientTeam(i) != CS_TEAM_CT && !IsFakeClient(i) && rp_GetClientKeyAppartement(i, appart) && i != client ) {
+				Entity_GetModel(i, model, sizeof(model));
+				if( StrContains(model, "sprisioner", false) == -1 )
+					rndClient[rndCount++] = i;
 			}
 		}
 	}
+	if( rndCount == 0 ) {
+		for (int i = 1; i <= MaxClients; i++) {
+			if( IsValidClient(i) && GetClientTeam(i) != CS_TEAM_CT && !IsFakeClient(i) && rp_GetClientJobID(i) != 91 && i != client ) {
+				Entity_GetModel(i, model, sizeof(model));
+				if( StrContains(model, "sprisioner", false) == -1 )
+					rndClient[rndCount++] = i;
+			}
+		}
+	}
+
 	if( rndCount == 0 )
 		return false;
 	int rnd = Math_GetRandomInt(0, rndCount - 1);
