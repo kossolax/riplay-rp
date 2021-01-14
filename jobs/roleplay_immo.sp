@@ -537,7 +537,7 @@ public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerUse, fwdOnPlayerUse);
 	rp_HookEvent(client, RP_OnFrameSeconde, fwdOnFrame);
 	
-	fwdLoaded(client);
+	
 	g_bDataLoaded[client] = false;
 	for (int i = 0; i < 64; i++) {
 		g_sCount[client][i] = 0;
@@ -551,6 +551,10 @@ public void OnClientPostAdminCheck(int client) {
 public Action fwdOnFrame(int client) {
 	int appart = rp_GetPlayerZoneAppart(client);
 	float src[3], dst[3];
+	
+	if( appart > 0 ) {
+		fwdLoaded(client);
+	}
 	
 	if( appart > 0 && rp_GetClientKeyAppartement(client, appart) ) {
 		for (int j = 0; j < g_iDirtyCount[appart]; j++) {
@@ -650,11 +654,23 @@ public Action fwdLoaded(int client) {
 			rp_SetClientInt(client, i_AppartCount, rp_GetClientInt(client, i_AppartCount) + 1);
 		}
 	}
+	else {
+		if( rp_GetClientKeyAppartement(client, 50) == true ) {
+			rp_SetClientKeyAppartement(client, 50, false);
+			rp_SetClientInt(client, i_AppartCount, rp_GetClientInt(client, i_AppartCount) - 1);
+		}
+	}
 	
 	if( rp_GetClientGroupID(client) > 0 && rp_GetCaptureInt(cap_bunker) == rp_GetClientGroupID(client) ) {
 		if( rp_GetClientKeyAppartement(client, 51) == false ) {
 			rp_SetClientKeyAppartement(client, 51, true );
 			rp_SetClientInt(client, i_AppartCount, rp_GetClientInt(client, i_AppartCount) + 1);
+		}
+	}
+	else {
+		if( rp_GetClientKeyAppartement(client, 51) == true ) {
+			rp_SetClientKeyAppartement(client, 51, false);
+			rp_SetClientInt(client, i_AppartCount, rp_GetClientInt(client, i_AppartCount) - 1);
 		}
 	}
 	
