@@ -1606,7 +1606,7 @@ public Action Cmd_BedVilla(int client){
 		return Plugin_Handled;
 	}
 	
-	if( rp_GetClientBool(client, b_MaySteal) == false ) {
+	if( rp_GetClientBool(client, b_MaySteal) == false || rp_GetClientBool(client, b_HasVilla) == true ) {
 		ACCESS_DENIED(client);
 	}
 	rp_SetClientBool(client, b_MaySteal, false);

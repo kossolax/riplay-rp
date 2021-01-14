@@ -399,9 +399,7 @@ void OnGameFrame_10(float time) {
 
 	if( g_iHours == 1 && g_iMinutes == 1 ) {
 		if(g_bIsBlackFriday) {
-			Format(bfAnnoucement, sizeof(bfAnnoucement), "" ...MOD_TAG... " %T", "BlackFriday_ADS", LANG_SERVER, g_iBlackFriday[1]);
-			ReplaceString(bfAnnoucement, sizeof(bfAnnoucement), "PCT", "%%", true);
-			CPrintToChatAll(bfAnnoucement);
+			CPrintToChatAll("" ...MOD_TAG... " %T", "BlackFriday_ADS", LANG_SERVER, g_iBlackFriday[1]);
 		}
 	}
 
