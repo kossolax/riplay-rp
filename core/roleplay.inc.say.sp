@@ -113,9 +113,18 @@ public Action Command_Say(int client, int args) {
 		return Plugin_Handled;
 	}
 	else if(
-		strcmp(szSayTrig, "!craft", false) == 0 || strcmp(szSayTrig, "/craft", false) == 0
+		strcmp(szSayTrig, "!recycl", false) == 0 || strcmp(szSayTrig, "/recycl", false) == 0 ||
+		strcmp(szSayTrig, "!recycler", false) == 0 || strcmp(szSayTrig, "/recycler", false) == 0 ||
+		strcmp(szSayTrig, "!recyclage", false) == 0 || strcmp(szSayTrig, "/recyclage", false) == 0
 		) {
 		RP_ShowMOTD(client, MOD_URL ... "craft.php");
+
+		return Plugin_Handled;
+	}
+	else if(
+		strcmp(szSayTrig, "!craft", false) == 0 || strcmp(szSayTrig, "/craft", false) == 0
+		) {
+		RP_ShowMOTD(client, MOD_URL ... "/#/craft/0");
 
 		return Plugin_Handled;
 	}
