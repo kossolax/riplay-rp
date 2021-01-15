@@ -42,12 +42,12 @@
 				<ul class="dropdown-menu">
 					<li><a href="/index.php?page=aide&sub=debuter"><i class="fa fa-key"></i> Comment bien débuter?</a></li>
 					<li><a href="https://forum.riplay.fr/index.php?/topic/1293-comment-se-connecter-au-discord/"><i class="fa fa-key"></i>  Comment se connecter au Discord ?</a></li>
-					<li><a href="https://forum.riplay.fr/index.php?/topic/1037-comment-trouver-un-job/"></i> Comment trouver un job?</a></li>
-					<li><a href="https://forum.riplay.fr/index.php?/topic/1003-comment-gagner-de-largent/"></i> Comment gagner de l'argent?</a></li>
+					<li><a href="https://forum.riplay.fr/index.php?/topic/1037-comment-trouver-un-job/">Comment trouver un job?</a></li>
+					<li><a href="https://forum.riplay.fr/index.php?/topic/1003-comment-gagner-de-largent/">Comment gagner de l'argent?</a></li>
 					<li><a href="https://forum.riplay.fr/index.php?/topic/1529-tuto-activ%C3%A9-la-console/"><i class="fa fa-keyboard-o"></i> Comment activé la console?</a></li>
 					<li><a href="https://forum.riplay.fr/index.php?/topic/1042-mettre-en-place-vos-binds/"><i class="fa fa-keyboard-o"></i> Mettre en place vos binds</a></li>
 					<!-- <li><a href="/index.php?page=aide&sub=nopyj"><i class="fa fa-ticket"></i> Qu'est-ce que le rang no-pyj ?</a></li> -->
-                    <li><a href="https://forum.riplay.fr/index.php?/topic/1548-d%C3%A9buter-lartisanat/"><i class="fa fa-flask"></i> Qu'est-ce que l'artisanat ?</a></li>
+                    			<li><a href="https://forum.riplay.fr/index.php?/topic/1548-d%C3%A9buter-lartisanat/"><i class="fa fa-flask"></i> Qu'est-ce que l'artisanat ?</a></li>
 					<li><a href="https://forum.riplay.fr/index.php?/topic/1451-craft-v2/"><i class"fa fa-flask"></i> Comment faire de l'artisanat V2</a></li>
 				</ul>
 			</li>
