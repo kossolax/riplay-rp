@@ -44,7 +44,7 @@ Handle g_hGodTimer[65], g_hKillTimer[65];
 bool g_bIsInCaptureMode = false;
 int g_cBeam;
 StringMap g_hGlobalDamage, g_hGlobalSteamID;
-enum damage_data { gdm_shot, gdm_touch, gdm_damage, gdm_hitbox, gdm_elo, gdm_flag, gdm_kill, gdm_dead, gdm_team, gdm_score, gdm_area, gdm_group, gdm_max };
+enum damage_data { gdm_shot, gdm_touch, gdm_damage, gdm_hitbox, gdm_elo, gdm_lastkill_to, gdm_lastkill_by, gdm_flag, gdm_kill, gdm_dead, gdm_team, gdm_score, gdm_area, gdm_group, gdm_max };
 TopMenu g_hStatsMenu;
 TopMenuObject g_hStatsMenu_Shoot, g_hStatsMenu_Head, g_hStatsMenu_Damage, g_hStatsMenu_Flag, g_hStatsMenu_ELO, g_hStatsMenu_SCORE, g_hStatsMenu_KILL, g_hStatsMenu_DEAD, g_hStatsMenu_RATIO;
 int g_iPlayerTeam[2049], g_stkTeam[view_as<int>(TEAM_MAX)][MAXPLAYERS + 1], g_stkTeamCount[view_as<int>(TEAM_MAX)], g_iTeamScore[view_as<int>(TEAM_MAX)];
@@ -1167,10 +1167,7 @@ public Action fwdDead(int victim, int attacker, float& respawn, int& tdm, float&
 		GDM_RegisterDie(victim);
 		
 		
-		int points = GDM_ELOKill(attacker, victim, dropped);
-		if( dropped )
-			points += RoundFloat(float(points)*0.25);
-			
+		int points = GDM_ELOKill(attacker, victim, dropped);			
 		PrintHintText(attacker, "Kill !\n <font color='#33ff33'>+%d</span> points !", points);
 		g_flClientLastScore[attacker] = GetGameTime();
 		rp_IncrementSuccess(attacker, success_list_killpvp2);
@@ -1805,6 +1802,10 @@ int GDM_ELOKill(int client, int target, bool flag = false) {
 	tElo = RoundFloat(float(victim[gdm_elo]) + ELO_FACTEUR_K * (0.0 - tDelta));
 	
 	int tmp = cElo - attacker[gdm_elo];
+	if( attacker[gdm_lastkill_to] != victim && victim[gdm_lastkill_by] != attacker )
+		tmp += 20;
+	if( flag )
+		tmp += 10;
 	
 	g_iTeamScore[ g_iPlayerTeam[client] ] += tmp;
 	
