@@ -691,6 +691,9 @@ public bool IsMoveAble(int ent) {
 		return false;
 	
 	
+	if( StrContains(classname, "rp_moneybag", false) == 0 )
+		return false;
+	
 	GetEdictClassname(ent, classname, sizeof(classname));
 	if( StrContains(classname, "door", false) == 0 )
 		return false;

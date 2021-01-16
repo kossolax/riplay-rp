@@ -17,6 +17,8 @@ public void OnGameFrame() {
 	for(int Client = 1; Client <= MaxClients; Client++) {
 		if( !g_bUserData[Client][b_isConnected] )
 			continue;
+		if( !IsValidClient(Client) )
+			continue;
 		if( !IsPlayerAlive(Client) )
 			continue;
 		FORCE_FRAME(Client);
@@ -85,6 +87,8 @@ void OnGameFrame_01(float time) {
 		if( !IsValidEdict(Client) || !IsValidEntity(Client) )
 			continue;
 		if( !g_bUserData[Client][b_isConnected] )
+			continue;
+		if( !IsValidClient(Client) )
 			continue;
 		
 		

@@ -147,5 +147,8 @@ public void OnClientDisconnect(int Client) {
 		}
 	}
 	
+	g_bUserData[Client][b_isConnected]  = 0;
+	g_bUserData[Client][b_isConnected2]  = 0;
+	
 	return;
 }
