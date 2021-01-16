@@ -1802,7 +1802,7 @@ int GDM_ELOKill(int client, int target, bool flag = false) {
 	tElo = RoundFloat(float(victim[gdm_elo]) + ELO_FACTEUR_K * (0.0 - tDelta));
 	
 	int tmp = cElo - attacker[gdm_elo];
-	if( attacker[gdm_lastkill_to] != victim && victim[gdm_lastkill_by] != attacker )
+	if( attacker[gdm_lastkill_to] != target && victim[gdm_lastkill_by] != client )
 		tmp += 20;
 	if( flag )
 		tmp += 10;
