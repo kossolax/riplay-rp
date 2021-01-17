@@ -144,6 +144,10 @@ public void Q1_Frame(int objectiveID, int client)
 public void Q1_Abort(int objectiveID, int client) {
 	clearQuest(client);
 	PrintHintText(client, "<b>Quête</b>: %s\nLa quête est terminée.", QUEST_NAME);
+	
+	if( rp_IsValidVehicle(g_iTaxi[client]) )
+		rp_SetVehicleInt(g_iTaxi[client], car_health, -1);
+
 }
 
 // -----------------------------------STEP 2------------------------------------
@@ -315,6 +319,7 @@ public void Q4_Done(int objectiveID, int client)
 		rp_ClientXPIncrement(client, 500);
 		giveMoney(client, 1500);
 		CPrintToChat(client, ""...MOD_TAG..." Bravo, vous avez conduit tous vos clients à bon port ! Vous venez de recevoir %d$.", 1500);
+		rp_SetVehicleInt(g_iTaxi[client], car_health, -1);
 		
 		rp_ClientVehiclePassagerExit(client, g_iTaxi[client]);
 	
