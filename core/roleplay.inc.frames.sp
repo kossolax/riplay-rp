@@ -931,12 +931,12 @@ public void CRON_TIMER() {
 			ServerCommand("rp_force_loto");
 		}
 	}
-/*	if( StringToInt(szDayOfWeek) == 0  ) {	// Dimanche
+	if( StringToInt(szDayOfWeek) == 5  ) {	// Vendredi
 		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
 			ServerCommand("rp_force_appart");
 		}
 	}
-*/	if( StringToInt(szDayOfWeek) == 1  ) {	// Lundi
+	if( StringToInt(szDayOfWeek) == 1  ) {	// Lundi
 		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
 			ServerCommand("rp_force_maire");
 		}
