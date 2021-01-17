@@ -173,6 +173,11 @@ void DrawVendreMenu(int client) {
 				if( StrContains(g_szItemListOrdered[i][item_type_extra_cmd], "rp_giveitem_pvp", false) == 0 )
 					continue;
 			}
+			// Tueur & Kidnapping
+			if( g_iUserData[client][i_Job] == 45 || g_iUserData[client][i_Job] == 46 ) {
+				if( StrContains(g_szItemListOrdered[i][item_type_extra_cmd], "kidnapping", false) >= 0 )
+					continue;
+			}
 			// Technicien & Photocopieuse
 			if( g_iUserData[client][i_Job] == 224 || g_iUserData[client][i_Job] == 225 || g_iUserData[client][i_Job] == 226 ) {
 				if( StrContains(g_szItemListOrdered[i][item_type_extra_cmd], "rp_item_cashbig", false) == 0 )
