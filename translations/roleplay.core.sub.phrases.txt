@@ -402,6 +402,10 @@
 	{
 		"fr"	"Prendre une quête"
 	}
+	"Menu_DisplayPhone_quest_cancel"
+	{
+		"fr"	"Annuler une quête"
+	}
 	"Menu_DisplayPhone_mail"
 	{
 		"fr"	"Lire mes emails"

@@ -23,7 +23,13 @@ void Menu_DisplayPhone(int Client) {
 	menu.SetTitle("%T\n ", "Menu_DisplayPhone", Client);
 	
 	Format(tmp, sizeof(tmp), "%T", "Menu_DisplayPhone_pickup", Client);		menu.AddItem("pickup", tmp, g_flPhoneStart >= GetTickedTime() && GetVectorDistance(f_ClientOrigin, g_flPhonePosit) <= 50.0 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
-	Format(tmp, sizeof(tmp), "%T", "Menu_DisplayPhone_quest", Client);		menu.AddItem("quest", tmp, g_bUserData[Client][b_HasQuest] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+
+	if( g_iClientQuests[client][questID] != -1 )
+		Format(tmp, sizeof(tmp), "%T", "Menu_DisplayPhone_quest_cancel" , Client);		menu.AddItem("quest", tmp, ITEMDRAW_DEFAULT);
+	else
+		Format(tmp, sizeof(tmp), "%T", "Menu_DisplayPhone_quest" , Client);		menu.AddItem("quest", tmp, g_bUserData[Client][b_HasQuest] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+	
+	Format(tmp, sizeof(tmp), "%T", "Menu_DisplayPhone_quest", Client);		menu.AddItem("quest", tmp, );
 	Format(tmp, sizeof(tmp), "%T", "Menu_DisplayPhone_mail", Client);		menu.AddItem("mail", tmp);
 	Format(tmp, sizeof(tmp), "%T", "Menu_DisplayPhone_call", Client);		menu.AddItem("call", tmp);
 	Format(tmp, sizeof(tmp), "%T", "Menu_DisplayPhone_report", Client);		menu.AddItem("report", tmp);
