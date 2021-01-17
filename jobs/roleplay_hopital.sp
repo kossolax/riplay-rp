@@ -129,7 +129,8 @@ public Action Cmd_ItemChirurgie(int args) {
 			rp_GetClientBool(client, ch_Jump) &&
 			rp_GetClientBool(client, ch_Regen) &&
 			rp_GetClientBool(client, ch_Heal) &&
-			rp_GetClientBool(client, ch_Heal) ) {
+			rp_GetClientBool(client, ch_Heal) &&
+			rp_GetClientBool(client, ch_Breath) ) {
 			rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
 			return Plugin_Handled;
 		}
@@ -152,6 +153,10 @@ public Action Cmd_ItemChirurgie(int args) {
 		return Plugin_Handled;
 	}
 	if( StrEqual(arg1, "heal") && rp_GetClientBool(client, ch_Heal) ) {
+		rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+		return Plugin_Handled;
+	}
+	if( StrEqual(arg1, "breath") && rp_GetClientBool(client, ch_Breath) ) {
 		rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
 		return Plugin_Handled;
 	}
@@ -213,8 +218,16 @@ public Action Cmd_ItemChirurgie(int args) {
 			rp_HookEvent(client, RP_OnPlayerSpawn, fwdSpawn);
 		rp_SetClientBool(client, ch_Heal, true);
 	}
+	if( StrEqual(arg1, "breath") || StrEqual(arg1, "full") ) {
+		if( !rp_GetClientBool(client, ch_Breath))
+			rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruBreath);
+		rp_SetClientBool(client, ch_Breath, true);
+	}
 	
 	return Plugin_Handled;
+}
+public Action fwdChiruBreath(int client) {
+	SetEntProp(client, Prop_Data, "m_nWaterLevel", 0);
 }
 public Action ChiruEffect(Handle timer, Handle dp) {
 	ResetPack(dp);

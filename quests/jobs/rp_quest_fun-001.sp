@@ -95,6 +95,11 @@ public bool fwdCanStart(int client)
 			return true;
 	}
 	
+	for (int i = 50; i < 200; i++) { // villa + garage
+		if( rp_GetClientKeyAppartement(client, i) )
+			return true;
+	}
+	
 	return false; // return false
 }
 

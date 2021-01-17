@@ -697,6 +697,7 @@ enum bool_user_data {
 	ch_Heal,
 	ch_Kevlar,
 	ch_Yeux,
+	ch_Breath,
 	b_WeaponIsHands,
 	b_WeaponIsKnife,
 	b_WeaponIsMelee,
