@@ -531,6 +531,9 @@ public void Q6_Frame(int objectiveID, int client) {
 				rp_ClientXPIncrement(g_stkTeam[TEAM_POLICE][j], gainPolice / 10);
 			}
 		}
+		for (int i = 0; i < g_stkTeamCount[TEAM_BRAQUEUR_DEAD]; i++) {
+			CPrintToChat(g_stkTeam[TEAM_BRAQUEUR_DEAD][i], "" ...MOD_TAG... " Le braquage a été perdu.");
+		}
 		rp_QuestStepFail(client, objectiveID);
 		LogToGame("[BRAQUAGE] [END] Le braquage est terminé, perdu: %d$", g_iQuestGain);
 		return;
@@ -652,6 +655,10 @@ public void Q7_Frame(int objectiveID, int client) {
 				rp_ClientXPIncrement(g_stkTeam[TEAM_POLICE][j], gainPolice / 10);
 			}
 		}
+		for (int i = 0; i < g_stkTeamCount[TEAM_BRAQUEUR_DEAD]; i++) {
+			CPrintToChat(g_stkTeam[TEAM_BRAQUEUR_DEAD][i], "" ...MOD_TAG... " Le braquage a été perdu.");
+		}		
+		
 		rp_QuestStepFail(client, objectiveID);
 		LogToGame("[BRAQUAGE] [END] Le braquage est terminé, perdu: %d$", g_iQuestGain);
 		return;
@@ -807,6 +814,7 @@ public Action fwdLoaded(int client) {
 public void OnClientDisconnect(int client) {
 	if( g_iPlayerTeam[client] == TEAM_BRAQUEUR )
 		OnBraqueurKilled(client);
+	
 	if( g_iPlayerTeam[client] == TEAM_POLICE && g_iQuestGain > 0 ) {
 		
 		char szQuery[512], szSteamID[64];

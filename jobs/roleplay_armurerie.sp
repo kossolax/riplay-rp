@@ -299,6 +299,12 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 					ServerCommand("rp_item_redraw %i 74", client);
 				}
 				else if(StrEqual(type, "sanandreas")){
+					
+					int itemId = 22;
+					if( GetConVarInt(FindConVar("rp_capture")) == 1 && rp_GetServerRules(rules_ItemsDisabled, rules_Enabled) == 1 && rp_GetServerRules(rules_ItemsDisabled,rules_Target) == itemId ) {
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_CannotUseItemInPvP", client);
+						return;
+					}
 
 					char classname[64];
 					

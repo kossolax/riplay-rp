@@ -66,7 +66,7 @@ public int eventItemMenu(Handle p_hItemMenu, MenuAction p_oAction, int p_iParam1
 			
 			int id = StringToInt(data[0]);
 			
-			if( g_bIsInCaptureMode && g_iServerRules[rules_ItemsDisabled][rules_Enabled] == 1 && rp_GetClientGroupID(p_iParam1) > 0 && g_iServerRules[rules_ItemsDisabled][rules_Target] == id ) {
+			if( g_bIsInCaptureMode && g_iServerRules[rules_ItemsDisabled][rules_Enabled] == 1 && g_iServerRules[rules_ItemsDisabled][rules_Target] == id ) {
 				CPrintToChat(p_iParam1, "" ...MOD_TAG... " %T", "Error_CannotUseItemInPvP", p_iParam1);
 				return;
 			}

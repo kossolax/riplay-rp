@@ -1510,7 +1510,7 @@ public Action Command_Say(int client, int args) {
 	char tag[32];
 	Format(tag, sizeof(tag), "Empty_String");
 	if( g_bIsHidden[client] == false ) {
-		if( flags & ADMFLAG_ROOT || flags & ADMFLAG_CHEATS ) {
+		if( flags & ADMFLAG_ROOT || flags & ADMFLAG_CONFIG ) {
 			Format(tag, sizeof(tag), "Chat_TAG_Admin"); 
 		}
 		else if( flags & ADMFLAG_KICK ) {
