@@ -259,10 +259,7 @@ void LeaveVehiclePassager(int client, int vehicle=-1) {
 				g_iCarPassager1[car][j] = 0;
 		}
 		
-		if( IsInPVP(client) )
-			GroupColor(client);
-		else
-			Colorize(client, 255, 255, 255, 255);
+		Colorize(client, 255, 255, 255, 255);
 		
 		SetEntProp(client, Prop_Data, "m_takedamage", 2);
 		SetEntityMoveType(client, MOVETYPE_WALK);

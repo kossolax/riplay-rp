@@ -1175,10 +1175,7 @@ public int Native_rpClientColorize(Handle plugin, int numParams) {
 	
 	if( color[0] == -1 ) {
 		if( client > MaxClients || g_bUserData[client][b_Invisible] == false ) {
-			if( IsInPVP(client) )
-				GroupColor(client);
-			else
-				Colorize(client, 255, 255, 255, 255);
+			Colorize(client, 255, 255, 255, 255);
 		}
 	}
 	else {

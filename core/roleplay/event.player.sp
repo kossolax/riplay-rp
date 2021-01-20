@@ -372,11 +372,7 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 		g_iUserData[Client][i_Kevlar] = 250;
 	}
 
-	StripWeapons(Client);
-	
-	if( IsInPVP(Client) )
-		GroupColor(Client);
-	
+	StripWeapons(Client);	
 
 	CreateTimer(0.1, OnPlayerSpawnPost, GetClientUserId(Client));
 

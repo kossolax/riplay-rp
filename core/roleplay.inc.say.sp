@@ -894,6 +894,8 @@ public Action Command_Say(int client, int args) {
 	}
 	else if(
 		strcmp(szSayTrig, "!deletenote", false) == 0		|| strcmp(szSayTrig, "/deletenote", false) == 0 ||
+		strcmp(szSayTrig, "!delnote", false) == 0		|| strcmp(szSayTrig, "/delnote", false) == 0 ||
+		strcmp(szSayTrig, "!delnotes", false) == 0		|| strcmp(szSayTrig, "/delnotes", false) == 0 ||
 		strcmp(szSayTrig, "!deletenotes", false) == 0			|| strcmp(szSayTrig, "/deletenotes", false) == 0
 		) {
 

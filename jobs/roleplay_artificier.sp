@@ -582,9 +582,13 @@ public Action EMPExplode_Task(Handle timer, any ent) {
 			}
 			else {
 				if( IsValidClient(i) && !(rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_PEACEFULL) ) {
-					kev = rp_GetClientInt(i, i_Kevlar) / 2;
+					
+					if( boosted[ent] )
+						kev = rp_GetClientInt(i, i_Kevlar);
+					else
+						kev = rp_GetClientInt(i, i_Kevlar) / 2;
+
 					damage += float(kev);
-					  
 					kev -= 50;
 					if( kev < 0 )
 						kev = 0;

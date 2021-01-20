@@ -178,10 +178,7 @@ public Action SendToGrave(Handle timer, any client) {
 			vecOrigin[2] += 5.0;
 			TeleportClient(client, vecOrigin, vecAngles, NULL_VECTOR);			
 			
-			if( IsInPVP(i) )
-				GroupColor(client);
-			else
-				Colorize(client, 255, 255, 255, 255);
+			Colorize(client, 255, 255, 255, 255);
 			return;
 		}
 	}
@@ -1072,9 +1069,6 @@ int GetAssurence(int client, bool forced = false) {
 void CopSetVisible(int client) {
 	
 	ClientCommand(client, "r_screenoverlay 0");
-	
-	if( IsInPVP(client) )
-		GroupColor(client);
 	Colorize(client, 255, 255, 255, 255);
 	
 	g_bUserData[client][b_Invisible] = 0;

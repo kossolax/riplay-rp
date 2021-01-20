@@ -133,23 +133,6 @@ void addToGroup(int client, int amount) {
 	
 	SetGroupCapital(group, GetGroupCapital(group) );
 }
-
-void GroupColor(int client) {
-	
-	if( !IsValidClient(client) ) {
-		client = GetEntPropEnt(client, Prop_Send, "m_hOwnerEntity");
-	}
-	
-	int group = GetGroupPrimaryID(client);
-	if( group > 0 ) {		
-		if( strlen(g_szGroupList[group][group_type_skin]) > 10 && Client_GetVehicle(client) <= 0 && GetConVarInt(FindConVar("rp_capture")) == 0 ) {
-			SetEntityModel(client, g_szGroupList[group][group_type_skin]);
-		}
-	}
-	else {
-		Colorize(client, 255, 255, 255, 255);
-	}
-}
 int GetGroupPrimaryID(int client) {
 	int group_id = g_iUserData[client][i_Group];
 	
