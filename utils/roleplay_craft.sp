@@ -1226,24 +1226,6 @@ int getEnemy(int ent, float src[3], float ang[3], float& tilt, float threshold) 
 	
 	return nearest;
 }
-public bool enumerator(int entity, any data) {
-	if( entity == data )
-		return true;
-	
-	
-	if( data == 465 ) {
-		PrintToChat(30, "%d", entity);
-	}
-	
-	if( entity == 1299 ) {
-		PrintToChat(30, "oui!");
-	}
-	
-	if( entity == 0 )
-		return false;
-	
-	return true;
-}
 
 public void OnThink(int ent) {
 	float tilt = GetEntPropFloat(ent, Prop_Send, "m_flPoseParameter", 0);
@@ -1252,6 +1234,7 @@ public void OnThink(int ent) {
 	int state = GetEntProp(ent, Prop_Data, "m_iInteractionState");
 	int oldEnemy = GetEntPropEnt(ent, Prop_Data, "m_hInteractionPartner");
 	bool disabled = rp_GetBuildingData(ent, BD_HackedTime) > GetTime();
+	int owner = Entity_GetOwner(ent);
 
 	int damage = 10;
 	float push = 128.0;
@@ -1264,12 +1247,17 @@ public void OnThink(int ent) {
 	Entity_GetAbsAngles(ent, ang);
 	src[2] += 43.0; 
 	
-	if( disabled ) {
+	if( disabled || !IsValidClient(owner) ) {
 		if( GetRandomInt(0, 3) == 0 ) {
 			GetAngleVectors(ang, dir, NULL_VECTOR, NULL_VECTOR);
 			TE_SetupSparks(src, dir, 1, 0);
 			TE_SendToAll();
 		}
+		
+		if( !IsValidClient(owner) ) {
+			SDKHooks_TakeDamage(ent, ent, ent, 1, ent);
+		}
+		
 		return;
 	}
 	

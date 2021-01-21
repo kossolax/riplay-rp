@@ -209,6 +209,7 @@
 	}
 	"Jeton_Which_Money_Give"
 	{
+		"#format"	"{1:d}"
 		"fr"	"Vous avez reçu {green}{1}{default}$!"
 		"en"	"You have received {green}${1}{default}!"
 	}

@@ -1333,11 +1333,11 @@ public Action Command_Say(int client, int args) {
 			return Plugin_Handled;
 		}
 		
-		if( g_bUserData[client][b_IsSearchByTribunal] ) {
+		if( g_bUserData[client][b_IsSearchByTribunal] && rp_GetClientJobID(target) != 101 ) {
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_Give_Tribunal", client);
 			return Plugin_Handled;
 		}
-		if( g_iUserData[client][i_SearchLVL] >= 1 ) {
+		if( g_iUserData[client][i_SearchLVL] >= 1 && rp_GetClientJobID(target) != 101 ) {
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_Give_Tribunal", client);
 			return Plugin_Handled;
 		}	

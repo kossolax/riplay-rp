@@ -575,8 +575,14 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 							break;
 						}
 
-						Format(tmp, sizeof(tmp), "save %d", i);			
-						AddMenuItem(menu, tmp, g_szItems_SAVE[client][i]);
+						Format(tmp, sizeof(tmp), "save %d", i);	
+						
+						if( strlen(g_szItems_SAVE[client][i]) <= 3 )
+							Format(tmp2, sizeof(tmp2), "%T", "Item_Register", client, i)						
+						else
+							Format(tmp2, sizeof(tmp2), "%s", g_szItems_SAVE[client][i])						
+						
+						AddMenuItem(menu, tmp, tmp2);
 					}
 				}
 				else if( StringToInt(buff[2]) == 0 ){

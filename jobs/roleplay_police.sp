@@ -439,10 +439,13 @@ public Action Cmd_Cop(int client) {
 	if (!rp_GetClientBool(client, b_MaySteal) || rp_GetClientBool(client, b_Stealing)) {  // Pendant un vol
 		ACCESS_DENIED(client);
 	}
-
-	if( rp_GetClientInt(client, i_KillJailDuration) > 1) {
+	if( rp_GetClientInt(client, i_KillJailDuration) > 1 && GetClientTeam(client) == CS_TEAM_T) {
 		ACCESS_DENIED(client);
 	}
+	if( rp_GetClientInt(client, i_JailTime) > 1 && GetClientTeam(client) == CS_TEAM_T ) {
+		ACCESS_DENIED(client);
+	}
+	
 	
 	if (GetClientTeam(client) == CS_TEAM_CT) {
 		CS_SwitchTeam(client, CS_TEAM_T);

@@ -12,8 +12,8 @@
 
 public void OnClientPutInServer(int Client) {
 	check_dead(Client);
-	g_iEntityLimit = GetConVarInt(g_hMAX_ENT);
-	g_hAggro[Client] = new ArrayList(KillStack_max, 0);
+	g_iEntityLimit = GetConVarInt(g_hMAX_ENT);	
+	g_hAggro[Client].Erase(0);
 }
 public void OnClientPostAdminCheck(int Client) {
 	if(!IsFakeClient(Client)) {
@@ -75,7 +75,7 @@ public void OnClientDisconnect(int Client) {
 			RemoveAllFromForward(g_hRPNative[Client][i], plugin);
 	}
 	
-	delete g_hAggro[Client];
+	g_hAggro[Client].Erase(0);
 	
 	int old = EntRefToEntIndex(g_iUserData[Client][i_FPD]);
 	if( old > 0 ) {

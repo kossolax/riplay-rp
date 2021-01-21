@@ -269,6 +269,13 @@ Action Draw_Menu(int client) {
 	if( rp_GetClientInt(client, i_Job) == 107 && !FormationCanBeMade(type) )
 		return Plugin_Stop;
 	
+	if( rp_GetClientInt(client, i_KillJailDuration) > 1 && GetClientTeam(client) == CS_TEAM_T) {
+		ACCESS_DENIED(client);
+	}
+	if( rp_GetClientInt(client, i_JailTime) > 1 && GetClientTeam(client) == CS_TEAM_T ) {
+		ACCESS_DENIED(client);
+	}
+	
 	
 	if( isTribunalDisponible(type) ) {
 		
