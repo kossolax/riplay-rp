@@ -55,7 +55,7 @@ int g_iVehicle;
 #endif
 
 int g_iPlanque, g_iPlanqueZone, g_iQuestGain, g_iLastPlanque[4];
-int g_iPlayerTeam[2049], g_stkTeam[QUEST_TEAMS + 1][MAXPLAYERS + 1], g_stkTeamCount[QUEST_TEAMS + 1], g_iJobs[MAX_JOBS], g_iMaskEntity[MAXPLAYERS + 1];
+int g_iPlayerTeam[2049], g_stkTeam[QUEST_TEAMS + 1][MAXPLAYERS + 1], g_stkTeamCount[QUEST_TEAMS + 1], g_iJobs[MAX_JOBS], g_iMask[MAXPLAYERS + 1];
 
 public void OnPluginStart() {
 	g_iLastPlanque[0] = 71;
@@ -209,10 +209,7 @@ void Q_Clean() {
 				
 				SetEntProp(i, Prop_Send, "m_bHasHelmet", 0);
 				rp_UnhookEvent(i, RP_OnPlayerUse, fwdPressUse);
-				
-				if( g_iMaskEntity[i] > 0 && IsValidEdict(g_iMaskEntity[i]) && IsValidEntity(g_iMaskEntity[i]) )
-					rp_AcceptEntityInput(g_iMaskEntity[i], "Kill");
-				g_iMaskEntity[i] = 0;
+				rp_ClientResetSkin(i);
 			}
 		}
 	}
@@ -316,6 +313,12 @@ public void Q1_Frame(int objectiveID, int client) {
 #if defined USING_VEHICLE
 public void Q2_Start(int objectiveID, int client) {
 	g_iVehicle = spawnVehicle(client);
+	
+	int seed = GetRandomInt(0, 7);
+	for (int i = 0; i < g_stkTeamCount[TEAM_BRAQUEUR]; i++) {
+		g_iMask[g_stkTeam[TEAM_BRAQUEUR][i]] = ((seed + i) % 8) + 1;
+		attachMask(client, false);
+	}
 }
 public void Q2_Frame(int objectiveID, int client) {
 	if( !rp_IsValidVehicle(g_iVehicle) ) { g_iVehicle = spawnVehicle(client); }
@@ -436,7 +439,7 @@ public void Q5_Start(int objectiveID, int client) {
 		rp_SetClientInt(g_stkTeam[TEAM_BRAQUEUR][i], i_Kevlar, 250);
 		SetEntProp(g_stkTeam[TEAM_BRAQUEUR][i], Prop_Send, "m_bHasHelmet", 1);
 		rp_HookEvent(g_stkTeam[TEAM_BRAQUEUR][i], RP_OnPlayerUse, fwdPressUse);
-		attachMask(g_stkTeam[TEAM_BRAQUEUR][i]);
+		attachMask(g_stkTeam[TEAM_BRAQUEUR][i], true);
 	}
 	for (int i = 0; i < g_stkTeamCount[TEAM_POLICE]; i++) {
 		LogToGame("[BRAQUAGE] [DEBUT] %L est dans l'équipe de la police.", g_stkTeam[TEAM_POLICE][i]);
@@ -1276,10 +1279,7 @@ void OnBraqueurKilled(int client) {
 		
 		SetEntProp(client, Prop_Send, "m_bHasHelmet", 0);
 		rp_UnhookEvent(client, RP_OnPlayerUse, fwdPressUse);
-		
-		if( g_iMaskEntity[client] > 0 && IsValidEdict(g_iMaskEntity[client]) && IsValidEntity(g_iMaskEntity[client]) )
-			rp_AcceptEntityInput(g_iMaskEntity[client], "Kill");
-		g_iMaskEntity[client] = 0;
+		rp_ClientResetSkin(client);
 	}
 }
 void OnBraqueurRespawn(int client) {
@@ -1291,42 +1291,13 @@ void OnBraqueurRespawn(int client) {
 		
 		SetEntProp(client, Prop_Send, "m_bHasHelmet", 1);
 		rp_HookEvent(client, RP_OnPlayerUse, fwdPressUse);
-		attachMask(client);
+		attachMask(client, true);
 	}
 }
-void attachMask(int client) {
-	int rand = Math_GetRandomInt(1, 7);
-	char model[128];
-	switch (rand) {
-		case 1: Format(model, sizeof(model), "models/player/holiday/facemasks/facemask_skull.mdl");
-		case 2: Format(model, sizeof(model), "models/player/holiday/facemasks/facemask_wolf.mdl");
-		case 3: Format(model, sizeof(model), "models/player/holiday/facemasks/facemask_tiki.mdl");
-		case 4: Format(model, sizeof(model), "models/player/holiday/facemasks/facemask_samurai.mdl");
-		case 5: Format(model, sizeof(model), "models/player/holiday/facemasks/facemask_hoxton.mdl");
-		case 6: Format(model, sizeof(model), "models/player/holiday/facemasks/facemask_dallas.mdl");
-		case 7: Format(model, sizeof(model), "models/player/holiday/facemasks/facemask_chains.mdl");
-	}
-	
-	int ent = CreateEntityByName("prop_dynamic");
-	DispatchKeyValue(ent, "classname", "rp_braquage_mask");
-	DispatchKeyValue(ent, "model", model);
-	DispatchSpawn(ent);
-	
-	Entity_SetOwner(ent, client);
-	
-	SetVariantString("!activator");
-	rp_AcceptEntityInput(ent, "SetParent", client, client);
-	
-	SetVariantString("facemask");
-	rp_AcceptEntityInput(ent, "SetParentAttachment");
-	
-	SDKHook(ent, SDKHook_SetTransmit, Hook_SetTransmit);
-	g_iMaskEntity[client] = ent;
-}
-public Action Hook_SetTransmit(int entity, int client) {
-	if (Entity_GetOwner(entity) == client && rp_GetClientInt(client, i_ThirdPerson) == 0)
-		return Plugin_Handled;
-	return Plugin_Continue;
+void attachMask(int client, bool mask) {
+	SetEntityModel(client, "models/player/custom_player/legacy/hoxton/hoxton.mdl");
+	SetEntProp(client, Prop_Send, "m_nBody", mask ? 1 : 0);
+	SetEntProp(client, Prop_Send, "m_nSkin", g_iMask[client]-1);
 }
 void detachHostage(int client) {
 	int ent = CreateEntityByName("func_hostage_rescue");
