@@ -47,6 +47,11 @@
 		"fr"		"FREEKILL MASSIF: Autojail à 500 TDM."
 		"en"		"MASSIVE FREEKILL DETECTED."
 	}
+	"Comico_Free"
+	{
+		"fr"		"Cellules non surveillées"
+		"en"		"Unmonitored cells"
+	}
 	// ----------------------------------------------------------------------------------------------
 	"JailReason"
 	{
