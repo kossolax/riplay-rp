@@ -14,7 +14,7 @@ char g_szFullName[PLATFORM_MAX_PATH] =	"Tronçoneuse";
 char g_szName[PLATFORM_MAX_PATH] 	 =	"chainsaw";
 char g_szReplace[PLATFORM_MAX_PATH]  =	"weapon_taser";
 
-char g_szVModel[PLATFORM_MAX_PATH] =	"models/weapons/tsx/chainsaw/v_chainsaw.mdl";
+char g_szVModel[PLATFORM_MAX_PATH] =	"models/weapons/tsx/chainsaw/v_chainsawcsgo.mdl";
 char g_szWModel[PLATFORM_MAX_PATH] =	"models/weapons/tsx/chainsaw/w_chainsaw.mdl";
 
 char g_szMaterials[][PLATFORM_MAX_PATH] = {
