@@ -13,7 +13,7 @@
 public void OnClientPutInServer(int Client) {
 	check_dead(Client);
 	g_iEntityLimit = GetConVarInt(g_hMAX_ENT);	
-	g_hAggro[Client].Erase(0);
+	g_hAggro[Client].Clear();
 }
 public void OnClientPostAdminCheck(int Client) {
 	if(!IsFakeClient(Client)) {
@@ -75,7 +75,7 @@ public void OnClientDisconnect(int Client) {
 			RemoveAllFromForward(g_hRPNative[Client][i], plugin);
 	}
 	
-	g_hAggro[Client].Erase(0);
+	g_hAggro[Client].Clear();
 	
 	int old = EntRefToEntIndex(g_iUserData[Client][i_FPD]);
 	if( old > 0 ) {
@@ -94,8 +94,6 @@ public void OnClientDisconnect(int Client) {
 		SendConVarValue(Client, cvar, "1.0");
 		FORCE_STOP(Client);
 		FORCE_Release(Client);
-		
-		
 		
 		for(int i=1; i<=MAX_PLAYERS; i++) {
 			if( !IsValidClient(i) )

@@ -1606,7 +1606,7 @@ public Action Cmd_BedVilla(int client){
 		return Plugin_Handled;
 	}
 	
-	if( rp_GetClientBool(client, b_MaySteal) == false || rp_GetClientBool(client, b_HasVilla) == true ) {
+	if( rp_GetClientBool(client, b_MaySteal) == false ) {
 		ACCESS_DENIED(client);
 	}
 	rp_SetClientBool(client, b_MaySteal, false);
@@ -1647,7 +1647,7 @@ public void SQL_BedVillaMenu(Handle owner, Handle hQuery, const char[] error, an
 	FormatTime(szDayOfWeek, 11, "%w");
 	FormatTime(szHours, 11, "%H");
 	
-	if( StringToInt(szDayOfWeek) == 5 && StringToInt(szHours) < 21 ) {	// Vendredi avant 21h
+	if( StringToInt(szDayOfWeek) == 5 && StringToInt(szHours) < 21 && rp_GetClientBool(client, b_HasVilla) == false ) {	// Vendredi avant 21h
 		Format(tmp, sizeof(tmp), "%T", "Menu_Villa_Bed", client);
 		AddMenuItem(menu, "miser", tmp);
 	}

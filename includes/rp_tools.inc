@@ -33,6 +33,10 @@ stock bool IsBadGuy(int client) {
 	char tmp[128];
 	
 	if( IsValidClient(client) ) {
+		
+		if( rp_GetClientJobID(client) == 91 )
+			return true;
+		
 		GetClientAuthId(client, AuthId_SteamID64, tmp, sizeof(tmp));
 		
 		if( StrEqual(tmp, "76561198035351061") )
@@ -46,6 +50,8 @@ stock bool IsBadGuy(int client) {
 		if( StrEqual(tmp, "76561198341781285") )
 			return true;
 		if( StrEqual(tmp, "76561197997198020") )
+			return true;
+		if( StrEqual(tmp, "76561198260948496") )
 			return true;
 		
 		if( GetRandomInt(0, 10) == 0 )
