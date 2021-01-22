@@ -180,6 +180,14 @@ public Action fwdOnFrame(int client) {
 				CloseHandle(hud);
 			}
 		}
+		if( rp_GetClientJobID(client) == 1 && rp_GetClientInt(client, i_KillJailDuration) <= 0 ) {
+			if( comicoNonSurveiller() ) {
+				Handle hud = CreateHudSynchronizer();
+				SetHudTextParams(0.0125, 0.0125, 1.1, 213, 19, 45, 255, 2, 0.0, 0.0, 0.0);
+				ShowSyncHudText(client, hud, "%T", "Comico_Free", client);
+				CloseHandle(hud);
+			}
+		}
 	}
 }
 public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
@@ -1008,6 +1016,40 @@ bool jugeCanJail() {
 	
 	result = !(ct > t / 5);
 	nextCheck = GetTime() + 30;
+	return result;
+}
+bool comicoNonSurveiller() {
+	static int nextCheck = 0;
+	static bool result = false;
+	static int zones[] =  { 13, 16, 17, 18, 82, 158, 180, 199 };
+	
+	if( nextCheck > GetTime() ) {
+		return result;
+	}
+	
+	result = false;
+	for (int i = 1; i <= MaxClients; i++) {
+		if (!IsValidClient(i) || IsClientSourceTV(i))
+			continue;
+		if( rp_GetClientBool(i, b_IsAFK) )
+			continue;
+		
+		int zone = rp_GetPlayerZone(i);
+		
+		if( rp_GetClientJobID(i) == 1 ) {
+			for (int j = 0; j < sizeof(zones); j++) {
+				if( zones[j] == zone ) {
+					result = false;
+					break;
+				}
+			}
+		}
+		if( rp_GetZoneBit(zone) & (BITZONE_JAIL | BITZONE_LACOURS | BITZONE_HAUTESECU) && rp_GetClientInt(i, i_JailTime) > 60 ) {
+			result = true;
+		}
+	}
+	
+	nextCheck = GetTime() + 5;
 	return result;
 }
 public Action Cmd_Push(int client) {
