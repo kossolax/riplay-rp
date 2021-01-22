@@ -1647,7 +1647,7 @@ public void SQL_BedVillaMenu(Handle owner, Handle hQuery, const char[] error, an
 	FormatTime(szDayOfWeek, 11, "%w");
 	FormatTime(szHours, 11, "%H");
 	
-	if( StringToInt(szDayOfWeek) == 0 && StringToInt(szHours) < 21 ) {	// Dimanche avant 21h
+	if( StringToInt(szDayOfWeek) == 5 && StringToInt(szHours) < 21 ) {	// Vendredi avant 21h
 		Format(tmp, sizeof(tmp), "%T", "Menu_Villa_Bed", client);
 		AddMenuItem(menu, "miser", tmp);
 	}
@@ -1782,7 +1782,7 @@ public int bedVillaMenu_BED(Handle p_hItemMenu, MenuAction p_oAction, int client
 			FormatTime(szDayOfWeek, 11, "%w");
 			FormatTime(szHours, 11, "%H");
 			
-			if( StringToInt(szDayOfWeek) == 0 && StringToInt(szHours) < 21 ) {	// Dimanche avant 21h
+			if( StringToInt(szDayOfWeek) == 5 && StringToInt(szHours) < 21 ) {	// Vendredi avant 21h
 			
 				GetClientAuthId(client, AUTH_TYPE, sql, sizeof(sql));
 				Format(sql, sizeof(sql), "INSERT INTO `rp_bid` (`steamid`, `amount`) VALUES ('%s', '%d') ON DUPLICATE KEY UPDATE `amount`=`amount`+%d;", sql, amount, amount);
