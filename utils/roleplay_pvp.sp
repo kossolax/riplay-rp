@@ -2244,7 +2244,7 @@ void setTeamSkin(int client, bool invisible = false ) {
 		}
 	}
 	
-	if( status )
+	if( invisible )
 		rp_ClientColorize(client, {0, 0, 0, 0});
 	else
 		rp_ClientColorize(client);
