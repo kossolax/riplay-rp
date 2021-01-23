@@ -25,8 +25,8 @@ float g_flNode[MAX_NODE][3];
 int g_iArc[MAX_ARC][4], g_cLaser, g_cBeam, g_iMarked[65];
 int g_iTarget[65];
 Handle g_hTimer[65];
-char loadNode[] = "SELECT `id`, `x`, `y`, `z`, `zoneid` FROM `fireblue`.`rp_gps_node`;";
-char loadArc[] = "SELECT A.`id`, `src`, `dst`, `length`, length(`zone_type`) as `private`, A.`zoneID` FROM `fireblue`.`rp_gps_arc` A INNER JOIN `rp_csgo`.`rp_location_zones` Z ON Z.`id`=A.`zoneID`;";
+char loadNode[] = "SELECT `id`, `x`, `y`, `z`, `zoneid` FROM `rp_gps_node`;";
+char loadArc[] = "SELECT A.`id`, `src`, `dst`, `length`, length(`zone_type`) as `private`, A.`zoneID` FROM `rp_gps_arc` A INNER JOIN `rp_csgo`.`rp_location_zones` Z ON Z.`id`=A.`zoneID`;";
 
 public void OnPluginStart() {
 	
@@ -60,7 +60,7 @@ public void OnMapStart() {
 	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt");
 	
 	
-	g_hBDD = SQL_Connect("rp_gps", true, g_szQuery, sizeof(g_szQuery));
+	g_hBDD = SQL_Connect("roleplay", true, g_szQuery, sizeof(g_szQuery));
 	if (g_hBDD == INVALID_HANDLE) {
 		SetFailState("Connexion impossible: %s", g_szQuery);
 	}
@@ -80,7 +80,7 @@ public void SQL_LoadNode(Handle owner, Handle hQuery, const char[] error, any no
 		int zone2 = rp_GetZoneFromPoint(g_flNode[i]);
 		
 		if( zone1 != zone2 ) {
-			Format(g_szQuery, sizeof(g_szQuery), "UPDATE `fireblue`.`rp_gps_node` SET `zoneid`='%d' WHERE `id`= %d;", zone2, i);
+			Format(g_szQuery, sizeof(g_szQuery), "UPDATE `rp_gps_node` SET `zoneid`='%d' WHERE `id`= %d;", zone2, i);
 			SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
 		}
 	}
@@ -102,7 +102,7 @@ public void SQL_LoadArc(Handle owner, Handle hQuery, const char[] error, any non
 		int zone3 = rp_GetZoneFromPoint(g_flNode[g_iArc[i][1]]);
 		
 		if( !(zone1 == zone2 || zone1 == zone3) ) {
-			Format(g_szQuery, sizeof(g_szQuery), "UPDATE `fireblue`.`rp_gps_arc` SET `zoneid`='%d' WHERE `id`= %d;", zone2, i);
+			Format(g_szQuery, sizeof(g_szQuery), "UPDATE `rp_gps_arc` SET `zoneid`='%d' WHERE `id`= %d;", zone2, i);
 			SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
 		}
 	}
@@ -203,7 +203,7 @@ public int MenuGps(Handle menu, MenuAction action, int client, int param2) {
 				GetClientAbsOrigin(client, vec);
 				vec[2] += 32.0;
 				
-				Format(g_szQuery, sizeof(g_szQuery), "INSERT INTO `fireblue`.`rp_gps_node` (`id`, `x`, `y`, `z`, `zoneID`) VALUES (NULL, '%d', '%d', '%d', '%d');", 
+				Format(g_szQuery, sizeof(g_szQuery), "INSERT INTO `rp_gps_node` (`id`, `x`, `y`, `z`, `zoneID`) VALUES (NULL, '%d', '%d', '%d', '%d');", 
 				RoundFloat(vec[0]), RoundFloat(vec[1]), RoundFloat(vec[2]), rp_GetZoneFromPoint(vec));
 				
 				SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
@@ -217,9 +217,9 @@ public int MenuGps(Handle menu, MenuAction action, int client, int param2) {
 				int node = findNearestNode(vec);
 				PrintToChatAll("%d", node);
 				
-				Format(g_szQuery, sizeof(g_szQuery), "DELETE FROM `fireblue`.`rp_gps_arc` WHERE `src`=%d OR `dst`= %d;", node, node);
+				Format(g_szQuery, sizeof(g_szQuery), "DELETE FROM `rp_gps_arc` WHERE `src`=%d OR `dst`= %d;", node, node);
 				SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
-				Format(g_szQuery, sizeof(g_szQuery), "DELETE FROM `fireblue`.`rp_gps_node` WHERE `id`= %d;", node);
+				Format(g_szQuery, sizeof(g_szQuery), "DELETE FROM `rp_gps_node` WHERE `id`= %d;", node);
 				SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
 				
 				SQL_TQuery(g_hBDD, SQL_LoadNode, loadNode);
@@ -241,7 +241,7 @@ public int MenuGps(Handle menu, MenuAction action, int client, int param2) {
 				int end = findNearestNode(pos);
 				int dst = RoundFloat( GetVectorDistance(g_flNode[start], g_flNode[end]) );
 				
-				Format(g_szQuery, sizeof(g_szQuery), "INSERT INTO `fireblue`.`rp_gps_arc` (`id`, `src`, `dst`, `length`, `zoneID`) VALUES (NULL, '%d', '%d', '%d', '%d');", 
+				Format(g_szQuery, sizeof(g_szQuery), "INSERT INTO `rp_gps_arc` (`id`, `src`, `dst`, `length`, `zoneID`) VALUES (NULL, '%d', '%d', '%d', '%d');", 
 				start, end, dst, rp_GetZoneFromPoint(g_flNode[start]));
 				
 				SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
