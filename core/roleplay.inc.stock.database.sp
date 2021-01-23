@@ -1133,7 +1133,6 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 	SDKHook(Client, SDKHook_PostThink,		OnPostThink);
 	SDKHook(Client, SDKHook_PostThinkPost,	OnPostThinkPost);
 	
-	//SDKHook(Client, SDKHook_SetTransmit,	OnSetTransmit);
 	SDKHook(Client, SDKHook_WeaponCanUse,	OnWeaponCanUse);
 	SDKHook(Client, SDKHook_WeaponCanSwitchTo,	OnWeaponCanSwitchTo);
 	SDKHook(Client, SDKHook_WeaponEquip,	WeaponEquip);

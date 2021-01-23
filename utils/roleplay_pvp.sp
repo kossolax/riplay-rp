@@ -1124,13 +1124,13 @@ public Action fwdSpawn(int client) {
 public Action fwdSpawn_ToMetro(Handle timer, any client) {
 	if( IsValidClient(client) ) {
 		teleportToZone(client, METRO_BELMON);
-		setTeamSkin(client);
+		setTeamSkin(client, g_hGodTimer[client] != INVALID_HANDLE);
 	}
 }
 public Action fwdSpawn_ToRespawn(Handle timer, any client) {
 	if( g_iPlayerTeam[client] == view_as<int>(TEAM_RED) && IsValidClient(client) ) {
 		teleportToZone(client, ZONE_RESPAWN);
-		setTeamSkin(client);
+		setTeamSkin(client, g_hGodTimer[client] != INVALID_HANDLE);
 	}
 }
 bool CanTP(float pos[3], int client) {
@@ -1277,7 +1277,7 @@ public Action fwdFrame(int client) {
 			}			
 		}
 		
-		setTeamSkin(client);
+		setTeamSkin(client, g_hGodTimer[client] != INVALID_HANDLE);
 		
 		if( rp_GetClientVehicle(client) <= 0 ) {
 			ClientCommand(client, "firstperson");
@@ -1939,7 +1939,6 @@ void GDM_Resume() {
 void Client_SetSpawnProtect(int client, bool status) {
 	if( status == true ) {
 		rp_HookEvent(client, RP_OnPlayerDead, fwdGodPlayerDead);
-		SDKHook(client, SDKHook_SetTransmit, fwdGodHideMe);
 		SDKHook(client, SDKHook_PreThink, fwdGodThink);
 		float duration = 10.0;
 		if( g_iPlayerTeam[client] == view_as<int>(TEAM_RED) )
@@ -1950,11 +1949,10 @@ void Client_SetSpawnProtect(int client, bool status) {
 		SetEntProp(client, Prop_Data, "m_takedamage", 0);
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez %d secondes de spawn-protection.", RoundFloat(duration));
 		
-		setTeamSkin(client);	
+		setTeamSkin(client, true);	
 	}
 	else {
 		rp_UnhookEvent(client, RP_OnPlayerDead, fwdGodPlayerDead);
-		SDKUnhook(client, SDKHook_SetTransmit, fwdGodHideMe);
 		SDKUnhook(client, SDKHook_PreThink, fwdGodThink);
 		if( g_hGodTimer[client] != INVALID_HANDLE )
 			delete g_hGodTimer[client];
@@ -1971,11 +1969,6 @@ public Action fwdGodThink(int client) {
 		SetEntPropFloat(wep, Prop_Send, "m_flNextPrimaryAttack", GetGameTime() + 0.25);
 		SetEntPropFloat(wep, Prop_Send, "m_flNextSecondaryAttack", GetGameTime() + 0.25);
 	}
-}
-public Action fwdGodHideMe(int client, int target) {
-	if( client != target )
-		return Plugin_Handled;
-	return Plugin_Continue;
 }
 public Action fwdGodPlayerDead(int client, int attacker, float& respawn, int& tdm, float& ctx) {
 	Client_SetSpawnProtect(client, false);
@@ -2235,10 +2228,24 @@ public int Sort_ByELO(int[] a, int[] b, const int[][] array, Handle hndl) {
 	return b[1] - a[1];
 }
 
-void setTeamSkin(int client) {
-	if( g_iPlayerTeam[client] == view_as<int>(TEAM_RED) )
-		SetEntityModel(client, "models/player/custom_player/legacy/ctm_sas.mdl");
-	else if( g_iPlayerTeam[client] == view_as<int>(TEAM_BLUE) )
-		SetEntityModel(client, "models/player/custom_player/legacy/tm_phoenix.mdl");
-	rp_ClientColorize(client);
+void setTeamSkin(int client, bool invisible = false ) {
+	char path[PLATFORM_MAX_PATH];
+	
+	if( IsPlayerAlive(client) ) {
+		Entity_GetModel(client, path, sizeof(path));
+		
+		if( g_iPlayerTeam[client] == view_as<int>(TEAM_RED) ) {
+			if( !StrEqual(path, "models/player/custom_player/legacy/ctm_sas.mdl") )
+				SetEntityModel(client, "models/player/custom_player/legacy/ctm_sas.mdl");
+		}
+		else if( g_iPlayerTeam[client] == view_as<int>(TEAM_BLUE) ) {
+			if( !StrEqual(path, "models/player/custom_player/legacy/tm_phoenix.mdl") )
+				SetEntityModel(client, "models/player/custom_player/legacy/tm_phoenix.mdl");
+		}
+	}
+	
+	if( status )
+		rp_ClientColorize(client, {0, 0, 0, 0});
+	else
+		rp_ClientColorize(client);
 }

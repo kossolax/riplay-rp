@@ -1007,10 +1007,6 @@ stock void SpawnBonbon( float origin[3], int owner = 0) {
 	ScheduleEntityInput(id, 60.0, "Kill");
 	
 	ServerCommand("sm_effect_particles %d Trail5 10", id);
-	if( owner > 0 ) {
-		g_iOriginOwner[id] = owner;
-		SDKHook(id, SDKHook_SetTransmit, Hook_Transmit);
-	}
 	return;
 }
 public void BonbonEntityGotTouch(int touched, int toucher) {
