@@ -468,12 +468,6 @@ public Action FlagThink(Handle timer, any data) {
 	CreateTimer(0.25, FlagThink, data);
 	return Plugin_Handled;
 }
-public Action SDKHideFlag(int from, int to ) {
-	if( g_iFlagData[from][data_owner] == to && rp_GetClientInt(to, i_ThirdPerson) == 0) {
-		return Plugin_Handled;
-	}
-	return Plugin_Continue;
-}
 // -----------------------------------------------------------------------------------------------------------------
 void CAPTURE_Start() {
 	CAPTURE_CHANGE_STATE(ps_begin);
@@ -1662,8 +1656,6 @@ void CTF_FlagTouched(int client, int flag) {
 	CreateTimer(0.5, SwitchToFirst, client);
 	
 	EmitSoundToClientAny(client, g_szSoundList[snd_YouHaveTheFlag], _, _, _, _, ANNONCES_VOLUME);
-	
-	//SDKHook(flag, SDKHook_SetTransmit, SDKHideFlag);
 }
 public Action CTF_SpawnFlag_Delay(Handle timer, any ent2) {
 	TeleportEntity(ent2, view_as<float>({30.0, 0.0, 0.0}), view_as<float>({0.0, 90.0, 0.0}), NULL_VECTOR);

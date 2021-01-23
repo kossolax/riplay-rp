@@ -46,9 +46,9 @@ public void OnAllPluginsLoaded() {
 	CWM_SetFloat(id, WSF_AttackRange,	RANGE_MELEE + 16.0);
 	CWM_SetFloat(id, WSF_Spread, 		0.0);
 	
-	CWM_AddAnimation(id, WAA_Idle, 		3,	64, 30);
-	CWM_AddAnimation(id, WAA_Draw, 		7,	65, 30);
-	CWM_AddAnimation(id, WAA_Reload, 	7,	65, 30);
+	CWM_AddAnimation(id, WAA_Idle, 		1,	64, 30);
+	CWM_AddAnimation(id, WAA_Draw, 		2,	65, 30);
+	CWM_AddAnimation(id, WAA_Reload, 	2,	65, 30);
 	CWM_AddAnimation(id, WAA_Attack, 	1,  30, 60);
 	
 	CWM_RegHook(id, WSH_Draw,			OnDraw);
