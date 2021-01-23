@@ -111,7 +111,7 @@ void LoadServerDatabase() {
 			if( !SQL_IsFieldNull(hQuery, 11) )
 				SQL_FetchString(hQuery, 11, g_szVillaOwner[maireName], sizeof(g_szVillaOwner[]));
 			
-			int tmp_dbversion = SQL_FetchInt(12);
+			int tmp_dbversion = SQL_FetchInt(hQuery, 12);
 			if( tmp_dbversion > dbversion )
 				dbversion = tmp_dbversion;
 		}
