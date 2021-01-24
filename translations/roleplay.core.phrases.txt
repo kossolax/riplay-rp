@@ -5,871 +5,1058 @@
 	{
 		"#format"	"{1:s}"
 		"fr"	"Sélectionner un job pour: %s"
+		"en"	"Select a job for: %s"
 	}
 	"Menu_SelectGroupTarget"
 	{
 		"#format"	"{1:s}"
 		"fr"	"Sélectionner un groupe pour: %s"
+		"en"	"Select a group for: %s"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"AFK_KickAdmin"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Vous êtes resté trop longtemps AFK, mais un admin vous a accordé un remboursement de {1}$."
+		"en"	"You stayed too long AFK, but an admin gave you a ${1} refund."
 	}
 	"AFK_Kick"
 	{
 		"fr"	"Vous êtes resté trop longtemps AFK."
+		"en"	"You've been AFK for too long."
 	}
 	"AFK_Start"
 	{
 		"fr"	"Vous êtes maintenant considéré comme {red}AFK{default}."
+		"en"	"You are now considered {red}AFK{default}."
 	}
 	"AFK_End"
 	{
 		"#format"	"{1:d}"
 		"fr"	"Vous n'êtes plus considéré comme {green}AFK{default} ({1} minutes)."
+		"en"	"You are no longer considered {green}AFK{default} ({1} minutes)"
 	}
 	"AFK_Braquage"
 	{
 		"fr"	"Attention, un braquage est en cours. Le fait de passer AFK diminue les chances de win pour vos collègues."
+		"en"	"Warning, a robbery is in progress. Going AFK decreases the chances of winning for your colleagues."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Force_Bind"
 	{
 		"fr"	"Votre bind est incorrecte. Si vous souhaitez utiliser la force, modifier votre bind comme ceci: {red}bind X +force{default}"
+		"en"	"Your bind is incorrect. If you want to use force, modify your bind like this: {red}bind X +force{default}"
 	}
 	"Force_Already"
 	{
 		"fr"	"Impossible d'utiliser la force lorsqu'un autre joueur vous tient."
+		"en"	"Cannot use force when another player is holding you."
 	}
 	"Force_Here"
 	{
 		"fr"	"Impossible d'utiliser la force ici."
+		"en"	"Cannot use force here."
 	}
 	"Force_Kill"
 	{
 		"#format"	"{1:d},{2:d},{3:d}"
 		"fr"	"Vous avez perdu {red}{1}{default}$ pour avoir abusé du pouvoir de la force ({2}/{3})."
+		"en"	"You have lost {red}{1}{default}$ for abusing the power of force ({2}/{3}."
 	}
 	"Force_Ban"
 	{
 		"fr"	"Abuse de la force"
+		"en"	"Abuse of force"
 	}
 	"Force_Menu"
 	{
 		"fr"	"Gestion de la force:"
+		"en"	"Force Management:"
 	}
 	"Force_Filter"
 	{
 		"#format"	"{1:t}"
 		"fr"	"Limitation: [{1}]"
+		"en"	"Limitation: [{1}]"
 	}
 	"Force_Filter_Player"
 	{
 		"fr"	"JOUEURS"
+		"en"	"PLAYERS"
 	}
 	"Force_Filter_Prop"
 	{
 		"fr"	"PROPS"
+		"en"	"PROPS"
 	}
 	"Force_Filter_All"
 	{
 		"fr"	"TOUS"
+		"en"	"ALL"
 	}
 	
 	"Force_Move"
 	{
 		"#format"	"{1:t}"
 		"fr"	"Déplacement: [{1}]"
+		"en"	"Move: [{1}]"
 	}
 	"Force_Move_Teleport"
 	{
 		"fr"	"TELEPORT"
+		"en"	"TELEPORT"
 	}
 	"Force_Move_Velocity"
 	{
 		"fr"	"VÉLOCITÉ"
+		"en"	"VELOCITY"
 	}
 	
 	"Force_Search"
 	{
 		"#format"	"{1:t}"
 		"fr"	"Recherche: [{1}]"
+		"en"	"Search: [{1}]"
 	}
 	"Force_Search_Aim"
 	{
 		"fr"	"VISÉE"
+		"en"	"AIM"
 	}
 	"Force_Search_Sphere"
 	{
 		"fr"	"SPHERE"
+		"en"	"SPHERE"
 	}
 	
 	"Force_Distance"
 	{
 		"#format"	"{1:t}"
 		"fr"	"Distance: [{1}]"
+		"en"	"Distance: [{1}]"
 	}
 	"Force_Distance_Nearby"
 	{
 		"fr"	"PROCHE"
+		"en"	"NEAR"
 	}
 	"Force_Distance_Away"
 	{
 		"fr"	"LOIN"
+		"en"	"FAR"
 	}
 	
 	"Force_Toggle"
 	{
 		"#format"	"{1:t}"
 		"fr"	"Saisir: [{1}]"
+		"en"	"Catch: [{1}]"
 	}
 	"Force_Toggle_Alter"
 	{
 		"fr"	"ALTERER"
+		"en"	"ALTER"
 	}
 	"Force_Toggle_HOLD"
 	{
 		"fr"	"MAINTENIR"
+		"en"	"HOLD"
 	}
 	
 	"Force_Cannot_Player"
 	{
 		"fr"	"Vous n'êtes pas autorisé à déplacer cette personne."
+		"en"	"You are not authorized to move this person."
 	}
 	"Force_Cannot_Car"
 	{
 		"fr"	"Vous n'êtes pas autorisé à déplacer ce véhicule."
+		"en"	"You are not authorized to move this vehicle."
 	}
 	"Force_Cannot_Prop"
 	{
 		"fr"	"Vous n'êtes pas autorisé à déplacer ce props."
+		"en"	"You are not allowed to move this props."
 	}	
 	// ----------------------------------------------------------------------------------------------
 	"Cmd_Reload"
 	{
 		"fr"		"La configuration du serveur a été rechargée."
+		"en"		"The server configuration has been reloaded."
 	}
 	"Cmd_KnifeDamage"
 	{
 		"#format"	"{1:s},{2:d}"
 		"fr"		"{1} fera {2} dégat(s) de {red}couteau{default} jusqu'à sa mort."
+		"en"		"will {1} do {2} damage {red}with knife{default} until his death."
 	}
 	"Cmd_HandsDamage"
 	{
 		"#format"	"{1:s},{2:d}"
 		"fr"		"{1} fera {2} dégat(s) avec ses {red}poings{default} jusqu'à sa mort."
+		"en"		"will {1} do {2} damage {red}with his fists{default} until his death."
 	}
 	"Cmd_WeaponDamage"
 	{
 		"#format"	"{1:s},{2:d}"
 		"fr"		"{1} aura {2}% de {red}précision de tir{default} jusqu'à sa mort."
+		"en"		"{1}will have {2}% of{red}fire accuracy{default} until his death."
 	}
 	"Cmd_Clear"
 	{
 		"#format"	"{1:s}"
 		"fr"		"{1} a été réinitialisé."
+		"en"		"{1} has been reset."
 	}
 	"Cmd_Clean"
 	{
 		"#format"	"{1:d}"
 		"fr"		"{1} entités ont été supprimées."
+		"en"		"{1} entities have been deleted."
 	}
 	"Cmd_Peine"
 	{
 		"fr"		"Vous pouvez modifier la durée/zone de ton emprisonnement en tapant {red}/peine{default}."
+		"en"		"You can change the duration/area of your detention by typing {red}/penaltydefault}."
 	}
 	"Cmd_RebootIn"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Le serveur va {red}redémarrer{default} dans {1} secondes."
+		"en"		"The server will {red}restart{default} in {1} seconds."
 	}
 	"Cmd_RebootNow"
 	{
 		"fr"		"Le serveur va {red}redémarrer{default} MAINTENANT."
+		"en"		"The server will {red}restart {default} NOW."
 	}
 	"Cmd_Plainte"
 	{
 		"fr"		"Porter plainte contre un Policier:"
+		"en"		"Suing a Police Officer:"
 	}
 	"Cmd_Report"
 	{
 		"fr"		"Porter plainte contre un Citoyen:"
+		"en"		"Suing a Police Citizen:"
 	}
 	"Cmd_Money"
 	{
 		"#format"	"{1:d},{2:d},{3:s}"
 		"fr"		"Argent: {green}{1}{default}$ - En Banque: {green}{2}{default}$ - Job: {green}{3}{default}."
+		"en"		"Money: {green}{1}{default}$ - Bank: {green}{2}{default}$ - Job: {green}{3}{default}."
 	}
 	"Cmd_Vita"
 	{
 		"#format"	"{1:.1f},{2:d}"
 		"fr"		"Vous avez êtes maintenant niveau {green}{2}{default} en vitalité avec {green}{1}{default} point(s)."
+		"en"		"You are now level {green}{2}{default} in vitality with {green}{1}{default} points(s)."
 	}
 	"Cmd_REV"
 	{
 		"#format"	"{1:s},{2:s},{3:s}"
 		"fr"		"Dernière révision: {1} {2} TAG: {3}"
+		"en"		"Last revision: {1} {2} TAG: {3}"
 	}
 	"Cmd_Skin"
 	{
-		"fr"		"Vous devez vous rendre dans une cabine d'essage."
+		"fr"		"Vous devez vous rendre dans une cabine d'essayage."
+		"en"		"You have to go to a fitting room."
 	}
 	"Cmd_Assu"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Votre assurance vous couvre pour {green}{1}{default}$."
+		"en"		"Your insurance covers you for {green}{1}{default}$."
 	}
 	"Cmd_AddNote"
 	{
 		"#format"	"{1:s},{2:s}"
 		"fr"		"{1} a ajouté la note: {red}{2}{default}."
+		"en"		"{1} added the note: {red}{2}{default}."
 	}
 	"Cmd_ListOfPlayer"
 	{
 		"fr"		"Liste des personnes:"
+		"en"		"List of players:"
 	}
 	"Cmd_ListOfPlayer_None"
 	{
 		"fr"		"Il y'a personne."
+		"en"		"There's no one there."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Cmd_Out_Cannot_Kidnap"
 	{
 		"fr"		"Vous ne pouvez pas /out une personne kidnappée."
+		"en"		"You can't /out a kidnapped person."
 	}
 	"Cmd_Out_Cannot_Coloc"
 	{
 		"fr"		"Vous ne pouvez pas /out l'un de vos colocataire."
+		"en"		"You can't /out one of your roommates."
 	}
 	"Cmd_Out_Cannot_Perquiz"
 	{
 		"fr"		"Vous ne pouvez pas /out un membre des forces de l'ordre durant une perquisition."
+		"en"		"You can't/out a law enforcement officer during a search."
 	}
 	"Cmd_Out_Cannot_Zone"
 	{
 		"fr"		"Vous ne pouvez pas /out cette personne dans cette zone."
+		"en"		"You can't /out this person in this area."
 	}
 	"Cmd_Out_Target"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Vous avez mis dehors {1}."
+		"en"		"You kicked out {1}."
 	}
 	"Cmd_Out_Self"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Vous avez été mis dehors par {1}."
+		"en"		"You were kicked out by {1}."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Cmd_Dismiss_Cannot_Chef"
 	{
 		"fr"		"Les chefs de jobs doivent contacter un administrateur pour démissionner."
+		"en"		"Job managers must contact an administrator to resign."
 	}
 	"Cmd_Dismiss_Cannot_Quest"
 	{
 		"fr"		"Vous devez d'abord terminer votre quête pour pouvoir démissionner."
+		"en"		"You must first complete your quest before you can resign."
 	}
 	"Cmd_Dismiss_Warning"
 	{
 		"fr"		"{red}STOP!{default}  Soyez certain d'avoir un nouvel emploi avant de démissionner.\nIl faut {red}OBLIGATOIREMENT{default} contacter un {red}CHEF DE METIER{default} pour en récupérer un.\nSans quoi, vous resterez sans emploi pour un long moment..."
+		"en"		"{red}STOP!{default} Make sure you have a new job before you quit.\nYou must {red}OBLIGATORILY{default} contact a {red}JOB CHIEF{default} to get one back.\nOtherwise, you will be unemployed for a long time..."
 	}
 	"Cmd_Dismiss_Confirm"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Confirmez en tapant: {red}/demission {1}{default}"
+		"en"		"Confirm by typing: {red}/resignation {1}{default}"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Cmd_Enquete_Call"
 	{
 		"#format"	"{1:s},{2:s},{3:s}"
 		"fr"		"{1} souhaite faire une enquête sur {2}, il se trouve {3}."
+		"en"		"{1} wishes to investigate {2}, he is {3}"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Cmd_GiveXP_NotEnought"
 	{
 		"fr"		"Vous n'avez pas assez d'XP à donner."
+		"en"		"You don't have enough XP to give."
 	}
 	"Cmd_GiveXP_MoreThan"
 	{
 		"fr"		"Vous devez donner plus de 100XP."
+		"en"		"You must give more than 100XP."
 	}
 	"Cmd_GiveXP_Target"
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"		"Vous avez donné {green}{1}{default} points d'expérience à {green}{2}{default}."
+		"en"		"You gave {green}{1}{default} experience points to {green}{2}{default}."
 	}
 	"Cmd_GiveXP_Self"
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"		"Vous avez reçu {green}{1}{default} points d'expérience de {green}{2}{default}."
+		"en"		"You have received {green}{1}{default} experience points from {green}{2}{default}."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Cmd_Give_NotEnought"
 	{
 		"fr"		"Vous n'avez pas assez d'argent à donner."
+		"en"		"You don't have enough money to give."
 	}
 	"Cmd_Give_MoreThan"
 	{
 		"fr"		"Vous devez donner plus de 0$."
+		"en"		"You have to give more than $0."
 	}
 	"Cmd_Give_LessThan"
 	{
 		"fr"		"Vous devez donner moins de 100.000$."
+		"en"		"You must give less than $100,000."
 	}
 	"Cmd_Give_TooFast"
 	{
 		"fr"		"Vous ne pouvez pas donner autant d'argent en aussi peu de temps."
+		"en"		"You can't give that much money in that short time."
 	}
 	"Cmd_Give_Double"
 	{
 		"fr"		"Vous ne pouvez pas donner d'argent à l'un de vos doubles comptes. S'il ne s'agit pas d'un double compte, vous pouvez contester cette décision sur ce lien:"
+		"en"		"You cannot give money to one of your double accounts. If it is not a double account, you can contest this decision on this link:"
 	}
 	"Cmd_Give_Target"
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"		"Vous avez donné {green}{1}{default}$ à {green}{2}{default}."
+		"en"		"You gave {green}{1}{default}$ to {green}{2}{default}."
 	}
 	"Cmd_Give_Self"
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"		"Vous avez reçu {green}{1}{default}$ de {green}{2}{default}."
+		"en"		"You have received {green}{1}{default}$ from {green}{2}{default}."
 	}
 	"Cmd_Give_Tribunal"
 	{
-		"fr"		"Vous ne pouvez pas donner de l'argnet quand vous êtes recherché par le Tribunal."
+		"fr"		"Vous ne pouvez pas donner de l'argent quand vous êtes recherché par le Tribunal."
+		"en"		"You can't give money when you're wanted by the court."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Cmd_Hire"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Sélectionner un job pour: {1}"
+		"en"		"Select a job for: {1}"
 	}
 	"Cmd_Hire_Unemployed"
 	{
 		"fr"		"Cette personne a déjà un emploi."
+		"en"		"This person already has a job."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Cmd_Tuto_InTutorial"
 	{
 		"#format"	"{1:s}"
 		"fr"		"TUTORIAL: {1}"
+		"en"		"TUTORIAL: {1}"
 	}
 	"Cmd_Tuto_WithJob"
 	{
 		"#format"	"{1:s}"
 		"fr"		"DÉBUTANT: {1}"
+		"en"		"BEGINNER: {1}"
 	}
 	"Cmd_Tuto_WithoutJob"
 	{
 		"#format"	"{1:s}"
 		"fr"		"SANS EMPLOI: {1}"
+		"en"		"WITHOUT JOB: {1}"
 	}
 	"Cmd_Tuto_Count"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Il y' a actuellement {red}{1}{default} nouveau(x) joueur(s)."
+		"en"		"There is currently {red}{1}{default} new player(s)."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Cmd_Appart"
 	{
 		"fr"		"Liste des appartements et garages:"
+		"en"		"List of apartments and garages:"
 	}
 	"Cmd_Appart_Free"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Appartement {1}: Disponible"
+		"en"		"Apartment {1}: Available"
 	}
 	"Cmd_Appart_Occupied"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Appartement {1}: Occupé"
+		"en"		"Apartment {1}: Occupied"
 	}
 	"Cmd_Garage_Free"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Garage {1}: Disponible"
+		"en"		"Garage {1}: Available"
 	}
 	"Cmd_Garage_Occupied"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Garage {1}: Occupé"
+		"en"		"Garage {1}: Occupied"
 	}
 	"Cmd_Appart_Count"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Il y'a {red}{1}{default} appartement(s) et {red}{2}{default} garage(s) disponible."
+		"en"		"There are {red}{1}{default} apartment(s) and {red}{2}{default} garage(s) available."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Chat_Talk"
 	{
 		"#format"	"{1:s},{2:t},{3:s}"
 		"fr"		"{teamcolor}{1}{default} {2}: {3}"
+		"en"		"{teamcolor}{1}{default} {2}: {3}"
 	}
 	"Chat_TAG_Admin"
 	{
 		"fr"		"({green}ADMIN{default})"
+		"en"		"({green}ADMIN{default})"
 	}
 	"Chat_TAG_VIP"
 	{
 		"fr"		"({green}VIP{default})"
+		"en"		"({green}VIP{default})"
 	}
 	"Chat_TAG_GROUP"
 	{
 		"fr"		"({red}GROUPE{default})"
+		"en"		"({red}GROUP{default})"
 	}
 	"Chat_TAG_TEAM"
 	{
 		"fr"		"({orange}JOB{default})"
+		"en"		"({orange}JOB{default})"
 	}
 	"Chat_TAG_COLOC"
 	{
 		"fr"		"({purple}COLOC{default})"
+		"en"		"({purple}COLOC{default})"
 	}
 	"Chat_TAG_EMOTE"
 	{
 		"fr"		"({olive}ANNONCE{default})"
+		"en"		"({olive}ANNOUNCEMENT{default})"
 	}
 	"Chat_TAG_LOCAL"
 	{
 		"fr"		"({teamcolor}LOCAL{default})"
+		"en"		"({teamcolor}LOCAL{default})"
 	}
 	"Chat_TAG_WEDDING"
 	{
 		"fr"		"({red}MARIÉ{default})"
+		"en"		"({red}MARRIED{default})"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Phone_Mission"
 	{
 		"fr"		"Mission téléphone:"
+		"en"		"Phone mission:"
 	}
 	"Phone_Mission_Send"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Un hélicoptère vous envois un colis, il sera envoyé près de: {1}."
+		"en"		"A helicopter sends you a package, it will be sent near: {1}."
 	}
 	"Phone_Quest"
 	{
 		"fr"		"Menu des quêtes:"
+		"en"		"Quests menu:"
 	}
 	"Phone_Quest_None"
 	{
 		"fr"		"Vous n'avez aucune quête disponible pour le moment."
+		"en"		"You have no quests available at the moment."
 	}
 	"Phone_Quest_Cancel"
 	{
-		"fr"		"Vous avez déjà une quête en cours. Si vous abandonnez, vous ne pourrezpas reprendre cette quête pendant au moins 24 heures. Souhaitez-vous l'interrompre?"
+		"fr"		"Vous avez déjà une quête en cours. Si vous abandonnez, vous ne pourrez pas reprendre cette quête pendant au moins 24 heures. Souhaitez-vous l'interrompre?"
+		"en"		"You already have a quest in progress. If you give up, you will not be able to continue this quest for at least 24 hours. Do you wish to interrupt it?"
 	}
 	"Phone_Quest_Cancel_Continue"
 	{
 		"fr"		"Non, je veux continuer"
+		"en"		"No, I want to go on."
 	}
 	"Phone_Quest_Cancel_Stop"
 	{
 		"fr"		"Oui, je veux l'arrêter"
+		"en"		"Yes, I want to stop it"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Ban_Cash"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Limite {1}$"
+		"en"		"Limit {1}$"
 	}
 	"Ban_Refund"
 	{
 		"#format"	"{1:d},{2:d}"
-		"fr"		"Vous n'avez pas reçu {red}{1}{defualt}$ afin de rembourser votre dette de {red}{2}{default}$."
+		"fr"		"Vous n'avez pas reçu {red}{1}{default}$ afin de rembourser votre dette de {red}{2}{default}$."
+		"en"		"You have not received {red}{1}{default}$ in order to repay your debt of {red}{2}{default}$."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Passive_Disabled"
 	{
 		"fr"		"Le mode de jeu passif a été désactivé."
+		"en"		"Passive gaming mode has been deactivated."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"BlackFriday_ADS"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Journée exceptionnelle du Black Friday ! Profitez d'une réduction de {green}-{1}%%{default} sur tous vos achats !"
+		"en"		"Special Black Friday! Enjoy a {green}-{1}%%{default} discount on all your purchases!"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"HUD_RespawnIn"
 	{
 		"#format"	"{1:.1f}"
 		"fr"		"<font color='#ff0000'>Vous êtes mort.</font>\nVous allez revivre dans:\n<center><font color='#00ff00'>{1}</font> seconde(s)</center>"
+		"en"		"<font color='#ff0000'>You're dead.</font>\nYou'll live again in:\n<center><font color='#00ff00'>{1}</font> second(s)</center>"
 	}
 	"HUD_RespawnPress"
 	{
 		"fr"		"<font color='#ff0000'>Vous êtes mort.</font>\nAppuyez sur n'importe quelle touche pour revivre."
+		"en"		"<font color='#ff0000'>You're dead.</font>\nPress any key to live again."
 	}
 	"HUD_Vehicle"
 	{
 		"#format"	"{1:d},{2:.1f},{3:d}" // HP, KmH, MpH
 		"fr"		"Voiture: {1}HP\nVitesse: {2}km/h"
+		"en"		"Car: {1}HP\nSpeed: {2}M/h"
 	}
 	"HUD_LoadingData"
 	{
 		"fr"		" \nChargement de vos informations...\nCeci peut prendre jusqu'à une minute\n \n \n \nLes serveurs Steam sont peut-être saturé,\ndans ce cas les délais peuvent être plus long."
+		"en"		"\nLoading your information...\nThis may take up to a minute\n \n \n \nSteam servers may be overloaded,\nin which case it may take longer."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"HINT_Player"
 	{
 		"#format"	"{1:s},{2:s},{3:d},{4:s},{5:s}"			// color, name, HP, jail, job
 		"fr"		"<font color='#{1}'>{2}</font>[HP: {3}] {4}\nJob: {5}"
+		"en"		"<font color='#{1}'>{2}</font>[HP: {3}] {4}\nJob: {5}"
 	}
 	"HINT_NewPlayer"
 	{
 		"#format"	"{1:s},{2:s},{3:d},{4:s},{5:s}"			// color, name, HP, jail, job
 		"fr"		"<strong>*NEW*</strong> <font color='#{1}'>{2}</font>[HP: {3}] {4}\nJob: {5}"
+		"en"		"<strong>*NEW*</strong> <font color='#{1}'>{2}</font>[HP: {3}] {4}\nJob: {5}"
 	}
 	"Hint_Props"
 	{
 		"#format"	"{1:s},{2:d},{3:.2f}"
 		"fr"		"Props de {1}\nHP: {2} - {3}%"
+		"en"		"Props of {1}\nHP: {2} - {3}%"
 	}
 	"Hint_Stuff"
 	{
 		"#format"	"{1:t},{2:d},{3:.2f}"
 		"fr"		"{1}\nHP: {2} - {3}%"
+		"en"		"{1}\nHP: {2} - {3}%"
 	}
 	"Hint_Vehicle"
 	{
 		"#format"	"{1:s},{2:d}"
 		"fr"		"Véhicule de {1}\n \nHP: {2}"
+		"en"		"Vehicle of {1}\n \nHP: {2}"
 	}
 	"Hint_VehicleDriving"
 	{
 		"#format"	"{1:s},{2:s},{3:d}"
 		"fr"		"Véhicule de {1}\n{2} Conduit\nHP: {3}"
+		"en"		"Vehicle of {1}\n{2} Driving: {3}"
 	}
 	"Hint_VehicleJob"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Véhicule de fonction\n \nHP: {1}"
+		"en"		"Company car\n \nHP: {1}"
 	}
 	"Hint_VehicleJobDriving"
 	{
 		"#format"	"{1:s},{2:d}"
 		"fr"		"Véhicule de fonction\n{1} Conduit\nHP: {2}"
+		"en"		"Company car\n{1} Driving\nHP: {2}"
 	}
 	"Hint_Appart"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Appartement de {1}"
+		"en"		"Apartment of {1}"
 	}
 	"Hint_Appart_Sell"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Appartement {1} à louer\nPrix: {2}$"
+		"en"		"Apartment of {1} for rent\nPrice: ${2}"
 	}
 	"Hint_Garage"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Garage de {1}"
+		"en"		"Garage of {1}"
 	}
 	"Hint_Garage_Sell"
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Garage {1} à louer\nPrix: {2}$"
+		"en"		"Garage {1} for rent\nPrice: ${2}"
 	}
 	"Hint_Villa"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Villa de {1}"
+		"en"		"Mansion of {1}"
 	}
 	"Hint_Door"
 	{
 		"#format"	"{1:s},{2:t},{3:t}"
 		"fr"		"Porte {1} {2}\n{3}"
+		"en"		"Door {1} {2}\n{3}"
 	}
 	"Hint_Door_Close"
 	{
 		"fr"		"<font color='#ff0000'>fermée</font>"
+		"en"		"<font color='#ff0000'>fermée</font>"
 	}
 	"Hint_Door_Open"
 	{
 		"fr"		"<font color='#00ff00'>ouverte</font>"
+		"en"		"<font color='#00ff00'>ouverte</font>"
 	}
 	"Hint_Door_WithoutKey"
 	{
 		"fr"		"Vous n'avez <font color='#ff0000'>pas les clés</font>."
+		"en"		"You have <font color='#ff0000'>not the keys</font>."
 	}
 	"Hint_Door_WithKey"
 	{
 		"fr"		"Vous avez <font color='#00ff00'>les clés</font>."
+		"en"		"You have <font color='#00ff00'>the keys</font>."
 	}
 	"Hint_ATM"
 	{
 		"fr"		"Distributeur de billets"
+		"en"		"Cash Dispenser"
 	}
 	"Hint_MAIL"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Boite aux lettres {1}"
+		"en"		"Mailbox {1}"
 	}
 	"Hint_MAIL_Mairie"
 	{
 		"fr"		"de la Mairie"
+		"en"		"of the Town Hall"
 	}
 	"Hint_Phone"
 	{
 		"fr"		"Téléphone public"
+		"en"		"Public phone"
 	}
 	"Hint_Arbre"
 	{
 		"#format"	"{1:d},{2:.2f}"
 		"fr"		"Arbre\nHP {1} - {2}%"
+		"en"		"Tree\nHP {1} - {2}%"
 	}
 	"Hint_Wood"
 	{
 		"#format"	"{1:d},{2:.2f}"
 		"fr"		"Bois\nHP {1} - {2}%"
+		"en"		"Wood\nHP {1} - {2}%"
 	}
 	"Hint_Bois"
 	{
 		"#format"	"{1:d},{2:.2f}"
 		"fr"		"Bois\nHP {1} - {2}%"
+		"en"		"Wood\nHP {1} - {2}%"
 	}
 	"Hint_Stone"
 	{
 		"#format"	"{1:s},{2:d},{3:.2f}"
 		"fr"		"{1}\nHP {2} - {3}%"
+		"en"		"{1}\nHP {2} - {3}%"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Vehicule_Cannot_NoKey"
 	{
 		"fr"		"Vous n'avez {red}pas{default} les clés de ce véhicule."
+		"en"		"You {red}do not{default} have the keys to this vehicle."
 	}
 	"Door_Cannot_NoKey"
 	{
 		"fr"		"Vous n'avez {red}pas{default} les clés de cette porte."
+		"en"		"You {red}do not{default} have the keys to this door."
 	}
 	"Door_AddAll"
 	{
 		"fr"		"Ajouter les clés à tous le monde"
+		"en"		"Add the keys to everyone"
 	}
 	"Door_RemoveAll"
 	{
 		"fr"		"Retirer les clés à tous le monde"
+		"en"		"Take the keys away from everyone"
 	}
 	"Door_Add"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Ajouter - {1}"
+		"en"		"Add - {1}"
 	}
 	"Door_Remove"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Retirer - {1}"
+		"en"		"Remove - {1}"
 	}
 	"Door_Lock"
 	{
 		"fr"		"Cette porte a été {red}fermée{default} à clé."
+		"en"		"This door has been {red}locked{default}."
 	}
 	"Door_Unlock"
 	{
 		"fr"		"Cette porte a été {green}déverouillée{default}."
+		"en"		"This door has been {green}unlocked {default}."
 	}
 	"Door_IsLocked"
 	{
 		"fr"		"La porte est {red}fermée{default} à clé, tapez {red}/unlock{default} pour l'ouvrir."
+		"en"		"The door is {red}locked{default}, press {red}/unlock{default} to open it."
 	}
 	
 	// ----------------------------------------------------------------------------------------------
 	"Pay_Cannot_Full"
 	{
 		"fr"		"Votre coffre en banque est {red}plein{default}, vous {red}ne toucherez pas {default}votre paye."
+		"en"		"Your safe is {red}full{default}, you {red}won't get {default}your paycheck."
 	}
 	"Pay_Cannot_AFK"
 	{
 		"fr"		"Vous êtes resté trop longtemps {red}AFK{default}, vous {red}ne toucherez pas {default}votre paye."
+		"en"		"You've been staying {red}AFK{default} too long, you {red}won't get your {default}paycheck."
 	}
 	"Pay_Cannot_Jail"
 	{
 		"fr"		"Vous êtes en {red}prison{default}, vous n'avez reçu que {red}10% {default}de votre paye."
+		"en"		"You are in {red}prison{default}, you have received only {red}10% {default} of your paycheck."
 	}
 	"Pay_Cannot_Tribunal"
 	{
 		"fr"		"Vous êtes {red}recherché {default}par le Tribunal, vous {red}ne toucherez pas {default}votre paye."
+		"en"		"You are {red}wanted {default}by the court, you {red}will not get your {default}paycheck."
 	}
 	"Pay_Cannot_Bankrupt"
 	{
 		"fr"		"Votre entreprise a fait {red}faillite{default}. vous {red}ne toucherez pas {default}votre paye."
+		"en"		"Your company has been declared {red}bankrupt{default}. You {red}will not receive your {default}pay."
 	}
 	"Pay_Give"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Vous avez reçu votre paye de {green}{1}{default}$."
+		"en"		"You received your paycheck from {green}{1}{default}$."
 	}
 	"Pay_Work"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Vous avez reçu {green}{1}{default}$ pour votre travail d'aujourd'hui."
+		"en"		"You received {green}{1}{default}$ for your work today."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Syn_Hire"
 	{
 		"#format"	"{1:s},{2:s}"
 		"fr"		"Vous avez été {green}engagé{default} comme {green}{1}{default}, par {2}."
+		"en"		"You have been {green}committed{default} as {green}{1}{default}, by {2}."
 	}
 	"Syn_Upgrade"
 	{
 		"#format"	"{1:s},{2:s}"
 		"fr"		"Vous avez été {green}promu{default} comme {green}{1}{default}, par {2}."
+		"en"		"You have been {green}upgraded{default} as {green}{1}{default}, by {2}."
 	}
 	"Syn_Downgrade"
 	{
 		"#format"	"{1:s},{2:s}"
 		"fr"		"Vous avez été {red}rétrogradé{default} comme {red}{1}{default}, par {2}."
+		"en"		"You have been {red}retrograded{default} to {red}{1}{default}, by {2}."
 	}
 	"Syn_Fire"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Vous avez été {red}viré{default} par {1}."
+		"en"		"You have been {red}fired{1} by {1}."
 	}
 	"Syn_Dismiss"
 	{
 		"fr"		"Vous avez {red}démissionné{default}."
+		"en"		"You have {red}quit{default}."
 	}
 	"Syn_Money_Give"
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"		"Vous avez {green}reçu{default} {1}$ par {2}."
+		"en"		"You have {green}received{default} ${1} by {2}."
 	}
 	"Syn_Money_Take"
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"		"Vous avez {red}perdu{default} {1}$ par {2}."
+		"en"		"You have {red}lost{default} ${1} by {2}."
 	}
 	"Syn_Jail"
 	{
 		"#format"	"{1:d},{2:s},{3:s}"
 		"fr"		"Vous avez été {red}condamné{default} à {red}{1}{default} heure(s) de prison par {2}, pour {3}." 
+		"en"		"You have been {red}convicted{default} to {red}{1}{default} hour(s) in jail by {2}, for {3}."
 	}
 	"Syn_Item_Give"
 	{
 		"#format"	"{1:d},{2:s},{3:s}"
 		"fr"		"Vous avez {green}reçu{default}: {1} {2} par {3}."
+		"en"		"You have {green}received{default}: {1} {2} by {3}."
 	}
 	"Syn_Item_Take"
 	{
 		"#format"	"{1:d},{2:s},{3:s}"
 		"fr"		"Vous avez {red}perdu{default}: {1} {2} par {3}."
+		"en"		"You have {red}lost{default}: {1} {2} by {3}."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Visibility_Visible"
 	{
 		"fr"		"Vous êtes maintenant {red}visible{default}."
+		"en"		"You are now {red}visible{default}."
 	}
 	"Visibility_Transparent"
 	{
 		"fr"		"Vous êtes maintenant {yellow}transparent{default}."
+		"en"		"You are now {yellow}transparent{default}."
 	}
 	"Visibility_Invisible"
 	{
 		"fr"		"Vous êtes maintenant {green}invisible{default}."
+		"en"		"You are now {green}invisible {default}."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"ScoreBar_TAG_Police"
 	{
 		"fr"		"Gendarmerie"
+		"en"		"Police"
 	}
 	"ScoreBar_TAG_Juge"
 	{
 		"fr"		"Juge"
+		"en"		"Judge"
 	}
 	"ScoreBar_TAG_Criminal"
 	{
 		"fr"		"Criminel"
+		"en"		"Criminal"
 	}
 	"ScoreBar_TAG_InJail"
 	{
 		"fr"		"En prison"
+		"en"		"In prison"
 	}
 	"ScoreBar_TAG_AFK"
 	{
 		"fr"		"AFK"
+		"en"		"AFK"
 	}
 	"ScoreBar_TAG_InTUTO"
 	{
 		"fr"		"TUTORIAL"
+		"en"		"TUTORIAL"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"HUD_Energy"
 	{
 		"#format"	"{1:.2f}"
 		"fr"		"Énergie : {1}%"
+		"en"		"Energy: {1}%"
 	}
 	"HUD_Dept"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Dette     : {1}$"
+		"en"		"Debt: {1}$"
 	}
 	"HUD_Money"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Argent  : {1}$"
+		"en"		"Money: {1}$"
 	}
 	"HUD_Bank"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Banque : {1}$"
+		"en"		"Bank: {1}$"
 	}
 	"HUD_Job"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Emploi  : {1}"
+		"en"		"Employment: {1}"
 	}
 	"HUD_Group"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Clan      : {1}"
+		"en"		"Clan: {1}"
 	}
 	"HUD_Rank"
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"		"Rang     : {1} - {2}"
+		"en"		"Rank     : {1} - {2}"
 	}
 	"HUD_Zone"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Zone     : {1}"
+		"en"		"Zone     : {1}"
 	}
 	"HUD_Salaire"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Salaire  : {1}$"
+		"en"		"Salary  : {1}$"
 	}
 	"HUD_Salaire_Extra"
 	{
 		"#format"	"{1:s},{2:d}"
 		"fr"		"Salaire  : {1}$ + {2}$"
+		"en"		"Salary: ${1} + ${2}"
 	}
 	"HUD_Jail_Days"
 	{
 		"#format"	"{1:d},{2:d},{3:d}"
 		"fr"		"En prison pour encore: {1}j {2}h{3}"
+		"en"		"In prison for another: {1}j {2}h {3}"
 	}
 	"HUD_Sick"
 	{
 		"fr"		"Vous êtes malade"
+		"en"		"You're sick"
 	}
 	"HUD_Admin"
 	{
 		"#format"	"{1:.1f},{2:d},{3:d}"
 		"fr"		"Limite   : {1}% - Z:{2} - XP:{3}"
+		"en"		"Limit	: {1}% - Z:{2} - XP:{3}"
 	}
 	"HUD_Quest"
 	{
 		"fr"		"Une quête est disponible"
+		"en"		"A quest is available"
 	}
 	"HUD_Mail"
 	{
 		"fr"		"Un nouveau message"
+		"en"		"A new message"
 	}
 	
 	"HUD_Date"
 	{
 		"#format"	"{1:s},{2:d},{3:t},{4:d}" // szHours, g_iDays, szMonths, g_iYear
 		"fr"		"{1} {2} {3} {4}"
+		"en"		"{1} {2} {3} {4}"
 	}
 	"HUD_Month_1"
 	{
@@ -935,14 +1122,17 @@
 	"Success_Done"
 	{
 		"fr"	"Mes succès accompli"
+		"en"	"My Achievements"
 	}
 	"Success_Todo"
 	{
 		"fr"	"Mes succès à faire"
+		"en"	"My successes to do"
 	}
 	"Success_Win"
 	{
 		"#format"	"{1:s},{2:s}"
 		"fr"		"{1} a remporté le succès {lightblue}{2}{default}!"
+		"en"		"{1} was successful in {lightblue}{2}{default}!"
 	}
 }
