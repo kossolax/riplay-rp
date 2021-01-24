@@ -3,419 +3,517 @@
 	"HUD_WarnDisconnect"
 	{
 		"fr"	"Attention\n \nVous avez déconnecté avec\ndes objets dans votre inventaires.\nCette fois, ils vous ont été rendu.\n\nPensez à les déposer en banque,\nafin d'éviter de mauvaise surprise."
+		"en"	"" Warning\n \n You have disconnected with\n items in your inventory.\nThis time, they have been returned to you.\n\nRemember to deposit them in the bank,\n so there will be no unpleasant surprises.""
 	}
 	"Understand"
 	{
 		"fr"	"J'ai compris"
+		"en"	"I understood"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"cl_downloadfilter"
 	{
 		"fr"	"Des problemes d'affichage? Entrez {red}cl_downloadfilter all{default} dans votre console, puis relancer CS:GO."
+		"en"	"Display problems? Enter {red}cl_downloadfilter all{default} in your console, then restart CS:GO."
 	}
 	"cl_join_advertise"
 	{
 		"fr"	"Entrez {green}cl_join_advertise 2{default} dans votre console, pour que vos amis puissent vous rejoindre facilement {red}<3{default}!"
+		"en"	"Enter {green}cl_join_advertise 2{default} in your console, so your friends can join you easily {red}<3{default}!"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Kill_Self"
 	{
 		"#format"	"{1:s}"
 		"fr"		"{red}{1}{default} s'est tué."
+		"en"		"{red}{1}{default} killed himself."
 	}
 	"Kill_Target"
 	{
 		"#format"	"{1:s},{2:s}"
 		"fr"		"{red}{2}{default} a tué {red}{1}{default}."
+		"en"		"{red}{2}{default} killed {red}{1}{default}."
 	}
 	"Kill_Kick"
 	{
 		"fr"	"Vous avez été kické pour FREEKILL abusif"
+		"en"	"You have been kicked for abusive FREEKILL"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Menu_Help"
 	{
 		"fr"	"Besoin d'aide?"
+		"en"	"Need some help?"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"BankATM"
 	{
 		"fr"	"Distributeur de billets"
+		"en"	"Cash dispenser"
 	}
 	"BankATM_Disabled"
 	{
 		"fr"	"Hors service\n \nCe distributeur est en panne."
+		"en"	"Not in service\n \nThis dispenser is out of order."
 	}
 	"BankATM_disposite"
 	{
 		"fr"	"Déposer de l'argent"
+		"en"	"Deposit money"
 	}
 	"BankATM_withdraw"
 	{
 		"fr"	"Retirer de l'argent"
+		"en"	"Withdraw money"
 	}
 	"BankATM_transfer_disposite"
 	{
 		"#format"	"{1:s},{2:s}"
 		"fr"	"Combien souhaitez-vous déposer?\nSur soi: {1}$\nEn Banque: {2}$\n "
+		"en"	"How much would you like to deposit? On you: {1}$\nIn Bank: {2}$\n"
 	}
 	"BankATM_transfer_withdraw"
 	{
 		"#format"	"{1:s},{2:s}"
 		"fr"	"Combien souhaitez-vous retirer?\nSur soi: {1}$\nEn Banque: {2}$\n "
+		"en"	"How much would you like to withdraw? On you: {1}$\nIn Bank: {2}$\n"
 	}
 	"BankATM_transfer_all"
 	{
 		"fr"	"Tout mon argent"
+		"en"	"All my money"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"DrawBankTransfer"
 	{
 		"fr"	"Gestion de l'inventaire"
+		"en"	"Inventory management"
 	}
 	"DrawBankTransfer_account"
 	{
 		"fr"	"Combien souhaitez-vous en transférer?"
+		"en"	"How many would you like to transfer?"
 	}
 	"DrawBankTransfer_account_all"
 	{
 		"#format"	"{1:s},{2:d}"
 		"fr"	"Tous {1} ({2})"
+		"en"	"All {1} ({2})"
 	}
 	"DrawBankTransfer_to_bank"
 	{
 		"#format"	"{1:t}"
 		"fr"	"Déposer des objets {1}"
+		"en"	"Deposit objects {1}"
 	}
 	"DrawBankTransfer_coffre"
 	{
 		"#format"	"{1:d}"
 		"fr"		"Votre coffre est rempli à {1}%."
+		"en"		"Your safe is {1}% full."
 	}
 	"DrawBankTransfer_full"
 	{
 		"fr"	"(coffre plein)"
+		"en"	"(safe full)"
 	}
 	"DrawBankTransfer_to_inve"
 	{
 		"fr"	"Retirer des objets"
+		"en"	"Remove objects"
 	}
 	"DrawBankTransfer_hdv"
 	{
 		"fr"	"Hôtel des ventes"
+		"en"	"Auction House"
 	}
 	"DrawBankTransfer_save"
 	{
 		"fr"	"Editer un registre"
+		"en"	"Edit a register"
 	}
 	"DrawBankTransfer_rename"
 	{
 		"fr"	"Renommer un registre"
+		"en"	"Rename a register"
 	}
 	"DrawBankTransfer_rename_chat"
 	{
 		"fr"	"Entrez un nouveau nom pour ce registre dans le chat"
+		"en"	"Enter a new name for this register in the chat room"
 	}
 	"DrawBankTransfer_rename_done"
 	{
 		"fr"	"Le registre a bien été renommé."
+		"en"	"The register has been renamed."
 	}
 	"DrawBankTransfer_rename_fail"
 	{
 		"fr"	"Ce nom est trop court."
+		"en"	"This name is too short."
 	}
 	
 	"DrawBankTransfer_save_items"
 	{
 		"fr"	"Sauvegarder mes items actuels dans le registre"
+		"en"	"Save my current items in the register"
 	}
 	"DrawBankTransfer_load"
 	{
 		"#format"	"{1:t}"
 		"fr"	"Charger un registre {1}"
+		"en"	"Load a register {1}"
 	}
 	"DrawBankTransfer_trier"
 	{
 		"fr"	"Trier mon coffre"
+		"en"	"Sort my safe"
 	}
 	"DrawBankTransfer_trier_AZ_ASC"
 	{
 		"fr"	"Par ordre alphabétique"
+		"en"	"In alphabetical order"
 	}
 	"DrawBankTransfer_trier_AZ_DESC"
 	{
 		"fr"	"Par ordre alphabétique inversé"
+		"en"	"In reverse alphabetical order"
 	}
 	"DrawBankTransfer_trier_PX_ASC"
 	{
 		"fr"	"Par prix croissant"
+		"en"	"By ascending price"
 	}
 	"DrawBankTransfer_trier_PX_DESC"
 	{
 		"fr"	"Par prix décroissant"
+		"en"	"By descending price"
 	}
 	"DrawBankTransfer_trier_TY_ASC"
 	{
 		"fr"	"Par type"
+		"en"	"By type"
 	}
 	"DrawBankTransfer_trier_TY_DESC"
 	{
 		"fr"	"Par type inversé"
+		"en"	"By inverted type"
 	}
 	"DrawBankTransfer_trier_JB_ASC"
 	{
 		"fr"	"Par job"
+		"en"	"Per job"
 	}
 	"DrawBankTransfer_trier_JB_DESC"
 	{
 		"fr"	"Par job inversé"
+		"en"	"Per reverse job"
 	}
 	"DrawBankTransfer_to_resell"
 	{
 		"fr"	"Vendre mon arme au marché noir"
+		"en"	"Sell my gun on the black market"
 	}
 	"DrawBankTransfer_Tribunal"
 	{
 		"fr"	"Le Tribunal de princeton a {red}gelé votre compte{default} en banque, car vous êtes recherché depuis trop longtemps."
+		"en"	"The Princeton Court has {red}frozen your bank account {default} because you've been wanted for too long."
 	}
 	"DrawBankTransfer_weaponAdd"
 	{
 		"fr"	"Déposer une arme"
+		"en"	"Deposit a weapon"
 	}
 	"DrawBankTransfer_weaponGet"
 	{
 		"fr"	"Retirer une arme"
+		"en"	"Remove a weapon"
 	}
 	"DrawBankTransfer_AprilFool"
 	{
 		"fr"	"Gestion du serveur"
+		"en"	"Server management"
 	}
 	"DrawBankTransfer_AprilFool_Sub"
 	{
 		"fr"	"Se donner 100 000$\nSe donner Arme PvP\nSe donner 100x un item\nReduire 80% de mes degats (hors pvp)\nAugmenter 20% de mes degats (pvp)\nAimbot discret\nFaire CRASH\nFaire semblant de lag\nDDoS un joueur\nDDoS un gang\nBannir LEXAL pour raison bidone\nRAZ un joueur"
+		"en"	"Give yourself $100,000\nGive yourself a PvP weapon\nGive yourself 100x an item\nReduce 80% of my damages (excluding pvp)\nIncrease 20% of my damages (pvp)\nLow-key Aimbot\nMake a CRASH\nPretend to lag\nDDoS a player\nDDoS a gang\nBan LEXAL for no reason\nRAZ a player"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"OpenBossConfig"
 	{
 		"fr"	"Configuration du job:"
+		"en"	"Job configuration:"
 	}
 	"OpenBossConfig_pay"
 	{
 		"fr"	"Modifier les paies"
+		"en"	"Modify payrolls"
 	}
 	"OpenBossConfig_rank"
 	{
 		"fr"	"Modifier les grades"
+		"en"	"Modify grades"
 	}
 	"OpenBossConfig_key"
 	{
 		"fr"	"Modifier la clé"
+		"en"	"Modify key"
 	}
 	"GestionKeyBoss_remove"
 	{
 		"#format"	"{1:s}"
 		"fr"	"Cette clé a été {red}retirée{default} pour les {red}{1}{default}."
+		"en"	"This key has been {red}removed{default} for the {red}{1}{default}."
 	}
 	"GestionKeyBoss_add"
 	{
 		"#format"	"{1:s}"
 		"fr"	"Cette clé a été {green}ajoutée{default} pour les {green}{1}{default}."
+		"en"	"This key has been {green}added{default} for the {green}{1}{default}."
 	}
 	"OpenBossConfig_player"
 	{
 		"#format"	"{1:s},{2:s}"
 		"fr"	"{1} [{2}]"
+		"en"	"{1} [{2}]"
 	}
 	"OpenBossConfig_player_inactive"
 	{
 		"#format"	"{1:s},{2:s}"
 		"fr"	"{1} [{2}] - inactif"
+		"en"	"{1} [{2}] - inactive"
 	}
 	"eventSetJobMenu"
 	{
 		"fr"	"Sa place dans le job a bien été modifiée."
+		"en"	"His place in the job has been changed."
 	}
 	"OpenBossPayMenu"
 	{
 		"fr"	"Sélectionner un grade:"
+		"en"	"Select a grade:"
 	}
 	"MenuSelectPay"
 	{
 		"fr"	"Sélectionner la nouvelle paie:"
+		"en"	"Select the new payroll:"
 	}
 	"MenuSetPay"
 	{
 		"#format"	"{1:s},{2:d}"
 		"fr"	"La paie du grade de {red}{1}{default} est maintenant de {red}{2}{default}$."
+		"en"	"The pay for the grade of {red}{1}{default} is now {red}{2}{default}$."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Cmd_Item"
 	{
 		"#format"	"{1:s}"
 		"fr"		"Vous avez utilisé: {green}{1}{default}."
+		"en"		"You used: {green}{1}{default}."
 	}
 	"Cmd_Item_None"
 	{
 		"fr"		"Vous n'avez {red}pas d'objet{default} à utiliser."
+		"en"		"You have {red}no {default} object to use."
 	}
 	"Cmd_Item_Choose"
 	{
 		"fr"		"Sélectionner un objet à utiliser:"
+		"en"		"Select an object to use:"
 	}
 	"Cmd_Note"
 	{
 		"fr"		"Informations"
+		"en"		"Information"
 	}
 	"Cmd_Note_remove"
 	{
 		"fr"		"Note à supprimer"
+		"en"		"Note to be deleted"
 	}
 	"Cmd_Note_time"
 	{
 		"#format"	"{1:s},{2:s}"
 		"fr"		"{1} il y'a {2} heure(s)"
+		"en"		"{1} there's {2} hour(s) ago"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Cmd_Passive"
 	{
 		"fr"	"Quel est votre mode de jeu préféré?"
+		"en"	"What's your favorite gaming mode?"
 	}
 	"Cmd_Passive_Kill"
 	{
 		"fr"	"Ayant commis un meurtre récement, vous ne pouvez passer en mode passif tant que vous avez des meurtres à votre actif."
+		"en"	"Having committed a murder recently, you can't go into passive mode as long as you have murders on your record."
 	}
 	"Cmd_Passive_Aggress"
 	{
 		"fr"	"Ayant commis une agression physique récement, vous ne pouvez pas activer ce mode."
+		"en"	"Having committed a recent physical assault, you cannot activate this mode."
 	}
 	"Cmd_Passive_Enabling"
 	{
 		"fr"	"Le mode de jeu {green}passif{default} va être activé dans {green}une{default} minute."
+		"en"	"The {green}passive{default} game mode will be activated in {green}one{default} minute."
 	}
 	"Cmd_Passive_Disabling"
 	{
 		"fr"	"Le mode de jeu {red}actif{default} va être activé dans {red}une{default} minute."
+		"en"	"The game mode {red}active{default} will be activated in {red}one{default} minute"
 	}
 	"Cmd_Passive_Enabled"
 	{
 		"fr"	"Le mode de jeu {green}passif{default} est {green}activé{default}!"
+		"en"	"The game mode {green}passive{default} is {green}on {default}!"
 	}
 	"Cmd_Passive_Disabled"
 	{
 		"fr"	"Le mode de jeu {red}actif{default} est {red}activé{default}!"
+		"en"	" {The game mode {red}active{default} is {red}on{default}!"
 	}
 	"Cmd_Passive_Enable"
 	{
 		"fr"	"Activer le mode passif:\n- Vous ne pouvez mourir qu'en cas de légitime défense.\n- Ce mode est récommandé."
+		"en"	"Activate passive mode:\n- You can only die in self-defense. This mode is recommended."
 	}
 	"Cmd_Passive_Enable_Confirm"
 	{
 		"fr"	"Vous avez choisi le mode passif :\n \n- Vous ne pouvez attaquer qu'en cas de légitime défense.\n- Vous ne pouvez mourir que par légitime défense.\n \n Ce mode s'activera dans 1 minute."
+		"en"	"You have selected passive mode: You may only attack in self-defense. You may only die in self-defense. This mode will activate in one minute."
 	}
 	"Cmd_Passive_Disable"
 	{
 		"fr"	"Activer le mode actif:\n- Vous autorisez les autres joueurs à vous freekill.\n- Vous avez le droit de freekill."
+		"en"	"Activate active mode:\n- You allow other players to freekill you.\n- You are allowed to freekill."
 	}
 	"Cmd_Passive_Disable_Confirm"
 	{
 		"#format"	"{1:t}"
 		"fr"	"Vous avez choisi le mode actif :\n \n- Vous pouvez attaquer quand vous le souhaitez.\n- Vous pouvez tuer sans justification.\n- Vous risquez de mourir sans raison.\n- Votre vitalité augmente chaques secondes\n{1}\n \n Ce mode s'activera dans 1 minute."
+		"en"	"You have chosen the active mode:\n \n You can attack whenever you want.\n- You can kill for no reason.\n- You may die for no reason.\n- Your vitality increases every second\n{1}\n \n This mode will activate in 1 minute."
 	}
 	"Cmd_Passive_Disable_Confirm_1"
 	{
 		"fr"	"- Double les gains liés aux amendes."
+		"en"	"- Double the earnings because of the fines"
 	}
 	"Cmd_Passive_Disable_Confirm_11"
 	{
 		"fr"	"- Immunité à l'overdose et aux poisons."
+		"en"	"- Immunity to overdose and poisons."
 	}
 	"Cmd_Passive_Disable_Confirm_21"
 	{
 		"fr"	"- Double le bonus de la vitalité."
+		"en"	"- Double the vitality bonus."
 	}
 	"Cmd_Passive_Disable_Confirm_31"
 	{
 		"fr"	"- Vous trouvez des M.P. en marchant."
+		"en"	"- You find raw materials while walking."
 	}
 	"Cmd_Passive_Disable_Confirm_41"
 	{
 		"fr"	"- +25%% de vitesse de déplacement en contrat."
+		"en"	"- +25% contract travel speed."
 	}
 	"Cmd_Passive_Disable_Confirm_51"
 	{
 		"fr"	"- Vos meurtres en voiture sont retiré des logs."
+		"en"	"- Your drive-by killings are removed from the logs."
 	}
 	"Cmd_Passive_Disable_Confirm_61"
 	{
 		"fr"	"- Tous les bonus d'appartement sont gratuit."
+		"en"	"- All apartment bonuses are free."
 	}
 	"Cmd_Passive_Disable_Confirm_71"
 	{
 		"fr"	"- Votre précision de tir augmente en marchant."
+		"en"	"- Your shooting accuracy increases as you walk."
 	}
 	"Cmd_Passive_Disable_Confirm_81"
 	{
 		"fr"	"- +50%% de vitesse de déplacement après un vol."
+		"en"	"- +50% speed after a robbery."
 	}
 	"Cmd_Passive_Disable_Confirm_91"
 	{
 		"fr"	"- +50%% de vitesse de déplacement après un vol."
+		"en"	"- +50% speed after a robbery."
 	}
 	"Cmd_Passive_Disable_Confirm_101"
 	{
 		"fr"	"- +5 regénération de vie chaques secondes"
+		"en"	"- +5 regeneration of life every second"
 	}
 	"Cmd_Passive_Disable_Confirm_111"
 	{
 		"fr"	"- +25%% de dégât supplémentaire via les armes à feux."
+		"en"	"- +25% additional damage via firearms."
 	}
 	"Cmd_Passive_Disable_Confirm_131"
 	{
 		"fr"	"- +50%% de dégât supplémentaire via les explosifs."
+		"en"	"- +50% additional damage via explosives."
 	}
 	"Cmd_Passive_Disable_Confirm_171"
 	{
 		"fr"	"- Vous trouvez des jetons rouge en marchant."
+		"en"	"- You find red tokens while walking."
 	}
 	"Cmd_Passive_Disable_Confirm_191"
 	{
 		"fr"	"- +50%% de dégât et de portée de la sucette-duo."
+		"en"	"- +50% damage and range of the dummy-duo."
 	}
 	"Cmd_Passive_Disable_Confirm_211"
 	{
 		"fr"	"- L'hôtel des ventes est gratuit."
+		"en"	"- The Auction House is free."
 	}
 	"Cmd_Passive_Disable_Confirm_221"
 	{
 		"fr"	"- Vos machines produisent plus rapidement."
+		"en"	"- Your machines produce faster."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Menu_DisplayPhone"
 	{
 		"fr"	"Cabine téléphonique"
+		"en"	"Phone booth"
 	}
 	"Menu_DisplayPhone_pickup"
 	{
 		"fr"	"Décrocher le téléphone"
+		"en"	"Pick up the phone"
 	}
 	"Menu_DisplayPhone_quest"
 	{
 		"fr"	"Prendre une quête"
+		"en"	"Take a quest"
 	}
 	"Menu_DisplayPhone_quest_cancel"
 	{
 		"fr"	"Annuler une quête"
+		"en"	"Cancel a quest"
 	}
 	"Menu_DisplayPhone_mail"
 	{
 		"fr"	"Lire mes emails"
+		"en"	"Read my emails"
 	}
 	"Menu_DisplayPhone_call"
 	{
 		"fr"	"Appeler un joueur"
+		"en"	"Call a player"
 	}
 	"Menu_DisplayPhone_report"
 	{
 		"fr"	"Rapporter un mauvais comportement"
+		"en"	"Report bad behavior"
 	}
 }
