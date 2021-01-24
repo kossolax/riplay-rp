@@ -3,7 +3,7 @@
 	"HUD_WarnDisconnect"
 	{
 		"fr"	"Attention\n \nVous avez déconnecté avec\ndes objets dans votre inventaires.\nCette fois, ils vous ont été rendu.\n\nPensez à les déposer en banque,\nafin d'éviter de mauvaise surprise."
-		"en"	"" Warning\n \n You have disconnected with\n items in your inventory.\nThis time, they have been returned to you.\n\nRemember to deposit them in the bank,\n so there will be no unpleasant surprises.""
+		"en"	"Warning\n \n You have disconnected with\n items in your inventory.\nThis time, they have been returned to you.\n\nRemember to deposit them in the bank,\n so there will be no unpleasant surprises."
 	}
 	"Understand"
 	{
