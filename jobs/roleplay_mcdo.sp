@@ -16,6 +16,7 @@
 #include <smlib>		// https://github.com/bcserv/smlib
 #include <emitsoundany> // https://forums.alliedmods.net/showthread.php?t=237045
 #include <csgo_items>
+#include <givenameditem>
 
 #pragma newdecls required
 #include <roleplay.inc>	// https://www.ts-x.eu
@@ -124,6 +125,9 @@ public Action task_KNIFE(Handle timer, any client) {
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, MENU_TIME_DURATION);
 }
+
+int g_iSkinID[65];
+
 public int MenuKnife(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_iParam2) {
 	
 	if (p_oAction == MenuAction_Select && client != 0) {
@@ -141,8 +145,9 @@ public int MenuKnife(Handle p_hItemMenu, MenuAction p_oAction, int client, int p
 			Client_RemoveWeapon(client, "weapon_knife");
 		}
 		
+		g_iSkinID[client] = GiveNamedItem_GetItemDefinitionByClassname(option);
 		int wpn = GivePlayerItem(client, option);
-		//SetEntProp(wpn, Prop_Send, "m_iItemDefinitionIndex", CSGO_GetItemDefinitionIndexByName(option));
+		
 		FakeClientCommand(client, "use weapon_knife; use weapon_bayonet"); 
 		rp_ClientGiveItem(client, ITEM_KNIFE, -1);
 	}
@@ -150,6 +155,13 @@ public int MenuKnife(Handle p_hItemMenu, MenuAction p_oAction, int client, int p
 		CloseHandle(p_hItemMenu);
 	}
 }
+public void OnGiveNamedItemEx(int client, const char[] Classname) {
+	if(g_iSkinID[client] > 0 && GiveNamedItemEx.IsClassnameKnife(Classname)) {
+		GiveNamedItemEx.ItemDefinition = g_iSkinID[client];
+		g_iSkinID[client] = 0;
+	}
+}
+
 public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbose) {
 	
 	int vit_level = GetLevelFromVita(rp_GetClientFloat(client, fl_Vitality));

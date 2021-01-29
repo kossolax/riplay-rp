@@ -38,7 +38,7 @@ public void OnGameFrame() {
 	OnGameFrame_10(time);
 }
 void OnGameFrame_01(float time) {
-	static int wasInPVP[65], oldZone[65];
+	static int wasInPVP[65], oldZone[65], wasHUD[65];
 	float pos[3];
 	g_iEntityCount = MaxClients;
 	
@@ -71,6 +71,9 @@ void OnGameFrame_01(float time) {
 			PrintToChatAll("%s est hors map", tmp);
 			rp_AcceptEntityInput(i, "Kill");
 		}
+		
+		
+		
 	}
 	if( g_bLoaded ) {
 		if( g_iEntityCount >= g_iEntityLimit ) {
@@ -91,6 +94,17 @@ void OnGameFrame_01(float time) {
 		if( !IsValidClient(Client) )
 			continue;
 		
+		if( GetClientMenu(Client) != MenuSource_None ) {
+			if( wasHUD[Client] ) {
+				SetHudTextParams(0.0125, 0.4, 0.25, 255, 255, 200, 128, 2, 0.0, 0.0, 0.0);
+				ShowHudText(Client, 0, " ");
+			}
+			
+			wasHUD[Client] = false;
+		}
+		else {
+			wasHUD[Client] = true;
+		}
 		
 		blockShot = false;
 		g_iPlayerCount++;
@@ -856,7 +870,6 @@ void OnGameFrame_10(float time) {
 					
 				}
 				else {
-					
 					PrintHUD(i, szHUD, sizeof(szHUD));
 					
 					Call_StartForward( view_as<Handle>(g_hRPNative[i][RP_OnPlayerHUD]));
@@ -865,22 +878,26 @@ void OnGameFrame_10(float time) {
 					Call_PushCell(sizeof(szHUD));
 					Call_Finish();
 					
-					Handle mSayPanel = CreatePanel();
-					SetPanelTitle(mSayPanel, szGeneralMenu);
-					DrawPanelItem(mSayPanel, "", ITEMDRAW_SPACER);
-					
-					DrawPanelText(mSayPanel, szHUD);
-					
-					SendPanelToClient(mSayPanel, i, MenuNothing, 2);
-					CreateTimer(1.1, PostKillHandle, mSayPanel);
+					if( GetConVarInt(FindConVar("hostport")) == 27015 ) {
+						Handle mSayPanel = CreatePanel();
+						SetPanelTitle(mSayPanel, szGeneralMenu);
+						DrawPanelItem(mSayPanel, "", ITEMDRAW_SPACER);
+						
+						DrawPanelText(mSayPanel, szHUD);
+						
+						SendPanelToClient(mSayPanel, i, MenuNothing, 2);
+						CreateTimer(1.1, PostKillHandle, mSayPanel);
+					}
+					else {
+						SetHudTextParams(0.0125, 0.35, 2.0, 255, 255, 200, 128, 2, 0.0, 0.0, 0.0);
+						ShowHudText(i, 0, szHUD);
+					}
 				}
 			}
 			
 			if( GetEntProp(i, Prop_Send, "m_bDrawViewmodel") == 1 ) {
-				Handle hud = CreateHudSynchronizer();
-				SetHudTextParams(-1.0, 1.0, 1.1, 19, 213, 45, 255, 2, 0.0, 0.0, 0.0);
-				ShowSyncHudText(i, hud, szDates);
-				CloseHandle(hud);
+				SetHudTextParams(-1.0, 1.0, 2.0, 19, 213, 45, 255, 2, 0.0, 0.0, 0.0);
+				ShowHudText(i, 2, szDates);
 			}
 			
 			CheckNoWonSuccess(i);

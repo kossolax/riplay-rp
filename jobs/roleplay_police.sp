@@ -159,33 +159,28 @@ public Action fwdOnFrame(int client) {
 	
 	if( rp_GetClientInt(client, i_KillJailDuration) > 400 ) {
 		if( GetEntProp(client, Prop_Send, "m_bDrawViewmodel") == 1 ) {
-			Handle hud = CreateHudSynchronizer();
-			SetHudTextParams(0.0125, 0.0125, 1.1, 213, 19, 45, 255, 2, 0.0, 0.0, 0.0);
-			ShowSyncHudText(client, hud, "%T", "Jail_Auto", client);
+			SetHudTextParams(0.0125, 0.0125, 2.0, 213, 19, 45, 255, 2, 0.0, 0.0, 0.0);
+			ShowHudText(client, 1, "%T", "Jail_Auto", client);
 		}
 	}
 	else {
 		if( rp_GetClientJobID(client) == 101 && GetClientTeam(client) == CS_TEAM_CT && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 101 ) {
 			
 			if( GetEntProp(client, Prop_Send, "m_bDrawViewmodel") == 1 ) {
-				Handle hud = CreateHudSynchronizer();
 				if( jugeCanJail() ) {
-					SetHudTextParams(0.0125, 0.0125, 1.1, 19, 213, 45, 255, 2, 0.0, 0.0, 0.0);
-					ShowSyncHudText(client, hud, "%T", "Jail_IsAllowed", client);
+					SetHudTextParams(0.0125, 0.0125, 2.0, 19, 213, 45, 255, 2, 0.0, 0.0, 0.0);
+					ShowHudText(client, 1, "%T", "Jail_IsAllowed", client);
 				}
 				else {
-					SetHudTextParams(0.0125, 0.0125, 1.1, 213, 19, 45, 255, 2, 0.0, 0.0, 0.0);
-					ShowSyncHudText(client, hud, "%T", "Jail_IsDenied", client);
+					SetHudTextParams(0.0125, 0.0125, 2.0, 213, 19, 45, 255, 2, 0.0, 0.0, 0.0);
+					ShowHudText(client, 1, "%T", "Jail_IsDenied", client);
 				}
-				CloseHandle(hud);
 			}
 		}
 		if( rp_GetClientJobID(client) == 1 && rp_GetClientInt(client, i_KillJailDuration) <= 0 ) {
 			if( comicoNonSurveiller() ) {
-				Handle hud = CreateHudSynchronizer();
-				SetHudTextParams(0.0125, 0.0125, 1.1, 213, 19, 45, 255, 2, 0.0, 0.0, 0.0);
-				ShowSyncHudText(client, hud, "%T", "Comico_Free", client);
-				CloseHandle(hud);
+				SetHudTextParams(0.0125, 0.0125, 2.0, 213, 19, 45, 255, 2, 0.0, 0.0, 0.0);
+				ShowHudText(client, 1, "%T", "Comico_Free", client);
 			}
 		}
 	}
