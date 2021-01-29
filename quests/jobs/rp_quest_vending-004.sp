@@ -229,21 +229,20 @@ public void Q3_Frame(int objectiveID, int client)
 {
 	g_iDuration[client]--;
 	
-	if(!IsValidEntity(g_iTaxi[client]))
-	{
+	if(!IsValidEntity(g_iTaxi[client])) {
 		rp_QuestStepFail(client, objectiveID);
 		return;
 	}
 	
-	sendMenuDestination(client);
 	
-	if (g_CurrentDestination[client] != -1)
+	if (g_CurrentDestination[client] != -1) {
 		rp_QuestStepComplete(client, objectiveID);
-	else if (g_iDuration[client] <= 0)
-	{
+	}
+	else if (g_iDuration[client] <= 0) {
 		rp_QuestStepFail(client, objectiveID);
 	}
 	else {
+		sendMenuDestination(client);
 		PrintHintText(client, "<b>Quête</b>: %s\n<b>Temps restant</b>: %dsec\n<b>Objectif</b>: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME1);
 	}
 }
