@@ -878,6 +878,8 @@ public int DrawBankTransfer_4(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 }
 
 public void fwdBankSetSaveName(int client, int save, char[] message) {
+	TrimString(message);
+	
 	char tmp[32], tmp2[32*2+1];
 	Format(tmp, sizeof(tmp), "%s", message);
 	
