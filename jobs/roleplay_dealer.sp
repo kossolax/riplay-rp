@@ -1402,7 +1402,8 @@ public Action ItemPickLockOver_18th(Handle timer, Handle dp) {
 		CreateTimer(10.0, AllowStealing, client);
 		return Plugin_Handled;
 	}
-	if( (rp_IsClientNew(target) || (rp_GetClientJobID(target)==41 && rp_GetClientInt(target, i_ToKill) > 0) || (rp_GetWeaponBallType(wepid) == ball_type_nosteal)) && Math_GetRandomInt(0,3) != 0 ) {
+	
+	if( rp_IsClientNew(target) || (rp_GetClientJobID(target)==41 && rp_GetClientInt(target, i_ToKill) > 0) || (rp_GetWeaponBallType(wepid) == ball_type_nosteal) ) {
 		CPrintToChat(client, ""...MOD_TAG..." %T", "Steal_Failed", client);
 		CreateTimer(5.0, AllowStealing, client);
 		return Plugin_Handled;

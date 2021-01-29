@@ -221,7 +221,15 @@ public void Q3_Frame(int objectiveID, int client) {
 	
 	if( GetVectorDistance(target, origin) < 64.0 ) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 2500$.");
-		rp_ClientMoney(client, i_Money, 2500);
+		
+		if( rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank) < 2500 ) {
+			rp_ClientMoney(client, i_Money, 2500);
+		}
+		else {
+			rp_ClientMoney(client, i_Bank, -2500);
+			rp_ClientMoney(client, i_Money, 2500);
+		}
+		
 		rp_QuestStepComplete(client, objectiveID);
 	}
 	else {
@@ -293,7 +301,16 @@ public void Q5_Frame(int objectiveID, int client) {
 
 	if( GetVectorDistance(target, origin) < 128.0 ) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu en récompense 1 Desert Eagle.");
-		rp_ClientGiveItem(client, 150);
+		
+		int itemid = 150;
+		if( rp_GetClientItem(client, itemid) == false && rp_GetClientItem(client, itemid, true) == false ) {
+			rp_ClientGiveItem(client, itemid);
+		}
+		else if( rp_GetClientItem(client, itemid, true) ) {
+			rp_ClientGiveItem(client, itemid, -1, true);
+			rp_ClientGiveItem(client, itemid,  1, false);
+		}
+
 		rp_QuestStepComplete(client, objectiveID);
 	}
 	else {
@@ -747,7 +764,8 @@ public void Q14_Done(int objectiveID, int client) {
 	FakeClientCommand(client, "say /shownotes");
 	
 	rp_SetClientInt(client, i_Tutorial, 20);
-	rp_ClientGiveItem(client, 223);
+	
+	rp_ClientGiveItem(client, 223);	
 	rp_ClientMoney(client, i_Bank, 10000);
 	rp_SetClientBool(client, b_GameModePassive, true);
 	
