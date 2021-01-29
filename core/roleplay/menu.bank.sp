@@ -576,11 +576,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 						}
 
 						Format(tmp, sizeof(tmp), "save %d", i);	
-						
-						if( strlen(g_szItems_SAVE[client][i]) <= 3 )
-							Format(tmp2, sizeof(tmp2), "%T", "Item_Register", client, i);
-						else
-							Format(tmp2, sizeof(tmp2), "%s", g_szItems_SAVE[client][i]);
+						Format(tmp2, sizeof(tmp2), "%s", g_szItems_SAVE[client][i]);
 						
 						AddMenuItem(menu, tmp, tmp2);
 					}
@@ -601,7 +597,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 				}
 				else {
 					int config = StringToInt(buff[1]);
-					if( StringToInt(buff[2]) == 1 ){
+					if( StringToInt(buff[2]) == 1 ) {
 						menu = CreateMenu(MenuNothing);
 						SetMenuTitle(menu, "%T\n%s\n ", "DrawBankTransfer_save", client, g_szItems_SAVE[client][config]);
 						
@@ -609,7 +605,8 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 						AddMenuItem(menu, "_", tmp, ITEMDRAW_DISABLED);
 						
 						rp_GetClientNextMessage(client, config, fwdBankSetSaveName);
-					} else if( StringToInt(buff[2]) == 2 ){
+					}
+					else if( StringToInt(buff[2]) == 2 ) {
 						ItemSave_SetItems(client, config);
 						return;
 					}

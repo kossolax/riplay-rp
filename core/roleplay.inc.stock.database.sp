@@ -1412,6 +1412,7 @@ void ItemSave_SetItems(int client, int saveid){
 
 void ItemSave_SetName(int client, int saveid, char[] name){
 	strcopy(g_szItems_SAVE[client][saveid], sizeof(g_szItems_SAVE[][]), name);
+	
 	char query[128];
 	GetClientAuthId(client, AUTH_TYPE, query, sizeof(query), false);
 	Format(query, sizeof(query), "UPDATE rp_itemsaves SET name='%s' WHERE steamid='%s' AND slot=%d", name, query, saveid);

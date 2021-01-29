@@ -517,6 +517,8 @@ public void Q6_Frame(int objectiveID, int client) {
 	if( Math_GetRandomInt(0, 4) == 0 )
 		updateTeamPolice();
 	
+	bool canLeave = ( g_iQuestGain*2 > GainMax );
+	
 #if defined USING_VEHICLE
 	if( !rp_IsValidVehicle(g_iVehicle) ) { g_iVehicle = spawnVehicle(client); }
 #endif
@@ -566,9 +568,19 @@ public void Q6_Frame(int objectiveID, int client) {
 		SetEntityHealth(g_stkTeam[TEAM_BRAQUEUR][i], heal);
 		rp_SetClientInt(g_stkTeam[TEAM_BRAQUEUR][i], i_Kevlar, kevlar);
 #if defined USING_VEHICLE
-		PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "Objectif: Restez vivant. Prenez la fuite avec votre voiture quand vous le souhaitez. Gain<: %d$", g_iQuestGain);
+		if( canLeave ) {
+			PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "Objectif: Restez vivant. Prenez la fuite avec votre voiture quand vous le souhaitez. Gain: %d$", g_iQuestGain);
+		}
+		else {
+			PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "Objectif: Restez vivant. Gain: %d$", g_iQuestGain);
+		}
 #else
-		PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "Objectif: Restez vivant. Prenez la fuite dans un métro quand vous le souhaitez. Gain: %d$", g_iQuestGain);
+		if( canLeave ) {
+			PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "Objectif: Restez vivant. Prenez la fuite dans un métro quand vous le souhaitez. Gain: %d$", g_iQuestGain);
+		}
+		else {
+			PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "Objectif: Restez vivant. Gain: %d$", g_iQuestGain);
+		}
 #endif
 		for (int j = 0; j < g_stkTeamCount[TEAM_HOSTAGE]; j++) {
 			if( Math_GetRandomInt(0, 4)  == 0 ) {
@@ -587,10 +599,10 @@ public void Q6_Frame(int objectiveID, int client) {
 		if( g_iQuestGain >= GainMax ) g_iQuestGain = GainMax;
 	}
 #if defined USING_VEHICLE
-	if( allInVehicle ) 
+	if( allInVehicle && canLeave ) 
 		rp_QuestStepComplete(client, objectiveID);
 #else
-	if( allInMetro )
+	if( allInMetro && canLeave )
 		rp_QuestStepComplete(client, objectiveID);
 #endif
 
