@@ -478,6 +478,8 @@ public int Native_CWM_Spawn(Handle plugin, int numParams) {
 	g_iEntityData[entity][WSI_ShotFired] = 0;
 	g_iEntityData[entity][WSI_Identifier] = id;
 	
+	g_iEntityData[entity][WSI_AttackDamage] = g_iStack[id][WSI_AttackDamage];
+	
 	g_iEntityData[entity][WSI_Bullet] = g_iStack[id][WSI_MaxBullet];
 	g_iEntityData[entity][WSI_Ammunition] = g_iStack[id][WSI_MaxAmmunition];
 	g_iEntityData[entity][WSI_MaxBullet] = g_iStack[id][WSI_MaxBullet];
@@ -570,7 +572,7 @@ public int Native_CWM_ShootHull(Handle plugin, int numParams) {
 
 			if (IsBreakable(target)) {
 				
-				Entity_Hurt(target, g_iStack[id][WSI_AttackDamage], client, DMG_CRUSH|DMG_SLASH, g_sStack[id][WSS_Name]);
+				Entity_Hurt(target, g_iEntityData[wpnid][WSI_AttackDamage], client, DMG_CRUSH|DMG_SLASH, g_sStack[id][WSS_Name]);
 				
 				if (IsValidClient(target)) {
 					TE_SetupBloodSprite(hit, view_as<float>( { 0.0, 0.0, 0.0 } ), { 255, 0, 0, 255 }, 16, 0, 0);
@@ -632,13 +634,13 @@ public int Native_CWM_ShootRay(Handle plugin, int numParams) {
 				float physcale = 8.0; // TODO: Use cvar: phys_pushscale
 				SubtractVectors(hit, src, nor);
 				NormalizeVector(nor, nor);
-				ScaleVector(nor, float(g_iStack[id][WSI_AttackDamage]) * physcale);
+				ScaleVector(nor, float(g_iEntityData[wpnid][WSI_AttackDamage]) * physcale);
 				TeleportEntity(target, NULL_VECTOR, NULL_VECTOR, nor);
 			}
 			
 			if (IsBreakable(target)) {
 				
-				Entity_Hurt(target, g_iStack[id][WSI_AttackDamage], client, DMG_CRUSH, g_sStack[id][WSS_Name]);
+				Entity_Hurt(target, g_iEntityData[wpnid][WSI_AttackDamage], client, DMG_CRUSH, g_sStack[id][WSS_Name]);
 				
 				if (IsValidClient(target)) {
 					TE_SetupBloodSprite(hit, nor, { 255, 0, 0, 255 }, 16, 0, 0);
@@ -686,7 +688,8 @@ public int Native_CWM_ShootDamage(Handle plugin, int numParams) {
 	int id = g_iEntityData[wpnid][WSI_Identifier];
 	
 	if (IsBreakable(target)) {
-		Entity_Hurt(target, g_iStack[id][WSI_AttackDamage], client, DMG_CRUSH, g_sStack[id][WSS_Name]);
+		Entity_Hurt(target, g_iEntityData[wpnid][WSI_AttackDamage], client, DMG_CRUSH, g_sStack[id][WSS_Name]);
+		
 		if (IsValidClient(target)) {
 			TE_SetupBloodSprite(hit, view_as<float>( { 0.0, 0.0, 0.0 } ), { 255, 0, 0, 255 }, 16, 0, 0);
 			TE_SendToAll();
@@ -705,7 +708,7 @@ public int Native_CWM_ShootExplode(Handle plugin, int numParams) {
 	int entity = GetNativeCell(3);
 	float radius = view_as<float>(GetNativeCell(4));
 	int id = g_iEntityData[wpnid][WSI_Identifier];
-	float falloff = float(g_iStack[id][WSI_AttackDamage]) / radius;
+	float falloff = float(g_iEntityData[wpnid][WSI_AttackDamage]) / radius;
 	float src[3], dst[3], distance, min[3], max[3], hit[3], fraction;
 	Handle tr;
 	Entity_GetAbsOrigin(entity, src);
@@ -1636,7 +1639,7 @@ public Action CWM_ProjectileTouch(int ent, int target) {
 		Call_Finish(a);
 		
 		if (a == Plugin_Continue && IsBreakable(target)) {
-			Entity_Hurt(target, g_iStack[id][WSI_AttackDamage], g_iEntityData[wpnid][WSI_Owner], DMG_GENERIC, g_sStack[id][WSS_Name]);
+			Entity_Hurt(target, g_iEntityData[wpnid][WSI_AttackDamage], g_iEntityData[wpnid][WSI_Owner], DMG_GENERIC, g_sStack[id][WSS_Name]);
 		}
 		
 		if (a != Plugin_Stop) {

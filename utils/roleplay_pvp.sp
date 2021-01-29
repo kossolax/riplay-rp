@@ -30,6 +30,7 @@ enum quest_teams {
 	
 	TEAM_MAX
 };
+
 #define		ACCELERATION_FACTOR	1
 #define		LEAVING_TIME		(2*60/ACCELERATION_FACTOR)
 

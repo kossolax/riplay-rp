@@ -13,7 +13,7 @@ char g_szFullName[PLATFORM_MAX_PATH] =	"Pistolet bioniques";
 char g_szName[PLATFORM_MAX_PATH] 	 =	"biorifle";
 char g_szReplace[PLATFORM_MAX_PATH]  =	"weapon_glock";
 
-char g_szVModel[PLATFORM_MAX_PATH] =	"models/weapons/tsx/bio_rifle/v_bio_riflecsgo.mdl";
+char g_szVModel[PLATFORM_MAX_PATH] =	"models/weapons/tsx/bio_rifle/v_bio_rifle.mdl";
 char g_szWModel[PLATFORM_MAX_PATH] =	"models/weapons/tsx/bio_rifle/w_bio_riflecsgo.mdl";
 char g_szTModel[PLATFORM_MAX_PATH] =	"models/weapons/tsx/bio_rifle/biomass.mdl";
 

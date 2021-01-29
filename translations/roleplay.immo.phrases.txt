@@ -222,7 +222,7 @@
 	}
 	"Tomb_RespawnMap"
 	{
-		"fr"		"Revivre sur n'importe où"
+		"fr"		"Revivre n'importe où"
 		"en"		"Respawn elsewhere"
 	}
 }

@@ -17,9 +17,8 @@ public Plugin myinfo = {
 #define	MAX_NODE	2048
 #define MAX_ARC		MAX_NODE
 #define SERV_IP		"5.196.39.48"
-//#define SERV_IP		"109.88.12.57"
 
-Handle g_hBDD, g_Socket, g_hShow[65];
+Handle g_Socket, g_hShow[65];
 char g_szQuery[1024];
 float g_flNode[MAX_NODE][3];
 int g_iArc[MAX_ARC][4], g_cLaser, g_cBeam, g_iMarked[65];
@@ -58,15 +57,12 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 public void OnMapStart() {
 	g_cLaser = PrecacheModel("materials/vgui/hud/icon_arrow_up.vmt");
 	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt");
-	
-	
-	g_hBDD = SQL_Connect("roleplay", true, g_szQuery, sizeof(g_szQuery));
-	if (g_hBDD == INVALID_HANDLE) {
-		SetFailState("Connexion impossible: %s", g_szQuery);
-	}
-	
-	SQL_TQuery(g_hBDD, SQL_LoadNode, loadNode);
 }
+
+public void OnAllPluginsLoaded() {	
+	SQL_TQuery(rp_GetDatabase(), SQL_LoadNode, loadNode);
+}
+	
 public void SQL_LoadNode(Handle owner, Handle hQuery, const char[] error, any none) {
 	int i;
 	while( SQL_FetchRow(hQuery) ) {
@@ -81,11 +77,11 @@ public void SQL_LoadNode(Handle owner, Handle hQuery, const char[] error, any no
 		
 		if( zone1 != zone2 ) {
 			Format(g_szQuery, sizeof(g_szQuery), "UPDATE `rp_gps_node` SET `zoneid`='%d' WHERE `id`= %d;", zone2, i);
-			SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
+			SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, g_szQuery, 0);
 		}
 	}
 	
-	SQL_TQuery(g_hBDD, SQL_LoadArc, loadArc);
+	SQL_TQuery(rp_GetDatabase(), SQL_LoadArc, loadArc);
 }
 public void SQL_LoadArc(Handle owner, Handle hQuery, const char[] error, any none) {
 	int i;
@@ -103,14 +99,11 @@ public void SQL_LoadArc(Handle owner, Handle hQuery, const char[] error, any non
 		
 		if( !(zone1 == zone2 || zone1 == zone3) ) {
 			Format(g_szQuery, sizeof(g_szQuery), "UPDATE `rp_gps_arc` SET `zoneid`='%d' WHERE `id`= %d;", zone2, i);
-			SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
+			SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, g_szQuery, 0);
 		}
 	}
 }
 // ----------------------------------------- EVENT
-public void OnMapEnd() {
-	CloseHandle(g_hBDD);
-}
 public void OnSocketConnected(Handle hSock, any blah) {
 	SocketSetOption(hSock, SocketKeepAlive, true);
 }
@@ -206,8 +199,8 @@ public int MenuGps(Handle menu, MenuAction action, int client, int param2) {
 				Format(g_szQuery, sizeof(g_szQuery), "INSERT INTO `rp_gps_node` (`id`, `x`, `y`, `z`, `zoneID`) VALUES (NULL, '%d', '%d', '%d', '%d');", 
 				RoundFloat(vec[0]), RoundFloat(vec[1]), RoundFloat(vec[2]), rp_GetZoneFromPoint(vec));
 				
-				SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
-				SQL_TQuery(g_hBDD, SQL_LoadNode, loadNode);
+				SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, g_szQuery, 0);
+				SQL_TQuery(rp_GetDatabase(), SQL_LoadNode, loadNode);
 			}
 			else if( StrEqual(szMenu, "delNode") ) {
 				float vec[3];
@@ -218,11 +211,11 @@ public int MenuGps(Handle menu, MenuAction action, int client, int param2) {
 				PrintToChatAll("%d", node);
 				
 				Format(g_szQuery, sizeof(g_szQuery), "DELETE FROM `rp_gps_arc` WHERE `src`=%d OR `dst`= %d;", node, node);
-				SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
+				SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, g_szQuery, 0);
 				Format(g_szQuery, sizeof(g_szQuery), "DELETE FROM `rp_gps_node` WHERE `id`= %d;", node);
-				SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
+				SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, g_szQuery, 0);
 				
-				SQL_TQuery(g_hBDD, SQL_LoadNode, loadNode);
+				SQL_TQuery(rp_GetDatabase(), SQL_LoadNode, loadNode);
 			}
 			else if( StrEqual(szMenu, "markNode") ) {
 				
@@ -244,8 +237,8 @@ public int MenuGps(Handle menu, MenuAction action, int client, int param2) {
 				Format(g_szQuery, sizeof(g_szQuery), "INSERT INTO `rp_gps_arc` (`id`, `src`, `dst`, `length`, `zoneID`) VALUES (NULL, '%d', '%d', '%d', '%d');", 
 				start, end, dst, rp_GetZoneFromPoint(g_flNode[start]));
 				
-				SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
-				SQL_TQuery(g_hBDD, SQL_LoadArc, loadArc);
+				SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, g_szQuery, 0);
+				SQL_TQuery(rp_GetDatabase(), SQL_LoadArc, loadArc);
 			}
 			else if( StrEqual(szMenu, "fermer") ) {
 				delete g_hShow[client];
