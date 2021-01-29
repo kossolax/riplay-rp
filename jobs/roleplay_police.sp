@@ -1338,10 +1338,11 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 				rp_SetClientInt(target, i_JailledBy, 0);
 				rp_SetClientBool(target, b_IsFreekiller, false);
 				
-				char target_name[128];
+				char client_name[128], target_name[128];
+				GetClientName2(client, client_name, sizeof(client_name), false);
 				GetClientName2(target, target_name, sizeof(target_name), false);
 				CPrintToChat(client, ""...MOD_TAG..." %T", "JailAutoFree", client, target_name, g_szJailRaison[type][jail_raison]);
-				CPrintToChat(target, ""...MOD_TAG..." %T", "JailFree_Target", target);
+				CPrintToChat(target, ""...MOD_TAG..." %T", "JailFree_By", target, client_name);
 				
 				LogToGame("[TSX-RP] [JAIL] %L a été libéré car il n'avait pas commis d'agression", target);
 				
@@ -1357,10 +1358,11 @@ public int eventSetJailTime(Handle menu, MenuAction action, int client, int para
 				rp_SetClientInt(target, i_JailledBy, 0);
 				rp_SetClientBool(target, b_IsFreekiller, false);
 				
-				char target_name[128];
+				char client_name[128], target_name[128];
+				GetClientName2(client, client_name, sizeof(client_name), false);
 				GetClientName2(target, target_name, sizeof(target_name), false);
 				CPrintToChat(client, ""...MOD_TAG..." %T", "JailAutoFree", client, target_name, g_szJailRaison[type][jail_raison]);
-				CPrintToChat(target, ""...MOD_TAG..." %T", "JailFree_Target", target);
+				CPrintToChat(target, ""...MOD_TAG..." %T", "JailFree_By", target, client_name);
 				
 				LogToGame("[TSX-RP] [JAIL] %L a été libéré car il n'avait pas effectué de tir dangereux", target);
 				
