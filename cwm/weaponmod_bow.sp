@@ -19,7 +19,7 @@ char g_szWModel[PLATFORM_MAX_PATH] =	"models/weapons/w_huntingbowcsgo.mdl";
 
 char g_szTModel[PLATFORM_MAX_PATH] =	"models/weapons/w_huntingbow_arrow.mdl";
 
-float g_fWeaponStart[MAX_ENTITIES];
+float g_fWeaponStart[MAX_ENTITIES], g_flWeaponPercent[MAX_ENTITIES];
 
 char g_szMaterials[][PLATFORM_MAX_PATH] = {
 	"materials/models/weapons/huntingbow/steelarrow.vmt",
@@ -57,10 +57,10 @@ public void OnAllPluginsLoaded() {
 	
 	CWM_SetInt(id, WSI_AttackType,		view_as<int>(WSA_LockAndLoad));
 	CWM_SetInt(id, WSI_ReloadType,		view_as<int>(WSR_Automatic));
-	CWM_SetInt(id, WSI_AttackDamage, 	25);
+	CWM_SetInt(id, WSI_AttackDamage, 	1);
 	CWM_SetInt(id, WSI_AttackBullet, 	1);
-	CWM_SetInt(id, WSI_MaxBullet, 		50);
-	CWM_SetInt(id, WSI_MaxAmmunition, 	0);
+	CWM_SetInt(id, WSI_MaxBullet, 		1);
+	CWM_SetInt(id, WSI_MaxAmmunition, 	100);
 	CWM_SetInt(id, WSI_ShotFired,		0);
 	
 	CWM_SetFloat(id, WSF_Speed,			240.0);
@@ -95,6 +95,7 @@ public Action OnAttack(int client, int entity) {
 	g_fWeaponStart[entity] = GetGameTime();
 	return Plugin_Continue;
 }
+
 public Action OnAttackPost(int client, int entity) {
 	CWM_ZoomOut(client, entity, 90, 5);
 	CWM_RunAnimation(entity, WAA_Attack2);
@@ -105,6 +106,7 @@ public Action OnAttackPost(int client, int entity) {
 	
 	int ent = CWM_ShootProjectile(client, entity, g_szTModel, "arrow", 0.0, 2000.0 * pc, OnProjectileHit);
 	SetEntityGravity(ent, 1.0 - (pc*0.8));
+	g_flWeaponPercent[ent] = pc;
 	
 	EmitSoundToAllAny(g_szSounds[GetRandomInt(11, 13)], entity, SNDCHAN_WEAPON);
 	return Plugin_Continue;
@@ -127,8 +129,18 @@ public Action OnProjectileHit(int client, int wpnid, int entity, int target) {
 	if( target > 0 ) {
 		SetVariantString("!activator");
 		AcceptEntityInput(ent, "SetParent", target);
-			
+		
+		int dmg = RoundFloat(25 + float(150) * g_flWeaponPercent[entity]);
+		if( dmg < 1 )
+			dmg = 1;
+		
+		CWM_SetEntityInt(wpnid, WSI_AttackDamage, dmg);
+		int kev = rp_GetClientInt(target, i_Kevlar);
+		
+		rp_SetClientInt(target, i_Kevlar, 0);
 		CWM_ShootDamage(client, wpnid, target, pos);
+		rp_SetClientInt(target, i_Kevlar, kev);
+		
 		EmitSoundToAllAny(g_szSounds[GetRandomInt(1, 4)], ent, SNDCHAN_WEAPON);
 	}
 	else {

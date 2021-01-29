@@ -1458,7 +1458,7 @@ stock void CWM_Attack(int client, int wpnid) {
 				CWM_Recoil(client, wpnid);
 			}
 			
-			if (g_iEntityData[wpnid][WSI_Bullet] == 0)
+			if (g_iEntityData[wpnid][WSI_Bullet] == 0 && g_iEntityData[wpnid][WSI_State] == 0 )
 				CreateTimer(g_fStack[id][WSF_AttackSpeed], CWM_ReloadBatch, wpnid);
 		}
 	}
@@ -1491,6 +1491,9 @@ stock void CWM_AttackPost(int client, int wpnid) {
 	Call_PushCell(client);
 	Call_PushCell(wpnid);
 	Call_Finish(a);
+	
+	if (g_iEntityData[wpnid][WSI_Bullet] == 0 )
+		CreateTimer(g_fStack[id][WSF_AttackSpeed], CWM_ReloadBatch, wpnid);
 	
 }
 stock void CWM_Attack2(int client, int wpnid) {

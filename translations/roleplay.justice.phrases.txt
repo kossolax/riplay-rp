@@ -631,7 +631,7 @@
 	}
 	"Tribunal_Menu_Dedo_Amount"
 	{
-		"#format"	"{1:s},{2:d}"
+		"#format"	"{1:t},{2:d}"
 		"fr"	"Quel est la valeur de {1}?\n    {2}$"
 		"en"	"What is the worth of {1}?\n    {2}$"
 	}

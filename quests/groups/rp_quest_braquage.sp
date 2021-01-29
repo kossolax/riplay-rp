@@ -129,7 +129,7 @@ public bool fwdCanStart(int client) {
 		return false;
 	if( GetGameTime() < 60.0*30.0 && GetConVarInt(FindConVar("hostport")) != 27025 )
 		return false;
-	/*
+	
 	char szDayOfWeek[12], szHours[12];
 	FormatTime(szDayOfWeek, 11, "%w");
 	FormatTime(szHours, 11, "%H");
@@ -138,12 +138,12 @@ public bool fwdCanStart(int client) {
 			return false;
 		}
 	}
-	if( StringToInt(szDayOfWeek) == 5 ) { // Vendredi
+	if( StringToInt(szDayOfWeek) == 0 ) { // Vendredi
 		if( StringToInt(szHours) >= 20 && StringToInt(szHours) < 22) {	// 21h00m00s
 			return false;
 		}
 	}
-	*/
+	
 	int ct = 0;
 	int t = 0;
 	for (int i = 1; i <= MaxClients; i++) {

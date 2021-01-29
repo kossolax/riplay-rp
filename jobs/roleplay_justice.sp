@@ -460,9 +460,7 @@ Menu AUDIENCE_Articles(int type, int a, int b, int c) {
 		}
 	}
 	else if( a == 1 && b >= 0 ) {
-		
 		if( StringToInt(g_szArticles[b][4]) == -1 && c != 42 ) {
-			
 			g_iTribunalData[type][td_Dedommagement2] += c;
 			if( g_iTribunalData[type][td_Dedommagement2] < 0 )
 				g_iTribunalData[type][td_Dedommagement2] = 0;
@@ -1255,9 +1253,10 @@ void SQL_Insert(int type, int condamne, int condamnation, int heure, int amende)
 
 		if(rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_LawyerAudience) < 300) {
 			rp_SetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_LawyerAudience, rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_LawyerAudience) + 1);
-			int xp = calculAudienceXp(rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_LawyerAudience));
-			rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatPlaignant], xp);
 		}
+		
+		int xp = calculAudienceXp(rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_LawyerAudience));
+		rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatPlaignant], xp);
 	}
 	if( IsValidClient(g_iTribunalData[type][td_AvocatSuspect]) ) {
 		GetClientAuthId(g_iTribunalData[type][td_AvocatSuspect], AUTH_TYPE, szSteamID[4], sizeof(szSteamID[]));
@@ -1265,9 +1264,10 @@ void SQL_Insert(int type, int condamne, int condamnation, int heure, int amende)
 
 		if(rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_LawyerAudience) < 300) {
 			rp_SetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_LawyerAudience, rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_LawyerAudience) + 1);
-			int xp = calculAudienceXp(rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_LawyerAudience));
-			rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatSuspect], xp);
 		}
+		
+		int xp = calculAudienceXp(rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_LawyerAudience));
+		rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatSuspect], xp);
 	}
 	
 	Format(query, sizeof(query), "INSERT INTO `rp_audiences` (`id`, `juge`, `plaignant`, `suspect`, `avocat-plaignant`, `avocat-suspect`, `temps`, `condamne`, `charges`, `condamnation`, `heure`, `amende`, `dedommage`) VALUES(NULL,");

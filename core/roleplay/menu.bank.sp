@@ -878,12 +878,13 @@ public int DrawBankTransfer_4(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 }
 
 public void fwdBankSetSaveName(int client, int save, char[] message) {
-	char tmp[32];
-	TrimString(message);
-	SQL_EscapeString(g_hBDD, message, tmp, sizeof(tmp));
+	char tmp[32], tmp2[32*2+1];
+	Format(tmp, sizeof(tmp), "%s", message);
+	
+	SQL_EscapeString(g_hBDD, tmp, tmp2, sizeof(tmp2));
 	
 	if( strlen(message) >= 3 ) {
-		ItemSave_SetName(client, save, tmp);
+		ItemSave_SetName(client, save, tmp2);
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "DrawBankTransfer_rename_done", client);
 		DrawBankTransfer(client);
 	}
