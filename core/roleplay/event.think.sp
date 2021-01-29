@@ -31,11 +31,14 @@ public void OnPreThink(int client) {
 	
 	if( btn & IN_ATTACK ) {
 		int wpnid = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
-		float next = GetEntPropFloat(wpnid, Prop_Send, "m_flNextPrimaryAttack");
 		
-		if( wpnid > 0 && g_flWeaponFireRate[wpnid] > 0.0 && next <= GameTime ) {
-			SetEntPropFloat(wpnid, Prop_Send, "m_flPlaybackRate", g_flWeaponFireRate[wpnid]);
-			g_bWeaponFireRate[wpnid] = true;
+		if( wpnid > 0 ) {
+			float next = GetEntPropFloat(wpnid, Prop_Send, "m_flNextPrimaryAttack");
+			
+			if( wpnid > 0 && g_flWeaponFireRate[wpnid] > 0.0 && next <= GameTime ) {
+				SetEntPropFloat(wpnid, Prop_Send, "m_flPlaybackRate", g_flWeaponFireRate[wpnid]);
+				g_bWeaponFireRate[wpnid] = true;
+			}
 		}
 	}
 }

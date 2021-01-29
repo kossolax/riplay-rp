@@ -140,7 +140,7 @@
 	"JailSend_By"
 	{
 		"#format"	"{1:s}"
-		"fr"		"Vous avez jeté en prison par {1}."
+		"fr"		"Vous avez été jeté en prison par {1}."
 		"en"		"You were thrown in jail by {1}."
 	}
 	"JailArrest_Target"

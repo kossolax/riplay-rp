@@ -655,8 +655,8 @@
 	"Tribunal_Menu_Dedo_Given"
 	{
 		"#format"	"{1:s},{2:s},{3:d}"
-		"fr"	"{red}{1}{fault} a dédommagé {red}{2}{default} de {red}{3}{default}$."
-		"en"	"{red}{1}{fault} has compensated {red}{2}{default} for {red}{3}{default}$."
+		"fr"	"{red}{1}{default} a dédommagé {red}{2}{default} de {red}{3}{default}$."
+		"en"	"{red}{1}{default} has compensated {red}{2}{default} for {red}{3}{default}$."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tribunal_Menu_Acquitter"

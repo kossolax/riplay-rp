@@ -164,22 +164,24 @@ public Action WeaponEquip(int client, int weapon) {
 
 void showGraveMenu(int client) {
 	char tmp[128];
+	
 	if( !g_bUserData[client][b_HasGrave] )
 		return;
-	if( !IsPlayerAlive(client) )
+	if( IsPlayerAlive(client) )
 		return;
 	if( g_bIsInCaptureMode )
 		return;
-	
+	if( !rp_ClientCanDrawPanel(client) )
+		return;
 	
 	Handle menu = CreateMenu(eventTombSwitch);
 	SetMenuTitle(menu, "%T\n ", "Tomb_Dead", client);
 	
-	Format(tmp, sizeof(tmp), "%T", "Tomb_RespawnTomb", client);	AddMenuItem(menu, "tomb", tmp);
-	Format(tmp, sizeof(tmp), "%T", "Tomb_RespawnMap", client);	AddMenuItem(menu, "any", tmp);
+	Format(tmp, sizeof(tmp), "%T", "Tomb_RespawnTomb", client);	AddMenuItem(menu, "tomb", tmp, g_bUserData[client][b_SpawnToGrave] ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+	Format(tmp, sizeof(tmp), "%T", "Tomb_RespawnMap", client);	AddMenuItem(menu, "any", tmp, g_bUserData[client][b_SpawnToGrave] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 	
-	SetMenuExitButton(menu, false);
-	DisplayMenu(menu, client, 5);
+	SetMenuExitButton(menu, true);
+	DisplayMenu(menu, client, MENU_TIME_DURATION);
 }
 bool CheckBuild(int client, bool showMsg = true) {
 	if( IsInVehicle(client) ) {

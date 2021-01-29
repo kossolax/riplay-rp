@@ -690,7 +690,7 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 			if( IsValidClient(invoker) )
 				GetClientName2(invoker, szPseudo, sizeof(szPseudo), false);
 
-			if( from_id == 0 || GetJobID(from_id) != GetJobID(to_id) )
+			if( from_id == 0 || GetJobID(from_id) != GetJobID(to_id) || from_id == to_id )
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Hire", client, g_szJobList[to_id][job_type_name], szPseudo);
 			else if( from_id > to_id )
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Upgrade", client, g_szJobList[to_id][job_type_name], szPseudo);
@@ -730,7 +730,7 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 			if( IsValidClient(invoker) )
 				GetClientName2(invoker, szPseudo, sizeof(szPseudo), false);
 
-			if( from_id == 0 )
+			if( from_id == 0 || GetGroupID(from_id) != GetGroupID(to_id) || from_id == to_id )
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Hire", client, g_szGroupList[to_id][group_type_name], szPseudo);
 			else if( from_id > to_id )
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Upgrade", client, g_szGroupList[to_id][group_type_name], szPseudo);

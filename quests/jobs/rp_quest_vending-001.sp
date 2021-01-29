@@ -185,7 +185,7 @@ public void Q3_End(int objectiveID, int client) {
 	menu.SetTitle("Quète: %s", QUEST_NAME);
 	menu.AddItem("", "Interlocuteur anonyme :", ITEMDRAW_DISABLED);
 	menu.AddItem("", "Je te remercie pour ta rapidité d'action", ITEMDRAW_DISABLED);
-	menu.AddItem("", "voila un petit cadeaux : [PvP] AK-47.", ITEMDRAW_DISABLED);
+	menu.AddItem("", "voilà un petit cadeau : [PvP] AK-47.", ITEMDRAW_DISABLED);
 	
 	menu.ExitButton = false;
 	menu.Display(client, 30);

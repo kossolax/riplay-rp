@@ -319,7 +319,7 @@
 	}
 	"Cmd_Item_Choose"
 	{
-		"fr"		"Sélectionner un objet à utiliser:"
+		"fr"		"Sélectionnez un objet à utiliser:"
 		"en"		"Select an object to use:"
 	}
 	"Cmd_Note"

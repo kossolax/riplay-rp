@@ -4,13 +4,13 @@
 	"Menu_SelectJobTarget"
 	{
 		"#format"	"{1:s}"
-		"fr"	"Sélectionner un job pour: %s"
+		"fr"	"Sélectionnez un job pour: %s"
 		"en"	"Select a job for: %s"
 	}
 	"Menu_SelectGroupTarget"
 	{
 		"#format"	"{1:s}"
-		"fr"	"Sélectionner un groupe pour: %s"
+		"fr"	"Sélectionnez un groupe pour: %s"
 		"en"	"Select a group for: %s"
 	}
 	// ----------------------------------------------------------------------------------------------
@@ -417,7 +417,7 @@
 	"Cmd_Hire"
 	{
 		"#format"	"{1:s}"
-		"fr"		"Sélectionner un job pour: {1}"
+		"fr"		"Sélectionnez un job pour: {1}"
 		"en"		"Select a job for: {1}"
 	}
 	"Cmd_Hire_Unemployed"
@@ -831,8 +831,8 @@
 	}
 	"Pay_Cannot_Jail"
 	{
-		"fr"		"Vous êtes en {red}prison{default}, vous n'avez reçu que {red}10% {default}de votre paye."
-		"en"		"You are in {red}prison{default}, you have received only {red}10% {default} of your paycheck."
+		"fr"		"Vous êtes en {red}prison{default}, vous n'avez reçu que {red}10%% {default}de votre paye."
+		"en"		"You are in {red}prison{default}, you have received only {red}10%% {default} of your paycheck."
 	}
 	"Pay_Cannot_Tribunal"
 	{
