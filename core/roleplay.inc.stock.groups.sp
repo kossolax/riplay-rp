@@ -142,6 +142,14 @@ int GetGroupPrimaryID(int client) {
 	
 	return group_id;
 }
+int GetGroupID(int group_id) {
+	
+	if( StringToInt( g_szGroupList[ group_id ][job_type_isboss] ) != 1 ) {
+		group_id = StringToInt( g_szGroupList[ group_id ][job_type_ownboss] );
+	}
+	
+	return group_id;
+}
 void SetGroupCapital(int group_id, int amount) {
 	if( group_id <= 0 ) {
 		return;
