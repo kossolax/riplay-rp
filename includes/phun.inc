@@ -690,11 +690,10 @@ public bool IsMoveAble(int ent) {
 	if( !HasEntProp(ent, Prop_Send, "m_vecVelocity") && !HasEntProp(ent, Prop_Data, "m_vecAbsVelocity") )
 		return false;
 	
+	GetEdictClassname(ent, classname, sizeof(classname));
 	
 	if( StrContains(classname, "rp_moneybag", false) == 0 )
 		return false;
-	
-	GetEdictClassname(ent, classname, sizeof(classname));
 	if( StrContains(classname, "door", false) == 0 )
 		return false;
 	if( StrContains(classname, "prop_p", false) == 0 )

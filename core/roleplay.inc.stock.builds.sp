@@ -163,7 +163,7 @@ public Action WeaponEquip(int client, int weapon) {
 }
 
 void showGraveMenu(int client) {
-	char tmp[128];
+	char tmp[128], tmp2[128];
 	
 	if( !g_bUserData[client][b_HasGrave] )
 		return;
@@ -177,11 +177,16 @@ void showGraveMenu(int client) {
 	Handle menu = CreateMenu(eventTombSwitch);
 	SetMenuTitle(menu, "%T\n ", "Tomb_Dead", client);
 	
-	Format(tmp, sizeof(tmp), "%T", "Tomb_RespawnTomb", client);	AddMenuItem(menu, "tomb", tmp, g_bUserData[client][b_SpawnToGrave] ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
-	Format(tmp, sizeof(tmp), "%T", "Tomb_RespawnMap", client);	AddMenuItem(menu, "any", tmp, g_bUserData[client][b_SpawnToGrave] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+	Format(tmp2, sizeof(tmp2), "[%T]", "Enabled", client);
+	
+	Format(tmp, sizeof(tmp), "%T%s", "Tomb_RespawnTomb", client, g_bUserData[client][b_SpawnToGrave] ? "" : tmp2);
+	AddMenuItem(menu, "tomb", tmp, g_bUserData[client][b_SpawnToGrave] ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+	
+	Format(tmp, sizeof(tmp), "%T%s", "Tomb_RespawnMap", client, g_bUserData[client][b_SpawnToGrave] ? tmp2 : "");
+	AddMenuItem(menu, "any", tmp, g_bUserData[client][b_SpawnToGrave] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 	
 	SetMenuExitButton(menu, true);
-	DisplayMenu(menu, client, MENU_TIME_DURATION);
+	DisplayMenu(menu, client, 3);
 }
 bool CheckBuild(int client, bool showMsg = true) {
 	if( IsInVehicle(client) ) {
