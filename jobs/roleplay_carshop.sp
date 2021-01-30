@@ -519,7 +519,7 @@ public Action Cmd_SpawnVehicle(int client, int args) {
 	
 	int car; 
 	if( StrContains(model, "mustang", false) >= 0 )
-		car = rp_CreateVehicle(vecOrigin, vecAngles, "models/natalya/vehicles/natalya_mustang_csgo_2016.mdl", 1, client);
+		car = rp_CreateVehicle(vecOrigin, vecAngles, "models/natalya/vehicles/natalya_mustang_csgo_2021.mdl", 1, client);
 	else if( StrContains(model, "moto", false) >= 0 )
 		car = rp_CreateVehicle(vecOrigin, vecAngles, "models/natalya/vehicles/dirtbike.mdl", 1, client);
 	else if( StrContains(model, "victoria", false) >= 0 )
@@ -529,7 +529,7 @@ public Action Cmd_SpawnVehicle(int client, int args) {
 	else if( StrContains(model, "police", false) >= 0 )
 		car = rp_CreateVehicle(vecOrigin, vecAngles, "models/natalya/vehicles/police_crown_victoria_csgo_v2.mdl", 6);
 	else
-		car = rp_CreateVehicle(vecOrigin, vecAngles, "models/natalya/vehicles/natalya_mustang_csgo_2016.mdl", 1, client);
+		car = rp_CreateVehicle(vecOrigin, vecAngles, "models/natalya/vehicles/natalya_mustang_csgo_2021.mdl", 1, client);
 			
 	if( !car ) {
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Build_CannotHere", client);
@@ -566,7 +566,7 @@ public Action Cmd_ItemVehicle(int args) {
 	int item_id = GetCmdArgInt(args);
 	int max = 0;
 	
-	if( StrEqual(arg1, "models/natalya/vehicles/natalya_mustang_csgo_2016.mdl") ) {
+	if( StrEqual(arg1, "models/natalya/vehicles/natalya_mustang_csgo_2021.mdl") ) {
 		max = 3;
 	}
 	if( StrEqual(arg1, "models/natalya/vehicles/police_crown_victoria_csgo_v2.mdl") ) {
@@ -613,7 +613,7 @@ public Action Cmd_ItemVehicle(int args) {
 	// Voiture donateur, on la thune wesh
 	char arg0[128];
 	GetCmdArg(0, arg0, sizeof(arg0));
-	if( StrEqual(arg0, "rp_item_vehicle2") && StrEqual(arg1, "models/natalya/vehicles/natalya_mustang_csgo_2016.mdl") ) {
+	if( StrEqual(arg0, "rp_item_vehicle2") && StrEqual(arg1, "models/natalya/vehicles/natalya_mustang_csgo_2021.mdl") ) {
 		ServerCommand("sm_effect_colorize %d 255 64 32 255", car);
 		rp_SetVehicleInt(car, car_particle, 9);
 		rp_SetVehicleInt(car, car_battery, 1);
@@ -624,7 +624,7 @@ public Action Cmd_ItemVehicle(int args) {
 		rp_SetVehicleInt(car, car_donateur, 1);
 		rp_SetVehicleInt(car, car_can_jump, 1);
 
-		DispatchKeyValue(car, "vehiclescript", 	"scripts/vehicles/natalya_mustang_csgo_20163.txt");
+		DispatchKeyValue(car, "vehiclescript", 	"scripts/vehicles/natalya_mustang_csgo_20213.txt");
 		ServerCommand("vehicle_flushscript");
 		attachVehicleLight(car);
 	}
@@ -1861,7 +1861,7 @@ public int SpawnVehicle(Handle menu, MenuAction action, int client, int param) {
 			int skinid = 1;
 			
 			if( StrEqual(arg1, "mustang") ) {
-				Format(model, sizeof(model), "models/natalya/vehicles/natalya_mustang_csgo_2016.mdl");
+				Format(model, sizeof(model), "models/natalya/vehicles/natalya_mustang_csgo_2021.mdl");
 				max = 3;
 			}
 			if( StrEqual(arg1, "victoria") ) {

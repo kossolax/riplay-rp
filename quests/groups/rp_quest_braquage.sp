@@ -1102,9 +1102,6 @@ void removeClientTeam(int client) {
 }
 // ----------------------------------------------------------------------------
 int requiredTForCT() {
-#if defined USING_VEHICLE
-	return REQUIRED_T;
-#else
 	int minimum = REQUIRED_T;
 	int ct = 0;
 	
@@ -1115,10 +1112,9 @@ int requiredTForCT() {
 			ct++;
 	}
 	
-	if( ct > SUPPLEMENT_T )
+	if( ct >= SUPPLEMENT_T )
 		minimum++;
 	return minimum;
-#endif
 }
 int countPlayerInZone(int jobID) {
 	int ret;
@@ -1164,7 +1160,7 @@ int spawnVehicle(int client) {
 		if( g_flStartPos[rnd[i]][2] < -2200.0 ) 
 			ang[1] = 90.0;
 		
-		ent = rp_CreateVehicle(g_flStartPos[rnd[i]], ang, "models/natalya/vehicles/natalya_mustang_csgo_2016.mdl", 1, 0);
+		ent = rp_CreateVehicle(g_flStartPos[rnd[i]], ang, "models/natalya/vehicles/natalya_mustang_csgo_2021.mdl", 1, 0);
 		if( ent > 0 && rp_IsValidVehicle(ent) ) {
 			break;
 		}
@@ -1173,7 +1169,7 @@ int spawnVehicle(int client) {
 		
 		SetEntProp(ent, Prop_Data, "m_bLocked", 1);
 		rp_SetVehicleInt(ent, car_owner, client);
-		rp_SetVehicleInt(ent, car_maxPassager, 3);
+		rp_SetVehicleInt(ent, car_maxPassager, 4);
 		rp_SetVehicleInt(ent, car_health, 10000);
 		rp_SetClientKeyVehicle(client, ent, true);
 		ServerCommand("sm_effect_colorize %d 0 0 0 255", ent);
