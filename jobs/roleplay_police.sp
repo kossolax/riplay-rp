@@ -111,7 +111,7 @@ public void OnPluginStart() {
 	HookEvent("weapon_fire", Event_Weapon_Fire);
 	
 	for (int i = 1; i <= MaxClients; i++) {
-		g_UsedWeapon[client] = new ArrayList(256);
+		g_UsedWeapon[i] = new ArrayList(256);
 		if (IsValidClient(i))
 			OnClientPostAdminCheck(i);
 	}
