@@ -692,19 +692,19 @@ public bool IsMoveAble(int ent) {
 	
 	GetEdictClassname(ent, classname, sizeof(classname));
 	
-	if( StrContains(classname, "rp_moneybag", false) == 0 )
+	if( StrContains(classname, "rp_moneybag") == 0 )
 		return false;
-	if( StrContains(classname, "door", false) == 0 )
+	if( StrContains(classname, "door") == 0 )
 		return false;
-	if( StrContains(classname, "prop_p", false) == 0 )
+	if( StrContains(classname, "prop_p") == 0 )
 		return true;
-	if( StrContains(classname, "weapon_", false) == 0 )
+	if( StrContains(classname, "weapon_") == 0 )
 		return true;
-	if( StrContains(classname, "chicken", false) == 0 )
+	if( StrContains(classname, "chicken") == 0 )
 		return true;
-	if( StrContains(classname, "rp_", false) == 0 )
+	if( StrContains(classname, "rp_") == 0 )
 		return true;
-	if( StrContains(classname, "bonbon_entity", false) == 0 )
+	if( StrContains(classname, "bonbon_entity") == 0 )
 		return true;
 	
 	return false;

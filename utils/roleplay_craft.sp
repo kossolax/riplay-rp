@@ -1248,14 +1248,14 @@ public void OnThink(int ent) {
 	src[2] += 43.0; 
 	
 	if( disabled || !IsValidClient(owner) ) {
+		
 		if( GetRandomInt(0, 3) == 0 ) {
 			GetAngleVectors(ang, dir, NULL_VECTOR, NULL_VECTOR);
-			TE_SetupSparks(src, dir, 1, 0);
-			TE_SendToAll();
+			rp_Effect_ParticlePath(ent, "env_sparks_omni", src, ang, src);
 		}
 		
 		if( !IsValidClient(owner) ) {
-			SDKHooks_TakeDamage(ent, ent, ent, 1, ent);
+			SDKHooks_TakeDamage(ent, ent, ent, 1.0, ent);
 		}
 		
 		return;

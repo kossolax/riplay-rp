@@ -17,6 +17,19 @@
 #include <cstrike>
 #include <csgo_items>
 
+stock bool Weapon_IsMelee(int wep) {
+	char classname[64];
+	GetEdictClassname(wep, classname, sizeof(classname));
+	
+	if( StrContains(classname, "weapon_knife") == 0 )
+		return true;
+	if( StrContains(classname, "weapon_melee") == 0 )
+		return true;
+	if( StrContains(classname, "weapon_zeus") == 0 || StrContains(classname, "weapon_taser") == 0 )
+		return true;
+	
+	return false;
+}
 stock int rp_GetClientEntity(int client) {
 	
 	int source = GetEntPropEnt(client, Prop_Send, "m_hVehicle");

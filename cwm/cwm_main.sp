@@ -788,8 +788,8 @@ public int Native_CWM_ShootProjectile(Handle plugin, int numParams) {
 	SetEntityMoveType(ent, MOVETYPE_FLYGRAVITY);
 	
 	Entity_SetSolidType(ent, SOLID_VPHYSICS);
-	Entity_SetSolidFlags(ent, FSOLID_TRIGGER );
-	Entity_SetCollisionGroup(ent, COLLISION_GROUP_PLAYER | COLLISION_GROUP_PLAYER_MOVEMENT);	
+	Entity_SetSolidFlags(ent, FSOLID_TRIGGER);
+	Entity_SetCollisionGroup(ent, COLLISION_GROUP_PLAYER);	
 	
 	if (!StrEqual(model, NULL_MODEL)) {
 		if (!IsModelPrecached(model))
@@ -813,7 +813,7 @@ public int Native_CWM_ShootProjectile(Handle plugin, int numParams) {
 	ScaleVector(vecDir, speed);
 	
 	
-	float delta[3] =  { 32.0, -16.0, -12.0 };
+	float delta[3] =  { 32.0, -4.0, -12.0 };
 	Math_RotateVector(delta, vecAngles, delta);
 	vecOrigin[0] += delta[0];
 	vecOrigin[1] += delta[1];
@@ -1207,8 +1207,10 @@ public Action OnPlayerRunCmd(int client, int& btn, int & impulse, float vel[3], 
 public MRESReturn CCSPlayer_GetPlayerMaxSpeed(int client, Handle hReturn, Handle hParams) {
 
 #if DEBUG_MAXSPEED == 1
-	float speed = DHookGetReturn(hReturn);
-	PrintToChatAll("%f", speed);
+	if (g_bHasCustomWeapon[client]) {
+		float speed = DHookGetReturn(hReturn);
+		PrintToChat(21, "%f", speed);
+	}
 	return MRES_Ignored;
 #else
 	if (g_bHasCustomWeapon[client]) {

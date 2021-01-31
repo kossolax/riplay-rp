@@ -104,25 +104,16 @@ public Action Cmd_ItemBallType(int args) {
 	GetCmdArg(1, arg1, sizeof(arg1));
 	
 	int client = GetCmdArgInt(2);
-	int wepid = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+	int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 	int item_id = GetCmdArgInt(args);
 	
-	
-	if( !IsValidEntity(wepid) ) {
+	if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	
-	char classname[64];
-	GetEdictClassname(wepid, classname, sizeof(classname));
-	if( StrEqual(classname, "weapon_knife") ) {
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
-		ITEM_CANCEL(client, item_id);
-		return Plugin_Handled;
-	}
-	
-	if( rp_GetWeaponBallType(wepid) == ball_type_braquage ) {
+	if( rp_GetWeaponBallType(wep_id) == ball_type_braquage ) {
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
@@ -159,7 +150,7 @@ public Action Cmd_ItemBallType(int args) {
 		type = ball_type_notk;
 	}
 	
-	if( type == ball_type_none || rp_GetWeaponBallType(wepid) == type ) {
+	if( type == ball_type_none || rp_GetWeaponBallType(wep_id) == type ) {
 		ITEM_CANCEL(client, item_id);
 		char item_name[128];
 		rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
@@ -168,7 +159,7 @@ public Action Cmd_ItemBallType(int args) {
 		return Plugin_Handled;
 	}
 	
-	rp_SetWeaponBallType(wepid, type);
+	rp_SetWeaponBallType(wep_id, type);
 	
 	return Plugin_Handled;
 }
@@ -181,14 +172,13 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 		return Plugin_Continue;
 
 	int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-	char wep_name[32], tmp1[128], tmp2[128];
-	GetEdictClassname(wep_id, wep_name, sizeof(wep_name));
 	
-	if( StrEqual(wep_name, "weapon_knife") ) {
+	if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
 		return Plugin_Stop;
 	}
-
+	
+	char tmp1[64], tmp2[64];
 	Handle menu = CreateMenu(ModifyWeapon);
 	SetMenuTitle(menu, "%T\n ", "edit_weapon", client);
 	
@@ -233,15 +223,13 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 			strcopy(type, 31, data[0]);
 			int price = StringToInt(data[1]);
 			int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-			char wep_name[32];
-			GetEdictClassname(wep_id, wep_name, sizeof(wep_name));
 
-			if( StrEqual(wep_name, "weapon_knife") ) {
+			if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
 				return;
 			}
 
-			if(StrEqual(type, "pvp")){
+			if( StrEqual(type, "pvp") ){
 				Handle menupvp = CreateMenu(ModifyWeaponPVP);
 				char tmp[64], tmp2[64];
 				SetMenuTitle(menupvp, "%T\n ", "edit_weapon_gang", client);
@@ -371,10 +359,8 @@ public int ModifyWeaponPVP(Handle p_hItemMenu, MenuAction p_oAction, int client,
 			int groupid = StringToInt(data[0]);
 			int price = StringToInt(data[1]);
 			int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-			char wep_name[32];
-			GetEdictClassname(wep_id, wep_name, 31);
 
-			if( StrEqual(wep_name, "weapon_knife") ) {
+			if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
 				return;
 			}

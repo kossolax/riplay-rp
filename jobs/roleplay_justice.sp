@@ -237,6 +237,8 @@ public Action Cmd_Jugement(int client, char[] arg) {
 	if( type != 3 ) {
 		Format(query, sizeof(query), "INSERT INTO `rp_csgo`.`rp_users2` (`steamid`, `xp`, `pseudo`) (SELECT `steamid`, '100', 'Tribunal Forum' FROM `rp_report`.`site_report_votes` WHERE `reportid`=%d AND `vote`=%d GROUP BY `steamid`)", id, type == 1 ? 1 : 0);
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
+		
+		rp_ClientXPIncrement(client, 250);
 	}
 	
 	if( type == 1 ) {
@@ -1247,11 +1249,11 @@ void SQL_Insert(int type, int condamne, int condamnation, int heure, int amende)
 	
 	if( IsValidClient(g_iTribunalData[type][td_AvocatPlaignant]) ) {
 		GetClientAuthId(g_iTribunalData[type][td_AvocatPlaignant], AUTH_TYPE, szSteamID[3], sizeof(szSteamID[]));
-		rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatPlaignant], rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_Avocat));
+		rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatPlaignant], rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_Avocat)/2, true);
 	}
 	if( IsValidClient(g_iTribunalData[type][td_AvocatSuspect]) ) {
 		GetClientAuthId(g_iTribunalData[type][td_AvocatSuspect], AUTH_TYPE, szSteamID[4], sizeof(szSteamID[]));
-		rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatSuspect], rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_Avocat));
+		rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatSuspect], rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_Avocat)/2, true);
 	}
 	
 	Format(query, sizeof(query), "INSERT INTO `rp_audiences` (`id`, `juge`, `plaignant`, `suspect`, `avocat-plaignant`, `avocat-suspect`, `temps`, `condamne`, `charges`, `condamnation`, `heure`, `amende`, `dedommage`) VALUES(NULL,");

@@ -51,6 +51,27 @@ char g_szSounds[][PLATFORM_MAX_PATH] = {
 
 public void OnPluginStart() {
 	RegServerCmd("sm_cwm_reload", Cmd_PluginReloadSelf);
+	RegServerCmd("rp_item_arrow",	Cmd_ItemArrow,		"RP-ITEM",	FCVAR_UNREGISTERED);
+}
+public Action Cmd_ItemArrow(int args) {
+	int client = GetCmdArgInt(1);
+	int item_id = GetCmdArgInt(args);
+	
+	int wep = Client_GetActiveWeapon(client);
+	if( CWM_IsCustom(wep) ) {
+		int cwm = CWM_GetEntityInt(wep, WSI_Identifier);
+		char name[PLATFORM_MAX_PATH];
+		CWM_GetName(cwm, name);
+		
+		if( StrEqual(name, g_szName) ) {
+			int ammo = CWM_GetEntityInt(wep, WSI_Ammunition) + 25;
+			CWM_SetEntityInt(wep, WSI_Ammunition, CWM_GetEntityInt(wep, WSI_Ammunition) + 25);
+			return Plugin_Handled;
+		}
+	}
+	
+	rp_ClientGiveItem(client, item_id);
+	return Plugin_Handled;
 }
 public void OnAllPluginsLoaded() {
 	int id = CWM_Create(g_szFullName, g_szName, g_szReplace, g_szVModel, g_szWModel);
@@ -70,10 +91,10 @@ public void OnAllPluginsLoaded() {
 	CWM_SetFloat(id, WSF_Spread, 		0.0);
 	CWM_SetFloat(id, WSF_Recoil, 		0.0);
 	
-	CWM_AddAnimation(id, WAA_Idle, 		0,  1, 30);
-	CWM_AddAnimation(id, WAA_Draw, 		10,	44, 30);
-	CWM_AddAnimation(id, WAA_Attack, 	6,  25, 30);
-	CWM_AddAnimation(id, WAA_Attack2, 	7,  15, 30);
+	CWM_AddAnimation(id, WAA_Idle, 		0,  23, 30);
+	CWM_AddAnimation(id, WAA_Draw, 		9,	44, 30);
+	CWM_AddAnimation(id, WAA_Attack, 	5,  25, 30);
+	CWM_AddAnimation(id, WAA_Attack2, 	6,  15, 30);
 	
 	CWM_RegHook(id, WSH_Draw,			OnDraw);
 	CWM_RegHook(id, WSH_Attack,			OnAttack);
@@ -106,6 +127,9 @@ public Action OnAttackPost(int client, int entity) {
 	
 	int ent = CWM_ShootProjectile(client, entity, g_szTModel, "arrow", 0.0, 2000.0 * pc, OnProjectileHit);
 	SetEntityGravity(ent, 1.0 - (pc*0.8));
+	Entity_SetMinMaxSize(ent, view_as<float>({-1.0, -1.0, -1.0}), view_as<float>({1.0, 1.0, 1.0}));
+	Entity_SetSolidType(ent, SOLID_BBOX);
+	
 	g_flWeaponPercent[ent] = pc;
 	
 	EmitSoundToAllAny(g_szSounds[GetRandomInt(11, 13)], entity, SNDCHAN_WEAPON);
@@ -124,6 +148,7 @@ public Action OnProjectileHit(int client, int wpnid, int entity, int target) {
 	DispatchKeyValue(ent, "solid", "0");
 	DispatchSpawn(ent);
 	TeleportEntity(ent, pos, ang, NULL_VECTOR);
+	AcceptEntityInput(ent, "FireUser1");
 	
 	//
 	if( target > 0 ) {
@@ -134,12 +159,17 @@ public Action OnProjectileHit(int client, int wpnid, int entity, int target) {
 		if( dmg < 1 )
 			dmg = 1;
 		
-		CWM_SetEntityInt(wpnid, WSI_AttackDamage, dmg);
-		int kev = rp_GetClientInt(target, i_Kevlar);
-		
-		rp_SetClientInt(target, i_Kevlar, 0);
-		CWM_ShootDamage(client, wpnid, target, pos);
-		rp_SetClientInt(target, i_Kevlar, kev);
+		if( IsValidClient(target) ) {
+			CWM_SetEntityInt(wpnid, WSI_AttackDamage, dmg);
+			int kev = rp_GetClientInt(target, i_Kevlar);
+			
+			rp_SetClientInt(target, i_Kevlar, 0);
+			CWM_ShootDamage(client, wpnid, target, pos);
+			rp_SetClientInt(target, i_Kevlar, kev);
+		}
+		else {
+			CWM_ShootDamage(client, wpnid, target, pos);
+		}
 		
 		EmitSoundToAllAny(g_szSounds[GetRandomInt(1, 4)], ent, SNDCHAN_WEAPON);
 	}
@@ -147,7 +177,6 @@ public Action OnProjectileHit(int client, int wpnid, int entity, int target) {
 		EmitSoundToAllAny(g_szSounds[GetRandomInt(5, 7)], ent, SNDCHAN_WEAPON);
 	}
 	
-	AcceptEntityInput(ent, "FireUser1");
 	
 	return Plugin_Handled;
 }
