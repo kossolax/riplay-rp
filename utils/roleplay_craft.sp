@@ -1302,7 +1302,8 @@ public void OnThink(int ent) {
 					AddVectors(vel, dir, dir);
 					TeleportEntity(victim, NULL_VECTOR, NULL_VECTOR, dir);
 					if( damage > 0 ) {
-						rp_SetClientInt(victim, i_LastInflictor, ent);
+						if( IsValidClient(victim) )
+							rp_SetClientInt(victim, i_LastInflictor, ent);
 						
 						if( rp_IsInPVP(victim) )
 							SDKHooks_TakeDamage(victim, ent, Entity_GetOwner(ent), float(damage)*1.5, ent);

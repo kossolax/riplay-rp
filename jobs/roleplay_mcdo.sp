@@ -794,7 +794,13 @@ public Action Cmd_ItemBanane(int args) {
 	return Plugin_Handled;
 }
 public Action BuildingBanana_touch(int index, int client) {
-	if( !IsValidClient(client) )
+	
+	if( rp_IsValidVehicle(client) ) {
+		rp_AcceptEntityInput(index, "Kill");
+		return Plugin_Handled;
+	}
+	
+	if( !IsValidClient(client) || Client_GetVehicle(client) > 0 || rp_GetClientVehicle(client) > 0 || rp_GetClientVehiclePassager(client) > 0 )
 		return Plugin_Continue;
 	
 	rp_SetClientInt(client, i_LastAgression, GetTime());
@@ -819,7 +825,6 @@ public Action BuildingBanana_touch(int index, int client) {
 	
 	rp_AcceptEntityInput(index, "Kill");
 	SDKUnhook(index, SDKHook_Touch, BuildingBanana_touch);
-	
 	return Plugin_Continue;
 }
 int GetLevelFromVita(float vita) {

@@ -398,10 +398,7 @@ public Action fwdWeapon(int victim, int attacker, float &damage, int wepID, floa
 		case ball_type_caoutchouc: {
 			damage *= 0.0;
 			
-			if( rp_IsInPVP(victim) ) {
-				TeleportEntity(victim, NULL_VECTOR, NULL_VECTOR, vecNull);
-				damage *= 0.5;
-				
+			if( rp_IsInPVP(victim) && !(rp_GetZoneBit(rp_GetPlayerZone(victim)) & BITZONE_PERQUIZ) ) {				
 				rp_SetClientFloat(victim, fl_FrozenTime, GetGameTime() + 1.5);
 				if(!rp_GetClientBool(victim, ch_Yeux))
 					ServerCommand("sm_effect_flash %d 1.5 180", victim);
