@@ -110,9 +110,11 @@ public void OnPluginStart() {
 	
 	HookEvent("weapon_fire", Event_Weapon_Fire);
 	
-	for (int i = 1; i <= MaxClients; i++)
+	for (int i = 1; i <= MaxClients; i++) {
+		g_UsedWeapon[client] = new ArrayList(256);
 		if (IsValidClient(i))
 			OnClientPostAdminCheck(i);
+	}
 }
 
 public void OnAllPluginsLoaded() {
@@ -149,11 +151,10 @@ public void OnClientPostAdminCheck(int client) {
 	rp_SetClientBool(client, b_IsSearchByTribunal, false);
 
 	CreateTimer(0.01, AllowStealing, client);
-	g_UsedWeapon[client] = new ArrayList(256);
 	g_bBlockJail[client] = false;
 }
 public void OnClientDisconnect(int client) {
-	delete g_UsedWeapon[client];
+	g_UsedWeapon[client].Clear();
 }
 public Action fwdOnFrame(int client) {
 	
