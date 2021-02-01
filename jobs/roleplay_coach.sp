@@ -419,7 +419,7 @@ public void Cmd_ItemCutThrow_TOUCH(int rocket, int entity) {
 	int attacker = GetEntPropEnt(rocket, Prop_Send, "m_hOwnerEntity");
 	bool touched = false;
 	
-	if( entity > 0 && IsValidEdict(entity) && IsValidEntity(entity) ) {
+	if( entity > 0 && IsValidEdict(entity) && IsValidEntity(entity) && entity != attacker ) {
 		
 		GetEdictClassname(entity, classname, sizeof(classname));
 		
@@ -1564,7 +1564,7 @@ public Action BuildingKevlarBox_post(Handle timer, any entity) {
 	return Plugin_Handled;
 }
 public Action DamageMachine(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
-	if( IsBadGuy(attacker) ) {
+	if( !Entity_CanBeBreak(victim, attacker) ) {
 		damage = 0.0;
 		return Plugin_Changed;
 	}

@@ -608,7 +608,7 @@ public Action DamageATM(int victim, int &attacker, int &inflictor, float &damage
 		damage *= 25.0;
 		return Plugin_Changed;
 	}
-	else if( IsBadGuy(attacker) ) {
+	else if( !Entity_CanBeBreak(victim, attacker) ) {
 		damage = 0.0;
 		return Plugin_Changed;
 	}
@@ -877,7 +877,7 @@ public Action BuildingSIGN_post(Handle timer, any entity) {
 	return Plugin_Handled;
 }
 public Action DamageMachine(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
-	if( IsBadGuy(attacker) ) {
+	if( !Entity_CanBeBreak(victim, attacker) ) {
 		damage = 0.0;
 		return Plugin_Changed;
 	}

@@ -25,6 +25,8 @@ stock bool Weapon_IsMelee(int wep) {
 		return true;
 	if( StrContains(classname, "weapon_melee") == 0 )
 		return true;
+	if( StrContains(classname, "weapon_fists") == 0 )
+		return true;
 	if( StrContains(classname, "weapon_zeus") == 0 || StrContains(classname, "weapon_taser") == 0 )
 		return true;
 	
@@ -42,36 +44,18 @@ stock int rp_GetClientEntity(int client) {
 	
 	return source;
 }
-stock bool IsBadGuy(int client) {
+stock bool Entity_CanBeBreak(int entity, int client) {
 	char tmp[128];
 	
 	if( IsValidClient(client) ) {
-		
 		if( rp_GetClientJobID(client) == 91 )
-			return true;
+			return false;
 		
-		GetClientAuthId(client, AuthId_SteamID64, tmp, sizeof(tmp));
-		
-		if( StrEqual(tmp, "76561198035351061") )
-			return true;
-		if( StrEqual(tmp, "76561198148517623") )
-			return true;
-		if( StrEqual(tmp, "76561199075543682") )
-			return true;
-		if( StrEqual(tmp, "76561198308059058") )
-			return true;
-		if( StrEqual(tmp, "76561198341781285") )
-			return true;
-		if( StrEqual(tmp, "76561197997198020") )
-			return true;
-		if( StrEqual(tmp, "76561198260948496") )
-			return true;
-		
-		if( GetRandomInt(0, 10) == 0 )
-			LogToGame("%L a fait des dégats sur un props légitime.", client);
+		if( rp_GetZoneBit(rp_GetPlayerZone(entity)) & BITZONE_PERQUIZ )
+			return false;
 	}
 
-	return false;
+	return true;
 }
 stock float Math_Lerp(float a, float b, float n) {
 	return (1 - n) * a + n * b;

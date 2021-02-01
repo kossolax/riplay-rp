@@ -311,7 +311,8 @@ public Action Cmd_ItemNano(int args) {
 		
 		if( target > 0 ) {
 		
-			if( (rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PVP) || rp_GetBuildingData(target, BD_owner) == client ) {
+			if( ((rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PVP) || rp_GetBuildingData(target, BD_owner) == client) && !(rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PERQUIZ) ) {
+				
 				rp_ClientRemoveProp(client, target, item_id);
 				return Plugin_Handled;
 			}
@@ -525,7 +526,7 @@ public Action BuildingCashMachine_post(Handle timer, any entity) {
 	return Plugin_Handled;
 }
 public Action DamageMachine(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
-	if( IsBadGuy(attacker) ) {
+	if( !Entity_CanBeBreak(victim, attacker) ) {
 		damage = 0.0;
 		return Plugin_Changed;
 	}

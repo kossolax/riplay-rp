@@ -679,7 +679,7 @@ public Action BuildingHealBox_post(Handle timer, any entity) {
 	return Plugin_Handled;
 }
 public Action DamageMachine(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
-	if( IsBadGuy(attacker) ) {
+	if( !Entity_CanBeBreak(victim, attacker) ) {
 		damage = 0.0;
 		return Plugin_Changed;
 	}

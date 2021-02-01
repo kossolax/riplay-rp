@@ -965,6 +965,11 @@ void DrawMenu_Invitation(int client, int target) {
 	
 	menu.Display(target, 10);
 }
+public Action RestoreGrave(Handle timer, any client) {
+	if( IsValidClient(client) && rp_GetClientBool(client, b_HasGrave) ) {
+		rp_SetClientBool(target, b_SpawnToGrave, true);
+	}
+}
 public int MenuRespawnBraqueur(Handle menu, MenuAction action, int client, int param2) {
 	if( action == MenuAction_Select ) {
 		char options[64], tmp[2][12];
@@ -981,6 +986,11 @@ public int MenuRespawnBraqueur(Handle menu, MenuAction action, int client, int p
 			removeClientTeam(hostage);
 			rp_AcceptEntityInput(hostage, "Kill");
 			
+			bool grave = rp_GetClientBool(target, b_SpawnToGrave);
+			if( grave ) {
+				rp_SetClientBool(target, b_SpawnToGrave, false);
+				CreateTimer(1.0, RestoreGrave, target);
+			}
 			if( !IsPlayerAlive(target) )
 				CS_RespawnPlayer(target);
 			
