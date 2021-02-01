@@ -422,12 +422,18 @@ public Action Cmd_GiveItem(int args) {
 	
 	if( StrEqual(Arg1, "weapon_hammer") ) {
 		g_iMeleeHP[ent][1] = MELEE_HP;
+		if( rof > 1 )
+			g_iMeleeHP[ent][1] = RoundFloat(rof*float(MELEE_HP));
 	}
 	if( StrEqual(Arg1, "weapon_axe") ) {
 		g_iMeleeHP[ent][2] = MELEE_HP;
+		if( rof > 1 )
+			g_iMeleeHP[ent][2] = RoundFloat(rof*float(MELEE_HP));
 	}
 	if( StrEqual(Arg1, "weapon_spanner") ) {
 		g_iMeleeHP[ent][3] = MELEE_HP;
+		if( rof > 1 )
+			g_iMeleeHP[ent][3] = RoundFloat(rof*float(MELEE_HP));
 	}
 	
 	if( rof > 1.0 ) {
