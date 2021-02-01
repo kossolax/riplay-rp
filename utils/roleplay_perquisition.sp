@@ -198,7 +198,11 @@ void INIT_PERQUIZ(int client, int zone, int target, int type) {
 	if( isZoneInPerquiz(zone) )
 		return;
 
-	if( type == 0) resp = GetPerquizResp(zone);
+	if( type == 0) {
+		resp = GetPerquizResp(zone, true);
+		if( resp == 0 )
+			GetPerquizResp(zone, false);
+	}
 
 	setPerquizData(client, zone, target, resp, type, 0);
 	
@@ -435,7 +439,11 @@ public Action TIMER_PERQUIZ_LOOKUP(Handle timer, any zone) {
 		return Plugin_Stop;
 	}
 	
-	if ( !IsValidClient(array[PQ_resp])) array[PQ_resp] = GetPerquizResp(zone);
+	if ( !IsValidClient(array[PQ_resp]) ) {
+		array[PQ_resp] = GetPerquizResp(zone, true);
+		if( array[PQ_resp] == 0 )
+			GetPerquizResp(zone, false);
+	}
 
 	bool canStart = (array[PQ_timeout] >= 60 || !IsValidClient(array[PQ_resp]));
 	
@@ -469,31 +477,32 @@ public Action TIMER_PERQUIZ_LOOKUP(Handle timer, any zone) {
 	return Plugin_Continue;
 }
 // ----------------------------------------------------------------------------
-int GetPerquizResp(int zone) {
+int GetPerquizResp(int zone, bool afkCheck) {
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
 	if( StrEqual(tmp, "bunker") )
-		return GetPerquizRespByGroup( rp_GetCaptureInt(cap_bunker) );
+		return GetPerquizRespByGroup( rp_GetCaptureInt(cap_bunker), afkCheck);
 	else if( StrEqual(tmp, "villa") )
-		return GetPerquizRespByGroup( rp_GetCaptureInt(cap_villa) );
+		return GetPerquizRespByGroup( rp_GetCaptureInt(cap_villa), afkCheck);
 	else if( StrEqual(tmp, "mairie") )
-		return GetPerquizRespMaire();
+		return GetPerquizRespMaire(); 
 	else if( StrContains(tmp, "appart_") == 0 ) {
 		ReplaceString(tmp, sizeof(tmp), "appart_", "");
-		return GetPerquizRespByAppart(StringToInt(tmp));
+		return GetPerquizRespByAppart(StringToInt(tmp), afkCheck);
 	}
 	else
-		return GetPerquizRespByJob(StringToInt(tmp));
+		return GetPerquizRespByJob(StringToInt(tmp), afkCheck);
 }
-int GetPerquizRespByAppart(int appartID) {
+int GetPerquizRespByAppart(int appartID, bool afkCheck) {
 	int zone;
 	int res = 0;
 	int owner = rp_GetAppartementInt(appartID, appart_proprio);
 	
-	
 	for(int i=1; i<=MaxClients; i++) {
 		if( !IsValidClient(i) )
+			continue;
+		if( afkCheck && rp_GetClientBool(i, b_IsAFK) )
 			continue;
 		zone = rp_GetZoneBit(rp_GetPlayerZone(i));
 		
@@ -508,13 +517,15 @@ int GetPerquizRespByAppart(int appartID) {
 	}
 	return res;
 }
-int GetPerquizRespByJob(int job_id) {
+int GetPerquizRespByJob(int job_id, bool afkCheck) {
 	int zone;	
 	int min = 9999;
 	int res = 0;
 	
 	for(int i=1; i<=MaxClients; i++) {
 		if( !IsValidClient(i) )
+			continue;
+		if( afkCheck && rp_GetClientBool(i, b_IsAFK) )
 			continue;
 		zone = rp_GetZoneBit(rp_GetPlayerZone(i));
 		
@@ -530,13 +541,15 @@ int GetPerquizRespByJob(int job_id) {
 	
 	return res;
 }
-int GetPerquizRespByGroup(int gang_id) {
+int GetPerquizRespByGroup(int gang_id, bool afkCheck) {
 	int zone;	
 	int min = 9999;
 	int res = 0;
 	
 	for(int i=1; i<=MaxClients; i++) {
 		if( !IsValidClient(i) )
+			continue;
+		if( afkCheck && rp_GetClientBool(i, b_IsAFK) )
 			continue;
 		zone = rp_GetZoneBit(rp_GetPlayerZone(i));
 		
