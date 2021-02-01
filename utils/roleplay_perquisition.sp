@@ -831,6 +831,9 @@ bool hasCopInZone(int zone) {
 			continue;
 		if( rp_GetClientInt(i, i_KidnappedBy) > 0 )
 			continue;
+		if( GetPlayerWeaponSlot(i, CS_SLOT_PRIMARY) <= 0 &&  GetPlayerWeaponSlot(i, CS_SLOT_SECONDARY) <= 0 )
+			continue;
+		
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
 		if( StrEqual(tmp, tmp2) )
 			return true;
