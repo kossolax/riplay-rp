@@ -755,7 +755,7 @@ public Action Command_Say(int client, int args) {
 
 		if( (g_iUserData[client][i_Money]+g_iUserData[client][i_Bank]) < 100 ) {
 			ACCESS_DENIED(client);
-		}
+		}		
 
 		if( g_bUserData[client][b_MaySteal] == 0 ) {
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_Command_ForNow", client);
@@ -767,6 +767,11 @@ public Action Command_Say(int client, int args) {
 
 		if( !IsPlayerAlive(target) )
 			return Plugin_Handled;
+		
+		
+		if( g_iUserData[client][i_KillJailDuration] >= 1 || g_iUserData[target][i_KillJailDuration] >= 1 ) {
+			ACCESS_DENIED(client);
+		}
 
 		if( !IsTueur(client) ) {
 			char clientname[64], targetname[64];
