@@ -967,7 +967,7 @@ void DrawMenu_Invitation(int client, int target) {
 }
 public Action RestoreGrave(Handle timer, any client) {
 	if( IsValidClient(client) && rp_GetClientBool(client, b_HasGrave) ) {
-		rp_SetClientBool(target, b_SpawnToGrave, true);
+		rp_SetClientBool(client, b_SpawnToGrave, true);
 	}
 }
 public int MenuRespawnBraqueur(Handle menu, MenuAction action, int client, int param2) {
