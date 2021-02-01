@@ -569,17 +569,17 @@ public void Q6_Frame(int objectiveID, int client) {
 		rp_SetClientInt(g_stkTeam[TEAM_BRAQUEUR][i], i_Kevlar, kevlar);
 #if defined USING_VEHICLE
 		if( canLeave ) {
-			PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "Objectif: Restez vivant. Prenez la fuite avec votre voiture quand vous le souhaitez. Gain: %d$", g_iQuestGain);
+			PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "<font color='#33ff33'>Objectif</span>: Prenez la fuite avec votre voiture quand vous le souhaitez. Gain: %d$", g_iQuestGain);
 		}
 		else {
-			PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "Objectif: Restez vivant. Gain: %d$", g_iQuestGain);
+			PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "<font color='#ff3333'>Objectif</span>: Restez vivant. Gain: %d$", g_iQuestGain);
 		}
 #else
 		if( canLeave ) {
-			PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "Objectif: Restez vivant. Prenez la fuite dans un métro quand vous le souhaitez. Gain: %d$", g_iQuestGain);
+			PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "<font color='#33ff33'>Objectif</span>: Prenez la fuite dans un métro quand vous le souhaitez. Gain: %d$", g_iQuestGain);
 		}
 		else {
-			PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "Objectif: Restez vivant. Gain: %d$", g_iQuestGain);
+			PrintHintText(g_stkTeam[TEAM_BRAQUEUR][i], "<font color='#ff3333'>Objectif</span>: Restez vivant. Gain: %d$", g_iQuestGain);
 		}
 #endif
 		for (int j = 0; j < g_stkTeamCount[TEAM_HOSTAGE]; j++) {
