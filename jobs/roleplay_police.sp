@@ -598,7 +598,6 @@ public Action Cmd_Tazer(int client) {
 			return Plugin_Handled;
 		}
 		
-		float time;
 		rp_Effect_Tazer(client, target);
 		rp_HookEvent(target, RP_PreHUDColorize, fwdTazerBlue, 9.0);
 		rp_HookEvent(target, RP_PrePlayerPhysic, fwdFrozen, 7.5);
@@ -802,6 +801,9 @@ public Action Cmd_Tazer(int client) {
 }
 
 void TazerCooldown(int client) {
+	int job = rp_GetClientInt(client, i_Job);
+	float time = 10.0;
+	
 	rp_SetClientBool(client, b_MaySteal, false);
 	switch (job) {
 		case 1:time = 0.001;
