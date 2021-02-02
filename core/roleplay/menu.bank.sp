@@ -484,7 +484,7 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 				DataPackPos pos = view_as<DataPackPos>(StringToInt(expl[1]));
 				
 				rp_WeaponMenu_Get(g_iCustomBank[target], pos, name, data);
-				rp_WeaponMenu_Give(g_iCustomBank[target], pos, client);
+				int wepid = rp_WeaponMenu_Give(g_iCustomBank[target], pos, client);
 				rp_WeaponMenu_Delete(g_iCustomBank[target], pos);
 				
 				g_iWeaponFromStore[wepid] = data[BM_Store];
