@@ -170,7 +170,15 @@ public int Native_rp_WeaponMenu_Give(Handle plugin, int numParams) {
 
 	Format(weapon, sizeof(weapon), "weapon_%s", weapon);
 	
-	int wepid = GivePlayerItem(client, name);
+	int wepid = GivePlayerItem(client, weapon);
+	if (data[BM_Munition] != -1) {
+		Weapon_SetPrimaryClip(wepid, data[BM_Munition]);
+		Weapon_SetPrimaryAmmoCount(wepid, data[BM_Chargeur]);
+		
+		SetEntProp(wepid, Prop_Send, "m_iClip1", data[BM_Munition]);
+		SetEntProp(wepid, Prop_Send, "m_iPrimaryReserveAmmoCount", data[BM_Chargeur]);
+	}
+	
 	RemovePlayerItem(client, wepid);
 	
 	rp_SetWeaponBallType(wepid, view_as<enum_ball_type>(data[BM_Type]));
