@@ -115,8 +115,18 @@ public void OnPluginStart() {
 		if (IsValidClient(i))
 			OnClientPostAdminCheck(i);
 	}
+	
+	RegAdminCmd("rp_police_addweapon", Cmd_AddWeapon, ADMFLAG_ROOT);
 }
-
+public Action Cmd_AddWeapon(int client, int args) {
+	int weaponID = CreateEntityByName("weapon_ak47");
+	
+	Weapon_SetPrimaryClip(weaponID, 10000);
+	SetEntProp(weaponID, Prop_Send, "m_iPrimaryReserveAmmoCount", 42);
+	
+	rp_WeaponMenu_Add(g_hBuyMenu, weaponID, 0);
+	return Plugin_Handled;
+}
 public void OnAllPluginsLoaded() {
 	g_hBuyMenu = rp_WeaponMenu_Create();
 }
@@ -2048,18 +2058,8 @@ public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int 
 			
 			if (rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money) < data[BM_Prix])
 				return 0;
-			Format(name, sizeof(name), "weapon_%s", name);
-				
-			int wepid = GivePlayerItem(client, name);			
-			rp_SetWeaponBallType(wepid, view_as<enum_ball_type>(data[BM_Type]));
-			if (data[BM_PvP] > 0)
-				rp_SetWeaponGroupID(wepid, rp_GetClientGroupID(client));
 			
-			if (data[BM_Munition] != -1) {
-				SetEntProp(wepid, Prop_Send, "m_iClip1", data[BM_Munition]);
-				SetEntProp(wepid, Prop_Send, "m_iPrimaryReserveAmmoCount", data[BM_Chargeur]);
-			}
-			
+			rp_WeaponMenu_Give(g_hBuyMenu, position, client);
 			rp_WeaponMenu_Delete(g_hBuyMenu, position);
 			rp_ClientMoney(client, i_Money, -data[BM_Prix]);
 			

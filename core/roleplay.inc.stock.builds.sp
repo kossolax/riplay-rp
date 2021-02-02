@@ -154,6 +154,41 @@ public int Native_rp_WeaponMenu_Get(Handle plugin, int numParams) {
 	SetNativeString(3, weapon, sizeof(weapon));
 	SetNativeArray(4, data, view_as<int>(BM_Max));
 }
+public int Native_rp_WeaponMenu_Give(Handle plugin, int numParams) {
+	DataPack hBuyMenu = view_as<DataPack>(GetNativeCell(1));
+	DataPackPos pos = GetNativeCell(2);
+	int client = GetNativeCell(3);
+	
+	char weapon[BM_WeaponNameSize];
+	int[] data = new int[view_as<int>(BM_Max)];
+	hBuyMenu.Position = pos;
+	hBuyMenu.ReadString(weapon, sizeof(weapon));
+	
+	for (int i = 0; i < view_as<int>(BM_Max); i++) {
+		data[i] = hBuyMenu.ReadCell();
+	}
+
+	Format(weapon, sizeof(weapon), "weapon_%s", weapon);
+	
+	int wepid = GivePlayerItem(client, name);
+	RemovePlayerItem(client, wepid);
+	
+	rp_SetWeaponBallType(wepid, view_as<enum_ball_type>(data[BM_Type]));
+	if (data[BM_PvP] > 0)
+		rp_SetWeaponGroupID(wepid, rp_GetClientGroupID(client));
+	
+	if (data[BM_Munition] != -1) {
+		Weapon_SetPrimaryClip(wepid, data[BM_Munition]);
+		Weapon_SetPrimaryAmmoCount(wepid, data[BM_Chargeur]);
+		
+		SetEntProp(wepid, Prop_Send, "m_iClip1", data[BM_Munition]);
+		SetEntProp(wepid, Prop_Send, "m_iPrimaryReserveAmmoCount", data[BM_Chargeur]);
+	}
+	
+	EquipPlayerWeapon(client, wepid);
+	
+	return wepid;
+}
 
 
 public Action WeaponEquip(int client, int weapon) {

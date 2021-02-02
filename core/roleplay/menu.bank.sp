@@ -480,34 +480,14 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 				
 				char name[BM_WeaponNameSize];
 				int[] data = new int[view_as<int>(BM_Max)];
-				rp_WeaponMenu_Get(g_iCustomBank[target], view_as<DataPackPos>(StringToInt(expl[1])), name, data);
 				
-				Format(name, sizeof(name), "weapon_%s", name);
+				DataPackPos pos = view_as<DataPackPos>(StringToInt(expl[1]));
 				
-				int iWeaponSlot = -1;
-			
-				for(int lp; lp < MAX_BUYWEAPONS; lp++) {
-					if (strcmp(g_szBuyWeapons[lp][0], name) == 0) {
-						iWeaponSlot = StringToInt(g_szBuyWeapons[lp][2]);
-						break;
-					}
-				}
-					
-				int wepid = GivePlayerItem(client, name);
-				
-				rp_SetWeaponBallType(wepid, view_as<enum_ball_type>(data[BM_Type]));
-				if(data[BM_PvP] > 0)
-					rp_SetWeaponGroupID(wepid, rp_GetClientGroupID(client));
-				
-				if( data[BM_Munition] != -1 ) {
-					SetEntProp(wepid, Prop_Send, "m_iClip1", data[BM_Munition]);
-					SetEntProp(wepid, Prop_Send, "m_iPrimaryReserveAmmoCount", data[BM_Chargeur]);
-				}
+				rp_WeaponMenu_Get(g_iCustomBank[target], pos, name, data);
+				rp_WeaponMenu_Give(g_iCustomBank[target], pos, client);
+				rp_WeaponMenu_Delete(g_iCustomBank[target], pos);
 				
 				g_iWeaponFromStore[wepid] = data[BM_Store];
-				
-				rp_WeaponMenu_Delete(g_iCustomBank[target], view_as<DataPackPos>(StringToInt(expl[1])));
-					
 			}
 			#if defined EVENT_APRIL
 			else if( StrEqual( options, "admin") ) {

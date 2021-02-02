@@ -603,6 +603,8 @@ native DataPackPos rp_WeaponMenu_GetMax(DataPack hBuyMenu);
 native bool rp_WeaponMenu_Add(DataPack hBuyMenu, int weaponID, int owner);
 native void rp_WeaponMenu_Delete(DataPack& hBuyMenu, DataPackPos pos);
 native void rp_WeaponMenu_Get(DataPack hBuyMenu, DataPackPos pos, char weapon[BM_WeaponNameSize], int[] data);
+native int rp_WeaponMenu_Give(DataPack hBuyMenu, DataPackPos pos, int client);
+
 // ----------------------------------------------------------------------------
 #define ACCESS_DENIED(%1)	CPrintToChat(%1, "" ...MOD_TAG... " %T.", "No Access", %1);	return Plugin_Handled
 #define ITEM_CANCEL(%1,%2)	rp_ClientGiveItem(%1,%2); rp_SetClientFloat(%1, fl_CoolDown, 0.05)

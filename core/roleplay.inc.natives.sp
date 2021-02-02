@@ -207,6 +207,7 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 	CreateNative("rp_WeaponMenu_Add", Native_rp_WeaponMenu_Add);
 	CreateNative("rp_WeaponMenu_Delete", Native_rp_WeaponMenu_Delete);
 	CreateNative("rp_WeaponMenu_Get", Native_rp_WeaponMenu_Get);
+	CreateNative("rp_WeaponMenu_Give", Native_rp_WeaponMenu_Give);
 	
 	CreateNative("rp_GetForwardHandle", Native_GetForwardHandle);
 	CreateNative("rp_GetClientNextMessage", Native_rp_GetClientNextMessage);

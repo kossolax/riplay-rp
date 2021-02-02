@@ -1712,20 +1712,10 @@ public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int 
 			
 			if (rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money) < data[BM_Prix])
 				return 0;
-			Format(name, sizeof(name), "weapon_%s", name);
 				
-			int wepid = GivePlayerItem(client, name);			
-			rp_SetWeaponBallType(wepid, view_as<enum_ball_type>(data[BM_Type]));
-			if (data[BM_PvP] > 0)
-				rp_SetWeaponGroupID(wepid, rp_GetClientGroupID(client));
-			
-			if (data[BM_Munition] != -1) {
-				SetEntProp(wepid, Prop_Send, "m_iClip1", data[BM_Munition]);
-				SetEntProp(wepid, Prop_Send, "m_iPrimaryReserveAmmoCount", data[BM_Chargeur]);
-			}
+			int wepid = rp_WeaponMenu_Give(g_hBuyMenu_Weapons, position, client);
 			rp_SetWeaponStorage(wepid, data[BM_Store] == 1);
 			rp_WeaponMenu_Delete(g_hBuyMenu_Weapons, position);
-			
 			
 			rp_ClientMoney(client, i_Money, -data[BM_Prix]);
 			
