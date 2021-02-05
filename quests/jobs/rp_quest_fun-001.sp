@@ -358,6 +358,7 @@ public void Q3_Done(int objectiveID, int client)
 		giveGain(client);
 	}	
 	
+	SDKUnhook(g_iVehicle[client], SDKHook_Think, OnThink);
 	g_iEssai[client]--;
 }
 
@@ -493,9 +494,11 @@ public void OnThink(int entity)
 		return;
 	
 
-	if( g_iStep[client] == CHECKPOINTS && g_iObjectiveID[client] > 0 ) {
-		rp_QuestStepComplete(client, g_iObjectiveID[client]);
-		g_iObjectiveID[client] = -1;
+	if( g_iStep[client] >= CHECKPOINTS ) {
+		if( g_iObjectiveID[client] > 0 )
+			rp_QuestStepComplete(client, g_iObjectiveID[client]);
+			g_iObjectiveID[client] = -1;
+		}
 		return;
 	}
 	
@@ -549,8 +552,6 @@ public int MenuEssai(Handle menu, MenuAction action, int client, int param2) {
 		if(StrEqual(options, "1"))
 		{		
 			g_iSkip[client] = 2;
-			
-			SDKUnhook(g_iVehicle[client], SDKHook_Think, OnThink);
 			
 			g_iEssai[client] = 0;
 			g_bRecompense[client] = true;
