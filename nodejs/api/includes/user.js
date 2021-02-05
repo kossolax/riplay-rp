@@ -77,6 +77,15 @@ exports = module.exports = function(server){
     return converted;
   }
 
+
+server.get('/user/admin', function (req, res, next) {
+      server.conn.query(server.getAuthAdminID, [req.headers.auth], function(err, row) {
+        if( err ) return res.send(new ERR.InternalServerError(err));
+        if( row[0] == null ) return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
+        return res.send("ok");
+     });
+});
+
   /**
    * @api {get} /user/:SteamID GetUserBySteamID
    * @apiName GetUserBySteamID
@@ -92,7 +101,7 @@ exports = module.exports = function(server){
 
     var sql = "SELECT U.`name`, `money` as `cash_money`, `bank` as `cash_bank`, `money`+`bank` as `cash`, U.`job_id`, `job_name`, U.`group_id`, G.`name` as `group_name`, `time_played` as `timeplayed`, ";
     sql += "`permi_lege`, `permi_lourd`, `permi_vente`, `train` as `train_knife`, `train_weapon`, `train_esquive`, ";
-    sql += "`pay_to_bank`, `have_card`, `have_account`, `kill`, `death`, `refere`, `timePlayedJob`, U.`skin`, UNIX_TIMESTAMP(`last_connected`) as `last_connected`, `vitality`, `level` as `rang`, `prestige`, F.`member_id` as `forum_id`, "
+    sql += "`pay_to_bank`, `have_card`, `have_account`, `kill`, `death`, `refere`, `timePlayedJob`, U.`skin`, UNIX_TIMESTAMP(`last_connected`) as `last_connected`, `vitality`, `level` as `rang`, `prestige`, F.`member_id` as `forum_id`, F.`member_group_id` as `forum_primary_goup`, "
     sql += "(U.job_id - (U.job_id%10))+1 as job_boss_id, `no_pyj`";
     sql += " FROM `rp_csgo`.`rp_users` U INNER JOIN `rp_csgo`.`rp_jobs` J ON J.`job_id`=U.`job_id` INNER JOIN `rp_csgo`.`rp_groups` G ON G.`id`=U.`group_id` LEFT JOIN `forum`.`ipb_core_members` F ON REPLACE(F.`steamid`, 'STEAM_0', 'STEAM_1')=U.`steamid` WHERE U.`steamid`=? ORDER BY F.`last_visit` DESC LIMIT 1;";
 
@@ -125,8 +134,8 @@ exports = module.exports = function(server){
 
     var sql = "SELECT id, REPLACE(COALESCE(N.`SteamID`, tmp.`SteamID`), 'STEAM_0', 'STEAM_1') as `SteamID`, COALESCE(`uname2`, N.`SteamID`, tmp.`SteamID`) as `nick`, `BanReason` as `reason`, `Length`, `game`, `banned`, `StartTime`, `is_unban` as `unban` FROM (";
     sql += " SELECT *, '1' as banned FROM `rp_csgo`.`srv_bans` WHERE `is_hidden`='0' AND ((`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0') ";
-    sql += "   UNION ";
-    sql += "   SELECT *, '0' as banned FROM `rp_csgo`.`srv_bans` WHERE `is_hidden`='0' AND NOT ((`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0') ";
+//    sql += "   UNION ";
+//    sql += "   SELECT *, '0' as banned FROM `rp_csgo`.`srv_bans` WHERE `is_hidden`='0' AND NOT ((`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0') ";
     sql += " ) AS tmp LEFT JOIN `rp_csgo`.`srv_nicks` N ON REPLACE(tmp.`SteamID`, 'STEAM_0', 'STEAM_1')=N.`SteamID` ORDER BY id DESC LIMIT ?,100;";
 
     server.conn.query(sql, [req.params['page']*100], function(err, rows) {
@@ -162,30 +171,6 @@ exports = module.exports = function(server){
 
       if( req.params['game'] == "forum" || req.params['game'] == "ALL" ) {
 	server.conn.query("DELETE S FROM `forum`.`ipb_core_sessions` AS S INNER JOIN `forum`.`ipb_core_members` U ON S.`member_id`=U.`member_id` INNER JOIN `rp_csgo`.`srv_bans` B ON U.`steamid`=B.`steamid` WHERE (`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0' AND (`game`='forum' OR `game`='ALL')", function(err, row) { console.log(err); });
-      }
-      if( req.params['game'] == "teamspeak" || req.params['game'] == "ALL" ) {
-        var tsClient = new TeamSpeak('176.31.38.179', 10011);
-    
-        tsClient.api.login({ client_login_name: "tsxbot", client_login_password: server.TSTokken}, function(err, resp, req) {
-          tsClient.api.use({ sid: 1}, function(err, resp, req) {
-            tsClient.send("clientupdate", {client_nickname: "[BOT2] ts-x.eu"});
-            tsClient.send('clientlist', function(err, resp, req) {
-              var clients = new Array();
-              resp.data.forEach(function(element) {
-                clients[element.client_database_id] = element.clid;
-              });
-              server.conn.query("SELECT `client_id` FROM `TeamSpeak`.`clients` WHERE `steamid`=?;", [target], function(err, rows) {
-                for(var i=0; i<rows.length; i++) {
-                  tsClient.send("servergroupdelclient", {sgid: 7, cldbid: rows[i].client_id});
-                  if( clients[rows[i].client_id] > 0 )
-                    tsClient.send("clientkick", {reasonid: 5, clid: clients[rows[i].client_id], reasonmsg: "banned"});
-                }
-
-                setTimeout(function() { tsClient.disconnect(); }, 3000);
-              });
-            });
-          });
-        });
       }
       next();
     });
@@ -385,8 +370,10 @@ exports = module.exports = function(server){
         if( err ) return res.send(new ERR.InternalServerError(err));
         if( rows.length == 0 ) return res.send(new ERR.NotFoundError("UserNotFound"));
         var data = new Array();
-        for(var i=0; i<rows.length; i++)
-          data.push(rows[i].steamid);
+        for(var i=0; i<rows.length; i++) {
+          if( rows[i].steamid != req.params['id'] )
+            data.push(rows[i].steamid);
+        }
 
         server.cache.set( req._url.pathname, data);
         return res.send( data );
@@ -435,20 +422,18 @@ exports = module.exports = function(server){
    * @apiParam {String} reason
    */
   server.put('/user/double/deny/:target/:reason', function (req, res, next) {
-    if( req.params['id'] == 0 )
-      return res.send(new ERR.BadRequestError("InvalidParam"));
 
     server.conn.query(server.getAuthSteamID, [req.headers.auth], function(err, row) {
       if( err ) return res.send(new ERR.InternalServerError(err));
       if( row.length == 0 ) return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
       var SteamID = row[0].steamid.replace("STEAM_0", "STEAM_1");
-      var UserName = row[0].username_clean;
+      var UserName = row[0].name;
 
       var mail = "<input type='text' value='"+ SteamID + "'/> conteste <input type='text' value='" + req.params['target'] + "'/> <br />"+ req.params['reason'];
       server.conn.query("INSERT INTO `rp_double_contest` (`steamid`, `target`, `approuved`) VALUES (?, ?, ?);", [SteamID, req.params['target'], parseInt(req.params['reason'])], function(err, rows) {
 	if( err ) return res.send(new ERR.BadRequestError("Impossible de contester ce double-compte."));
 
-        sendmail({from: 'account@ts-x.eu', to: 'kossolax@ts-x.eu', subject: 'Double compte: '+ UserName, html: mail }, function(err, reply) {
+        sendmail({from: 'noreply@riplay.fr', to: 'genesys@riplay.fr', subject: 'Double compte: '+ UserName, html: mail }, function(err, reply) {
           return res.send("Votre contestation va être annalysée sous les 24 heures.");
         });
       });
@@ -517,8 +502,12 @@ exports = module.exports = function(server){
 
         var img = gd.createTrueColorSync(800, 200);
         gd.createFromJpeg("/home/www/rp/images/roleplay/"+req.params['type']+"/"+id+".jpg").then( bg => {
-	        bg.copyResampled(img, 0, 0, 0, 0, 800, 200, bg.width, bg.height );
-        	bg.destroy();
+		try {
+		        bg.copyResampled(img, 0, 0, 0, 0, 800, 200, bg.width, bg.height );
+        		bg.destroy();
+		} catch ( e ) {
+			
+		}
 
         	var black = img.colorAllocate(0,0,0);
         	var white = img.colorAllocate(255,255,255);
@@ -916,6 +905,13 @@ server.get('/user/:id/playtime/:type', function (req, res, next) {
             afkTime += (lastRow.stop - lastDate)/1000 + (3*60);
           else {
             connexionTime += (lastRow.stop - lastDate)/1000;
+
+            if( type == "31days" ) {
+              server.conn.query("INSERT INTO `rp_csgo`.`rp_stats` (`steamid`, `timestamp`, `temps`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `temps`=?;", [
+		req.params['id'], lastRow.stop/1000, (lastRow.stop - lastDate)/1000, (lastRow.stop - lastDate)/1000
+              ]);
+	    }
+
           }
         }
 
@@ -929,6 +925,12 @@ server.get('/user/:id/playtime/:type', function (req, res, next) {
           connexionTime += (rows[i].date - lastDate)/1000 - (3*60);
           lastDate = rows[i].date;
           connected = 2;
+
+            if( type == "31days" ) {
+              server.conn.query("INSERT INTO `rp_csgo`.`rp_stats` (`steamid`, `timestamp`, `temps`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `temps`=?;", [
+                req.params['id'], lastRow.stop/1000, (lastRow.stop - lastDate)/1000, (lastRow.stop - lastDate)/1000
+              ]);
+            }
         }
         if( connected > 0 && rows[i].type == "noafk" ) {
           afkTime += (rows[i].date - lastDate)/1000 + (3*60);
@@ -940,6 +942,12 @@ server.get('/user/:id/playtime/:type', function (req, res, next) {
             afkTime += (rows[i].date - lastDate)/1000 + (3*60);
           else {
             connexionTime += (rows[i].date - lastDate)/1000;
+
+            if( type == "31days" ) {
+              server.conn.query("INSERT INTO `rp_csgo`.`rp_stats` (`steamid`, `timestamp`, `temps`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `temps`=?;", [
+                req.params['id'], lastRow.stop/1000, (lastRow.stop - lastDate)/1000, (lastRow.stop - lastDate)/1000
+              ]);
+            }
           }
           connected = 0;
         }
@@ -1132,7 +1140,7 @@ server.get('/user/:id/incomes/:scale', function (req, res, next) {
 
   var sqlTimeColumn = "(FLOOR(`timestamp`/("+scale+"*60*60))*"+scale+"*60*60) as `date` ";
   var sql = "";
-  sql += "SELECT SUM(I.`prix`*S.`amount`) AS `total`, " + sqlTimeColumn;
+  sql += "SELECT SUM(I.`prix`*S.`amount` - ROUND(I.`prix`*S.`amount`*S.`reduction`/100)) as total, " + sqlTimeColumn;
   sql += "	FROM `rp_csgo`.`rp_sell` S INNER JOIN `rp_csgo`.`rp_items` I ON S.`item_id`=I.`id` WHERE `steamid`=? AND `item_type`='0' GROUP BY `date` ORDER BY `date` ASC;"
 
   server.conn.query(sql, [req.params['id']], function(err, rows) {
@@ -1356,12 +1364,9 @@ server.put('/user/:SteamID/sendMoney/:cash', function (req, res, next) {
  */
 server.post('/user/:SteamID/giveitem', function (req, res, next) {
 
-  server.conn.query(server.getAuthSMAdmin, [req.headers.auth], function(err, row) {
+  server.conn.query(server.getAuthSMSuperAdmin, [req.headers.auth], function(err, row) {
     if( err ) return res.send(new ERR.InternalServerError(err));
     if( row.length == 0 ) return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
-    var SteamID = row[0].steamid.replace("STEAM_0", "STEAM_1");
-    if( SteamID != "STEAM_1:0:7490757" && SteamID != "STEAM_1:1:39278818" && SteamID != "STEAM_1:0:23617413" && SteamID != "STEAM_1:1:114134761" && SteamID != "STEAM_1:1:114134761" )
-	return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
 
     var UserName = row[0].username;
     var amount = parseInt(req.params['amount']);
@@ -1385,12 +1390,9 @@ server.post('/user/:SteamID/giveitem', function (req, res, next) {
  */
 server.post('/user/:SteamID/givemoney', function (req, res, next) {
 
-  server.conn.query(server.getAuthSMAdmin, [req.headers.auth], function(err, row) {
+  server.conn.query(server.getAuthSMSuperAdmin, [req.headers.auth], function(err, row) {
     if( err ) return res.send(new ERR.InternalServerError(err));
     if( row.length == 0 ) return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
-    var SteamID = row[0].steamid.replace("STEAM_0", "STEAM_1");
-    if( SteamID != "STEAM_1:0:7490757" && SteamID != "STEAM_1:1:39278818" && SteamID != "STEAM_1:0:23617413" && SteamID != "STEAM_1:1:114134761" && SteamID != "STEAM_1:1:114134761" )
-        return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
 
     var UserName = row[0].username;
     var amount = parseInt(req.params['amount']);
@@ -1414,12 +1416,9 @@ server.post('/user/:SteamID/givemoney', function (req, res, next) {
  */
 server.post('/user/:SteamID/givexp', function (req, res, next) {
 
-  server.conn.query(server.getAuthSMAdmin, [req.headers.auth], function(err, row) {
+  server.conn.query(server.getAuthSMSuperAdmin, [req.headers.auth], function(err, row) {
     if( err ) return res.send(new ERR.InternalServerError(err));
     if( row.length == 0 ) return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
-    var SteamID = row[0].steamid.replace("STEAM_0", "STEAM_1");
-    if( SteamID != "STEAM_1:0:7490757" && SteamID != "STEAM_1:1:39278818" && SteamID != "STEAM_1:0:23617413" && SteamID != "STEAM_1:1:114134761" && SteamID != "STEAM_1:1:114134761" )
-        return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
 
     var UserName = row[0].username;
     var amount = parseInt(req.params['amount']);

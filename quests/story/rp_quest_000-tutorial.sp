@@ -34,19 +34,21 @@ public Plugin myinfo = {
 int g_iQuest;
 
 char qualif[][] =  	{ "Recommandé", "Amusant", "Difficile", "Métier de vente", "Non recommandé"};
-int g_iJob[] =  			{ 16,25, 35, 46, 65, 76, 87, 96, 116, 135, 176, 216, 226 };
+int g_iJob[] =  			{ 15, 26, 36, 46, 56, 65, 76, 87, 96, 116, 135, 176, 216, 226};
 int g_iRecom[MAX_JOBS];
 int g_iDefaultJob[MAXPLAYERS];
+
+int g_iDisableAsk[65];
+#define FREE_JOB	5
 	
 // TODO: Déplacer les récompenses dans les fonctions appropriées
-// TODO: Trié les jobs par sous quota, ou quota "non respecté"
 
-int g_iQ9, g_iQ12, g_iQ14;
+int g_iQ9, g_iQ12;
 public void OnPluginStart() {
-	g_iRecom[116] = g_iRecom[176] = 0;
+	g_iRecom[116] = 0;
 	g_iRecom[87] = g_iRecom[96] = g_iRecom[226] = 1;
-	g_iRecom[46] = g_iRecom[35] = 2;
-	g_iRecom[16] = g_iRecom[25] = g_iRecom[55] = g_iRecom[65] = g_iRecom[76] = g_iRecom[135] = g_iRecom[176] = g_iRecom[216] = 3;
+	g_iRecom[46] = g_iRecom[36] = 2;
+	g_iRecom[15] = g_iRecom[26] = g_iRecom[56] = g_iRecom[65] = g_iRecom[76] = g_iRecom[135] = g_iRecom[176] = g_iRecom[216] = 3;
 	g_iRecom[195] = 4;
 	
 	RegServerCmd("rp_quest_reload", Cmd_PluginReloadSelf);
@@ -82,11 +84,18 @@ public void OnAllPluginsLoaded() {
 	rp_QuestAddStep(g_iQuest, i++, QUEST_NULL,	Q10_Frame,	QUEST_NULL,	QUEST_NULL);
 	rp_QuestAddStep(g_iQuest, i++, QUEST_NULL,	Q12_Frame,	QUEST_NULL,	QUEST_NULL);
 	rp_QuestAddStep(g_iQuest, i++, QUEST_NULL,	Q13_Frame,	QUEST_NULL,	QUEST_NULL);
-	rp_QuestAddStep(g_iQuest, i++, QUEST_NULL,	Q14_Frame,	QUEST_NULL,	Q14_Done);
+	rp_QuestAddStep(g_iQuest, i++, Q14_Start,	Q14_Frame,	QUEST_NULL,	Q14_Done);
 }
 // ----------------------------------------------------------------------------
 public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
+	rp_HookEvent(client, RP_OnFrameSeconde, fwdFrame);
+	g_iDisableAsk[client] = 0;
+}
+public Action fwdFrame(int client) {
+	if( rp_IsTutorialOver(client) && rp_GetClientInt(client, i_AllowedDismiss) > 0 && rp_GetClientInt(client, i_Job) == 0 && rp_ClientCanDrawPanel(client) && g_iDisableAsk[client] < GetTime() ) {
+		drawJobMenu(client);
+	}
 }
 public Action fwdCommand(int client, char[] command, char[] arg) {	
 	if( StrEqual(command, "aide") || StrEqual(command, "aides") || StrEqual(command, "help")  ) { // C'est pour nous !
@@ -107,6 +116,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 	}
 	return Plugin_Continue;
 }
+// ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 public bool fwdCanStart(int client) {
 	return true;
@@ -211,7 +221,15 @@ public void Q3_Frame(int objectiveID, int client) {
 	
 	if( GetVectorDistance(target, origin) < 64.0 ) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 2500$.");
-		rp_ClientMoney(client, i_Money, 2500);
+		
+		if( rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank) < 2500 ) {
+			rp_ClientMoney(client, i_Money, 2500);
+		}
+		else {
+			rp_ClientMoney(client, i_Bank, -2500);
+			rp_ClientMoney(client, i_Money, 2500);
+		}
+		
 		rp_QuestStepComplete(client, objectiveID);
 	}
 	else {
@@ -283,7 +301,16 @@ public void Q5_Frame(int objectiveID, int client) {
 
 	if( GetVectorDistance(target, origin) < 128.0 ) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu en récompense 1 Desert Eagle.");
-		rp_ClientGiveItem(client, 150);
+		
+		int itemid = 150;
+		if( rp_GetClientItem(client, itemid) == false && rp_GetClientItem(client, itemid, true) == false ) {
+			rp_ClientGiveItem(client, itemid);
+		}
+		else if( rp_GetClientItem(client, itemid, true) ) {
+			rp_ClientGiveItem(client, itemid, -1, true);
+			rp_ClientGiveItem(client, itemid,  1, false);
+		}
+
 		rp_QuestStepComplete(client, objectiveID);
 	}
 	else {
@@ -351,8 +378,11 @@ public void Q7_Frame(int objectiveID, int client) {
 	
 	if( GetVectorDistance(target, origin) < 64.0 ) {
 		
-		rp_ClientGiveItem(client, 81);
-		rp_ClientGiveItem(client, 103);
+		if( rp_GetClientItem(client, 81, false) + rp_GetClientItem(client, 81, true) <= 0 )
+			rp_ClientGiveItem(client, 81);
+		
+		if( rp_GetClientItem(client, 103, false) + rp_GetClientItem(client, 103, true) <= 0 )
+			rp_ClientGiveItem(client, 103);
 		
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu en récompense 1 Plant de drogue et 1 Machine à faux-billets.");
 		
@@ -441,7 +471,6 @@ public void SQL_FindDefaultJob(Handle owner, Handle handle, const char[] error, 
 	if(  handle != INVALID_HANDLE )
 		CloseHandle(handle);
 }
-
 public void Q9_Abort(int objectiveID, int client) {
 	rp_UnhookEvent(client, RP_PrePlayerTalk, OnPlayerTalk);
 }
@@ -561,7 +590,7 @@ public void Q10_Frame(int objectiveID, int client) {
 }
 // ----------------------------------------------------------------------------
 public void Q12_Frame(int objectiveID, int client) {
-	float origin[3], target[3] = {2472.0, -1063.0, -2144.0};
+	float origin[3], target[3] = {677.0, -1109.0, -2135.0};
 	GetClientAbsOrigin(client, origin);
 	
 	if( rp_ClientCanDrawPanel(client) ) {
@@ -584,7 +613,7 @@ public void Q12_Frame(int objectiveID, int client) {
 		DrawPanelText(panel, " ");
 		DrawPanelText(panel, " Bon jeu!");
 		DrawPanelText(panel, " ");
-		DrawPanelText(panel, "→ Rendez-vous devant l'hôpital afin de");
+		DrawPanelText(panel, "→ Rendez-vous a coté l'hôpital afin de");
 		DrawPanelText(panel, "commencer votre aventure RolePlay.");
 		
 		rp_SendPanelToClient(panel, client, 1.1);
@@ -654,54 +683,50 @@ public int MenuSelectParrain(Handle menu, MenuAction action, int client, int par
 		CloseHandle(menu);
 	}
 }
-
+public void Q14_Start(int objectiveID, int client) {
+	rp_SetClientInt(client, i_AllowedDismiss, FREE_JOB);
+}
 public void Q14_Frame(int objectiveID, int client) {
-
+	char tmp[128];
+	
 	if( g_iDefaultJob[client] > 0 ) {
 		int job = g_iDefaultJob[client];
 		rp_SetClientInt(client, i_Job, job);
-		rp_QuestStepComplete(client, g_iQ14);
+		rp_QuestStepComplete(client, objectiveID);
+	}
+	else if( rp_GetClientInt(client, i_Job) > 0 ) {
+		rp_GetJobData(rp_GetClientInt(client, i_Job), job_type_name, tmp, sizeof(tmp));
+		
+		for (int i = 1; i <= MaxClients; i++) {
+			if( !IsValidClient(i) )
+				continue;
+			if( i == client )
+				continue;
+			CPrintToChat(i, "" ...MOD_TAG... " %N{default} vient de terminer son tutorial, il est %s. Aidez le !", client, tmp);
+		}
+		rp_QuestStepComplete(client, objectiveID);
 	}
 	else if( rp_ClientCanDrawPanel(client) ) {
-		g_iQ14 = objectiveID;
-		
-		Handle menu = CreateMenu(MenuSelectJob);
-		SetMenuTitle(menu, "== Votre premier job vous est offert\n ");
-		AddMenuItem(menu, "", "Sachez que plus tard, vous devrez le trouver", ITEMDRAW_DISABLED);
-		AddMenuItem(menu, "", "vous-même et être recruté par le chef d'un job.\n ", ITEMDRAW_DISABLED);
-			
-		char tmp[128], tmp2[8];
-		int limit = 3;
-		ArrayList dbl = rp_GetClientDouble(client);
-		if( dbl.Length > 1 )
-			limit = 8;
-		
-		for( int i=0; i<sizeof(g_iJob) - limit; i++) {
-			
-			rp_GetJobData(g_iJob[i], job_type_name, tmp, sizeof(tmp));
-			Format(tmp, sizeof(tmp), "%s: %s", qualif[g_iRecom[g_iJob[i]]], tmp);
-			Format(tmp2, sizeof(tmp2), "%d", g_iJob[i]+1000);
-			AddMenuItem(menu, tmp2, tmp);
-		}
-					
-		SetMenuExitButton(menu, true);
-		DisplayMenu(menu, client, 60);
+		drawJobMenu(client);
 	}
 }
 public int MenuSelectJob(Handle menu, MenuAction action, int client, int param2) {
+	char options[64];
 	if( action == MenuAction_Select ) {
-		char options[64];
 		GetMenuItem(menu, param2, options, sizeof(options));
 		int job = StringToInt(options);
 		
-		if( job > 1000 ) {
+		if( job == -1  ) {
+			g_iDisableAsk[client] = GetTime() + 6 * 60;
+		}
+		else if( job > 1000 ) {
 			job -= 1000;
 			rp_GetJobData(job, job_type_name, options, sizeof(options));
 			
 			Handle menu2 = CreateMenu(MenuSelectJob);
 			
 			Format(options, sizeof(options), "%s: %s", qualif[g_iRecom[job]], options);
-			SetMenuTitle(menu2, "== Votre premier job vous est offert\nVous avez choisis comme métier\n%s\n \nSachez que plus tard, vous devrez le trouver\nVOUS-MÊME et être recruté par le chef d'un job.\n---------------------", options);
+			SetMenuTitle(menu2, "== Vos premiers job vous sont offerts\nVous avez choisis comme métier\n%s\n \nSachez que plus tard, vous devrez le trouver\nVOUS-MÊME et être recruté par le chef d'un job.\n---------------------", options);
 			
 			Format(options, sizeof(options), "%d", job);
 			AddMenuItem(menu2, "0", "Je veux choisir un autre job");
@@ -710,18 +735,11 @@ public int MenuSelectJob(Handle menu, MenuAction action, int client, int param2)
 			DisplayMenu(menu2, client, 60);
 		}
 		else if( job > 0 ) {
-			
-			rp_SetClientInt(client, i_Job, job);			
-			rp_QuestStepComplete(client, g_iQ14);
+			rp_SetClientInt(client, i_Job, job);
+			rp_SetClientInt(client, i_AllowedDismiss, rp_GetClientInt(client, i_AllowedDismiss) - 1);
 			rp_GetJobData(job, job_type_name, options, sizeof(options));
 			
-			for (int i = 1; i <= MaxClients; i++) {
-				if( !IsValidClient(i) )
-					continue;
-				if( i == client )
-					continue;
-				CPrintToChat(i, "" ...MOD_TAG... " %N{default} vient de terminer son tutorial, il est %s. Aidez le !", client, options);
-			}
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez choisis %s, il vous reste %d/%d job(s) offert(s)", options, rp_GetClientInt(client, i_AllowedDismiss), FREE_JOB);
 		}
 	}
 	else if( action == MenuAction_End ) {
@@ -746,7 +764,8 @@ public void Q14_Done(int objectiveID, int client) {
 	FakeClientCommand(client, "say /shownotes");
 	
 	rp_SetClientInt(client, i_Tutorial, 20);
-	rp_ClientGiveItem(client, 223);
+	
+	rp_ClientGiveItem(client, 223);	
 	rp_ClientMoney(client, i_Bank, 10000);
 	rp_SetClientBool(client, b_GameModePassive, true);
 	
@@ -757,9 +776,44 @@ public void Q14_Done(int objectiveID, int client) {
 
 	Format(szQuery, sizeof(szQuery), "DELETE FROM `rp_users3` WHERE `steamid`='%s';", szSteamID);
 	SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery);
+	
+	
+	CPrintToChat(client, "" ...MOD_TAG... " Voici une invitation pour rejoindre notre discord: {green}https://discord.gg/hw4GSSw{default}");
 }
-
-
+void drawJobMenu(int client) {
+	char tmp[128], tmp2[8];
+	Handle menu = CreateMenu(MenuSelectJob);
+	SetMenuTitle(menu, "== Vos premiers job vous sont offerts\n ");
+	AddMenuItem(menu, "", "Sachez que plus tard, vous devrez le trouver", ITEMDRAW_DISABLED);
+	AddMenuItem(menu, "", "vous-même et être recruté par le chef d'un job.\n ", ITEMDRAW_DISABLED);
+	
+	int limit = 3;
+	ArrayList dbl = rp_GetClientDouble(client);
+	if( dbl.Length >= 1 )
+		limit = 8;
+	
+	int cpt = 0;
+	for( int i=0; i<sizeof(g_iJob) - limit; i++) {
+		if( rp_GetClientPlaytimeJob(client, g_iJob[i], true) > 60)
+			continue;
+		
+		rp_GetJobData(g_iJob[i], job_type_name, tmp, sizeof(tmp));
+		Format(tmp, sizeof(tmp), "%s: %s", qualif[g_iRecom[g_iJob[i]]], tmp);
+		Format(tmp2, sizeof(tmp2), "%d", g_iJob[i]+1000);
+		AddMenuItem(menu, tmp2, tmp);
+		cpt++;
+	}
+	
+	if( rp_IsTutorialOver(client) )
+		AddMenuItem(menu, "-1", "Quelqu'un a un autre job pour moi");
+	
+	SetMenuExitButton(menu, true);
+	
+	if( cpt > 0 )
+		DisplayMenu(menu, client, 60);
+	else
+		delete menu;
+}
 // ------------------------------------------------------------
 void OpenHelpMenu(int client, int section, int parent) {
 	char query[1024];
@@ -804,8 +858,6 @@ public void SQL_OpenHelpMenu(Handle owner, Handle hQuery, const char[] error, an
 	
 	menu.Display(client, MENU_TIME_FOREVER);
 }
-
-
 public int helpMenu(Handle hItem, MenuAction oAction, int client, int param) {
 	
 	if (oAction == MenuAction_Select) {

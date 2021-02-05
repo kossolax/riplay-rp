@@ -1,0 +1,11 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/player/custom/sprisioner/m_white_15_co"
+         "$phongexponenttexture" 	"models/player/custom/sprisioner/m_white_15_n"
+	"$model" "1"
+	"$phong" "1"
+	"$phongexponent" "5"
+	"$phongboost"	"1"
+	"$phongfresnelranges"	"[.5 3 48]"
+
+}

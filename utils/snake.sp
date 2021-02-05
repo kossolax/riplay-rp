@@ -74,7 +74,22 @@ public OnPluginStart()
 	
 	SQL_TConnect(SQL_OnDatabaseConnected, (SQL_CheckConfig("snake")?"snake":"storage-local"));
 }
-
+public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
+{
+	RegPluginLibrary("snake");
+	CreateNative("IsClientInSnakeGame", Native_IsClientInTetrisGame);
+	return APLRes_Success;
+}
+public Native_IsClientInTetrisGame(Handle:plugin, numParams)
+{
+	new client = GetNativeCell(1);
+	if (client < 1 || client > MaxClients)
+	{
+		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index (%d)", client);
+	}
+	
+	return g_hGameThink[client] != INVALID_HANDLE;
+}
 public OnClientAuthorized(client, const String:auth[])
 {
 	if(g_hDatabase != INVALID_HANDLE)
@@ -123,7 +138,7 @@ public Event_OnPlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast
 	if(g_hGameThink[client] != INVALID_HANDLE)
 	{
 		// Disable any movement
-		SetEntProp(client, Prop_Send, "m_fFlags", FL_CLIENT|FL_ATCONTROLS);
+		SetEntityMoveType(client, MOVETYPE_NONE);
 	}
 }
 
@@ -139,7 +154,7 @@ public Action:Cmd_StartSnake(client, args)
 	{
 		ClearTimer(g_hGameThink[client]);
 		PrintToChat(client, "%sGame paused.", PREFIX);
-		SetEntProp(client, Prop_Send, "m_fFlags", FL_FAKECLIENT|FL_ONGROUND|FL_PARTIALGROUND);
+		SetEntityMoveType(client, MOVETYPE_WALK);
 	}
 	
 	new Handle:hMenu = CreateMenu(Menu_HandleMainMenu);
@@ -183,7 +198,7 @@ public Menu_HandleMainMenu(Handle:menu, MenuAction:action, param1, param2)
 			TriggerTimer(g_hGameThink[param1]);
 			
 			// Disable any movement
-			SetEntProp(param1, Prop_Send, "m_fFlags", FL_CLIENT|FL_ATCONTROLS);
+			SetEntityMoveType(param1, MOVETYPE_NONE);
 		}
 		else if(StrEqual(info, "newgame2"))
 		{
@@ -195,7 +210,7 @@ public Menu_HandleMainMenu(Handle:menu, MenuAction:action, param1, param2)
 			TriggerTimer(g_hGameThink[param1]);
 			
 			// Disable any movement
-			SetEntProp(param1, Prop_Send, "m_fFlags", FL_CLIENT|FL_ATCONTROLS);
+			SetEntityMoveType(param1, MOVETYPE_NONE);
 		}
 		else if(StrEqual(info, "resume"))
 		{
@@ -203,7 +218,7 @@ public Menu_HandleMainMenu(Handle:menu, MenuAction:action, param1, param2)
 			TriggerTimer(g_hGameThink[param1]);
 			
 			// Disable any movement
-			SetEntProp(param1, Prop_Send, "m_fFlags", FL_CLIENT|FL_ATCONTROLS);
+			SetEntityMoveType(param1, MOVETYPE_NONE);
 		}
 		else if(StrEqual(info, "top10"))
 		{
@@ -240,7 +255,7 @@ public Panel_GameHandler(Handle:menu, MenuAction:action, param1, param2)
 		{
 			ClearTimer(g_hGameThink[param1]);
 			PrintToChat(param1, "%sGame paused. Type !snake to resume.", PREFIX);
-			SetEntProp(param1, Prop_Send, "m_fFlags", FL_FAKECLIENT|FL_ONGROUND|FL_PARTIALGROUND);
+			SetEntityMoveType(param1, MOVETYPE_WALK);
 		}
 		else if(param2 == 1)
 		{
@@ -250,7 +265,7 @@ public Panel_GameHandler(Handle:menu, MenuAction:action, param1, param2)
 			TriggerTimer(g_hGameThink[param1]);
 			
 			// Disable any movement
-			SetEntProp(param1, Prop_Send, "m_fFlags", FL_CLIENT|FL_ATCONTROLS);
+			SetEntityMoveType(param1, MOVETYPE_NONE);
 		}
 	}
 }
@@ -313,7 +328,7 @@ public Action:Timer_OnGameThink(Handle:timer, any:userid)
 		}
 		
 		ResetSnakeGame(client);
-		SetEntProp(client, Prop_Send, "m_fFlags", FL_FAKECLIENT|FL_ONGROUND|FL_PARTIALGROUND);
+		SetEntityMoveType(client, MOVETYPE_WALK);
 		g_hGameThink[client] = INVALID_HANDLE;
 		return Plugin_Stop;
 	}

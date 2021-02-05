@@ -48,15 +48,14 @@ public void OnPluginStart() {
 	g_hScoring = new StringMap();
 	g_hWhitelist = new StringMap();
 	g_hQueue = new ArrayList(16, 0);
+	
 	g_bProcessing = false;
 	
 	CreateTimer(QUEUE_SPEED, Timer_TICK, _, TIMER_REPEAT);
-	
-	g_hCvarScore = CreateConVar("sv_autoban_vpn_score", "0.991");
+	g_hCvarScore = CreateConVar("sv_autoban_vpn_score", "0.997");
 	
 	RegAdminCmd("sm_vpn_reload", Cmd_ReloadWhiteList, ADMFLAG_BAN);
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
-	SQL_TQuery(rp_GetDatabase(), SQL_WhiteList, "SELECT `steamid` FROM `srv_vpn`");
 	
 	for (int i = 1; i < MaxClients; i++)
 		if( IsClientInGame(i) )
@@ -75,7 +74,12 @@ public void SQL_WhiteList(Handle owner, Handle row, const char[] error, any none
 		g_hWhitelist.SetValue(tmp, 1);	
 	}
 }
+bool whitelist = false;
 public void OnClientPostAdminCheck(int client) {
+	if( whitelist == false ) {
+		SQL_TQuery(rp_GetDatabase(), SQL_WhiteList, "SELECT `steamid` FROM `srv_vpn`");
+		whitelist = true;
+	}
 	char tmp[16], steamid[64];
 	float score;
 	int thrust;
@@ -94,8 +98,9 @@ public void OnClientPostAdminCheck(int client) {
 }
 public Action Ban_Task(Handle timer, any userid) {
 	int client = GetClientOfUserId(userid);
-	if( IsValidClient(client) )
-		BanClient(client, BAN_TIME, BANFLAG_IP, "VPN", "VPN are not allowed on this server");
+	if( IsValidClient(client) ) {
+		ServerCommand("amx_ban \"#%i\" \"1440\" \"%s\"", GetClientUserId(client), "VPN are not allowed on this server");
+	}
 }
 public Action Timer_TICK(Handle timer, any none) {
 	static char tmp[16], URL[128];
@@ -111,7 +116,8 @@ public Action Timer_TICK(Handle timer, any none) {
 			Handle dp = CreateDataPack();
 			WritePackString(dp, tmp);
 			
-			g_bProcessing = true;		
+			g_bProcessing = true;
+			
 			Handle req = SteamWorks_CreateHTTPRequest(k_EHTTPMethodGET, URL);
 			SteamWorks_SetHTTPCallbacks(req, OnSteamWorksHTTPComplete);
 			SteamWorks_SetHTTPRequestContextValue(req, dp);

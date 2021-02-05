@@ -43,19 +43,6 @@ int LookupAttachment(int entity, char[] point) {
 	
 	return SDKCall(g_hLookupAttachment, entity, point);
 }
-bool IsCompatibleWithPlayerSkin(int vehicleID) {
-	
-	return false;
-	
-	char mdl[128];
-	Entity_GetModel(vehicleID, mdl, sizeof(mdl));
-	if( StrEqual(mdl, "models/natalya/vehicles/natalya_mustang_csgo_2016.mdl") )
-		return true;
-	if( StrEqual(mdl, "models/natalya/vehicles/dirtbike.mdl") )
-		return true;
-	
-	return false;
-}
 
 void rp__SetClientVehicle(int client, int vehicleID, bool force=false) {
 	
@@ -255,6 +242,10 @@ void LeaveVehiclePassager(int client, int vehicle=-1) {
 		rp_AcceptEntityInput(g_iCarPassager[car][client], "Kill");
 		SetEntProp(client, Prop_Send, "m_CollisionGroup", COLLISION_GROUP_PLAYER);
 		
+		int hud = GetEntProp(client, Prop_Send, "m_iHideHUD");
+		hud &= ~HIDEHUD_WEAPONSELECTION; hud &= ~HIDEHUD_CROSSHAIR; hud &= ~HIDEHUD_INVEHICLE;
+		SetEntProp(client, Prop_Send, "m_iHideHUD", hud);
+		
 		int EntEffects = GetEntProp(client, Prop_Send, "m_fEffects") & (~EF_NODRAW) & (~EF_BONEMERGE) & (~EF_NOSHADOW) & (~EF_NOINTERP) & (~EF_BONEMERGE_FASTCULL) & (~EF_PARENT_ANIMATES);
 		SetEntProp(client, Prop_Send, "m_fEffects", EntEffects);
 		 
@@ -268,10 +259,7 @@ void LeaveVehiclePassager(int client, int vehicle=-1) {
 				g_iCarPassager1[car][j] = 0;
 		}
 		
-		if( IsInPVP(client) )
-			GroupColor(client);
-		else
-			Colorize(client, 255, 255, 255, 255);
+		Colorize(client, 255, 255, 255, 255);
 		
 		SetEntProp(client, Prop_Data, "m_takedamage", 2);
 		SetEntityMoveType(client, MOVETYPE_WALK);
@@ -348,7 +336,7 @@ public void vehicle_OnPreThinkPost(int client) {
 		if( WasInVehicle[client] == 0 ) {
 			if( !rp_GetClientKeyVehicle(client, InVehicle) ) {
 				ExitVehicle(client, InVehicle, true);
-				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas les clés de cette voiture.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicule_Cannot_NoKey", client);
 				rp_AcceptEntityInput(InVehicle, "Lock");
 			}
 			ClientCommand(client, "cam_idealpitch 65");

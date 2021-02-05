@@ -3,7 +3,7 @@
   <a class="btn btn-default" href="#/pilori/double/{{steamid}}"> Vos doubles comptes </a>
   <a class="btn btn-default" href="#/pilori/last/0"> Les dernières condamnations </a>
 </div>
-<form ng-show="isAdmin">
+<form ng-show="isAdmin || $parent.isAdmin">
   <div class="form-inline">
 		<div class="input-group">
 			<input type="text" class="form-control" placeholder="STEAM_0:x:abcdef" ng-model="target">
@@ -24,18 +24,18 @@
 </form>
 <br />
 
-<div class="col-md-10 col-md-offset-1 alert alert-warning" role="alert" ng-show="data.length > 1">
+<div class="col-md-10 col-md-offset-1 alert alert-warning" role="alert" ng-show="data.length > 0">
   <strong>L'utilisation d'un double compte est tolérée</strong> mais aucune action ne doit être entreprise pour le second compte (pas de transaction, HDV, give, réduction, etc).
   Les déconnexions intempestives, pour changer de compte, ne sont pas autorisées. <i>Exemple : Je me suis fait mettre en prison, du coup je change de compte...</i>
   <br />
   Le Rang "No-pyj" ne peut être obtenu que sur un seul de vos comptes.
 </div>
 
-<div class="col-md-10 col-md-offset-1 alert alert-success" role="alert" ng-show="data.length <= 1">
+<div class="col-md-10 col-md-offset-1 alert alert-success" role="alert" ng-show="data.length <= 0">
   <strong>Aucun double compte détecté <i class="fa fa-thumbs-up" aria-hidden="true"></i> </strong> L'utilisation d'un double compte est tolérée, mais aucune action ne doit être entreprise en faveur du second compte.
 </div>
 
-<table ng-init="target=''" class="table table-condensed" ng-show="data.length > 1">
+<table ng-init="target=''" class="table table-condensed" ng-show="data.length > 0">
   <tr><th>SteamID</th><th>Pseudo</th><th>Job</th><th ng-if="steamid==paramsSub">Contester?</th></tr>
   <tr ng-repeat="item in data" ng-show="item!=paramsSub">
     <td>{{item}}</td>

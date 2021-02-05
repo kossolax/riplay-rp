@@ -47,40 +47,36 @@ int g_cBeam;
 
 // Numéro, Résumé, Heures, Amende, Dédo, Détails
 char g_szArticles[][][512] = {
-	{"221-1-a-12",	"Homicide involontaire",						"12",	"500",		"1000",	"Toutes atteintes involontaires à la vie d’un citoyen sont condamnées à une peine maximale de 12h de prison et 500$ d’amende." },
-	{"221-1-a-24",	"Homicide volontaire",							"24",	"1250",		"2500",	"Toutes atteintes volontaires à la vie d’un citoyen sont condamnées à une peine maximale de 24h de prison et 1250$ d’amende." },
-	{"221-1-a-48",	"Assassinat criminel",							"48",	"2500",		"5000",	"Toutes atteintes volontaires et préméditée à la vie d’un citoyen sont condamnées à une peine maximale de 48h de prison et 2500$ d’amende." },
+	{"221-1-a-12",	"Act_KillAtt",		"12",	"500",		"1000",	"Act_KillAttDesc" },
+	{"221-1-a-24",	"Act_Kill",			"24",	"1250",		"2500",	"Act_KillDesc" },
+	{"221-1-a-48",	"Act_KillAggr",		"48",	"2500",		"5000",	"Act_KillAggrDesc" },
 
-	{"221-1-b",		"Meurtre d'un policier",						"24",	"5500",		"1500",	"Toutes atteintes volontaires à la vie d’un officier des forces de l’ordre sont condamnées à une peine maximale de 24h de prison et 5 500$ d’amende." },
-	{"221-1-c",		"Tentative de meurtre",							"12",	"500",		"500",	"Les coups et blessures volontaires ayant provoqué des lésions corporelles sont condamnés à une peine maximale de 12h de prison et 500$ d’amende." },
-	{"221-1-d",		"Agression physique",							"6",	"250",		"100",	"Les coups et blessures involontaires n’ayant pas provoqué des lésions corporelles sont condamnés à une peine maximale de 6h de prison et 250$ d’amende." },
+	{"221-1-b",		"Act_KillCT",		"12",	"2000",		"1500",	"Act_KillCTDesc" },
+	{"221-1-d",		"Act_Aggr",			"6",	"250",		"100",	"Act_AggrDesc" },
 
-	{"221-2",		"Vol",											"6",	"450",		"-1",	"Le vol est un acte punis d’une peine maximale de 6h de prison et 450$ d’amende." },
-	{"221-3",		"Manquement convocation",						"18",	"4000",		"0",	"Le manquement à une convocation devant les tribunaux sans motif valable est puni d’une peine maximale de 18h de prison et 4.000$ d'amende." },
-	{"221-4",		"Faux aveux / Dénonciations calomnieuses",		"6",	"1500",		"300",	"Les faux aveux ou les dénonciations calomnieuses sont punis d’une peine maximale de 6h de prison et 1500$ d’amende." },
-	{"221-5-a",		"Nuisances sonores", 							"6",	"1500", 	"0",	"Les nuisances sonores sont punies d’une peine maximale de 6h de prison et 1 500$ d'amende." },
-	{"221-5-b",		"Insultes / irrespect", 						"6",	"1000", 	"1250",	"Les insultes sont passibles d’une peine maximale de 6h de prison et 1000$ d’amende." },
-	{"221-5-c",		"Harcèlements / Menaces", 						"6",	"800",		"300",	"Les actes de harcèlement et/ou menaces sont passibles d'une peine maximale de 6h de prison et 800$ d'amende." },
-	{"221-6",		"Récidive",										"6",	"15000",	"0",	"Toute personne condamnée pour une récidive vis-à-vis de meurtre ou d'une infraction déjà jugée sera condamnée à une peine plus lourde, l'amende peut-être augmentée progressivement de 15 000$ et la peine de prison de 6h." },
-	{"221-7",		"Obstruction ",									"6",	"650",		"0",	"Tout acte obstruant les forces de l’ordre (Masque/Suicide/Pilule/Pots de vins, que ce soit avant ou pendant l’audience/Changement de pseudo délibéré, pendant la recherche du criminel et GHB), ou la fuite délibérée, ou mutinerie, sont passibles d’une peine maximale de 6h de prison et 650$ d'amende. " },
-	{"221-8",		"Bavure policière",								"24",	"3000",		"2000",	"Tout acte de maltraitance policière (taser, balle perdue, jail/déjail répétitif...) pourra être rapporté devant les tribunaux. La maltraitance est passible de 24h de prison au maximum, et d'une amende de 3 000$ au maximum" },
-	{"221-10-a",	"Fraude",										"24",	"5000",		"0",	"Tout acte de fraude (transaction d'argent) pour éviter des sanctions juridiques peut être rapporté et signalé. Les personnes étant complices de cette fraude peuvent encourir une peine maximale de 24h de prison et 5000$ d'amende." },
-	{"221-10-b",	"Association de malfaiteurs",					"6",	"500",		"0",	"Toute association de malfaiteurs (Défense lors de perquisitions notamment) est punissable d’une peine maximale de 6h de prison et 500$ d’amende." },
-	{"221-11-b",	"Refus de vente",								"6",	"1500",		"0",	"Tout refus de vente est punissable par 6h de prison et une amende de 1.500$ au maximum." },
-	{"221-12",		"Profiter de la vulnérabilité d’une personne",	"18",	"3000",		"1500",	"Le fait de soumettre une personne à un acte criminel en abusant de sa vulnérabilité ou de sa dépendance à son travail est punis d’une peine maximale de 18h de prison et 3 000$ d’amende en plus de la peine du crime commis" },
-	{"221-13-a",	"Destruction de biens d’autrui",				"6",	"1500",		"1000",	"Tout acte volontaire ou involontaire de destruction de biens d'autrui et ce quelque soit les méthodes de destruction utilisées, peut-être condamné par 6h de prison et 1500$ au maximum" },
-	{"221-13-b",	"Atteinte à la vie privée",						"6",	"950",		"500",	"Les atteintes à la vie privée telles que l’espionnage, ou l’enregistrement d’une conversation intime, sont punies d’une peine maximale de 6h de prison et 950$ d'amende" },
-	{"221-13-c",	"Intrusion dans une propriété privée",			"6",	"800",		"500",	"La violation d’une propriété privée est punie d’une peine maximale de 6h de prison et 800$ d’amende." },
-	{"221-13-d",	"Intrusion dans un batiment fédéral",			"18",	"5000",		"500",	"La violation d’un batiment fédéral est punie d’une peine maximale de 18h de prison et 5000$ d’amende." },
-	{"221-14-a",	"Usage de produits illicites",					"6",	"1000",		"250",	"Droguer ou alcooliser une personne à son insu est un acte punis d’une peine maximale de 6h de prison et 1000$ d’amende. " },
-	{"221-15-a",	"Tentative de corruption",						"24",	"10000",	"0",	"Tout acte de corruption ou de tentative de corruption, est puni d’une peine maximale de 24h de prison et 10 000$ d’amende." },
-	{"221-15-b",	"Escroquerie",									"18",	"5000",		"-1",	"Tout acte d’escroquerie est puni d’une peine maximale de 24h de prison et 5 000$ d’amende." },
-	{"221-16",		"Séquestration",								"6",	"800",		"500",	"Les actes de séquestrations sont passibles d'une peine maximale de 6h de prison et 800$ d'amende." },
-	{"221-17",		"Acte de proxénétisme / prostitution",			"6",	"450",		"0",	"Tout acte de proxénétisme ou de prostitution est passible d'une peine maximale de 6h de prison et 450$ d’amende." },
-	{"221-18",		"Asile politique",								"24",	"1500",		"1000",	"Le tribunal est une zone internationale indépendante des lois de la police, tout citoyen y est protégé par asile juridique. De ce fait, tout policier mettant une personne étant dans le tribunal en prison encourt une peine maximale de 24h de prison et 1 500$ d'amende." }
+	{"221-2",		"Act_Vol",			"6",	"450",		"-1",	"Act_VolDesc" },
+	{"221-3",		"Act_MqConvoc",		"18",	"4000",		"0",	"Act_MqConvocDesc" },
+	{"221-4",		"Act_Fake",			"6",	"1500",		"300",	"Act_FakeDesc" },
+	{"221-5-a",		"Act_NuisaSono", 	"6",	"1500", 	"0",	"Act_NuisaSonoDesc" },
+	{"221-5-b",		"Act_Insult", 		"6",	"1000", 	"1250",	"Act_InsultDesc" },
+	{"221-5-c",		"Act_HarcMen", 		"6",	"800",		"300",	"Act_HarcMenDesc" },
+	{"221-7",		"Act_Obstru",		"6",	"650",		"0",	"Act_ObstruDesc" },
+	{"221-8",		"Act_BavuPol",		"24",	"3000",		"2000",	"Act_BavuPolDesc" },
+	{"221-10-b",	"Act_AssocMalf",	"6",	"500",		"0",	"Act_AssocMalfDesc" },
+	{"221-12",		"Act_ProfitVulne",	"18",	"3000",		"1500",	"Act_ProfitVulneDesc" },
+	{"221-13-a",	"Act_Destruct",		"6",	"1500",		"1000",	"Act_DestructDesc" },
+	{"221-13-b",	"Act_ViePrv",		"6",	"950",		"500",	"Act_ViePrvDesc" },
+	{"221-13-c",	"Act_IntrusiPrv",	"6",	"800",		"500",	"Act_IntrusiPrvDesc" },
+	{"221-13-d",	"Act_IntrusiFede",	"18",	"5000",		"500",	"Act_IntrusiFedeDesc" },
+	{"221-14-a",	"Act_UseDrug",		"6",	"1000",		"250",	"Act_UseDrugDesc" },
+	{"221-14-b",	"Act_IllegTrafc",	"6",	"1000",		"250",	"Act_IllegTrafcDesc" },
+	{"221-15-a",	"Act_TCorrup",		"24",	"10000",	"0",	"Act_TCorrupDesc" },
+	{"221-15-b",	"Act_Escroq",		"18",	"5000",		"-1",	"Act_EscroqDesc" },
+	{"221-16",		"Act_Seq",			"6",	"800",		"500",	"Act_SeqDesc" },
+	{"221-17",		"Act_Pute",			"6",	"450",		"0",	"Act_PuteDesc" }
 };
-char g_szAcquittement[6][32] = { "Non coupable", "Conciliation", "Impossible de prouver les faits", "Déjà condamné", "Plainte annulée", "Nouveau"};
-char g_szCondamnation[6][32] = { "Très indulgent", "Indulgent", "Juste", "Sévère", "Très sévère", "Déconnexion"};
+char g_szAcquittement[6][64] = { "Justice_Acquittement_NonCoupable", "Justice_Acquittement_Conciliation", "Justice_Acquittement_Impossible", "Justice_Acquittement_DejaVu", "Justice_Acquittement_Cancel", "Justice_Acquittement_Newbie"};
+char g_szCondamnation[6][64] = { "Justice_Condamnation_VerySmall", "Justice_Condamnation_Small", "Justice_Condamnation_Average", "Justice_Condamnation_Hard", "Justice_Condamnation_VeryHard", "Justice_Condamnation_Disconnect"};
 float g_flCondamnation[6] = {0.2, 0.4, 0.6, 0.8, 1.0, 1.5};
 float g_flCoords[3][2][3];
 
@@ -89,13 +85,25 @@ int g_iTribunalData[3][view_as<int>(td_Max)];
 char g_szJugementDATA[65][3][32];
 bool g_bClientDisconnected[65];
 
-int g_iXpAudience[] = { 10, 20, 30, 40, 50, 60, 80, 100, 120, 150, 180, 220, 250, 300 };
-
 #define isTribunalDisponible(%1) (g_iTribunalData[%1][td_Owner]<=0?true:false)
 #define GetTribunalZone(%1) (%1==1?TRIBUNAL_1:TRIBUNAL_2)
 #define GetTribunalJail(%1) (%1==1?TRIBUJAIL_1:TRIBUJAIL_2)
 
+public Action Cmd_Reload(int args) {
+	char name[64];
+	GetPluginFilename(INVALID_HANDLE, name, sizeof(name));
+	ServerCommand("sm plugins reload %s", name);
+	return Plugin_Continue;
+}
+
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("common.phrases");
+	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.items.phrases");
+	LoadTranslations("roleplay.justice.phrases");
+	
+	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	
 	g_flCoords[1][0] = view_as<float>( { -508.0, -818.0, -1870.0 } );
 	g_flCoords[1][1] = view_as<float>( { -508.0, -712.0, -1870.0 } );
@@ -131,7 +139,7 @@ public Action RP_OnPlayerGotPay(int client, int salary, int& topay, bool verbose
 	if( jobID == 101 && rp_GetClientInt(client, i_KillJailDuration) > 0 ) {
 		
 		if( verbose )
-			CPrintToChat(client, "" ...MOD_TAG... " La Justice ne paye pas ses membres tuant la population.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Justice_NoPay", client);
 		
 		topay = 0;
 		return Plugin_Stop;
@@ -198,7 +206,7 @@ public Action Cmd_Jugement(int client, char[] arg) {
 		size = 2;
 	
 	if( size == 0 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Veuillez selectionner une plainte du Tribunal forum en premier.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Tribunal_Error_SelectFirst", client);
 		return Plugin_Handled;
 	}
 	
@@ -214,7 +222,7 @@ public Action Cmd_Jugement(int client, char[] arg) {
 	amende = StringToInt(buffers[3]);
 	
 	if( !StrEqual(buffers[1], g_szJugementDATA[client][0]) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Le code de confirmation est incorrect.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_WrongCode", client);
 		return Plugin_Handled;
 	}
 	
@@ -223,33 +231,35 @@ public Action Cmd_Jugement(int client, char[] arg) {
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 	SQL_EscapeString(rp_GetDatabase(), arg, escape, length*2 + 1);
 	
-	Format(query, sizeof(query), "UPDATE `ts-x`.`site_report` SET `jail`='%d', `amende`='%d', `juge`='%s', `reason`='%s' WHERE `id`='%d' LIMIT 1;", heure, amende, szSteamID, escape, id);
+	Format(query, sizeof(query), "UPDATE `rp_report`.`site_report` SET `jail`='%d', `amende`='%d', `juge`='%s', `reason`='%s' WHERE `id`='%d' LIMIT 1;", heure, amende, szSteamID, escape, id);
 	SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 	
 	if( type != 3 ) {
-		Format(query, sizeof(query), "INSERT INTO `rp_csgo`.`rp_users2` (`steamid`, `xp`, `pseudo`) (SELECT `steamid`, '100', 'Tribunal Forum' FROM `ts-x`.`site_report_votes` WHERE `reportid`=%d AND `vote`=%d GROUP BY `steamid`)", id, type == 1 ? 1 : 0);
+		Format(query, sizeof(query), "INSERT INTO `rp_csgo`.`rp_users2` (`steamid`, `xp`, `pseudo`) (SELECT `steamid`, '100', 'Tribunal Forum' FROM `rp_report`.`site_report_votes` WHERE `reportid`=%d AND `vote`=%d GROUP BY `steamid`)", id, type == 1 ? 1 : 0);
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
+		
+		rp_ClientXPIncrement(client, 250);
 	}
 	
 	if( type == 1 ) {
 		GetClientName(client, nick, sizeof(nick));
 		SQL_EscapeString(rp_GetDatabase(), nick, pseudo, sizeof(pseudo));
 		
-		Format(query, sizeof(query), "INSERT INTO `rp_csgo`.`rp_users2` (`steamid`, `money`, `jail`, `pseudo`, `steamid2`, `raison`) ( SELECT `report_steamid`, '%d', '%d', '%s', '%s', '%s' FROM `ts-x`.`site_report` WHERE `id`='%d' )", -amende, heure*60, pseudo, szSteamID, escape, id); 
+		Format(query, sizeof(query), "INSERT INTO `rp_csgo`.`rp_users2` (`steamid`, `money`, `jail`, `pseudo`, `steamid2`, `raison`) ( SELECT `report_steamid`, '%d', '%d', '%s', '%s', '%s' FROM `rp_report`.`site_report` WHERE `id`='%d' )", -amende, heure*60, pseudo, szSteamID, escape, id); 
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 	}
 	
 	switch(type) {
-		case 1: CPrintToChat(client, "" ...MOD_TAG... " Le joueur a été condamné.");
-		case 2: CPrintToChat(client, "" ...MOD_TAG... " Le joueur a été acquitté.");
-		case 3: CPrintToChat(client, "" ...MOD_TAG... " La plainte troll a été supprimée.");
+		case 1: CPrintToChat(client, "" ...MOD_TAG... " %T", "Tribunal_Forum_Condamn", client);
+		case 2: CPrintToChat(client, "" ...MOD_TAG... " %T", "Tribunal_Forum_Acquit", client);
+		case 3: CPrintToChat(client, "" ...MOD_TAG... " %T", "Tribunal_Forum_Cancel", client);
 		
 	}
 	
 	return Plugin_Handled;
 }
 Action Draw_Menu(int client) {
-	
+	char tmp[128];
 	int type = GetTribunalType(rp_GetPlayerZone(client));
 	
 	if( type == 0 )
@@ -259,17 +269,23 @@ Action Draw_Menu(int client) {
 	if( rp_GetClientInt(client, i_Job) == 107 && !FormationCanBeMade(type) )
 		return Plugin_Stop;
 	
+	if( rp_GetClientInt(client, i_KillJailDuration) > 1 && GetClientTeam(client) == CS_TEAM_T) {
+		ACCESS_DENIED(client);
+	}
+	if( rp_GetClientInt(client, i_JailTime) > 1 && GetClientTeam(client) == CS_TEAM_T ) {
+		ACCESS_DENIED(client);
+	}
+	
 	
 	if( isTribunalDisponible(type) ) {
 		
 		Menu menu = new Menu(MenuTribunal);
-		menu.SetTitle("Tribunal de Princeton\n ");
-		menu.AddItem("start -1", "Débuter une audience");
-		menu.AddItem("mariage", "Gestion du mariage");
-		if( rp_GetClientInt(client, i_Job) <= 104 && GetConVarInt(FindConVar("hostport")) == 27015 )
-			menu.AddItem("forum", "Traiter les plaintes forum");
+		menu.SetTitle("%T\n ", "Tribunal_Menu", client);
 		
-		menu.AddItem("identity", "Changer l'identité");
+		Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Start", client);		menu.AddItem("start -1", tmp);
+		Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Wedding", client);	menu.AddItem("mariage", tmp);
+		Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Forum", client);		menu.AddItem("forum", tmp, (rp_GetClientInt(client, i_Job) <= 104 && GetConVarInt(FindConVar("hostport")) == 27015) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+		Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Genre", client);		menu.AddItem("identity", tmp);
 		
 		menu.Display(client, MENU_TIME_FOREVER);
 	}
@@ -287,16 +303,16 @@ Action Draw_Menu(int client) {
 		
 		if( admin == ITEMDRAW_DEFAULT ) {
 						
-			menu.AddItem("articles", "Gestion des articles");
-			menu.AddItem("avocat", "Gestion des avocats");
-			menu.AddItem("enquete", "Enquêter", (injail) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+			Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Articles", client);	menu.AddItem("articles", tmp); 
+			Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Avocats", client);	menu.AddItem("avocat", tmp);
+			Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Enquete", client);	menu.AddItem("enquete", tmp, (injail) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 			
-			menu.AddItem("condamner -1", "Condamner", (injail) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
-			menu.AddItem("dedomager -1", "Dédommager", (g_iTribunalData[type][td_DoneDedommagement] == 0 && injail && (g_iTribunalData[type][td_AvocatPlaignant] > 0 || g_iTribunalData[type][td_AvocatSuspect] > 0)) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
-			menu.AddItem("acquitter -1", "Acquitter", (injail) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
-			menu.AddItem("stop 1", "Annuler l'audience", (!injail) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
-			menu.AddItem("inverser", "Inverser plaignant-suspect", (injail) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
-			menu.AddItem("forward", "Changer de juge");
+			Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Condamner", client);	menu.AddItem("condamner -1", tmp, (injail) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
+			Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Dedo", client);		menu.AddItem("dedomager -1", tmp, (g_iTribunalData[type][td_DoneDedommagement] == 0 && injail /*&& (g_iTribunalData[type][td_AvocatPlaignant] > 0 || g_iTribunalData[type][td_AvocatSuspect] > 0)*/) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
+			Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Acquitter", client);	menu.AddItem("acquitter -1", tmp, (injail) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
+			Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Cancel", client);		menu.AddItem("stop 1", tmp, (!injail) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+			Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Switch", client);		menu.AddItem("inverser", tmp, (injail) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+			Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Juge", client);		menu.AddItem("forward", tmp);
 		}
 		menu.Display(client, MENU_TIME_FOREVER);
 	}
@@ -310,7 +326,7 @@ Menu AUDIENCE_Start(int client, int type, int plaignant, int suspect) {
 	
 	if( plaignant <= 0 ) {
 		subMenu = new Menu(MenuTribunal);
-		subMenu.SetTitle("Qui est le plaignant?\n ");
+		subMenu.SetTitle("%T\n ", "Tribunal_Menu_Plaignant", client);
 		
 		for (int i = 1; i<=MaxClients; i++) {
 			if( !IsValidClient(i) )
@@ -320,14 +336,14 @@ Menu AUDIENCE_Start(int client, int type, int plaignant, int suspect) {
 				continue;
 			
 			Format(tmp, sizeof(tmp), "start %d", i);
-			Format(tmp2, sizeof(tmp2), "%N", i);
+			GetClientName2(i, tmp2, sizeof(tmp2), true);
 			
 			subMenu.AddItem(tmp, tmp2);
 		}
 	}
 	else if( suspect <= 0 ) {
 		subMenu = new Menu(MenuTribunal);
-		subMenu.SetTitle("Qui est le suspect?\n ");
+		subMenu.SetTitle("%T\n ", "Tribunal_Menu_Suspect", client);
 		
 		for (int i = 1; i<=MaxClients; i++) {
 			if( !IsValidClient(i) )
@@ -339,7 +355,7 @@ Menu AUDIENCE_Start(int client, int type, int plaignant, int suspect) {
 				continue;
 #endif
 			Format(tmp, sizeof(tmp), "start %d %d", plaignant, i);
-			Format(tmp2, sizeof(tmp2), "%N", i);
+			GetClientName2(i, tmp2, sizeof(tmp2), true);
 			
 			subMenu.AddItem(tmp, tmp2);
 		}
@@ -348,6 +364,7 @@ Menu AUDIENCE_Start(int client, int type, int plaignant, int suspect) {
 		g_iTribunalData[type][td_Suspect] = suspect;
 		g_iTribunalData[type][td_Plaignant] = plaignant;		
 		g_iTribunalData[type][td_Owner] = client;
+		rp_SetClientBool(client, b_IsInAudiance, true);
 		
 		if( GetClientTeam(client) == CS_TEAM_T ) {
 			FakeClientCommand(client, "say /cop");
@@ -371,14 +388,21 @@ Menu AUDIENCE_Stop(int type, int needConfirmation = 0) {
 	if( needConfirmation == 1 ) {
 		
 		bool injail = (g_iTribunalData[type][td_SuspectArrive] == 1 ? true:false);
+		int client = g_iTribunalData[type][td_Owner];
 		
 		Menu subMenu = new Menu(MenuTribunal);
-		subMenu.SetTitle("Êtes vous sur d'annuler l'audience?\n ");
+		subMenu.SetTitle("%T\n ", "Tribunal_Menu_Cancel_Confirm", client); 
 		
-		subMenu.AddItem("tb", "Ne pas annuler l'audience");
-		subMenu.AddItem("stop 0", "Annuler l'audience", (!injail) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+		char tmp[64];
+		
+		Format(tmp, sizeof(tmp), "%T", "No", client);	subMenu.AddItem("tb", tmp);
+		Format(tmp, sizeof(tmp), "%T", "Yes", client);	subMenu.AddItem("stop 0", tmp, (!injail) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 		
 		return subMenu;
+	}
+	
+	if( IsValidClient(g_iTribunalData[type][td_Owner]) ) {
+		rp_SetClientBool(g_iTribunalData[type][td_Owner], b_IsInAudiance, false);
 	}
 	
 	if( IsValidClient(g_iTribunalData[type][td_Suspect]) ) {
@@ -392,6 +416,7 @@ Menu AUDIENCE_Stop(int type, int needConfirmation = 0) {
 	for (int i = 0; i < sizeof(g_iArticles[]); i++)
 		g_iArticles[type][i] = 0;
 	
+	
 	for (int i = 1; i <= MaxClients; i++) {
 		if( !IsValidClient(i) )
 			continue;
@@ -401,55 +426,57 @@ Menu AUDIENCE_Stop(int type, int needConfirmation = 0) {
 }
 Menu AUDIENCE_Articles(int type, int a, int b, int c) {
 	Menu subMenu = null;
-	char tmp[64];
+	char tmp[64], tmp2[64];
+	
+	int client = g_iTribunalData[type][td_Owner];
 	
 	if( a == 0 ) {
 		subMenu = new Menu(MenuTribunal);
-		subMenu.SetTitle("Gestion des articles \n ");
-		subMenu.AddItem("articles 1 -1", "Ajouter un article", getMaxArticles(g_iTribunalData[type][td_Owner]) > g_iTribunalData[type][td_ArticlesCount] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
-		subMenu.AddItem("articles 2 -1", "Retirer un article", g_iTribunalData[type][td_ArticlesCount] > 0 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
+		subMenu.SetTitle("%T \n ", "Tribunal_Menu_Articles", client);
+		Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Articles_Add", client);		subMenu.AddItem("articles 1 -1", tmp, getMaxArticles(g_iTribunalData[type][td_Owner]) > g_iTribunalData[type][td_ArticlesCount] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
+		Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Articles_Remove", client);	subMenu.AddItem("articles 2 -1", tmp, g_iTribunalData[type][td_ArticlesCount] > 0 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
 		
 	}
 	else if( a == 1 && b == -1 ) {
 		subMenu = new Menu(MenuTribunal);
-		subMenu.SetTitle("Liste des articles\n ");
+		subMenu.SetTitle("%T\n ", "Tribunal_Menu_Articles_List", client);
 		for (int i = 0; i < sizeof(g_szArticles); i++) {
 			Format(tmp, sizeof(tmp), "articles 1 %d", i);
+			Format(tmp2, sizeof(tmp2), "%T", g_szArticles[i][1], client);
 			
-			subMenu.AddItem(tmp, g_szArticles[i][1]);
+			subMenu.AddItem(tmp, tmp2);
 		}
 	}
 	else if( a == 2 && b == -1 ) {
 		subMenu = new Menu(MenuTribunal);
-		subMenu.SetTitle("Liste des articles\n ");
+		subMenu.SetTitle("%T\n ", "Tribunal_Menu_Articles_List", client);
 		for (int i = 0; i < sizeof(g_szArticles); i++) {
 			if( g_iArticles[type][i] <= 0 )
 				continue;
 			Format(tmp, sizeof(tmp), "articles 2 %d", i);
+			Format(tmp2, sizeof(tmp2), "%T", g_szArticles[i][1], client);
 			
-			subMenu.AddItem(tmp, g_szArticles[i][1]);
+			subMenu.AddItem(tmp, tmp2);
 		}
 	}
 	else if( a == 1 && b >= 0 ) {
-		
 		if( StringToInt(g_szArticles[b][4]) == -1 && c != 42 ) {
-			
 			g_iTribunalData[type][td_Dedommagement2] += c;
 			if( g_iTribunalData[type][td_Dedommagement2] < 0 )
 				g_iTribunalData[type][td_Dedommagement2] = 0;
 			
 			subMenu = new Menu(MenuTribunal);
-			subMenu.SetTitle("Quel est la valeur de %s?\n   %d$\n ", g_szArticles[b][1], g_iTribunalData[type][td_Dedommagement2]);
+			subMenu.SetTitle("%T\n ", "Tribunal_Menu_Dedo_Amount", client, g_szArticles[b][1], g_iTribunalData[type][td_Dedommagement2]);
 			
-			Format(tmp, sizeof(tmp), "articles 1 %d %d", b, 5);		subMenu.AddItem(tmp, "Ajouter 5$");
-			Format(tmp, sizeof(tmp), "articles 1 %d %d", b, 50);	subMenu.AddItem(tmp, "Ajouter 50$");
-			Format(tmp, sizeof(tmp), "articles 1 %d %d", b, 500);	subMenu.AddItem(tmp, "Ajouter 500$\n ");
+			Format(tmp, sizeof(tmp), "articles 1 %d %d", b, 5);		Format(tmp2, sizeof(tmp2), "%T", "Tribunal_Menu_Dedo_Add", client, 5);		subMenu.AddItem(tmp, tmp2);
+			Format(tmp, sizeof(tmp), "articles 1 %d %d", b, 50);	Format(tmp2, sizeof(tmp2), "%T", "Tribunal_Menu_Dedo_Add", client, 50);		subMenu.AddItem(tmp, tmp2);
+			Format(tmp, sizeof(tmp), "articles 1 %d %d", b, 500);	Format(tmp2, sizeof(tmp2), "%T", "Tribunal_Menu_Dedo_Add", client, 500);		subMenu.AddItem(tmp, tmp2);
 			
-			Format(tmp, sizeof(tmp), "articles 1 %d %d", b, -5);	subMenu.AddItem(tmp, "Retirer 5$");
-			Format(tmp, sizeof(tmp), "articles 1 %d %d", b, -50);	subMenu.AddItem(tmp, "Retirer 50$");
-			Format(tmp, sizeof(tmp), "articles 1 %d %d", b, -500);	subMenu.AddItem(tmp, "Retirer 500$");
+			Format(tmp, sizeof(tmp), "articles 1 %d %d", b, -5);	Format(tmp2, sizeof(tmp2), "%T", "Tribunal_Menu_Dedo_Remove", client, 5);		subMenu.AddItem(tmp, tmp2);
+			Format(tmp, sizeof(tmp), "articles 1 %d %d", b, -50);	Format(tmp2, sizeof(tmp2), "%T", "Tribunal_Menu_Dedo_Remove", client, 50);	subMenu.AddItem(tmp, tmp2);
+			Format(tmp, sizeof(tmp), "articles 1 %d %d", b, -500);	Format(tmp2, sizeof(tmp2), "%T", "Tribunal_Menu_Dedo_Remove", client, 500);	subMenu.AddItem(tmp, tmp2);
 			
-			Format(tmp, sizeof(tmp), "articles 1 %d %d", b, 42);	subMenu.AddItem(tmp, "Valider");
+			Format(tmp, sizeof(tmp), "articles 1 %d %d", b, 42);	Format(tmp2, sizeof(tmp2), "%T", "Tribunal_Menu_Dedo_Confirm", client);		subMenu.AddItem(tmp, tmp2);
 		}
 		else {
 			g_iArticles[type][b]++;
@@ -467,24 +494,20 @@ Menu AUDIENCE_Condamner(int type, int articles) {
 	Menu subMenu = null;
 	char tmp[64], tmp2[64];
 	
-	if( IsVolAndRecidive(type) ) {
-		CPrintToChatSearch(type, "" ...MOD_TAG... " Le juge %N{default} a tenté de faire un abus. Cet incident a été reporté.", g_iTribunalData[type][td_Owner]);
-		LogToGame("[CHEATING] [JUGE] [CONDAMNER] %L a tenté de faire une condamnation pour récidive de vol.", g_iTribunalData[type][td_Owner]);
-		return null;
-	}
+	int client = g_iTribunalData[type][td_Owner];
 	
 	if( articles == -1 ) {
 		int severity = timeToSeverity(g_iTribunalData[type][td_Time]) - g_iTribunalData[type][td_DoneDedommagement];
 		
 		subMenu = new Menu(MenuTribunal);
-		subMenu.SetTitle("Quel est votre verdict?\n ");
+		subMenu.SetTitle("%T\n ", "Tribunal_Menu_Condamner_Confirm", client);
 		
 		int heure, amende;
 		calculerJail(type, heure, amende);
 		
 		for (int i = 0; i < sizeof(g_szCondamnation); i++) {
 			Format(tmp, sizeof(tmp), "condamner %d", i);
-			Format(tmp2, sizeof(tmp2), "%s %dh %d$", g_szCondamnation[i], RoundFloat(float(heure) * g_flCondamnation[i]),  RoundFloat(float(amende) * g_flCondamnation[i]));
+			Format(tmp2, sizeof(tmp2), "%T %dh %d$", g_szCondamnation[i], client, RoundFloat(float(heure) * g_flCondamnation[i]),  RoundFloat(float(amende) * g_flCondamnation[i]));
 			
 			subMenu.AddItem(tmp, tmp2, (i>=severity-1&&i<=severity+1) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
 		}
@@ -497,8 +520,21 @@ Menu AUDIENCE_Condamner(int type, int articles) {
 		heure = RoundFloat(float(heure) * g_flCondamnation[articles]);
 		amende = RoundFloat(float(amende) * g_flCondamnation[articles]);
 		
+		char target_name[128];
+		GetClientName2(g_iTribunalData[type][td_Suspect], target_name, sizeof(target_name), false);
+		
+		CPrintToChatSearch(type, "{lightblue}================================");
+		CPrintToChatSearch(type, ""...MOD_TAG..." %T", "Tribunal_Menu_Condamner_Doing", LANG_SERVER, target_name);
+		for (int i = 0; i < sizeof(g_szArticles); i++) {
+			if( g_iArticles[type][i] <= 0 )
+				continue;
+			
+			CPrintToChatSearch(type, "- %T", g_szArticles[i][5], LANG_SERVER, heure, amende);
+		}		
+		CPrintToChatSearch(type, "" ...MOD_TAG... " %T", "Tribunal_Menu_Condamner_Given", LANG_SERVER, target_name, heure, amende, g_szCondamnation[articles]);
+		CPrintToChatSearch(type, "{lightblue}================================");
+
 		SQL_Insert(type, 1, articles, heure, amende);
-		CPrintToChatSearch(type, "" ...MOD_TAG... " %N{default} a été condamné à %d heure%s et %d$ d'amende. Le juge a été %s.", g_iTribunalData[type][td_Suspect], heure, heure >= 2 ? "s" :"",amende, g_szCondamnation[articles]);
 		
 		AUDIENCE_Stop(type);
 	}
@@ -507,21 +543,28 @@ Menu AUDIENCE_Condamner(int type, int articles) {
 }
 Menu AUDIENCE_Acquitter(int type, int articles) {
 	Menu subMenu = null;
-	char tmp[64];
+	char tmp[64], tmp2[64];
+	
+	int client = g_iTribunalData[type][td_Owner];
+	
+	
 	if( articles == -1 ) {
 		subMenu = new Menu(MenuTribunal);
-		subMenu.SetTitle("Pour quelle raison doit-il être acquitté?\n ");
+		subMenu.SetTitle("%T\n ", "Tribunal_Menu_Acquitter_Confirm", client);
 		for (int i = 0; i < sizeof(g_szAcquittement); i++) {
 			Format(tmp, sizeof(tmp), "acquitter %d", i);
+			Format(tmp2, sizeof(tmp2), "%T", g_szAcquittement[i], client);
 			
-			subMenu.AddItem(tmp, g_szAcquittement[i]);
+			subMenu.AddItem(tmp, tmp2);
 		}
 	}
 	else {
 		
 		SQL_Insert(type, 0, articles, 0, 0);
 		
-		CPrintToChatSearch(type, "" ...MOD_TAG... " %N{default} a été acquitté: %s.", g_iTribunalData[type][td_Suspect], g_szAcquittement[articles]);
+		char target_name[128];
+		GetClientName2(g_iTribunalData[type][td_Suspect], target_name, sizeof(target_name), false);
+		CPrintToChatSearch(type, "" ...MOD_TAG... " %T", "Tribunal_Menu_Acquitter_Given", LANG_SERVER, target_name, g_szAcquittement[articles]);
 		AUDIENCE_Stop(type);
 	}
 	
@@ -531,17 +574,22 @@ Menu AUDIENCE_Avocat(int type, int a, int b) {
 	Menu subMenu = null;
 	char tmp[64], tmp2[64];
 	
+	int client = g_iTribunalData[type][td_Owner];
+	
 	if( a == 0 ) {
 		subMenu = new Menu(MenuTribunal);
-		subMenu.SetTitle("Quel type d'avocat gérer?\n ");
-		subMenu.AddItem("avocat 1 -1", "Avocat de la victime");
-		subMenu.AddItem("avocat 2 -1", "Avocat de la défense");
+		subMenu.SetTitle("%T\n ", "Tribunal_Menu_Avocats", client);
+		
+		Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Avocats_Victim", client);		subMenu.AddItem("avocat 1 -1", tmp);
+		Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Avocats_Defense", client);	subMenu.AddItem("avocat 2 -1", tmp);
 	}
 	else if( b == -1 ) {
 		subMenu = new Menu(MenuTribunal);
-		subMenu.SetTitle("Qui mettre comme avocat?\n ");
+		subMenu.SetTitle("%T\n ", "Tribunal_Menu_Avocats", client);
+		
 		Format(tmp, sizeof(tmp), "avocat %d 0", a);
-		subMenu.AddItem(tmp, "Personne");
+		Format(tmp2, sizeof(tmp2), "%T", "Jobs_Noone", client);
+		subMenu.AddItem(tmp, tmp2);
 		
 		for (int i = 1; i <= MaxClients; i++) {
 			if( !IsValidClient(i) )
@@ -558,7 +606,7 @@ Menu AUDIENCE_Avocat(int type, int a, int b) {
 				continue;
 			
 			Format(tmp, sizeof(tmp), "avocat %d %d", a, i);
-			Format(tmp2, sizeof(tmp2), "%N", i);
+			GetClientName2(i, tmp2, sizeof(tmp2), true);
 			subMenu.AddItem(tmp, tmp2);
 		}
 	}
@@ -572,12 +620,6 @@ Menu AUDIENCE_Dedommagement(int type) {
 	
 	if( g_iTribunalData[type][td_DoneDedommagement] == 0 ) {
 		
-		if( IsVolAndRecidive(type) ) {
-			CPrintToChatSearch(type, "" ...MOD_TAG... " Le juge %N{default} a tenté de faire un abus. Cet incident a été reporté.", g_iTribunalData[type][td_Owner]);
-			LogToGame("[CHEATING] [JUGE] [DEDO] %L a tenté de faire une dédo pour récidive de vol.", g_iTribunalData[type][td_Owner]);
-			return null;
-		}
-		
 		g_iTribunalData[type][td_DoneDedommagement] = 1;
 		
 		int money = calculerDedo(type);
@@ -587,7 +629,11 @@ Menu AUDIENCE_Dedommagement(int type) {
 		rp_ClientMoney(target, i_Money, -money);
 		rp_ClientMoney(client, i_Money, money);
 		
-		CPrintToChatSearch(type, "" ...MOD_TAG... " %N{default} a dédommagé %N{default} de %d$.", target, client, money);
+		char client_name[128], target_name[128];
+		GetClientName2(client, client_name, sizeof(client_name), false);
+		GetClientName2(target, target_name, sizeof(target_name), false);
+		
+		CPrintToChatSearch(type, "" ...MOD_TAG... " %T", "Tribunal_Menu_Dedo_Given", LANG_SERVER, target_name, client_name, money);
 	}
 	
 	return null;
@@ -597,16 +643,19 @@ Menu AUDIENCE_Enquete(int type, int a, int b) {
 	Menu subMenu = null;
 	char tmp[64], tmp2[64];
 	
+	int client = g_iTribunalData[type][td_Owner];
+	
 	if( a == 0 ) {
 		
 		if( g_iTribunalData[type][td_TimeMercenaire] == 0 && !hasMercenaire() )
 			g_iTribunalData[type][td_TimeMercenaire] = 60;
 		
 		subMenu = new Menu(MenuTribunal);
-		subMenu.SetTitle("Enquêter\n ");
-		subMenu.AddItem("enquete 1", "Convoquer les mercenaires", g_iTribunalData[type][td_TimeMercenaire] < 60 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
-		subMenu.AddItem("enquete 2", "Enquêter sans mercenaire (100$)", g_iTribunalData[type][td_TimeMercenaire] >= 60 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
-		subMenu.AddItem("enquete 3", "Enquêter dans les logs", (g_iTribunalData[type][td_EnquetePlaignant] + g_iTribunalData[type][td_EnqueteSuspect]) >= 2 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
+		subMenu.SetTitle("%T\n ", "Tribunal_Menu_Enquete", client);
+		
+		Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Enquete_Merco", client);		subMenu.AddItem("enquete 1", tmp, g_iTribunalData[type][td_TimeMercenaire] < 60 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+		Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Enquete_Self", client, 100);	subMenu.AddItem("enquete 2", tmp, g_iTribunalData[type][td_TimeMercenaire] >= 60 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+		Format(tmp, sizeof(tmp), "%T", "Tribunal_Menu_Enquete_Log", client);		subMenu.AddItem("enquete 3", tmp, (g_iTribunalData[type][td_EnquetePlaignant] + g_iTribunalData[type][td_EnqueteSuspect]) >= 2 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
 		
 	}
 	else if( a == 1 ) {
@@ -614,7 +663,7 @@ Menu AUDIENCE_Enquete(int type, int a, int b) {
 			CreateTimer(1.0, Timer_MERCENAIRE, type, TIMER_REPEAT);
 		}
 		
-		CPrintToChatSearch(type, "" ...MOD_TAG... " Les mercenaires ont été convoqués au Tribunal %d.", type);
+		CPrintToChatSearch(type, "" ...MOD_TAG... " %T", "Tribunal_Menu_Enquete_Merco_Confirm", LANG_SERVER, type);
 	}
 	else if( a == 2 || a == 3 ) {
 		if( a == 2 &&  b > 0 ) {
@@ -632,14 +681,14 @@ Menu AUDIENCE_Enquete(int type, int a, int b) {
 			char szURL[1024];
 			GetClientAuthId(b, AUTH_TYPE, tmp2, sizeof(tmp2));
 
-			Format(szURL, sizeof(szURL), "https://rpweb.riplay.fr/index.php#/tribunal/case/%s", tmp2);
-			PrintToConsole(g_iTribunalData[type][td_Owner], "https://rpweb.riplay.fr/index.php#/tribunal/case/%s", tmp2);
+			Format(szURL, sizeof(szURL), ""...MOD_URL..."index.php#/tribunal/case/%s", tmp2);
+			PrintToConsole(g_iTribunalData[type][td_Owner], ""...MOD_URL..."index.php#/tribunal/case/%s", tmp2);
 			
 			RP_ShowMOTD(g_iTribunalData[type][td_Owner], szURL);
 		}
 		else {
 			subMenu = new Menu(MenuTribunal);
-			subMenu.SetTitle("Enquêter\n ");
+			subMenu.SetTitle("%T\n ", "Tribunal_Menu_Enquete", client);
 			
 			int zone;
 			int tribu = GetTribunalZone(type);
@@ -652,7 +701,7 @@ Menu AUDIENCE_Enquete(int type, int a, int b) {
 				zone = rp_GetPlayerZone(i);
 				if( zone == tribu || zone == jail ) {
 					Format(tmp, sizeof(tmp), "enquete %d %d", a, i);
-					Format(tmp2, sizeof(tmp2), "%N", i);
+					GetClientName2(i, tmp2, sizeof(tmp2), true);
 					subMenu.AddItem(tmp, tmp2);
 				}
 			}
@@ -683,9 +732,11 @@ Menu AUDIENCE_Forward(int type, int a) {
 	Menu subMenu;
 	char tmp[64], tmp2[64];
 	
+	int client = g_iTribunalData[type][td_Owner];
+	
 	if( a == 0 ) {
 		subMenu = new Menu(MenuTribunal);
-		subMenu.SetTitle("Qui mettre comme nouveau juge?\n ");
+		subMenu.SetTitle("%T\n ", "Tribunal_Menu_Juge", client);
 		
 		for (int i = 1; i <= MaxClients; i++) {
 			if( !IsValidClient(i) )
@@ -696,38 +747,44 @@ Menu AUDIENCE_Forward(int type, int a) {
 				continue;
 			
 			Format(tmp, sizeof(tmp), "forward %d", i);
-			Format(tmp2, sizeof(tmp2), "%N", i);
+			GetClientName2(i, tmp2, sizeof(tmp2), true);
 			subMenu.AddItem(tmp, tmp2);
 		}
 	}
 	else {
-		CPrintToChatSearch(type, "" ...MOD_TAG... " %N{default} cède sa place de juge à %N{default}.", g_iTribunalData[type][td_Owner], a);
+		GetClientName2(g_iTribunalData[type][td_Owner], tmp, sizeof(tmp), true);
+		GetClientName2(a, tmp2, sizeof(tmp2), true);
+		CPrintToChatSearch(type, "" ...MOD_TAG... " %T", "Tribunal_Menu_Switch_Confirm", LANG_SERVER, tmp, tmp2);
+		
+		rp_SetClientBool(g_iTribunalData[type][td_Owner], b_IsInAudiance, false);
 		g_iTribunalData[type][td_Owner] = a;
+		rp_SetClientBool(g_iTribunalData[type][td_Owner], b_IsInAudiance, true);
+		
 	}
 	return subMenu;
 }
 Menu AUDIENCE_Forum(int client, int a, int b) {
-	char query[1024], tmp[64];
+	char query[1024], tmp[64], tmp2[64];
 	Menu subMenu;
 	
 	if( a == 0 ) {
 		GetClientAuthId(client, AUTH_TYPE, tmp, sizeof(tmp));
 		
-		Format(query, sizeof(query), "SELECT R.`id`, `report_steamid`, COUNT(`vote`) cpt, `name`, SUM(IF(`vote`=1,1,0)) as cpt2 FROM `ts-x`.`site_report` R INNER JOIN `ts-x`.`site_report_votes` V ON V.`reportid`=R.`id` INNER JOIN `rp_csgo`.`rp_users` U ON U.`steamid`=R.`report_steamid` WHERE V.`vote`<>'2' AND R.`jail`=-1 AND R.`own_steamid`<>'%s' AND R.`report_steamid`<>'%s' GROUP BY R.`id` HAVING cpt>=5 ORDER BY cpt DESC;", tmp, tmp);
+		Format(query, sizeof(query), "SELECT R.`id`, `report_steamid`, COUNT(`vote`) cpt, `name`, SUM(IF(`vote`=1,1,0)) as cpt2 FROM `rp_report`.`site_report` R INNER JOIN `rp_report`.`site_report_votes` V ON V.`reportid`=R.`id` INNER JOIN `rp_csgo`.`rp_users` U ON U.`steamid`=R.`report_steamid` WHERE V.`vote`<>'2' AND R.`jail`=-1 AND R.`own_steamid`<>'%s' AND R.`report_steamid`<>'%s' GROUP BY R.`id` HAVING cpt>=5 ORDER BY cpt DESC;", tmp, tmp);
 		SQL_TQuery(rp_GetDatabase(), SQL_AUDIENCE_Forum, query, client);
 	}
 	else if( b == 0 ) {
 			
-		Format(query, sizeof(query), "https://rpweb.riplay.fr/index.php#/tribunal/case/%d", a);
-		PrintToConsole(client, "https://rpweb.riplay.fr/index.php#/tribunal/case/%d", a);
+		Format(query, sizeof(query), ""...MOD_URL..."index.php#/tribunal/case/%d", a);
+		PrintToConsole(client, ""...MOD_URL..."index.php#/tribunal/case/%d", a);
 		RP_ShowMOTD(client, query);
 		
 	 	subMenu = new Menu(MenuTribunal);
-		subMenu.SetTitle("Que faire?\n ");
+		subMenu.SetTitle("%T\n ", "Tribunal_Menu_Condamner_Confirm", client);
 		
-		Format(tmp, sizeof(tmp), "forum %d 1", a); subMenu.AddItem(tmp, "Condamner");
-		Format(tmp, sizeof(tmp), "forum %d 2", a); subMenu.AddItem(tmp, "Acquitter");
-		Format(tmp, sizeof(tmp), "forum %d 3", a); subMenu.AddItem(tmp, "Plainte troll");
+		Format(tmp, sizeof(tmp), "forum %d 1", a); Format(tmp2, sizeof(tmp2), "%T", "Tribunal_Menu_Condamner", client); subMenu.AddItem(tmp, tmp2);
+		Format(tmp, sizeof(tmp), "forum %d 2", a); Format(tmp2, sizeof(tmp2), "%T", "Tribunal_Menu_Acquitter", client); subMenu.AddItem(tmp, tmp2);
+		Format(tmp, sizeof(tmp), "forum %d 3", a); Format(tmp2, sizeof(tmp2), "%T", "Tribunal_Menu_Supprimer", client); subMenu.AddItem(tmp, tmp2);
 		
 	}
 	else {
@@ -736,10 +793,7 @@ Menu AUDIENCE_Forum(int client, int a, int b) {
 		Format(g_szJugementDATA[client][1], sizeof(g_szJugementDATA[][]), "%d", a);
 		Format(g_szJugementDATA[client][2], sizeof(g_szJugementDATA[][]), "%d", b);
 		
-		if( b == 1 )
-			CPrintToChat(client, "" ...MOD_TAG... " Afin de confirmer votre jugement, tappez maintenant /jgmt %s heure amende raison", g_szJugementDATA[client][0]);
-		else if( b == 2 || b == 3 )
-			CPrintToChat(client, "" ...MOD_TAG... " Afin de confirmer votre jugement, tappez maintenant /jgmt %s raison", g_szJugementDATA[client][0]);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", b == 1 ? "Tribunal_Forum_Confirm_Condamn" : "Tribunal_Forum_Confirm_Acquitter", client, g_szJugementDATA[client][0]);
 	}
 	
 	return subMenu;
@@ -751,7 +805,7 @@ Menu AUDIENCE_Identity(int& client, int a, int b, int c) {
 	if( a == 0 && b == 0 ) {
 		a = client;
 		subMenu = new Menu(MenuTribunal);
-		subMenu.SetTitle("Qui veux changer de sexe?\n ");
+		subMenu.SetTitle("%T\n ", "Tribunal_Menu_Sexe", client);
 		
 		for (int i = 1; i<=MaxClients; i++) {
 			if( !IsValidClient(i) )
@@ -761,7 +815,7 @@ Menu AUDIENCE_Identity(int& client, int a, int b, int c) {
 				continue;
 			
 			Format(tmp, sizeof(tmp), "identity %d %d", a, i);
-			Format(tmp2, sizeof(tmp2), "%N", i);
+			GetClientName2(i, tmp2, sizeof(tmp2), true);
 			
 			subMenu.AddItem(tmp, tmp2);
 		}
@@ -770,25 +824,27 @@ Menu AUDIENCE_Identity(int& client, int a, int b, int c) {
 		client = b;
 		
 		subMenu = new Menu(MenuTribunal);
-		subMenu.SetTitle("Souhaitez-vous changer de sexe?\nCette opération vous coûtera 2.500$.\n ");
-		Format(tmp, sizeof(tmp), "identity %d %d 1", a, b);	subMenu.AddItem(tmp, "Non");
-		Format(tmp, sizeof(tmp), "identity %d %d 2", a, b);	subMenu.AddItem(tmp, "Oui");
+		subMenu.SetTitle("%T\n ", "Tribunal_Menu_Sexe_Confirm", client, 2500);
+		Format(tmp, sizeof(tmp), "identity %d %d 1", a, b); Format(tmp2, sizeof(tmp2), "%T", "No", client); subMenu.AddItem(tmp, tmp2);
+		Format(tmp, sizeof(tmp), "identity %d %d 2", a, b); Format(tmp2, sizeof(tmp2), "%T", "Yes", client); subMenu.AddItem(tmp, tmp2);
 		
 	}
 	else {
-		
+		char client_name[128];
+		GetClientName2(client, client_name, sizeof(client_name), false);
+
+
 		if( c == 2 ) {
 			rp_ClientMoney(client, i_Money, -2500);
 			rp_ClientMoney(a, i_Money, 1250);
 			rp_SetJobCapital(101, rp_GetJobCapital(101) + 1250);
 			
 			rp_SetClientBool(client, b_isFemale, !rp_GetClientBool(client, b_isFemale));
-			PrintToChatZone( rp_GetPlayerZone(client) , "%N est maintenant ... %s.", client, rp_GetClientBool(client, b_isFemale) ? "une femme" : "un homme");
+			
+			PrintToChatZone( rp_GetPlayerZone(client) , "" ...MOD_TAG... " %T", "Tribunal_Menu_Sexe_Given", client_name, rp_GetClientBool(client, b_isFemale) ? "a_female" : "a_male");
 		}
 		else {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez refusé de changer de sexe.");
-			CPrintToChat(a, "" ...MOD_TAG... " %N{default} a refusé de changer de sexe.", client);
-			
+			CPrintToChat(a, "" ...MOD_TAG... " %T", "Tribunal_Menu_Sexe_Deny", client_name);			
 		}
 	}
 	
@@ -798,12 +854,12 @@ public void SQL_AUDIENCE_Forum(Handle owner, Handle handle, const char[] error, 
 	
 	
 	if( SQL_GetRowCount(handle) == 0 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Il n'y a aucun cas à traiter pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Tribunal_Forum_None");
 		return;
 	}
 	
 	Menu subMenu = new Menu(MenuTribunal);
-	subMenu.SetTitle("Plainte du Tribunal Forum\n ");
+	subMenu.SetTitle("%T\n ", "Tribunal_Menu_Forum", client);
 	int id, vote, cond;
 	char tmp[4][64];
 	
@@ -882,6 +938,8 @@ public Action Timer_MERCENAIRE(Handle timer, any type) {
 	if( g_iTribunalData[type][td_TimeMercenaire] > 60 )
 		return Plugin_Stop;
 	
+	int client = g_iTribunalData[type][td_Owner];
+	
 	for (int i = 1; i <= MaxClients; i++) {
 		if( !IsValidClient(i) )
 			continue;
@@ -889,7 +947,7 @@ public Action Timer_MERCENAIRE(Handle timer, any type) {
 			if( rp_GetPlayerZone(i) == GetTribunalZone(type) )
 				return Plugin_Stop;
 			
-			PrintHintText(i, "Vos services d'enquêteur sont requis au Tribunal n°%d.", type);
+			PrintHintText(i, "%T", "Tribunal_Menu_Enquete_Merco_Confirm", client, type);
 		}
 	}
 	
@@ -908,17 +966,34 @@ public Action Timer_AUDIENCE(Handle timer, any type) {
 		return Plugin_Stop;
 	}
 	
+	char target_name[128];
+	GetClientName2(target, target_name, sizeof(target_name), false);
+	
 	if( g_iTribunalData[type][td_ArticlesCount] == 0 ) {
-		PrintHintText(g_iTribunalData[type][td_Owner], "La convocation commencera dès que vous aurez ajoutez le premier article.");
+		PrintHintText(g_iTribunalData[type][td_Owner], "%T", "Tribunal_Menu_Audiance_Starting", g_iTribunalData[type][td_Owner]);
 		return Plugin_Continue;
+	}
+	
+	if( rp_GetClientInt(target, i_TimeAFK) > 15*60 ) {
+		float pos[3];
+		pos = getZoneMiddle(GetTribunalJail(type));
+		if( !IsPlayerAlive(target) ) {
+			CS_RespawnPlayer(target);
+		}
+		rp_ClientTeleport(target, pos);
+		CPrintToChatSearch(type, "" ...MOD_TAG... " %T", "Tribunal_Menu_Audiance_AFK", LANG_SERVER, target_name);
 	}
 		
 	if( time < 60 && time % 20 == 0 ) {
-		CPrintToChatSearch(type, "" ...MOD_TAG... " %N{default} est convoqué par le {green}Tribunal n°%d{default} de Princeton [%d/3].", target, type, time/20 + 1);
+		CPrintToChatSearch(type, "{lightblue}================================");
+		CPrintToChatSearch(type, "" ...MOD_TAG... " %T", "Tribunal_Menu_Audiance_Call", LANG_SERVER, target_name, type, time/20 + 1);
+		CPrintToChatSearch(type, "{lightblue}================================");
 		LogToGame("[TRIBUNAL] [AUDIENCE] Le juge %L a convoque %L [%d/3].", g_iTribunalData[type][td_Owner], target, time/20 + 1);
 	}
 	else if( time % 60 == 0 ) {
-		CPrintToChatSearch(type, "" ...MOD_TAG... " %N{default} est recherché par le {green}Tribunal n°%d{default} de Princeton depuis %d minutes.", target, type, time/60);
+		CPrintToChatSearch(type, "{lightblue}================================");
+		CPrintToChatSearch(type, "" ...MOD_TAG... " %T", "Tribunal_Menu_Audiance_Search", LANG_SERVER, target_name, type, time/60);
+		CPrintToChatSearch(type, "{lightblue}================================");
 		LogToGame("[TRIBUNAL] [AUDIENCE] Le juge %L recherche %L depuis %d minutes.", g_iTribunalData[type][td_Owner], target, time/60);
 		
 		if( time >= 24*60 )
@@ -932,11 +1007,11 @@ public Action Timer_AUDIENCE(Handle timer, any type) {
 	if( zone == jail ) {
 	
 		if( time < 60 )
-			CPrintToChatSearch(type, "" ...MOD_TAG... " %N{default} est arrivé sans retard.", target);
-		else if ( time > 300 )
-			CPrintToChatSearch(type, "" ...MOD_TAG... " %N{default} est arrivé après %d minutes, il y a un {red}manquement{default} à la convocation!", target, time/60);
+			CPrintToChatSearch(type, "" ...MOD_TAG... " %T", "Tribunal_Menu_Audiance_Came_Fast", LANG_SERVER, target_name);
+		else if (time < 300 )
+			CPrintToChatSearch(type, "" ...MOD_TAG... " %T", "Tribunal_Menu_Audiance_Came_Normal", LANG_SERVER, target_name, time/60);
 		else
-			CPrintToChatSearch(type, "" ...MOD_TAG... " %N{default} est arrivé après %d minutes.", target, time/60);
+			CPrintToChatSearch(type, "" ...MOD_TAG... " %T", "Tribunal_Menu_Audiance_Came_Slow", LANG_SERVER, target_name,time/60);
 		
 		LogToGame("[TRIBUNAL] [AUDIENCE] Le juge %L termine la convocation de %L après %d minute%s.", g_iTribunalData[type][td_Owner], target, time/60, time/60 >= 2 ? "s":"");
 		g_iTribunalData[type][td_SuspectArrive] = 1;
@@ -949,44 +1024,65 @@ public Action Timer_AUDIENCE(Handle timer, any type) {
 	mid = getZoneMiddle(jail);
 	
 	ServerCommand("sm_effect_gps %d %f %f %f", target, mid[0], mid[1], mid[2]);
-	PrintHintText(target, "Vous êtes attendu au tribunal n°%d de Princeton. Venez <u>immédiatement</u> pour un jugement <font color='#00cc00'>%s</font>.", type, g_szCondamnation[timeToSeverity(time)]);
+	PrintHintText(target, "%T", "Tribunal_Menu_Audiance_Target", target, type, g_szCondamnation[timeToSeverity(time)]);
 	
 	g_iTribunalData[type][td_Time]++;
 	return Plugin_Continue;
 }
 public Action fwdHUD(int client, char[] szHUD, const int size) {
+	char tmp1[64], tmp2[64];
 	int type = GetTribunalType( rp_GetPlayerZone(client) );
 	
 	if( type > 0 && !isTribunalDisponible(type) ) {
 		int heure, amende;
-		Format(szHUD, size, "Tribunal de Princeton, affaire opposant\n%N   et   %N\nJuge: %N", g_iTribunalData[type][td_Plaignant], g_iTribunalData[type][td_Suspect], g_iTribunalData[type][td_Owner]);
+		GetClientName2(g_iTribunalData[type][td_Plaignant], tmp1, sizeof(tmp1), true);
+		GetClientName2(g_iTribunalData[type][td_Suspect]  , tmp2, sizeof(tmp2), true);
 		
-		if( g_iTribunalData[type][td_AvocatPlaignant] ) {
-			Format(szHUD, size, "%s\nAvocat de la victime: %N", szHUD, g_iTribunalData[type][td_AvocatPlaignant]);
+		if( g_iTribunalData[type][td_ArticlesCount] <= 10 ) {
+			Format(szHUD, size, "%T", "Tribunal_Menu_Audiance_Main", client);
 		}
-		if( g_iTribunalData[type][td_AvocatSuspect] ) {
-			Format(szHUD, size, "%s\nAvocat de la défense: %N", szHUD, g_iTribunalData[type][td_AvocatSuspect]);
+		else {
+			Format(szHUD, size, "");
+		}
+		
+		if( g_iTribunalData[type][td_ArticlesCount] <= 9 ) {
+			Format(szHUD, size, "%s\n%T", szHUD, "Tribunal_Menu_Audiance_Main_Players", client, tmp1, tmp2);
+		}
+		
+		if( g_iTribunalData[type][td_ArticlesCount] <= 8 ) {
+			GetClientName2(g_iTribunalData[type][td_Owner]    , tmp1, sizeof(tmp1), true);
+			Format(szHUD, size, "%s\n%T", szHUD, "Tribunal_Menu_Audiance_Main_Juge", client, tmp1);
+		}
+		
+		if( g_iTribunalData[type][td_AvocatPlaignant] && g_iTribunalData[type][td_ArticlesCount] <= 7 ) {
+			GetClientName2(g_iTribunalData[type][td_AvocatPlaignant], tmp1, sizeof(tmp1), true);
+			Format(szHUD, size, "%s\n%T", szHUD, "Tribunal_Menu_Audiance_Main_Avocat_Victime", client, tmp1);
+		}
+		if( g_iTribunalData[type][td_AvocatSuspect] && g_iTribunalData[type][td_ArticlesCount] <= 6 ) {
+			GetClientName2(g_iTribunalData[type][td_AvocatSuspect], tmp1, sizeof(tmp1), true);
+			Format(szHUD, size, "%s\n%T", szHUD, "Tribunal_Menu_Audiance_Main_Avocat_Defense", client, tmp1);
 		}
 		
 		Format(szHUD, size, "%s\n ", szHUD);
 		
 		if( g_iTribunalData[type][td_ArticlesCount] > 0 ) {
-			Format(szHUD, size, "%s\n \nCharges:\n ", szHUD);
+			Format(szHUD, size, "%s\%T\n ", szHUD, "Tribunal_Menu_Audiance_Main_Charges", client);
 			for (int i = 0; i < sizeof(g_szArticles); i++) {
 				if( g_iArticles[type][i] <= 0 )
 					continue;
 				
-				Format(szHUD, size, "%s %2dx   %s\n ", szHUD, g_iArticles[type][i], g_szArticles[i][1]);
+				Format(tmp1, sizeof(tmp1), "%T", g_szArticles[i][1], client);
+				Format(szHUD, size, "%s %2dx   %s\n ", szHUD, g_iArticles[type][i], tmp1);
 				
 				heure += (g_iArticles[type][i] * StringToInt(g_szArticles[i][2]));
 				amende += (g_iArticles[type][i] * StringToInt(g_szArticles[i][3]));
 			}
-			Format(szHUD, size, "%s\nPeine encourue: %d heure%s %d$ d'amende", szHUD, heure, heure >= 2 ? "s" : "",amende);
+			Format(szHUD, size, "%s\n%T", szHUD, "Tribunal_Menu_Audiance_Main_TOTAL", client, heure, amende);
 			if( g_iTribunalData[type][td_Dedommagement] > 0 )
-				Format(szHUD, size, "%s\nDédommagement possible: %d$", szHUD, g_iTribunalData[type][td_Dedommagement]);
+				Format(szHUD, size, "%s\n%T", szHUD, "Tribunal_Menu_Audiance_Main_Dedo", client, g_iTribunalData[type][td_Dedommagement]);
 		}
 		else {
-			Format(szHUD, size, "%s\nEn attente d'un article pour débuter l'audience", szHUD, heure, amende);
+			Format(szHUD, size, "%s\n%T", szHUD, "Tribunal_Menu_Audiance_Starting", client, heure, amende);
 		}
 		
 		Format(szHUD, size, "%s\n ", szHUD);
@@ -995,7 +1091,7 @@ public Action fwdHUD(int client, char[] szHUD, const int size) {
 	else if( rp_GetClientInt(client, i_Avocat) > 0 ) {
 		for (int i = 1; i <= 2; i++) {
 			if( g_iTribunalData[i][td_AvocatPlaignant] == client || g_iTribunalData[i][td_AvocatSuspect] == client )
-				PrintHintText(client, "Vos services d'avocat sont requis au Tribunal n°%d", i);
+				PrintHintText(client, "%T", "Tribunal_Menu_Audiance_Avocat", client, i);
 		}
 	}
 	return Plugin_Continue;
@@ -1037,9 +1133,7 @@ stock void CPrintToChatSearch(int type, const char[] message, any...) {
 			continue;
 		
 		if( i == g_iTribunalData[type][td_Suspect] || GetTribunalType(rp_GetPlayerZone(i)) == type || rp_GetClientJobID(i) == 1 || rp_GetClientJobID(i) == 101 ) {
-			CPrintToChat(i, "{lightblue} ================================ ");
 			CPrintToChat(i, buffer);
-			CPrintToChat(i, "{lightblue} ================================ ");
 		}
 	}
 }
@@ -1155,23 +1249,11 @@ void SQL_Insert(int type, int condamne, int condamnation, int heure, int amende)
 	
 	if( IsValidClient(g_iTribunalData[type][td_AvocatPlaignant]) ) {
 		GetClientAuthId(g_iTribunalData[type][td_AvocatPlaignant], AUTH_TYPE, szSteamID[3], sizeof(szSteamID[]));
-		//rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatPlaignant], rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_Avocat));
-
-		if(rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_LawyerAudience) < 300) {
-			rp_SetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_LawyerAudience, rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_LawyerAudience) + 1);
-			int xp = calculAudienceXp(rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_LawyerAudience));
-			rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatPlaignant], xp);
-		}
+		rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatPlaignant], rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_Avocat)/2, true);
 	}
 	if( IsValidClient(g_iTribunalData[type][td_AvocatSuspect]) ) {
 		GetClientAuthId(g_iTribunalData[type][td_AvocatSuspect], AUTH_TYPE, szSteamID[4], sizeof(szSteamID[]));
-		//rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatSuspect], rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_Avocat));
-
-		if(rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_LawyerAudience) < 300) {
-			rp_SetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_LawyerAudience, rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_LawyerAudience) + 1);
-			int xp = calculAudienceXp(rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_LawyerAudience));
-			rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatSuspect], xp);
-		}
+		rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatSuspect], rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_Avocat)/2, true);
 	}
 	
 	Format(query, sizeof(query), "INSERT INTO `rp_audiences` (`id`, `juge`, `plaignant`, `suspect`, `avocat-plaignant`, `avocat-suspect`, `temps`, `condamne`, `charges`, `condamnation`, `heure`, `amende`, `dedommage`) VALUES(NULL,");
@@ -1250,26 +1332,12 @@ float getAvocatRatio(int client) {
 	return 1.0;
 	
 }
-int calculAudienceXp(int numb) {
-	int value = 0;
-
-	for(int i = 0; i < sizeof(g_iXpAudience); i++) {
-		if(g_iXpAudience[i] <= numb)
-			value = i;
-	}
-
-	if(value > 0) {
-		value = g_iXpAudience[value] / 2;
-	}
-
-	return value;
-}
 // ----------------------------------------------------------------------------
 public Action Cmd_ItemEnquete(int args) {
 	
 	int client = GetCmdArgInt(1);
 	int target = GetCmdArgInt(2);
-	char tmp[255];
+	char tmp[256];
 	
 	if( rp_GetClientJobID(client) == 101 ) {
 		int type = GetTribunalType( rp_GetPlayerZone(client) );
@@ -1284,14 +1352,17 @@ public Action Cmd_ItemEnquete(int args) {
 	
 	
 	rp_IncrementSuccess(client, success_list_detective);
+	
 	Handle menu = CreateMenu(MenuNothing);
-	SetMenuTitle(menu, "Information sur %N\n ", target);
+	
+	GetClientName2(target, tmp, sizeof(tmp), true);
+	SetMenuTitle(menu, "%T\n ", "Enquete_MenuTarget", client, tmp); 
 	
 	PrintToConsole(client, "\n\n\n\n\n -------------------------------------------------------------------------------------------- ");
 	
 	rp_GetZoneData(rp_GetPlayerZone(target), zone_type_name, tmp, sizeof(tmp));
 	
-	AddMenu_Blank(client, menu, "Localisation: %s", tmp);	
+	AddMenu_Blank(client, menu, "%T", "Enquete_Localisation", client, tmp);
 	
 	int killedBy = rp_GetClientInt(target, i_LastKilled_Reverse);
 	if( IsValidClient(killedBy) ) {
@@ -1304,12 +1375,13 @@ public Action Cmd_ItemEnquete(int args) {
 			
 			String_GetRandom(tmp, sizeof(tmp), 24);
 			
-			AddMenu_Blank(client, menu, "Il a tué: %s", tmp);
-			CPrintToChat(target, "" ...MOD_TAG... " Votre pot de vin envers un mercenaire vient de vous sauver.");
+			AddMenu_Blank(client, menu, "%T", "Enquete_Killed", client, tmp);
+			CPrintToChat(target, "" ...MOD_TAG... " %T", "PotDeVin_OwnKill", target);
 			LogToGame("[TSX-RP] [ENQUETE] Une enquête effectuée sur %L n'a pas montré qui l'a tué pour cause de pot de vin.", target);
 		}
 		else {	
-			AddMenu_Blank(client, menu, "Il a tué: %N", killedBy);
+			GetClientName2(killedBy, tmp, sizeof(tmp), true);
+			AddMenu_Blank(client, menu, "%T", "Enquete_Killed", client, tmp);
 			LogToGame("[TSX-RP] [ENQUETE] Une enquête effectuée sur %L a montré qu'il a tué %L.", target, killedBy);
 		}
 	}
@@ -1318,7 +1390,7 @@ public Action Cmd_ItemEnquete(int args) {
 	}
 	
 	if( rp_GetClientInt(target, i_KillingSpread) > 0 )
-		AddMenu_Blank(client, menu, "Meurtre consécutif: %i", rp_GetClientInt(target, i_KillingSpread) );
+		AddMenu_Blank(client, menu, "%T", "Enquete_KillingSpread", client, rp_GetClientInt(target, i_KillingSpread) );
 	
 	int killed = rp_GetClientInt(target, i_LastKilled);
 	if( IsValidClient(killed) ) {
@@ -1331,12 +1403,13 @@ public Action Cmd_ItemEnquete(int args) {
 			
 			String_GetRandom(tmp, sizeof(tmp), 24);
 			
-			AddMenu_Blank(client, menu, "%s, l'a tué", tmp);
-			CPrintToChat(killed, "" ...MOD_TAG... " Votre pot de vin envers un mercenaire vient de vous sauver.");
+			AddMenu_Blank(client, menu, "%T", "Enquete_KilledBy", client, tmp);
+			CPrintToChat(killed, "" ...MOD_TAG... " %T", "PotDeVin_OwnKill", target);
 			LogToGame("[TSX-RP] [ENQUETE] Une enquête effectuée sur %L n'a pas montré qui l'a tué pour cause de pot de vin.", target);
 		}
 		else {
-			AddMenu_Blank(client, menu, "%N, l'a tué", killed);
+			GetClientName2(killed, tmp, sizeof(tmp), true);
+			AddMenu_Blank(client, menu, "%T", "Enquete_KilledBy", client, tmp);
 			LogToGame("[TSX-RP] [ENQUETE] Une enquête effectuée sur %L a montré que %L l'a tué.", target, killed);
 		}
 	}
@@ -1344,47 +1417,22 @@ public Action Cmd_ItemEnquete(int args) {
 		LogToGame("[TSX-RP] [ENQUETE] Une enquête effectuée sur %L a révélé qu'il n'a été tué par personne.", target, killed);
 	}
 	
-	if( IsValidClient(rp_GetClientInt(target, i_LastVol)) && rp_GetClientInt(rp_GetClientInt(target, i_LastVol), i_LastVolAmount) > 25 ) 
-		AddMenu_Blank(client, menu, "%N, l'a volé %d$", rp_GetClientInt(target, i_LastVol), rp_GetClientInt(rp_GetClientInt(target, i_LastVol), i_LastVolAmount) );
+	if( IsValidClient(rp_GetClientInt(target, i_LastVol)) && rp_GetClientInt(rp_GetClientInt(target, i_LastVol), i_LastVolAmount) > 25 ) {
+		GetClientName2(rp_GetClientInt(target, i_LastVol), tmp, sizeof(tmp), true);
+		if( rp_GetClientInt(rp_GetClientInt(target, i_LastVol), i_LastVolTarget) == client ) {
+			AddMenu_Blank(client, menu, "%T", "Enquete_StealAmount", client, tmp, rp_GetClientInt(rp_GetClientInt(target, i_LastVol), i_LastVolAmount) );
+		}
+		else {
+			AddMenu_Blank(client, menu, "%T", "Enquete_Steal", client, tmp);
+		}
+	}
 	
 	AddMenu_Blank(client, menu, "--------------------------------");
 	
-	AddMenu_Blank(client, menu, "Niveau d'entraînement: %i", rp_GetClientInt(target, i_KnifeTrain));
-	AddMenu_Blank(client, menu, "Précision de tir: %.2f", rp_GetClientFloat(target, fl_WeaponTrain));
-	
-	int count=0;
-	Format(tmp, sizeof(tmp), "Permis possédé:");
-	
-	if( rp_GetClientBool(target, b_License1) ) {	Format(tmp, sizeof(tmp), "%s léger", tmp);	count++;	}
-	if( rp_GetClientBool(target, b_License2) ) {	Format(tmp, sizeof(tmp), "%s lourd", tmp);	count++;	}
-	if( rp_GetClientBool(target, b_LicenseSell) ) {	Format(tmp, sizeof(tmp), "%s vente", tmp);	count++;	}
-	
-	if( count == 0 ) {
-		Format(tmp, sizeof(tmp), "%s Aucun", tmp);
-	}
-	AddMenu_Blank(client, menu, "%s.", tmp);
-	
-	AddMenu_Blank(client, menu, "Argent: %i$ - Banque: %i$", rp_GetClientInt(target, i_Money), rp_GetClientInt(target, i_Bank));
-	
-	count = 0;
-	Format(tmp, sizeof(tmp), "Appartement possédé: ");
-	for (int i = 1; i <= 100; i++) {
-		if( rp_GetClientKeyAppartement(target, i) ) {
-			count++;
-			if( count > 1 )
-				Format(tmp, sizeof(tmp), "%s, ", tmp);
-			Format(tmp, sizeof(tmp), "%s%d", tmp, i);
-		}	
-	}
-	
-	if( count == 0 )
-		Format(tmp, sizeof(tmp), "%s Aucun", tmp);
-	
-	AddMenu_Blank(client, menu, tmp);
-	
-	AddMenu_Blank(client, menu, "Taux d'alcoolémie: %.3f", rp_GetClientFloat(client, fl_Alcool));
-	
-	CPrintToChat(client, "" ...MOD_TAG... " Ces informations ont été envoyées dans votre console.");
+	AddMenu_Blank(client, menu, "%T", "Enquete_Knife", client, rp_GetClientInt(target, i_KnifeTrain));
+	AddMenu_Blank(client, menu, "%T", "Enquete_Weapon", client, RoundToFloor(rp_GetClientFloat(target, fl_WeaponTrain)/8.0*100.0));
+	AddMenu_Blank(client, menu, "%T", "Enquete_Money", client, rp_GetClientInt(target, i_Money)+rp_GetClientInt(target, i_Bank));	
+	AddMenu_Blank(client, menu, "%T", "Enquete_Alcool", client, rp_GetClientFloat(client, fl_Alcool));
 	
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, MENU_TIME_DURATION);
@@ -1398,7 +1446,7 @@ public Action Cmd_ItemEnqueteMenu(int args) {
 	int client = StringToInt(arg1);
 	
 	Handle menu = CreateMenu(Cmd_ItemEnqueteMenu_2);
-	SetMenuTitle(menu, "Sélectionner sur qui récupérer des informations\n ");
+	SetMenuTitle(menu, "%T\n ", "Enquete_Menu", client);
 	
 	char name[128], tmp[64];
 	GetClientName(client, name, 127);
@@ -1448,25 +1496,6 @@ public int MenuNothing(Handle menu, MenuAction action, int client, int param2) {
 		if( menu != INVALID_HANDLE )
 			CloseHandle(menu);
 	}
-}
-bool IsVolAndRecidive(int type) {
-	int vol = 0;
-	int recidive = 0;
-	int other = 0;
-	
-	for (int i = 0; i < sizeof(g_iArticles[]); i++) {
-		if( g_iArticles[type][i] <= 0 )
-			continue;
-		if( i == 2 )
-			vol++;
-		else if( i == 8 )
-			recidive++;
-		else
-			other++;
-	}
-	if( vol > 0 && recidive > 0 && other == 0 )
-		return true;
-	return false;
 }
 // ----------------------------------------------------------------------------
 void AddMenu_Blank(int client, Handle menu, const char[] myString , any ...) {

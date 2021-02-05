@@ -10,11 +10,26 @@
 	#include "roleplay.sp"
 #endif
 
-
 public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& weapon, float damageForce[3], float damagePosition[3]) {
 	bool changed = false;
 	int victim_zone = GetPlayerZone(victim);
 	int attacker_zone = GetPlayerZone(attacker);
+	
+	g_iUserData[victim][i_LastInflictor] = inflictor;
+	
+	if( IsValidClient(victim) && attacker > MaxClients && attacker == inflictor && weapon == -1 && damagetype == DMG_NEVERGIB|DMG_CLUB ) {
+		char tmp[64];
+		GetEdictClassname(inflictor, tmp, sizeof(tmp));
+		
+		if( StrContains(tmp, "weapon_melee") == 0 ) {
+			int prev = GetEntPropEnt(inflictor, Prop_Send, "m_hPrevOwner");
+			if( IsValidClient(prev) ) {
+				attacker = prev;
+				changed = true;
+			}
+		}
+	}
+	
 	
 	if( IsValidClient(victim) ) {
 		if( attacker == inflictor && inflictor > MaxClients && damagetype == 1 ) {
@@ -35,84 +50,44 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 	}
 	
 #if defined USING_VEHICLE
-	if( damagetype == 1 && inflictor == 0 && attacker == 0 && weapon == -1 && damageForce[0] == 0.0 && damageForce[1] == 0.0 && damageForce[2] <= -8192.0 ) {
-		// Bug relou des voitures.
-		return Plugin_Stop;
-	}
+	
 	if( g_flVehicleDamage > 0.001 && victim == attacker && IsValidClient(victim) && IsValidVehicle(inflictor) && damagetype == 17 ) {
 		
-		if( g_bUserData[victim][b_GameModePassive] && !(rp_GetZoneBit(rp_GetPlayerZone(victim)) & BITZONE_ROAD) ) {
+		if( GetVectorLength(damageForce) > 8192.0 ) {
+			return Plugin_Continue;
+		}
+		
+		if( Vehicle_GetDriver(inflictor) != victim && g_bUserData[victim][b_GameModePassive] && !(rp_GetZoneBit(rp_GetPlayerZone(victim)) & BITZONE_ROAD) ) {
 			damage = 0.0;
 			return Plugin_Changed;
 		}
 		
-		float min[3] =  { -16.0, -16.0, -16.0 };
-		float max[3] =  { 16.0, 16.0, 16.0 };
-		
-		
-		Handle tr = TR_TraceHullFilterEx(damagePosition, damagePosition, min, max, MASK_ALL, FilterToVehicle, inflictor);
-		if( TR_DidHit(tr) ) {
-				
-			int InVehicle = TR_GetEntityIndex(tr);
-			if( IsValidVehicle(InVehicle) ) {
-				
-				float delta = (SquareRoot(float(GetEntProp(inflictor, Prop_Send, "m_nSpeed"))) + 1.0) / (SquareRoot(float(GetEntProp(InVehicle, Prop_Send, "m_nSpeed"))) + 1.0);
-				
-				int heal = RoundToCeil(damage * g_flVehicleDamage * delta);
-				
-				if( heal > 0 ) {
-					rp_SetVehicleInt(InVehicle, car_health, rp_GetVehicleInt(InVehicle, car_health) - heal);
-				}
-				
-				heal = RoundToCeil(damage * g_flVehicleDamage * (1.0-delta));
-				
-				if( heal > 0 ) {
-					rp_SetVehicleInt(inflictor, car_health, rp_GetVehicleInt(inflictor, car_health) - heal);
-				}
-			}
+		if( !rp_IsTutorialOver(victim) ) {
+			damage = 0.0;
+			return Plugin_Changed;
 		}
-		CloseHandle(tr);
 		
 		return Plugin_Continue;
 	}
 	if( IsValidVehicle(attacker) && IsValidVehicle(inflictor) ) {
-		
+
 		if( g_flVehicleDamage > 0.001 ) {
 			
-			if( g_bUserData[victim][b_GameModePassive] && !(rp_GetZoneBit(rp_GetPlayerZone(victim)) & BITZONE_ROAD) ) {
+			if( Vehicle_GetDriver(inflictor) != victim && g_bUserData[victim][b_GameModePassive] && !(rp_GetZoneBit(rp_GetPlayerZone(victim)) & BITZONE_ROAD) ) {
 				damage = 0.0;
 				return Plugin_Changed;
 			}
 			
-			float min[3] =  { -16.0, -16.0, -16.0 };
-			float max[3] =  { 16.0, 16.0, 16.0 };
-			
-			
-			Handle tr = TR_TraceHullFilterEx(damagePosition, damagePosition, min, max, MASK_ALL, FilterToVehicle, inflictor);
-			if( TR_DidHit(tr) ) {
-					
-				int InVehicle = TR_GetEntityIndex(tr);
-				if( IsValidVehicle(InVehicle) ) {
-					
-					float delta = (SquareRoot(float(GetEntProp(inflictor, Prop_Send, "m_nSpeed"))) + 1.0) / (SquareRoot(float(GetEntProp(InVehicle, Prop_Send, "m_nSpeed"))) + 1.0);
-					
-					int heal = RoundToCeil(damage * g_flVehicleDamage * delta);
-					
-					if( heal > 0 ) {
-						rp_SetVehicleInt(InVehicle, car_health, rp_GetVehicleInt(InVehicle, car_health) - heal);
-					}
-					
-					heal = RoundToCeil(damage * g_flVehicleDamage * (1.0-delta));
-					
-					if( heal > 0 ) {
-						rp_SetVehicleInt(inflictor, car_health, rp_GetVehicleInt(inflictor, car_health) - heal);
-					}
-				}
+			if( !rp_IsTutorialOver(victim) ) {
+				damage = 0.0;
+				return Plugin_Changed;
 			}
-			CloseHandle(tr);
 		}
 		
-		if( GetEntPropEnt(inflictor, Prop_Send, "m_hPlayer") > 0 ) {
+		if( IsValidClient(g_iGrabbedBy[inflictor]) ) {
+			attacker = g_iGrabbedBy[inflictor];
+		}
+		else if( GetEntPropEnt(inflictor, Prop_Send, "m_hPlayer") > 0 ) {
 			attacker = GetEntPropEnt(inflictor, Prop_Send, "m_hPlayer");
 			
 			if( IsValidClient(attacker ) ) {
@@ -128,6 +103,17 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 	
 	
 #endif
+	if(  inflictor != attacker && inflictor > 0 && attacker > 0 ) {
+		char classname[128];
+		GetEdictClassname(inflictor, classname, sizeof(classname));
+		
+		if( StrEqual(classname, "snowball_projectile") ) {
+			damage = 0.0;
+			g_iUserData[attacker][i_LastAgression] = GetTime();
+			return Plugin_Changed;
+		}
+	}
+	
 	if( attacker == 0 && inflictor == 0 && damagetype == DMG_FALL ) {
 		if( g_flUserData[victim][fl_Alcool] >= 1.0 ) {
 			damage *= 0.0;
@@ -234,6 +220,13 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 				}
 			}
 		}
+
+		if( g_bUserData[attacker][b_WeaponIsHands]	&& inflictor > 0 && inflictor < MaxClients ) {
+			if( g_iUserData[attacker][i_FistTrainAdmin] >= 0 ) {
+				damage = float(g_iUserData[attacker][i_FistTrainAdmin]);
+				changed = true;
+			}
+		}
 		
 		if( g_bUserData[attacker][b_WeaponIsKnife]	&& inflictor > 0 && inflictor < MaxClients ) {
 
@@ -334,7 +327,7 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 
 		if( StrEqual(sInflictor, "player") && StrContains(sWeapon, "weapon_") == 0 && !g_bUserData[attacker][b_WeaponIsKnife] && attacker == inflictor ) {
 			if( g_iWeaponsGroup[wep_id] > 0 ) {
-				if( IsInPVP(victim) || IsInPVP(attacker) ) {
+				if( IsInPVP(victim) && !(rp_GetZoneBit(victim_zone) & BITZONE_PERQUIZ) ) {
 					damage *= 1.5;
 					if( StrEqual(sWeapon, "weapon_awp", false) ) {
 						int fov = GetEntProp(attacker, Prop_Send, "m_iFOV");
@@ -388,10 +381,10 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 			if( g_flUserData[victim][fl_Reflect] >= GetGameTime() && !(g_flUserData[attacker][fl_Reflect] >= GetGameTime() ) ) {
 				if( IsInPVP(attacker) || IsInPVP(victim) ) {
 					damage *= 0.5;
-					rp_ClientDamage(attacker, RoundFloat(damage*0.5), victim, "bigmac");
+					rp_ClientDamage(attacker, RoundFloat(damage*0.5), victim, "bigmac", DMG_GENERIC, true);
 				}
 				else {
-					rp_ClientDamage(attacker, RoundFloat(damage * 0.9), victim, "bigmac");
+					rp_ClientDamage(attacker, RoundFloat(damage * 0.9), victim, "bigmac", DMG_GENERIC, true);
 					damage *= 0.1;
 				}
 				

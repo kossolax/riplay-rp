@@ -1,6 +1,9 @@
 #pragma semicolon 1
 #include <sourcemod>
 #include <sdktools>
+#include <colors_csgo>	// https://forums.alliedmods.net/showthread.php?p=2205447#post2205447
+#include <smlib>		// https://github.com/bcserv/smlib
+#include <roleplay>
 
 public Plugin myinfo = 
 {
@@ -40,13 +43,9 @@ public OnMapStart() {
 public OnMapEnd() {
 	CloseHandle(g_hBDD);
 }
-public SQL_QueryCallBack(Handle owner, Handle handle, const char[] error, any data) {
-	if( handle == INVALID_HANDLE ) {
-		LogError("[SQL] [ERROR] %s", error);
-	}
-}
 public OnClientPostAdminCheck(int client) {
 	if( !IsFakeClient(client) ) {
+		CreateTimer(1.0, CheckBanned, GetClientUserId(client));
 		CreateTimer(30.0, CheckBanned, GetClientUserId(client));
 	}
 }
@@ -173,21 +172,6 @@ public Action Cmd_Unban(int client, int args) {
 	
 	return Plugin_Handled;
 }
-public bool IsValidClient(int client) {
-	if( client <= 0 )
-		return false;
-	
-	if( client > MaxClients )
-		return false;
-	
-	if( !IsValidEdict(client) )
-		return false;
-	
-	if( !IsClientConnected(client) )
-		return false;
-	
-	return true;
-}
 stock InsertBan(int client, int target, char targetSteamID[64], int time, const char reason[256]) {
 	
 	char safe_reason[512];
@@ -243,7 +227,7 @@ stock InsertBan(int client, int target, char targetSteamID[64], int time, const 
 public Action CheckBanned(Handle timer, any userid) {
 	int client = GetClientOfUserId(userid);
 	
-	if( !IsFakeClient(client) ) {
+	if( client > 0 && !IsFakeClient(client) ) {
 		
 		char SteamID64[64];
 		char SteamID1[64];
@@ -259,16 +243,25 @@ public Action CheckBanned(Handle timer, any userid) {
 		char IP[64];
 		GetClientIP(client, IP, sizeof(IP));
 		
-		Format(g_szQuery, sizeof(g_szQuery), "SELECT `BanReason` FROM `srv_bans` WHERE `SteamID`='%s' AND (`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0' AND (`game`='%s' OR `game`='ALL');", SteamID64, game);
+		char tmp2[32];
+		ArrayList dbl = rp_GetClientDouble(client);
+		for (int i = 0; i < dbl.Length; i++) {
+			dbl.GetString(i, tmp2, sizeof(tmp2));
+			
+			Format(g_szQuery, sizeof(g_szQuery), "SELECT `BanReason`, `SteamID` FROM `srv_bans` WHERE `SteamID`='%s' AND (`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0' AND (`game`='%s' OR `game`='ALL');", tmp2, game);
+			SQL_TQuery(g_hBDD, CheckBanned_2, g_szQuery, userid);
+		}
+		
+		Format(g_szQuery, sizeof(g_szQuery), "SELECT `BanReason`, `SteamID` FROM `srv_bans` WHERE `SteamID`='%s' AND (`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0' AND (`game`='%s' OR `game`='ALL');", SteamID64, game);
 		SQL_TQuery(g_hBDD, CheckBanned_2, g_szQuery, userid);
 		
-		Format(g_szQuery, sizeof(g_szQuery), "SELECT `BanReason` FROM `srv_bans` WHERE `SteamID`='%s' AND (`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0' AND (`game`='%s' OR `game`='ALL');", SteamID1, game);
+		Format(g_szQuery, sizeof(g_szQuery), "SELECT `BanReason`, `SteamID` FROM `srv_bans` WHERE `SteamID`='%s' AND (`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0' AND (`game`='%s' OR `game`='ALL');", SteamID1, game);
 		SQL_TQuery(g_hBDD, CheckBanned_2, g_szQuery, userid);
 		
-		Format(g_szQuery, sizeof(g_szQuery), "SELECT `BanReason` FROM `srv_bans` WHERE `SteamID`='%s' AND (`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0' AND (`game`='%s' OR `game`='ALL');", SteamID0, game);
+		Format(g_szQuery, sizeof(g_szQuery), "SELECT `BanReason`, `SteamID` FROM `srv_bans` WHERE `SteamID`='%s' AND (`Length`='0' OR `EndTime`>UNIX_TIMESTAMP()) AND `is_unban`='0' AND (`game`='%s' OR `game`='ALL');", SteamID0, game);
 		SQL_TQuery(g_hBDD, CheckBanned_2, g_szQuery, userid);
 		
-		Format(g_szQuery, sizeof(g_szQuery), "SELECT `banReason` FROM `srv_bans` A WHERE ( A.`SteamID`='%s' AND (A.`Length`='0' OR A.`EndTime`>UNIX_TIMESTAMP()) AND A.`is_unban`='0' AND (A.`game`='%s' OR A.`game`='ALL') ) AND NOT EXISTS ( SELECT B.`id` FROM `srv_bans` B WHERE B.`SteamID`='%s' AND (B.`Length`='0' OR B.`EndTime`>UNIX_TIMESTAMP()) AND B.`is_unban`='0' AND (B.`game`='whitelist') ) AND NOT EXISTS ( SELECT C.`id` FROM `srv_bans` C WHERE C.`SteamID`='%s' AND (C.`Length`='0' OR C.`EndTime`>UNIX_TIMESTAMP()) AND C.`is_unban`='0' AND (C.`game`='%s' OR C.`game`='ALL') ) ", IP, game, SteamID64, SteamID64, game);
+		Format(g_szQuery, sizeof(g_szQuery), "SELECT `banReason`, `SteamID` FROM `srv_bans` A WHERE ( A.`SteamID`='%s' AND (A.`Length`='0' OR A.`EndTime`>UNIX_TIMESTAMP()) AND A.`is_unban`='0' AND (A.`game`='%s' OR A.`game`='ALL') ) AND NOT EXISTS ( SELECT B.`id` FROM `srv_bans` B WHERE B.`SteamID`='%s' AND (B.`Length`='0' OR B.`EndTime`>UNIX_TIMESTAMP()) AND B.`is_unban`='0' AND (B.`game`='whitelist') ) AND NOT EXISTS ( SELECT C.`id` FROM `srv_bans` C WHERE C.`SteamID`='%s' AND (C.`Length`='0' OR C.`EndTime`>UNIX_TIMESTAMP()) AND C.`is_unban`='0' AND (C.`game`='%s' OR C.`game`='ALL') ) ", IP, game, SteamID64, SteamID64, game);
 		SQL_TQuery(g_hBDD, CheckBanned_3, g_szQuery, userid);
 	}
 }
@@ -279,11 +272,19 @@ public CheckBanned_2(Handle owner, Handle handle, const char[] error, any userid
 		LogError("[SQL] [ERROR] %s", error);
 	}
 	if( SQL_FetchRow(handle) ) {
-		char sql_row[128], szReason[256];
+		char sql_row[256], szReason[256], SteamID[64], SteamID64[64];
 		SQL_FetchString(handle, 0, sql_row, sizeof(sql_row));
-		Format(szReason, 255, "Vous avez ete bannis pour: %s.\n Plus d info sur http://riplay.fr/", sql_row);
+		SQL_FetchString(handle, 1, SteamID, sizeof(SteamID));
 		
-		KickClient(client, szReason);
+		GetClientAuthId(client, AuthId_SteamID64, SteamID64, sizeof(SteamID64));
+		
+		if( StrEqual(SteamID, SteamID64) ) {
+			InsertBan(0, client, SteamID64, 0, sql_row);
+		}
+		else {		
+			Format(szReason, 255, "Vous avez ete bannis pour: %s.\n Plus d info sur http://riplay.fr/", sql_row);
+			KickClient(client, szReason);
+		}
 	}
 }
 public CheckBanned_3(Handle owner, Handle handle, const char[] error, any data) {

@@ -1,0 +1,14 @@
+VertexLitGeneric
+{
+$baseTexture "models\project_torque\240"
+$color2 "{ 0 0 0 }"
+$bumpmap "models\hummerh3\flat"
+$translucent 1
+$envmap "env_cubemap"
+$envmaptint "[ .03 .03 .03 ]"
+$phong 1
+$phongboost 0.5
+$phongexponent 200
+$phongfresnelranges "[1 5 150]"
+//$rimlight 1
+}

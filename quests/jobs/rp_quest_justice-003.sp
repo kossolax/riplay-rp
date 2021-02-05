@@ -27,7 +27,7 @@
 #define	QUEST_NAME		"Un homme très recherché"
 #define	QUEST_TYPE		quest_daily
 #define	QUEST_JOBID		101
-#define	QUEST_RESUME	"Condamner un citoyen recherché pdnt au moins 10min"
+#define	QUEST_RESUME	"Condamner un citoyen recherché pendant au moins 10min"
 
 public Plugin myinfo = {
 	name = "Quête: "...QUEST_NAME, author = "KoSSoLaX",

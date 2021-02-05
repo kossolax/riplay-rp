@@ -138,12 +138,12 @@ void EffectPissing(int Client) {
 		GetClientEyeAngles(Client, aang);
 			
 		if(aang[1] > 0) {
-			ppos[0]+=FloatSub(10.0, FloatMul(FloatDiv(10.0, 90.0), aang[1]));
-			ppos[1]+=FloatSub(10.0, FloatMul(FloatDiv(10.0, 90.0), FloatAbs(FloatSub(aang[1], 90.0))));
+			ppos[0]+=(10.0 - ((10.0/90.0)* aang[1]));
+			ppos[1]+=(10.0 - ((10.0/90.0)* FloatAbs((aang[1]-90.0))));
 		}
 		else {
-			ppos[0]+=FloatSub(10.0, FloatMul(FloatDiv(10.0, 90.0), FloatAbs(aang[1])));
-			ppos[1]-=FloatSub(10.0, FloatMul(FloatDiv(10.0, 90.0), FloatAbs(FloatSub(FloatAbs(aang[1]), 90.0))));
+			ppos[0]+=(10.0 - ((10.0/90.0)* FloatAbs(aang[1])));
+			ppos[1]-=(10.0 - ((10.0/90.0)* FloatAbs((FloatAbs(aang[1])-90.0))));
 		}
 		
 		aang[0]=0.0;
@@ -337,7 +337,7 @@ void RP_PerformFade(int client) {
 	
 	int hud = GetEntProp(client, Prop_Send, "m_iHideHUD");
 	int hud2 = hud;
-	bool radar = ( !IsInPVP(client) && !g_bUserData[client][b_GameModePassive] && GetEntProp(client, Prop_Send, "m_bDrawViewmodel") == 1 );
+	bool radar = ( !IsInPVP(client) && !(GetZoneBit( GetPlayerZone(client) ) & (BITZONE_BLOCKRADAR|BITZONE_PERQUIZ)) && !g_bUserData[client][b_GameModePassive] && GetEntProp(client, Prop_Send, "m_bDrawViewmodel") == 1 );
 	
 	if( g_bUserData[client][b_Blind] || !radar || (GetZoneBit( GetPlayerZone(client) ) & BITZONE_EVENT) ) {
 		if( !(hud & HIDEHUD_RADAR) )
@@ -354,8 +354,6 @@ void RP_PerformFade(int client) {
 	if( hud != hud2 ) {
 		SetEntProp(client, Prop_Send, "m_iHideHUD", hud);
 	}
-	
-	
 	
 	Handle hFadeClient = StartMessageOne("Fade",client);
 	PbSetInt(hFadeClient, "duration", 1);
@@ -478,7 +476,7 @@ void PoisonPlayer(int target, float time, int client) {
 	if( Client_CanAttack(client, target) == false )
 		return;
 	
-	if( !(rp_GetClientJobID(client) == 11 && !g_bUserData[client][b_GameModePassive]) && g_flUserData[target][fl_LastPoison] < GetGameTime() ) {
+	if( !(rp_GetClientJobID(target) == 11 && !g_bUserData[target][b_GameModePassive]) && g_flUserData[target][fl_LastPoison] < GetGameTime() ) {
 		g_iUserData[target][i_Sickness] = 1;
 		g_flUserData[target][fl_LastPoison] = GetGameTime();
 		
@@ -522,7 +520,7 @@ public void DoBeacon(int client) {
 		
 		int target = g_iUserData[client][i_Protect_From];
 		
-		if( Entity_GetDistance(client, target) < 500.0 ) {
+		if( rp_GetDistance(client, target) < 500.0 ) {
 			
 			float pos[3], top[3];
 			top[2] = 1.0;

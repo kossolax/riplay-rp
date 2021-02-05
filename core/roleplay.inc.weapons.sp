@@ -15,7 +15,6 @@ public Action Strip_Weapon(Handle timer, any client) {
 void StripWeapons(int client ){
 	int wepIdx;
 	
-	LogToGame("removed weapon of %N", client);
 	for( int i = 0; i < 5; i++ ){
 		
 		while( ( wepIdx = GetPlayerWeaponSlot( client, i ) ) != -1 ) {
@@ -26,10 +25,13 @@ void StripWeapons(int client ){
 	
 	Client_RemoveWeapon(client, "weapon_taser");
 	
+	g_bUserData[client][b_WeaponIsKnife] = false;
+	g_bUserData[client][b_WeaponIsHands] = true;
+	g_bUserData[client][b_WeaponIsMelee] = false;
+	
 	int tmp = GivePlayerItem(client, "weapon_fists");
 	EquipPlayerWeapon(client, tmp);
 	FakeClientCommand(client, "use weapon_fists");
-	LogToGame("removed weapon of %N", client);
 }
 void RedrawWeapon(int target) {
 	char weapon[64];

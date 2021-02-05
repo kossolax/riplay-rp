@@ -1,0 +1,1076 @@
+"Phrases"
+{
+	"Empty_String"
+	{
+		"fr"	""
+		"en"	""
+	}
+	"Error_Command_ForNow"
+	{
+		"fr"		"Vous ne pouvez pas utiliser cette commande pour le moment."
+		"en"		"You cannot use this command for now."
+	}
+	"Error_Command_Here"
+	{
+		"fr"		"Vous ne pouvez pas utiliser cette commande ici."
+		"en"		"You cannot use this command here."
+	}
+	"Error_ItemMissing"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous n'avez plus de {red}{1}{default}."
+		"en"		"You no longer have {red}{1}{default}."
+	}
+	"Error_ItemCooldown"
+	{
+		"#format"	"{1:.1f}"
+		"fr"		"Vous ne pouvez rien utiliser pour encore {red}{1}{default} seconde(s)."
+		"en"		"You can't use anything for another {red}{1}{default} second(s)."
+	}
+	"Error_ItemNotEnought"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous n'avez pas assez de {red}{1}{default}."
+		"en"		"You don't have enough {red}{1}{default}."
+	}
+	"Error_ItemAlreadyEnable"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{red}{1}{default} est déjà activé."
+		"en"		"{red}{1}{default} is already enabled."
+	}
+	"Error_ItemCannotBeUsedForNow"
+	{
+		"#format"	"{1:s}"
+		"fr"	"{red}{1}{default} n'est pas disponible pour le moment."
+		"en"	"{red}{1}{default} cannot be used for now."
+	}
+	"Error_NotEnoughtMoney"
+	{
+		"fr"	"Vous n'avez pas assez d'argent."
+		"en"	"You don't have enough money."
+	}
+	"Error_CannotUseItemInPvP"
+	{
+		"fr"	"Cet objet est interdit en PvP."
+		"en"	"You cannot use this item in PvP."
+	}
+	"Error_CannotUseItemInPeace"
+	{
+		"fr"	"Cet objet est interdit en peacefull."
+		"en"	"You cannot use this item in peacefull."
+	}
+	"Error_CannotUseItemInCar"
+	{
+		"fr"	"Cet objet est interdit en voiture."
+		"en"	"You cannot use this item in the car."
+	}
+	"Error_CannotUseItemPolice"
+	{
+		"fr"	"Cet objet est interdit aux forces de l'ordre."
+		"en"	"You cannot use this item in law enforcement agencies."
+	}
+	"Error_CannotUseItemInPerquiz"
+	{
+		"fr"	"Cet objet est interdit lors d'une perquisition."
+		"en"	"You cannot use this item during a search."
+	}
+	"Error_CannotUseItemInBraquage"
+	{
+		"fr"	"Cet objet est interdit lors de ce braquage."
+		"en"	"You cannot use this item during the robbery."
+	}
+	"Error_CannotUseItemHere"
+	{
+		"fr"	"Cet objet est interdit où vous êtes."
+		"en"	"You cannot use this item here."
+	}
+	"Error_CannotUseItemNow"
+	{
+		"fr"	"Cet objet est interdit pour le moment."
+		"en"	"You cannot use this item for now."
+	}
+	"Error_FromServer"
+	{
+		"fr"		"Quelque chose s'est mal passé."
+		"en"		"Something went wrong."
+	}
+	"Error_CannotSteal_ForNow"
+	{
+		"fr"		"Il n'est pas possible de voler pour le moment."
+		"en"		"You cannot steal for now."
+	}
+	"Error_CannotSteal_Target_ForNow"
+	{
+		"fr"		"Il n'est pas possible de voler cette personne pour le moment."
+		"en"		"You cannot steal from this person for now."
+	}
+	"Error_CannotSteal_Target_Broke"
+	{
+		"fr"		"Cette personne a les poches vides."
+		"en"		"This person has empty pockets."
+	}
+	"Error_CannotFindTarget"
+	{
+		"fr"		"Vous devez viser une personne."
+		"en"		"You must aim at a person."
+	}
+	"Error_OnlyInside"
+	{
+		"fr"		"Vous devez être à l'intérieur pour utiliser cet objet."
+		"en"		"You must be inside to use this object."
+	}
+	"Error_OnlyInsideAppart"
+	{
+		"fr"		"Vous devez être à l'intérieur pour utiliser cet objet."
+		"en"		"You must be inside to use this object."
+	}
+	"Error_Level"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"		"Vous devez être au moins de niveau {1} ({red}{2}{default}), afin d'utiliser cette commande."
+		"en"		"You must be at least level {1} ({red}{2}{default}), to use this command."
+	}
+	"Error_YouMustAim"
+	{
+		"#format"	"{1:t}"
+		"fr"	"Vous devez viser {red}{1}{default}."
+		"en"	"You must aim {red}{1}{default}."
+	}
+	"Error_NoItemToSellForNow"
+	{
+		"fr"	"Il n'y a rien à vendre pour le moment"
+		"en"	"There is nothing to sell at the moment."
+	}
+	"Error_KnifeInHands"
+	{
+		"fr"	"Vous devez prendre votre couteau en main."
+		"en"	"You must take your knife in hand."
+	}
+	"Error_YouMustBeAliveToTalk"
+	{
+		"fr"	"Vous devez être en vie pour parler."
+		"en"	"You must be alive to speak."		
+	}
+	"Error_YouMustWaitToTalk"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Vous devez attendre encore {1} seconde(s), avant d'utiliser à nouveau le chat général."
+		"en"	"You must wait another {1} second(s), before using general chat again."		
+	}
+	"Error_YouMustNotSpam"
+	{
+		"fr"	"Votre message a été bloqué afin d'éviter d'éventuel spam."
+		"en"	"Your message has been blocked to avoid possible spam."		
+	}
+	"Error_WrongCode"
+	{
+		"fr"	"Le code de confirmation est incorrect."
+		"en"	"The confirmation code is incorrect."
+	}
+	"Enabled"
+	{
+		"fr"	"Activé"
+		"en"	"Enabled"
+	}
+	"Disabled"
+	{
+		"fr"	"Désactivé"
+		"en"	"Disabled"
+	}
+
+	// ----------------------------------------------------------------------------------------------
+	"Pay_Bonus_Appart"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Votre appartement a fait remporté {green}{1}{default}$ supplémentaire."
+		"en"	"Your apartment earned {green}{1}{default}$ extra."
+	}
+	"Pay_Bonus_Vitality"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"	"Votre vitalité de niveau {green}{1}{default} a fait remporté {green}{2}{default}$ supplémentaire."
+		"en"	"Your level {green}{1}{default} vitality earned you {green}{2}{default}$ extra."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"LEVEL_XP"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Vous avez gagné {green}{1}{default} points d'expérience."
+		"en"		"You have gained {green}{1}{default} experience point(s)."		
+	}
+	"LEVEL_UP"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Vous avez atteint le niveau {green}{1}{default}."
+		"en"		"You have reached level {green}{1}{default}."		
+	}
+	"LEVEL_RANK"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"		"Vous avez atteint le niveau {green}{1}{default}, vous êtes maintenant {green}{2}{default}!"
+		"en"		"You have reached level {green}{1}{default}, you are now {green}{2}{default}!"		
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Steal_Starting"
+	{
+		"fr"		"{red}Attention!{default} Quelqu'un essaye de vous voler!"
+		"en"		"{red}Attention!{default} Someone is trying to steal from you!"
+	}
+	"Steal_Money_Target"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Vous avez volé {red}{1}{default}$."
+		"en"		"You stole {red}{1}{default}$."
+	}
+	"Steal_Money_By"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Quelqu'un vous a volé {red}{1}{default}$."
+		"en"		"Someone robbed you {red}{1}{default}$."
+	}
+	"Steal_Item_Target"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"		"Vous avez volé {1}x {red}{2}{default}."
+		"en"		"You stole {1}x {red}{2}{default}."
+	}
+	"Steal_Item_By"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"		"Quelqu'un vous a volé {1}x {red}{2}{default}."
+		"en"		"Someone stole from you {1}x {red}{2}{default}."
+	}
+	"Steal_Failed"
+	{
+		"fr"		"Cette personne ne s'est pas laissée faire."
+		"en"		"This person didn't let it happen."
+	}
+	"Steal_Nearby"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Gendarme(s) proche: {1}"
+		"en"		"Police officer close by: {1}"
+	}
+	"Difficulty_Failed"
+	{
+		"fr"		"Difficulté: Échec"
+		"en"		"Difficulty: Failed" 
+	}
+	"Difficulty_VeryEasy"
+	{
+		"fr"		"Difficulté: Très facile"
+		"en"		"Difficulty: Very easy"
+	}
+	"Difficulty_Easy"
+	{
+		"fr"		"Difficulté: Facile"
+		"en"		"Difficulty: Easy"
+	}
+	"Difficulty_Average"
+	{
+		"fr"		"Difficulté: Moyenne"
+		"en"		"Difficulty: Average"
+	}
+	"Difficulty_Hard"
+	{
+		"fr"		"Difficulté: Difficile"
+		"en"		"Difficulty: Hard"
+	}
+	"Difficulty_VeryHard"
+	{
+		"fr"		"Difficulté: Très difficile"
+		"en"		"Difficulty: Very hard"
+	}
+	"Difficulty_Impossible"
+	{
+		"fr"		"Difficulté: Impossible"
+		"en"		"Difficulty: Impossible"
+	}
+	
+	// ----------------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------------
+	"Jobs_All"
+	{
+		"fr"	"Tous les jobs"
+		"en"	"All jobs"
+	}
+	"Jobs_List"
+	{
+		"fr"	"Liste des jobs:"
+		"en"	"List of jobs:"
+	}
+	"Jobs_ListAvailable"
+	{
+		"fr"	"Liste des jobs disponibles:"
+		"en"	"List of available jobs:"
+	}
+	"Jobs_Noone"
+	{
+		"fr"	"Personne"
+		"en"	"No one" 
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Cmd_TargetIsToFar"
+	{
+		"fr"	"Cette personne est beaucoup trop éloignée."
+		"en"	"This person is too far away."
+	}
+	"Cmd_TargetIsSlippy"
+	{
+		"fr"	"Cette personne vous a glissé des mains."
+		"en"	"This person slipped out from your grasp."
+	}
+	"Cmd_TargetIgnore"
+	{
+		"fr"	"Cette personne vous ignore."
+		"en"	"Cette personne vous ignore."
+	}
+	"Cmd_OutOf_Car_By"
+	{
+		"#format"	"{1:s}"
+		"fr"	"{1} vous a sorti de votre voiture."
+		"en"	"{1} pulled you out of your car."
+	}
+	"Cmd_NowSteal"
+	{
+		"fr"	"Vous pouvez à nouveau voler."
+		"en"	"You can steal again."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Money_Take"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Vous avez récupéré: {green}{1}{default}$."
+		"en"	"You have retrieved: {green}{1}{default}$."
+	}
+	"Item_Take"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"	"Vous avez récupéré: {1}x {green}{2}{default}."
+		"en"	"You have retrieved: {1}x {green}{2}{default}."
+	}
+	"Item_NotEnough"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"	"Il vous {green}manque{default} {1} {2} dans votre banque."
+		"en"	"You {green}lack{default} {1} {2} in your bank."
+	}
+	"Item_NoMore"
+	{
+		"#format"	"{1:s},{2:d}"
+		"fr"	"Vous {red}n'avez plus de{default} {1} ({2}) dans votre banque."
+		"en"	"You {red}no longer have{default} any {1} ({2}) in your bank."
+	}
+	"Item_Disposite"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"	"Vous avez déposé: {1}x {red}{2}{default}."
+		"en"	"You have deposited: {1}x {red}{2}{default}."
+	}
+	"Item_Found"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"	"Vous avez trouvé: {1}x {green}{2}{default}."
+		"en"	"You have found: {1}x {green}{2}{default}."
+	}
+	"Item_Give"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"	"Vous avez reçu: {1}x {green}{2}{default}."
+		"en"	"You have received: {1}x {green}{2}{default}."
+	}
+	"Item_Free"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"	"Vous avez reçu comme cadeau: {1}x {green}{2}{default}."
+		"en"	"You received a gift: {1}x {green}{2}{default}."
+	}
+	"Market_Buy"
+	{
+		"#format"	"{1:d},{2:s},{3:d}"
+		"fr"		"Vous avez acheté {red}{1} {2}{default}, pour {red}{3}{default}$."
+		"en"		"You purchased {red}{1} {2}{default}, for {red}{3}{default}$."
+	}
+	"Market_Sell"
+	{
+		"#format"	"{1:d},{2:s},{3:d}"
+		"fr"		"Vous avez vendu {green}{1} {2}{default}, pour {green}{3}{default}$."
+		"en"		"You sold {green}{1} {2}{default}, for {green}{3}{default}$."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Build_CannotHere"
+	{
+		"fr"	"Vous ne pouvez pas construire ici."
+		"en"	"You cannot build here."
+	}
+	"Build_Cannot_ForNow"
+	{
+		"fr"	"Vous ne pouvez pas construire pour le moment."
+		"en"	"You cannot build for now."
+	}
+	"Build_TooMany"
+	{
+		"fr"	"Vous avez trop de props actif en ville."
+		"en"	"You have too many active props in town."
+	}
+	"Build_Destroyed"
+	{
+		"#format"	"{1:t}"
+		"fr"	"{1} a été détruite."
+		"en"	"{1} was destroyed."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Dead_DropWallet"
+	{
+		"fr"	"Vous avez accidentellement fait tombé votre {red}porte-feuilles{default}."
+		"en"	"You have accidentaly dropped your {red}wallet{default}."
+	}
+	"Dead_DropCB"
+	{
+		"fr"	"Vous avez accidentellement fait tombé votre {red}carte bancaire{default}."
+		"en"	"You have accidentaly dropped your {red}bank card{default}."
+	}
+	"Dead_DropSkin"
+	{
+		"fr"	"Vous avez accidentellement déchiré votre {red}tenue vestimentaire{default}."
+		"en"	"You have accidentaly torn your {red}attire{default}."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Banned_Event"
+	{
+		"fr"	"En raison de votre mauvais comportement, il vous est temporairement interdit de participer à un event."
+		"en"	"Due to your misconduct, you are temporarily banned from participating in an event."
+	}
+	"Banned_Quest"
+	{
+		"fr"	"En raison de votre mauvais comportement, il vous est temporairement interdit de participer aux quêtes."
+		"en"	"Due to your misconduct, you are temporarily banned from participating in a quest."
+	}
+	"Banned_Give"
+	{
+		"fr"	"En raison de votre mauvais comportement, il vous est temporairement interdit de donner de l'argent aux autres personnes."
+		"en"	"Due to your misconduct, you are temporarily banned from giving money to others."
+	}
+	"Banned_GlobalTalk"
+	{
+		"fr"	"En raison de votre mauvais comportement, il vous est temporairement interdit d'utiliser le chat général."
+		"en"	"Due to your misconduct, you are temporarily banned from talking in global chat."
+	}
+	"Banned_LocalTalk"
+	{
+		"fr"	"En raison de votre mauvais comportement, il vous est temporairement interdit d'utiliser le chat local."
+		"en"	"Due to your misconduct, you are temporarily banned from talking in local chat."
+	}
+	"Ignore"
+	{
+		"fr"	"Ignorer"
+		"en"	"Ignore"
+	}
+	"Ignore_For"
+	{
+		"#format"	"{1:s},{2:d}"	
+		"fr"	"Vous ignorez les demandes de {1} pour {2} heures."
+		"en"	"You ignore requests for {1} for {2} hours."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"a_male"
+	{
+		"fr"	"Un homme"
+		"en"	"A male"
+	}
+	"a_female"
+	{
+		"fr"	"Une femme"
+		"en"	"A female"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Perm_Edit"
+	{
+		"fr"		"Modifier les permissions"
+		"en"		"Change permissions"
+	}
+	"Perm_Self"
+	{
+		"fr"		"Uniquement moi"
+		"en"		"Only me"
+	}
+	"Perm_Chef"
+	{
+		"fr"		"Tous les chefs de mon job"
+		"en"		"All the bosses from my job"
+	}
+	"Perm_Job"
+	{
+		"fr"		"Toutes les personnes de mon job"
+		"en"		"All the people from my job"
+	}
+	"Perm_Gang"
+	{
+		"fr"		"Toutes les personnes de mon gang"
+		"en"		"All the people in my gang"
+	}
+	"Perm_Colloc"
+	{
+		"fr"		"Tous mes collocataires"
+		"en"		"All the people in my appartement"
+	}
+	"Perm_Everyone"
+	{
+		"fr"		"Tout le monde"
+		"en"		"Everyone"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Phone_Mission"
+	{
+		"fr"		"Appel d'un inconnu:"
+		"en"		"Call from an unknown person:"
+	}
+	"Phone_Mission_Copter"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Un hélicoptère vous envois un colis.\nIl sera envoyé près de: {1}"
+		"en"		"A helicopter is delivering you a package.\nIt will be delivered close to: {1}"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"rp_banana"
+	{
+		"fr"	"une banane"
+		"en"	"a banana"
+	}
+	"rp_bank"
+	{
+		"fr"	"un distributeur"
+		"en"	"a cash machine"
+	}
+	"rp_barriere"
+	{
+		"fr"	"une barrière"
+		"en"	"a barrier"
+	}
+	"rp_bigcashmachine"
+	{
+		"fr"	"une photocopieuse"
+		"en"	"a photocopier"
+	}
+	"rp_braquage_mask"
+	{
+		"fr"	"un masque"
+		"en"	"a mask"
+	}
+	"rp_cashmachine"
+	{
+		"fr"	"une imprimante à faux-billet"
+		"en"	"a counterfeit bill printer"
+	}
+	"rp_copter"
+	{
+		"fr"	"un hélicoptère"
+		"en"	"a helicopter"
+	}
+	"rp_crate"
+	{
+		"fr"	"une caisse"
+		"en"	"a crate"
+	}
+	"rp_discoball"
+	{
+		"fr"	"une boule disco"
+		"en"	"a disco ball"
+	}
+	"rp_discosmoke"
+	{
+		"fr"	"un fumigène"
+		"en"	"a smoke machine"
+	}
+	"rp_emote"
+	{
+		"fr"	"une dance"
+		"en"	"a dance"
+	}
+	"rp_grave"
+	{
+		"fr"	"une pière tombale"
+		"en"	"a gravestone"
+	}
+	"rp_gyrophare"
+	{
+		"fr"	"un gyrophare"
+		"en"	"lights"		
+	}
+	"rp_healbox"
+	{
+		"fr"	"une healbox"
+		"en"	"a healbox"
+	}
+	"rp_kevlarbox"
+	{
+		"fr"	"une kevlarbox"
+		"en"	"a kevlarbox"
+	}
+	"rp_microwave"
+	{
+		"fr"	"un microonde"
+		"en"	"a microwave"
+	}
+	"rp_mine"
+	{
+		"fr"	"une mine"
+		"en"	"a mine"
+	}
+	"rp_phone"
+	{
+		"fr"	"un téléphone"
+		"en"	"a phone"
+	}
+	"rp_plant"
+	{
+		"fr"	"un plant de drogue"
+		"en"	"a drug plant"
+	}
+	"rp_props"
+	{
+		"fr"	"un prop"
+		"en"	"a prop"
+	}
+	"rp_sentry"
+	{
+		"fr"	"une tourelle"
+		"en"	"a sentry"
+	}
+	"rp_sign"
+	{
+		"fr"	"un panneau"
+		"en"	"a sign"
+	}
+	"rp_table"
+	{
+		"fr"	"une table de craft"
+		"en"	"a craft table"
+	}
+	"rp_weaponbox"
+	{
+		"fr"	"une caisse d'armes"
+		"en"	"a crate of weapons"
+	}
+	"prop_vehicle_driveable"
+	{
+		"fr"	"un véhicule"
+		"en"	"a vehicle"
+	}
+	"prop_door_rotating"
+	{
+		"fr"	"une porte"
+		"en"    "a door"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Trail"
+	{
+		"fr"	"Propulseur"
+		"en"	"Propellant"
+	}
+	"Trail2"
+	{
+		"fr"	"Fusée n°1"
+		"en"	"Rocket n°1"
+	}
+	"Trail_01"
+	{
+		"fr"	"Fusée n°2"
+		"en"	"Rocket n°2"
+	}
+	"Trail3"
+	{
+		"fr"	"Petit cube bleu"
+		"en"	"Small blue cube"
+	}
+	"Trail4"
+	{
+		"fr"	"Fumée verte n°1"
+		"en"	"Green smoke n°1"
+	}
+	"Trail_03"
+	{
+		"fr"	"Fumée verte n°2"
+		"en"	"Green smoke n°2"
+	}
+	"Trail7"
+	{
+		"fr"	"Fumée verte n°3"
+		"en"	"Green smoke n°3"
+	}
+	"Trail5"
+	{
+		"fr"	"Seringue"
+		"en"	"Syringe"
+	}
+	"Trail8"
+	{
+		"fr"	"Fumée blanche et bleue"
+		"en"	"White and blue smoke"
+	}
+	"Trail10"
+	{
+		"fr"	"Bulle bleue n°1"
+		"en"	"Blue bubble n°1"
+	}
+	"Trail13"
+	{
+		"fr"	"Bulle bleue n°2"
+		"en"	"Blue bubble n°2"
+	}
+	"Trail11"
+	{
+		"fr"	"Fumée Or"
+		"en"	"Gold Smoke"
+	}
+	"Trail12"
+	{
+		"fr"	"Fumée bleue n°1"
+		"en"	"Blue smoke n°1"
+	}
+	"Trail_02"
+	{
+		"fr"	"Fumée bleue n°2"
+		"en"	"Blue smoke n°2"
+	}
+	"Trail15"
+	{
+		"fr"	"Trait jaune et vert"
+		"en"	"Yellow and green line"
+	}
+	"Trail_04"
+	{
+		"fr"	"Fumée bleue et rose"
+		"en"	"Blue and pink smoke"
+	}
+	"trail_money"
+	{
+		"fr"	"Billets"
+		"en"	"Bills"
+	}
+	"trail_heart"
+	{
+		"fr"	"Coeurs"
+		"en"	"Hearts"
+	}
+	"confetti_balloons"
+	{
+		"fr"	"Ballons"
+		"en"	"Balloons"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"-1 -1 -1"
+	{
+		"fr"	"Couleur personnalisé"
+		"en"	"Custom color"
+	}
+	"128 0 0"
+	{
+		"fr"	"Rubis"
+		"en"	"Ruby"
+	}
+	"255 0 0"
+	{
+		"fr"	"Rouge"
+		"en"	"Red"
+	}
+	"255 128 0"
+	{
+		"fr"	"Orange"
+		"en"	"Orange"
+	}
+	"255 255 0"
+	{
+		"fr"	"Jaune"
+		"en"	"Yellow"
+	} 
+	"128 255 0"
+	{
+		"fr"	"Vert-pomme"
+		"en"	"Apple green"
+	}
+	"0 255 0"
+	{
+		"fr"	"Vert"
+		"en"	"Green"
+	}
+	"0 128 0"
+	{
+		"fr"	"Vert-foncé"
+		"en"	"Dark green"
+	}
+	"0 255 128"
+	{
+		"fr"	"Vert-émeraude"
+		"en"	"Emerald green"
+	}
+	"0 255 255"
+	{
+		"fr"	"Bleu-ciel"
+		"en"	"Sky blue"  
+	}
+	"0 128 255"
+	{
+		"fr"	"Bleu-clair"
+		"en"	"Light blue"
+	}
+	"0 0 255"
+	{
+		"fr"	"Bleu"
+		"en"	"Blue"
+	}
+	"0 0 128"
+	{
+		"fr"	"Bleu-Foncé"
+		"en"	"Dark blue"
+	}
+	
+	"128 0 255"
+	{
+		"fr"	"Mauve"
+		"en"	"Mauve"
+	}
+	"255 0 255"
+	{
+		"fr"	"Rose"
+		"en"	"Pink"
+	}
+	"255 0 128"
+	{
+		"fr"	"Fushia"
+		"en"	"Fushia"
+	}
+	"255 255 255"
+	{
+		"fr"	"Blanc"
+		"en"	"White"
+	}
+	"128 128 128"
+	{
+		"fr"	"Gris"
+		"en"	"Gray"
+	}
+	"0 0 0"
+	{
+		"fr"	"Noir"
+		"en"	"Black"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"models/props_office/desk_01.mdl"
+	{
+		"fr"	"Bureau"
+		"en"	"Desk"
+	}
+	"models/props_interiors/tv.mdl"
+	{
+		"fr"	"Télévision"
+		"en"	"Television"
+	}
+	"models/props_c17/furniturewashingmachine001a.mdl"
+	{
+		"fr"	"Machine à laver"
+		"en"	"Washing machine"
+	}
+	"models/props_c17/FurnitureDresser001a.mdl"
+	{
+		"fr"	"Armoire"
+		"en"	"Wardrobe"
+	}
+	"models/props_interiors/chair_office2.mdl"
+	{
+		"fr"	"Chaise"
+		"en"	"Chair"
+	}
+	"models/props_interiors/couch.mdl"
+	{
+		"fr"	"Canapé"
+		"en"	"Couch"
+	}
+	"models/props_interiors/coffee_table_rectangular.mdl"
+	{
+		"fr"	"Table basse"
+		"en"	"Coffee table"
+	}
+	"models/props/cs_assault/box_stack1.mdl"
+	{
+		"fr"	"Pile de palettes"
+		"en"	"Stack of pallets"
+	}
+	"models/props/cs_militia/bar01.mdl"
+	{
+		"fr"	"Bar"
+		"en"	"Bar"
+	}
+	"models/props/de_house/bed_rustic.mdl"
+	{
+		"fr"	"Lit"
+		"en"	"Bed"
+	}
+	"models/props_interiors/tv_cabinet.mdl"
+	{
+		"fr"	"Etagère télévision"
+		"en"	"Television cabinet"
+	}
+	"models/props/DeadlyDesire/blocks/32x32.mdl"
+	{
+		"fr"	"Cube"
+		"en"	"Block"
+	}
+	"models/props_industrial/pallet_stack_96.mdl"
+	{
+		"fr"	"Palette"
+		"en"	"Pallet"
+	}
+	"models/props_fortifications/concrete_block001_128_reference.mdl"
+	{
+		"fr"	"Mur de fortification"
+		"en"	"Fortification wall"
+	}
+	"models/props/cs_office/vending_machine.mdl"
+	{
+		"fr"	"Distributeur de boisson"
+		"en"	"Vending machine"
+	}
+	"models/props_urban/boat002.mdl"
+	{
+		"fr"	"Bateau"
+		"en"	"Boat"
+	}
+	"models/props_urban/outhouse002.mdl"
+	{
+		"fr"	"Cabine de toilettes"
+		"en"	"Outhouse"
+	}
+	"models/props_pipes/concrete_pipe001b.mdl"
+	{
+		"fr"	"Conduit en béton"
+		"en"	"Concrete pipe"
+	}
+	"models/props_interiors/table_picnic.mdl"
+	{
+		"fr"	"Table de picnic"
+		"en"	"Picnic table"
+	}
+	"models/props_industrial/warehouse_shelf001.mdl"
+	{
+		"fr"	"Etagère industrielle"
+		"en"	"Industrial shelf"
+	}
+	"models/props/cs_assault/box_stack1.mdl"
+	{
+		"fr"	"Barricade de carton"
+		"en"	"Cardboard barricade"
+	}
+	"models/props/de_vertigo/construction_wood_2x4_01.mdl"
+	{
+		"fr"	"Planche en bois"
+		"en"	"Wooden board"
+	}
+	"models/models_kit/xmas/xmastree_mini.mdl"
+	{
+		"fr"	"Sapin de Noel"
+		"en"	"Chistmas tree"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"weapon_knife"
+	{
+		"fr"	"Couteau"
+		"fr"	"Knife"		
+	}
+	"weapon_knife_css"
+	{
+		"fr"	"Couteau classique"
+		"en"	"Classic knife"
+	}
+	"weapon_bayonet"
+	{
+		"fr"	"Baïonnette"
+		"en"	"Bayonet"
+	}
+	"weapon_knife_flip"
+	{
+		"fr"	"Couteau pliant"
+		"en"	"Folding knife"
+	}
+	"weapon_knife_gut"
+	{
+		"fr"	"Couteau à éviscérer"
+		"en"	"Gutting knife"
+	}
+	"weapon_knife_karambit"
+	{
+		"fr"	"Karambit"
+		"en"	"Karambit"
+	}
+	"weapon_knife_m9_bayonet"
+	{
+		"fr"	"Baïonnette M9"
+		"en"	"Bayonet M9"
+	}
+	"weapon_knife_tactical"
+	{
+		"fr"	"Couteau de chasseur"
+		"en"	"Hunting knife"
+	}
+	"weapon_knife_butterfly"
+	{
+		"fr"	"Couteau papillon"
+		"en"	"Butterfly knife"
+	}
+	"weapon_knife_falchion"
+	{
+		"fr"	"Couteau fauchon"
+		"en"	"Falchion knife"
+	}
+	"weapon_knife_push"
+	{
+		"fr"	"Dagues sombres"
+		"en"	"Dark dagger"
+	}
+	"weapon_knife_survival_bowie"
+	{
+		"fr"	"Couteau bowie"
+		"en"	"Bowie knife"
+	}
+	"weapon_knife_ursus"
+	{
+		"fr"	"Couteau ursus"
+		"en"	"Ursus knife"
+	}
+	"weapon_knife_gypsy_jackknife"
+	{
+		"fr"	"Couteau navaja"
+		"en"	"Navaja knife"
+	}
+	"weapon_knife_stiletto"
+	{
+		"fr"	"Couteau stileto"
+		"en"	"Stiletto knife"
+	}
+	"weapon_knife_widowmaker"
+	{
+		"fr"	"Couteau canif"
+		"en"	"Pocket knife"
+	}
+	"weapon_knife_canis"
+	{
+		"fr"	"Couteau de survie"
+		"en"	"Survival knife"
+	}
+	"weapon_knife_cord"
+	{
+		"fr"	"Couteau en paracorde"
+		"en"	"Paracord knife"
+	}
+	"weapon_knife_skeleton"
+	{
+		"fr"	"Couteau squelettique"
+		"en"	"Skeleton knife"
+	}
+	"weapon_knife_outdoor"
+	{
+		"fr"	"Couteau de nomade"
+		"en"	"Nomad knife"
+	}
+}

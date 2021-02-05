@@ -1,0 +1,14 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/player/custom/50cent/slow_body"
+	"$bumpmap" "models/player/custom/50cent/slow_body_bump"
+
+	"$nocull" 1
+
+	"$envmap" "env_cubemap"
+	"$normalmapalphaenvmapmask" 1
+//	"$envmapmask"	"models/player/custom/50cent/slow_body"
+	"$envmaptint" "[.8 .8 .8]"
+	"$envmapcontrast" .75
+	"$envmapsaturation" .85
+}

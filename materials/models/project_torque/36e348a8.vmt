@@ -1,0 +1,7 @@
+vertexlitgeneric
+{
+$baseTexture "models\project_torque\36e348a8"
+//$halflambert 1
+$alphatest 1
+$nocull 1
+}

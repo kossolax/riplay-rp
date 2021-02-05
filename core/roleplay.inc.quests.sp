@@ -22,28 +22,23 @@ public int Native_rp_QuestCreateInstance(Handle plugin, int numParams) {
 		if( !PrecacheModel(model) )
 			return -1;
 	
-	int ent = CreateEntityByName("prop_dynamic_glow");
+	int ent = CreateEntityByName("prop_dynamic");
 	DispatchKeyValue(ent, "model", model);
 	DispatchSpawn(ent);
 	TeleportEntity(ent, position, NULL_VECTOR, NULL_VECTOR);
-	g_iOriginOwner[ent] = client;
-	
-	SetEntProp(ent, Prop_Send, "m_bShouldGlow", 1);
-	SetEntProp(ent, Prop_Send, "m_clrGlow", 255);
-	
-	SDKHook(ent, SDKHook_SetTransmit, Hook_Transmit);
 	
 	return ent;
-}
-public Action Hook_Transmit(int entity, int client) {
-	if( g_iOriginOwner[entity] != client )
-		return Plugin_Handled;
-	return Plugin_Continue;
 }
 public Action Cmd_StartQuest(int args) {
 	int client = GetCmdArgInt(1);
 	char arg[32]; GetCmdArg(2, arg, sizeof(arg));
 	StartQuest(client, arg);
+	return Plugin_Handled;
+}
+public Action Cmd_StopQuest(int args) {
+	int client = GetCmdArgInt(1);
+	QuestClean(client);
+	
 	return Plugin_Handled;
 }
 public void StartQuest(int client, char uniqID[32]) {
@@ -85,6 +80,7 @@ public void SQL_StartQuest_CB(Handle owner, Handle hQuery, const char[] error, a
 			g_iClientQuests[client][objectiveID] = SQL_FetchInt(hQuery, 6);
 			g_iClientQuests[client][stepID] = SQL_FetchInt(hQuery, 7);
 			
+			rp_HookEvent(client, RP_OnFrameSeconde, QuestFrame);
 			
 			Function fct2 = QuestGetFunction(g_iClientQuests[client][startID]);
 			if( fct2 != INVALID_FUNCTION ) {
@@ -94,7 +90,6 @@ public void SQL_StartQuest_CB(Handle owner, Handle hQuery, const char[] error, a
 				Call_Finish();
 			}
 			
-			rp_HookEvent(client, RP_OnFrameSeconde, QuestFrame);
 		}
 	}
 	else if( g_iClientQuests[client][stepID] == -1 ) {
@@ -236,6 +231,7 @@ public int Native_rp_QuestStepComplete(Handle plugin, int numParams) {
 	
 	
 	if( g_iClientQuests[client][questID] > 0 ) {
+		
 		rp_UnhookEvent(client, RP_OnFrameSeconde, QuestFrame);
 		
 		Function fct = QuestGetFunction(g_iClientQuests[client][overID]);
@@ -297,21 +293,25 @@ public void Cmd_QuestMenu(int client) {
 	
 	if( g_iClientQuests[client][questID] != -1 ) {
 		Menu menu = new Menu(Cmd_QuestMenu_Choose);
-		menu.SetTitle("Menu des quêtes\n ");
-		menu.AddItem("", "Vous avez déjà une quête en cours,", ITEMDRAW_DISABLED);
-		menu.AddItem("", "si vous abandonnez, vous ne pourrez", ITEMDRAW_DISABLED);
-		menu.AddItem("", "pas reprendre cette quête pendant", ITEMDRAW_DISABLED);
-		menu.AddItem("", "au moins 24 heures.", ITEMDRAW_DISABLED);
-		menu.AddItem("", "Souhaitez-vous l'interrompre?", ITEMDRAW_DISABLED);
-		menu.AddItem("continue", "Non, je veux continuer");
-		menu.AddItem("stop", "Oui, je veux l'arrêter");
+		menu.SetTitle("%T\n ", "Phone_Quest", client);
+		
+		char msg[256], expl[32][64];
+		Format(msg, sizeof(msg), "%T", "Phone_Quest_Cancel", client);
+		String_WordWrap(msg, 40);
+		int len = ExplodeString(msg, "\n", expl, sizeof(expl), sizeof(expl[]));
+		for (int i = 0; i < len; i++) {
+			menu.AddItem("_", expl[i], ITEMDRAW_DISABLED);
+		}
+
+		Format(msg, sizeof(msg), "%T", "Phone_Quest_Cancel_Continue", client);	menu.AddItem("continue", msg); 
+		Format(msg, sizeof(msg), "%T", "Phone_Quest_Cancel_Stop", client); 		menu.AddItem("stop", msg);
 		menu.ExitButton = false;
 		menu.Display(client, MENU_TIME_FOREVER);
 		return;
 	}
 	
 	if( g_bUserData[client][b_IsMuteEvent] ) {
-		CPrintToChat(client, "" ...MOD_TAG... " En raison de votre mauvais comportement, il vous est temporairement interdit de participer aux quêtes.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Banned_Quest", client);
 		return;
 	}
 	
@@ -385,7 +385,7 @@ public void Cmd_QuestMenu_CB(Handle owner, Handle hQuery, const char[] error, an
 	CheckMP(client);
 	
 	if( i == 0 ) {	
-		CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez aucune quête disponible pour le moment.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Phone_Quest_None", client);
 		delete menu;
 		return;
 	}

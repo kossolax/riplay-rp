@@ -27,12 +27,11 @@ public MRESReturn DHooks_OnTeleport(int client, Handle hParams) {
 public Action Cmd_Force_Rebind(int client, int args) {
 	char arg[256];
 	
-	GetCmdArgString(arg, 256);
+	GetCmdArgString(arg, sizeof(arg));
 	StripQuotes(arg);
 	
 	if( StrEqual(arg, "/+force", false) || StrEqual(arg, "/-force", false) ||  StrEqual(arg, "!+force", false) || StrEqual(arg, "!-force", false) || StrEqual(arg, "+force", false) || StrEqual(arg, "-force", false)  ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Votre bind est incorrecte. Si vous souhaitez utiliser la force...");
-		CPrintToChat(client, "" ...MOD_TAG... " Modifier le comme ceci: bind \"X\" \"+force\".");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Force_Bind", client);
 		
 		FORCE_STOP(client);
 		CreateTimer(0.01, FixForce, client);
@@ -52,6 +51,10 @@ public void FORCE_FRAME(int client) {
 	g_iFrameCount[client]++;
 	
 	if( g_bIsSeeking[client] ) {
+		
+		if( g_iGrabbing[client] > 0 ) {
+			SDKUnhook(g_iGrabbing[client], SDKHook_Touch, OnForceTouch);
+		}
 		g_iGrabbing[client] = 0;
 		
 		float position[3];
@@ -136,7 +139,6 @@ public void FORCE_FRAME(int client) {
 		vecVelocity[2] = (vecMoveto[2] - EntityOrigin[2]) * dist / VELOCITY_MULTIPLIER;
 		
 		if( g_bGrabNear[client] && GetVectorLength(vecVelocity) >= 4096.0 ) {
- 			CPrintToChat(client, "" ...MOD_TAG... " Vous avez lâché prise.");
  			FORCE_STOP(client);
  			return;
  		}
@@ -181,6 +183,7 @@ public Action FixForce(Handle timer, any client) {
 void FORCE_STOP(int client) {
 	if( g_iGrabbing[client] > 0  ) {
 		
+		SDKUnhook(g_iGrabbing[client], SDKHook_Touch, OnForceTouch);
 		if( IsValidClient(g_iGrabbing[client]) ) {
 			float nulVec[3];
 			int flags = GetEntityFlags(g_iGrabbing[client]);
@@ -209,7 +212,7 @@ public Action Cmd_grab(int client, int args) {
 			continue;
 			
 		if( g_iGrabbing[i] == client ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Il est impossible d'utiliser la force quand quelqu'un vous tiens.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Force_Already", client);
 			FORCE_STOP(client);
 			return Plugin_Handled;
 		}
@@ -219,7 +222,7 @@ public Action Cmd_grab(int client, int args) {
 		StringToInt(g_szZoneList[ GetPlayerZone(client) ][zone_type_type]) == 101
 	) {
 		if( !IsPolice(client) && !IsJuge(client) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Le +force est interdit dans cette zone.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Force_Here", client);
 			FORCE_STOP(client);
 			return Plugin_Handled;
 		}
@@ -235,6 +238,9 @@ public Action Cmd_grab(int client, int args) {
 		}
 	}
 	else {
+		if( g_iGrabbing[client] > 0 ) {
+			SDKUnhook(g_iGrabbing[client], SDKHook_Touch, OnForceTouch);
+		}
 		g_iGrabbing[client] = 0;
 		g_bIsSeeking[client] = true;
 		g_bToggle[client] = false;
@@ -261,55 +267,57 @@ void IncrementForceKill(int client,int victim) {
 	
 	LogToGame("[TSX-RP] [FORCE-KILL] %L tue avec la force (%i/10).", client, g_iCurrentKill[client]);
 	
-	CPrintToChat( client, "\x04[TSX-RP]\x01 Vous avez perdu 250$ pour avoir tué avec la force. (%i/10)", g_iCurrentKill[client]);
-	rp_ClientMoney(client, i_Money, -250);
+	int money = 250;
+	int max = 10;
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Force_Kill", client, money, g_iCurrentKill[client], max);
+	rp_ClientMoney(client, i_Money, -money);
 	
 	if( g_iCurrentKill[client] >= 10 ) {
-		ServerCommand("amx_ban \"#%i\" \"60\" \"tue avec la force\"", GetClientUserId(client));
+		ServerCommand("amx_ban \"#%i\" \"60\" \"%T\"", GetClientUserId(client), "Force_Ban", LANG_SERVER);
 	}
 }
 void OpenGestionForce(int client) {
-	
+	char tmp[128];
 	Handle menu = CreateMenu(SetMyForce);
-	SetMenuTitle(menu, "Gestion du +force\n ");
+	SetMenuTitle(menu, "%T\n ", "Force_Menu", client);
 	
 	if( g_iMayGrabAll[client] == 0 ) {
-		AddMenuItem(menu, "grab_prop", "Limitation: [JOUEUR]");
+		Format(tmp, sizeof(tmp), "%T", "Force_Filter", client, "Force_Filter_Player");		AddMenuItem(menu, "grab_prop", tmp);
 	}
 	else if( g_iMayGrabAll[client] == 1 ) {
-		AddMenuItem(menu, "grab_all", "Limitation: [PROPS]");
+		Format(tmp, sizeof(tmp), "%T", "Force_Filter", client, "Force_Filter_Prop");		AddMenuItem(menu, "grab_all", tmp);
 	}
 	else if( g_iMayGrabAll[client] == 2 ) {
-		AddMenuItem(menu, "grab_player", "Limitation: [TOUT]");
+		Format(tmp, sizeof(tmp), "%T", "Force_Filter", client, "Force_Filter_All");			AddMenuItem(menu, "grab_player", tmp);
 	}
 	
 	if( g_bMovingTeleport[client]  ) {
-		AddMenuItem(menu, "move_velo", "Deplacement: [TELEPORT]");
+		Format(tmp, sizeof(tmp), "%T", "Force_Move", client, "Force_Move_Teleport");		AddMenuItem(menu, "move_velo", tmp);
 	}
 	else {
-		AddMenuItem(menu, "move_tele", "Deplacement: [VELOCITY]");
+		Format(tmp, sizeof(tmp), "%T", "Force_Move", client, "Force_Move_Velocity");		AddMenuItem(menu, "move_tele", tmp);
 	}
 	
 	
 	if( g_bCheckSphere[client]  ) {
-		AddMenuItem(menu, "search_aim", "Recherche: [ZONE]");
+		Format(tmp, sizeof(tmp), "%T", "Force_Search", client, "Force_Search_Sphere");		AddMenuItem(menu, "search_aim", tmp);
 	}
 	else {
-		AddMenuItem(menu, "search_zone", "Recherche: [AIM]");
+		Format(tmp, sizeof(tmp), "%T", "Force_Search", client, "Force_Search_Aim");			AddMenuItem(menu, "search_zone", tmp);
 	}
 	
 	if( g_bGrabNear[client] ) {
-		AddMenuItem(menu, "dist_away", "Distance: [PROCHE]");
+		Format(tmp, sizeof(tmp), "%T", "Force_Distance", client, "Force_Distance_Nearby");	AddMenuItem(menu, "dist_away", tmp);
 	}
 	else {
-		AddMenuItem(menu, "dist_near", "Distance: [DISTANTE]");
+		Format(tmp, sizeof(tmp), "%T", "Force_Distance", client, "Force_Distance_Away");	AddMenuItem(menu, "dist_near", tmp);
 	}
 	
 	if( g_bToggle[client] ) {
-		AddMenuItem(menu, "toggle_off", "Saisir: [ALTERER]");
+		Format(tmp, sizeof(tmp), "%T", "Force_Toggle", client, "Force_Toggle_Alter");		AddMenuItem(menu, "toggle_off", tmp);
 	}
 	else {
-		AddMenuItem(menu, "toggle_on", "Saisir: [MAINTENIR]");
+		Format(tmp, sizeof(tmp), "%T", "Force_Toggle", client, "Force_Toggle_HOLD");		AddMenuItem(menu, "toggle_on", tmp);
 	}
 	
 	SetMenuExitButton(menu, true);
@@ -369,18 +377,18 @@ bool CheckValidGrab(int client, int result) {
 		}
 		if( result <= MaxClients ) {
 			if( !IsAllowed_client(client) ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas autorisé à deplacer des joueurs.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Force_Cannot_Player", client);
 				return false;
 			}
 			if( !rp_IsEntityGrabable(client, result) ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas autorisé à deplacer ce joueur.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Force_Cannot_Player", client);
 				return false;
 			}
 
 			LogToGame("[TSX-RP] [FORCE] %L tien %L", client, result);
 		}
 		if( IsValidVehicle(result) && !IsAllowed_car(client, result) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas autorisé à deplacer des voitures.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Force_Cannot_Car");
 			return false;
 		}
 		
@@ -389,14 +397,7 @@ bool CheckValidGrab(int client, int result) {
 		
 		if( StrContains(classname, "prop_physic", false) != -1 ) {
 			if( !IsAllowed_prop(client, result) ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas autorisé à deplacer ce prop.");
-				
-				int job = g_iUserData[client][i_Job];
-				
-				int flags = GetUserFlagBits(client);
-				if( (job >= 1 && job <= 10) || (flags & ADMFLAG_GENERIC || flags & ADMFLAG_ROOT) ) {
-					CPrintToChat(client, "" ...MOD_TAG... " Proprietaire: %N", rp_GetBuildingData(result, BD_owner));
-				}
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Force_Cannot_Prop", client);
 				return false;
 			}
 		}
@@ -416,11 +417,13 @@ bool CheckValidGrab(int client, int result) {
 		g_iGrabbing[client] = result;
 		g_iGrabbedBy[result] = client;
 		g_bIsSeeking[client] = false;
-		
-		if( !g_bGrabNear[client] ) {
+		SDKHook(g_iGrabbing[client], SDKHook_Touch, OnForceTouch);
+
+		int flags = GetUserFlagBits(client);
+		if (flags & ADMFLAG_GENERIC || flags & ADMFLAG_ROOT) {
 			char name[64];
-			GetEdictClassname(result, name, 63);
-			CPrintToChat(client, "[FORCE] Entity grabbed: %s[%i]", name, result);
+			GetEdictClassname(result, name, sizeof(name));
+			CPrintToChat(client, "[FORCE] %s [%i]", name, result);
 		}
 		
 		if( client == result ) {
@@ -430,6 +433,52 @@ bool CheckValidGrab(int client, int result) {
 		return true;
 	}
 	return false;
+}
+public Action OnForceTouch(int entity, int touched) {
+	int client = g_iGrabbedBy[entity];
+	
+	if( client > 0 && g_iGrabbing[client] == 0 ) {
+		SDKUnhook(g_iGrabbing[client], SDKHook_Touch, OnForceTouch);
+		return Plugin_Continue;
+	}
+	
+	if( client <= 0 ) {
+		// Mais qui nous grab, bordel.
+		LogError("OnForceTouch with client <= 0");
+		for (int i = 1; i <= MaxClients; i++) {
+			if( g_iGrabbing[i] == entity ) {
+				FORCE_STOP(i);
+			}
+		}
+		return Plugin_Continue;
+	}
+	
+	if( IsValidVehicle(entity) )
+		return Plugin_Continue;
+	
+	if( !IsValidVehicle(touched) )
+		return Plugin_Continue;
+	
+	if( rp_GetVehicleInt(touched, car_owner) ==  client )
+		return Plugin_Continue;
+	
+	if( rp_GetZoneBit(rp_GetPlayerZone(touched)) & BITZONE_PARKING ) {
+		int zone = getZoneAppart(client);
+		
+		if( zone > 0 && g_iDoorOwner_v2[client][zone] )
+			return Plugin_Continue;
+
+		zone = StringToInt(g_szZoneList[GetPlayerZone(client)][zone_type_type]);
+		if( zone != 0 && zone == GetJobPrimaryID(client) )
+			return Plugin_Continue;
+		
+		IncrementForceKill(client, entity);
+		
+		FORCE_STOP(client);
+		return Plugin_Stop;
+	}
+	
+	return Plugin_Continue;
 }
 bool IsAllowed_client(int client) {
 	int job = g_iUserData[client][i_Job];
@@ -511,7 +560,7 @@ bool MayMoveThisEntity(int client, int ent) {
 	}
 	if( IsValidClient(ent) ) {
 		if( g_flLubrifian[ent] > GetGameTime() ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Impossible d'attraper ce joueur!");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_TargetIsSlippy", client);
 			return false;
 		}
 	}
@@ -524,12 +573,6 @@ bool MayMoveThisEntity(int client, int ent) {
 			return true;
 		if( IsValidVehicle(ent) && IsAllowed_car(client, ent) )
 			return true;
-		
-		char classname[64];
-		GetEdictClassname(ent, classname, sizeof(classname));
-		if( StrContains(classname, "rp_banana") == 0 ) {
-			return true;
-		}
 	}
 	else if( g_iMayGrabAll[client] == 2 ) {
 		

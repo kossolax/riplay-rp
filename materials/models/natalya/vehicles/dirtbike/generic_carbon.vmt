@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models/natalya/vehicles/dirtbike/generic_carbon"
+	"$bumpmap" "models/natalya/vehicles/dirtbike/generic_carbon_normal"
+}

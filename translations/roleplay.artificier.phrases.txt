@@ -1,0 +1,90 @@
+"Phrases"
+{
+	"Bomb_WillExplodeIn"
+	{
+		"#format"	"{1:.0f}"
+		"fr"	"La {blue}petite bombe{default} a été placée et explosera dans {red}{1}{default} secondes."
+		"en"	"The {blue}small bomb{default} has been placed and will explode in {red}{1}{default} seconds."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Firework_Build"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Placer un feu d'artifice ({1}/{2})"
+		"en"		"Place a fireworks display ({1}/{2})"
+	}
+	"Firework_Trail"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Trainée: {1}"
+		"en"		"Trail: {1}"
+	}
+	"Firework_Shot"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Mode de tir: {1}"
+		"en"		"Firing mode: {1}"
+	}
+	"Firework_Shot_Instant"
+	{
+		"fr"		"Instantanné"
+		"en"		"Instant"
+	}
+	"Firework_Shot_Fast"
+	{
+		"fr"		"Rapide"
+		"en"		"Fast"
+	}
+	"Firework_Shot_Long"
+	{
+		"fr"		"Long"
+		"en"		"Long"
+	}
+	"Firework_Shot_Trigger"
+	{
+		"fr"		"Déclancheur"
+		"en"		"Trigger"
+	}
+	"Firework_Fuel"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Mode de propultion: {1}"
+		"en"		"Propulsion mode: {1}"
+	}
+	"Firework_Fuel_Up"
+	{
+		"fr"		"Vers le haut"
+		"en"		"To the top"
+	}
+	"Firework_Fuel_Realistic"
+	{
+		"fr"		"Réaliste"
+		"en"		"Realistic"
+	}
+	"Firework_Fuel_Random"
+	{
+		"fr"		"Aléatoire"
+		"en"		"Random"
+	}
+	"Firework_Fuel_FollowAim"
+	{
+		"fr"		"Suis le viseur"
+		"en"		"Follow the sight"
+	}
+	"Firework_Fuel_FollowPlayer"
+	{
+		"fr"		"Suis le joueur le plus proche"
+		"en"		"Follow the closest player"
+	}
+	
+	"Firework_Start"
+	{
+		"fr"		"Lancer les feux d'artifices"
+		"en"		"Launch the fireworks"
+	}
+	"Firework_Stop"
+	{
+		"fr"		"Exploser les feux d'artifices"
+		"en"		"Explode the fireworks"
+	}
+}

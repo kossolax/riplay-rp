@@ -59,7 +59,7 @@
       <span ng-show="item.Length">pour une durée de {{item.Length | fullDuration }}. <br /> Cette sanction sera levée à {{ (item.Length + item.StartTime) * 1000 | date: "HH'h'mm, le dd-MM-yy" }}.</span>
     <br />
       La raison de cette sanction est: <u><b>{{item.reason}}</b></u>.
-      <span ng-show="Params.sub==steamid">Vous pouvez contester en postant <a href="https://www.ts-x.eu/forum/posting.php?mode=post&f=56">ici</a>.</span>
+      <span ng-show="Params.sub==steamid">Vous pouvez contester en postant <a href="https://forum.riplay.fr/index.php?/topic/89-a-lire-avant-de-poster-demande-de-d%C3%A9bannissement/">ici</a>.</span>
     </td>
   </tr>
 

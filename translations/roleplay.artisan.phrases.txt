@@ -1,0 +1,207 @@
+"Phrases"
+{
+	"Artisan_Menu"
+	{
+		"#format"	"{1:t}"
+		"fr"	"L'artisanat: {1}"
+		"en"	"Craftsmanship: {1}"
+	}
+	"Artisan_Status"
+	{
+		"#format"	"{1:d},{2:d},{3:d}"
+		"fr"		"{1} / {2} réussi(s), {3} échec(s)"
+		"en"		"{1} / {2} success(es), {3} failure(s)"
+	}
+	"Artisan_Level"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Niveau: {1}"
+		"en"		"Level: {1}"
+	}
+	"Artisan_XP"
+	{
+		"#format"	"{1:s}{2:.1f}"
+		"fr"		"Expérience: {1} {2}%"
+		"en"		"Experience: {1} {2}%"
+	}
+	"Artisan_SLEEP"
+	{
+		"#format"	"{1:s}{2:.1f}"
+		"fr"		"Fatigue: {1} {2}%"
+		"en"		"Fatigue: {1} {2}%"
+	}
+	"Artisan_POINTS"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Point(s) de compétence: {1}"
+		"en"		"Point(s) of expertise: {1}"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Artisan_SpecA"
+	{
+		"fr"		"Vous avez la possibilité de choisir de maîtriser une spécialitée d'artisanat. Vous resterez capable de recycler et craft les objets classiques, mais pas ceux d'une maitrise."
+		"en"		"You have the option of choosing to master a crafting class. You will still be able to recycle and craft classic items, but not mastery items."		
+	}
+	"Artisan_SpecB"
+	{
+		"fr"		"Une fois votre spécialitée choisie, vous débloquerez une partie des nouveaux crafts. Ce choix est définitif et ne peut être changé. Vous devrez donc collaborer avec d'autres personnes maitrisant une autre spécialité pour obtenir l'objet final."
+		"en"		"Once you have chosen your class, you will unlock some new crafts. This choice is final and cannot be changed. You will therefore have to collaborate with other people mastering another class to obtain the final item."		
+	}
+	"Artisan_Confirm"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Attention, ce choix est définitif et ne peut être changé.\nÊtes vous sûre de vouloir être {1}?"
+		"en"		"Please note, this choice is final and cannot be changed. \nAre you sure you want to be  {1}?"		
+	}
+	"Artisan_Spec_1"
+	{
+		"fr"		"Forgeron"
+		"en"		"Blacksmith"		
+	}
+	"Artisan_Spec_2"
+	{
+		"fr"		"Ingénieur"
+		"en"		"Engineer"		
+	}
+	"Artisan_Spec_3"
+	{
+		"fr"		"Alchimiste"
+		"en"		"Alchemist"		
+	}
+	"Artisan_Change"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Vous êtes maintenant: {green}{1}{default}!"
+		"en"		"You are now: {green}{1}{default}!"		
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Artisan_Ask"
+	{
+		"fr"	"Demander à construire"
+		"en"	"Ask to build"
+	}
+	"Artisan_Ask_None"
+	{
+		"fr"	"Il n'y a {red}pas{default} d'artisan {red}spécialisé{default} disponible aux alentours."
+		"en"	"There is {red}no{default} skilled craftsman available."
+	}
+	"Artisan_Ask_Line"
+	{
+		"#format"	"{1:s},{2:d},{3:.0f}"
+		"fr"	"{1} - (lvl: {2}, fatigue: {3}%%)"
+		"en"	"{1} - (lvl: {2}, sleepness: {3}%%)"
+	}
+	"Artisan_Ask_Confirm"
+	{
+		"#format"	"{1:s},{2:d},{3:d},{4:s}"
+		"fr" "{1} vous propose {2}$\npour crafter {3}x {4}\nÊtes vous d'accord?"
+		"en" "{1} propose you {2}$\nto craft {3}x {4}\nDo you agree?"
+	}
+	"Artisan_Ask_Money"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Argent sur soi: {1}$"
+		"en"	"Money on your wallet: {1}$"
+	}
+	"Artisan_Build"
+	{
+		"fr"	"Construire"
+		"en"	"Build"
+	}
+	"Artisan_Build_All"
+	{
+		"#format"	"{1:d},{2:.1f}"
+		"fr"	"Tout construire ({1}) ({2}sec)"
+		"en"	"Build all ({1}) ({2}sec)"
+	}
+	"Artisan_Build_Count"
+	{
+		"#format"	"{1:d},{2:.1f}"
+		"fr"	"Construire {1} ({2}sec)"
+		"en"	"Build {1} ({2}sec)"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Artisan_Recycl"
+	{
+		"fr"	"Recycler"
+		"en"	"Recycle"
+	}
+	"Artisan_Recycl_None"
+	{
+		"fr"	"Vous n'avez {red}aucun{default} item à recycler."
+		"en"	"You have {red}no{default} items to recycle."
+	}
+	"Artisan_Recycl_All"
+	{
+		"#format"	"{1:d},{2:.1f}"
+		"fr"	"Tout recycler ({1}) ({2}sec)"
+		"en"	"Recycle all ({1}) ({2}sec)"
+	}
+	"Artisan_Recycl_Count"
+	{
+		"#format"	"{1:d},{2:.1f}"
+		"fr"	"Recycler {1} ({2}sec)"
+		"en"	"Recycle {1} ({2}sec)"
+	}
+	// ----------------------------------------------------------------------------------------------	
+	"Artisan_Learn"
+	{
+		"fr"	"Apprendre"
+		"en"	"Learn"
+	}
+	"Artisan_Learn_None"
+	{
+		"fr"	"Vous n'avez {red}aucun{default} point d'apprentissage. Pour en avoir vous pouvez gagner un {red}niveau d'artisanat{default} ou acheter et lire une {red}potion de sagesse{default}."
+		"en"	"You have {red}no{default} learning points. To get one you can earn a {red}craftsmanship level{default} or buy and read a {red}wisdom potion{default}."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Artisan_Books"
+	{
+		"fr"	"Livre des recettes"
+		"en"	"Recipe book"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Artisan_Infos"
+	{
+		"fr"	"Vos informations"
+		"en"	"Your information"
+	}
+	"Artisan_Infos_Bonus_XP"
+	{
+		"#format"	"{1:.1f}"
+		"fr"	"Bonus: +50% d'expérience: {1} minute(s)."
+		"en"	"Bonus: +50% experience: {1} minute(s)."
+	}
+	"Artisan_Infos_Bonus_SLEEP"
+	{
+		"#format"	"{1:.1f}"
+		"fr"	"Bonus: -50% de fatigue: {1} minute(s)."
+		"en"	"Bonus: -50% fatigue: {1} minute(s)."
+	}
+	"Artisan_Infos_Bonus_FOCUS"
+	{
+		"#format"	"{1:.1f}"
+		"fr"	"Bonus: +50% de concentration: {1} minute(s)."
+		"en"	"Bonus: +50% concentration: {1} minute(s)."
+	}
+	"Artisan_Infos_Bonus_SPEED"
+	{
+		"#format"	"{1:.1f}"
+		"fr"	"Bonus: +100% de vitesse: {1} minute(s)."
+		"en"	"Bonus: +100% speed: {1} minute(s)."
+	}
+	"Artisan_Infos_Bonus_LUCK"
+	{
+		"#format"	"{1:.1f}"
+		"fr"	"Bonus: +5% de chance: {1} minute(s)."
+		"en"	"Bonus: +5% luck: {1} minute(s)."
+	}
+	"Artisan_Infos_Bonus_STEAL"
+	{
+		"#format"	"{1:.1f}"
+		"fr"	"Protection vol d'inventaire: {1} minute(s)."
+		"en"	"Inventory theft protection: {1} minute(s)."
+	}
+	// ----------------------------------------------------------------------------------------------
+	
+}

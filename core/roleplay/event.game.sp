@@ -14,8 +14,6 @@
 //
 // On map started
 public void OnMapStart() {
-
-	CPrintToChatAll("" ...MOD_TAG... " Chargement de la config RP.");
 	PrintToServer("[TSX-RP] Chargement...");
 
 	char mapname[64];
@@ -38,7 +36,11 @@ public void OnMapStart() {
 	PrecacheSoundAny("weapons/hegrenade/explode5.wav");
 	PrecacheSoundAny("physics/glass/glass_impact_bullet4.wav");
 	PrecacheSoundAny("buttons/blip1.wav");
+	PrecacheSoundAny("doors/default_locked.wav");
+	PrecacheSoundAny("doors/latchunlocked1.wav");
+	
 	g_cSnow = PrecacheDecal("DeadlyDesire/maps/snow.vmt");
+	if( g_cSnow ) { }
 
 	char tmp[128];
 	for(int rand=0; rand<11; rand++) {
@@ -67,11 +69,12 @@ public void OnMapStart() {
 	PrecacheModel(MODEL_KNIFE);
 	PrecacheModel(MODEL_GRAVE);
 	PrecacheModel("models/props/cs_office/plant01_gib1.mdl");
+	PrecacheModel("models/props_street/mail_dropbox.mdl");
 	//
 	ServerCommand("mp_teamname_1 \"Police\"");
 	ServerCommand("mp_teamname_2 \"Civil\"");
 
-	CPrintToChatAll("" ...MOD_TAG... " Config chargée avec succès.");
+	CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_Reload", LANG_SERVER);
 	PrintToServer("--------------------------------------------------------------");
 	PrintToServer("");
 	PrintToServer("			Counter-Strike Source: RolePlay");
@@ -120,6 +123,9 @@ public Action PostLoading(Handle timer, any zomg) {
 
 	if( g_iHours >= 18 || g_iHours < 6 ) {
 		ServerCommand("sm_effect_time night 1.0");
+	}
+	else {
+		ServerCommand("sm_effect_time day 1.0");
 	}
 	
 	AddServerTag("roleplay");
@@ -182,7 +188,7 @@ public void OnEntityDestroyed(int entity) {
 					int active = Client_GetActiveWeapon(player);
 					
 					float vec[3], rnd[3];
-					char name[65];
+					char name[BM_WeaponNameSize];
 					int[] data = new int[view_as<int>(BM_Max)];
 					DataPackPos max = rp_WeaponMenu_GetMax(g_iCustomBank[entity]);
 					DataPackPos position = rp_WeaponMenu_GetPosition(g_iCustomBank[entity]);
@@ -192,7 +198,7 @@ public void OnEntityDestroyed(int entity) {
 					while( position < max ) {
 						rp_WeaponMenu_Get(g_iCustomBank[entity], position, name, data);
 						
-						if( g_iEntityCount < 2000 ) {
+						if( g_iEntityCount < 2000 && data[BM_Prix] > 0 ) {
 							Format(name, sizeof(name), "weapon_%s", name);
 							
 							rnd[0] = Math_GetRandomFloat(-250.0, 250.0);
@@ -209,10 +215,8 @@ public void OnEntityDestroyed(int entity) {
 							
 							rp_SetWeaponBallType(wepid, view_as<enum_ball_type>(data[BM_Type]));
 							
-							if( data[BM_Munition] != -1 ) {
-								Weapon_SetPrimaryClip(wepid, data[BM_Munition]);
-								Weapon_SetPrimaryAmmoCount(wepid, data[BM_Chargeur]);
-							}
+							SetEntProp(wepid, Prop_Send, "m_iClip1", data[BM_Munition]);
+							SetEntProp(wepid, Prop_Send, "m_iPrimaryReserveAmmoCount", data[BM_Chargeur]);
 						}
 						position = rp_WeaponMenu_GetPosition(g_iCustomBank[entity]);
 					}
@@ -235,7 +239,6 @@ public void OnEntityDestroyed(int entity) {
 	if( entity > 0 ) {
 		g_iEntityCount--;
 		g_iWeaponsGroup[entity] = 0;
-		rp_SetBuildingData(entity, BD_owner, 0);
 		g_iWeapons[entity] = 0;
 		g_iWeaponStolen[entity] = 0;
 		g_iWeaponFromStore[entity] = 0;
@@ -246,10 +249,12 @@ public void OnEntityCreated(int entity, const char[] classname)  {
 		return;
 	
 	g_iOriginOwner[entity] = -1;
+	g_flWeaponFireRate[entity] = 0.0;
+	g_bWeaponFireRate[entity] = false;
 	g_iEntityCount++;
 	
-	if( StrEqual(classname, "smokegrenade_projectile") || StrEqual(classname, "flashbang_projectile") ) {
-		SDKHook(entity, SDKHook_Think, THINK_Grenade);
+	if( StrEqual(classname, "smokegrenade_projectile") || StrEqual(classname, "flashbang_projectile") || StrEqual(classname, "hegrenade_projectile") || StrEqual(classname, "flashbang_projectile") ) {
+		RequestFrame(CB_Nade, EntIndexToEntRef(entity));
 	}
 	
 	strcopy(g_szEntityName[entity], sizeof(g_szEntityName[]), classname);
@@ -257,16 +262,32 @@ public void OnEntityCreated(int entity, const char[] classname)  {
 	g_iWeaponsBallType[entity] = ball_type_none;
 	g_iWeaponFromStore[entity] = 0;
 	rp_SetBuildingData(entity, BD_Trapped, 0);
+	rp_SetBuildingData(entity, BD_owner, 0);
 	//g_iWeaponsBallType
 }
+public void CB_Nade(any ref) {
+	char classname[128];
+	int entity = EntRefToEntIndex(ref);
+	if( IsValidEdict(entity) && IsValidEntity(entity) ) {
+		GetEdictClassname(entity, classname, sizeof(classname));
+		
+		if( StrEqual(classname, "smokegrenade_projectile") || StrEqual(classname, "flashbang_projectile") || StrEqual(classname, "hegrenade_projectile") || StrEqual(classname, "flashbang_projectile") ) {
+			if( rp_GetZoneBit(rp_GetPlayerZone(entity)) & BITZONE_PEACEFULL ) {
+				AcceptEntityInput(entity, "Kill");
+			}
+			else {
+				Entity_SetSolidType(entity, SOLID_VPHYSICS);
+				Entity_SetSolidFlags(entity, FSOLID_TRIGGER );
+				Entity_SetCollisionGroup(entity, COLLISION_GROUP_PLAYER);
+				
+				SDKHook(entity, SDKHook_Think, THINK_Grenade);
+			}
+		}
+	}
+}
 public void THINK_Grenade(int entity) {
-	if( StrEqual(g_szEntityName[entity], "smokegrenade_projectile") || StrEqual(g_szEntityName[entity], "flashbang_projectile") ) {
-		if( rp_GetZoneBit(rp_GetPlayerZone(entity)) & BITZONE_PEACEFULL ) 
-			rp_AcceptEntityInput(entity, "Kill");
-	}
-	else {
-		SDKUnhook(entity, SDKHook_Think, THINK_Grenade);
-	}
+	if( rp_GetZoneBit(rp_GetPlayerZone(entity)) & BITZONE_PEACEFULL ) 
+		rp_AcceptEntityInput(entity, "Kill");
 }
 public Action EventRoundEnd(Handle ev, const char[] name, bool  bd) {
 	OnRoundEnd();
@@ -280,33 +301,35 @@ public Action EventRoundStart(Handle ev, const char[] name, bool  bd) {
 }
 
 public Action GameLogHook(const char[] message) {
-	static char log[2048], arg[64];
+	static char log[2048], arg[64], tmp[128];
+	static Handle rgxKill;
+	static Handle rgxProp;
+	if( rgxKill == INVALID_HANDLE )
+ 		rgxKill = CompileRegex("\".*<([0-9]{1,5})><(?:STEAM_1:[0-1]:[0-9]{1,14})><(?:TERRORIST|CT)>\" \\[(-?[0-9]* -?[0-9]* -?[0-9]*)\\] killed \".*<([0-9]{1,5})><(?:STEAM_1:[0-1]:[0-9]{1,14})><(?:TERRORIST|CT)>\" \\[(-?[0-9]* -?[0-9]* -?[0-9]*)\\] with .*\"");
+
+	if( rgxProp == INVALID_HANDLE )
+ 		rgxProp = CompileRegex("\".*<([0-9]{1,5})><(?:STEAM_1:[0-1]:[0-9]{1,14})><(?:TERRORIST|CT)>\" \\[(-?[0-9]* -?[0-9]* -?[0-9]*)\\] killed other \".*<([0-9]{1,5})>\" \\[(-?[0-9]* -?[0-9]* -?[0-9]*)\\] with .*\"");
 	
-	static Handle regex;
-	if( regex == INVALID_HANDLE )
- 		regex = CompileRegex("\".*<([0-9]{1,5})><(?:STEAM_1:[0-1]:[0-9]{1,14})><(?:TERRORIST|CT)>\" \\[(-?[0-9]* -?[0-9]* -?[0-9]*)\\] killed \".*<([0-9]{1,5})><(?:STEAM_1:[0-1]:[0-9]{1,14})><(?:TERRORIST|CT)>\" \\[(-?[0-9]* -?[0-9]* -?[0-9]*)\\] with .*\"");
-	
-	int amount = MatchRegex(regex, message);
-		
+	int amount;
+	amount = MatchRegex(rgxKill, message);
 	if( amount > 0 ) {
 		strcopy(log, sizeof(log), message);
 		
-		GetRegexSubString(regex, 1, arg, sizeof(arg));
+		GetRegexSubString(rgxKill, 1, arg, sizeof(arg));
 		int client = GetClientOfUserId(StringToInt(arg));
 				
-		GetRegexSubString(regex, 3, arg, sizeof(arg));
+		GetRegexSubString(rgxKill, 3, arg, sizeof(arg));
 		int target = GetClientOfUserId(StringToInt(arg));
 		
 		if( IsValidClient(client) && IsValidClient(target) ) {
-			GetRegexSubString(regex, 2, arg, sizeof(arg));
+			GetRegexSubString(rgxKill, 2, arg, sizeof(arg));
 			ReplaceStringEx(log, sizeof(log), arg, g_szZoneList[GetPlayerZone(client)][zone_type_name]);
 			
-			GetRegexSubString(regex, 4, arg, sizeof(arg));
+			GetRegexSubString(rgxKill, 4, arg, sizeof(arg));
 			ReplaceStringEx(log, sizeof(log), arg, g_szZoneList[GetPlayerZone(target)][zone_type_name]);
 
 			if( IsInPVP(client) || IsInPVP(target) || g_iHideNextLog[client][target] == 1 ) {
 				g_iHideNextLog[client][target] = 0;
-				PrintToConsole(client, "Votre meurtre sur %L a été retiré des logs", target);
 				LogToGame("[HIDDEN] %L -> %L", client, target);
 				return Plugin_Handled;
 			}
@@ -318,10 +341,52 @@ public Action GameLogHook(const char[] message) {
 			
 			LogToGame(log);
 			return Plugin_Handled;
+		}
+		
+		return Plugin_Continue;
+	}
+	amount = MatchRegex(rgxProp, message);
+	if( amount > 0 ) {
+		strcopy(log, sizeof(log), message);
+		
+		GetRegexSubString(rgxProp, 1, arg, sizeof(arg));
+		int client = GetClientOfUserId(StringToInt(arg));
+				
+		GetRegexSubString(rgxProp, 3, arg, sizeof(arg));
+		int target = StringToInt(arg);
+		
+		if( target > 0 && target <= 2048 ) {
+			target = rp_GetBuildingData(target, BD_owner);
+		}
+		
+		if( IsValidClient(client) && IsValidClient(target) ) {
+			GetRegexSubString(rgxProp, 2, arg, sizeof(arg));
+			ReplaceStringEx(log, sizeof(log), arg, g_szZoneList[GetPlayerZone(client)][zone_type_name]);
+			
+			float pos[3];
+			char zone[3][12];
+			GetRegexSubString(rgxProp, 4, arg, sizeof(arg));
+			ExplodeString(arg, " ", zone, sizeof(zone), sizeof(zone[]));
+			pos[0] = StringToFloat(zone[0]);
+			pos[1] = StringToFloat(zone[1]);
+			pos[2] = StringToFloat(zone[2]);
+			ReplaceStringEx(log, sizeof(log), arg, g_szZoneList[ GetPointZone(pos) ][zone_type_name]);
+			
+			GetRegexSubString(rgxProp, 3, arg, sizeof(arg));
+
+			GetClientAuthId(target, AuthId_Engine, tmp, sizeof(tmp));
+			Format(tmp, sizeof(tmp), " of %N\"<%d><%s><>", target, GetClientUserId(target), tmp);
+			Format(arg, sizeof(arg), "<%s>\"", arg);
+			ReplaceStringEx(log, sizeof(log), arg, tmp);
+
+			LogToGame(log);
+			return Plugin_Handled;
 
 		}
+		return Plugin_Continue;
 	}
-	else if( StrContains(message, ">\" triggered \"clantag\" (value \"") > 0 ) {
+	
+	if( StrContains(message, ">\" triggered \"clantag\" (value \"") > 0 ) {
 		return Plugin_Handled;
 	}
 	
@@ -333,21 +398,19 @@ public void OnCvarChange(Handle cvar, const char[] oldVal, const char[] newVal) 
 		g_iEntityLimit = StringToInt(newVal);
 	}
 	else if( cvar == g_hCapturable ) {
-		if( StrEqual(oldVal, "none") && StrEqual(newVal, "active") )
+		if( StrEqual(oldVal, "0") && StrEqual(newVal, "1") )
 			g_bIsInCaptureMode = true;
-		else if( StrEqual(oldVal, "active") && StrEqual(newVal, "none") )
+		else if( StrEqual(oldVal, "1") && StrEqual(newVal, "0") )
 			g_bIsInCaptureMode = false;
 	}
 	else if( cvar == g_hAllowDamage ) {
 		g_flVehicleDamage = StringToFloat(newVal);
 	}
 	else if( cvar == g_hEVENT_HIDE ) {
-		if( StrEqual(oldVal, "0") && StrEqual(newVal, "1") ) {
-			EVENT_HIDE = 1;
-		}
-		else if( StrEqual(oldVal, "1") && StrEqual(newVal, "0") ){
-			EVENT_HIDE = 0;
-		}
+		EVENT_HIDE = StringToInt(newVal);
+	}
+	else if( cvar == g_hEVENT_3RD ) {
+		EVENT_3RD = StringToInt(newVal);
 	}
 }
 

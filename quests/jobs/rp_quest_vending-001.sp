@@ -40,7 +40,7 @@ float g_flLocation[5][3] =  {
 	{ -130.6, 1330.9, -2096.4 }, 
 	{ -1097.0, 848.2, -2091.1 }, 
 	{ -7707.3, 2030.2, -2335.9 }, 
-	{ -8712.8, -7291.5, -1207.9 }, 
+	{ -2366.1, -3920.5, -2015.9 }, 
 	{ 2058.3, -2652.2, -979.7 }
 };
 
@@ -64,18 +64,13 @@ public void OnAllPluginsLoaded() {
 }
 // ----------------------------------------------------------------------------
 public bool fwdCanStart(int client) {
-	int jobList[] =  { 11, 21, 31, 51, 61, 71, 81, 111, 121, 131, 171, 181, 191, 211, 221 };
+	int jobList[] =  { 11, 21, 31, 41, 51, 61, 71, 81, 111, 121, 131, 171, 181, 191, 211, 221 };
 	int job = rp_GetClientJobID(client);
 	
 	for (int i = 0; i < sizeof(jobList); i++) {
 		if( jobList[i] == job )
 			return true;
 	}
-	
-	char steamid[32];
-	GetClientAuthId(client, AUTH_TYPE, steamid, sizeof(steamid));
-	if( StrEqual(steamid, "STEAM_1:1:1756644") )
-		return true;
 	
 	return false;
 }
@@ -190,7 +185,7 @@ public void Q3_End(int objectiveID, int client) {
 	menu.SetTitle("Quète: %s", QUEST_NAME);
 	menu.AddItem("", "Interlocuteur anonyme :", ITEMDRAW_DISABLED);
 	menu.AddItem("", "Je te remercie pour ta rapidité d'action", ITEMDRAW_DISABLED);
-	menu.AddItem("", "voila un petit cadeaux : [PvP] AK-47.", ITEMDRAW_DISABLED);
+	menu.AddItem("", "voilà un petit cadeau : [PvP] AK-47.", ITEMDRAW_DISABLED);
 	
 	menu.ExitButton = false;
 	menu.Display(client, 30);

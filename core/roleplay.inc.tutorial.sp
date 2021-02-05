@@ -36,8 +36,9 @@ void DisplayTutorial(int client) {
 	}
 }
 stock bool IsTutorialOver(int client) {
-	if( g_iUserData[client][i_Tutorial] > 11 ) {
+	if( IsFakeClient(client) )
 		return true;
-	}
+	if( g_iUserData[client][i_Tutorial] > 11 )
+		return true;
 	return false;
 }

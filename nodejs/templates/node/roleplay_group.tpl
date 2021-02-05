@@ -14,7 +14,7 @@
       <table width="100%" class="table-hover table-condensed">
         <tr>
           <th class="pull-right">Joueurs:</th>
-          <th class="text-center" ng-class="(players.length-10)>=-2 ? 'text-success' : (players.length-10)>=-4 ? 'text-warning' : 'text-danger'">{{players.length}} / 10</th>
+          <th class="text-center" ng-class="(players.length-6)>=-2 ? 'text-success' : (players.length-6)>=-4 ? 'text-warning' : 'text-danger'">{{players.length}} / 6</th>
           <th>Rangs:</th>
           <th>Points:</th>
         </tr>
@@ -25,7 +25,7 @@
             <a ng-show="$parent.isAdmin" style="cursor:pointer;" data-ng-click="$parent.steamid = player.steamid; $parent.updateSteamID(); $parent.toggleModal();">{{player.name}} <i class="fa fa-wrench"></i></a>
             <span ng-hide="$parent.isAdmin">{{player.name}}</span>
           </td>
-          <td>{{player.point}}</td>
+          <td>{{player.points}}</td>
         </tr>
         <tr ng-show="isAdmin">
           <td></td><td></td>

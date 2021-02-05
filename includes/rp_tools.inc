@@ -15,8 +15,234 @@
 
 #include <sdkhooks>
 #include <cstrike>
+#include <csgo_items>
 
-bool rp_AcceptEntityInput(int dest, const char[] input, int activator=-1, int caller=-1, int outputid=0) {
+stock bool Weapon_IsMelee(int wep) {
+	char classname[64];
+	GetEdictClassname(wep, classname, sizeof(classname));
+	
+	if( StrContains(classname, "weapon_knife") == 0 )
+		return true;
+	if( StrContains(classname, "weapon_melee") == 0 )
+		return true;
+	if( StrContains(classname, "weapon_fists") == 0 )
+		return true;
+	if( StrContains(classname, "weapon_zeus") == 0 || StrContains(classname, "weapon_taser") == 0 )
+		return true;
+	
+	return false;
+}
+stock int rp_GetClientEntity(int client) {
+	
+	int source = GetEntPropEnt(client, Prop_Send, "m_hVehicle");
+	if( source <= 0 )
+		source = rp_GetClientVehiclePassager(client);
+	if( source <= 0 )
+		source = Entity_GetParent(client);
+	if( source <= 0 )
+		source = client;
+	
+	return source;
+}
+stock bool Entity_CanBeBreak(int entity, int client) {
+	char tmp[128];
+	
+	if( IsValidClient(client) ) {
+		if( rp_GetClientJobID(client) == 91 )
+			return false;
+		
+		if( rp_GetZoneBit(rp_GetPlayerZone(entity)) & BITZONE_PERQUIZ )
+			return false;
+	}
+
+	return true;
+}
+stock float Math_Lerp(float a, float b, float n) {
+	return (1 - n) * a + n * b;
+}
+
+stock void String_TimeFormat(int time, char[] str, int len, bool full = true) {
+	str[0] = 0;
+	int t, d, s;
+	t = time;
+	
+	
+	s = 60 * 60;
+	if( t >= s ) {
+		d = t / s;
+		Format(str, len, "%s%d heure%s", str, d, d > 1 ? "s" : "");
+		t -= (d * s);
+		
+		if( !full ) return;
+		if( t > 0 ) Format(str, len, "%s, ", str);
+	}
+	
+	s = 60;
+	if( t >= s) {
+		d = t / s;
+		Format(str, len, "%s%d minute%s", str, d, d > 1 ? "s" : "");
+		t -= (d * s);
+		
+		if( !full ) return;
+		if( t > 0 ) Format(str, len, "%s et ", str);
+	}
+	
+	s = 1;
+	if( t >= s ) {
+		d = t / s;
+		Format(str, len, "%s%d seconde%s", str, d, d > 1 ? "s" : "");
+		t -= (d * s);
+	}
+}
+stock int rp_GetZoneByType(const char[] zoneType) {
+	static float lastCheck;
+	static StringMap zoneMap = null;
+	static char zone[64];
+	
+	if(zoneMap == null)
+		zoneMap = new StringMap();
+
+	int zoneID = -1;
+	if(lastCheck > GetGameTime() && zoneMap.GetValue(zoneType, zoneID))
+		return zoneID;
+	
+	for (int j = 1; j < MAX_ZONES; j++) {
+		rp_GetZoneData(j, zone_type_type, zone, sizeof(zone));
+		
+		if (!StrEqual(zone, zoneType))
+			continue;
+		
+		zoneID = j;
+		break;
+	}
+	
+	zoneMap.SetValue(zoneType, zoneID);
+	lastCheck = GetGameTime() + 30.0;
+	return zoneID;
+}
+stock void rp_CANCEL_AUTO_ITEM(int client, int vendeur, int item_id) {
+	float prix = float(rp_GetItemInt(item_id, item_type_prix));
+	float reduc = prix / 100.0 * float(rp_GetClientInt(vendeur, i_Reduction));
+	float taxe = rp_GetItemFloat(item_id, item_type_taxes);
+	int jobID = rp_GetClientJobID(vendeur);
+	
+	PrintToConsole(client, "DEBUG pour kosso: prix: %f reduc: %f taxe: %f", prix, reduc, taxe);
+	PrintToConsole(client, "DEBUG pour kosso: argent à prendre au vendeur %N: %d", vendeur, -RoundFloat((prix * taxe) - reduc));
+	PrintToConsole(client, "DEBUG pour kosso: argent rendre au client %N: %d", client, RoundFloat(prix - reduc));
+	
+	rp_ClientMoney(vendeur, i_AddToPay, -RoundFloat((prix * taxe) - reduc));
+	rp_ClientMoney(client, i_Bank, RoundFloat(prix - reduc));
+	rp_SetJobCapital(jobID, rp_GetJobCapital(jobID) - RoundFloat(prix * (1.0 - taxe)));
+	
+	rp_SetClientStat(vendeur, i_MoneyEarned_Sales, rp_GetClientStat(vendeur, i_MoneyEarned_Sales) - RoundFloat((prix * taxe) - reduc));
+}
+
+stock int rp_GetTargetHull(int client, float hit[3], float size=8.0) {
+	float src[3], ang[3], dst[3], min[3], max[3];
+	
+	GetClientEyePosition(client, src);
+	GetClientEyeAngles(client, ang);
+	GetAngleVectors(ang, dst, NULL_VECTOR, NULL_VECTOR);
+	ScaleVector(dst, 10000.0);
+	AddVectors(src, dst, dst);
+	
+	for (int i = 0; i < 3; i++) {
+		min[i] = -8.0;
+		max[i] =  8.0;
+	}
+	
+	int target;
+	Handle trace = TR_TraceHullFilterEx(src, dst, min, max, MASK_SHOT, FilterToOne, client);
+
+	if (TR_DidHit(trace)) {
+		TR_GetEndPosition(hit, trace);
+		target = TR_GetEntityIndex(trace);
+
+		if (GetVectorDistance(src, hit) > size+0.01) {
+			target = -1;
+		}
+	}
+	
+	CloseHandle(trace);
+	
+	return target;
+}
+// -----------------------------------------------------------------------------------------------------------------
+bool rp_IsInBunkerArea(int client) {
+	if( rp_GetClientBool(client, b_IsAFK) )
+		return false;
+	
+	int zone = rp_GetPlayerZone(client);
+	if( zone >= BUNKER_ZONE_MIN && zone <= BUNKER_ZONE_MAX )
+		return true;
+	if( zone == METRO_BELMON || zone == METRO_BELMON-1 )
+		return true;	
+	if( zone == 261 || zone == 315 ) // Route victoire & "rue du bunker"
+		return true;
+	
+	return false;
+}
+stock bool rp_IsClientSafe(int client, bool withAFK=true) {
+	if( client <= 0 )
+		return false;
+	
+	if( rp_IsClientNew(client) )
+		return true;
+	if( withAFK && rp_GetClientBool(client, b_IsAFK) )
+		return true;
+	if( withAFK && rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_EVENT && !(rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_LACOURS) )
+		return true;
+	if( GetConVarInt(FindConVar("rp_capture")) == 1 && rp_IsInBunkerArea(client) )
+		return true;
+	
+	return false;
+}
+stock void GetClientName2(int client, char[] str, int length, bool hideColor=true) {
+	
+	GetClientName(client, str, length);
+	if( hideColor || !rp_GetClientBool(client, b_Crayon) ) {
+		CRemoveTags(str, length);
+	}
+	else {
+		Format(str, length, "%s{default}", str);
+	}
+	
+	if( StrContains(str, "{green}", false) > 0 && (StrContains(str, "VIP") > 0 || StrContains(str, "ADMIN") > 0) ) {
+		if( StrContains(str, "{green}", false) < StrContains(str, "VIP") )
+			ReplaceString(str, length, "VIP", "");
+		if( StrContains(str, "{green}", false) < StrContains(str, "ADMIN") )
+			ReplaceString(str, length, "ADMIN", "");
+	}
+}
+
+stock float rp_GetDistance(int client, int id) {
+	int source, target;
+	
+	if( client > 0 && client <= MaxClients ) {
+		source = GetEntPropEnt(client, Prop_Send, "m_hVehicle");
+		if( source <= 0 )
+			source = rp_GetClientVehiclePassager(client);
+		if( source <= 0 )
+			source = Entity_GetParent(client);
+	}
+	
+	if( id > 0 && id <= MaxClients ) {
+		target = GetEntPropEnt(id, Prop_Send, "m_hVehicle");
+		if( target <= 0 )
+			target = rp_GetClientVehiclePassager(id);
+		if( target <= 0 )
+			target = Entity_GetParent(id);
+	}
+	
+	if( source <= 0 )
+		source = client;
+	if( target <= 0 )
+		target = id;
+	
+	return Entity_GetDistance(source, target);
+}
+
+stock bool rp_AcceptEntityInput(int dest, const char[] input, int activator=-1, int caller=-1, int outputid=0) {
 	static char tmp[64];
 	if( dest > 0 && IsValidEdict(dest) && IsValidEntity(dest) ) {
 		GetEdictClassname(dest, tmp, sizeof(tmp));
@@ -27,15 +253,6 @@ bool rp_AcceptEntityInput(int dest, const char[] input, int activator=-1, int ca
 	}
 }
 // ----------------------------------------------------------------------------
-stock bool Weapon_ShouldBeEquip(const char[] weapon) {
-	if( StrContains(weapon, "weapon_knife") == 0 || StrEqual(weapon, "weapon_bayonet") || StrEqual(weapon, "weapon_taser") ) // TODO: Add missing
-		return true;
-	
-	if( StrEqual(weapon, "weapon_fists") || StrEqual(weapon, "weapon_axe") || StrEqual(weapon, "weapon_hammer") || StrEqual(weapon, "weapon_spanner") || StrEqual(weapon, "weapon_shield") )
-		return true;
-	
-	return false;
-}
 stock int Math_GetRandomPow(int min, int max) {
 	return RoundToFloor(float(max - min) * Pow(GetURandomFloat(), 2.0)) + min;
 }
@@ -148,6 +365,9 @@ stock void String_NumberFormat(int value, char[] buffer, int size) {
 	}
 }
 stock void String_ColorsToHTML(char[] text, int length) {
+	ReplaceString(text, length, "<", "");
+	ReplaceString(text, length, ">", "");
+	
 	ReplaceString(text, length, "{darkred}", "<font color='#bb0000'>");
 	ReplaceString(text, length, "{red}", "<font color='#ff0000'>");
 	ReplaceString(text, length, "{pink}", "<font color='#ffc0cc'>");
@@ -168,28 +388,26 @@ stock void FormatDate(int date, char[] buffer, int maxlen) {
 }
 
 stock int DateToTimestamp(const char[] szDate) {
-    char szBuffer[64];
-    strcopy( szBuffer, sizeof( szBuffer ), szDate );
-    
-	LogToFile("bf.txt", "date: (%s)", szDate);
+	char szBuffer[64];
+	strcopy( szBuffer, sizeof( szBuffer ), szDate );
 
-    ReplaceString(szBuffer, sizeof(szBuffer), " ", "");
-    
-    char szTime[6][32];
-    ExplodeString(szBuffer, "/", szTime, sizeof(szTime), sizeof(szTime[]));
+	ReplaceString(szBuffer, sizeof(szBuffer), " ", "");
 
-    int day = StringToInt(szTime[0]);
-    int month  = StringToInt(szTime[1]);
-    int year = StringToInt(szTime[2]);
-	int min = StringToInt(szTime[3]);
-	int hour =  StringToInt(szTime[4]);
+	char szTime[6][32];
+	ExplodeString(szBuffer, "/", szTime, sizeof(szTime), sizeof(szTime[]));
+
+	int day = StringToInt(szTime[0]);
+	int month  = StringToInt(szTime[1]);
+	int year = StringToInt(szTime[2]);
+	int hour =  StringToInt(szTime[3]);
+	int min = StringToInt(szTime[4]);
 	int sec =  StringToInt(szTime[5]);
 
-    return TimeToUnix(year, month, day, hour, min, sec, UT_TIMEZONE_SERVER);
+	return TimeToUnix(year, month, day, hour, min, sec, UT_TIMEZONE_SERVER);
 }
 // ----------------------------------------------------------------------------
 stock void PrintToChatClientArea(int client, const char[] message, any...) {
-	char buffer[250];
+	char buffer[MAX_MESSAGE_LENGTH];
 	VFormat(buffer, sizeof(buffer), message, 3);
 	
 	for (int i = 1; i <= MaxClients; i++) {
@@ -199,7 +417,7 @@ stock void PrintToChatClientArea(int client, const char[] message, any...) {
 			continue;
 		
 		if (rp_IsTargetHear(i, client)) {
-			CPrintToChat(i, "" ...MOD_TAG... " %s", buffer);
+			CPrintToChat(i, buffer);
 		}
 	}
 }
@@ -214,21 +432,35 @@ stock void PrintToChatZone(int zoneID, const char[] message, any...) {
 			continue;
 		
 		if (rp_GetPlayerZone(i) == zoneID) {
-			CPrintToChat(i, "" ...MOD_TAG... " %s", buffer);
+			CPrintToChat(i, buffer);
 		}
 	}
 }
-stock void PrintToChatPoliceSearch(int target, const char[] message, any...) {
+stock void PrintToChatPoliceZone(int zone, const char[] message, any...) {
 	char buffer[MAX_MESSAGE_LENGTH];
+	char tmp[128];
 	VFormat(buffer, sizeof(buffer), message, 3);
 	
-	for (int i = 1; i <= MaxClients; i++) {
-		if (!IsValidClient(i))
-			continue;
-		
-		if (i == target || rp_GetClientJobID(i) == 1 || rp_GetClientJobID(i) == 101) {
-			CPrintToChat(i, buffer);
+	
+	int jobID = rp_GetZoneInt(zone, zone_type_type);
+	if( jobID > 0 ) {
+		PrintToChatPoliceJob(jobID, buffer);
+		return;
+	}
+
+	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	if( StrContains(tmp, "appart_") == 0 ) {
+		ReplaceString(tmp, sizeof(tmp), "appart_", "");
+		int appartID = StringToInt(tmp);
+		if( appartID > 0 ) {
+			PrintToChatPoliceAppart(appartID, buffer);
+			return;
 		}
+	}
+	
+	if( StrContains(tmp, "bunker") == 0 ) {
+		PrintToChatPoliceGroup(rp_GetCaptureInt(cap_bunker), buffer);
+		return;
 	}
 }
 stock void PrintToChatPoliceJob(int target, const char[] message, any...) {
@@ -242,6 +474,38 @@ stock void PrintToChatPoliceJob(int target, const char[] message, any...) {
 			continue;
 		
 		if (rp_GetClientJobID(i) == 1 || rp_GetClientJobID(i) == 101 || rp_GetClientJobID(i) == target) {
+			CPrintToChat(i, buffer);
+		}
+	}
+}
+stock void PrintToChatPoliceAppart(int target, const char[] message, any...) {
+	char buffer[MAX_MESSAGE_LENGTH];
+	VFormat(buffer, sizeof(buffer), message, 3);
+	
+	for (int i = 1; i <= MaxClients; i++) {
+		if (!IsValidClient(i))
+			continue;
+		if (!IsPlayerAlive(i))
+			continue;
+		
+		
+		if (rp_GetClientJobID(i) == 1 || rp_GetClientJobID(i) == 101 || rp_GetClientKeyAppartement(i, target) ) {
+			CPrintToChat(i, buffer);
+		}
+	}
+}
+stock void PrintToChatPoliceGroup(int target, const char[] message, any...) {
+	char buffer[MAX_MESSAGE_LENGTH];
+	VFormat(buffer, sizeof(buffer), message, 3);
+	
+	for (int i = 1; i <= MaxClients; i++) {
+		if (!IsValidClient(i))
+			continue;
+		if (!IsPlayerAlive(i))
+			continue;
+		
+		
+		if (rp_GetClientJobID(i) == 1 || rp_GetClientJobID(i) == 101 || rp_GetClientGroupID(i) == target ) {
 			CPrintToChat(i, buffer);
 		}
 	}
@@ -326,9 +590,6 @@ stock int rp_GetServerInt(rp_serv typeID) {
 }
 
 stock bool rp_IsRemoveAble(int target) {
-	#if defined DEBUG
-	PrintToServer("IsRemoveAble");
-	#endif
 	if (!IsValidEdict(target))
 		return false;
 	if (!IsValidEntity(target))
@@ -361,10 +622,22 @@ stock bool rp_IsRemoveAble(int target) {
 	if (StrEqual(classname, "rp_plant")) {
 		return true;
 	}
+	if (StrEqual(classname, "rp_props")) {
+		return true;
+	}
 	if (StrContains(classname, "prop_physics") == 0) {
 		return true;
 	}
 	if (StrEqual(classname, "rp_grave")) {
+		return true;
+	}
+	if (StrEqual(classname, "rp_table")) {
+		return true;
+	}
+	if (StrEqual(classname, "rp_bank") && rp_GetBuildingData(target, BD_owner) > 0 ) {
+		return true;
+	}
+	if (StrEqual(classname, "rp_sentry")) {
 		return true;
 	}
 	
@@ -401,6 +674,8 @@ stock bool rp_IsMoveAble(int ent) {
 	if (StrContains(classname, "player", false) == 0)
 		return true;
 	if (StrContains(classname, "prop_p", false) == 0)
+		return true;
+	if (StrContains(classname, "rp_props", false) == 0)
 		return true;
 	if (StrContains(classname, "func_phys", false) == 0)
 		return true;
@@ -457,6 +732,10 @@ public Action rp_ClientRemoveProp(int client, int target, int item_id) {
 				if (IsValidClient(owner)) {
 					CPrintToChat(client, "" ...MOD_TAG... " Vous avez detruit la machine de %N", owner);
 					CPrintToChat(owner, "" ...MOD_TAG... " Une de vos machines a faux billet a été detruite.");
+					
+					if( client != owner ) {
+						rp_ClientAggroIncrement(client, owner, 1000);
+					}
 				}
 				
 			}
@@ -466,6 +745,10 @@ public Action rp_ClientRemoveProp(int client, int target, int item_id) {
 				if (IsValidClient(owner)) {
 					CPrintToChat(client, "" ...MOD_TAG... " Vous avez detruit la grosse machine de %N", owner);
 					CPrintToChat(owner, "" ...MOD_TAG... " Votre grosse machine a faux billet a été detruite.");
+					
+					if( client != owner ) {
+						rp_ClientAggroIncrement(client, owner, 1000);
+					}
 				}
 			}
 			else if (StrEqual(name, "rp_plant")) {
@@ -473,6 +756,8 @@ public Action rp_ClientRemoveProp(int client, int target, int item_id) {
 				if (IsValidClient(owner) && owner != client) {
 					CPrintToChat(client, "" ...MOD_TAG... " Vous avez detruit un plant de drogue de %N", owner);
 					CPrintToChat(owner, "" ...MOD_TAG... " Une de vos plantations a été detruite.");
+					
+					rp_ClientAggroIncrement(client, owner, 1000);
 				}
 				else if (owner == client && rp_GetBuildingData(target, BD_FromBuild) == 0) {
 					int sub = rp_GetBuildingData(target, BD_item_id);
@@ -498,6 +783,7 @@ public Action rp_ClientRemoveProp(int client, int target, int item_id) {
 					else {
 						// DealDamage(target, 1000, client);
 						SDKHooks_TakeDamage(target, client, client, 1000.0);
+						rp_ClientAggroIncrement(client, owner, 1000);
 					}
 				}
 				else {
@@ -505,18 +791,24 @@ public Action rp_ClientRemoveProp(int client, int target, int item_id) {
 					CPrintToChat(client, "" ...MOD_TAG... " Le props a été supprime.");
 				}
 			}
+			else if (StrContains(name, "rp_sentry") == 0) {
+				SDKHooks_TakeDamage(target, client, client, 10000.0);
+			}
 			else {
 				rp_AcceptEntityInput(target, "Kill");
 				CPrintToChat(client, "" ...MOD_TAG... " Le props a été supprime.");
 			}
 		}
 		else if (rp_IsValidVehicle(target) && rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PVP) {
-			int heal = rp_GetVehicleInt(target, car_health) - 500;
+			int heal = rp_GetVehicleInt(target, car_health) - 250;
 			int owner = rp_GetVehicleInt(target, car_owner);
 			rp_SetVehicleInt(target, car_health, heal);
 			
 			if (heal <= 0 && IsValidClient(owner)) {
 				CPrintToChat(owner, "" ...MOD_TAG... " Votre voiture a été détruite en PvP.");
+				if( client != owner ) {
+					rp_ClientAggroIncrement(client, owner, 1000);
+				}
 			}
 			rp_Effect_Tazer(client, target);
 		}
@@ -533,6 +825,23 @@ public Action rp_ClientRemoveProp(int client, int target, int item_id) {
 }
 stock int rp_GetWeaponPrice(int weaponID) {
 	char classname[65], tmp[255], tmp2[255];
+	int index = GetEntProp(weaponID, Prop_Send, "m_iItemDefinitionIndex");
+	CSGO_GetItemDefinitionNameByIndex(index, classname, sizeof(classname));
+	
+	for (int i = 1; i < MAX_ITEMS; i++) {
+		rp_GetItemData(i, item_type_extra_cmd, tmp, sizeof(tmp));
+		Format(tmp2, sizeof(tmp2), "rp_giveitem %s", classname);
+		if (StrEqual(tmp, tmp2)) {
+			return rp_GetItemInt(i, item_type_prix) + rp_GetWeaponPriceCartouche(weaponID);
+		}
+	}
+	
+	
+	int owner = GetEntPropEnt(weaponID, Prop_Send, "m_hPrevOwner");
+	ReplaceString(classname, sizeof(classname), "weapon_", "");
+	if (owner > 0 && view_as<int>(CS_AliasToWeaponID(classname)) > 0)
+		return CS_GetWeaponPrice(owner, CS_AliasToWeaponID(classname)) + rp_GetWeaponPriceCartouche(weaponID);
+
 	GetEdictClassname(weaponID, classname, sizeof(classname));
 	
 	for (int i = 1; i < MAX_ITEMS; i++) {
@@ -544,7 +853,6 @@ stock int rp_GetWeaponPrice(int weaponID) {
 	}
 	
 	ReplaceString(classname, sizeof(classname), "weapon_", "");
-	int owner = GetEntPropEnt(weaponID, Prop_Send, "m_hPrevOwner");
 	
 	if (owner > 0 && view_as<int>(CS_AliasToWeaponID(classname)) > 0)
 		return CS_GetWeaponPrice(owner, CS_AliasToWeaponID(classname)) + rp_GetWeaponPriceCartouche(weaponID);
@@ -571,6 +879,33 @@ stock int rp_GetWeaponPriceCartouche(int weaponID) {
 	}
 	return prix;
 }
+
+stock int rp_CountPolice() {
+	static float g_flLastCheck;
+	static int g_iLastData;
+	char tmp[64];
+	
+	if (g_flLastCheck > GetGameTime()) {
+		return g_iLastData;
+	}
+	
+	int job, count;
+	for (int i = 1; i < MaxClients; i++) {
+		if (!IsValidClient(i))
+			continue;
+		
+		job = rp_GetClientInt(i, i_Job);
+		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_name, tmp, sizeof(tmp));
+		
+		if (GetClientTeam(i) == CS_TEAM_CT || (job >= 1 && job <= 7)) {
+			count++;
+		}
+	}
+	
+	g_flLastCheck = GetGameTime() + 5.0;
+	g_iLastData = count;
+	return count;
+}
 stock int rp_CountPoliceNear(int client) {
 	static float g_flLastCheck[65];
 	static int g_iLastData[65];
@@ -589,7 +924,7 @@ stock int rp_CountPoliceNear(int client) {
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_name, tmp, sizeof(tmp));
 		
 		if (GetClientTeam(i) == CS_TEAM_CT || (job >= 1 && job <= 7)) {
-			if (Entity_GetDistance(client, i) < MAX_AREA_DIST && !rp_GetClientBool(i, b_IsAFK) && StrContains(tmp, "Prison") == -1 && StrContains(tmp, "Tribunal") == -1 ) {
+			if (rp_GetDistance(client, i) < MAX_AREA_DIST && !rp_GetClientBool(i, b_IsAFK) && StrContains(tmp, "Prison") == -1 && StrContains(tmp, "Tribunal") == -1 ) {
 				count++;
 			}
 		}

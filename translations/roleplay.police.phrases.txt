@@ -1,0 +1,360 @@
+"Phrases"
+{
+	// ----------------------------------------------------------------------------------------------
+	"Tazer_removed_own"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Vous avez retiré {red}{1}{default} vous appartenant."
+		"en"		"You removed {red}{1}{default} belonging to you."
+	}
+	"Tazer_removed_target"
+	{
+		"#format"	"{1:t},{2:s}"
+		"fr"		"Vous avez retiré {red}{1}{default} de {2}."
+		"en"		"You removed {red}{1}{default} from {2}."
+	}
+	"Tazer_removed_by"
+	{
+		"#format"	"{1:t}"
+		"fr"		"{red}{1}{default} a été retiré(e) par un agent de police."
+		"en"		"{red}{1}{default} has been removed by a police officer."
+	}
+	"Tazer_player_by"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez été tazé par {red}{1}{default}."
+		"en"		"You have been tazed by {red}{1}{default}."
+	}
+	"Tazer_player_target"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez tazé {red}{1}{default}."
+		"en"		"You tazed {red}{1}{default}."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Jail_IsAllowed"
+	{
+		"fr"		"/jail autorisé"
+		"en"		"/jail authorized"
+	}
+	"Jail_IsDenied"
+	{
+		"fr"		"/jail non autorisé"
+		"en"		"/jail not authorized"
+	}
+	"Jail_Auto"
+	{
+		"fr"		"FREEKILL MASSIF: Autojail à 500 TDM."
+		"en"		"MASSIVE FREEKILL DETECTED."
+	}
+	"Comico_Free"
+	{
+		"fr"		"Cellules non surveillées"
+		"en"		"Unmonitored cells"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"JailReason"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Pour quel motif voulez-vous arrêter {1}?"
+		"en"		"Which reason do you want to stop {1}?"
+	}
+	"JailReason_Free"
+	{
+		"fr"		"Annuler la peine / Libérer"
+		"en"		"Cancel Sentence / Release"
+	}
+	"JailReason_TB"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Jail du Tribunal n°{1}"
+		"en"		"Court Jail n°{1}"
+	}
+	"JailReason_Custody"
+	{
+		"fr"		"Garde à vue"
+		"en"		"Custody"
+	}
+	"JailReason_Kill"
+	{
+		"fr"		"Meurtre"
+		"en"		"Murder"
+	}
+	"JailReason_Aggression"
+	{
+		"fr"		"Agression physique"
+		"en"		"Physical assault"
+	}
+	"JailReason_Intrusion"
+	{
+		"fr"		"Intrusion propriété privée"
+		"en"		"Trespassing on private property"
+	}
+	"JailReason_Steal"
+	{
+		"fr"		"Vol, tentative de vol"
+		"en"		"Theft, attempted theft"
+	}
+	"JailReason_Escape"
+	{
+		"fr"		"Fuite, refus d'obtempérer"
+		"en"		"Escape, refusal to comply"
+	}
+	"JailReason_Disrespect"
+	{
+		"fr"		"Insultes, Irrespect"
+		"en"		"Insults, Disrespect"
+	}
+	"JailReason_IllegalStuff"
+	{
+		"fr"		"Trafic illégal"
+		"en"		"Illegal trafficking"
+	}
+	"JailReason_Noisy"
+	{
+		"fr"		"Nuisance sonore"
+		"en"		"Noise nuisance"
+	}
+	"JailReason_Shotting"
+	{
+		"fr"		"Tir dans la rue"
+		"en"		"Shooting in the street"
+	}
+	"JailReason_Driving"
+	{
+		"fr"		"Conduite dangereuse"
+		"en"		"Reckless driving"
+	}
+	"JailReason_Evasion"
+	{
+		"fr"		"Mutinerie, évasion"
+		"en"		"Mutiny, evasion"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"JailSend_Target"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} a été envoyé en prison."
+		"en"		"{1} was sent to jail."
+	}
+	"JailSend_By"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez été jeté en prison par {1}."
+		"en"		"You were thrown in jail by {1}."
+	}
+	"JailArrest_Target"
+	{
+		"#format"	"{1:s},{2:d},{3:t}"
+		"fr"		"{1} restera en prison {2} heure(s) pour {red}{3}{default}."
+		"en"		"{1} will remain in jail {2} hour(s) for {red}{3}{default}."
+	}
+	"JailArrest_By"
+	{
+		"#format"	"{1:s},{2:d},{3:t}"
+		"fr"		"Vous avez été arreté {2} heure(s) par {1} pour {red}{3}{default}."
+		"en"		"You have been stopped {2} hour(s) by {1} for {red}{3}{default}."
+	}
+	"JailWait_Target"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} a été envoyé au Tribunal en attente d'un jugement."
+		"en"		"{1} has been sent to Court awaiting judgment."
+	}
+	"JailWait_By"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez été envoyé au Tribunal par {1}."
+		"en"		"You have been sent to Court by {1}."
+	}
+	"JailFree_Target"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez libéré {1} de prison."
+		"en"		"You have released {1} from jail."
+	}
+	"JailFree_By"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez été libéré de prison par {1}."
+		"en"		"You have been released from jail by {1}."
+	}
+	"JailFree"
+	{
+		"fr"		"Vous avez terminé votre peine de prison."
+		"en"		"You have been released from jail."
+	}
+	"JailAutoFree"
+	{
+		"#format"	"{1:s},{2:t}"
+		"fr"		"{1} a été libéré de prison, car il n'a pas commis: {2}."
+		"en"		"{1} was released from jail because he did not commit any crimes: {2}."
+	}
+	"JailQuest"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} ne peut pas être arrêté pour le moment à cause d'une quête."
+		"en"		"{1} cannot be stopped for the moment because of a quest."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Police_NoPay"
+	{
+		"fr"		"La police a décidé de {red}ne pas verser votre salaire{default} en raison de votre mauvais comportement envers la population."
+		"en"		"The police decided {red}not to pay your salary{default} because of your bad behavior towards the public."
+	}
+	"Police_RefundVictim"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Votre voleur a été arrêté, la police vous a remboursé {red}{1}{default}$."
+		"en"		"Your thief was arrested, the police reimbursed you {red}{1}{default}$."
+	}
+	"Police_RefundThief"
+	{
+		"#format"	"{1:d}"
+		"fr"		"La police a confisqué votre butin de {red}{1}{default}$."
+		"en"		"The police confiscated your loot of {red}{1}{default}$."
+	}
+	"Police_MurderVictim"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Votre meurtrier a été arrêté, la police l'a condamné à {1} heures de prison."
+		"en"		"Your murderer was arrested, the police sentenced him to {1} hours in jail."
+	}
+	"Police_Jail_Amende"
+	{
+		"#format"	"{1:d},{2:t}"
+		"fr"		"Une amende de {1}$ vous a été prélevée pour {2}."
+		"en"		"A fine of {1}$ has been levied on you for {2}."
+	}
+	"Police_Jail_AmendeTo"
+	{
+		"#format"	"{1:d},{2:s}{3:t}"
+		"fr"		"Une amende de {1}$ a été prélevée à {2} pour {3}."
+		"en"		"A fine of {1}$ was collected at {2} for {3}."
+	}
+	"Police_Jail_Caution"
+	{
+		"#format"	"{1:t},{2:d}"
+		"fr"		"Vous avez été arrêté pour {1}, une caution de {2}$ vous est demandé."
+		"en"		"You have been arrested for {1}, a bond of {2}$ is asked."
+	}
+	"Police_Jail_CautionYes"
+	{
+		"fr"		"Oui, je veux payer ma caution."
+		"en"		"Yes, I want to pay my bail."
+	}
+	"Police_Jail_CautionNo"
+	{
+		"fr"		"Non, je souhaite moisir en taule."
+		"en"		"No, I want to rot in jail."
+	}
+	"Police_Jail_Disconnect"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Cette personne a quitté la ville, mais il sera condamné à {1} heures de prison."
+		"en"		"This person left town, but he will be sentenced to {1} hours in jail."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Enquete_On"
+	{
+		"#format"	"{1:s}"
+		"fr"	"Informations sur {1}."
+		"en"	"Information about {1}."
+	}
+	"Enquete_PermisLeger"
+	{
+		"fr"		"Permis de port d'armes légère"
+		"en"		"Permit to carry small weapons"
+	}
+	"Enquete_PermisLourd"
+	{
+		"fr"		"Permis de port d'armes lourdes"
+		"en"		"Permit to carry heavy weapons"
+	}
+	"Enquete_PermisVente"
+	{
+		"fr"		"Permis de vente"
+		"en"		"Seller's permit"
+	}
+	"Enquete_PrimaryWeapon"
+	{
+		"fr"		"Arme lourde"
+		"en"		"Heavy weapon"
+	}
+	"Enquete_SecondaryWeapon"
+	{
+		"fr"		"Arme légère"
+		"en"		"Light weapon"
+	}
+	"Enquete_NoWeapon"
+	{
+		"fr"		"Aucune"
+		"en"		"None"
+	}
+	"Enquete_Amende_Lourd"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Amende {1}$ - Permis lourd"
+		"en"		"Fine {1}$ - Heavy permit"
+	}
+	"Enquete_Amende_Leger"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Amende {1}$ - Permis léger"
+		"en"		"Fine {1}$ - Light permit"
+	}
+	
+	"Enquete_Amende_Lourd_Sanction"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Vous avez été contrôlé en possession {red}d'arme(s) lourde(s) sans permis{default} valide, vous devez vous acquitter d'une amende de {1}$"
+		"en"		"You were found to be in possession of heavy {red}weapon(s) without a permit{default} that's valid, you must pay a fine of {1}$"
+	}
+	"Enquete_Amende_Leger_Sanction"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Vous avez été contrôlé en possession {red}d'arme(s) légère(s) sans permis{default} valide, vous devez vous acquitter d'une amende de {1}$"
+		"en"		"You were found to be in possession of light {red}weapon(s) without a permit{default} that's valid, you must pay a fine of {1}$"
+	}
+	"Enquete_Amende_SanctionTo"
+	{
+		"#format"	"{1:d},{2:s},{3:t}"
+		"fr"		"Une amende de {1}$ vient d'être prélevée auprès de {2} pour défaut de: {3}"
+		"en"		"A fine of {1}$ has just been levied from {2} for failure to: {3}"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"PotDeVin_OwnLocalisation"
+	{
+		"fr"		"Votre pot de vin vient de réussir à bloquer {red}votre localisation{default}."
+		"en"		"Your bribe just managed to block {red}your localization{default}.
+	}
+	"PotDeVin_To"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous n'arrivez pas à localiser {1}, les signaux GPS semblent avoir été brouillés."
+		"en"		"You can't locate {1}, the GPS signals seem to have been scrambled."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"PlayerInJail"
+	{
+		"fr"		"Liste des joueurs en prison"
+		"en"		"List of players in jail"
+	}
+	"PlayerInJail_Player"
+	{
+		"#format"	"{1:s},{2:.1f}"
+		"fr"		"{1} - {2} heure(s)"
+		"en"		"{1} - {2} hour(s)"
+	}
+	"PlayerInJail_None"
+	{
+		"fr"		"Il n'y a personne en prison."
+		"en"		"There is no one in jail."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Police_WeaponInStore"
+	{
+		"fr"		"Armées trouvées par la police:"
+		"en"		"Weapons found by the police:"
+	}
+}

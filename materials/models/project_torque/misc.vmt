@@ -1,0 +1,10 @@
+vertexlitgeneric
+{
+$baseTexture white
+$color2 "{24 24 24}"
+$basemapalphaphongmask 1
+$phong 1
+$phongboost "0.02"
+$phongexponent 5
+$phongfresnelranges "[1 1 1]"
+}

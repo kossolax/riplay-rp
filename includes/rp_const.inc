@@ -13,12 +13,13 @@
 #endif
 #define _rp_const_included_
 
-#define __LAST_REV__			"8.1 - REBORN"
+#define __LAST_REV__			"8.2 - REBORN"
 #define	MOD_TAG					"{lightblue}[RIPLAY.FR]{default}"
+#define MOD_URL					"https://rpweb.riplay.fr/"
 
 //#define DEBUG
-#define MAX_LOCATIONS			150
-#define MAX_ZONES				320
+#define MAX_LOCATIONS			175
+#define MAX_ZONES				350
 #define MAX_GROUPS				150
 #define MAX_AREA_DIST			500
 #define CONTACT_DIST			150
@@ -35,6 +36,11 @@
 #define MAIRIE_BUR_ZONE			308
 #define MAIRIE_POS				{522.0, 2002.0, -2135.0}
 #define	LEGIT_KILL_TIME			15
+#define FREEKILL_TIME			(2*60)
+#define AUTOKICK_TDM			500
+#define FREEZE_VITALITY			0
+#define ITEM_BANK_LIMIT			(500000*10)
+
 
 // DO NOT EDIT BELLOW.
 #define WORLDINDEX				0				
@@ -63,6 +69,11 @@
 #define MODEL_BARRIERE		"models/props_fortifications/police_barrier001_128_reference.mdl"
 #define MODEL_TABLE1 		"models/props/de_boathouse/table_drafting01.mdl"
 #define MODEL_TABLE2		"models/props/de_boathouse/table_drafting02.mdl"
+
+#define MODEL_TABLE_METAL	"models/mosi/fallout4/furniture/workstations/armorworkbench.mdl"
+#define MODEL_TABLE_INGE	"models/brickscrafting/workbench_1.mdl"
+#define MODEL_TABLE_ALCH	"models/voikanaa/props_dragonsreach/alchemyworkbench.mdl"
+
 #define	MODEL_PANNEAU		"models/props/de_cbble/cobble_sign02.mdl"
 #define MODEL_PLANT_0		"models/custom_prop/marijuana/marijuana_0.mdl"
 #define MODEL_PLANT_1		"models/custom_prop/marijuana/marijuana_1.mdl"
@@ -76,18 +87,25 @@
 #define ITEM_PIEDBICHE		1
 #define ITEM_KITCROCHTAGE	2
 #define ITEM_KITEXPLOSIF	3
-#define ITEM_MANDAT			4
+#define ITEM_MAGNETCB 		4
+#define ITEM_BERSERK 		6
+#define	ITEM_KNIFE			17
 #define ITEM_FITNESS		30
+#define ITEM_FEUARTIFICE	49
 #define ITEM_TICKETID		76
+#define ITEM_NANO_CRYO		78
 #define ITEM_CADEAU			132
 #define	ITEM_GPS			144
 #define	ITEM_REPAIR			176
 #define	ITEM_PARTICULES		181
 #define	ITEM_NEONS			193
+#define	ITEM_BOOST			180
+#define	ITEM_BATTERIE		183
+#define	ITEM_SUSPENSION		207
+
 #define	ITEM_JETONROUGE		276
 #define ITEM_JETONBLEU		286
 #define ITEM_CHEQUE			304
-#define ITEM_MAGNETCB 310
 
 // Zone:
 #define	METRO_PAIX		60
@@ -112,11 +130,15 @@
 
 // PvP:
 #define	FLAG_SPEED		280.0
-#define	FLAG_POINT_MAX	150
-#define FLAG_POINT_MIN	50
+#define	FLAG_POINT_MAX	100
+#define FLAG_POINT_MIN	20
 #define FLAG_MAX		10
 
 #define ELO_FACTEUR_K	40.0
 #define MAX_ANNOUNCES	32
 #define ANNONCES_DELAY	12
 #define	ANNONCES_VOLUME 0.33
+
+#define BUNKER_ZONE_MIN	184
+#define BUNKER_ZONE_MAX	198
+

@@ -43,14 +43,17 @@ void DisplayPhoneMenu(int client) {
 	WritePackFloat(dp, vecDir[0]);
 	WritePackFloat(dp, vecDir[1]);
 	
-	char msg[256];
-	Format(msg, sizeof(msg), "%s. Récupérez le.", g_szZoneList[GetPointZone(vecDir)][zone_type_name]);
-	
 	Handle menu = CreateMenu(MenuNothing);
-	SetMenuTitle(menu, "== MISSION TELEPHONE == \n ");
-	AddMenuItem(menu, "_", "Un hélicoptère vous envois un colis.", ITEMDRAW_DISABLED);
-	AddMenuItem(menu, "_", "Il sera envoyé près de:", ITEMDRAW_DISABLED);
-	AddMenuItem(menu, "_", msg, ITEMDRAW_DISABLED);
+	SetMenuTitle(menu, "%T\n ", "Phone_Mission", client);
+	
+	char msg[1024], expl[32][64];
+	Format(msg, sizeof(msg), "%T", "Phone_Mission_Send", client, g_szZoneList[GetPointZone(vecDir)][zone_type_name]);
+	String_WordWrap(msg, 40);
+	int len = ExplodeString(msg, "\n", expl, sizeof(expl), sizeof(expl[]));
+	for (int i = 0; i < len; i++) {
+		AddMenuItem(menu, "_", expl[i], ITEMDRAW_DISABLED);
+	}
+	
 	
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, MENU_TIME_DURATION);	

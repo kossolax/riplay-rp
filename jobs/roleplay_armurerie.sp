@@ -36,6 +36,12 @@ public Action Cmd_Reload(int args) {
 	return Plugin_Continue;
 }
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("common.phrases");
+	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.items.phrases");
+	LoadTranslations("roleplay.armurerie.phrases");
+	
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	RegServerCmd("rp_giveitem",			Cmd_GiveItem,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_giveitem_pvp",		Cmd_GiveItemPvP,		"RP-ITEM",	FCVAR_UNREGISTERED);
@@ -57,7 +63,7 @@ public Action Cmd_GiveItem(int args) {
 	GetCmdArg(1, Arg1, sizeof(Arg1));
 	int client = GetCmdArgInt(2);
 	int item_id = GetCmdArgInt(args);
-	
+		
 	if( StrEqual(Arg1, "weapon_usp") || StrEqual(Arg1, "weapon_p228") || StrEqual(Arg1, "weapon_m3") || StrEqual(Arg1, "weapon_galil") || StrEqual(Arg1, "weapon_scout") ) {
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
@@ -67,17 +73,17 @@ public Action Cmd_GiveItem(int args) {
 		return Plugin_Handled;
 	}
 	
-	if( Weapon_ShouldBeEquip(Arg1) && Client_HasWeapon(client, Arg1) ) {
+	if( (StrContains(Arg1, "weapon_knife") == 0 || StrContains(Arg1, "weapon_bayonet") == 0) && Client_HasWeapon(client, "weapon_knife") ) {
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	
+	int ent = GivePlayerItem(client, Arg1);	
 	
-	
-	int ent = GivePlayerItem(client, Arg1);
-	
-	if( Weapon_ShouldBeEquip(Arg1) )
-		EquipPlayerWeapon(client, ent);
+	if( StrContains(Arg1, "weapon_taser") == 0 ) {
+		Weapon_SetPrimaryClip(ent, 1000);
+		SDKHook(ent, SDKHook_Reload, OnWeaponReload);
+	}
 	
 	return Plugin_Handled;
 }
@@ -98,57 +104,62 @@ public Action Cmd_ItemBallType(int args) {
 	GetCmdArg(1, arg1, sizeof(arg1));
 	
 	int client = GetCmdArgInt(2);
-	int wepid = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+	int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 	int item_id = GetCmdArgInt(args);
 	
-	
-	if( !IsValidEntity(wepid) ) {
+	if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	
-	char classname[64];
-	GetEdictClassname(wepid, classname, sizeof(classname));
-	if( Weapon_ShouldBeEquip(classname) ) {
+	if( rp_GetWeaponBallType(wep_id) == ball_type_braquage ) {
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	
-	if( rp_GetWeaponBallType(wepid) == ball_type_braquage ) {
-		ITEM_CANCEL(client, item_id);
-		return Plugin_Handled;
-	}
-	
+	enum_ball_type type = ball_type_none;
 	if( StrEqual(arg1, "fire") ) {
-		rp_SetWeaponBallType(wepid, ball_type_fire);
+		type = ball_type_fire;
 	}
 	else if( StrEqual(arg1, "caoutchouc") ) {
-		rp_SetWeaponBallType(wepid, ball_type_caoutchouc);
+		type = ball_type_caoutchouc;
 	}
 	else if( StrEqual(arg1, "paintball") ) {
-		rp_SetWeaponBallType(wepid, ball_type_paintball);
+		type = ball_type_paintball;
 	}
 	else if( StrEqual(arg1, "poison") ) {
-		rp_SetWeaponBallType(wepid, ball_type_poison);
+		type = ball_type_poison;
 	}
 	else if( StrEqual(arg1, "vampire") ) {
-		rp_SetWeaponBallType(wepid, ball_type_vampire);
+		type = ball_type_vampire;
 	}
 	else if( StrEqual(arg1, "reflex") ) {
-		rp_SetWeaponBallType(wepid, ball_type_reflexive);
+		type = ball_type_reflexive;
 	}
 	else if( StrEqual(arg1, "explode") ) {
-		rp_SetWeaponBallType(wepid, ball_type_explode);
+		type = ball_type_explode;
 	}
 	else if( StrEqual(arg1, "revitalisante") ) {
-		rp_SetWeaponBallType(wepid, ball_type_revitalisante);
+		type = ball_type_revitalisante;
 	}
 	else if( StrEqual(arg1, "nosteal") ) {
-		rp_SetWeaponBallType(wepid, ball_type_nosteal);
+		type = ball_type_nosteal;
 	}
 	else if( StrEqual(arg1, "notk") ) {
-		rp_SetWeaponBallType(wepid, ball_type_notk);
+		type = ball_type_notk;
 	}
+	
+	if( type == ball_type_none || rp_GetWeaponBallType(wep_id) == type ) {
+		ITEM_CANCEL(client, item_id);
+		char item_name[128];
+		rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
+
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
+		return Plugin_Handled;
+	}
+	
+	rp_SetWeaponBallType(wep_id, type);
 	
 	return Plugin_Handled;
 }
@@ -161,75 +172,40 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 		return Plugin_Continue;
 
 	int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-	char wep_name[32];
-	GetEdictClassname(wep_id, wep_name, 31);
-	if( Weapon_ShouldBeEquip(wep_name) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous devez prendre une arme en main pour la modifier.");
-		return Plugin_Handled;
+	
+	if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
+		return Plugin_Stop;
 	}
-
+	
+	char tmp1[64], tmp2[64];
 	Handle menu = CreateMenu(ModifyWeapon);
-	SetMenuTitle(menu, "Modifier l'arme\n ");
-	//AddMenuItem(menu, "reload_50", "Recharger l'arme (50$)");
-	AddMenuItem(menu, "sanandreas_150", "Ajouter 1000 balles (150$)");
-
-	/*if(rp_GetWeaponGroupID(wep_id) != 0)
-		AddMenuItem(menu, "pvp_250", "Transformer en arme PvP (250$)", ITEMDRAW_DISABLED);
-	else
-		AddMenuItem(menu, "pvp_250", "Transformer en arme PvP (250$)");*/
-
-	/*if(rp_GetWeaponBallType(wep_id) == ball_type_fire)
-		AddMenuItem(menu, "fire_250", "Ajouter des cartouches incendiaires (250$)", ITEMDRAW_DISABLED);
-	else
-		AddMenuItem(menu, "fire_250", "Ajouter des cartouches incendiaires (250$)");*/
-
-	if(rp_GetWeaponBallType(wep_id) == ball_type_caoutchouc)
-		AddMenuItem(menu, "caoutchouc_200", "Ajouter des cartouches en caoutchouc (200$)", ITEMDRAW_DISABLED);
-	else
-		AddMenuItem(menu, "caoutchouc_200", "Ajouter des cartouches en caoutchouc (200$)");
-
-	if(rp_GetWeaponBallType(wep_id) == ball_type_poison)
-		AddMenuItem(menu, "poison_200", "Ajouter des cartouches empoisonnées (200$)", ITEMDRAW_DISABLED);
-	else
-		AddMenuItem(menu, "poison_200", "Ajouter des cartouches empoisonnées (200$)");
-
-	if(rp_GetWeaponBallType(wep_id) == ball_type_vampire)
-		AddMenuItem(menu, "vampire_200", "Ajouter des cartouches vampiriques (200$)", ITEMDRAW_DISABLED);
-	else
-		AddMenuItem(menu, "vampire_200", "Ajouter des cartouches vampiriques (200$)");
-
-	if(rp_GetWeaponBallType(wep_id) == ball_type_reflexive)
-		AddMenuItem(menu, "reflexive_200", "Ajouter des cartouches rebondissantes (200$)", ITEMDRAW_DISABLED);
-	else
-		AddMenuItem(menu, "reflexive_200", "Ajouter des cartouches rebondissantes (200$)");
-
-	/*if(rp_GetWeaponBallType(wep_id) == ball_type_explode)
-		AddMenuItem(menu, "explode_300", "Ajouter des cartouches explosives (300$)", ITEMDRAW_DISABLED);
-	else
-		AddMenuItem(menu, "explode_300", "Ajouter des cartouches explosives (300$)");*/
-
-	if(rp_GetWeaponBallType(wep_id) == ball_type_revitalisante)
-		AddMenuItem(menu, "revitalisante_200", "Ajouter des cartouches revitalisantes (200$)", ITEMDRAW_DISABLED);
-	else
-		AddMenuItem(menu, "revitalisante_200", "Ajouter des cartouches revitalisantes (200$)");
-
-	/*if(rp_GetWeaponBallType(wep_id) == ball_type_paintball)
-		AddMenuItem(menu, "paintball_50", "Ajouter des cartouches de paintball (50$)", ITEMDRAW_DISABLED);
-	else
-		AddMenuItem(menu, "paintball_50", "Ajouter des cartouches de paintball (50$)");*/
-
-	if(rp_GetWeaponBallType(wep_id) == ball_type_nosteal)
-		AddMenuItem(menu, "nosteal_75", "Ajouter des cartouches antivol (75$)", ITEMDRAW_DISABLED);
-	else
-		AddMenuItem(menu, "nosteal_75", "Ajouter des cartouches antivol (75$)");
-
-	/*if(rp_GetWeaponBallType(wep_id) == ball_type_notk)
-		AddMenuItem(menu, "notk_50", "Ajouter des cartouches anti team-kill (50$)", ITEMDRAW_DISABLED);
-	else
-		AddMenuItem(menu, "notk_50", "Ajouter des cartouches anti team-kill (50$)");*/
-
+	SetMenuTitle(menu, "%T\n ", "edit_weapon", client);
+	
+	char szMenu[][][] = {
+		{"sanandreas",		"150",	"add_bullet_sanAndreas"},
+		{"pvp",				"250",	"add_bullet_pvp"},
+		{"fire",			"250",	"add_ball_type_fire"},
+		{"caoutchouc",		"200",	"add_ball_type_caoutchouc"},
+		{"poison",			"200",	"add_ball_type_poison"},
+		{"vampire",			"200",	"add_ball_type_vampire"},
+		{"paintball",		"50",	"add_ball_type_paintball"},
+		{"reflexive",		"200",	"add_ball_type_reflexive"},
+		{"explode", 		"300",	"add_ball_type_explode"},
+		{"revitalisante",	"200",	"add_ball_type_revitalisante"},
+		{"nosteal", 		"75",	"add_ball_type_nosteal"},
+		{"notk", 			"50",	"add_ball_type_notk"},
+		{"braquage",		"500",	"add_ball_type_braquage"}
+	};
+	
+	for (int i = 0; i < sizeof(szMenu); i++) {
+		Format(tmp1, sizeof(tmp1), "%s_%s", szMenu[i][0], szMenu[i][1]);
+		Format(tmp2, sizeof(tmp2), "%T - %s$", szMenu[i][2], client, szMenu[i][1]);
+		AddMenuItem(menu, tmp1, tmp2);
+	}
+	
 	DisplayMenu(menu, client, 60);
-	cooldown = 5.0;
+	cooldown = 0.1;
 	
 	return Plugin_Stop;
 }
@@ -247,18 +223,16 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 			strcopy(type, 31, data[0]);
 			int price = StringToInt(data[1]);
 			int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-			char wep_name[32];
-			GetEdictClassname(wep_id, wep_name, 31);
 
-			if( StrContains(wep_name, "weapon_bayonet") == 0 || StrContains(wep_name, "weapon_knife") == 0 ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous devez prendre une arme en main pour la modifier");
+			if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
 				return;
 			}
 
-			if(StrEqual(type, "pvp")){
+			if( StrEqual(type, "pvp") ){
 				Handle menupvp = CreateMenu(ModifyWeaponPVP);
 				char tmp[64], tmp2[64];
-				SetMenuTitle(menupvp, "A quel groupe attribuer l'arme?\n ");
+				SetMenuTitle(menupvp, "%T\n ", "edit_weapon_gang", client);
 				for(int i=1; i<MAX_GROUPS; i+=10){
 					for(int j=1;j< MAXPLAYERS+1;j++){
 						if( !IsValidClient(j) )
@@ -274,13 +248,8 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 				DisplayMenu(menupvp, client, 60);
 			}
 			else{
-				if((rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money)) >= price){
-					rp_ClientMoney(client, i_Money, -price);
-					CPrintToChat(client, "" ...MOD_TAG... " La modification a été appliquée à votre arme.");	
-					rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
-				}
-				else{
-					CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent.");
+				if((rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money)) < price){
+					CPrintToChat(client, ""...MOD_TAG..." %T", "Error_NotEnoughtMoney", client);
 					return;
 				}
 
@@ -318,17 +287,40 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 					ServerCommand("rp_item_redraw %i 74", client);
 				}
 				else if(StrEqual(type, "sanandreas")){
+					
+					int itemId = 22;
+					if( GetConVarInt(FindConVar("rp_capture")) == 1 && rp_GetServerRules(rules_ItemsDisabled, rules_Enabled) == 1 && rp_GetServerRules(rules_ItemsDisabled,rules_Target) == itemId ) {
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_CannotUseItemInPvP", client);
+						return;
+					}
+
+					char classname[64];
+					
+					GetEdictClassname(wep_id, classname, sizeof(classname));
+					if(StrContains(classname, "weapon_breachcharge") == 0)
+						return;
+					
 					int ammo = Weapon_GetPrimaryClip(wep_id);
 					if( ammo >= 150 ) {
-						CPrintToChat(client, "" ...MOD_TAG... " Votre arme a déjà un San Andreas, il vous reste %d balles dans le chargeur.", ammo);
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_sanAndreas", client, ammo);
 						return;
 					}
 					ammo += 1000; if( ammo > 5000 ) ammo = 5000;
 					Weapon_SetPrimaryClip(wep_id, ammo);
 					SDKHook(wep_id, SDKHook_Reload, OnWeaponReload);
-					CPrintToChat(client, "" ...MOD_TAG... " Votre arme possède maintenant %i balles", ammo);
 				}
-				rp_SetJobCapital( 111, rp_GetJobCapital(111)+price );
+				
+				
+				rp_ClientMoney(client, i_Money, -price);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
+				rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
+				
+				if( StrEqual(type, "fire") || StrEqual(type, "explode") || StrEqual(type, "paintball") ){
+					rp_SetJobCapital( 131, rp_GetJobCapital(131)+price );
+				}
+				else {
+					rp_SetJobCapital( 111, rp_GetJobCapital(111)+price );
+				}
 				FakeClientCommand(client, "say /build");
 
 			}
@@ -347,7 +339,7 @@ public Action OnWeaponReload(int wepid) {
 		int client = Weapon_GetOwner(wepid);
 		
 		if( cache[client] < GetGameTime() ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Votre arme a un San Andreas, il vous reste %d balles dans le chargeur.", ammo);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "weapon_sanAndreas", client, ammo);
 			cache[client] = GetGameTime() + 1.0;
 		}
 		
@@ -367,21 +359,19 @@ public int ModifyWeaponPVP(Handle p_hItemMenu, MenuAction p_oAction, int client,
 			int groupid = StringToInt(data[0]);
 			int price = StringToInt(data[1]);
 			int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-			char wep_name[32];
-			GetEdictClassname(wep_id, wep_name, 31);
 
-			if( StrContains(wep_name, "weapon_bayonet") == 0 || StrContains(wep_name, "weapon_knife") == 0 ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous devez prendre une arme en main pour la modifier.");
+			if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
 				return;
 			}
 
 			if((rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money)) >= price){
 				rp_ClientMoney(client, i_Money, -price);
 				rp_SetJobCapital( 111, rp_GetJobCapital(111)+price );
-				CPrintToChat(client, "" ...MOD_TAG... " La modification a été appliquée à votre arme.");	
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
 			}
 			else{
-				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent.");
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Error_NotEnoughtMoney", client);
 				return;
 			}
 
@@ -408,10 +398,7 @@ public Action fwdWeapon(int victim, int attacker, float &damage, int wepID, floa
 		case ball_type_caoutchouc: {
 			damage *= 0.0;
 			
-			if( rp_IsInPVP(victim) ) {
-				TeleportEntity(victim, NULL_VECTOR, NULL_VECTOR, vecNull);
-				damage *= 0.5;
-				
+			if( rp_IsInPVP(victim) && !(rp_GetZoneBit(rp_GetPlayerZone(victim)) & BITZONE_PERQUIZ) ) {				
 				rp_SetClientFloat(victim, fl_FrozenTime, GetGameTime() + 1.5);
 				if(!rp_GetClientBool(victim, ch_Yeux))
 					ServerCommand("sm_effect_flash %d 1.5 180", victim);
@@ -559,7 +546,7 @@ public Action Cmd_ItemSanAndreas(int args) {
 	
 	GetEdictClassname(wepid, classname, sizeof(classname));
 		
-	if( StrContains(classname, "weapon_bayonet") == 0 || StrContains(classname, "weapon_knife") == 0 ) {
+	if( StrContains(classname, "weapon_bayonet") == 0 || StrContains(classname, "weapon_knife") == 0 || StrContains(classname, "weapon_breachcharge") == 0 ) {
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
@@ -567,14 +554,14 @@ public Action Cmd_ItemSanAndreas(int args) {
 	int ammo = Weapon_GetPrimaryClip(wepid);
 	if( ammo >= 5000 ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous aviez déjà 5000 balles.");
+		CPrintToChat(client, ""...MOD_TAG..." %T", "edit_weapon_sanAndreas", client, ammo);
 		return Plugin_Handled;
 	}
 	ammo += 1000;
 	if( ammo > 5000 )
 		ammo = 5000;
 	Weapon_SetPrimaryClip(wepid, ammo);
-	CPrintToChat(client, "" ...MOD_TAG... " Votre arme a maintenant %i balles", ammo);
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "weapon_sanAndreas", client, ammo);
 	
 	SDKHook(wepid, SDKHook_Reload, OnWeaponReload);
 	return Plugin_Handled;

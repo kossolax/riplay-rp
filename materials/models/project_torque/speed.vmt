@@ -1,0 +1,7 @@
+UnlitGeneric
+{
+$baseTexture "models\project_torque\pointer"
+$translucent 1
+$selfillum 1
+$model 1
+}

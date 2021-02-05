@@ -28,6 +28,9 @@ public Plugin myinfo = {
 };
 
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("roleplay.phrases");
+	
 	for (int i = 1; i <= MaxClients; i++)
 		if( IsValidClient(i) )
 			OnClientPostAdminCheck(i);
@@ -185,8 +188,14 @@ public Action fwdFrame(int client) {
 		}
 	}
 	
-	if( target > 0  && !areNear)
+	if( target > 0  && !areNear) {
+		if( Client_GetVehicle(target) > 0 )
+			target = Client_GetVehicle(target);
+		if( rp_GetClientVehiclePassager(client) > 0 )
+			target = rp_GetClientVehiclePassager(client);
+		
 		rp_Effect_BeamBox(client, target, NULL_VECTOR, 255, 92, 205); // Crée un laser / laser cube rose sur le/la marié(e)
+	}
 }
 // ----------------------------------------------------------------------------
 Menu Menu_Main() {

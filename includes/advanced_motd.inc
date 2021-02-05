@@ -5,7 +5,7 @@
 
 #include <SteamWorks>
 
-#define URL_PATH "https://riplay.fr/api/redirect/%s"
+#define URL_PATH "http://5.196.39.48:8080/redirect/%s"
 
 
 stock void RP_ShowMOTD(int client, char[] url) {	
@@ -18,6 +18,8 @@ stock void RP_ShowMOTD(int client, char[] url) {
 	SteamWorks_SetHTTPRequestContextValue(req, client);
 	SteamWorks_SetHTTPRequestGetOrPostParameter(req, "url", url);
 	SteamWorks_SendHTTPRequest(req);
+	
+	PrintToConsole(client, url);
 }
 
 public int MOTD_OnSteamWorksHTTPComplete(Handle HTTPRequest, bool fail, bool success, EHTTPStatusCode statusCode, any client) {

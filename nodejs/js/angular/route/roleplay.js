@@ -22,6 +22,10 @@ exports = module.exports = function(app) {
       templateUrl: function(p) { return "/templates/node/roleplay_hdv.tpl"; },
       controller: 'rpHDV',
       reloadOnSearch: false
+    }).when('/craft/:arg', {
+      templateUrl: function(p) { return "/templates/node/roleplay_craft.tpl"; },
+      controller: 'rpCraft',
+      reloadOnSearch: false
     }).when('/:arg/:sub', {
       templateUrl: function(p) { return "/templates/node/roleplay_"+p.arg+".tpl"; },
       controller: 'rpJobGang',

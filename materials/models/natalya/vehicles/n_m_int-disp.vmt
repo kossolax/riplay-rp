@@ -1,0 +1,16 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/natalya/vehicles/n_m_int-disp"
+	"$blendtintbybasealpha" 1
+	"$halflambert" 1
+	"$phong" "1" 
+	"$phongboost" "0.5" 
+	"$phongfresnelranges" "[.3 .5 1]" 
+	"$phongexponent" 50
+
+	"$rimlight" "1"
+	"$rimlightexponent" "10"
+	"$rimlightboost" ".1"
+	"$rimmask" "1"
+"$alphatest" "1"
+}

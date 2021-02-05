@@ -49,8 +49,9 @@ void SelectingAmmunition(int client, int ent, bool crochettage = false) {
 		AddMenuItem(hBuyMenu, "remove", "Supprimer mes armes");
 		
 		int braquage = GetConVarInt(FindConVar("rp_braquage"));
+		int kidnapping = GetConVarInt(FindConVar("rp_kidnapping"));
 		
-		if( braquage >= 1 ) {
+		if( braquage >= 1 || kidnapping >= 1 ) {
 			char tmp[128];
 			int cpt = 0;
 			int owner;
@@ -71,9 +72,10 @@ void SelectingAmmunition(int client, int ent, bool crochettage = false) {
 					}
 				}
 			}
-			
-			Format(tmp, sizeof(tmp), "M4A1: Braquage (%d/%d)", cpt, max);
-			AddMenuItem(hBuyMenu, "braquage", tmp, cpt>=max? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+			if( !crochettage ){
+				Format(tmp, sizeof(tmp), "M4A1: Braquage (%d/%d)", cpt, max);
+				AddMenuItem(hBuyMenu, "braquage", tmp, cpt>=max? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+			}
 		}
 		
 		for(int lp; lp < MAX_BUYWEAPONS; lp++) {
@@ -108,7 +110,7 @@ void SelectingAmmunition(int client, int ent, bool crochettage = false) {
 			// S'il est policier ou plus:
 			if( (rp_GetClientJobID(client) == 1 && g_iUserData[client][i_Job] <= 8) || (rp_GetClientJobID(client) == 101 && g_iUserData[client][i_Job] <= 108) || braquage) {
 				if( StrEqual(g_szBuyWeapons[lp][0], "weapon_famas" ) ||
-					StrEqual(g_szBuyWeapons[lp][0], "weapon_mp5navy" )					
+					StrEqual(g_szBuyWeapons[lp][0], "weapon_mp5sd" )					
 				) {
 					AddMenuItem(hBuyMenu, g_szBuyWeapons[lp][0], g_szBuyWeapons[lp][1]);
 					continue;
@@ -117,7 +119,6 @@ void SelectingAmmunition(int client, int ent, bool crochettage = false) {
 			// S'il est FBI ou plus:
 			if( (rp_GetClientJobID(client) == 1 && g_iUserData[client][i_Job] <= 7) || (rp_GetClientJobID(client) == 101 && g_iUserData[client][i_Job] <= 107) || braquage) {
 				if( StrContains(g_szBuyWeapons[lp][0], "weapon_m4a1" ) == 0 ||
-					StrEqual(g_szBuyWeapons[lp][0], "weapon_scout") ||
 					StrEqual(g_szBuyWeapons[lp][0], "weapon_ssg08")
 				) {
 					AddMenuItem(hBuyMenu, g_szBuyWeapons[lp][0], g_szBuyWeapons[lp][1]);
@@ -126,7 +127,10 @@ void SelectingAmmunition(int client, int ent, bool crochettage = false) {
 			}
 			// S'il est CIA ou plus:
 			if( g_iUserData[client][i_Job] <= 6 || g_iUserData[client][i_Job] == 101  || g_iUserData[client][i_Job] == 102 || braquage) {
-				if( StrEqual(g_szBuyWeapons[lp][0], "weapon_awp" ) ) {
+				if( StrEqual(g_szBuyWeapons[lp][0], "weapon_awp")  ||
+					StrEqual(g_szBuyWeapons[lp][0], "weapon_aug") ||
+					StrEqual(g_szBuyWeapons[lp][0], "weapon_sg556")
+				) {
 					AddMenuItem(hBuyMenu, g_szBuyWeapons[lp][0], g_szBuyWeapons[lp][1]);
 					continue;
 				}
@@ -149,8 +153,11 @@ void SelectingAmmunition(int client, int ent, bool crochettage = false) {
 public int eventAmmunitionPickup(Handle p_hBuyMenu, MenuAction p_oAction, int client, int p_iParam2) {
 	if (p_oAction == MenuAction_Select) {
 		char szMenuItem[32];
-		
+		char explo[2][32];
+
 		if (GetMenuItem(p_hBuyMenu, p_iParam2, szMenuItem, sizeof(szMenuItem))) {
+			
+			ExplodeString(szMenuItem, " ", explo, sizeof(explo), sizeof(explo[]));
 			
 			int ent = GetClientAimTarget(client, false);
 			if( !IsAmmunition(ent) )
@@ -167,10 +174,10 @@ public int eventAmmunitionPickup(Handle p_hBuyMenu, MenuAction p_oAction, int cl
 				}
 			}
 			
-			if( StrEqual(szMenuItem, "reload", false) ) {
+			if( StrEqual(explo[0], "reload", false) ) {
 				RedrawWeapon(client);
 			}
-			else if( StrEqual(szMenuItem, "braquage", false) ) {
+			else if( StrEqual(explo[0], "braquage", false) ) {
 				
 				int wepid = GivePlayerItem(client, "weapon_m4a1");
 				FakeClientCommand(client, "use weapon_m4a1");
@@ -179,25 +186,36 @@ public int eventAmmunitionPickup(Handle p_hBuyMenu, MenuAction p_oAction, int cl
 				g_iWeaponFromStore[wepid] = 1;
 				
 			}
-			else if( StrEqual(szMenuItem, "remove", false) ) {
+			else if( StrEqual(explo[0], "remove", false) ) {
 				int id = WeaponsGetDeployedWeaponIndex(client);
 				if( id > 0 ) {
 					RemovePlayerItem(client, id );
 					RemoveEdict( id );
+					
+					FakeClientCommand(client, "use weapon_fists");
+					g_bUserData[client][b_WeaponIsKnife] = false;
+					g_bUserData[client][b_WeaponIsHands] = true;
+					g_bUserData[client][b_WeaponIsMelee] = false;
 				}
 			}
 			else {
 				
-				if( GetPlayerWeaponSlot( client, iWeaponSlot) != -1 && (IsPolice(client) || IsJuge(client)) ) {
+				if( GetPlayerWeaponSlot( client, iWeaponSlot) != -1 ) {
 					CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà une arme de ce type");
 					return;
 				}
 				
-				int id = GivePlayerItem(client, szMenuItem);
+				int id = GivePlayerItem(client, explo[0]);
 				g_iWeaponFromStore[id] = 1;
-				if( StrContains(szMenuItem, "m4", false) >= 0 || StrContains(szMenuItem, "usp")  >= 0 ) {
+				if( StrContains(explo[1], "caouchouc", false) >= 0) {
 					g_iWeaponsBallType[id] = ball_type_caoutchouc;
 				}
+				
+				Call_StartForward(rp_GetForwardHandle(client, RP_PostStealWeapon));
+				Call_PushCell(client);
+				Call_PushCell(client);
+				Call_PushCell(id);
+				Call_Finish();
 			}
 		}
 	}

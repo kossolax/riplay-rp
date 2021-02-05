@@ -28,7 +28,10 @@ public Plugin myinfo = {
 	description = "RolePlay - Utils: Menu",
 	version = __LAST_REV__, url = "https://www.ts-x.eu"
 };
-public void OnPluginStart() {	
+public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("roleplay.phrases");
+	
 	for (int i = 1; i <= MaxClients; i++)
 		if( IsValidClient(i) )
 			OnClientPostAdminCheck(i);

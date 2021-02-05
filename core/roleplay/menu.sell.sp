@@ -103,7 +103,8 @@ void DrawVendreMenu(int client) {
 				continue;
 			if( !IsClientConnected(i) )
 				continue;
-			if( !(Entity_GetDistance(client, i) < MAX_AREA_DIST.0) )
+			
+			if( !(rp_GetDistance(client, i) < MAX_AREA_DIST.0) )
 				continue;
 			if(client == i) 
 				continue;
@@ -154,7 +155,7 @@ void DrawVendreMenu(int client) {
 				continue;
 			
 			// Chirurgie
-			if( g_iUserData[client][i_Job] == 13) {
+			if( g_iUserData[client][i_Job] == 14) {
 				if( StrContains(g_szItemListOrdered[i][item_type_extra_cmd], "rp_chirurgie full", false) == 0 )
 					continue;
 			}
@@ -168,12 +169,17 @@ void DrawVendreMenu(int client) {
 					continue;
 			}
 			// Tueur & PvP
-			if( g_iUserData[client][i_Job] == 46 || g_iUserData[client][i_Job] == 45 || g_iUserData[client][i_Job] == 44 ) {
+			if( g_iUserData[client][i_Job] == 44 || g_iUserData[client][i_Job] == 45 || g_iUserData[client][i_Job] == 46 ) {
 				if( StrContains(g_szItemListOrdered[i][item_type_extra_cmd], "rp_giveitem_pvp", false) == 0 )
 					continue;
 			}
+			// Tueur & Kidnapping
+			if( g_iUserData[client][i_Job] == 45 || g_iUserData[client][i_Job] == 46 ) {
+				if( StrContains(g_szItemListOrdered[i][item_type_extra_cmd], "kidnapping", false) >= 0 )
+					continue;
+			}
 			// Technicien & Photocopieuse
-			if( g_iUserData[client][i_Job] == 226 || g_iUserData[client][i_Job] == 225 || g_iUserData[client][i_Job] == 224 ) {
+			if( g_iUserData[client][i_Job] == 224 || g_iUserData[client][i_Job] == 225 || g_iUserData[client][i_Job] == 226 ) {
 				if( StrContains(g_szItemListOrdered[i][item_type_extra_cmd], "rp_item_cashbig", false) == 0 )
 					continue;
 			}
@@ -418,6 +424,10 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 				type = 1003;
 			}
 			else if( StrContains(buffer, "justice") == 0 ) {
+				if( !(rp_GetClientJobID(target) == 101 && GetClientTeam(target) == CS_TEAM_CT) ) {
+					CPrintToChat(client, "" ...MOD_TAG... " %N{default} doit être un membre de la justice pour utiliser ce type de contrat.");
+					return;
+				}
 				type = 1004;
 			}
 			else if( StrContains(buffer, "kidnapping") == 0 ) {
@@ -426,7 +436,7 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 					return;
 				}
 				if( g_iUserData[target][i_PlayerLVL] < 306 ) {
-					CPrintToChat(client, "" ...MOD_TAG... " %N{default} doit être au moins de niveau 306 \"Haut conseillé\", afin d'effectuer un contrat kidnapping.");
+					CPrintToChat(client, "" ...MOD_TAG... " %N{default} doit être au moins de niveau 306 \"Haut conseillé\", afin d'effectuer un contrat kidnapping.", target);
 					return;
 				}
 				type = 1005;
@@ -755,6 +765,12 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 					if( i == client )
 						continue;
 					
+					// les items des haut-gradés
+					if( StrContains(g_szItemList[item_id][item_type_extra_cmd], "rp_item_cashbig", false) == 0 && (g_iUserData[i][i_Job]-jobID) > 2 )
+						continue;
+					if( StrContains(g_szItemList[item_id][item_type_extra_cmd], "rp_giveitem_pvp", false) == 0 && (g_iUserData[i][i_Job]-jobID) > 2 )
+						continue;
+					
 					jobList[mnt] = i;
 					mnt++;
 				}
@@ -816,13 +832,15 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			g_iUserData[vendeur][i_Reduction] = reduction;
 			g_iUserStat[client][i_MoneySpent_Shop] += RoundFloat(prixItem - reduc);
 
-			if( StrContains(g_szItemList[item_id][item_type_extra_cmd], "rp_item_contrat") == 0 ) {
+			if(
+				StrContains(g_szItemList[item_id][item_type_extra_cmd], "rp_item_contrat") == 0 ||
+				StrContains(g_szItemList[item_id][item_type_extra_cmd], "rp_give_appart_door") == 0 ) {
 				g_iUserData[vendeur][i_ContratPay] = RoundFloat(prixItem);
 			}
 			
-			rp_ClientMoney(client, type == 5 ? i_Bank : i_Money, -RoundFloat(prixItem - reduc));
-			rp_ClientMoney(vendeur, i_Money, RoundToFloor(((prixItem * taxe) - reduc) * 0.5));
-			rp_ClientMoney(vendeur, i_AddToPay, RoundToCeil(((prixItem * taxe) - reduc) * 0.5));
+			rp_ClientMoney(client, type == 5 ? i_Bank : i_Money, -RoundFloat(prixItem - reduc), true);
+			rp_ClientMoney(vendeur, i_Money, RoundToFloor(((prixItem * taxe) - reduc) * 0.5), true);
+			rp_ClientMoney(vendeur, i_AddToPay, RoundToCeil(((prixItem * taxe) - reduc) * 0.5), true);
 			// ici pour modif gozer
 			
 			// a partir d'ici il reste 80% du prix
@@ -874,8 +892,8 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 				SQL_EscapeString(g_hBDD, g_szItemList[ item_id ][item_type_name], buffer, sizeof(buffer));
 				
 				char szQuery[1024];
-				Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`, `to_steamid`) VALUES (NULL, '%s', '%i', '%i', '0', '%i', '%s', '%i', '%s');",
-				SteamID, GetJobPrimaryID(vendeur), GetTime(), item_id, buffer, amount, targetSteamID);
+				Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`, `to_steamid`, `reduction`) VALUES (NULL, '%s', '%i', '%i', '0', '%i', '%s', '%i', '%s', '%i');",
+				SteamID, GetJobPrimaryID(vendeur), GetTime(), item_id, buffer, amount, targetSteamID, reduction+g_iBlackFriday[1]);
 				SQL_TQuery(g_hBDD, SQL_QueryCallBack, szQuery);
 				
 				
@@ -893,6 +911,12 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			
 			if( IsGangMaffia(client) || IsDealer(client)) {
 				g_flUserData[vendeur][fl_LastVente] = GetGameTime();
+			}
+
+			if( g_iUserData[vendeur][i_Job] == 61){
+				if( StrContains(g_szZoneList[GetPlayerZone(vendeur)][zone_type_type], "appart_") == 0 ) {
+					g_flUserData[vendeur][fl_LastVente] = GetGameTime()+17.0;
+				}
 			}
 			
 			if( item_type == 0 ) {

@@ -20,7 +20,7 @@
 //#define	INSTANT
 
 #define getWheel(%1,%2,%3,%4) (g_iJoker[%1][%3] == %4 ? 6 : wheel[%2][%3][%4])
-#define wheelButton 392
+#define wheelButton 390
 
 
 public Plugin myinfo = {
@@ -65,6 +65,12 @@ public Action Cmd_Reload(int args) {
 	return Plugin_Continue;
 }
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("common.phrases");
+	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.items.phrases");
+	LoadTranslations("roleplay.loto.phrases");
+	
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	// Loto
 	RegServerCmd("rp_item_loto",		Cmd_ItemLoto,			"RP-ITEM",	FCVAR_UNREGISTERED);
@@ -100,7 +106,7 @@ public void OnMapStart() {
 public Action touch(int entity, int target) {
 	
 	if( IsValidClient(rp_IsGrabbed(target)) ) {
-		CPrintToChat(rp_IsGrabbed(target), "" ...MOD_TAG... " Ne touchez pas la roue.");
+		CPrintToChat(rp_IsGrabbed(target), "" ...MOD_TAG... " %T", "Error_DontTouchWheel", rp_IsGrabbed(target));
 		rp_ClientDamage(rp_IsGrabbed(target), 50000, rp_IsGrabbed(target));
 	}
 		
@@ -112,7 +118,7 @@ public Action touch(int entity, int target) {
 		pos[0] -= 255.0;
 		pos[2] += 8.0;
 		
-		CPrintToChat(target, "" ...MOD_TAG... " Ne touchez pas la roue.");
+		CPrintToChat(target, ""...MOD_TAG..." %T", "Error_DontTouchWheel", target);
 		rp_ClientTeleport(target, pos);
 	
 	}
@@ -127,16 +133,16 @@ public Action wheelButtonPressed(const char[] output, int caller, int activator,
 	SetEntPropFloat(caller, Prop_Data, "m_flWait", 1.0);
 	
 	if( !canPlay || GetEntProp(caller, Prop_Data, "m_bLocked") == 1 ) {
-		CPrintToChat(activator, "" ...MOD_TAG... " Impossible de jouer pour le moment.");
+		CPrintToChat(activator, "" ...MOD_TAG... " %T", "SlotMachine_CantForNow", activator);
 		return Plugin_Handled;
 	}
 	
 	if( jeton < 5 ) {
-		CPrintToChat(activator, "" ...MOD_TAG... " Il faut 5 jetons pour jouer à cette machine.");
+		CPrintToChat(activator, "" ...MOD_TAG... " %T", "SlotMachine_RequiredJeton", activator, 5);
 		return Plugin_Handled;
 	}
 	if( (rp_GetClientInt(activator, i_Money)+rp_GetClientInt(activator, i_Bank)) < 10000 ) {
-		CPrintToChat(activator, "" ...MOD_TAG... " Il faut 10.000$ pour jouer à cette machine.");
+		CPrintToChat(activator, "" ...MOD_TAG... " %T", "Error_NotEnoughtMoney", activator);
 		return Plugin_Handled;
 	}
 	
@@ -172,13 +178,13 @@ public Action wheelThink(Handle timer, any client) {
 			c = 0;
 		
 		if( gain2[c] == 0 )
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez perdu un tour!");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "SlotMachine_LoseTurn", client);
 		else if( gain2[c] > 0 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez gagné %d$!", gain2[c]);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "SlotMachine_WinCash", client, gain2[c]);
 			rp_SetClientStat(client, i_LotoWon, rp_GetClientStat(client, i_LotoWon) + (gain2[c]));
 		}
 		else {
-			CPrintToChat(client, "" ...MOD_TAG... " BANKRUPT! Vous avez perdu %d$!", gain2[c]);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "SlotMachine_Lose", client, -gain2[c]);
 			rp_SetClientStat(client, i_LotoSpent, rp_GetClientStat(client, i_LotoSpent) + gain2[c]);
 		}
 		
@@ -236,13 +242,13 @@ public Action Cmd_de(int client, char[] arg) {
 		count = 5;
 	
 	if( rp_GetClientFloat(client, fl_CoolDown) > GetGameTime() ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez rien utiliser pour encore %.2f seconde(s).", rp_GetClientFloat(client, fl_CoolDown)-GetGameTime() );
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCooldown", client, rp_GetClientFloat(client, fl_CoolDown)-GetGameTime() );
 		return Plugin_Handled;
 	}
 	
 	rp_SetClientFloat(client, fl_CoolDown, GetGameTime() + 2.0);
 	
-	char tmp[128];
+	char tmp[128], client_name[128];
 	int k, j;
 	
 	for (int i = 1; i <= count; i++) {
@@ -252,10 +258,13 @@ public Action Cmd_de(int client, char[] arg) {
 	}
 	tmp[strlen(tmp) - 2] = 0;
 	
+	GetClientName2(client, client_name, sizeof(client_name), false);
+	
 	if( count == 1 )
-		PrintToChatClientArea(client, "%N lance un dé et fait {green}%d{default}!", client, k);
+		PrintToChatClientArea(client, "" ...MOD_TAG... " %T", "Dice_One", client, client_name, k);
 	else
-		PrintToChatClientArea(client, "%N lance %d dé%s et fait %s ... soit un total de {green}%d{default}!", client, count, count>1 ? "s" : "", tmp, k);
+		PrintToChatClientArea(client, "" ...MOD_TAG... " %T", "Dice_Multiple", client, client_name, count, tmp, k);
+	
 	return Plugin_Handled;
 }
 public Action fwdOnPlayerBuild(int client, float& cooldown) {
@@ -318,23 +327,37 @@ public Action Cmd_ItemStuffPvP(int args) {
 	ItemRand[amount++] = 53;	// Amelioration précision de tir
 	
 	int item_id = ItemRand[ Math_GetRandomInt(0, amount-1) ];
-	rp_ClientGiveItem(client, item_id);
+	
+	int cpt = 2;
 	if( item_id == 35 )
-		rp_ClientGiveItem(client, item_id, 4);
+		cpt = 5;
 	
 	if( (luck || Math_GetRandomInt(1, 100) > 80) && (item_id == 6 || item_id == 64 || item_id == 114 || item_id == 236 || item_id == 239) )
-		rp_ClientGiveItem(client, item_id);
+		cpt = 5;
 	
+	rp_ClientGiveItem(client, item_id, cpt);
+
 	char tmp[64];
 	rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
 	
-	CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu comme cadeau: %s", tmp);
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Free", client, cpt, tmp);
 }
 public Action Cmd_ItemLotoBonus(int args) {
 	int client = GetCmdArgInt(1);
-	CPrintToChat(client, "" ...MOD_TAG... " Vous vous sentez chanceux aujourd'hui.");
-	rp_IncrementLuck(client);
-	rp_HookEvent(client, RP_OnAssurance, fwdAssurance, 30.0);
+	
+
+	if( GetRandomInt(1, 100) == 42 ) {
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "YouFeelVeryLuck", client);
+		for (int i = 0; i < 10; i++) {			
+			rp_IncrementLuck(client);
+			rp_HookEvent(client, RP_OnAssurance, fwdAssurance, 30.0);
+		}
+	}
+	else {
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "YouFeelLuck", client);
+		rp_IncrementLuck(client);
+		rp_HookEvent(client, RP_OnAssurance, fwdAssurance, 30.0);
+	}
 }
 public Action fwdAssurance(int client, int& amount) {
 	amount += 250;
@@ -350,11 +373,11 @@ public void SQL_GetLotoCount(Handle owner, Handle hQuery, const char[] error, an
 			
 			Format(query, sizeof(query), "INSERT INTO `rp_loto` (`id`, `steamid`) VALUES (NULL, '%s');", szSteamID);
 			SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query, 0, DBPrio_High);
-			CPrintToChat(client, "" ...MOD_TAG... " Votre ticket a été validé. Un tirage exceptionnel pour la brocante de Noël aura lieu mercredi vers 21h30.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Lotery_OnlyOne_Validated", client);
 		}
 		else {
 			rp_ClientGiveItem(client, ITEM_TICKETID, 1, true);
-			CPrintToChat(client, "" ...MOD_TAG... " Votre ticket a déjà été validé. Vous avez été remboursé dans votre banque.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Lotery_OnlyOne_Refund", client);
 		}
 	}		
 }
@@ -371,7 +394,7 @@ public Action Cmd_ItemLoto(int args) {
 	
 	
 	if( g_hTimer[client] != INVALID_HANDLE ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes déjà entrain de gratter des tickets.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Lotery_Doing", client);
 		ITEM_CANCEL(client, itemID);
 		return Plugin_Handled;
 	}
@@ -401,9 +424,9 @@ public Action Delay_MenuLoto(Handle timer, Handle dp) {
 	
 	Menu menu = CreateMenu(MenuLoto);
 	if( amount == -1 )
-		menu.SetTitle("Vous avez %d ticket cagnotte.\nCombien voulez-vous gratter?\n ", count);
+		menu.SetTitle("%T\n ", "Lotery_Cagnotte", client, count);
 	else
-		menu.SetTitle("Vous avez %d ticket de %d$.\nCombien voulez-vous gratter?\n ", count, amount);
+		menu.SetTitle("%T\n ", "Lotery_Cagnotte", client, count, amount);
 		
 	char tmp[64], tmp2[64];
 		
@@ -416,11 +439,11 @@ public Action Delay_MenuLoto(Handle timer, Handle dp) {
 			continue;
 		
 		if( ticketAmountType[i] == -1 )
-			Format(tmp2, sizeof(tmp2), "Gratter jusqu'à ce que je gagne");
+			Format(tmp2, sizeof(tmp2), "%T", "Lotery_UntilWin", client);
 		else if( ticketAmountType[i] > 1000 )
-			Format(tmp2, sizeof(tmp2), "Gratter tous mes tickets");
+			Format(tmp2, sizeof(tmp2), "%T", "Lotery_All", client);
 		else
-			Format(tmp2, sizeof(tmp2), "Gratter %d ticket%s", ticketAmountType[i], ticketAmountType[i] > 1 ? "s":"");
+			Format(tmp2, sizeof(tmp2), "%T", "Lottery_Amount", client, ticketAmountType[i]);
 		
 		menu.AddItem(tmp, tmp2);
 	}
@@ -492,7 +515,7 @@ bool gratterTicket(int client, int amount, int itemID) {
 		Format(query, sizeof(query), "INSERT INTO `rp_loto` (`id`, `steamid`) VALUES (NULL, '%s');", szSteamID);
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query, 0, DBPrio_High);
 		
-		CPrintToChat(client, "" ...MOD_TAG... " Votre ticket a été validé. Les tirages ont lieu le mardi et le samedi à 21h00.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Lotery_Validated", client);
 		
 		return false;
 	}
@@ -500,7 +523,7 @@ bool gratterTicket(int client, int amount, int itemID) {
 	
 	rp_SetClientStat(client, i_LotoSpent, rp_GetClientStat(client, i_LotoSpent) + amount);
 	if( rp_GetClientJobID(client) == 171 ) // Pas de cheat inter job.
-		luck += 40;
+		luck += 15;
 	if( !rp_IsClientLucky(client) )
 		luck += 40;
 	
@@ -517,7 +540,7 @@ bool gratterTicket(int client, int amount, int itemID) {
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery);
 		LogToGame("[TSX-RP] [LOTO] %N gagne: %d jetons", client, (amount*100));
 		
-		CPrintToChat(client, "" ...MOD_TAG... " Félicitations! Vous avez gagné %i$.", (amount*100));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Lotery_Win", client, (amount*100));
 		rp_IncrementSuccess(client, success_list_loterie, (amount*100));			
 		rp_Effect_Particle(client, "weapon_confetti_balloons", 10.0);
 			
@@ -526,7 +549,7 @@ bool gratterTicket(int client, int amount, int itemID) {
 		return true;
 	}
 	
-	CPrintToChat(client, "" ...MOD_TAG... " Désolé, vous n'avez rien gagné.");
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Lotery_Lose", client);
 	return false;
 }
 // ------------------------------------------------------------------------------
@@ -557,8 +580,18 @@ void CheckLotery() {
 	Vous n'avez certes que 5% de chance de tout perdre dans cet exemple, mais il n'y a pas que 4 joueurs qui jouent au loto RP.
 	Plus il y en a, plus vos chances de perdre augmentent.
 	*/
+	float src[3] =  { 1761.0, -4902.0, -2015.0 };
+	float dst[3] =  { 2310.0, -4902.0, -2015.0 };
 	
-	SQL_TQuery( rp_GetDatabase() , SQL_GetLoteryWiner, "SELECT DISTINCT T.`steamid`,`name` FROM ( SELECT `steamid` FROM `rp_loto` ORDER BY RAND()  ) AS T INNER JOIN `rp_users` U ON U.`steamid`=T.`steamid` LIMIT 3;");
+	for (float i = 0.0; i <= 1.0; i += 0.1) {
+		float pos[3];
+		for (int j = 0; j < 3; j++)
+			pos[j] = Math_Lerp(src[j], dst[j], i);
+		
+		ServerCommand("sm_effect_fireworks %f %d %f %f %f", i, 0, pos[0], pos[1], pos[2]);
+	}
+	
+	SQL_TQuery( rp_GetDatabase() , SQL_GetLoteryWiner, "SELECT DISTINCT T.`steamid`,`name` FROM ( SELECT `steamid` FROM `rp_loto` ORDER BY RAND()  ) AS T LEFT JOIN `rp_users` U ON U.`steamid`=T.`steamid` LIMIT 3;");
 }
 public void SQL_GetLoteryWiner(Handle owner, Handle hQuery, const char[] error, any none) {
 	int place = 0;
@@ -568,6 +601,16 @@ public void SQL_GetLoteryWiner(Handle owner, Handle hQuery, const char[] error, 
 	
 	int g_iLOTO = rp_GetServerInt(lotoCagnotte);
 	
+	float pos[3] = { 2196.0, -4926.0, -1846.0 };
+	float ang[3] = { 0.0, 270.0, 0.0 };
+	int color[3][3] = {
+		{ 128, 255, 128 },
+		{ 255, 255, 128 },
+		{ 255, 128, 128 },
+	};
+	int size = 12;
+	
+	
 	while( SQL_FetchRow(hQuery) ) {
 		place++;
 		
@@ -576,27 +619,33 @@ public void SQL_GetLoteryWiner(Handle owner, Handle hQuery, const char[] error, 
 		
 		if( place == 1 ) {
 			iGain = (g_iLOTO/100*70);
-			CPrintToChatAll("" ...MOD_TAG... " Le gagnant de la loterie est... %s et remporte %d$!", szName, iGain);
+			CPrintToChatAll("" ...MOD_TAG... " %T", "Lotery_Cagnotte_First", LANG_SERVER, szName, iGain);
 		}
 		else if( place == 2 ) {
 			iGain = (g_iLOTO/100*20);
-			CPrintToChatAll("" ...MOD_TAG... " suivi de.... %s et remporte %d$!", szName, iGain);
+			CPrintToChatAll("" ...MOD_TAG... " %T", "Lotery_Cagnotte_Second", LANG_SERVER, szName, iGain);
 		}
 		else if( place == 3 ) {
 			iGain = (g_iLOTO/100*10);
-			CPrintToChatAll("" ...MOD_TAG... " %s remporte le lot de consolation de %d$!", szName, iGain);
+			CPrintToChatAll("" ...MOD_TAG... " %T", "Lotery_Cagnotte_Third", LANG_SERVER, szName, iGain);
 		}
 		LogToGame("[LOTO-%d] %s %s %d", place, szName, szSteamID, iGain);
+		ServerCommand("sm_effect_text %f %f %f %f %d %d %d %d \"%d - %s\" %f", pos[0], pos[1], pos[2] - float(size*place*2), ang[1], color[place-1][0], color[place-1][1], color[place-1][2], size * 2, place, szName, 180.0);
 		
-		if( place == 1 ) {
-			for (int client = 1; client <= MaxClients; client++) {
-				if( !IsValidClient(client) )
-					continue;
-				GetClientAuthId(client, AUTH_TYPE, szName, sizeof(szName));
-				
-				if( StrEqual(szSteamID, szName) ) {
+		
+		for (int client = 1; client <= MaxClients; client++) {
+			if( !IsValidClient(client) )
+				continue;
+			GetClientAuthId(client, AUTH_TYPE, szName, sizeof(szName));
+			
+			if( StrEqual(szSteamID, szName) ) {
+				if( place == 1 ) {
 					rp_IncrementSuccess(client, success_list_lotto);
 				}
+				
+				rp_Effect_Particle(client, "weapon_confetti_balloons", float(4-place) * 10.0);
+				rp_Effect_Particle(client, "weapon_confetti_balloons", float(4-place) * 10.0);
+				rp_Effect_Particle(client, "weapon_confetti_balloons", float(4-place) * 10.0);
 			}
 		}
 		
@@ -673,30 +722,31 @@ void displayCasino(int client) {
 	
 	int jeton = getPlayerJeton(client);
 	
-	Format(tmp, sizeof(tmp), "Machine à sous n°%d\n", n + 1, g_iJackpot);
-	Format(tmp, sizeof(tmp), "%sVous avez %d jeton%s\n----------------------------\n", tmp, jeton, jeton>1?"s":"");
+	Format(tmp, sizeof(tmp), "%T\n", "SlotMachine_Menu", client, n + 1);
+	Format(tmp, sizeof(tmp), "%s%T\n----------------------------\n", tmp, "SlotMachine_Jeton", client, jeton);
 	
 	if( g_iJackpot >= 100 ) {
-		Format(tmp, sizeof(tmp), "%s1.      %4s     %d jetons\n", tmp, symbol[6], g_iJackpot);
+		Format(tmp, sizeof(tmp), "%s1.      %4s     %T\n", tmp, symbol[6], "SlotMachine_Jackpot", client, g_iJackpot);
 	
 		for (int i = 0; i < sizeof(gain[])-1; i++)
-			Format(tmp, sizeof(tmp), "%s%d.      %4s     %d jetons\n", tmp, i+2, symbol[i], gain[n][i]);
+			Format(tmp, sizeof(tmp), "%s%d.      %4s     %T\n", tmp, i+2, symbol[i], "SlotMachine_Jackpot", client, gain[n][i]);
 	}
 	else {
 		for (int i = 0; i < sizeof(gain[])-1; i++)
-			Format(tmp, sizeof(tmp), "%s%d.      %4s     %d jetons\n", tmp, i+1, symbol[i], gain[n][i]);
+			Format(tmp, sizeof(tmp), "%s%d.      %4s     %T\n", tmp, i+1, symbol[i], "SlotMachine_Jackpot", client, gain[n][i]);
 	}
 	
 	Format(tmp, sizeof(tmp), "%s ", tmp);
 	
 	
 	Menu menu = CreateMenu(MenuCasino);
-	
-	menu.AddItem("1", 		"Jouer 1 jeton", jeton >= 1 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
-	menu.AddItem("2", 		"Jouer 2 jetons", jeton >= 2 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
-	menu.AddItem("3", 		"Jouer 3 jetons\n", jeton >= 3 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
-	
 	menu.SetTitle(tmp);
+	
+	Format(tmp, sizeof(tmp), "%T", "Play_Jeton", client, 1);	menu.AddItem("1", tmp, jeton >= 1 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+	Format(tmp, sizeof(tmp), "%T", "Play_Jeton", client, 2);	menu.AddItem("2", tmp, jeton >= 2 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+	Format(tmp, sizeof(tmp), "%T", "Play_Jeton", client, 3);	menu.AddItem("3", tmp, jeton >= 3 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+	
+	
 	menu.Pagination = MENU_NO_PAGINATION;
 	menu.ExitButton = true;
 	menu.Display(client, MENU_TIME_FOREVER);
@@ -710,7 +760,12 @@ void EffectCasino(int client, int jeton) {
 		return;
 	
 	if( !takePlayerJeton(client, jeton) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez plus assez de jeton.");
+		char tmp[128];
+		rp_GetItemData(ITEM_JETONBLEU, item_type_name, tmp, sizeof(tmp));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemNotEnought", client, tmp);
+		
+		rp_GetItemData(ITEM_JETONROUGE, item_type_name, tmp, sizeof(tmp));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemNotEnought", client, tmp);
 		return;
 	}
 	
@@ -800,28 +855,32 @@ void displayWheel(int client, int n, int l[3], int k[3], bool last) {
 		givePlayerJeton(client, won);
 		rp_SetClientStat(client, i_LotoWon, rp_GetClientStat(client, i_LotoWon) + (won*100));
 		
+		GetClientName2(client, tmp, sizeof(tmp), false);
+		
 		if( (g_iJackpot-won) == 0 && won > 1000 ) {
 			LogToGame("[CASINO] %L a remporté un jackpot de %d$.", client, won);
-			PrintToChatZone(171, "" ...MOD_TAG... " %L vient de gagner le jackpot de %d jetons !", client, won);
+			
+			PrintToChatZone(171, "" ...MOD_TAG... " %T", "SlotMachine_Jackpot", LANG_SERVER, tmp, won);
 			rp_Effect_Particle(client, "weapon_confetti_balloons", 10.0);
 		}
 		
 		g_iJackpot -= won;
-		Format(tmp, sizeof(tmp), "Vous avez gagné %d jeton%s!", won, won>1?"s":"");
+		Format(tmp, sizeof(tmp), "%T", "SlotMachine_Win_Jeton", client, won);
 	}
 	
 	
 	int jeton = getPlayerJeton(client);
 	
-	menu.SetTitle("Machine à sous n°%d\nIl vous reste %d jeton%s\n%s\n\n%s\n ", n+1, jeton, jeton>1?"s":"", tmp, title);
+	menu.SetTitle("%T\n%s\n\n%s\n ", "SlotMachine_Menu_Full", client, n+1, jeton, tmp, title);
 	
-	menu.AddItem("1", 		"Jouer 1 jeton", last && jeton >= 1 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
-	menu.AddItem("2", 		"Jouer 2 jetons", last && jeton >= 2 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
-	menu.AddItem("3", 		"Jouer 3 jetons\n", last && jeton >= 3 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+	Format(tmp, sizeof(tmp), "%T", "Play_Jeton", client, 1);	menu.AddItem("1", tmp, last && jeton >= 1 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+	Format(tmp, sizeof(tmp), "%T", "Play_Jeton", client, 2);	menu.AddItem("2", tmp, last && jeton >= 2 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+	Format(tmp, sizeof(tmp), "%T", "Play_Jeton", client, 3);	menu.AddItem("3", tmp, last && jeton >= 3 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 	
 	menu.Pagination = MENU_NO_PAGINATION;
 	menu.ExitButton = true;
 	menu.Display(client, MENU_TIME_FOREVER);
+	
 #if defined INSTANT
 	if (last) CreateTimer(0.1, fake, client);
 #endif
@@ -1000,9 +1059,12 @@ void drawEchange(int client, int target, int jobID) {
 	
 	int bleu = rp_GetClientItem(target, ITEM_JETONBLEU);
 	
+	char client_name[128];
+	GetClientName2(client, client_name, sizeof(client_name), true);
+	
 	if( jobID == -1 ) {
-		menu.SetTitle("%N vous propose\nd'échanger vos jetons bleus\ncontre des lots.\n ", client);
-		menu.AddItem("0", "Argent");
+		menu.SetTitle("%T\n ", "Jeton_Echange", target, client_name);
+		Format(tmp, sizeof(tmp), "%T", "Jeton_Which_Money", client); menu.AddItem("0", tmp); 
 		
 		for (int i = 0; i < sizeof(lstJOB); i++) {
 			rp_GetJobData(lstJOB[i], job_type_name, tmp, sizeof(tmp));
@@ -1013,12 +1075,12 @@ void drawEchange(int client, int target, int jobID) {
 		menu.ExitButton = true;
 	}
 	else {
-		menu.SetTitle("Vous avez %d jeton%s bleu%s\nQue souhaitez-vous échanger?\n ", bleu, bleu > 1 ? "s" : "", bleu > 1 ? "s" : "");
+		menu.SetTitle("%T\n ", "Jeton_Which", target, bleu);
 		
 		if( jobID == 0 ) {
-			menu.AddItem("0 10000 125", "10 000$ - 125 Jetons bleus", bleu >= 125 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
-			menu.AddItem("0 100000 1200", "100 000$ - 1 200 Jetons bleus", bleu >= 1200 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
-			menu.AddItem("0 1000000 11000", "1 000 000$ - 1 1000 Jetons bleus", bleu >= 11000 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+			Format(tmp, sizeof(tmp), "%T", "Jeton_Which_Money_Amount", client, 10000, 125);		menu.AddItem("0 10000 125", tmp, bleu >= 125 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+			Format(tmp, sizeof(tmp), "%T", "Jeton_Which_Money_Amount", client, 100000, 1200);	menu.AddItem("0 100000 1200", tmp, bleu >= 1200 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+			Format(tmp, sizeof(tmp), "%T", "Jeton_Which_Money_Amount", client, 100000, 11000);	menu.AddItem("0 1000000 11000", tmp, bleu >= 11000 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 		}
 		else {
 			for(int i = 0; i < MAX_ITEMS; i++) {
@@ -1029,7 +1091,7 @@ void drawEchange(int client, int target, int jobID) {
 				price = RoundToCeil(float(rp_GetItemInt(i, item_type_prix)*10) * 1.2 / 100.0);
 				
 				Format(tmp, sizeof(tmp), "%d %d %d", jobID, i, price);
-				Format(tmp2, sizeof(tmp2), "10x %s - %d Jetons bleus", tmp2, price);
+				Format(tmp2, sizeof(tmp2), "%T", "Jeton_Which_Item_Amount", client, 10, tmp2, price);
 				menu.AddItem(tmp, tmp2, bleu >= price ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 			}
 		}
@@ -1053,7 +1115,8 @@ public int MenuTrade(Handle menu, MenuAction action, int client, int param2) {
 			int bleu = rp_GetClientItem(client, ITEM_JETONBLEU);
 			
 			if( jetons > bleu ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas suffisement de jetons bleus.");
+				rp_GetItemData(ITEM_JETONBLEU, item_type_name, szMenuItem, sizeof(szMenuItem));
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemNotEnought", client, szMenuItem);
 				return;
 			}
 			
@@ -1062,12 +1125,12 @@ public int MenuTrade(Handle menu, MenuAction action, int client, int param2) {
 			
 			if( jobID == 0 ) {
 				rp_ClientMoney(client, i_Bank, itemID);
-				CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu: %d$!", itemID);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Jeton_Which_Money_Give", client, itemID);
 			}
 			else {
 				rp_ClientGiveItem(client, itemID, 10);
 				rp_GetItemData(itemID, item_type_name, szMenuItem, sizeof(szMenuItem)); 
-				CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu: 10x %s!", szMenuItem);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Take", client, 10, szMenuItem);
 			}
 			drawEchange(0, client, jobID);
 		}

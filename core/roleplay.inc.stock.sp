@@ -13,64 +13,55 @@
 //
 //	Stocks
 //
-
-int getKillContext(int attack, int victim) {
-	char ZoneName[32];
+int getNextReboot() {
+	static char szDate05[64], szDate16[64];
+	
+	int now = GetTime();
+	FormatTime(szDate05, sizeof(szDate05), "%e/%m/%Y/6/00/05", now);
+//	FormatTime(szDate16, sizeof(szDate16), "%e/%m/%Y/16/30/05", now);
+	
+	int iDate05 = DateToTimestamp(szDate05);
+	if( iDate05 < now )
+		iDate05 += (24 * 60 * 60);
+	
+//	int iDate16 = DateToTimestamp(szDate16);
+//	if( iDate16 < now )
+//		iDate16 += (24 * 60 * 60);
+	
+//	int next = iDate05 > iDate16 ? iDate16 : iDate05;
+	int next = iDate05;
+	
+	return next;
+}
+float getKillAcceleration(int attack, int victim, int inflictor, const char[] weapon) {
 	int zoneID, attackID, victimID;
 	
-	// ---- dans le comico	
-	zoneID = rp_GetZoneInt(rp_GetPlayerZone(victim), zone_type_type);
-	if( zoneID == 1 ) {
-		attackID = rp_GetClientJobID(attack);
-		victimID = rp_GetClientJobID(victim);
-	
-		if( attackID == zoneID && victimID == zoneID ) // Cas 1
-			return 8;
-		if( attackID == zoneID || victimID == zoneID ) // Cas 2
-			return 2;
-		return 5;
+	int src = victim;
+	if( StrEqual(weapon, "rp_sentry") ) {
+		src = inflictor;
 	}
 	
-	// ---- dans les autres planques
-	zoneID = rp_GetZoneInt(rp_GetPlayerZone(victim), zone_type_type);
-	if( zoneID > 1 ) {
-		attackID = rp_GetClientJobID(attack);
-		victimID = rp_GetClientJobID(victim);
-	
-		if( attackID == zoneID && victimID == zoneID ) // Cas 1
-			return 9;
-		if( attackID == zoneID || victimID == zoneID ) // Cas 2
-			return 3;
-		return 6;
+	// ---- dans les planques
+	zoneID = rp_GetZoneInt(rp_GetPlayerZone(src), zone_type_type);
+	if( zoneID > 0 ) {
+		if( rp_GetClientJobID(victim) == 1 )
+			return 0.7;
+		return 0.5;
 	}
 	
 	// ---- dans les appart
-	zoneID = rp_GetPlayerZoneAppart(victim);
+	zoneID = rp_GetPlayerZoneAppart(src);
 	if( zoneID > 0 ) {
-		attackID = rp_GetClientKeyAppartement(attack, zoneID);
-		victimID = rp_GetClientKeyAppartement(victim, zoneID);
-		
-		if( attackID && victimID ) // Cas 1
-			return 11;
-		if( attackID || victimID ) // Cas 2
-			return 3;
-		return 7;
+		if( GetClientTeam(victim) == CS_TEAM_CT || (rp_ClientFloodTriggered(attack, victim, fd_freekill1) && rp_ClientFloodTriggered(attack, victim, fd_freekill2)) )
+			return 1.0;
+		return 0.8;
 	}
 	
-	// --- ailleurs, du même job:
-	attackID = rp_GetClientJobID(attack);
-	victimID = rp_GetClientJobID(victim);
-	if( attackID == victimID )
-		return 29;
-	
-	// --- ailleurs, du même group:
-	attackID = rp_GetClientGroupID(attack);
-	victimID = rp_GetClientGroupID(victim);
-	if( attackID == victimID )
-		return 29;
-		
-	return 29;
-	
+	if( rp_ClientFloodTriggered(attack, victim, fd_freekill1) && rp_ClientFloodTriggered(attack, victim, fd_freekill2) )
+		return 1.45;
+	if( GetClientTeam(victim) == CS_TEAM_CT )
+		return 1.3;
+	return 1.1;
 }
 
 
@@ -99,7 +90,7 @@ bool Client_CanAttack(int attacker, int victim) {
 		return true;
 	else if( g_bIsInCaptureMode && (rp_IsInPVP(attacker) || rp_IsInPVP(victim)) )
 		return true;
-	else if( rp_GetZoneBit( rp_GetPlayerZone(attacker) ) & (BITZONE_EVENT|BITZONE_PERQUIZ) )
+	else if( rp_GetZoneBit( rp_GetPlayerZone(attacker) ) & (BITZONE_EVENT|BITZONE_PERQUIZ|BITZONE_LEGIT) )
 		return true;
 	
 	Action a; // Quête, merco, ...
@@ -233,21 +224,6 @@ void SSO_Forum(int client, char[] str, int size) {
 	Format(str, size, "&SSOid=%s", szCrypted);
 	
 }
-void GetClientName2(int client, char[] str, int length, bool hideColor=true) {
-	
-	GetClientName(client, str, length);
-	if( hideColor || !g_bUserData[client][b_Crayon] ) {
-		CRemoveTags(str, length);
-	}
-	
-	if( StrContains(str, "{green}", false) > 0 && (StrContains(str, "VIP") > 0 || StrContains(str, "ADMIN") > 0) ) {
-		if( StrContains(str, "{green}", false) < StrContains(str, "VIP") )
-			ReplaceString(str, length, "VIP", "");
-		if( StrContains(str, "{green}", false) < StrContains(str, "ADMIN") )
-			ReplaceString(str, length, "ADMIN", "");
-		
-	}
-}
 void detectCapsLock(int client) {
 	char message[128];
 	GetClientName(client, message, sizeof(message));
@@ -279,14 +255,39 @@ void incrementJobPlayTime(int client, int time) {
 	}
 }
 void AFK_Check(int client) {
+	static bool wasTalking[MAX_PLAYERS + 1];
+	static int lastBatterie[MAX_ENTITIES+1];
 	
 	float vecAngles[3];
 	GetClientEyeAngles(client, vecAngles);
 	
 	bool same = true;
 	for(int i=0; i<1; i++) {
-		if( RoundToFloor(vecAngles[i]/10.0) != RoundToFloor(g_Position[client][i]/10.0) )
+		if( FloatAbs(vecAngles[i] - g_Position[client][i]) > 2.0 )
 			same = false;
+	}
+
+	int vehicle = rp_GetClientVehicle(client);
+	if( vehicle > 0 ) {
+		same = true;
+		
+		if( lastBatterie[vehicle] != g_iVehicleData[vehicle][car_battery] ) {
+			same = false;
+		}
+		lastBatterie[vehicle] = g_iVehicleData[vehicle][car_battery];
+	}
+	int passager = rp_GetClientVehiclePassager(client);
+	if( passager > 0 ) {
+		same = true;
+	}
+	
+	if( !wasTalking[client] && g_hClientMicTimers[client] != INVALID_HANDLE ) {
+		same = false;
+		wasTalking[client] = true;
+	}
+	if( wasTalking[client] && g_hClientMicTimers[client] == INVALID_HANDLE ) {
+		same = false;
+		wasTalking[client] = false;	
 	}
 	
 	
@@ -311,7 +312,7 @@ void AFK_Check(int client) {
 			
 			if( !g_bUserData[client][b_IsAFK] ) {
 				g_bUserData[client][b_IsAFK] = true;
-				CPrintToChat(client, "" ...MOD_TAG... " Vous êtes maintenant considéré comme AFK.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "AFK_Start", client);
 				LogToGame("[TSX-RP] [AFK] %L est maintenant AFK.", client);
 				
 				g_iUserData[client][i_TimeAFK_total] += 60;
@@ -323,9 +324,10 @@ void AFK_Check(int client) {
 					g_iUserData[client][i_PlayerXP] -= 180;
 				
 			}
-			/*else {				
+			else {				
 				if( !IsClientInJail(client) ) {
-					if( g_iUserData[client][i_TimeAFK] > 3600 || g_iUserData[client][i_TimeAFK_total] > 7200 ) {
+					if( g_iUserData[client][i_TimeAFK] > (4*60*60) ||
+						(g_iUserData[client][i_TimeAFK] > (1*60*60) && g_iUserData[client][i_TimeAFK_total] > (8*60*60)) ) {
 						
 						for(int i=0; i<MAX_ITEMS; i++) { 
 							if( rp_GetClientItem(client, i) > 0 ) {
@@ -333,16 +335,16 @@ void AFK_Check(int client) {
 								rp_ClientGiveItem(client, i, -rp_GetClientItem(client, i), false);
 							}
 						}
-						KickClient(client, "Vous êtes resté trop longtemps AFK.");
+						KickClient(client, "%T", "AFK_Kick", client);
 					}
 				}
-			}*/
+			}
 		}
 	}
 	else {
 		if( g_bUserData[client][b_IsAFK] ) {
 			g_bUserData[client][b_IsAFK] = false;
-			CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes plus considéré comme AFK (%d minute%s).", g_iUserData[client][i_TimeAFK]/60, ((g_iUserData[client][i_TimeAFK]/60)>=2?"s" : ""));
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "AFK_End", client, g_iUserData[client][i_TimeAFK]/60);
 			LogToGame("[TSX-RP] [AFK] %L n'est plus AFK.", client);
 		}
 		g_iUserData[client][i_TimeAFK] = 0;
@@ -355,7 +357,8 @@ void AFK_Check(int client) {
 			g_bUserData[client][b_IsFirstSpawn] = false;
 		}
 	}
-	GetClientEyeAngles(client, g_Position[client]);
+	
+	g_Position[client] = vecAngles;
 }
 
 void SQL_Reconnect() {
@@ -365,18 +368,15 @@ void SQL_Reconnect() {
 
 
 	if( g_hBDD == INVALID_HANDLE ) {
-		PrintToChatAll("ERREUR FATAL, Perte de la connexion à la base de donnée.");
+		PrintToChatAll("%T", "Error_FromServer", LANG_SERVER);
 		LogToGame("ERREUR FATAL, Perte de la connexion à la base de donnée.");
 		LogToFile("roleplay.txt", "ERREUR FATAL, Perte de la connexion à la base de donnée.");
 		g_hBDD = SQL_Connect("default", true, g_szError, sizeof(g_szError));
 	}
 }
 
-int ExplosionDamage(float origin[3], float damage, float lenght, int index=0, int index2=0, char weapon[] = "") {
+int ExplosionDamage(float origin[3], float damage, float lenght, int activator=0, int inflictor=0, char weapon[] = "") {
 	static float lastExpl[3];
-	
-	if( index2 ) {
-	}
 	
 	int zone = GetPointZone(origin);
 	int zoneBIT = GetZoneBit(zone);
@@ -388,7 +388,7 @@ int ExplosionDamage(float origin[3], float damage, float lenght, int index=0, in
 		return 0;
 	origin[2] -= 25.0;
 	
-	if( !(zoneBIT & BITZONE_EVENT) && !(zoneBIT & BITZONE_PVP) && IsValidClient(index) && rp_GetClientJobID(index) == 131 && !g_bUserData[index][b_GameModePassive] ) { 
+	if( !(zoneBIT & BITZONE_EVENT) && !(zoneBIT & BITZONE_PVP) && IsValidClient(activator) && rp_GetClientJobID(activator) == 131 && !g_bUserData[activator][b_GameModePassive] ) { 
 		damage *= 1.5;
 	}
 	
@@ -404,7 +404,7 @@ int ExplosionDamage(float origin[3], float damage, float lenght, int index=0, in
 	if( GetVectorDistance(origin, lastExpl) >= 8.0 ) {
 		
 		
-		Handle tr = TR_TraceHullFilterEx(origin, origin, min, max, MASK_SHOT, TraceEntityFilterStuff2);
+		Handle tr = TR_TraceHullFilterEx(origin, origin, min, max, MASK_SHOT, TraceEntityFilterStuff2, inflictor);
 		
 		TR_GetPlaneNormal(tr, normal);
 		TR_GetEndPosition(origin2, tr);
@@ -433,11 +433,11 @@ int ExplosionDamage(float origin[3], float damage, float lenght, int index=0, in
 	
 	bool minimal = false;
 	if( StrEqual(weapon, "weapon_sucetteduo") ) {
-		if( !IsInPVP(index) ) {
+		if( !IsInPVP(activator) ) {
 			minimal = true;
 		}
 		
-		if( !(zoneBIT & BITZONE_EVENT) && !(zoneBIT & BITZONE_PVP) && IsValidClient(index) && rp_GetClientJobID(index) == 191 && !g_bUserData[index][b_GameModePassive] ) {
+		if( !(zoneBIT & BITZONE_EVENT) && !(zoneBIT & BITZONE_PVP) && IsValidClient(activator) && rp_GetClientJobID(activator) == 191 && !g_bUserData[activator][b_GameModePassive] ) {
 			damage *= 1.5;
 			lenght *= 2.0;
 		}
@@ -479,7 +479,7 @@ int ExplosionDamage(float origin[3], float damage, float lenght, int index=0, in
 		if( dmg < 0.0 )
 			continue;
 		
-		TR_TraceRayFilter(origin, PlayerVec, MASK_SHOT, RayType_EndPoint, TraceEntityFilterStuff2);
+		TR_TraceRayFilter(origin, PlayerVec, MASK_SHOT, RayType_EndPoint, TraceEntityFilterStuff2, inflictor);
 		float fraction = (TR_GetFraction()) * 1.25;
 		
 		if( fraction > 1.0 )
@@ -492,17 +492,17 @@ int ExplosionDamage(float origin[3], float damage, float lenght, int index=0, in
 		if( dmg <= 0.0 )
 			continue;
 		
-		g_iUserData[index][i_LastAgression] = GetTime();
-		DealDamage(i, RoundFloat(dmg), index, DMG_BLAST, weapon);
+		g_iUserData[activator][i_LastAgression] = GetTime();
+		DealDamage(i, RoundFloat(dmg), activator, DMG_BLAST, weapon);
 		if( IsValidClient(i) )
-			rp_ClientAggroIncrement(index, i, RoundFloat(dmg));
+			rp_ClientAggroIncrement(activator, i, RoundFloat(dmg));
 		res++;
 	}
 	
 	MakeRadiusPush2(origin, lenght, (damage * 2.0));
 	return res;
 }
-public bool TraceEntityFilterStuff2(int entity, int mask) {
+public bool TraceEntityFilterStuff2(int entity, int mask, int data) {
 
 	if( IsValidClient(entity) || IsMoveAble(entity) )
 		return false;
@@ -514,6 +514,9 @@ public bool TraceEntityFilterStuff2(int entity, int mask) {
 			return false;
 		}
 	}
+	
+	if( data > 0 && entity == data )
+		return false;
 	
 	return true;
 }
@@ -566,7 +569,7 @@ void MakeRadiusPush2( float center[3], float lenght, float damage, int ignore = 
 			NormalizeVector(vecPushDir, vecPushDir);
 			float dist = view_as<float>(Math_Min(1.0, (lenght - GetVectorDistance(vecOrigin, center)))) * FallOff;
 			
-			TR_TraceRayFilter(center, vecOrigin, MASK_SHOT, RayType_EndPoint, TraceEntityFilterStuff2);
+			TR_TraceRayFilter(center, vecOrigin, MASK_SHOT, RayType_EndPoint, TraceEntityFilterStuff2, ignore);
 			float fraction = (TR_GetFraction()) * 1.5;
 			
 			if( fraction >= 1.0 )
@@ -594,16 +597,9 @@ void MakeRadiusPush2( float center[3], float lenght, float damage, int ignore = 
 	lastExpl[2] = center[2];
 }
 int SpawnMoney( float origin[3], bool away = false, bool high = false) {
-	int id = CreateEntityByName("prop_physics");
+	int id = CreateEntityByName("item_cash");
 	if(id == -1)
 		return -1;
-	
-	if( !IsModelPrecached( "models/props/cs_assault/money.mdl" ) ) {
-		PrecacheModel( "models/props/cs_assault/money.mdl" );
-	}
-	
-	SetEntityModel( id, "models/props/cs_assault/money.mdl" );
-	SetEntityMoveType( id, MOVETYPE_VPHYSICS);
 	
 	DispatchKeyValue(id, "classname", 	"money_entity");
 	DispatchKeyValueVector(id, "Origin", origin);
@@ -615,13 +611,10 @@ int SpawnMoney( float origin[3], bool away = false, bool high = false) {
 	
 	float vecVelocity[3];
 	
-	if( away ) {
-		vecVelocity[0] += GetRandomFloat(-50.0, 50.0);
-		vecVelocity[1] += GetRandomFloat(-50.0, 50.0);
-		vecVelocity[2] += GetRandomFloat(150.0, 250.0);
+	if( !away ) {
+		TeleportEntity(id, origin, NULL_VECTOR, vecVelocity);
 	}
 	
-	TeleportEntity(id, origin, NULL_VECTOR, vecVelocity);
 	if( high )
 		Entity_SetTargetName(id, "rp_money_high");
 	else
@@ -665,7 +658,7 @@ public void MoneyEntityGotTouch(int touched, int toucher) {
 	
 	rp_ClientMoney(toucher, i_AddToPay, amount);
 	
-	CPrintToChat(toucher, "" ...MOD_TAG... " Vous avez récupéré %i$.", amount);
+	CPrintToChat(toucher, "" ...MOD_TAG... " %T", "Money_Take", toucher, amount);
 	
 	SDKUnhook(touched, SDKHook_Touch, MoneyEntityGotTouch);
 	rp_AcceptEntityInput(touched, "Kill");
@@ -715,14 +708,22 @@ float degrees_to_radians(float degreesGiven) {
 }
 bool IsAdmin(int client) {
 	char szSteamID[64];
-	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 	
-	for(int i = 0; i < sizeof(g_szSuperAdmin); i++) {
-		if(!StrEqual(g_szSuperAdmin[i], szSteamID)) {
-			continue;
+	if( GetConVarInt(FindConVar("hostport")) != 27015 ){
+		if( GetUserFlagBits(client) & ADMFLAG_ROOT){
+			return true;
 		}
-		
-		return true;
+	}
+
+	if( GetUserFlagBits(client) & ADMFLAG_ROOT){
+		GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
+		for(int i = 0; i < sizeof(g_szSuperAdmin); i++) {
+			if(!StrEqual(g_szSuperAdmin[i], szSteamID)) {
+				continue;
+			}
+			
+			return true;
+		}
 	}
 
 	return false;
@@ -738,13 +739,9 @@ bool IsEntitiesNear(int ent1, int ent2, bool tres_proche = false, float cache = 
 	static float g_flLastCheck[MAX_PLAYERS+1][MAX_ENTITIES];
 	static bool g_bLastData[MAX_PLAYERS+1][MAX_ENTITIES];
 	
-	float f_Origin_1[3];
-	float f_Origin_2[3];
+	float f_Origin_1[3], f_Origin_2[3];
 	
-	GetEntPropVector(ent1, Prop_Send, "m_vecOrigin", f_Origin_1);
-	GetEntPropVector(ent2, Prop_Send, "m_vecOrigin", f_Origin_2);
-	
-	float distance = GetVectorDistance(f_Origin_1, f_Origin_2);
+	float distance = rp_GetDistance(ent1, ent2);
 	
 	if( tres_proche ) {
 		if( (distance*0.5) <= CONTACT_DIST) {
@@ -802,29 +799,25 @@ bool IsEntitiesNear(int ent1, int ent2, bool tres_proche = false, float cache = 
 	return g_bLastData[ent1][ent2];
 }
 void RP_SpawnBank() {
-	char mapname[32];
+	char szMysql[1024], type[32], tmp[256], mapname[32];
 	GetCurrentMap(mapname, sizeof(mapname));
-	
-	char szMysql[1024];
-	Format(szMysql, sizeof(szMysql), "SELECT `id`, `origin_x`, `origin_y`, `origin_z`, `angle_y`, `type` FROM `rp_spawner` WHERE `map`='%s';", mapname);
+
+	Format(szMysql, sizeof(szMysql), "SELECT `id`, `origin_x`, `origin_y`, `origin_z`, `angle_y`, `type`, `physics` FROM `rp_spawner` WHERE `map`='%s';", mapname);
 	
 	SQL_LockDatabase(g_hBDD);
 	Handle req = SQL_Query(g_hBDD, szMysql);
 	
 	if( req != INVALID_HANDLE ) {
-		
 		for(int i=0; i<MAX_ENTITIES; i++) {
-			
 			if( !IsValidEdict(i) )
 				continue;
 			if( !IsValidEntity(i) )
 				continue;
 			
-			char classname[64];
-			GetEdictClassname(i, classname, 63);
+			GetEdictClassname(i, tmp, sizeof(tmp));
 			
-			if( StrContains(classname, "rp_phone") == 0 || StrContains(classname, "rp_tree") == 0 || StrContains(classname, "rp_bank") == 0  || StrContains(classname, "rp_weaponbox") == 0 ) {
-				if( StrContains(classname, "rp_bank") == 0 && rp_GetBuildingData(i, BD_owner) != 0 )
+			if( StrContains(tmp, "rp_phone") == 0 || StrContains(tmp, "rp_bank") == 0 || StrContains(tmp, "rp_mail_") == 0  || StrContains(tmp, "rp_weaponbox") == 0 ) {
+				if( StrContains(tmp, "rp_bank") == 0 && rp_GetBuildingData(i, BD_owner) != 0 )
 					continue;
 				rp_AcceptEntityInput(i, "Kill");
 			}
@@ -840,11 +833,9 @@ void RP_SpawnBank() {
 			vecOrigin[2] = float(SQL_FetchInt(req, 3));
 			vecAngles[1] = float(SQL_FetchInt(req, 4));
 			
-			char type[32];
 			SQL_FetchString(req, 5, type, sizeof(type));
 			
-			int ent = CreateEntityByName("prop_dynamic");
-			char tmp[255];
+			int ent = CreateEntityByName(SQL_FetchInt(req, 6) == 0 ? "prop_dynamic" : "prop_physics");
 			
 			if( StrEqual(type, "bank") ) {
 				Format(tmp, sizeof(tmp), "rp_bank");
@@ -872,6 +863,14 @@ void RP_SpawnBank() {
 				
 				vecAngles[1] += 90.0;
 			}
+			else if( StrContains(type, "mail_") == 0 ) {
+				Format(tmp, sizeof(tmp), "rp_%s", type);
+				
+				DispatchKeyValue(ent, "model", "models/props_street/mail_dropbox.mdl");
+				DispatchKeyValue(ent, "solid", "6");
+				
+				SetEntityModel(ent, "models/props_street/mail_dropbox.mdl");
+			}
 			else if( StrEqual(type, "weapon") ) {
 				Format(tmp, sizeof(tmp), "rp_weaponbox");
 				
@@ -880,23 +879,7 @@ void RP_SpawnBank() {
 				SetEntityModel(ent, "models/DeadlyDesire/props/atm01.mdl");
 				DispatchKeyValue(ent, "solid", "0");
 				
-				vecAngles[1] -= 90.0;				
-			}
-			else if( StrEqual(type, "tree") ) {
-				Format(tmp, sizeof(tmp), "rp_tree");
-				
-				DispatchKeyValue(ent, "model", "models/models_kit/xmas/xmastree_mini.mdl");
-				DispatchKeyValue(ent, "solid", "6");
-				
-				SetEntityModel(ent, "models/models_kit/xmas/xmastree_mini.mdl");
-			}
-			else if( StrEqual(type, "tree2") ) {
-				Format(tmp, sizeof(tmp), "rp_tree2");
-				
-				DispatchKeyValue(ent, "model", "models/models_kit/xmas/xmastree.mdl");
-				DispatchKeyValue(ent, "solid", "6");
-				
-				SetEntityModel(ent, "models/models_kit/xmas/xmastree.mdl");
+				vecAngles[1] -= 90.0;
 			}
 			
 			DispatchKeyValue(ent, "classname", tmp);
@@ -930,7 +913,7 @@ void RP_SpawnBank() {
 			rp_AcceptEntityInput( ent, "EnableCollision" );
 			
 			#if defined EVENT_NOEL
-			if( StrEqual(type, "tree") || StrEqual(type, "tree2") ) {
+			if( StrEqual(type, "tree2") ) {
 				if( GetConVarInt(g_hEVENT_NOEL) != 1 )
 					rp_AcceptEntityInput(ent, "Kill");
 			}
@@ -946,6 +929,10 @@ void RP_SpawnBank() {
 void SpawnRandomBonbon() {
 	
 	ServerCommand("sm_effect_weather snow 100");
+	
+	return;
+	// Deprecated?
+	
 	for( int i=MaxClients; i<=GetMaxEntities(); i++ ) {
 		if( !IsValidEdict(i) )
 			continue;
@@ -1020,10 +1007,6 @@ stock void SpawnBonbon( float origin[3], int owner = 0) {
 	ScheduleEntityInput(id, 60.0, "Kill");
 	
 	ServerCommand("sm_effect_particles %d Trail5 10", id);
-	if( owner > 0 ) {
-		g_iOriginOwner[id] = owner;
-		SDKHook(id, SDKHook_SetTransmit, Hook_Transmit);
-	}
 	return;
 }
 public void BonbonEntityGotTouch(int touched, int toucher) {
@@ -1050,8 +1033,8 @@ public void BonbonEntityGotTouch(int touched, int toucher) {
 	
 	if( !g_bUserData[toucher][b_IsAFK] ) {
 		
-		if( Math_GetRandomInt(0, 1) && IsTutorialOver(toucher) ) {
-			int rand = Math_GetRandomInt(2, 5)*50;
+		if( Math_GetRandomInt(1, 100) > 20 && IsTutorialOver(toucher) ) {
+			int rand = Math_GetRandomPow(10, 15) * 10;
 			rp_ClientXPIncrement(toucher, rand);
 		}
 		else {
@@ -1099,7 +1082,7 @@ int RunMapCleaner(bool full = false, bool admin = false, int zone = 0) {
 				}
 				
 				if( StrContains(classname, "cfe_player_decal") == 0 ) {
-			}
+				}
 				
 				if( zone == 0 || GetPlayerZone(i) == zone ) {
 					PrintToServer("[CLEANER-1] Supprimé: [%d] %s (full=%b admin=%b zone=%d) %s", i, classname, full, admin, zone, path);
@@ -1177,9 +1160,9 @@ int CleanUp(bool full = false, int zone = 0) {
 			
 		GetEdictClassname(i, name, sizeof(name));
 		
-		if( (StrContains(name, "weapon_") == -1 && StrContains(name, "item_") == -1) || StrContains(name, "weapon_c4") == 0)
+		if( (StrContains(name, "weapon_") == -1 && StrContains(name, "item_") == -1) && StrContains(name, "bumpmine_projectile") == -1 || StrContains(name, "weapon_c4") == 0)
 			continue;
-		if( Weapon_GetOwner(i) > 0 )
+		if( StrContains(name, "weapon_") == 0 && Weapon_GetOwner(i) > 0 )
 			continue;
 		
 		if( full ) {
@@ -1236,13 +1219,6 @@ void AddDownloadsTable() {
 // Autoriser le vol d'un joueur
 public Action AllowStealing(Handle timer, any client) {
 	g_bUserData[client][b_MaySteal] = true;
-	
-	if( IsValidClient(client) ) {
-		if (IsGangMaffia(client) || IsDealer(client) )
-			CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez à nouveau voler.");
-		else if( IsTech(client) )
-			CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez à nouveau poser une machine.");		
-	}
 }
 int _GetTime(float time) {
 	static float last;

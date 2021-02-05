@@ -73,7 +73,7 @@
         <i ng-show="item.unban==1">Un admin vous a accordé sa clémence.</i>
       </span>
 
-      <span ng-show="item.SteamID==steamid && item.banned==1">Vous pouvez contester en postant <a href="https://www.ts-x.eu/forum/posting.php?mode=post&f=56">ici</a>.</span>
+      <span ng-show="item.SteamID==steamid && item.banned==1">Vous pouvez contester en postant <a href="https://forum.riplay.fr/index.php?/topic/89-a-lire-avant-de-poster-demande-de-d%C3%A9bannissement/">ici</a>.</span>
     </td>
   </tr>
   <tr>

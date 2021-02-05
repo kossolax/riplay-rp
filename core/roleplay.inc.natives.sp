@@ -73,6 +73,9 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 	CreateNative("rp_IsInPVP",			Native_rp_IsInPVP);
 	CreateNative("rp_IsBuildingAllowed", Native_rp_IsBuildingAllowed);
 	
+	CreateNative("rp_SetWeaponFireRate",		Native_rp_SetWeaponFireRate);
+	CreateNative("rp_GetWeaponFireRate",		Native_rp_GetWeaponFireRate);
+	
 	CreateNative("rp_GetWeaponGroupID",		Native_rp_GetWeaponGroupID);
 	CreateNative("rp_SetWeaponGroupID",		Native_rp_SetWeaponGroupID);
 	
@@ -101,6 +104,8 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 	
 	CreateNative("rp_IsClientLucky", 	Native_rp_IsClientLucky);
 	CreateNative("rp_IncrementLuck", 	Native_rp_IsClientLucky);
+
+	CreateNative("rp_AddSaveSlot", 	Native_rp_AddSaveSlot);
 	
 	CreateNative("rp_GetJobCapital", Native_rp_GetJobCapital);
 	CreateNative("rp_SetJobCapital", Native_rp_SetJobCapital);
@@ -202,13 +207,19 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 	CreateNative("rp_WeaponMenu_Add", Native_rp_WeaponMenu_Add);
 	CreateNative("rp_WeaponMenu_Delete", Native_rp_WeaponMenu_Delete);
 	CreateNative("rp_WeaponMenu_Get", Native_rp_WeaponMenu_Get);
+	CreateNative("rp_WeaponMenu_Give", Native_rp_WeaponMenu_Give);
 	
 	CreateNative("rp_GetForwardHandle", Native_GetForwardHandle);
 	CreateNative("rp_GetClientNextMessage", Native_rp_GetClientNextMessage);
 	
+	CreateNative("rp_GetLevelData",	Native_rp_GetLevelData);
+	
 	RegPluginLibrary("roleplay");
 	
 	return APLRes_Success;
+}
+public int Native_rp_GetLevelData(Handle plugin, int numParams) {
+	SetNativeString(3, g_szLevelList[GetNativeCell(1)][GetNativeCell(2)], GetNativeCell(4));
 }
 public int Native_rp_ClientCanAttack(Handle plugin, int numParams) {
 	return Client_CanAttack(GetNativeCell(1), GetNativeCell(2));
@@ -217,12 +228,22 @@ public int Native_rp_ClientMoney(Handle plugin, int numParams) {
 	int client = GetNativeCell(1);
 	int type = GetNativeCell(2);
 	int amount = GetNativeCell(3);
+	bool unsafe = view_as<bool>(GetNativeCell(4));
+
+	if(amount > 1000000 || amount < -1000000){
+		if(!unsafe){
+			LogToGame("[CHEATING] [CLIENT-MONEY] %L aurait du recevoir %d.", client, amount);
+			LogStackTrace("[CHEATING] [CLIENT-MONEY] %L aurait du recevoir %d.", client, amount);
+			CPrintToChat(client, "%T", "Error_FromServer", client);
+			return 0;
+		}
+	}
 	
 	int dette = g_iUserData[client][i_Dette];
 	if( dette > 0 && amount > 0 ) {
 		
 		if( amount > 10 )
-			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas reçu %d$ afin de rembourser votre dette de %d$.", (amount < dette ? amount : dette), dette);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Ban_Refund", client, (amount < dette ? amount : dette), dette);
 		
 		dette -= amount;
 		if (dette < 0) {
@@ -280,6 +301,8 @@ public int Native_rp_ClientMoney(Handle plugin, int numParams) {
 		g_iUserData[client][i_AddToPay] = pay;
 		g_iUserData[client][i_Dette] = dette;
 	}
+	
+	return 1;
 }
 public int Native_GrabRelease(Handle plugin, int numParams) {
 	int client = GetNativeCell(1);
@@ -396,7 +419,7 @@ public Action fwdPlayerJail(int client, int attacker) {
 	rp_UnhookEvent(client, RP_OnPlayerDead, fwdPlayerDead);
 	rp_UnhookEvent(client, RP_PostClientSendToJail, fwdPlayerDead);
 }
-public Action fwdPlayerDead(int client, int attacker, float& respawn, int& tdm) {
+public Action fwdPlayerDead(int client, int attacker, float& respawn, int& tdm, float& ctx) {
 	Handle timer;
 	for (int i = 0; i < g_iParentedParticle[client].Length; i++) {
 		timer = view_as<Handle>(g_iParentedParticle[client].Get(i));
@@ -453,8 +476,10 @@ public int Native_rp_GetClientSSO(Handle plugin, int numParams) {
 	SetNativeString(2, tmp, GetNativeCell(3));
 }
 public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
+	char tmp[128];
 	int client = view_as<int>(GetNativeCell(1));
 	int xp = view_as<int>(GetNativeCell(2));
+	bool verbose = view_as<bool>(GetNativeCell(3));
 	
 	if( !IsTutorialOver(client) )
 		return 0;
@@ -463,25 +488,21 @@ public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
 		return 0;
 	}
 	
-	if( GetJobPrimaryID(client) == g_iUserData[client][i_Job] && g_iUserData[client][i_TimePlayedJob] >= (60*60*100) ) {
+	if( g_iUserData[client][i_Job] > 0 && GetJobPrimaryID(client) == g_iUserData[client][i_Job] && g_iUserData[client][i_TimePlayedJob] >= (60*60*100) ) {
 		float factor = (float(g_iUserData[client][i_TimePlayedJob]) / (60.0 * 60.0 * 1000.0));
 		xp += RoundFloat( float(xp) * factor);
 	}
+#if defined EVENT_BIRTHDAY
+	xp = xp * 2;
+#endif
+
 	g_iUserData[client][i_PlayerXP] += xp;
 
-	if( xp >= 100 )
-#if defined EVENT_BIRTHDAY
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez gagné {red}2x{green}%d{default} points d'expérience.", xp);
-	xp = xp * 2;
-#else
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez gagné {green}%d{default} points d'expérience.", xp);
-#endif
+	if( xp >= 100 || verbose )
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "LEVEL_XP", client, xp);
 	
 	while( g_iUserData[client][i_PlayerXP] >= (g_iUserData[client][i_PlayerLVL] * 3600) ) {
 		g_iUserData[client][i_PlayerLVL]++;
-		
-		if( !g_bUserData[client][b_IsFirstSpawn] && IsPlayerAlive(client) )
-			ServerCommand("sm_effect_particles %d levelup 10", client);
 		
 		int a = RoundToFloor(SquareRoot(float(g_iUserData[client][i_PlayerLVL])));
 		int b = a * (a + 1);
@@ -493,14 +514,20 @@ public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
 			g_iUserData[client][i_PlayerRank] = a + 1;
 			
 			if( b == 702 ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 50 cadeaux dans votre banque.");
-				rp_ClientGiveItem(client, ITEM_CADEAU, 50, true);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Give", client, 50, g_szItemList[ITEM_CADEAU][item_type_name]);
+				rp_ClientGiveItem(client, ITEM_CADEAU, 50);
+			}
+			if( b == 600 ) {
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Give", client, 25, g_szItemList[ITEM_CADEAU][item_type_name]);
+				rp_ClientGiveItem(client, ITEM_CADEAU, 25);
 			}
 			
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez atteint le niveau {green}%d{default}. Vous êtes maintenant {green}%s{default}!", g_iUserData[client][i_PlayerLVL], g_szLevelList[ g_iUserData[client][i_PlayerRank] ][rank_type_name]);
+			if( !g_bUserData[client][b_IsFirstSpawn] && IsPlayerAlive(client) )
+				ServerCommand("sm_effect_particles %d levelup 10", client);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "LEVEL_RANK", client, g_iUserData[client][i_PlayerLVL], g_szLevelList[ g_iUserData[client][i_PlayerRank] ][rank_type_name]);
 		}
 		else {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez atteint le niveau {green}%d{default}.", g_iUserData[client][i_PlayerLVL]);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "LEVEL_UP", client, g_iUserData[client][i_PlayerLVL]);
 		}
 	}
 	return 1;
@@ -528,6 +555,9 @@ public int Native_rp_ClientAgroIncrement(Handle plugin, int numParams) {
 	int time = GetTime();
 	
 	if( client == target )
+		return 1;
+	
+	if( IsInPVP(client) && IsInPVP(target) )
 		return 1;
 	
 	if( !IsValidClient(client) ) {
@@ -572,12 +602,6 @@ void ClientAgroDecrement(int client) {
 		if( tmp[KillStack_time] < GetTime() ) {
 			g_hAggro[client].Erase(0);
 			g_iAggro[client][ tmp[KillStack_target] ] -= tmp[KillStack_damage];
-			
-			
-			if( g_hAggro[client].Length == 0 ) {
-				delete g_hAggro[client];
-				g_hAggro[client] = new ArrayList(KillStack_max, 0);
-			}
 		}
 		else {
 			break;
@@ -785,35 +809,38 @@ public int Native_rp_ClientResetSkin(Handle plugin, int numParams ) {
 	SetPersonalSkin(GetNativeCell(1));
 }
 public int Native_rp_Effect_PropExplode(Handle plugin, int numParams) {
-	int ent = GetNativeCell(1);
-	bool tazer = view_as<bool>(GetNativeCell(2));
+
 	
-	if( !rp_GetBuildingData(ent, BD_Trapped) )
+	int ent = GetNativeCell(1);
+	int attacker = GetNativeCell(2);
+	bool tazer = view_as<bool>(GetNativeCell(3));
+	
+	if( rp_GetBuildingData(ent, BD_Trapped) == 0 )
+		return;
+	if( rp_GetBuildingData(ent, BD_owner) == attacker )
+		return;
+	if( rp_IsValidDoor(ent) && rp_GetClientKeyDoor(attacker, rp_GetDoorID(ent)) )
+		return;
+	if( rp_GetClientBool(attacker, b_GameModePassive) && rp_ClientCanAttack(rp_GetBuildingData(ent, BD_Trapped), attacker) == false )
 		return;
 	
-	rp_SetBuildingData(ent, BD_Trapped, false);
-	
-	float vecOrigin[3];
+	float vecOrigin[3], min[3], max[3];
 	Entity_GetAbsOrigin(ent, vecOrigin);
+	Entity_GetMinSize(ent, min);
+	Entity_GetMaxSize(ent, max);
+	vecOrigin[0] += (min[0] + max[0]) / 2.0;
+	vecOrigin[1] += (min[1] + max[1]) / 2.0;
+	vecOrigin[2] += (min[2] + max[2]) / 2.0;
 	
-	float dmg = float(RoundToCeil(Entity_GetHealth(ent)/5.0)+5);
-	if( tazer ) 
-		dmg *= 2.0;
+	float dmg = 300.0 * (tazer ? 4.0 : 1.0);
 	
-	char model[128];
-	Entity_GetModel(ent, model, sizeof(model));
-	
-	if( StrContains(model, "cash_register") != -1 ) {
-		dmg *= 4.0;
-		if( tazer ) 
-			dmg *= 4.0;
-	}
-	
-	ExplosionDamage(vecOrigin, dmg, 250.0, rp_GetBuildingData(ent, BD_owner), ent);
+	ExplosionDamage(vecOrigin, dmg, 256.0, rp_GetBuildingData(ent, BD_Trapped), ent, "rp_trap");
+	rp_SetBuildingData(ent, BD_Trapped, 0);
 	
 	TE_SetupExplosion(vecOrigin, g_cExplode, 1.0, 0, 0, 200, 200);
 	TE_SendToAll();
-	rp_AcceptEntityInput(ent, "Kill");
+	
+	SDKHooks_TakeDamage(ent, ent, attacker, dmg);
 }
 public int Native_rp_SetClientKeyAppartement(Handle plugin, int numParams ) {
 	g_iDoorOwner_v2[GetNativeCell(1)][GetNativeCell(2)] = GetNativeCell(3);
@@ -893,7 +920,10 @@ public int Native_rp_GetWeaponStorage(Handle plugin, int numParams) {
 	return g_iWeaponFromStore[GetNativeCell(1)];
 }
 public int Native_rp_IsClientNew(Handle plugin, int numParams) {
-	return (g_iClient_OLD[GetNativeCell(1)]!=1);
+	int client = GetNativeCell(1);
+	if( IsFakeClient(client) )
+		return view_as<int>(false);
+	return (g_iClient_OLD[client]!=1);
 }
 public int Native_rp_ClientVehiclePassagerExit(Handle plugin, int numParams) {
 	LeaveVehiclePassager(GetNativeCell(1), GetNativeCell(2) );
@@ -904,17 +934,12 @@ public int Native_rp_SetClientVehicle(Handle plugin, int numParams) {
 }
 public int Native_rp_ClientGiveHands(Handle plugin, int numParams) {
 	int client = GetNativeCell(1);
-	bool zeus = view_as<bool>(Client_HasWeapon(client, "weapon_taser"));
 	
 	Client_RemoveWeapon(client, "weapon_fists");
-	Client_RemoveWeapon(client, "weapon_taser");
 	
 	int tmp = GivePlayerItem(client, "weapon_fists");
 	EquipPlayerWeapon(client, tmp);
 	FakeClientCommand(client, "use weapon_fists");
-	
-	if( zeus )
-		GivePlayerItem(client, "weapon_taser");
 	
 }
 public int Native_rp_ClientVehicleExit(Handle plugin, int numParams ) {
@@ -939,10 +964,11 @@ public int Native_rp_SetClientVehiclePassager(Handle plugin, int numParams ) {
 	int client = GetNativeCell(1);
 	int car = GetNativeCell(2);
 	
+	int offset = GetNativeCell(3);
+	int version = GetNativeCell(4);
 	
-	int offset = 0;
-	bool found = false;
-	char tmp[32];
+	bool found = offset != 0;
+	char tmp[32], model[128];
 	
 	while( !found && offset < g_iVehicleData[car][car_maxPassager] ) {
 		offset++;
@@ -954,18 +980,24 @@ public int Native_rp_SetClientVehiclePassager(Handle plugin, int numParams ) {
 			continue;
 		
 		found = true;
-		g_iCarPassager1[car][offset] = client;
 	}
 	
 	if( !found )
 		return view_as<int>(false);
 	
+
+	g_iCarPassager1[car][offset] = client;
 	g_iCarPassager2[client] = car;
+	Format(tmp, sizeof(tmp), "vehicle_feet_passenger%d", offset);
 	
-	int ent = CreateEntityByName("prop_dynamic");
-	
-	DispatchKeyValue(ent, "model", "models/natalya/vehicles/csgo_car_seat_00.mdl");				
-	SetEntityModel(ent, "models/natalya/vehicles/csgo_car_seat_00.mdl");
+	int ent = CreateEntityByName("prop_dynamic");	
+	if( version == 2 )
+		Format(model, sizeof(model), "models/props/crates/csgo_drop_crate_spectrum_v8.mdl");
+	else
+		Format(model, sizeof(model), "models/natalya/vehicles/csgo_car_seat_00.mdl");
+
+	DispatchKeyValue(ent, "model", model);				
+	SetEntityModel(ent, model);
 	DispatchKeyValue(ent, "solid", "0");
 	
 	if( LookupAttachment(client, "legacy_weapon_bone") <= 0 ) {
@@ -988,13 +1020,14 @@ public int Native_rp_SetClientVehiclePassager(Handle plugin, int numParams ) {
 	rp_AcceptEntityInput(client, "SetParent", ent, ent);
 	
 	int iFlags = GetEntProp(client, Prop_Send, "m_fEffects");
-	SetEntProp(client, Prop_Send, "m_fEffects", iFlags | EF_BONEMERGE | EF_NOSHADOW | EF_NOINTERP);
+	SetEntProp(client, Prop_Send, "m_fEffects", iFlags | EF_BONEMERGE | EF_NOSHADOW | EF_NOINTERP | EF_BONEMERGE_FASTCULL | EF_PARENT_ANIMATES );
+//	SetEntProp(client, Prop_Send, "m_fEffects", iFlags | EF_BONEMERGE | EF_NOSHADOW | EF_NOINTERP);
 	SetEntProp(client, Prop_Send, "m_CollisionGroup", COLLISION_GROUP_NONE);
 	SetEntityMoveType(client, MOVETYPE_NONE);
+	
 	int hud = GetEntProp(client, Prop_Send, "m_iHideHUD");
 	hud |= HIDEHUD_WEAPONSELECTION|HIDEHUD_INVEHICLE;
 	SetEntProp(client, Prop_Send, "m_iHideHUD", hud);
-	SetEntProp(client, Prop_Send, "m_bDrawViewmodel", 0);
 	
 	ClientCommand(client, "cam_idealpitch 65");	
 	ClientCommand(client, "thirdperson");
@@ -1136,10 +1169,9 @@ public int Native_rpClientColorize(Handle plugin, int numParams) {
 	GetNativeArray(2, color, sizeof(color));
 	
 	if( color[0] == -1 ) {
-		if( IsInPVP(client) )
-			GroupColor(client);
-		else
+		if( client > MaxClients || g_bUserData[client][b_Invisible] == false ) {
 			Colorize(client, 255, 255, 255, 255);
+		}
 	}
 	else {
 		Colorize(client, color[0], color[1], color[2], color[3]);
@@ -1173,6 +1205,9 @@ public int Native_rp_ScheduleEntityInput(Handle plugin, int numParams) {
 }
 public int Native_rp_IsClientLucky(Handle plugin, int numParams) {
 	return 0;
+}
+public int Native_rp_AddSaveSlot(Handle plugin, int numParams) {
+	return view_as<int>(ItemSave_AddSave(GetNativeCell(1)));
 }
 public int Native_rp_GetItemData(Handle plugin, int numParams) {
 	
@@ -1233,9 +1268,15 @@ public int Native_rp_ClientDamage(Handle plugin, int numParams) {
 	int client = GetNativeCell(1);
 	int damage = GetNativeCell(2);
 	int target = GetNativeCell(3);
+	bool legit = view_as<bool>(GetNativeCell(6));
+	
+	if( legit )
+		rp_ClientAggroIncrement(client, target, damage*5);
 	
 	DealDamage(client, damage, target, GetNativeCell(5), str);
-	rp_ClientAggroIncrement(target, client, damage);
+	
+	if( !legit )
+		rp_ClientAggroIncrement(target, client, damage);
 	
 	return 1;
 }
@@ -1256,11 +1297,15 @@ public int Native_rp_SetClientKnifeType(Handle plugin, int numParams) {
 	
 	char classname[64];
 	GetEdictClassname(wepid, classname, sizeof(classname));
-	if( !Weapon_ShouldBeEquip(classname) ) {
+	if( !StrEqual(classname, "weapon_knife") ) {
 		return view_as<int>(false);
 	}
 	
-	g_iWeaponsBallType[wepid] = GetNativeCell(2);
+	int type = GetNativeCell(2);
+	if( g_iWeaponsBallType[wepid] == type )
+		return view_as<int>(false);
+	
+	g_iWeaponsBallType[wepid] = type;
 	
 	return view_as<int>(true);
 }
@@ -1273,7 +1318,7 @@ public int Native_rp_GetClientKnifeType(Handle plugin, int numParams) {
 	
 	char classname[64];
 	GetEdictClassname(wepid, classname, sizeof(classname));
-	if( !Weapon_ShouldBeEquip(classname) ) {
+	if( !StrEqual(classname, "weapon_knife") ) {
 		return 0;
 	}
 	
@@ -1284,6 +1329,13 @@ public int Native_rp_GetWeaponBallType(Handle plugin, int numParams) {
 }
 public int Native_rp_SetWeaponBallType(Handle plugin, int numParams) {
 	g_iWeaponsBallType[GetNativeCell(1)] = GetNativeCell(2);
+	return 1;
+}
+public int Native_rp_GetWeaponFireRate(Handle plugin, int numParams) {
+	return view_as<int>(g_flWeaponFireRate[GetNativeCell(1)]);
+}
+public int Native_rp_SetWeaponFireRate(Handle plugin, int numParams) {
+	g_flWeaponFireRate[GetNativeCell(1)] = view_as<float>(GetNativeCell(2));
 	return 1;
 }
 public int Native_rp_GetWeaponGroupID(Handle plugin, int numParams) {
@@ -1297,7 +1349,10 @@ public int Native_rp_GetClientGroupID(Handle plugin, int numParams) {
 	return GetGroupPrimaryID(GetNativeCell(1));
 }
 public int Native_rp_GetClientJobID(Handle plugin, int numParams) {
-	return GetJobPrimaryID(GetNativeCell(1));
+	int client = GetNativeCell(1);
+	if( client > 0 )
+		return GetJobPrimaryID(client);
+	return -1;
 }
 public int Native_rp_IsInPVP(Handle plugin, int numParams) {
 	return IsInPVP(GetNativeCell(1));

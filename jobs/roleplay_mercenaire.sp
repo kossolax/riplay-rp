@@ -51,6 +51,7 @@ int g_bShouldOpen[65];
 Handle g_vCapture = INVALID_HANDLE;
 Handle g_vConfigTueur = INVALID_HANDLE;
 Handle g_hTimer[65];
+Handle g_hActive;
 
 // ----------------------------------------------------------------------------
 public Action Cmd_Reload(int args) {
@@ -60,14 +61,22 @@ public Action Cmd_Reload(int args) {
 	return Plugin_Continue;
 }
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("common.phrases");
+	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.items.phrases");
+	LoadTranslations("roleplay.mercenaire.phrases");
+	
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	RegServerCmd("rp_item_contrat",		Cmd_ItemContrat,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_conprotect",	Cmd_ItemConProtect,		"RP-ITEM",	FCVAR_UNREGISTERED);
-
+	
 	RegServerCmd("rp_item_cryptage",	Cmd_ItemCryptage,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_map",			Cmd_ItemMaps,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	
-	g_vConfigTueur = CreateConVar("rp_config_kidnapping", "225,226,227,228,236,237-238");
+	g_vConfigTueur = CreateConVar("rp_config_kidnapping", "208,209,210,211,219,220-221");
+	
+	g_hActive 		= CreateConVar("rp_kidnapping", "0");
 	
 	for (int i = 1; i <= MaxClients; i++)
 		if( IsValidClient(i) )
@@ -93,9 +102,19 @@ public void OnCvarChange(Handle cvar, const char[] oldVal, const char[] newVal) 
 }
 // ----------------------------------------------------------------------------
 public void OnClientPostAdminCheck(int client) {
+	rp_HookEvent(client, RP_OnPlayerBuild, fwdOnPlayerBuild);
 	rp_HookEvent(client, RP_OnPlayerCommand, fwfCommand);
 	rp_HookEvent(client, RP_PostTakeDamageWeapon, fwdWeapon);
 	g_bBlockDrop[client] = false;
+}
+public Action fwdOnPlayerBuild(int client, float& cooldown) {
+	if( rp_GetClientJobID(client) != 41 )
+		return Plugin_Continue;
+	
+	ServerCommand("rp_item_lancercut %d -1", client);
+	cooldown = 10.0;
+	
+	return Plugin_Stop;
 }
 public void OnClientDisconnect(int client) {
 	if( rp_GetClientInt(client, i_ToKill) > 0 && rp_GetClientJobID(client) == 41 ) {
@@ -110,11 +129,11 @@ public void OnClientDisconnect(int client) {
 			
 		if( rp_GetClientInt(i, i_ToKill) == client  ) {
 			if( rp_GetClientInt(client, i_KidnappedBy) == i ) {
-				CPrintToChat(i, "" ...MOD_TAG... " Votre cible s'est déconnectée.");
+				CPrintToChat(i, "" ...MOD_TAG... " %T", "Tueur_TargetLeft", i);
 				RestoreAssassinNormal(i);
 			}
 			else {
-				CPrintToChat(i, "" ...MOD_TAG... " Votre cible s'est déconnectée.");
+				CPrintToChat(i, "" ...MOD_TAG... " %T", "Tueur_TargetLeft", i);
 				SetContratFail(i, true);
 			}
 		}
@@ -199,7 +218,7 @@ public Action Cmd_ItemContrat(int args) {
 	OpenSelectSkill(vendeur);
 	
 	if( !IsValidClient(target) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Votre cible s'est déconnectée.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Tueur_TargetLeft", client);
 		SetContratFail(client);
 	}
 	return Plugin_Handled;
@@ -208,6 +227,10 @@ public Action Cmd_ItemContrat(int args) {
 public Action fwdTueurCanKill(int attacker, int victim) {
 	if( victim == rp_GetClientInt(attacker, i_ToKill) || attacker == rp_GetClientInt(victim, i_ToKill) )
 		return Plugin_Handled;
+
+	if( rp_GetClientJobID(attacker) == 41 && rp_GetZoneInt(rp_GetPlayerZone(victim), zone_type_type) == 41 )
+		return Plugin_Handled;
+	
 	return Plugin_Continue;
 }
 public Action fwdFrame(int client) {
@@ -223,7 +246,10 @@ public Action fwdFrame(int client) {
 	else {
 		rp_GetZoneData(rp_GetPlayerZone(target), zone_type_name, tmp, sizeof(tmp));
 		rp_Effect_BeamBox(client, target, NULL_VECTOR, 255, 0, 0);
-		PrintHintText(client, "Cible: %N\n%Zone: %s", target, tmp);
+		
+		char target_name[128];
+		GetClientName2(target, target_name, sizeof(target_name), false);
+		PrintHintText(client, "%T", "Tueur_TargetHint", client, target_name, tmp);
 	}
 	
 	return Plugin_Continue;
@@ -236,12 +262,17 @@ public Action TaskResetVictim(Handle timer, any client) {
 	if( IsValidClient(client) )
 		rp_SetClientInt(client, i_LastKilled, 0);
 }
-public Action fwdTueurKill(int client, int attacker, float& respawn, int& tdm) {
+public Action fwdTueurKill(int client, int attacker, float& respawn, int& tdm, float& ctx) {
 	if( rp_GetClientInt(attacker, i_ToKill) == client && rp_GetClientInt(client, i_KidnappedBy) != attacker ) {
 		rp_SetClientStat(attacker, i_JobSucess, rp_GetClientStat(client, i_JobSucess) + 1);
 		rp_SetClientStat(attacker, i_JobFails, rp_GetClientStat(client, i_JobFails) - 1);
+		
+		char client_name[128], target_name[128];
+		GetClientName2(client, client_name, sizeof(client_name), false);
+		GetClientName2(attacker, target_name, sizeof(target_name), false);
+		
 
-		CPrintToChat(attacker, "" ...MOD_TAG... " Vous avez rempli votre contrat pour avoir tué %N.", client);
+		CPrintToChat(attacker, "" ...MOD_TAG... " %T", "Tueur_ContratDone_Self", attacker, client_name);
 		
 		int from = rp_GetClientInt(attacker, i_ContratFor);
 		bool kidnapping = false;
@@ -259,7 +290,7 @@ public Action fwdTueurKill(int client, int attacker, float& respawn, int& tdm) {
 				rp_SetJobCapital(41, rp_GetJobCapital(41) + 200);
 			}
 			
-			CPrintToChat(from, "" ...MOD_TAG... " %N{default} a rempli son contrat en tuant %N.", attacker, client);
+			CPrintToChat(from, "" ...MOD_TAG... " %T", "Tueur_ContratDone_Target", from, target_name, client_name);
 			rp_IncrementSuccess(from, success_list_tueur);
 			
 			if( g_iKillerPoint[attacker][competance_type] == 1003 ) {
@@ -294,13 +325,15 @@ public Action fwdTueurKill(int client, int attacker, float& respawn, int& tdm) {
 				rp_HookEvent(client, RP_OnPlayerSpawn, fwdOnRespawn);
 				respawn = 0.05;				
 				kidnapping = true;
+				SetConVarInt(g_hActive, 1);
+				changeZoneState(41, true);
 				
 				rp_ClientFloodIncrement(0, client, fd_kidnapping, 6.0*60.0);
 			}
 			else if( g_iKillerPoint[attacker][competance_type] == 1006 ) {
 				if( rp_GetClientBool(client, b_HaveCard) == true ){
 					rp_SetClientBool(client, b_HaveCard, false);
-					CPrintToChat(client, "" ...MOD_TAG... " Un mercenaire vous a pris votre portefeuille, et vous a volé votre carte bancaire...");
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Tueur_Lupin", client);
 				}
 				respawn *= 1.25;			
 			}
@@ -337,10 +370,11 @@ public Action fwdOnRespawn(int client) {
 		CreateTimer(0.01, SendToTribunal, client);
 	}
 }
-public Action fwdTueurDead(int client, int attacker, float& respawn, int& tdm) {
+public Action fwdTueurDead(int client, int attacker, float& respawn, int& tdm, float& ctx) {
 	int target = rp_GetClientInt(client, i_ToKill);
 	if( target > 0  && attacker == target) { // Double check.
 		SetContratFail(client);
+		return Plugin_Handled;
 	}
 	
 	return Plugin_Continue;
@@ -348,7 +382,6 @@ public Action fwdTueurDead(int client, int attacker, float& respawn, int& tdm) {
 public Action CS_OnCSWeaponDrop(int client, int weapon) {
 	
 	if( rp_GetClientJobID(client) == 41 && g_bBlockDrop[client] && (g_iKillerPoint[client][competance_usp] || g_iKillerPoint[client][competance_awp] || g_iKillerPoint[client][competance_pompe]) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas lâcher vos armes pendant un contrat.");
 		return Plugin_Handled;
 	}
 
@@ -367,6 +400,9 @@ public Action fwdDamage(int client, int victim, float& damage, int damagetype) {
 		return Plugin_Changed;
 	}
 	else if( target > 0 && target != victim ) {
+		if( rp_GetClientJobID(client) == 41 && rp_GetZoneInt(rp_GetPlayerZone(victim), zone_type_type) == 41 )
+			return Plugin_Continue;
+		
 		damage /= 3.0;
 		return Plugin_Changed;
 	}
@@ -395,8 +431,8 @@ public Action TimerEndProtect(Handle timer, any client) {
 	
 	int vendeur = rp_GetClientInt(client, i_Protect_From);
 	
-	CPrintToChat(client, "" ...MOD_TAG... " Le contrat de protection est terminé."); // Félicitations si réussi ? Votre client est mort,dommage. si raté ?
-	CPrintToChat(vendeur, "" ...MOD_TAG... " Le contrat de protection est terminé.");
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Tueur_ProtectOver", client); // Félicitations si réussi ? Votre client est mort,dommage. si raté ?
+	CPrintToChat(vendeur, "" ...MOD_TAG... " %T", "Tueur_ProtectOver", vendeur);
 	
 	rp_SetClientInt(client, i_Protect_From, 0);
 	rp_SetClientInt(vendeur, i_Protect_Him, 0);
@@ -414,31 +450,39 @@ public Action fwfCommand(int client, char[] command, char[] arg) {
 }
 void OpenSelectSkill(int client) {
 	
-	char tmp[255];
+	char tmp[256];
 	int target = rp_GetClientInt(client, i_ToKill);
 
 	if( target == 0 ) return;
 	
-	Format(tmp, 254, "Sélectionner les compétences à utiliser pour votre contrat sur %N (%i)", target, g_iKillerPoint[client][competance_left]);
+	Format(tmp, sizeof(tmp), "%T", "Tueur_Menu", client, g_iKillerPoint[client][competance_left]);
 	
 	Handle menu = CreateMenu(AddCompetanceToAssassin);
 	SetMenuTitle(menu, tmp);
 
 	if( IsValidClient(target) && g_iKillerPoint[client][competance_left] > 0 ) {
-		AddMenuItem(menu, "cut", "Cut Maximum", g_iKillerPoint[client][competance_cut] ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
-		AddMenuItem(menu, "tir", "Precision Maximum", g_iKillerPoint[client][competance_tir]);
-		AddMenuItem(menu, "usp", "M4 / Usp", (g_iKillerPoint[client][competance_usp] || g_iKillerPoint[client][competance_pompe] || g_iKillerPoint[client][competance_awp]) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
-		AddMenuItem(menu, "awp", "AWP / Cz75", (g_iKillerPoint[client][competance_usp] || g_iKillerPoint[client][competance_pompe] || g_iKillerPoint[client][competance_awp]) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
-		AddMenuItem(menu, "pompe", "Nova / Deagle", (g_iKillerPoint[client][competance_usp] || g_iKillerPoint[client][competance_pompe] || g_iKillerPoint[client][competance_awp]) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
-		AddMenuItem(menu, "inv", "Invisibilité", g_iKillerPoint[client][competance_invis] ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
-		AddMenuItem(menu, "vie", "Vie", g_iKillerPoint[client][competance_hp] ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
-		AddMenuItem(menu, "vit", "Vitesse", g_iKillerPoint[client][competance_vitesse] ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
-		if( rp_GetClientJobID(target) == 1 || rp_GetClientJobID(target) == 101 )
-			AddMenuItem(menu, "berserk", "seringue Berserk", g_iKillerPoint[client][competance_berserk] ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
-		if(g_iKillerPoint[client][competance_type] == 1005)
-			AddMenuItem(menu, "nano", "Nano-Cryogénisation", g_iKillerPoint[client][competance_cryo] ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+		Format(tmp, sizeof(tmp), "%T", "Tueur_Menu_Knife", client);					AddMenuItem(menu, "cut", tmp, g_iKillerPoint[client][competance_cut] ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+		Format(tmp, sizeof(tmp), "%T", "Tueur_Menu_Weapon", client);				AddMenuItem(menu, "tir", tmp, g_iKillerPoint[client][competance_tir]);
+		Format(tmp, sizeof(tmp), "%T", "Tueur_Menu_Weapon_M4_USP", client);			AddMenuItem(menu, "usp", tmp, (g_iKillerPoint[client][competance_usp] || g_iKillerPoint[client][competance_pompe] || g_iKillerPoint[client][competance_awp]) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+		Format(tmp, sizeof(tmp), "%T", "Tueur_Menu_Weapon_AWP_CZ75", client);		AddMenuItem(menu, "awp", tmp, (g_iKillerPoint[client][competance_usp] || g_iKillerPoint[client][competance_pompe] || g_iKillerPoint[client][competance_awp]) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+		Format(tmp, sizeof(tmp), "%T", "Tueur_Menu_Weapon_NOVA_DEAGLE", client);	AddMenuItem(menu, "pompe", tmp, (g_iKillerPoint[client][competance_usp] || g_iKillerPoint[client][competance_pompe] || g_iKillerPoint[client][competance_awp]) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+		Format(tmp, sizeof(tmp), "%T", "Tueur_Menu_Invisible", client);				AddMenuItem(menu, "inv", tmp, g_iKillerPoint[client][competance_invis] ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+		Format(tmp, sizeof(tmp), "%T", "Tueur_Menu_Vie", client);					AddMenuItem(menu, "vie", tmp, g_iKillerPoint[client][competance_hp] ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+		Format(tmp, sizeof(tmp), "%T", "Tueur_Menu_Vitesse", client);				AddMenuItem(menu, "vit", tmp, g_iKillerPoint[client][competance_vitesse] ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+		
+				
+		if( rp_GetClientJobID(target) == 1 || rp_GetClientJobID(target) == 101 ) {
+			rp_GetItemData(ITEM_BERSERK, item_type_name, tmp, sizeof(tmp));
+			AddMenuItem(menu, "berserk", tmp, g_iKillerPoint[client][competance_berserk] ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+		}
+		if(g_iKillerPoint[client][competance_type] == 1005) {
+			rp_GetItemData(ITEM_NANO_CRYO, item_type_name, tmp, sizeof(tmp));
+			AddMenuItem(menu, "nano", tmp, g_iKillerPoint[client][competance_cryo] ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+		}
 	}
-	AddMenuItem(menu, "annule", "Annuler mon contrat");
+	
+	Format(tmp, sizeof(tmp), "%T", "Tueur_Menu_Cancel", client);
+	AddMenuItem(menu, "annule", tmp);
 	
 	DisplayMenu(menu, client, MENU_TIME_DURATION);
 }
@@ -517,6 +561,7 @@ public int AddCompetanceToAssassin(Handle menu, MenuAction action, int client, i
 			g_iKillerPoint[client][competance_hp] = 1;
 			g_iKillerPoint_stored[client][competance_hp] = GetClientHealth(client);
 			SetEntityHealth(client, 500);
+			rp_SetClientInt(client, i_Kevlar, 250);
 		}
 		else if( StrEqual(options, "vit", false) ) {
 			g_iKillerPoint[client][competance_vitesse] = 1;
@@ -524,11 +569,11 @@ public int AddCompetanceToAssassin(Handle menu, MenuAction action, int client, i
 		}
 		else if( StrEqual(options, "nano", false) ) {
 			g_iKillerPoint[client][competance_cryo] = 1;
-			rp_ClientGiveItem(client, 78);
+			ServerCommand("rp_item_nano cryo %d 0", client);
 		}
 		else if( StrEqual(options, "berserk", false) ) {
 			g_iKillerPoint[client][competance_berserk] = 1;
-			ServerCommand("rp_item_adrenaline %d", client);
+			ServerCommand("rp_item_adrenaline %d 0", client);
 		}
 		
 		g_iKillerPoint[client][competance_left]--;
@@ -547,12 +592,15 @@ public void OnPostThinkPost(int client) {
 // ----------------------------------------------------------------------------
 void RestoreAssassinNormal(int client) {
 	
+	LogToGame("[CONTRAT] RestoreAssassinNormal: %L", client);
+	
 	g_iKillerPoint[client][competance_left] = 0;
 	rp_SetClientInt(client, i_ContratType, 0);
 	
 	if( g_iKillerPoint[client][competance_cut] ) {
 		rp_SetClientInt(client, i_KnifeTrain, g_iKillerPoint_stored[client][competance_cut]);
-		Client_RemoveWeapon(client, "weapon_knife");
+		if( Client_RemoveWeapon(client, "weapon_knife") )
+			rp_SetClientBool(client, b_WeaponIsKnife, false);
 	}
 	if( g_iKillerPoint[client][competance_tir] ) {
 		rp_SetClientFloat(client, fl_WeaponTrain, float(g_iKillerPoint_stored[client][competance_tir]));
@@ -610,29 +658,40 @@ void RestoreAssassinNormal(int client) {
 }
 void SetContratFail(int client, bool time = false, bool annule = false) { // time = retro-compatibilité. 
 	
+	int target = rp_GetClientInt(client, i_ContratFor);
+	int victim = rp_GetClientInt(client, i_ToKill);
 	int jobClient = rp_GetClientJobID(client);
 	
-	if( time )
-		CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas rempli votre contrat à temps.");
-	else if( jobClient != 41 ) // si le tueur a démissionné entre temps
-		CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes plus mercenaire, vous ne pouvez plus remplir votre contrat.");
-	else if(annule)
-		CPrintToChat(client, "" ...MOD_TAG... " Vous venez d'annuler votre contrat.");
-	else
-		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes mort et n'avez pas rempli votre contrat.");
+	LogToGame("[CONTRAT] SetContratFail: %L %d %d.", client, time, annule);
+	if( IsValidClient(target) )
+		LogToGame("[CONTRAT] SetContratFail-target: %L.", target);
+	if( IsValidClient(victim) )
+		LogToGame("[CONTRAT] SetContratFail-victim: %L.", victim);
 	
-	int target = rp_GetClientInt(client, i_ContratFor);
+	
+	if( time )
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Tueur_Fail_Time", client);
+	else if( jobClient != 41 ) // si le tueur a démissionné entre temps
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Tueur_Fail_Cancel", client);
+	else if(annule)
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Tueur_Fail_Cancel", client);
+	else
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Tueur_Fail_Lost", client);
+	
+	
 	if(target != client){
 		if( IsValidClient(target) ) {		
+			char client_name[128];
+			GetClientName2(client, client_name, sizeof(client_name), false);
 			
 			if( time )
-				CPrintToChat(target, "" ...MOD_TAG... " %N{default} n'a pas rempli son contrat à temps.", client);
+				CPrintToChat(target, "" ...MOD_TAG... " %T", "Tueur_Fail_Time_Target", target, client_name);
 			else if( jobClient != 41 ) // si le tueur a démissionné entre temps
-				CPrintToChat(target, "" ...MOD_TAG... " %N{default} n'est plus mercenaire et ne peut plus remplir votre contrat.", client);
+				CPrintToChat(target, "" ...MOD_TAG... " %T", "Tueur_Fail_Cancel_Target", target, client_name);
 			else if(annule)
-				CPrintToChat(target, "" ...MOD_TAG... " %N{default} a annulé son contrat.", client);
+				CPrintToChat(target, "" ...MOD_TAG... " %T", "Tueur_Fail_Cancel_Target", target, client_name);
 			else
-				CPrintToChat(target, "" ...MOD_TAG... " %N{default} a été tué et n'a pas pu remplir son contrat.", client);
+				CPrintToChat(target, "" ...MOD_TAG... " %T", "Tueur_Fail_Lost_Target", target, client_name);
 			
 			
 			int prix = rp_GetClientInt(client, i_ContratPay);
@@ -641,7 +700,7 @@ void SetContratFail(int client, bool time = false, bool annule = false) { // tim
 			int partmercenaire = RoundFloat(((float(prix) * 0.2) - reduc));
 			int partcapital = RoundFloat(float(prix) * 0.8);
 			
-			rp_ClientMoney(target, i_Bank, partmercenaire);
+			rp_ClientMoney(target, i_Bank, prix-RoundFloat(reduc));
 			rp_ClientMoney(client, i_AddToPay, -partmercenaire);
 			
 			rp_SetJobCapital(41, rp_GetJobCapital(41) - partcapital);
@@ -652,16 +711,13 @@ void SetContratFail(int client, bool time = false, bool annule = false) { // tim
 			Call_Finish();
 		}
 		else {
-			CPrintToChat(client, "" ...MOD_TAG... " Votre employeur s'est déconnecté, vous ne le remboursez pas.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Tueur_Client_Disconnect", client);
 		}
 	}
 	
 	
-	target = rp_GetClientInt(client, i_ToKill);
-	
 	RestoreAssassinNormal(client);
-	
-	rp_SetClientInt(target, i_ContratTotal, rp_GetClientInt(target, i_ContratTotal) - 1);
+	rp_SetClientInt(victim, i_ContratTotal, rp_GetClientInt(victim, i_ContratTotal) - 1);
 }
 // ----------------------------------------------------------------------------
 public Action SendToTribunal(Handle timer, any client) {
@@ -707,7 +763,7 @@ public Action SendToTueur(Handle timer, any client) {
 		}
 	}
 	
-	CPrintToChat(client, "" ...MOD_TAG... " Vous avez entendu dire que vos ravisseurs comptent vous libérer dans 6h. Vous pouvez tenter autre chose...");
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Tueur_Kidnapping", client);
 	
 	g_hTimer[client] = CreateTimer(6*60.0, FreeKidnapping, client);
 	rp_HookEvent(client, RP_OnPlayerZoneChange, fwdZoneChange);
@@ -718,7 +774,12 @@ public Action SendToTueur(Handle timer, any client) {
 	OpenKidnappingMenu(client);
 }
 void clearKidnapping(int client) {
-	if( rp_GetClientInt(client, i_KidnappedBy) > 0 ) {
+	LogToGame("[CONTRAT] clearKidnapping: %L", client);
+	
+	if( rp_GetClientInt(client, i_KidnappedBy) > 0 ) {		
+		SetConVarInt(g_hActive, 0);
+		changeZoneState(41, false);
+		
 		rp_UnhookEvent(client, RP_OnPlayerZoneChange, fwdZoneChange);
 		rp_UnhookEvent(client, RP_OnPlayerDead, fwdDead);
 		rp_UnhookEvent(client, RP_OnFrameSeconde, fwdFrame);
@@ -745,27 +806,29 @@ public Action fwdZoneChange(int client, int newZone, int oldZone) {
 			rp_SetClientInt( target, i_ContratFor, rp_GetClientInt(client, i_ToPay) );
 			SetContratFail( target , true);
 			
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez pris la fuite, vous êtes libres !");
-			CPrintToChat(target, "" ...MOD_TAG... " %N{default} s'est échappé.", client);
+			char client_name[128];
+			GetClientName2(client, client_name, sizeof(client_name), false);
+			
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Tueur_Kidnapping_Free", client);
+			CPrintToChat(target, "" ...MOD_TAG... " %T", "Tueur_Kidnapping_Free_Target", target, client_name);
 		}
 		else {
 			rp_ClientTeleport(client,  view_as<float>({-5553.9, -2838.9, -1959.9}));
-			CPrintToChat(client, "" ...MOD_TAG... " Une tentative de triche a été détectée.");
-			CPrintToChat(client, "" ...MOD_TAG... " Êtes-vous sorti correctement, sans triche, sans téléportation ?");
-			CPrintToChat(client, "" ...MOD_TAG... " Si c'est le cas, contactez KoSSoLaX --> @Kossolax@ts-x.eu ");			
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_FromServer", client);			
 		}
 	}
 }
-public Action fwdDead(int client, int attacker, float& respawn, int& tdm) {
+public Action fwdDead(int client, int attacker, float& respawn, int& tdm, float& ctx) {
 	int target = rp_GetClientInt(client, i_KidnappedBy);
 	clearKidnapping(client);
 	
 	rp_SetClientInt(target, i_ContratFor, rp_GetClientInt(client, i_ToPay) );
 	SetContratFail( target , true);
 	
-	CPrintToChat(client, "" ...MOD_TAG... " Vos ravisseurs vous ont tué.");
-	CPrintToChat(target, "" ...MOD_TAG... " %N{default} s'est échappé.", client);
-	
+	char client_name[128];
+	GetClientName2(client, client_name, sizeof(client_name), false);
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Tueur_Kidnapping_Free", client);
+	CPrintToChat(target, "" ...MOD_TAG... " %T", "Tueur_Kidnapping_Free_Target", target, client_name);
 	
 	return Plugin_Continue;
 }
@@ -778,29 +841,40 @@ public Action FreeKidnapping(Handle timer, any client) {
 	RestoreAssassinNormal(target);
 	rp_ClientTeleport(client,  view_as<float>({2911.0, 868.0, -1853.0}));
 	rp_ClientSendToSpawn(client, true); // C'est proche du comico. 
-	CPrintToChat(client, "" ...MOD_TAG... " Vos ravisseurs vous ont finalement libéré.");
-	CPrintToChat(target, "" ...MOD_TAG... " Vous avez libéré %N.", client);
+	
+	char client_name[128];
+	GetClientName2(client, client_name, sizeof(client_name), false);
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Tueur_Kidnapping_End", client);
+	CPrintToChat(target, "" ...MOD_TAG... " %T", "Tueur_Kidnapping_End_Target", target, client_name);
 	
 	return Plugin_Continue;
 }
 public int eventKidnapping(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_iParam2) {
 	if (p_oAction == MenuAction_Select) {
 		
+		if( rp_GetClientInt(client, i_KidnappedBy) <= 0 )
+			return;
+		
 		char options[64];
 		GetMenuItem(p_hItemMenu, p_iParam2, options, 63);
 		
 		if( StrEqual( options, "pay", false) ) {
 			
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez payé la rançon de 2500$.");
+			int pay = 2500;
+			
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Tueur_Kidnapping_Pay", client, pay);
 			
 			int from = rp_GetClientInt(client, i_ToPay);
 			int target = rp_GetClientInt(client, i_KidnappedBy);
 			
-			rp_ClientMoney(client, i_Bank, -2500);
-			rp_ClientMoney(from, i_Bank, 2500);		
+			rp_ClientMoney(client, i_Bank, -pay);
+			rp_ClientMoney(from, i_Bank, pay);
 			
-			CPrintToChat(from, "" ...MOD_TAG... " %N{default} a payé la rançon de 2500$.", client);
-			CPrintToChat(target, "" ...MOD_TAG... " %N{default} a payé la rançon de 2500$.", client);
+			char client_name[128];
+			GetClientName2(client, client_name, sizeof(client_name), false);
+			
+			CPrintToChat(from, "" ...MOD_TAG... " %T", "Tueur_Kidnapping_Pay_Target", from, client_name, pay);
+			CPrintToChat(target, "" ...MOD_TAG... " %T", "Tueur_Kidnapping_Pay_Target", target, client_name, pay);
 			
 			rp_IncrementSuccess(from, success_list_kidnapping);
 			
@@ -811,7 +885,7 @@ public int eventKidnapping(Handle p_hItemMenu, MenuAction p_oAction, int client,
 			rp_ClientSendToSpawn(client, true);
 		}
 		else if( StrEqual( options, "free", false) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Les portes s'ouvriront toute les 20 secondes, vous n'avez qu'une seule chance de vous en sortir. Pas le droit à l'erreur, foncez !");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Tueur_Kidnapping_Door", client);
 			float delay = 20.0;
 			float time = 0.0;
 			
@@ -850,13 +924,16 @@ public int eventKidnapping(Handle p_hItemMenu, MenuAction p_oAction, int client,
 			char dest[128];
 			rp_GetZoneData(rp_GetPlayerZone(client), zone_type_name, dest, sizeof(dest));
 			
+			char client_name[128];
+			GetClientName2(client, client_name, sizeof(client_name), false);
+			
 			for(int i=1; i<=MaxClients; i++) {
 				if( !IsValidClient(i) )
 					continue;
 				if( rp_GetClientJobID(i) != 1 && rp_GetClientJobID(i) != 101 )
 					continue;
 				
-				CPrintToChat(i, "" ...MOD_TAG... " Un enlèvement a eu lieu. Vous devez libérer %N{default} dans %s.", client, dest);
+				CPrintToChat(i, "" ...MOD_TAG... " %T", "Tueur_Kidnapping_Call", i, client_name, dest);
 				rp_Effect_BeamBox(i, client);
 				ClientCommand(i, "play buttons/blip1.wav");
 			}
@@ -867,20 +944,23 @@ public int eventKidnapping(Handle p_hItemMenu, MenuAction p_oAction, int client,
 			char dest[128];
 			rp_GetZoneData(rp_GetPlayerZone(client), zone_type_name, dest, sizeof(dest));
 			
+			char client_name[128];
+			GetClientName2(client, client_name, sizeof(client_name), false);
+			
 			for(int i=1; i<=MaxClients; i++) {
 				if( !IsValidClient(i) )
 					continue;
 				if( rp_GetClientJobID(i) != 91 )
 					continue;
 				
-				CPrintToChat(i, "" ...MOD_TAG... " Un enlèvement a eu lieu. Vous devez libérer %N{default} dans %s.", client, dest);
+				CPrintToChat(i, "" ...MOD_TAG... " %T", "Tueur_Kidnapping_Call", i, client_name, dest);
 				rp_Effect_BeamBox(i, client);
 				ClientCommand(i, "play buttons/blip1.wav");
 			}
 			
 		}
 		else if( StrEqual( options, "crier", false) ) {
-			FakeClientCommand(client, "say \"Au secours, j'ai été enlevé !!!\"");
+			FakeClientCommand(client, "say \"%T\"", "Tueur_Kidnapping_Cry", client);
 			
 			OpenKidnappingMenu(client);
 		}
@@ -893,14 +973,16 @@ public int eventKidnapping(Handle p_hItemMenu, MenuAction p_oAction, int client,
 void OpenKidnappingMenu(int client) {
 		
 	if( g_bShouldOpen[client] && rp_GetZoneInt( rp_GetPlayerZone(client), zone_type_type) == 41 && rp_ClientCanDrawPanel(client) ) {
+		
+		char tmp[128];
 		Handle menu = CreateMenu(eventKidnapping);
-		SetMenuTitle(menu, "Vous avez été enlevé ! Que faire ?\n ");
+		SetMenuTitle(menu, "%T\n ", "Tueur_Kidnapping_Menu", client);
 			
-		AddMenuItem(menu, "pay", "Payer la rançon de 2500$");
-		AddMenuItem(menu, "free", "Tenter l'évasion");
-		AddMenuItem(menu, "cops", "Appeler la police");
-		AddMenuItem(menu, "mafia", "Appeler la mafia");
-		AddMenuItem(menu, "crier", "Crier");		
+		Format(tmp, sizeof(tmp), "%T", "Tueur_Kidnapping_Menu_Pay", client); 		AddMenuItem(menu, "pay", tmp);
+		Format(tmp, sizeof(tmp), "%T", "Tueur_Kidnapping_Menu_Evade", client); 		AddMenuItem(menu, "free", tmp);
+		Format(tmp, sizeof(tmp), "%T", "Tueur_Kidnapping_Menu_CallPolice", client); AddMenuItem(menu, "cops", tmp);
+		Format(tmp, sizeof(tmp), "%T", "Tueur_Kidnapping_Menu_CallMafia", client); 	AddMenuItem(menu, "mafia", tmp);
+		Format(tmp, sizeof(tmp), "%T", "Tueur_Kidnapping_Menu_Cry", client); 		AddMenuItem(menu, "crier", tmp);	
 		
 		SetMenuExitButton(menu, false);
 		DisplayMenu(menu, client, 180);
@@ -916,13 +998,13 @@ public Action Cmd_ItemCryptage(int args) {
 	int item_id = GetCmdArgInt(args);
 	
 	if( rp_GetClientInt(client, i_SearchLVL) >= 3 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Le Tribunal de princeton a gelé vos achats de pot de vin car vous êtes recherché depuis trop longtemps.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Crypto_Blocked", client);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	
-	if(rp_GetClientJobID(client) == 1 || rp_GetClientJobID(client) == 101){
-		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit aux forces de l'ordre.");
+	if( rp_GetClientJobID(client) == 1 || rp_GetClientJobID(client) == 101 ){
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_CannotUseItemPolice", client);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
@@ -933,7 +1015,7 @@ public Action Cmd_ItemCryptage(int args) {
 		level = 5;
 		
 	rp_SetClientInt(client, i_Cryptage, level);
-	CPrintToChat(client, "" ...MOD_TAG... " Les mercenaires vous couvrent, vous avez désormais %i/100 de chance d'être caché.", level*20);
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Crypto_Done", client, level*20);
 	return Plugin_Handled;
 }
 public Action fwdWeapon(int victim, int attacker, float &damage, int wepID, float pos[3]) {
@@ -1000,3 +1082,26 @@ public Action fwdAssurance2(int client, int& amount) {
 		amount += 1000;
 }
 
+void changeZoneState(int zone, bool enabled) {
+	int bits;
+	char tmp[64], tmp2[64];
+	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	
+	for (int i = 0; i < MAX_ZONES; i++) {
+		
+		rp_GetZoneData(i, zone_type_type, tmp2, sizeof(tmp2));
+		if( !StrEqual(tmp, tmp2) )
+			continue;
+		
+		bits = rp_GetZoneBit(i);
+		
+		if( enabled && !(bits & BITZONE_LEGIT) ) {
+			bits |= BITZONE_LEGIT;
+		}
+		else if( !enabled && (bits & BITZONE_LEGIT) ) {
+			bits &= ~BITZONE_LEGIT;
+		}
+		
+		rp_SetZoneBit(i, bits);
+	}
+}

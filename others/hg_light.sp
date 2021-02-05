@@ -165,7 +165,7 @@ public Action fwdCanKill(int attacker, int victim) {
 	
 	return IsKillAllowed(attacker, victim) ? Plugin_Stop : Plugin_Continue;
 }
-public Action fwdOnDead(int victim, int attacker, float& respawn, int& tdm) {
+public Action fwdOnDead(int victim, int attacker, float& respawn, int& tdm, float& ctx) {
 	if( g_iPlayerTeam[attacker] == TEAM_NONE && g_iPlayerTeam[victim] == TEAM_NONE )
 		return Plugin_Continue;
 	
@@ -222,14 +222,14 @@ void Game_StartStop(bool status) {
 					bestDefCount = g_iPlayerDamage[i];
 					bestDef = i;
 				}
-				LogToGame("[HG] %L - dégat: %d - victimes: %d", i, g_iPlayerDamage[i], g_iPlayerKill[i]);
+				LogToGame("[HG] [DEF] %L - dégat: %d - victimes: %d", i, g_iPlayerDamage[i], g_iPlayerKill[i]);
 			}
 			else if( g_iPlayerTeam[i] == TEAM_ATK ) {
 				if( g_iPlayerDamage[i] > bestAttackCount ) {
 					bestAttackCount = g_iPlayerDamage[i];
 					bestAttack = i;
 				}
-				LogToGame("[HG] %L - dégat: %d - victimes: %d", i, g_iPlayerDamage[i], g_iPlayerKill[i]);
+				LogToGame("[HG] [ATK] %L - dégat: %d - victimes: %d", i, g_iPlayerDamage[i], g_iPlayerKill[i]);
 			}
 			
 			removeClientTeam(i);

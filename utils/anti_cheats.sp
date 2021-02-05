@@ -45,6 +45,19 @@ float g_flGameTime;
 float g_flSpawnOrigin[65][3];
 
 public void OnPluginStart() {
+	
+	char strIP[128];
+	Handle hostip = FindConVar("hostip");
+	int longip = GetConVarInt(hostip);
+	Format(strIP, sizeof(strIP),"%d.%d.%d.%d", (longip >> 24) & 0xFF, (longip >> 16) & 0xFF, (longip >> 8 )	& 0xFF, longip & 0xFF);
+	
+	if( StrEqual(strIP, "5.196.39.50") ) { 
+		if( GetConVarInt(FindConVar("hostport")) != 27015 ) {
+			SetFailState("test serv");
+			return;
+		}
+	}
+	
 	AddCommandListener(OnCheatCommand, "noclip");
 	AddCommandListener(OnCheatCommand, "god");
 	AddCommandListener(OnCheatCommand, "give");
@@ -83,12 +96,19 @@ public void OnPluginStart() {
 		for(int i=1; i<=MaxClients; i++) {
 			if( !IsValidClient(i) )
 				continue;
+			
 			rp_HookEvent(i, RP_OnPlayerZoneChange, fwdZoneChange);
 			if( rp_GetZoneBit( rp_GetPlayerZone(i) ) & BITZONE_PVP || rp_GetZoneBit( rp_GetPlayerZone(i) ) & BITZONE_EVENT ) {
 				g_bInPVP[i] = true;
 				SDKHook(i, SDKHook_SetTransmit, Hook_Transmit);
 			}
 		}
+	}
+	
+	for(int i=1; i<=MaxClients; i++) {
+		if( !IsValidClient(i) )
+			continue;
+		OnClientPostAdminCheck(i)
 	}
 	
 	int flag = GetConVarFlags(FindConVar("weapon_recoil_scale"));
@@ -125,10 +145,12 @@ public void OnCvarChange(Handle cvar, const char[] oldVal, const char[] newVal) 
 }
 public void OnClientPostAdminCheck(int client) {
 	int flags = GetUserFlagBits(client);
-	if ( !(flags & ADMFLAG_CHEATS || flags & ADMFLAG_ROOT) && GetConVarInt(FindConVar("hostport")) != 27015 ) {
-		//SendConVarValue(client, g_cVarCheat, "0");
+	
+	if ( !(flags & ADMFLAG_CHEATS || flags & ADMFLAG_ROOT) && GetConVarInt(FindConVar("hostport")) == 27015 ) {
+		SendConVarValue(client, g_cVarCheat, "0");
 		CreateTimer(60.0, task_ClientCheckConVar, GetClientUserId(client));
 	}
+	
 	g_iAimDetections[client] = g_iTriggerDetections[client] = g_iCmdDetections[client] = g_iSpeedDetections[client] = 0;
 	g_iPrevCmdNum[client] = g_iPrevTickCount[client] = 0;
 	g_iTicksLeft[client] = g_iMaxTicks;
@@ -210,6 +232,19 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	if( IsFakeClient(client) )
 		return Plugin_Continue;
 	
+	int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+	if( !IsValidEdict(wep_id) ) {
+		wep_id = Client_GetWeapon(client, "weapon_fists");
+		if( IsValidEdict(wep_id) ) {
+			Client_SetActiveWeapon(client, wep_id);
+		}
+		else {
+			wep_id = GivePlayerItem(client, "weapon_fists");
+			EquipPlayerWeapon(client, wep_id);
+		}
+		return Plugin_Handled;
+	}
+	
 	if( tickcount == 2147483647 && g_iPrevTickCount[client] == 2147483647 ) {
 		LogToGame(PREFIX ... " [AIR-STUCK] %L", client);
 		PrintToChatAll("[ANTI-CHEAT] %L est tellement mauvais qu'il utilise un %s... et s'est fait grillé.", client, "speedhack");
@@ -276,6 +311,7 @@ public Action task_ClientCheckConVar(Handle timer, any client) {
 	client = GetClientOfUserId(client);
 	if( client == 0 )
 		return Plugin_Handled;
+	
 	
 	//QueryClientConVar(client, "sv_cheats", ClientConVar, 0);
 	QueryClientConVar(client, "r_drawothermodels",ClientConVar, 1);

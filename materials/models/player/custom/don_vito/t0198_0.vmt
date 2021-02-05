@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/player/custom/don_vito/t0198_0"
+	"$surfaceprop" "Default"
+	"$alphatest" 1
+	"$nodecal" 1
+}

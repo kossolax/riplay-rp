@@ -36,19 +36,28 @@ public Action Cmd_Reload(int args) {
 	return Plugin_Continue;
 }
 public void OnPluginStart() {
-	RegServerCmd("rp_quest_reload", Cmd_Reload);
+	LoadTranslations("core.phrases");
+	LoadTranslations("common.phrases");
+	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.items.phrases");
+	LoadTranslations("roleplay.banque.phrases");
+	
+	RegServerCmd("rp_quest_reload", 	Cmd_Reload);
 	RegServerCmd("rp_bankcard",			Cmd_ItemBankCard,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_bankkey",			Cmd_ItemBankKey,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_bankswap",			Cmd_ItemBankSwap,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_assurance",	Cmd_ItemAssurance,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_forward",		Cmd_ItemForward,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_noAction",	Cmd_ItemNoAction,		"RP-ITEM",	FCVAR_UNREGISTERED);
+	RegServerCmd("rp_item_raw",			Cmd_ItemNoAction,		"RP-ITEM",	FCVAR_UNREGISTERED);
+	RegServerCmd("UNKNOWN",				Cmd_ItemNoAction,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_primal",		Cmd_ItemForward,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_cheque",		Cmd_ItemCheque,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_packdebutant",Cmd_ItemPackDebutant, 	"RP-ITEM", 	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_permi",		Cmd_ItemPermi,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_distrib",		Cmd_ItemDistrib,		"RP-ITEM", 	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_banksort",	Cmd_ItemBankSort,		"RP-ITEM", 	FCVAR_UNREGISTERED);
+	RegServerCmd("rp_item_registre",	Cmd_ItemRegistre,		"RP-ITEM", 	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_sign",		Cmd_ItemCraftSign,		"RP-ITEM", 	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_assuVie",		Cmd_ItemAssuVie,		"RP-ITEM", 	FCVAR_UNREGISTERED);
 	
@@ -64,7 +73,6 @@ public void OnMapStart() {
 }
 public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerBuild,	fwdOnPlayerBuild);
-	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 	rp_HookEvent(client, RP_OnPlayerUse, fwdUse);
 	rp_HookEvent(client, RP_OnPlayerHINT, fwdPlayerHINT);
 	
@@ -82,55 +90,6 @@ public Action Cmd_ItemCraftSign(int args) {
 	
 	return Plugin_Handled;
 }
-public Action fwdCommand(int client, char[] command, char[] arg) {	
-	if( StrEqual(command, "search") || StrEqual(command, "lookup")) {
-		if(rp_GetClientJobID(client) != 41 && rp_GetClientJobID(client) != 211) { // mercenaire, banquier
-			ACCESS_DENIED(client);
-		}
-
-		int target = rp_GetClientTarget(client);
-		
-		/*int wepIdx;
-		char classname[32], msg[128];
-		Format(msg, 127, "Ce joueur possède: ");
-
-		if( (wepIdx = GetPlayerWeaponSlot( target, 1 )) != -1 ){
-			GetEdictClassname(wepIdx, classname, 31);
-			ReplaceString(classname, 31, "weapon_", "", false);
-
-			Format(msg, 127, "%s %s", msg, classname);
-		}
-		if( (wepIdx = GetPlayerWeaponSlot( target, 0 )) != -1 ){
-			GetEdictClassname(wepIdx, classname, 31);
-			ReplaceString(classname, 31, "weapon_", "", false);
-
-			Format(msg, 127, "%s %s", msg, classname);
-		}*/
-			
-		char msg[128];
-		
-		if( rp_GetClientBool(target, b_License1) || rp_GetClientBool(target, b_License2) || rp_GetClientBool(target, b_LicenseSell) ) {
-			Format(msg, 127, "%s permis", msg);
-
-			if( rp_GetClientBool(target, b_License1) ) {
-				Format(msg, 127, "%s léger", msg);
-			}
-			if( rp_GetClientBool(target, b_License2) ) {
-				Format(msg, 127, "%s lourd", msg);
-			}
-			if(  rp_GetClientBool(target, b_LicenseSell) ) {
-				Format(msg, 127, "%s vente", msg);
-			}
-		} else {
-			Format(msg, 127, "%s RIEN", msg);
-		}
-
-		CPrintToChat(client, "" ...MOD_TAG... " %s.", msg);
-
-		return Plugin_Handled;
-	}
-	return Plugin_Continue;
-}
 
 // ----------------------------------------------------------------------------
 public Action Cmd_ItemPermi(int args) {
@@ -143,18 +102,13 @@ public Action Cmd_ItemPermi(int args) {
 	if( StrEqual(Arg1, "lege") ) {
 		rp_SetClientBool(client, b_License1, true);
 		rp_SetClientInt(client, i_StartLicense1, GetTime());
-
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez maintenant un permis de port d'arme légère.");
 	}
 	else if( StrEqual(Arg1, "lourd") ) {
 		rp_SetClientBool(client, b_License2, true);
 		rp_SetClientInt(client, i_StartLicense2, GetTime());
-
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez maintenant un permis de port d'arme lourde.");
 	}
 	else if( StrEqual(Arg1, "vente") ) {
 		rp_SetClientBool(client, b_LicenseSell, true);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez maintenant un permis de vente.");
 	}
 	
 	rp_ClientSave(client);
@@ -168,12 +122,13 @@ public Action Cmd_ItemBankCard(int args) {
 
 	if(rp_GetClientBool(client, b_HaveCard)){
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous disposez déjà d'une carte bancaire.");
+		char tmp[128];
+		rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemAlreadyEnable", client, tmp);
 		return Plugin_Handled;
 	}
-	rp_SetClientBool(client, b_HaveCard, true);
 	
-	CPrintToChat(client, "" ...MOD_TAG... " Votre carte bancaire est maintenant activée.");
+	rp_SetClientBool(client, b_HaveCard, true);
 	rp_ClientSave(client);
 	
 	return Plugin_Handled;
@@ -185,12 +140,13 @@ public Action Cmd_ItemBankSort(int args) {
 
 	if(rp_GetClientBool(client, b_CanSort)){
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez déjà trier votre inventaire.");
+		char tmp[128];
+		rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemAlreadyEnable", client, tmp);
 		return Plugin_Handled;
 	}
 
 	rp_SetClientBool(client, b_CanSort, true);
-	CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez maintenant trier votre inventaire jusqu'à votre déconnexion.");
 	
 	return Plugin_Handled;
 }
@@ -201,12 +157,13 @@ public Action Cmd_ItemBankKey(int args) {
 
 	if(rp_GetClientBool(client, b_HaveAccount)){
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Votre compte bancaire est déjà actif.");
+		char tmp[128];
+		rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemAlreadyEnable", client, tmp);
 		return Plugin_Handled;
 	}
 
 	rp_SetClientBool(client, b_HaveAccount, true);
-	CPrintToChat(client, "" ...MOD_TAG... " Votre compte bancaire est maintenant actif.");
 	rp_ClientSave(client);
 	
 	return Plugin_Handled;
@@ -218,12 +175,13 @@ public Action Cmd_ItemBankSwap(int args) {
 
 	if(rp_GetClientBool(client, b_PayToBank)){
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Votre paye va déjà en banque.");
+		char tmp[128];
+		rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemAlreadyEnable", client, tmp);
 		return Plugin_Handled;
 	}
 
 	rp_SetClientBool(client, b_PayToBank, true);
-	CPrintToChat(client, "" ...MOD_TAG... " Vous recevrez maintenant votre paye en banque.");
 	rp_ClientSave(client);
 	
 	return Plugin_Handled;
@@ -234,16 +192,23 @@ public Action Cmd_ItemAssurance(int args) {
 	int item_id = GetCmdArgInt(args);
 	int client = GetCmdArgInt(1);
 	
-	if( !rp_GetClientBool(client, b_Assurance) ) {
+	if( rp_GetClientBool(client, b_FreeAssurance) ) {
+		rp_IncrementSuccess(client, success_list_assurance);
+	}
+	else if( !rp_GetClientBool(client, b_Assurance) ) {
 		rp_IncrementSuccess(client, success_list_assurance);
 	}
 	else{
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes déjà assuré.");
+		char tmp[128];
+		rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemAlreadyEnable", client, tmp);
 		return Plugin_Handled;
 	}
 	
 	rp_SetClientBool(client, b_Assurance, true);
+	rp_SetClientBool(client, b_FreeAssurance, false);
+	
 	FakeClientCommand(client, "say /assu");
 	
 	rp_ClientSave(client);
@@ -256,23 +221,37 @@ public Action Cmd_ItemAssuVie(int args){
 	int item_id = GetCmdArgInt(args);
 	int client = GetCmdArgInt(1);
 	
-	if( !rp_GetClientBool(client, b_AssuranceVie) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous etes maintenant couvert par l'assurance vie.");
-		rp_IncrementSuccess(client, success_list_assurance);
-	}
-	else{
+	if( rp_GetClientBool(client, b_AssuranceVie) ) {
 		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous êtes déjà assuré.");
+		char tmp[128];
+		rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemAlreadyEnable", client, tmp);
 		return Plugin_Handled;
 	}
 	
+	rp_IncrementSuccess(client, success_list_assurance);
 	rp_SetClientBool(client, b_AssuranceVie, true);
 	rp_HookEvent(client, RP_OnAssurance,	fwdAssurance);
 	rp_HookEvent(client, RP_OnPlayerDead, OnPlayerDeathFastRespawn);
 	
 	return Plugin_Handled;
 }
-public Action OnPlayerDeathFastRespawn(int victim, int attacker, float& respawn, int& tdm) {
+public Action Cmd_ItemRegistre(int args){
+	
+	int client = GetCmdArgInt(1);
+	int item_id = GetCmdArgInt(args);
+	
+	if( rp_AddSaveSlot(client) ) {
+		rp_IncrementSuccess(client, success_list_assurance);
+	}
+	else{
+		ITEM_CANCEL(client, item_id);
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Item_Register_TooMany", client);
+	}
+	
+	return Plugin_Handled;
+}
+public Action OnPlayerDeathFastRespawn(int victim, int attacker, float& respawn, int& tdm, float& ctx) {
 	respawn /= 2.0;
 	return Plugin_Continue;
 }
@@ -289,8 +268,8 @@ public Action Cmd_ItemNoAction(int args) {
 	
 	ITEM_CANCEL(client, item_id);
 	rp_GetItemData(item_id, item_type_name, name, sizeof(name));
-	
-	CPrintToChat(client, "" ...MOD_TAG... " Ceci est un %s, vous en avez %d sur vous et %d en banque.", name, rp_GetClientItem(client, item_id), rp_GetClientItem(client, item_id, true));
+
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Count", client, rp_GetClientItem(client, item_id), rp_GetClientItem(client, item_id, true), name);
 	return;
 }
 // ----------------------------------------------------------------------------
@@ -309,7 +288,7 @@ public Action Cmd_ItemCheque(int args) {
 public Action task_cheque(Handle timer, any client) {
 	// Setup menu
 	Handle menu = CreateMenu(MenuCheque);
-	SetMenuTitle(menu, "Liste des jobs disponible:");
+	SetMenuTitle(menu, "%T:\n ", "Jobs_ListAvailable", client);
 	char tmp[12], tmp2[64];
 	
 	bool bJob[MAX_JOBS];
@@ -353,6 +332,20 @@ public Action task_cheque(Handle timer, any client) {
 		DisplayMenu(menu, client, MENU_TIME_DURATION);
 	}
 }
+bool HasHighGrade(int client, int jobID) {
+	for(int i = 1; i <= MaxClients; i++) {
+		if( !IsValidClient(i) )
+			continue;
+		if( i == client )
+			continue;
+		if( rp_GetClientJobID(i) != jobID )
+			continue;
+		if( (rp_GetClientInt(i, i_Job)-jobID) <= 2 )
+			return true;
+	}
+	
+	return false;
+}
 // ----------------------------------------------------------------------------
 public int MenuCheque(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_iParam2) {
 	
@@ -366,7 +359,7 @@ public int MenuCheque(Handle p_hItemMenu, MenuAction p_oAction, int client, int 
 			
 			// Setup menu
 			Handle hGiveMenu = CreateMenu(MenuCheque2);
-			SetMenuTitle(hGiveMenu, "Sélectionnez un objet à acheter\n ");
+			SetMenuTitle(hGiveMenu, "%T\n ", "Item_Buy", client);
 			
 			for(int i = 0; i < MAX_ITEMS; i++) {
 				
@@ -381,6 +374,12 @@ public int MenuCheque(Handle p_hItemMenu, MenuAction p_oAction, int client, int 
 				if( StrContains(tmp, "rp_item_contrat", false) == 0 )
 					continue;
 				if( StrContains(tmp, "rp_item_conprotect", false) == 0 )
+					continue;
+				
+				// les items des haut-gradés
+				if( StrContains(tmp, "rp_item_cashbig", false) == 0 && HasHighGrade(client, jobID) )
+					continue;
+				if( StrContains(tmp, "rp_giveitem_pvp", false) == 0 && HasHighGrade(client, jobID) )
 					continue;
 				
 				rp_GetItemData(i, item_type_name, tmp, sizeof(tmp));
@@ -418,7 +417,7 @@ public int MenuCheque2(Handle p_hItemMenu, MenuAction p_oAction, int client, int
 			// Setup menu
 			Handle hGiveMenu = rp_CreateSellingMenu();			
 			
-			SetMenuTitle(hGiveMenu, "Sélectionnez combien en acheter\n ");
+			SetMenuTitle(hGiveMenu, "%T\n ", "Item_BuyCount", client);
 			int amount = 0;
 			for(int i = 1; i <= 100; i++) {
 				
@@ -461,9 +460,9 @@ public Action Cmd_ItemForward(int args) {
 	rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
 	
 	if( mnt+1 == 1 )
-		CPrintToChat(client, "" ...MOD_TAG... " %d %s a été transféré en banque.", mnt+1, tmp);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_MoveToBank_Singl", client, mnt+1, tmp);
 	else
-		CPrintToChat(client, "" ...MOD_TAG... " %d %s ont été transférés en banque.", mnt+1, tmp);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_MoveToBank_Plural", client, mnt+1, tmp);
 	
 	return;
 }
@@ -481,7 +480,7 @@ public Action Cmd_ItemPackDebutant(int args) { //Permet d'avoir la CB, le compte
 	rp_SetClientInt(client, i_StartLicense1, GetTime());
 	rp_SetClientInt(client, i_StartLicense2, GetTime());
  	
-	CPrintToChat(client, "" ...MOD_TAG... " Votre carte bancaire, votre coffre, votre RIB et vos permis sont maintenant actifs.");
+	CPrintToChat(client, ""...MOD_TAG..." %T", "Item_PackForNew", client);
 
 	rp_ClientSave(client);
 }
@@ -492,6 +491,8 @@ public Action fwdOnPlayerBuild(int client, float& cooldown) {
 	
 	int ent = BuidlingATM(client);
 	rp_SetBuildingData(ent, BD_FromBuild, 1);
+	SetEntProp(ent, Prop_Data, "m_iHealth", GetEntProp(ent, Prop_Data, "m_iHealth")/5);
+	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
 	
 	if( ent > 0 ) {
 		rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
@@ -538,13 +539,11 @@ int BuidlingATM(int client) {
 		if( StrEqual(classname, tmp) && rp_GetBuildingData(i, BD_owner) == client ) {
 			count++;
 			if( count >= 2 ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà deux distributeurs portables de placés.");
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
 				return 0;
 			}
 		}
 	}
-	
-	CPrintToChat(client, "" ...MOD_TAG... " Construction en cours...");
 
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client);
 	
@@ -557,7 +556,7 @@ int BuidlingATM(int client) {
 	
 	SetEntityModel(ent, MODEL_ATM);
 	
-	SetEntProp( ent, Prop_Data, "m_iHealth", 10000);
+	SetEntProp( ent, Prop_Data, "m_iHealth", 50000);
 	SetEntProp( ent, Prop_Data, "m_takedamage", 0);
 	
 	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
@@ -574,6 +573,8 @@ int BuidlingATM(int client) {
 	CreateTimer(3.0, BuildingATM_post, ent);
 	rp_SetBuildingData(ent, BD_owner, client);
 	rp_SetBuildingData(ent, BD_FromBuild, 0);
+	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
+	
 	return ent;
 }
 
@@ -596,13 +597,19 @@ public void BuildingATM_break(const char[] output, int caller, int activator, fl
 	}
 	
 	if( IsValidClient(owner) ) {
-		CPrintToChat(owner, "" ...MOD_TAG... " Votre distributeur portable a été détruit.");
+		char tmp[128];
+		GetEdictClassname(caller, tmp, sizeof(tmp));
+		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Build_Destroyed", owner, tmp);
 	}
 }
 public Action DamageATM(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
 	
 	if( rp_IsInPVP(victim) ) {
 		damage *= 25.0;
+		return Plugin_Changed;
+	}
+	else if( !Entity_CanBeBreak(victim, attacker) ) {
+		damage = 0.0;
 		return Plugin_Changed;
 	}
 	
@@ -627,23 +634,33 @@ void DisplayMetroMenu(int client) {
 	if( !rp_IsTutorialOver(client) )
 		return;
 	
+	char tmp[128];
 	int zone = rp_GetPlayerZone(client);
 	
 	Handle menu = CreateMenu(eventMetroMenu);
-	SetMenuTitle(menu, "== Station de métro ==\n ");
+	SetMenuTitle(menu, "%T\n ", "Metro_Menu", client);
 	
-	if( GetConVarInt(g_hEVENT) == 1 )
-		AddMenuItem(menu, "metro_event", "Métro: Station événementiel");
-	if( GetConVarInt(g_hEVENT) == 5 )
-		AddMenuItem(menu, "metro_event2", "Métro: Station événementiel");
+	Format(tmp, sizeof(tmp), "%T", "Metro_Event", client);
+	AddMenuItem(menu, "metro_event", tmp, GetConVarInt(g_hEVENT) != 1 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 
-	AddMenuItem(menu, "metro_paix", 	"Métro: Station de la paix", (zone == 57) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
-	AddMenuItem(menu, "metro_zoning", 	"Métro: Station Place Station", (zone == 58) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
-	AddMenuItem(menu, "metro_inno", 	"Métro: Station de l'innovation", (zone == 59) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
-	AddMenuItem(menu, "metro_pvp", 		"Métro: Station Belmont", (zone == 200) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+	rp_GetZoneData(60, zone_type_name, tmp, sizeof(tmp));
+	AddMenuItem(menu, "metro_paix", 	tmp, (zone == 57) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+	
+	rp_GetZoneData(61, zone_type_name, tmp, sizeof(tmp));
+	AddMenuItem(menu, "metro_zoning", 	tmp, (zone == 58) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+	
+	rp_GetZoneData(62, zone_type_name, tmp, sizeof(tmp));
+	AddMenuItem(menu, "metro_inno", 	tmp, (zone == 59) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+	
+	rp_GetZoneData(201, zone_type_name, tmp, sizeof(tmp));
+	AddMenuItem(menu, "metro_pvp", 		tmp, (zone == 200) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+	
+	Format(tmp, sizeof(tmp), "%T", "Metro_Hell", client);
+	AddMenuItem(menu, "metro_mine", tmp, (zone == 155) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	
 	if( rp_GetClientKeyAppartement(client, 50) ) {
-		AddMenuItem(menu, "metro_villa", 	"Métro: Villa", (zone == 245) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+		Format(tmp, sizeof(tmp), "%T", "Metro_Villa", client);
+		AddMenuItem(menu, "metro_villa", tmp, (zone == 245) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	}
 	
 	SetMenuPagination(menu, MENU_NO_PAGINATION);
@@ -666,7 +683,7 @@ public int eventMetroMenu(Handle menu, MenuAction action, int client, int param2
 		
 		int Max, i, hours, min, iLocation[MAX_LOCATIONS];
 		
-		for( i=0; i<150; i++ ) {
+		for( i=0; i<MAX_LOCATIONS; i++ ) {
 			rp_GetLocationData(i, location_type_base, tmp, sizeof(tmp));
 			
 			if( StrEqual(tmp, options, false) ) {
@@ -684,7 +701,7 @@ public int eventMetroMenu(Handle menu, MenuAction action, int client, int param2
 		min = 5 - (min % 5);
 		
 		rp_GetZoneData(rp_GetZoneFromPoint(pos), zone_type_name, tmp, sizeof(tmp));
-		CPrintToChat(client, "" ...MOD_TAG... " Restez assis à l'intérieur du métro, le prochain départ pour %s est dans %d seconde%s.", tmp, min, min >= 2 ? "s" : "");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Metro_Start", client, min);
 		rp_SetClientInt(client, i_TeleportTo, i);
 		CreateTimer(float(min) + Math_GetRandomFloat(0.01, 0.8), metroTeleport, client);
 	}
@@ -710,11 +727,11 @@ public Action metroTeleport(Handle timer, any client) {
 	
 	if( StrContains(tmp, "metro_event") == 0) {
 		if( rp_GetClientBool(client, b_IsMuteEvent) == true ) {
-			CPrintToChat(client, "" ...MOD_TAG... " En raison de votre mauvais comportement, il vous est temporairement interdit de participer à un event.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Banned_Event", client);
 			return Plugin_Handled;
 		}
 		if( rp_GetClientBool(client, b_IsSearchByTribunal) == true ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous êtes recherché par le Tribunal, impossible de participer à un event.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Banned_Event", client);
 			return Plugin_Handled;
 		}
 		paid = true;
@@ -731,9 +748,10 @@ public Action metroTeleport(Handle timer, any client) {
 		rp_ClientGiveItem(client, 42, -1, true);
 	}
 	if( !paid && (rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 100 ) {
-		rp_ClientMoney(client, i_Money, -100);
-		rp_SetJobCapital(31, rp_GetJobCapital(31) + 100);
-		CPrintToChat(client, "" ...MOD_TAG... " Le métro vous a couté 100$. Pensez à acheter des tickets à un banquier pour que le trajet vous coûte moins chère.");
+		int price = 100;
+		rp_ClientMoney(client, i_Money, -price);
+		rp_SetJobCapital(211, rp_GetJobCapital(211) + price);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Metro_Paid", client, price);
 		paid = true;
 	}
 	
@@ -802,13 +820,11 @@ int BuidlingSIGN(int client) {
 			count++;
 			
 			if( count >= 1 && !isAdmin ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous avez placé un panneau indicateur.");
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
 				return 0;
 			}
 		}
 	}
-	
-	CPrintToChat(client, "" ...MOD_TAG... " Construction en cours...");
 
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client);
 	
@@ -818,7 +834,7 @@ int BuidlingSIGN(int client) {
 	DispatchSpawn(ent);
 	ActivateEntity(ent);
 	
-	SetEntProp( ent, Prop_Data, "m_iHealth", 2500);
+	SetEntProp( ent, Prop_Data, "m_iHealth", 50000);
 	SetEntProp( ent, Prop_Data, "m_takedamage", 0);
 	
 	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
@@ -849,12 +865,23 @@ public Action BuildingSIGN_post(Handle timer, any entity) {
 	
 	SetEntProp(entity, Prop_Data, "m_takedamage", 2);
 	HookSingleEntityOutput(entity, "OnBreak", BuildingSIGN_break);
+	SDKHook(entity, SDKHook_OnTakeDamage, DamageMachine);
 	
 	g_iSignPermission[entity] = 1;
 	g_hSignData[entity] = new ArrayList(255);
-	g_hSignData[entity].PushString("Appuyez sur E pour modifier le panneau");
+	
+	char tmp[128];
+	Format(tmp, sizeof(tmp), "%T", "Sign_Press", LANG_SERVER);
+	g_hSignData[entity].PushString(tmp);
 	
 	return Plugin_Handled;
+}
+public Action DamageMachine(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
+	if( !Entity_CanBeBreak(victim, attacker) ) {
+		damage = 0.0;
+		return Plugin_Changed;
+	}
+	return Plugin_Continue;
 }
 public void OnEntityDestroyed(int entity) {
 	if( entity > 0 && g_hSignData[entity] ) {
@@ -870,7 +897,9 @@ public void BuildingSIGN_break(const char[] output, int caller, int activator, f
 		rp_ClientAggroIncrement(activator, owner, 1000);
 	}
 	if( IsValidClient(owner) ) {
-		CPrintToChat(owner, "" ...MOD_TAG... " Votre panneau a été détruit.");
+		char tmp[128];
+		GetEdictClassname(caller, tmp, sizeof(tmp));
+		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Build_Destroyed", owner, tmp);
 	}
 }
 public Action fwdPlayerHINT(int client, int entity) {
@@ -888,10 +917,11 @@ public Action fwdPlayerHINT(int client, int entity) {
 }
 void displaySignMenu(int client, int entity) {
 	Menu menu = new Menu(Menu_displayMenu);
-	char tmp[128], tmp2[32];
+	char tmp[128], tmp2[128];
 	
 	int owner = rp_GetBuildingData(entity, BD_owner);
-	menu.SetTitle("Panneau de %N\n ", owner);
+	GetClientName2(owner, tmp, sizeof(tmp), true);
+	menu.SetTitle("%T\n ", "Sign_OwnedBy", client, tmp);
 	
 	bool hasPerm = false;
 	if( owner == client )
@@ -923,13 +953,15 @@ void displaySignMenu(int client, int entity) {
 	}
 	
 	if( hasPerm ) {
+		Format(tmp, sizeof(tmp), "%T", "Sign_Add", client);
 		Format(tmp2, sizeof(tmp2), "%d %d", -1, entity);
-		menu.AddItem(tmp2, "Ajouter une ligne");
+		menu.AddItem(tmp2, tmp);
 	}
 	
 	if( client == rp_GetBuildingData(entity, BD_owner) ) {
+		Format(tmp, sizeof(tmp), "%T", "Perm_Edit", client);
 		Format(tmp2, sizeof(tmp2), "%d %d", -2, entity);
-		menu.AddItem(tmp2, "Modifier les permissions");
+		menu.AddItem(tmp2, tmp);
 	}
 	
 	
@@ -940,6 +972,7 @@ public int Menu_displayMenu(Handle menu, MenuAction action, int client, int para
 	
 	if( action == MenuAction_Select ) {
 		char options[64], explo[2][32];
+		char tmp[128];
 		GetMenuItem(menu, param2, options, sizeof(options));
 		ExplodeString(options, " ", explo, sizeof(explo), sizeof(explo[]));
 		int i = StringToInt(explo[0]);
@@ -950,12 +983,28 @@ public int Menu_displayMenu(Handle menu, MenuAction action, int client, int para
 		}
 		else if( i == -2 ) {
 			Menu menu2 = new Menu(Menu_displayMenu);
-			menu2.SetTitle("Qui peut modifier ce panneau?\n ");
-			Format(options, sizeof(options), "%d %d", -1000+1, entity);	menu2.AddItem(options, "Uniquement moi");
-			Format(options, sizeof(options), "%d %d", -1000+2, entity);	menu2.AddItem(options, "Tous les chefs de mon job");
-			Format(options, sizeof(options), "%d %d", -1000+3, entity);	menu2.AddItem(options, "Toutes les personnes de mon job");
-			Format(options, sizeof(options), "%d %d", -1000+4, entity); menu2.AddItem(options, "Toutes les personnes de mon gang");
-			Format(options, sizeof(options), "%d %d", -1000+5, entity); menu2.AddItem(options, "Tout le monde");
+			menu2.SetTitle("%T\n ", "Sign_PermWho", client);
+			
+			Format(options, sizeof(options), "%d %d", -1000+1, entity);
+			Format(tmp, sizeof(tmp), "%T", "Perm_Self", client);
+			menu2.AddItem(options, tmp);
+			
+			Format(options, sizeof(options), "%d %d", -1000+2, entity);
+			Format(tmp, sizeof(tmp), "%T", "Perm_Chef", client);
+			menu2.AddItem(options, tmp);
+			
+			Format(options, sizeof(options), "%d %d", -1000+3, entity);
+			Format(tmp, sizeof(tmp), "%T", "Perm_Job", client);
+			menu2.AddItem(options, tmp);
+			
+			Format(options, sizeof(options), "%d %d", -1000+4, entity);
+			Format(tmp, sizeof(tmp), "%T", "Perm_Gang", client);
+			menu2.AddItem(options, tmp);
+			
+			Format(options, sizeof(options), "%d %d", -1000+5, entity);
+			Format(tmp, sizeof(tmp), "%T", "Perm_Everyone", client);
+			menu2.AddItem(options, tmp);
+			
 			
 			menu2.Display(client, MENU_TIME_FOREVER);
 		}
@@ -965,7 +1014,7 @@ public int Menu_displayMenu(Handle menu, MenuAction action, int client, int para
 			dp.WriteCell(entity);
 			rp_GetClientNextMessage(client, dp, cbTest);
 			
-			CPrintToChat(client, "" ...MOD_TAG... " Entrez une phrase dans le chat pour remplacer cette ligne. Entrez \".\" pour la supprimer. ");
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Sign_Adding", client);
 		}
 	}
 	else if( action == MenuAction_End ) {
@@ -986,8 +1035,11 @@ public void cbTest(int client, any data, char[] message) {
 		}
 		else {
 			g_hSignData[entity].Erase(i);
-			if( g_hSignData[entity].Length <= 0 ) 
-				g_hSignData[entity].PushString("Appuyez sur E pour modifier le panneau");
+			if( g_hSignData[entity].Length <= 0 ) {
+				char tmp[128];
+				Format(tmp, sizeof(tmp), "%T", "Sign_Press", LANG_SERVER);
+				g_hSignData[entity].PushString(tmp);
+			}
 		}
 	}
 	else if( i == -1 ) {

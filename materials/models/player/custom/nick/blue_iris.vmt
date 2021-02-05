@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\player\custom\nick\blue_iris"
+       // "$envmap" 			"env_cubemap"
+
+}

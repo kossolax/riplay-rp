@@ -40,21 +40,21 @@ exports = module.exports = function(server){
 
     if( pattern.test(tokken) ) {
       server.conn.query(server.getAuthAdminID, [req.headers.auth], function(err, row) {
-        if( err ) return res.send(new ERR.InternalServerError(err));
+        if( err ) return callback("NotAuthorized");
         if( row[0] == null ) {
           server.conn.query(server.getAuthSteamID, [req.headers.auth], function(err, row) {
-            if( err ) return res.send(new ERR.InternalServerError(err));
-            if( row[0] == null ) return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
+            if( err ) return callback("NotAuthorized");
+            if( row[0] == null ) return callback("NotAuthorized");
 
             var SteamID = row[0].steamid.replace("STEAM_0", "STEAM_1");
 
             server.conn.query("SELECT * FROM `rp_csgo`.`rp_tribunal` WHERE `steamid`=? AND `uniqID`=? AND `timestamp`+(30*60*60)>=UNIX_TIMESTAMP()", [tokken.replace("STEAM_0", "STEAM_1").trim(), SteamID], function(err, row) {
-              if( err ) return res.send(new ERR.InternalServerError(err));
+              if( err ) return callback("NotAuthorized");
 
               if( row[0] == null ) {
                 server.conn.query("SELECT `job_id` FROM `rp_users` WHERE `steamid`=?", [SteamID], function(err, row) {
-                  if( err ) return res.send(new ERR.InternalServerError(err));
-                  if( row[0] == null ) return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
+                  if( err ) return callback("NotAuthorized");
+                  if( row[0] == null ) return callback("NotAuthorized");
                   if( row[0].job_id >= 101 && row[0].job_id <= 109 ) {
                     var dStart = moment().subtract(2, 'hour').toDate();
                     var dEnd = moment().add(1, 'hour').toDate();
@@ -82,7 +82,7 @@ exports = module.exports = function(server){
           });
         }
         else {
-          var dStart = moment().subtract(7, 'days').toDate();
+          var dStart = moment().subtract(31, 'days').toDate();
           var dEnd = moment().add(1, 'hour').toDate();
 
           callback(null, tokken.replace("STEAM_0", "STEAM_1").trim(), dStart, dEnd);
@@ -91,8 +91,8 @@ exports = module.exports = function(server){
     }
     else if( !isNaN(parseInt(tokken)) && parseInt(tokken) > 0 ) {
       server.conn.query("SELECT * FROM `rp_report`.`site_report` WHERE `id`=?", [parseInt(tokken)], function(err, row) {
-        if( err ) return res.send(new ERR.InternalServerError(err));
-        if( row[0] == null ) return res.send(new ERR.NotAuthorizedError("NotAuthorized"));
+        if( err ) return callback("NotAuthorized");
+        if( row[0] == null ) return callback("NotAuthorized");
 
         var dStart = moment.unix(row[0].timestamp).subtract(1, 'hour').toDate();
         var dEnd = moment.unix(row[0].timestamp).add(1, 'hour').toDate();
@@ -199,7 +199,7 @@ exports = module.exports = function(server){
   	try {
       validateTokken(req, req.params['id'], function(err, tSteamID, dStart, dEnd, more) {
         if( err ) return res.send(new ERR.InternalServerError(err));
-        server.conn.query("SELECT SUM(IF(vote=1,1,0)) AS condamner, SUM(IF(vote=0,1,0)) AS acquitter FROM `rp_report`.`site_report_votes` WHERE reportid=? GROUP BY `steamid`", [req.params['id']], function(err, rows) {
+        server.conn.query("SELECT SUM(IF(vote=1,1,0)) AS condamner, SUM(IF(vote=0,1,0)) AS acquitter FROM `rp_report`.`site_report_votes` WHERE reportid=?", [req.params['id']], function(err, rows) {
           return res.send({steamid: tSteamID, dStart, dEnd, data: more, condamner: rows[0] ? rows[0].condamner : 0, acquitter: rows[0] ? rows[0].acquitter : 0});
         });
       });
@@ -228,7 +228,7 @@ exports = module.exports = function(server){
 
           var SteamID = row[0].steamid.replace("STEAM_0", "STEAM_1");
 
-          server.conn.query("DELETE `rp_report`.`site_report_votes` WHERE `reportid`=? AND `steamid`=?", [req.params['id'], SteamID], function(err, row) {
+          server.conn.query("DELETE FROM `rp_report`.`site_report_votes` WHERE `reportid`=? AND `steamid`=?", [req.params['id'], SteamID], function(err, row) {
             server.conn.query("INSERT INTO `rp_report`.`site_report_votes`(`reportid`, `steamid`, `vote`) VALUES (?, ?, ?);", [req.params['id'], SteamID, req.params['vote']], function(err, row) {
               return res.send({redirect: "/tribunal/rules", message: "Votre vote a bien été pris en compte, merci!"});
             });

@@ -40,6 +40,12 @@ Handle g_hDoing;
 
 public void OnPluginStart() {
 	RegServerCmd("rp_quest_reload", Cmd_PluginReloadSelf);
+	for (int i = 1; i <= MaxClients; i++) {
+		if( !IsValidClient(i) )
+			continue;
+		rp_HookEvent(i, RP_OnPlayerZoneChange, fwdOnZoneChange);
+	}
+
 }
 public void OnAllPluginsLoaded() {
 	g_iQuest = rp_RegisterQuest(QUEST_UNIQID, QUEST_NAME, QUEST_TYPE, fwdCanStart);
@@ -48,8 +54,10 @@ public void OnAllPluginsLoaded() {
 	
 	int i;
 	rp_QuestAddStep(g_iQuest, i++,	Q1_Start,	Q1_Frame,	Q1_Abort,	Q1_Abort);
-	
 	g_hDoing = CreateArray(MAXPLAYERS);
+}
+public void OnClientPostAdminCheck(int client) {
+	rp_HookEvent(client, RP_OnPlayerZoneChange, fwdOnZoneChange);
 }
 // ----------------------------------------------------------------------------
 public bool fwdCanStart(int client) {
@@ -90,11 +98,6 @@ public void Q1_Start(int objectiveID, int client) {
 	g_iDuration[client] = 12 * 60;
 	
 	PushArrayCell(g_hDoing, client);
-	for (int i = 1; i <= MaxClients; i++) {
-		if( !IsValidClient(i) || i == client )
-			continue;
-		rp_HookEvent(i, RP_OnPlayerZoneChange, fwdOnZoneChange);
-	}
 }
 public void Q1_Frame(int objectiveID, int client) {
 	
@@ -117,14 +120,7 @@ public void Q1_Frame(int objectiveID, int client) {
 	}
 }
 public void Q1_Abort(int objectiveID, int client) {
-	RemoveFromArray(g_hDoing, FindValueInArray(g_hDoing, client));
-	
-	for (int i = 1; i <= MaxClients; i++) {
-		if( !IsValidClient(i) || i == client )
-			continue;
-		rp_UnhookEvent(i, RP_OnPlayerZoneChange, fwdOnZoneChange);
-	}
-	
+	RemoveFromArray(g_hDoing, FindValueInArray(g_hDoing, client));	
 	PrintHintText(client, "Quête: %s\nLa quête est terminée.", QUEST_NAME);
 }
 public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
@@ -143,29 +139,47 @@ public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
 		int target = GetArrayCell(g_hDoing, i);
 		int z = rp_GetPlayerZone(target);
 		
-		if( target == client )
+		if( target == client ) {
+			for (int j = 1; j <= MaxClients; j++) {
+				if( !IsValidClient(j) || j == client )
+					continue;
+				if( lastFree[j] > GetGameTime() )
+					continue;
+				if( rp_GetClientInt(j, i_JailTime) <=0 )
+					continue;
+				if( rp_GetClientJobID(j) == 1 || rp_GetClientJobID(j) == 101 )
+					continue;
+				
+				int zone = rp_GetPlayerZone(j);
+				if( rp_GetZoneBit(zone) & (BITZONE_JAIL|BITZONE_LACOURS|BITZONE_HAUTESECU) ) {
+					PrintHintText(j, "Un mafieu s'approche pour tenter de vous libérer.");
+				}
+				
+			}
 			continue;
-		
-		for (int j = 0; j < sizeof(zoneID); j++) {
-			if( z == zoneID[j] ) {
-				for (int k = 0; k < sizeof(zoneID); k++) {
-					if( (rp_GetZoneBit(oldZone) & (BITZONE_JAIL|BITZONE_LACOURS|BITZONE_HAUTESECU)) &&  zoneID[k] == newZone ) {
-						
-						int cap = rp_GetRandomCapital(91);
-						rp_SetJobCapital(cap, rp_GetJobCapital(cap) - 600);
-						rp_ClientMoney(target, i_AddToPay, 500);
-						rp_SetJobCapital(91, rp_GetJobCapital(91) + 100);
-						
-						rp_ClientXPIncrement(client, 250);
-						
-						rp_ClientSendToSpawn(client, false);
-						
-						CPrintToChat(client, "" ...MOD_TAG... " %N{default} vous a libéré.", target);
-						PrintHintText(client,"{lightblue}[TSX-RP]{red} Vous avez été libéré de prison par %N . Vous avez donc été teleporté sur la map ! Ne vous faites pas prendre par les forces de l'ordre. ", target);
-						CPrintToChat(target, "" ...MOD_TAG... " vous avez libéré %N{default} et reçu une récompense de 500$.", client);
-						LogToGame("[QUETE] [MAFIA] %L a libéré %L", target, client);
-						
-						lastFree[client] = GetGameTime() + 180.0;
+		}
+		else {
+			for (int j = 0; j < sizeof(zoneID); j++) {
+				if( z == zoneID[j] ) {
+					for (int k = 0; k < sizeof(zoneID); k++) {
+						if( (rp_GetZoneBit(oldZone) & (BITZONE_JAIL|BITZONE_LACOURS|BITZONE_HAUTESECU)) &&  zoneID[k] == newZone ) {
+							
+							int cap = rp_GetRandomCapital(91);
+							rp_SetJobCapital(cap, rp_GetJobCapital(cap) - 600);
+							rp_ClientMoney(target, i_AddToPay, 500);
+							rp_SetJobCapital(91, rp_GetJobCapital(91) + 100);
+							
+							rp_ClientXPIncrement(client, 250);
+							
+							rp_ClientSendToSpawn(client, false);
+							
+							CPrintToChat(client, "" ...MOD_TAG... " %N{default} vous a libéré.", target);
+							PrintHintText(client,"{lightblue}[TSX-RP]{red} Vous avez été libéré de prison par %N . Vous avez donc été teleporté sur la map ! Ne vous faites pas prendre par les forces de l'ordre. ", target);
+							CPrintToChat(target, "" ...MOD_TAG... " vous avez libéré %N{default} et reçu une récompense de 500$.", client);
+							LogToGame("[QUETE] [MAFIA] %L a libéré %L", target, client);
+							
+							lastFree[client] = GetGameTime() + 180.0;
+						}
 					}
 				}
 			}

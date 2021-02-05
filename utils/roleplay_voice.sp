@@ -29,8 +29,20 @@ public Plugin myinfo = {
 	description = "RolePlay - Utils: VoiceProximity",
 	version = __LAST_REV__, url = "https://www.ts-x.eu"
 };
-
+public Action Cmd_Reload(int args) {
+	char name[64];
+	GetPluginFilename(INVALID_HANDLE, name, sizeof(name));
+	ServerCommand("sm plugins reload %s", name);
+	return Plugin_Continue;
+}
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("common.phrases");
+	LoadTranslations("plugin.basecommands");
+	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.core.phrases");
+
+	RegServerCmd("rp_quest_reload", Cmd_Reload);	
 	for (int i = 1; i <= MaxClients; i++)
 		if( IsValidClient(i) )
 			OnClientPostAdminCheck(i);
@@ -53,9 +65,12 @@ public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 }
 public Action fwdCommand(int client, char[] command, char[] arg) {
+	static char name[64];
 	#if defined DEBUG
 	PrintToServer("fwdCommand");
 	#endif
+	
+	GetClientName2(client, name, sizeof(name), false);
 	
 	if( StrEqual(command, "job") || StrEqual(command, "jobs") ) {
 		Cmd_job(client);
@@ -80,15 +95,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 			CreateTimer(10.0, AllowTalking, client);
 		}
 		
-		char name[64];
-		GetClientName(client, name, sizeof(name));
-		
-		if( !rp_GetClientBool(client, b_Crayon)) {
-			CRemoveTags(arg, strlen(arg));
-			CRemoveTags(name, sizeof(name));
-		}
-		
-		CPrintToChatAll("{lightblue}%s{default} ({olive}ANNONCE{default}): %s", name, arg);
+		CPrintToChatAll("%T", "Chat_Talk", LANG_SERVER, name, "Chat_TAG_EMOTE", arg);
 		LogToGame("[TSX-RP] [ANNONCES] %L: %s", client, arg);
 
 		return Plugin_Handled;
@@ -101,19 +108,25 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 			PrintToChat(client, "\x04[\x02MUTE\x01]\x01: Vous avez été interdit d'utiliser le chat local.");
 			return Plugin_Handled;
 		}
+
+		bool clientChat[MAXPLAYERS+1];
 		
 		for (int i = 1; i < 200; i++) {
 			if( !rp_GetClientKeyAppartement(client, i) )
 				continue;
 			
-			for(int j=1; j<=MaxClients; j++) {
+			for(int j=1; j<=MAXPLAYERS; j++) {
 				if( !IsValidClient(j) )
 					continue;
 				if( !rp_GetClientKeyAppartement(j, i) )
 					continue;
 					
-				CPrintToChatEx(j, client, "{lightblue}%N{default} ({purple}COLOC{default}): %s", client, arg);
+				clientChat[j] = true;
 			}
+		}
+		for( int i = 0; i<sizeof(clientChat); i++ ){
+			if(clientChat[i])
+				CPrintToChatEx(i, client, "%T", "Chat_Talk", LANG_SERVER, name, "Chat_TAG_COLOC", arg);
 		}
 		
 		LogToGame("[TSX-RP] [CHAT-COLLOC] %L: %s", client, arg);
@@ -143,7 +156,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 				j2 = 1;
 
 			if( j == j2 ) {
-				CPrintToChatEx(i, client, "{lightblue}%N{default} ({orange}TEAM{default}): %s", client, arg);
+				CPrintToChatEx(i, client, "%T", "Chat_Talk", LANG_SERVER, name, "Chat_TAG_TEAM", arg);
 			}
 		}
 		
@@ -157,8 +170,8 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 			ACCESS_DENIED(client);
 		}
 		
-		CPrintToChatEx(mari, client, "{lightblue}%N{default} ({red}MARIÉ{default}): %s", client, arg);
-		CPrintToChatEx(client, client, "{lightblue}%N{default} ({red}MARIÉ{default}): %s", client, arg);
+		CPrintToChatEx(mari, client, "%T", "Chat_Talk", LANG_SERVER, name, "Chat_TAG_WEDDING", arg);
+		CPrintToChatEx(client, client, "%T", "Chat_Talk", LANG_SERVER, name, "Chat_TAG_WEDDING", arg);
 		
 		LogToGame("[TSX-RP] [CHAT-MARIE] %L: %s", client, arg);
 		return Plugin_Handled;
@@ -173,7 +186,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 				continue;
 
 			if( rp_GetClientGroupID(i) == rp_GetClientGroupID(client) ) {
-				CPrintToChatEx(i, client, "{lightblue}%N{default} ({red}GROUP{default}): %s", client, arg);
+				CPrintToChatEx(i, client, "%T", "Chat_Talk", LANG_SERVER, name, "Chat_TAG_GROUP", arg);
 			}
 		}
 		
@@ -306,7 +319,7 @@ public int MenuJobs(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_
 			int amount = 0;
 			char tmp[128], tmp2[128];
 
-			for(int i=1; i<MAXPLAYERS+1;i++){
+			for(int i=1; i<=MAXPLAYERS;i++){
 				if(!IsValidClient(i))
 					continue;
 
@@ -317,8 +330,16 @@ public int MenuJobs(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_
 					continue;
 
 				Format(tmp2, sizeof(tmp2), "%i", i);
-				int ijob = rp_GetClientJobID(i)== 1 && GetClientTeam(i) == 2 ? 0 : rp_GetClientInt(i, i_Job);
+				int ijob = rp_GetClientInt(i, i_Job);
 				rp_GetJobData(ijob, job_type_name, tmp, sizeof(tmp));
+				
+				if( rp_GetClientJobID(i) == 1 && CS_TEAM_T ) {
+					if( rp_GetClientInt(client, i_KillJailDuration) > 1) {
+						Format(tmp, sizeof(tmp), "Criminel");
+					} else {
+						Format(tmp, sizeof(tmp), "Gendarmerie");
+					}
+				}
 
 				if(rp_GetClientBool(i, b_IsAFK))
 					Format(tmp, sizeof(tmp), "[AFK] %N - %s", i, tmp);
@@ -392,6 +413,10 @@ public int MenuJobs2(Handle p_hItemMenu, MenuAction p_oAction, int client, int p
 				Format(tmp2, sizeof(tmp2), "%i_-6", target);
 				AddMenuItem(menu, tmp2, "Demander un Appartement");
 				amount++;
+				
+				Format(tmp2, sizeof(tmp2), "%i_-7", target);
+				AddMenuItem(menu, tmp2, "Demander un nettoyage");
+				amount++;
 			}
 			else{
 				for(int i=1;i<MAX_ITEMS;i++){
@@ -448,13 +473,14 @@ public int MenuJobs3(Handle p_hItemMenu, MenuAction p_oAction, int client, int p
 				}
 				case -5: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} a besoin d'un avocat, il est actuellement: %s", client, zoneName);
 				case -6: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} souhaiterait acheter un appartement. Il est actuellement: %s", client, zoneName);
+				case -7: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} souhaiterait nettoyer son appartement. Il est actuellement: %s", client, zoneName);
 				default: {
 					rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
 					CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} a besoin de {lime}%s{default}, il est actuellement: %s", client, tmp, zoneName);
 					LogToGame("[TSX-RP] [CALL] %L a demandé %s à %L", client, tmp, target);
 				}
 			}
-			CPrintToChat(client, "" ...MOD_TAG... " La demande à été envoyée à la personne.");
+			CPrintToChat(client, "" ...MOD_TAG... " La demande a été envoyée à %N{default}.", target);
 			ClientCommand(target, "play buttons/blip1.wav");
 			rp_Effect_BeamBox(target, client, NULL_VECTOR, 122, 122, 0);
 			Handle dp;

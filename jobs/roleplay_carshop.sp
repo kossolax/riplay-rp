@@ -25,40 +25,66 @@ public Plugin myinfo = {
 	version = __LAST_REV__, url = "https://www.ts-x.eu"
 };
 
-Handle g_hMAX_CAR, g_hCarJump, g_hCarUnstuck, g_hCarHeal;
+bool g_bEntityManaged[2049] =  { false, ... };
+float g_flEntity[2049];
+
+Handle g_hMAX_CAR, g_hCarUnstuck, g_hCarHeal;
 int g_cExplode;
 int g_iBlockedTime[65][65];
 float g_lastpos[2049][3];
-bool g_bVehicleCanJump;
 
-char g_szParticles[][][32] =  {
-	{ "Trail",		"Propulseur" },
-	{ "Trail2",		"Fusée n°1" },
-	{ "Trail3",		"Petit cube bleu" },
-	{ "Trail4",		"Fumée verte" },
-	{ "Trail5",		"Seringue" },
-	{ "Trail7",		"Petite fumée verte" },
-	{ "Trail8",		"Fumée blanche et bleue" },
-	{ "Trail9",		"Drogue n°1" },
-	{ "Trail10",	"Bulle bleue n°1" },
-	{ "Trail11",	"Fumée Or" },
-	{ "Trail12",	"Fumée bleue" },
-	{ "Trail13",	"Bulle bleue °2" },
-	{ "Trail14",	"Drogue °2" },
-	{ "Trail15",	"Trait jaune et vert" },
-	{ "Trail_01",	"Fusée n°2" },
-	{ "Trail_02",	"Fumée bleue n°2" },
-	{ "Trail_03",	"Fumée verte" },
-	{ "Trail_04",	"Fumée bleue et rose" },
+int g_lastTouch[2049], g_touchCount[2049], g_damageCount[2049], g_lastDamage[2049];
+
+char g_szParticles[][] =  {
+	"Trail",
+	"Trail2",
+	"Trail_01",
+	"Trail3",
+	"Trail4",
+	"Trail_03",
+	"Trail7",
+	"Trail5",
+	"Trail8",
+	"Trail10",
+	"Trail13",
+	"Trail11",
+	"Trail12",
+	"Trail_02",
+	"Trail15",
+	"Trail_04",
+	"trail_money",
+	"trail_heart",
+	"confetti_balloons",
 };
-char g_szColor[][][32] = {
-	{ "128 0 0", 	"Rubis" },  	{ "255 0 0", 	"Rouge" }, 		{ "255 128 0", 	"Orange" },  	{ "255 255 0", 	"Jaune" }, 
-	{ "128 255 0", 	"Vert-pomme"},  { "0 255 0", 	"Vert" },  		{ "0 128 0", 	"Vert-foncé" }, { "0 255 128", 	"Vert-émeraude" }, 
-	{ "0 255 255", 	"Bleu-ciel" },  { "0 128 255", 	"Bleu-clair" },	{ "0 0 255", 	"Bleu" },  		{ "0 0 128", 	"Bleu-Foncé" }, 
-	{ "128 0 255", 	"Mauve" },  	{ "255 0 255", 	"Rose" },  		{ "255 0 128", 	"Fushia" }, 
-	{ "255 255 255","Blanc" },  	{ "128 128 128","Gris" },  		{ "0 0 0", 		"Noir" }
-};
+char g_szColor[][] = {
+	"128 0 0",
+	"255 0 0",
+	"255 128 0",
+	"255 255 0",
+	"128 255 0",
 	
+	"0 255 0",
+	"0 128 0",
+	"0 255 128",
+	"0 255 255",
+	"0 128 255",
+	
+	"0 0 255",
+	"0 0 128",
+	"128 0 255",
+	"255 0 255",
+	"255 0 128",
+	
+	"255 255 255",
+	"128 128 128",
+	"0 0 0"
+};
+
+int g_iVehiclePolice = -1;
+int g_iVehicleJustice = -1;
+int g_iVehicleHopital = -1;
+
+
 // ----------------------------------------------------------------------------
 public Action Cmd_Reload(int args) {
 	char name[64];
@@ -68,27 +94,31 @@ public Action Cmd_Reload(int args) {
 }
 
 public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error, int err_max) {
-	
 	CreateNative("rp_CreateVehicle", 		Native_rp_CreateVehicle);
 	
 	return APLRes_Success;
 }
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("common.phrases");
+	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.items.phrases");
+	LoadTranslations("roleplay.carshop.phrases");
+	
 	RegServerCmd("rp_quest_reload", 	Cmd_Reload);
 	RegServerCmd("rp_item_vehicle", 	Cmd_ItemVehicle,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_vehicle2", 	Cmd_ItemVehicle,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_vehicle3", 	Cmd_ItemVehicle,		"RP-ITEM",	FCVAR_UNREGISTERED);
+	RegAdminCmd("rp_vehicle", 			Cmd_SpawnVehicle,		ADMFLAG_KICK);
 	
 	RegServerCmd("rp_item_carstuff", 	Cmd_ItemVehicleStuff,	"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegAdminCmd("rp_vehiclexit",		Cmd_VehicleExit,		ADMFLAG_KICK);
 	
-	g_hMAX_CAR = CreateConVar("rp_max_car",	"25", "Nombre de voiture maximum sur le serveur", 0, true, 0.0, true, GetConVarInt(FindConVar("hostport")) == 27015 ? 50.0 : 500.0 );
-	g_hCarJump = CreateConVar("rp_car_jump", GetConVarInt(FindConVar("hostport")) == 27015 ? "0" : "1", "Les voitures peuvent-être sauter?", 0, true, 0.0, true, 1.0);
+	g_hMAX_CAR = CreateConVar("rp_max_car",	"20", "Nombre de voiture maximum sur le serveur", 0, true, 0.0, true, GetConVarInt(FindConVar("hostport")) == 27015 ? 25.0 : 500.0 );
 	g_hCarUnstuck = CreateConVar("rp_car_unstuck", "1", "Les voitures peuvent-elle s'auto-débloquer?", 0, true, 0.0, true, 1.0);
 	g_hCarHeal = CreateConVar("rp_car_heal", "1000", "La vie des voitures", 0, true, 100.0, true, 100000.0);
 	
-	HookConVarChange(g_hCarJump, OnConVarChanged);
-	g_bVehicleCanJump = GetConVarBool(g_hCarJump);
+	char model[PLATFORM_MAX_PATH];
 	
 	// Reload:
 	for (int i = 1; i <= MaxClients; i++) {
@@ -97,15 +127,156 @@ public void OnPluginStart() {
 	}
 	for (int i = MaxClients; i <= 2048; i++) {
 		if( rp_IsValidVehicle(i) ) {
-//			SDKHook(i, SDKHook_Touch, VehicleTouch);
+			SDKHook(i, SDKHook_Touch, VehicleTouch);
 			SDKHook(i, SDKHook_Think, OnThink);	
-			CreateTimer(3.5, Timer_VehicleRemoveCheck, EntIndexToEntRef(i));
+			CreateTimer(GetRandomFloat(0.5, 1.5), Timer_VehicleRemoveCheck, EntIndexToEntRef(i));
+			
+			Entity_GetModel(i, model, sizeof(model));
+			if( StrContains(model, "police_crown_victoria_csgo") >= 0 ) {
+				int skin = GetEntProp(i, Prop_Send, "m_nSkin");
+				if( skin == 6 )
+					g_iVehiclePolice = EntIndexToEntRef(i);
+				if( skin == 1 )
+					g_iVehicleJustice = EntIndexToEntRef(i);
+			}
+			
+			if( StrContains(model, "csgo_drop_crate_spectrum_v7") >= 0 ) {
+				int skin = GetEntProp(i, Prop_Send, "m_nSkin");
+				if( skin == 0 )
+					g_iVehicleHopital = EntIndexToEntRef(i);
+			}
+			
+		}
+	}
+	
+	CreateTimer(1.0, Check_VehiclePolice);
+}
+public void OnPluginEnd() {
+	for (int i = MaxClients; i <= 2048; i++) {
+		if( !IsValidEdict(i) || !IsValidEntity(i) )
+			continue;
+		if( g_bEntityManaged[i] ) {
+			AcceptEntityInput(i, "Kill");
 		}
 	}
 }
-public void OnConVarChanged(Handle cvar, const char[] oldVal, const char[] newVal) {
-	if( cvar == g_hCarJump )
-		g_bVehicleCanJump = GetConVarBool(cvar);
+public Action Check_VehiclePolice(Handle timer, any none) {
+	float spawn[][3] = {
+		{1477.0, 1818.0, -2143.0},
+		{1332.0, 1818.0, -2143.0}
+	};
+	
+	if( EntRefToEntIndex(g_iVehiclePolice) <= 0 ) {
+		int rnd = GetRandomInt(0, sizeof(spawn)-1);
+		
+		int car = rp_CreateVehicle(spawn[rnd], view_as<float>({0.0, 180.0, 0.0}), "models/natalya/vehicles/police_crown_victoria_csgo_v2.mdl", 6);
+		if( rp_IsValidVehicle(car) ) {
+			SetEntProp(car, Prop_Data, "m_bLocked", 1);
+			rp_SetVehicleInt(car, car_owner, -1);
+			rp_SetVehicleInt(car, car_maxPassager, 3);
+			SetEntProp(car, Prop_Send, "m_nBody", 3);
+			
+			g_iVehiclePolice = EntIndexToEntRef(car);
+		}
+	}
+	
+	if( EntRefToEntIndex(g_iVehicleJustice) <= 0 ) {
+		int rnd = GetRandomInt(0, sizeof(spawn)-1);
+		
+		int car = rp_CreateVehicle(spawn[rnd], view_as<float>({0.0, 180.0, 0.0}), "models/natalya/vehicles/police_crown_victoria_csgo_v2.mdl", 1);
+		if( rp_IsValidVehicle(car) ) {
+			SetEntProp(car, Prop_Data, "m_bLocked", 1);
+			rp_SetVehicleInt(car, car_owner, -101);
+			rp_SetVehicleInt(car, car_maxPassager, 3);
+			SetEntProp(car, Prop_Send, "m_nBody", 3);
+			
+			g_iVehicleJustice = EntIndexToEntRef(car);
+		}
+	}
+	
+	if( EntRefToEntIndex(g_iVehicleHopital) <= 0 ) {
+		float pos[3] =  {1336.0, -2307.0, -2008.0 };
+		
+		int car = rp_CreateVehicle(view_as<float>({1336.0, -2307.0, 0.0 }), view_as<float>({0.0, 90.0, 0.0}), "models/props/crates/csgo_drop_crate_spectrum_v7.mdl", 0);
+		TeleportEntity(car, pos, NULL_VECTOR, NULL_VECTOR);
+		if( rp_IsValidVehicle(car) ) {
+			SetEntProp(car, Prop_Data, "m_bLocked", 1);
+			rp_SetVehicleInt(car, car_owner, -11);
+			rp_SetVehicleInt(car, car_maxPassager, 1);
+			SetEntProp(car, Prop_Send, "m_nBody", 0);
+			
+			g_iVehicleHopital = EntIndexToEntRef(car);
+			// rp_SetClientVehiclePassager(client, vehicle, 2, 2);
+		}
+	}
+	
+	bool light = (GetConVarInt(FindConVar("rp_braquage")) > 0 || GetConVarInt(FindConVar("rp_kidnapping")) > 0 || GetConVarInt(FindConVar("rp_perquisition")) > 0);
+	if( light ) {
+		if( EntRefToEntIndex(g_iVehiclePolice) >= 0 ) {
+			updatePoliceLight(g_iVehiclePolice);
+		}
+		if( EntRefToEntIndex(g_iVehicleJustice) >= 0 ) {
+			updatePoliceLight(g_iVehicleJustice);
+		}
+	}
+	else {
+		if( EntRefToEntIndex(g_iVehiclePolice) >= 0 ) {
+			removePoliceLight(g_iVehiclePolice);
+		}
+		if( EntRefToEntIndex(g_iVehicleJustice) >= 0 ) {
+			removePoliceLight(g_iVehicleJustice);
+		}
+	}
+	
+	
+	for (int i = 1; i <= MaxClients; i++) {
+		if( !IsValidClient(i) )
+			continue;
+		
+		if( rp_GetClientJobID(i) == 1 && EntRefToEntIndex(g_iVehiclePolice) > 0 ) {
+			rp_SetClientKeyVehicle(i, EntRefToEntIndex(g_iVehiclePolice), true);
+		}
+			
+		if( rp_GetClientJobID(i) == 101 && EntRefToEntIndex(g_iVehicleJustice) > 0 )
+			rp_SetClientKeyVehicle(i, EntRefToEntIndex(g_iVehicleJustice), true);
+		
+		if( rp_GetClientJobID(i) == 11 && EntRefToEntIndex(g_iVehicleHopital) > 0 )
+			rp_SetClientKeyVehicle(i, EntRefToEntIndex(g_iVehicleHopital), true);
+		
+	}
+	
+	CreateTimer(1.0, Check_VehiclePolice);
+}
+void removePoliceLight(int car) {
+	car = EntRefToEntIndex(car);
+	if( car <= 0 )
+		return;
+	
+	
+	
+	if( EntRefToEntIndex(rp_GetVehicleInt(car, car_gyro_left)) > 0 ) {
+		AcceptEntityInput(EntRefToEntIndex(rp_GetVehicleInt(car, car_gyro_left)), "Kill");
+	}
+	if( EntRefToEntIndex(rp_GetVehicleInt(car, car_gyro_right)) > 0 ) {
+		AcceptEntityInput(EntRefToEntIndex(rp_GetVehicleInt(car, car_gyro_right)), "Kill");
+	}
+}
+void updatePoliceLight(int car) {
+	static float lastpos[2049][3];
+	
+	car = EntRefToEntIndex(car);
+	if( car <= 0 )
+		return;
+	
+	float src[3];
+	Entity_GetAbsOrigin(car, src);
+	
+	bool first = (EntRefToEntIndex(rp_GetVehicleInt(car, car_gyro_left)) <= 0 || EntRefToEntIndex(rp_GetVehicleInt(car, car_gyro_right)) <= 1);
+	
+	if( GetVectorDistance(src, lastpos[car]) > 2048.0 || first ) {
+		attachPoliceLight(car);
+		Entity_GetAbsOrigin(car, lastpos[car]);
+	}
 }
 public Action Cmd_VehicleExit(int client, int args) {
 	for (int i = 1; i <= MaxClients; i++) {
@@ -135,9 +306,109 @@ public void OnClientPostAdminCheck(int client) {
 	for (int i = 1; i < 65; i++)
 		g_iBlockedTime[client][i] = 0;
 }
+public bool FilterToVehicle(int entity, int mask, any data) {
+	return rp_IsValidVehicle(entity) && entity != data;
+}
 public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& weapon, float damageForce[3], float damagePosition[3]) {
-	if( Client_GetVehicle(victim) > 0 )
+	
+	if( damagetype == 1 && inflictor == 0 && attacker == 0 && weapon == -1 && damageForce[0] == 0.0 && damageForce[1] == 0.0 && damageForce[2] <= -8192.0 ) {
+		// Bug relou des voitures.
+		return Plugin_Stop;
+	}
+	
+	if( victim == attacker && IsValidClient(victim) && rp_IsValidVehicle(inflictor) && damagetype == 17 ) {
+		
+		if( GetVectorLength(damageForce) > 8192.0 ) {
+			int tick = GetGameTickCount();
+			
+			
+			if( g_lastDamage[inflictor]+1 >= tick) {
+				g_damageCount[inflictor]++;
+			}
+			else {
+				g_damageCount[inflictor] = 0;
+				
+				float g_flVehicleDamage = GetConVarFloat(FindConVar("rp_car_damages")) / 10.0;
+				int heal = RoundToCeil(damage * g_flVehicleDamage);
+				
+				if( heal > 250 )
+					heal = 250;
+				
+				if( heal > 0 ) {
+					rp_SetVehicleInt(inflictor, car_health, rp_GetVehicleInt(inflictor, car_health) - heal);
+				}
+			}
+			
+			g_lastDamage[inflictor] = tick;
+			
+			return Plugin_Stop;
+		}
+		else {
+			
+			float g_flVehicleDamage = GetConVarFloat(FindConVar("rp_car_damages")) / 10.0;
+			int heal = RoundToCeil(damage * g_flVehicleDamage);
+			
+			if( heal > 0 ) {
+				rp_SetVehicleInt(inflictor, car_health, rp_GetVehicleInt(inflictor, car_health) - heal); 
+			}
+		}
+	}
+	
+	if( rp_IsValidVehicle(attacker) && rp_IsValidVehicle(inflictor) ) {
+		float g_flVehicleDamage = GetConVarFloat(FindConVar("rp_car_damages")) / 2.0;
+		float min[3] =  { -16.0, -16.0, -16.0 };
+		float max[3] =  { 16.0, 16.0, 16.0 };
+		Handle tr = TR_TraceHullFilterEx(damagePosition, damagePosition, min, max, MASK_ALL, FilterToVehicle, inflictor);
+		if( TR_DidHit(tr) ) {
+				
+			int InVehicle = TR_GetEntityIndex(tr);
+			if( rp_IsValidVehicle(InVehicle) ) {
+				if( damage > 50.0 )
+					damage = 50.0;
+				
+				float delta = (SquareRoot(float(GetEntProp(inflictor, Prop_Send, "m_nSpeed"))) + 1.0) / (SquareRoot(float(GetEntProp(InVehicle, Prop_Send, "m_nSpeed"))) + 1.0);
+				
+				int heal = RoundToCeil(damage * g_flVehicleDamage * delta);
+				
+				if( heal > 0 ) {
+					rp_SetVehicleInt(InVehicle, car_health, rp_GetVehicleInt(InVehicle, car_health) - heal);
+				}
+				
+				heal = RoundToCeil(damage * g_flVehicleDamage * (1.0-delta));
+				
+				if( heal > 0 ) {
+					rp_SetVehicleInt(inflictor, car_health, rp_GetVehicleInt(inflictor, car_health) - heal);
+				}
+			}
+		}
+		CloseHandle(tr);
+	}
+	
+	if( IsValidClient(attacker) && rp_IsValidVehicle(inflictor) && IsValidClient(victim) ) {
+		float g_flVehicleDamage = GetConVarFloat(FindConVar("rp_car_damages")) / 5.0;
+		int heal = RoundToCeil(damage * g_flVehicleDamage);
+		if( heal > GetClientHealth(victim) ) {
+			heal = GetClientHealth(victim);
+		}
+		
+		if( !(rp_GetZoneBit(rp_GetPlayerZone(victim)) & BITZONE_ROAD) ) {		
+			if( heal > 0 ) {
+				rp_SetVehicleInt(inflictor, car_health, rp_GetVehicleInt(inflictor, car_health) - heal);
+			}
+		}
+	}
+	
+	if( Client_GetVehicle(victim) > 0 ) {
+		if( attacker > 0 && inflictor == attacker ) {
+			char tmp[64];
+			GetEdictClassname(inflictor, tmp, sizeof(tmp));
+			if( StrEqual(tmp, "entityflame") )
+				return Plugin_Continue;
+		}
+		
 		return Plugin_Handled;
+	}
+		
 	return Plugin_Continue;
 }
 public void OnClientDisconnect(int client) {
@@ -157,10 +428,18 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 		return Plugin_Continue;
 	
 	Handle menu = CreateMenu(SpawnVehicle);
-	SetMenuTitle(menu, "Une voiture pour 6 minutes");
+	SetMenuTitle(menu, "%T\n ", "Build_SpawnCar", client, 6);
 
-	AddMenuItem(menu, "mustang",	"Mustang");
-	AddMenuItem(menu, "moto", 		"Moto");
+	char tmp[128];
+
+	rp_GetItemData(177, item_type_name, tmp, sizeof(tmp));
+	AddMenuItem(menu, "mustang",	tmp);
+
+	rp_GetItemData(212, item_type_name, tmp, sizeof(tmp));
+	AddMenuItem(menu, "victoria",	tmp);
+
+	rp_GetItemData(178, item_type_name, tmp, sizeof(tmp));
+	AddMenuItem(menu, "moto", 		tmp);
 
 	DisplayMenu(menu, client, 60);
 	cooldown = 5.0;
@@ -199,7 +478,7 @@ public Action fwdUse(int client) {
 		if( driver > 0 ) {
 			
 			if( rp_GetVehicleInt(target, car_owner) == client && driver != client ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez éjecter le conducteur avec la commande /out.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicle_MayOut", client);
 			}
 			AskToJoinCar(client, target);			
 		}
@@ -221,6 +500,58 @@ int countVehicle(int client) {
 	}
 	return count;
 }
+public Action Cmd_SpawnVehicle(int client, int args) {
+	
+	if( !(rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_EVENT ) ) {
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Build_CannotHere", client);
+		return Plugin_Handled;
+	}
+	char model[128];
+	GetCmdArg(1, model, sizeof(model));
+	
+	float vecOrigin[3], vecAngles[3];
+	GetClientAbsOrigin(client, vecOrigin);
+	vecOrigin[2] += 10.0;
+	
+	GetClientEyeAngles(client, vecAngles);
+	vecAngles[0] = vecAngles[2] = 0.0;
+	vecAngles[1] -= 90.0;
+	
+	int car; 
+	if( StrContains(model, "mustang", false) >= 0 )
+		car = rp_CreateVehicle(vecOrigin, vecAngles, "models/natalya/vehicles/natalya_mustang_csgo_2021.mdl", 1, client);
+	else if( StrContains(model, "moto", false) >= 0 )
+		car = rp_CreateVehicle(vecOrigin, vecAngles, "models/natalya/vehicles/dirtbike.mdl", 1, client);
+	else if( StrContains(model, "victoria", false) >= 0 )
+		car = rp_CreateVehicle(vecOrigin, vecAngles, "models/natalya/vehicles/police_crown_victoria_csgo_v2.mdl", 0, client);
+	else if( StrContains(model, "ambulance", false) >= 0 )
+		car = rp_CreateVehicle(vecOrigin, vecAngles, "models/props/crates/csgo_drop_crate_spectrum_v7.mdl", 0);
+	else if( StrContains(model, "police", false) >= 0 )
+		car = rp_CreateVehicle(vecOrigin, vecAngles, "models/natalya/vehicles/police_crown_victoria_csgo_v2.mdl", 6);
+	else
+		car = rp_CreateVehicle(vecOrigin, vecAngles, "models/natalya/vehicles/natalya_mustang_csgo_2021.mdl", 1, client);
+			
+	if( !car ) {
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Build_CannotHere", client);
+		return Plugin_Handled;
+	}
+	
+	rp_SetVehicleInt(car, car_owner, 0);
+	rp_SetVehicleInt(car, car_item_id, 0);
+	rp_SetVehicleInt(car, car_maxPassager, 3);
+	rp_SetVehicleInt(car, car_donateur, 0);
+	rp_SetVehicleInt(car, car_boost, 1);
+	
+	if( StrContains(model, "police", false) >= 0 )
+		SetEntProp(car, Prop_Send, "m_nBody", 3);
+	if( StrContains(model, "moto", false) >= 0 )
+		rp_SetVehicleInt(car, car_maxPassager, 0);
+	if( StrContains(model, "ambulance", false) >= 0 )
+		rp_SetVehicleInt(car, car_maxPassager, 1);
+	
+	return Plugin_Handled;
+	
+}
 public Action Cmd_ItemVehicle(int args) {
 	
 	char arg1[128];
@@ -228,23 +559,33 @@ public Action Cmd_ItemVehicle(int args) {
 	
 	int skinid = GetCmdArgInt(2);
 	int client = GetCmdArgInt(3);
+	int sendToBank = 0;
+	if( args == 5 )
+		sendToBank = GetCmdArgInt(4);
+	
 	int item_id = GetCmdArgInt(args);
 	int max = 0;
 	
-	if( StrEqual(arg1, "models/natalya/vehicles/natalya_mustang_csgo_2016.mdl") ) {
+	if( StrEqual(arg1, "models/natalya/vehicles/natalya_mustang_csgo_2021.mdl") ) {
 		max = 3;
+	}
+	if( StrEqual(arg1, "models/natalya/vehicles/police_crown_victoria_csgo_v2.mdl") ) {
+		max = 3;
+	}
+	if( StrEqual(arg1, "models/props/crates/csgo_drop_crate_spectrum_v7.mdl") ) {
+		max = 1;
 	}
 	
 	if( rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PEACEFULL ) {
-		CAR_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
-		return;
+		CAR_CANCEL(client, item_id, sendToBank);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Build_CannotHere", client);
+		return Plugin_Handled;
 	}
 	
 	if( countVehicle(client) >= GetConVarInt(g_hMAX_CAR) ) {
-		CAR_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Il y a trop de voitures en circulation pour l'instant.");
-		return;			
+		CAR_CANCEL(client, item_id, sendToBank);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicle_TooManyCars", client);
+		return Plugin_Handled;
 	}
 	
 	float vecOrigin[3], vecAngles[3];
@@ -257,8 +598,9 @@ public Action Cmd_ItemVehicle(int args) {
 	
 	int car = rp_CreateVehicle(vecOrigin, vecAngles, arg1, skinid, client);
 	if( !car ) {
-		CAR_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas assez de place ici.");
+		CAR_CANCEL(client, item_id, sendToBank);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Build_CannotHere", client);
+		return Plugin_Handled;
 	}
 	
 	rp_SetVehicleInt(car, car_owner, client);
@@ -271,7 +613,7 @@ public Action Cmd_ItemVehicle(int args) {
 	// Voiture donateur, on la thune wesh
 	char arg0[128];
 	GetCmdArg(0, arg0, sizeof(arg0));
-	if( StrEqual(arg0, "rp_item_vehicle2") && StrEqual(arg1, "models/natalya/vehicles/natalya_mustang_csgo_2016.mdl") ) {
+	if( StrEqual(arg0, "rp_item_vehicle2") && StrEqual(arg1, "models/natalya/vehicles/natalya_mustang_csgo_2021.mdl") ) {
 		ServerCommand("sm_effect_colorize %d 255 64 32 255", car);
 		rp_SetVehicleInt(car, car_particle, 9);
 		rp_SetVehicleInt(car, car_battery, 1);
@@ -280,8 +622,9 @@ public Action Cmd_ItemVehicle(int args) {
 		rp_SetVehicleInt(car, car_light_b, 32);
 		rp_SetVehicleInt(car, car_boost, 1);
 		rp_SetVehicleInt(car, car_donateur, 1);
+		rp_SetVehicleInt(car, car_can_jump, 1);
 
-		DispatchKeyValue(car, "vehiclescript", 	"scripts/vehicles/natalya_mustang_csgo_20163.txt");
+		DispatchKeyValue(car, "vehiclescript", 	"scripts/vehicles/natalya_mustang_csgo_20213.txt");
 		ServerCommand("vehicle_flushscript");
 		attachVehicleLight(car);
 	}
@@ -290,30 +633,46 @@ public Action Cmd_ItemVehicle(int args) {
 		rp_SetVehicleInt(car, car_owner, 0);
 	}
 	
-	return;
+	return Plugin_Handled;
 }
 public void VehicleTouch(int car, int entity) {
+	
 	if( rp_IsValidDoor(entity) ) {
-		int door = rp_GetDoorID(entity);
+		
 		int client = Vehicle_GetDriver(car);
+		int door = rp_GetDoorID(entity);
+		int tick = GetGameTickCount();
+		
 		if( client > 0 && rp_GetClientKeyDoor(client, door) ) {
-			rp_SetDoorLock(door, false);
-			rp_ClientOpenDoor(client, door, true);
+			if( g_lastTouch[car]+1 >= tick) {
+				g_touchCount[car]++;
+			}
+			else {
+				g_touchCount[car] = 0;
+			}
 			
-			rp_ScheduleEntityInput(entity, 3.0, "Close");
-			rp_ScheduleEntityInput(entity, 3.1, "Lock");
-			
+			if( g_touchCount[car] > 64 && g_damageCount[car] > 64 ) {
+				rp_SetDoorLock(door, false);
+				rp_ClientOpenDoor(client, door, true);
+				
+				g_touchCount[car] = 0;
+				g_damageCount[car] = 0;
+			}
+			g_lastTouch[car] = GetGameTickCount();
 		}
 	}
 }
-public void CAR_CANCEL(int client, int item_id){
+public void CAR_CANCEL(int client, int item_id, int fromBank ){
 	if( item_id != -1) {
-		ITEM_CANCEL(client, item_id);
+		if( fromBank == 1 ) {
+			rp_ClientGiveItem(client, item_id, 1, true);
+		}
+		else {
+			ITEM_CANCEL(client, item_id);
+		}
 	}
 }
-public Action Cmd_ItemVehicleStuff(int args) {
-	static int offset = -1;	
-	
+public Action Cmd_ItemVehicleStuff(int args) {	
 	char arg1[12];
 	GetCmdArg(1, arg1, sizeof(arg1));
 	
@@ -326,132 +685,73 @@ public Action Cmd_ItemVehicleStuff(int args) {
 		return Plugin_Handled;
 	}
 	
-	
 	if( !rp_GetClientKeyVehicle(client, target) ) {
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	
-	if( offset == -1 ) {
-		offset = GetEntSendPropOffs(target, "m_clrRender", true);
-	}
-	
 	if( StrEqual(arg1, "key") ) {
 		
 		if( Vehicle_GetDriver(target) != client) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous devez utiliser cet objet dans votre voiture.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicle_YouMustBeInCar", client);
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
-		
 		if( rp_GetVehicleInt(target, car_owner) != client ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas le propriétaire de cette voiture.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicle_YouAreNotOwner", client);
+			ITEM_CANCEL(client, item_id);
+			return Plugin_Handled;
+		}
+		if( target == EntRefToEntIndex(g_iVehiclePolice) || target == EntRefToEntIndex(g_iVehicleJustice) ) {
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicle_CantCustom", client);
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
 		
 		int amount=0;
 		for(int i=1; i<=MaxClients; i++) {
+			if( i == client )
+				continue;
 			if( !IsValidClient(i) )
 				continue;
 			if( !rp_IsTutorialOver(i) )
 				continue;
-			if( rp_GetClientVehiclePassager(i) != target )
-				continue;
-			if( rp_GetClientKeyVehicle(i, target) )
-				continue;
-			
-			amount++;
-			rp_SetClientKeyVehicle(i, target, true);
-			CPrintToChat(client, "" ...MOD_TAG... " %N{default} a maintenant la clé de votre voiture.", i);
-		}
-		
-		if( amount == 0 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Il n'y a personne dans votre voiture à qui donner la clé.");
-			ITEM_CANCEL(client, item_id);
-			return Plugin_Handled;
-		}
-		
-		
-	}
-	else if( StrEqual(arg1, "gang") ) {
-		
-		int gID = rp_GetClientGroupID(client);
-		
-		if( gID == 0 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas de gang.");
-			ITEM_CANCEL(client, item_id);
-			return Plugin_Handled;
-		}
-		if( Vehicle_GetDriver(target) != client) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous devez utiliser cet objet dans votre voiture.");
-			ITEM_CANCEL(client, item_id);
-			return Plugin_Handled;
-		}
-		
-		if( rp_GetVehicleInt(target, car_owner) != client ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas le propriétaire de cette voiture.");
-			ITEM_CANCEL(client, item_id);
-			return Plugin_Handled;
-		}
-		
-		int amount=0;
-		for(int i=1; i<=MaxClients; i++) {
-			if( !IsValidClient(i) )
-				continue;
-			if( rp_GetClientGroupID(i) != gID )
-				continue;
-			if( rp_GetClientKeyVehicle(i, target) )
-				continue;
-			if( !rp_IsTutorialOver(i) )
-				continue;
-			
-			amount++;
-			rp_SetClientKeyVehicle(i, target, true);
-			CPrintToChat(client, "" ...MOD_TAG... " %N{default} a maintenant la clé de votre voiture.", i);
-		}
-		if( amount == 0 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez personne à qui donner la clé.");
-			ITEM_CANCEL(client, item_id);
-			return Plugin_Handled;
-		}
-	}
-	else if( StrEqual(arg1, "battery") ){
-		if(rp_GetVehicleInt(target, car_battery)!= -1){
-			CPrintToChat(client, "" ...MOD_TAG... " Votre voiture est déjà équipée d'une batterie secondaire.");
-			ITEM_CANCEL(client, item_id);
-			return Plugin_Handled;
-		}
-		rp_SetVehicleInt(target, car_battery, 0);
-		CPrintToChat(client, "" ...MOD_TAG... " Votre voiture est maintenant équipée d'une batterie secondaire.");
-	}
-	else if( StrEqual(arg1, "boost") ){
-		if( rp_GetVehicleInt(target, car_boost) != -1){
-			CPrintToChat(client, "" ...MOD_TAG... " Votre voiture est déjà équipée d'un boost.");
-			ITEM_CANCEL(client, item_id);
-			return Plugin_Handled;
-		}
-		
-		char ScriptPath[PLATFORM_MAX_PATH], buffer[8][64];
-		Entity_GetModel(target, ScriptPath, sizeof(ScriptPath));
-		int amount = ExplodeString(ScriptPath, "/", buffer, sizeof(buffer), sizeof(buffer[]));
-		if( amount > 0 ) {
-			ReplaceString(buffer[amount-1], sizeof(buffer[]), ".mdl", "");
-			Format(ScriptPath, sizeof(ScriptPath), "scripts/vehicles/%s2.txt", buffer[amount-1]);
-			
-			if( FileExists(ScriptPath) ) {
-				DispatchKeyValue(target, "vehiclescript", 		ScriptPath);
-				ServerCommand("vehicle_flushscript");
-				CPrintToChat(client, "" ...MOD_TAG... " Votre voiture est maintenant équipée d'un boost.");
+
+			if( rp_GetClientVehiclePassager(i) == target ) {
+				if( rp_GetClientKeyVehicle(i, target) == true )
+					continue;
+				
+				amount++;
+				rp_SetClientKeyVehicle(i, target, true);
+				
+				char client_name[128], target_name[128];
+				GetClientName2(client, client_name, sizeof(client_name), false);
+				GetClientName2(i, target_name, sizeof(target_name), false);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicle_CarGiveKey", client, target_name);
+				CPrintToChat(i, "" ...MOD_TAG... " %T", "Vehicle_CarReceiveKey", i, client_name);
 			}
 			else {
-				CPrintToChat(client, "" ...MOD_TAG... " Impossible d'installer un boost sur votre voiture.");
-				ITEM_CANCEL(client, item_id);
+				if( rp_GetClientKeyVehicle(i, target) == false )
+					continue;
+				
+				amount++;
+				rp_SetClientKeyVehicle(i, target, false);
+				
+				char client_name[128], target_name[128];
+				GetClientName2(client, client_name, sizeof(client_name), false);
+				GetClientName2(i, target_name, sizeof(target_name), false);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicle_CarRemoveKey", client, target_name);
+				CPrintToChat(i, "" ...MOD_TAG... " %T", "Vehicle_CarTakeKey", i, client_name);
 			}
 		}
 		
-		
+		if( amount == 0 ) {
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicle_CarNone", client);
+			ITEM_CANCEL(client, item_id);
+			return Plugin_Handled;
+		}
 	}
+
 	
 	return Plugin_Handled;
 }
@@ -469,8 +769,6 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	char[] model = new char[ l_model + 2];
 	GetNativeString(3, model, l_model + 1);
 
-	LogToFile("vehicules.txt", "%s", model);
-
 	// Thanks blodia: https://forums.alliedmods.net/showthread.php?p=1268368#post1268368
 	
 	int ent = CreateEntityByName("prop_vehicle_driveable");
@@ -483,32 +781,20 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	if( amount > 0 ) {
 		ReplaceString(buffer[amount-1], sizeof(buffer[]), ".mdl", "");
 		Format(ScriptPath, sizeof(ScriptPath), "scripts/vehicles/%s.txt", buffer[amount-1]);
-		
-		LogToFile("vehicules.txt", "need to found %s", ScriptPath);
-
 		if(FileExists(ScriptPath)) {
-			LogToFile("vehicules.txt", "yeah, %s exist", ScriptPath);
 			valid = true;
 		}
 	}
 
 	if(!valid) {
-		LogToFile("vehicules.txt", "%s not exist, need to load jeep", ScriptPath);
 		Format(ScriptPath, sizeof(ScriptPath), "scripts/vehicles/jeep.txt");
-
-		LogToFile("vehicules.txt", "now script is %s", ScriptPath);
-	}
-
-	LogToFile("vehicules.txt", "final check for %s", ScriptPath);
-
-	if(FileExists(ScriptPath)) {
-		LogToFile("vehicules.txt", "%s exist", ScriptPath);
-	} else {
-		LogToFile("vehicules.txt", "%s not exist", ScriptPath);
 	}
 	
+	LogToGame(model);
+	LogToGame(ScriptPath);
+	
 	DispatchKeyValue(ent, "model", 				model);
-	//DispatchKeyValue(ent, "vehiclescript", 		ScriptPath);
+	DispatchKeyValue(ent, "vehiclescript", 		ScriptPath);
 
 	DispatchKeyValue(ent, "solid",				"6");
 	DispatchKeyValue(ent, "actionScale",		"1");
@@ -523,14 +809,11 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	DispatchKeyValueFloat(ent, "MaxPitch", 		360.00);
 	DispatchKeyValueFloat(ent, "MinPitch", 		-360.00);
 	DispatchKeyValueFloat(ent, "MaxYaw", 		90.00);
-	
-	LogToFile("vehicules.txt", "before dispatch");
 
 	IntToString(skin, szSkin, sizeof(szSkin));
 	DispatchKeyValue(ent, "skin", szSkin);
+	DispatchKeyValue(ent, "body", "0");
 	DispatchSpawn(ent);
-	
-	LogToFile("vehicules.txt", "after dispatch");
 
 	// check if theres space to spawn the vehicle.
 	float MinHull[3],  MaxHull[3];
@@ -543,12 +826,8 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 		trace = TR_TraceHullEx(origin, origin, MinHull, MaxHull, MASK_SOLID);
 	else
 		trace = TR_TraceHullFilterEx(origin, origin, MinHull, MaxHull, MASK_SOLID, FilterToOne, client);
-	
-	LogToFile("vehicules.txt", "tr");
 
 	if( TR_DidHit(trace) ) { 
-		LogToFile("vehicules.txt", "no space to spawn the vehicle");
-
 		delete trace; 
 		rp_AcceptEntityInput(ent, "Kill");	
 		
@@ -556,8 +835,6 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	}
 
 	delete trace;
-
-	LogToFile("vehicules.txt", "no tr delete trace");
 
 	TeleportEntity(ent, origin, angle, NULL_VECTOR);
 	rp_SetVehicleInt(ent, car_light, -1);
@@ -569,6 +846,9 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	rp_SetVehicleInt(ent, car_particle, -1);	
 	rp_SetVehicleInt(ent, car_health, GetConVarInt(g_hCarHeal));
 	rp_SetVehicleInt(ent, car_klaxon, Math_GetRandomInt(1, 6));
+	rp_SetVehicleInt(ent, car_can_jump, -1);
+	rp_SetVehicleInt(ent, car_item_id, 0);
+	rp_SetVehicleInt(ent, car_owner, 0);
 	
 	SetEntProp(ent, Prop_Data, "m_takedamage", DAMAGE_NO); // Nope
 	//SetEntProp(ent, Prop_Data, "m_nNextThinkTick", -1);
@@ -576,7 +856,6 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 	
 	SDKHook(ent, SDKHook_Think, OnThink);	
 	
-	LogToFile("vehicules.txt", "after TeleportEntity");
 
 	//rp_AcceptEntityInput(ent, "HandBrakeOn");
 	rp_AcceptEntityInput(ent, "TurnOff");
@@ -595,18 +874,20 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 		WritePackCell(dp, ent);
 	}
 	
-//	SDKHook(ent, SDKHook_Touch, VehicleTouch);
+	SDKHook(ent, SDKHook_Touch, VehicleTouch);
 	CreateTimer(3.5, Timer_VehicleRemoveCheck, EntIndexToEntRef(ent));
+	CreateTimer(0.5, Timer_Flush);
 
-	LogToFile("vehicules.txt", "end");
 	return ent;
 }
-
+public Action Timer_Flush(Handle timer, any none) {
+	ServerCommand("vehicle_flushscript");
+}
 public void OnThink(int ent) {
 	SetEntPropFloat(ent, Prop_Data, "m_flTurnOffKeepUpright", 1.0);
 	SetEntProp(ent, Prop_Send, "m_bEnterAnimOn", 0);
 	
-	if( g_bVehicleCanJump ) {
+	if( rp_GetVehicleInt(ent, car_can_jump) == 1 ) {
 		int player = Vehicle_GetDriver(ent);
 		if( player > 0 && IsValidClient(player) && (GetClientButtons(player) & IN_DUCK) ) {
 			Handle trace;
@@ -675,6 +956,16 @@ void VehicleRemove(int vehicle, bool explode = false) {
 	}
 	dettachVehicleLight(vehicle);
 	
+	char class[64];
+	for (int i = MaxClients; i < 2049; i++) {
+		if( !IsValidEdict(i) || !IsValidEntity(i) )
+			continue;
+		
+		GetEdictClassname(i, class, sizeof(class));
+		if( StrEqual(class, "rp_gyrophare") && Entity_GetParent(i) == vehicle )
+			rp_AcceptEntityInput(i, "Kill");
+	}
+	
 	ServerCommand("sm_effect_fading %i 2.5 1", vehicle);
 	rp_ScheduleEntityInput(vehicle, 2.5, "Kill");
 }
@@ -702,6 +993,134 @@ public Action BatchLeave(Handle timer, any vehicle) {
 			rp_ClientVehicleExit(i, vehicle, true);
 		}
 	}
+}
+
+void attachPoliceLight(int target) {
+	float pos[3], ang[3];
+	char tmp[128];
+	
+	Entity_GetAbsOrigin(target, pos);
+	pos[2] += 76.0;
+	
+	int cpt = 2;
+	int color[3];
+	
+	if( rp_GetVehicleInt(target, car_health) <= 0 )
+		return;
+	
+	for (int j = 1; j <= 2; j++) {
+		int parent = CreateEntityByName("info_target");
+		DispatchKeyValue(parent, "classname", "rp_gyrophare");
+		SetVariantString("!activator");
+		AcceptEntityInput(parent, "SetParent", target);
+		
+		Format(tmp, sizeof(tmp), "light_bar%d", j);
+		SetVariantString(tmp);
+		AcceptEntityInput(parent, "SetParentAttachment", parent, parent, 0);
+		
+		g_bEntityManaged[parent] = true;
+		
+		
+		
+		if( EntRefToEntIndex(rp_GetVehicleInt(target, j == 1 ? car_gyro_right : car_gyro_left)) > 0 ) {
+			AcceptEntityInput(EntRefToEntIndex(rp_GetVehicleInt(target, j == 1 ? car_gyro_right : car_gyro_left)), "Kill");
+		}
+		rp_SetVehicleInt(target, j == 1 ? car_gyro_right : car_gyro_left, EntIndexToEntRef(parent));
+		
+		for (int i = 0; i < cpt; i++) {
+			ang[0] += (360.0 / float(cpt));
+			
+			int ent = CreateEntityByName("point_spotlight");
+			
+			if( j%2 == 0 ) {
+				color[0] = 255;
+				color[1] = 0;
+				color[2] = 0;
+			}
+			else {
+				color[0] = 0;
+				color[1] = 0;
+				color[2] = 255;
+			}
+			
+			Format(tmp, sizeof(tmp), "%d %d %d", color[0], color[1], color[2]);
+			DispatchKeyValue(ent, "rendercolor", tmp);
+			DispatchKeyValue(ent, "renderamt", "255");
+			
+			DispatchKeyValue(ent, "spotlightwidth", "8");
+			DispatchKeyValue(ent, "spotlightlength", "64");
+			DispatchKeyValue(ent, "spawnflags", "3");
+			
+			DispatchSpawn(ent);
+			//
+			
+			SetVariantString("!activator");
+			AcceptEntityInput(ent, "SetParent", parent);
+			
+			TeleportEntity(ent, view_as<float>({0.0, 0.0, 0.0}), ang, NULL_VECTOR);
+			
+			g_flEntity[ent] = ang[0];
+			SDKHook(ent, SDKHook_Think, fwdThink2);
+		}
+		
+	}
+}
+#define FCT RoundFloat(GetTickedTime() * 5.0)
+public void fwdThink2(int ent) {
+	int p = GetEntPropEnt(ent, Prop_Data, "m_hEffectEntity");
+	
+	if (p == -1) {
+		char tmp[64];
+		for (int i = MaxClients; i <= 2048; i++) {
+			if (!IsValidEdict(i) || !IsValidEntity(i))
+				continue;
+			
+			GetEdictClassname(i, tmp, sizeof(tmp));
+			if (StrEqual(tmp, "beam")) {
+				int j = GetEntPropEnt(i, Prop_Data, "m_hAttachEntity");
+				if (j == ent) {
+					SetEntPropEnt(ent, Prop_Data, "m_hEffectEntity", i);
+					p = i;
+				}
+			}
+		}
+	}
+	
+	if (p > 0) {
+		float s = 8.0 + (32.0 * OctavePerlin(FCT, 8, 2, 8.0, 2.0));
+		SetEntPropFloat(p, Prop_Send, "m_fWidth", s);
+		
+		float ang[3];
+		Entity_GetAbsAngles(ent, ang);
+		ang[1] = 90.0;
+		ang[0] = g_flEntity[ent];
+		
+		g_flEntity[ent] += 2.0;
+		
+		TeleportEntity(p, NULL_VECTOR, ang, NULL_VECTOR);
+		TeleportEntity(ent, NULL_VECTOR, ang, NULL_VECTOR);
+	}
+}
+
+float perlin(int n) {
+	n = (n << 13) ^ n;
+	float r = (1.0 - ((n * ((n * n * 15731) + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0);
+	return (r + 1.0) / 2.0;
+}
+public float OctavePerlin(int x, int frequency, int octaves, float persistence, float amplitude) {
+	float total = 0.0;
+	float maxValue = 0.0;
+	
+	for (int i = 0; i < octaves; i++) {
+		total += perlin(x * frequency) * amplitude;
+		
+		maxValue += amplitude;
+		
+		amplitude *= persistence;
+		frequency *= 2;
+	}
+	
+	return total / maxValue;
 }
 void attachVehicleLight(int vehicle) {
 	if( rp_GetVehicleInt(vehicle, car_light) > 0 ||  rp_GetVehicleInt(vehicle, car_light_r) == -1 ||  rp_GetVehicleInt(vehicle, car_light_g) == -1 ||  rp_GetVehicleInt(vehicle, car_light_b) == -1 )
@@ -735,15 +1154,15 @@ void attachVehicleLight(int vehicle) {
 	rp_SetVehicleInt(vehicle, car_light, ent);
 }
 void dettachVehicleLight(int vehicle) {
-	if( rp_GetVehicleInt(vehicle, car_light) <= 0 )
-		return;
-		
 	char class[128];
+		
 	int ent = rp_GetVehicleInt(vehicle, car_light);
-	GetEdictClassname(ent, class, sizeof(class));
-	
-	if( StrEqual(class, "env_projectedtexture") && Entity_GetParent(ent) == vehicle )
-		rp_AcceptEntityInput(ent, "Kill");
+	if( ent > 0 ) {
+		GetEdictClassname(ent, class, sizeof(class));
+		
+		if( StrEqual(class, "env_projectedtexture") && Entity_GetParent(ent) == vehicle )
+			rp_AcceptEntityInput(ent, "Kill");
+	}
 	
 	rp_SetVehicleInt(vehicle, car_light, -1);
 }
@@ -757,12 +1176,15 @@ public Action Timer_VehicleRemoveCheck(Handle timer, any ent) {
 	float vecOrigin[3];
 	Entity_GetAbsOrigin(ent, vecOrigin);
 	
+	int owner = rp_GetVehicleInt(ent, car_owner);
 	if( rp_GetVehicleInt(ent, car_health) <= 0 ) {
+		if( IsValidClient(owner) ) {
+			CPrintToChat(owner, ""...MOD_TAG..." %T", "Build_Destroyed", owner, "prop_vehicle_driveable");
+		}
 		VehicleRemove(ent, true);
 		return Plugin_Handled;
 	}
 	
-	int owner = rp_GetVehicleInt(ent, car_owner);
 	if( !Vehicle_HasDriver(ent) && (!IsValidClient(owner) || Entity_GetDistance(owner, ent) > 512) )
 		dettachVehicleLight(ent);
 		
@@ -774,8 +1196,8 @@ public Action Timer_VehicleRemoveCheck(Handle timer, any ent) {
 			int batterie = rp_GetVehicleInt(ent, car_battery);
 			
 			if( particule != -1 ) {
-				ServerCommand("sm_effect_particles %d %s 1 light_rl", ent, g_szParticles[particule][0]);
-				ServerCommand("sm_effect_particles %d %s 1 light_rr", ent, g_szParticles[particule][0]);	
+				ServerCommand("sm_effect_particles %d %s 1 light_rl", ent, g_szParticles[particule]);
+				ServerCommand("sm_effect_particles %d %s 1 light_rr", ent, g_szParticles[particule]);	
 			}
 			attachVehicleLight(ent);
 			
@@ -784,15 +1206,15 @@ public Action Timer_VehicleRemoveCheck(Handle timer, any ent) {
 					rp_SetVehicleInt(ent, car_battery, rp_GetVehicleInt(ent, car_battery)+1);
 					
 					if( rp_GetVehicleInt(ent, car_battery) == 420 )
-						CPrintToChat(driver, "" ...MOD_TAG... " Votre batterie est pleine vous pouvez maintenant aller au garage pour la revendre.");
+						CPrintToChat(driver, "" ...MOD_TAG... " %T", "Vehicle_Battery_Full", driver);
 					else if( rp_GetVehicleInt(ent, car_battery)%42 == 0 )
-						CPrintToChat(driver, "" ...MOD_TAG... " Votre batterie est chargée à %i%%.", rp_GetVehicleInt(ent, car_battery)*100/420);
+						CPrintToChat(driver, "" ...MOD_TAG... " %T", "Vehicle_Battery_Tick", driver, rp_GetVehicleInt(ent, car_battery)*100/420);
 				}
 			}
 			g_lastpos[ent] = vecOrigin;
 		}
 	}
-	else if( rp_GetZoneBit(rp_GetPlayerZone(ent)) & BITZONE_PARKING || owner == 0 )
+	else if( rp_GetZoneBit(rp_GetPlayerZone(ent)) & (BITZONE_PARKING|BITZONE_EVENT) )
 		IsNear = true;
 	else {
 		float vecTarget[3];
@@ -828,7 +1250,10 @@ public Action Timer_VehicleRemoveCheck(Handle timer, any ent) {
 		int tick = rp_GetVehicleInt(ent, car_awayTick) + 1;
 		rp_SetVehicleInt(ent, car_awayTick, tick );
 		
-		if( tick > 250 ) {		
+		if( tick > 12*60 ) {		
+			if( IsValidClient(owner) ) {
+				CPrintToChat(owner, ""...MOD_TAG..." %T", "Vehicle_Disspawn", owner);
+			}
 			VehicleRemove(ent);
 			return Plugin_Handled;
 		}
@@ -867,27 +1292,35 @@ public Action Timer_VehicleRemoveCheck(Handle timer, any ent) {
 void AskToJoinCar(int client, int vehicle) {
 	
 	if( rp_GetVehicleInt(vehicle, car_maxPassager) <= CountPassagerInVehicle(vehicle) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Il n'y a plus de place dans cette voiture.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicle_NotEnoughtRoom", client);
 		return;
 	}
 	
 	int driver = GetEntPropEnt(vehicle, Prop_Send, "m_hPlayer");
 	if( g_iBlockedTime[driver][client] != 0 ) {
 		if( (g_iBlockedTime[driver][client]+(6*60)) >= GetTime() ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Ce conducteur ne vous repondra pas.");
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Cmd_TargetIgnore", client);
 			return;
 		}
 	}
-	char tmp[255];	
+	char tmp[256], tmp2[128];
 	Handle menu = CreateMenu(AskToJoinCar_Menu);
 	
-	Format(tmp, sizeof(tmp), "%N souhaite entrer dans votre voiture.\n L'acceptez-vous ?\n ", client);
+	GetClientName2(client, tmp, sizeof(tmp), true);
+	Format(tmp, sizeof(tmp), "%T\n ", "Vehicle_AskJoin", client, tmp);
 	SetMenuTitle(menu, tmp);
 	
-	Format(tmp, sizeof(tmp), "%i_%i_1", client, vehicle);	AddMenuItem(menu, tmp, "Accepter la demande");
-	Format(tmp, sizeof(tmp), "%i_%i_2", client, vehicle);	AddMenuItem(menu, tmp, "Refuser la demande");
-	AddMenuItem(menu, "vide", "-----------------", ITEMDRAW_DISABLED);
-	Format(tmp, sizeof(tmp), "%i_%i_3", client, vehicle);	AddMenuItem(menu, tmp, "Ignorer ce joueur");
+	Format(tmp, sizeof(tmp), "%i_%i_1", client, vehicle);
+	Format(tmp2, sizeof(tmp2), "%T", "Yes", client);
+	AddMenuItem(menu, tmp, tmp2);
+	
+	Format(tmp, sizeof(tmp), "%i_%i_2", client, vehicle);
+	Format(tmp2, sizeof(tmp2), "%T\n ", "No", client);
+	AddMenuItem(menu, tmp, tmp2);
+	
+	Format(tmp, sizeof(tmp), "%i_%i_3", client, vehicle);
+	Format(tmp, sizeof(tmp2), "%T", "Ignore", client);
+	AddMenuItem(menu, tmp, tmp2);
 	
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, driver, MENU_TIME_DURATION);
@@ -907,36 +1340,34 @@ public int AskToJoinCar_Menu(Handle p_hItemMenu, MenuAction p_oAction, int clien
 			
 			if( type == 1 ) {
 				if( rp_GetVehicleInt(vehicle, car_maxPassager) <= CountPassagerInVehicle(vehicle) ) {
-					CPrintToChat(client, "" ...MOD_TAG... " Il n'y a plus de place dans cette voiture.");
-					CPrintToChat(request, "" ...MOD_TAG... " Il n'y a plus de place dans cette voiture.");
-					
 					return;
 				}
 				if( !IsPlayerAlive(request) ) {
-					CPrintToChat(request, "" ...MOD_TAG... " Vous êtes mort.");
 					return;
 				}
 				if( Vehicle_GetDriver(vehicle) != client  ) {
-					CPrintToChat(request, "" ...MOD_TAG... " Le conducteur n'est plus dans sa voiture.");
 					return;
 				}
 				
 				if( Entity_GetDistance(request, vehicle) >= (CONTACT_DIST) ) {
-					CPrintToChat(request, "" ...MOD_TAG... " La voiture est trop éloignée.");
 					return;
 				}
 				
-				if( rp_SetClientVehiclePassager(request, vehicle) )
+				if( rp_SetClientVehiclePassager(request, vehicle) ) {
 					ClientCommand(request, "thirdperson");
+				}
 			}
 			else if( type == 2 ) {
-				CPrintToChat(request, "" ...MOD_TAG... " Le conducteur a refusé votre demande.");
+				CPrintToChat(request, "" ...MOD_TAG... " %T", "Vehicle_JoinRefuse", request);
 				return;
 			}
 			else if( type == 3 ) {
 				g_iBlockedTime[client][request] = GetTime();
-				CPrintToChat(request, "" ...MOD_TAG... " Le conducteur a refusé, et vous ignorera.");
-				CPrintToChat(client, "" ...MOD_TAG... " Vous ignorez les demandes de %N{default} pour 6 heures", request);
+				
+				char target_name[128];
+				GetClientName2(request, target_name, sizeof(target_name), false);
+				CPrintToChat(client, "" ...MOD_TAG... "%T", "Ignore_For", client, target_name, 6);
+				CPrintToChat(request, "" ...MOD_TAG... " %T", "Vehicle_JoinRefuse", request);
 				return;
 			}
 		}
@@ -960,54 +1391,83 @@ int CountPassagerInVehicle(int vehicle) {
 void DisplayGarageMenu(int client) {
 	
 	Handle menu = CreateMenu(eventGarageMenu);
-	SetMenuTitle(menu, "Menu du garage\n ");
+	SetMenuTitle(menu, "%T\n ", "Garage", client);
 	
-	AddMenuItem(menu, "to_bank", 	"Ranger la voiture");
-	AddMenuItem(menu, "from_bank", 	"Sortir la voiture");
-	AddMenuItem(menu, "colors", 	"Peindre la voiture");	
-	AddMenuItem(menu, "particles", 	"Ajouter des particules");
-	AddMenuItem(menu, "neons", 		"Ajouter un néon");
-	AddMenuItem(menu, "klaxon", 		"Changer de klaxon");
+	char tmp[128];
+	Format(tmp, sizeof(tmp), "%T", "Garage_Withdraw", client);
+	AddMenuItem(menu, "from_bank", 	tmp);
 	
-	AddMenuItem(menu, "repair", 	"Réparer la voiture");
-	AddMenuItem(menu, "battery", 	"Vendre la batterie");
+	Format(tmp, sizeof(tmp), "%T", "Garage_Disposit", client);
+	AddMenuItem(menu, "to_bank", 	tmp);
+	
+	Format(tmp, sizeof(tmp), "%T", "Garage_Paint", client);
+	AddMenuItem(menu, "colors", 	tmp);
+	
+	Format(tmp, sizeof(tmp), "%T", "Garage_Particle", client);
+	AddMenuItem(menu, "particles", 	tmp);
+
+	Format(tmp, sizeof(tmp), "%T", "Garage_Light", client);
+	AddMenuItem(menu, "neons", 		tmp);
+	
+	Format(tmp, sizeof(tmp), "%T", "Garage_Klaxons", client);
+	AddMenuItem(menu, "klaxon", 	tmp);
+	
+	Format(tmp, sizeof(tmp), "%T", "Garage_Jump", client);
+	AddMenuItem(menu, "jump", 	tmp);
+	
+	Format(tmp, sizeof(tmp), "%T", "Garage_Boost", client);
+	AddMenuItem(menu, "boost", 	tmp);
+
+	Format(tmp, sizeof(tmp), "%T", "Garage_Battery", client);
+	AddMenuItem(menu, "battery", 	tmp);
+	
+	Format(tmp, sizeof(tmp), "%T", "Garage_Repair", client);
+	AddMenuItem(menu, "repair", 	tmp);
 	
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, MENU_TIME_DURATION);
 }
 void displayColorMenu(int client) {
+	char tmp[64], tmp2[64];
 	Handle menu2 = CreateMenu(eventGarageMenu);
-	SetMenuTitle(menu2, "Menu du garage\n ");
-	AddMenuItem(menu2, "colors_custom",		"Personnalisé");
+	SetMenuTitle(menu2, "%T\n ", "Garage", client);
+
+	Format(tmp2, sizeof(tmp2), "%T", "-1 -1 -1", client);
+	AddMenuItem(menu2, "colors_custom",	tmp2);
 			
-	char tmp[64];
 	for (int i = 0; i < sizeof(g_szColor); i++) {
-		Format(tmp, sizeof(tmp), "color %s", g_szColor[i][0]);
-		AddMenuItem(menu2, tmp, g_szColor[i][1]);
+		Format(tmp, sizeof(tmp), "color %s", g_szColor[i]);
+		Format(tmp2, sizeof(tmp2), "%T", g_szColor[i], client);
+		AddMenuItem(menu2, tmp, tmp2);
 	}
 	
 	SetMenuExitButton(menu2, true);
 	DisplayMenu(menu2, client, MENU_TIME_DURATION);
 }
 void displayColorMenu2(int client) {
+	char tmp[128];
 	Handle menu2 = CreateMenu(eventGarageMenu);
-	SetMenuTitle(menu2, "Menu du garage\n ");
-	AddMenuItem(menu2, "white",	"Ajouter du blanc");
-	AddMenuItem(menu2, "black",	"Ajouter du noir");
-	AddMenuItem(menu2, "red", 	"Ajouter du rouge");
-	AddMenuItem(menu2, "green", "Ajouter du vert");
-	AddMenuItem(menu2, "bleue", "Ajouter du bleu");
+	SetMenuTitle(menu2, "%T\n ", "Garage", client);
+	
+	Format(tmp, sizeof(tmp), "%T", "Garage_PaintAdd", client, "255 255 255");	AddMenuItem(menu2, "white",	tmp);
+	Format(tmp, sizeof(tmp), "%T", "Garage_PaintAdd", client, "0 0 0");			AddMenuItem(menu2, "black",	tmp);
+	Format(tmp, sizeof(tmp), "%T", "Garage_PaintAdd", client, "255 0 0");		AddMenuItem(menu2, "red",	tmp);
+	Format(tmp, sizeof(tmp), "%T", "Garage_PaintAdd", client, "0 255 0");		AddMenuItem(menu2, "green",	tmp);
+	Format(tmp, sizeof(tmp), "%T", "Garage_PaintAdd", client, "0 0 255");		AddMenuItem(menu2, "bleue",	tmp);
+
 	SetMenuExitButton(menu2, true);
 	DisplayMenu(menu2, client, MENU_TIME_DURATION);
 }
 void displayNeonMenu(int client) {
 	Handle menu2 = CreateMenu(eventGarageMenu);
-	SetMenuTitle(menu2, "Menu du garage\n ");
+	SetMenuTitle(menu2, "%T\n ", "Garage", client);
 				
-	char tmp[64];
+	char tmp[64], tmp2[64];
 	for (int i = 0; i < sizeof(g_szColor); i++) {
 		Format(tmp, sizeof(tmp), "neon %s", g_szColor[i][0]);
-		AddMenuItem(menu2, tmp, g_szColor[i][1]);
+		Format(tmp2, sizeof(tmp2), "%T", g_szColor[i][0], client);
+		
+		AddMenuItem(menu2, tmp, tmp2);
 	}
 			
 	SetMenuExitButton(menu2, true);
@@ -1015,25 +1475,39 @@ void displayNeonMenu(int client) {
 }
 void displayParticleMenu(int client) {
 	Handle menu2 = CreateMenu(eventGarageMenu);
-	char tmp[64];
-	SetMenuTitle(menu2, "Menu du garage\n ");
+	char tmp[64], tmp2[64];
+	SetMenuTitle(menu2, "%T\n ", "Garage", client);
 				
 	for (int i = 0; i < sizeof(g_szParticles); i++) {
 		Format(tmp, sizeof(tmp), "Particule %d", i+1);
-		AddMenuItem(menu2, tmp, g_szParticles[i][1]);
+		Format(tmp2, sizeof(tmp2), "%T", g_szParticles[i], client);
+		AddMenuItem(menu2, tmp, tmp2);
 	}
 	SetMenuExitButton(menu2, true);
 	DisplayMenu(menu2, client, MENU_TIME_DURATION);
 }
 void displayKlaxonMenu(int client){
 	char tmp[32];
-	Menu menu = new Menu(eventGarageMenu);
-	menu.SetTitle("Changer de klaxon\n ");
+	Handle menu2 = CreateMenu(eventGarageMenu);
+	SetMenuTitle(menu2, "%T\n ", "Garage", client);
 	for(int i=1; i<=6; i++){
 		Format(tmp, sizeof(tmp), "Klaxon %d", i);
-		menu.AddItem(tmp, tmp);
+		AddMenuItem(menu2, tmp, tmp);
 	}
-	menu.Display(client, 60);
+	DisplayMenu(menu2, client, MENU_TIME_DURATION);
+}
+void displayBatteryMenu(int client){
+	char tmp[32];
+	Handle menu2 = CreateMenu(eventGarageMenu);
+	SetMenuTitle(menu2, "%T\n ", "Garage", client);
+	
+	Format(tmp, sizeof(tmp), "%T", "Garage_Place", client);
+	AddMenuItem(menu2, "battery give", tmp);
+
+	Format(tmp, sizeof(tmp), "%T", "Garage_Sell", client);
+	AddMenuItem(menu2, "battery sell", tmp);
+
+	DisplayMenu(menu2, client, MENU_TIME_DURATION);
 }
 public int eventGarageMenu(Handle menu, MenuAction action, int client, int param) {
 	static int last[65], offset;
@@ -1052,7 +1526,7 @@ public int eventGarageMenu(Handle menu, MenuAction action, int client, int param
 			if( StrEqual(arg1, "from_bank") ) {
 					
 				Handle menu2 = CreateMenu(eventGarageMenu2);
-				SetMenuTitle(menu2, "Sélectionnez votre voiture\n ");
+				SetMenuTitle(menu2, "%T\n ", "Garage", client);
 				
 				char tmp[12], tmp2[64];
 				
@@ -1094,6 +1568,10 @@ public int eventGarageMenu(Handle menu, MenuAction action, int client, int param
 				displayKlaxonMenu(client);
 				return;
 			}
+			else if( StrEqual(arg1, "battery") ){
+				displayBatteryMenu(client);
+				return;
+			}
 			
 			for (int target = MaxClients; target <= 2048; target++) {
 				if( !rp_IsValidVehicle(target) )
@@ -1102,6 +1580,10 @@ public int eventGarageMenu(Handle menu, MenuAction action, int client, int param
 					continue;
 				if( rp_GetVehicleInt(target, car_owner) != client)
 					continue;
+				if( target == EntRefToEntIndex(g_iVehiclePolice) || target == EntRefToEntIndex(g_iVehicleJustice) ) {
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicle_CantCustom", client);
+					continue;
+				}
 				
 				if( StrEqual(arg1, "red") ||  StrEqual(arg1, "green") ||  StrEqual(arg1, "bleue") ||  StrEqual(arg1, "white") ||  StrEqual(arg1, "black") || StrContains(arg1, "color ") == 0 ) {
 
@@ -1162,7 +1644,9 @@ public int eventGarageMenu(Handle menu, MenuAction action, int client, int param
 					
 					if( rp_GetVehicleInt(target, car_light_r) == -1 ) {
 						if( rp_GetClientItem(client, ITEM_NEONS, true) <= 0 ) {
-							CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas de kit de néons en banque.");
+							char item_name[128];
+							rp_GetItemData(ITEM_NEONS, item_type_name, item_name, sizeof(item_name));
+							CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemMissing", client, item_name);
 							DisplayGarageMenu(client);
 							return;
 						}
@@ -1183,7 +1667,9 @@ public int eventGarageMenu(Handle menu, MenuAction action, int client, int param
 					
 					if( rp_GetVehicleInt(target, car_particle) == -1 ) {
 						if( rp_GetClientItem(client, ITEM_PARTICULES, true) <= 0 ) {
-							CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas de kit de particules en banque.");
+							char item_name[128];
+							rp_GetItemData(ITEM_PARTICULES, item_type_name, item_name, sizeof(item_name));
+							CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemMissing", client, item_name);
 							DisplayGarageMenu(client);
 							return;
 						}
@@ -1212,18 +1698,22 @@ public int eventGarageMenu(Handle menu, MenuAction action, int client, int param
 						continue;
 						
 					if( rp_GetVehicleInt(target, car_health) < 1000 ) {
-						CPrintToChat(client, "" ...MOD_TAG... " Votre véhicule est endommagé.");
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicle_CantWithdrawDamage");
+						continue;
+					}
+					
+					if( rp_GetVehicleInt(target, car_item_id) <= 0 ) {
+						CPrintToChat(client, ""...MOD_TAG..." %T", "Vehicle_CantWithdraw", client);
 						continue;
 					}
 					
 					if( rp_GetVehicleInt(target, car_donateur) == 1 && rp_GetVehicleInt(target, car_battery) == -1 ) {
-						LogToGame("[CHEATING] %L a tenté de ranger sa voiture donateur, sans batterie.", client);
-						CPrintToChat(client, "" ...MOD_TAG... " Votre mustang sportive n'a plus sa batterie.");
+						CPrintToChat(client, ""...MOD_TAG..." %T", "Vehicle_CantWithdrawBattery", client);
 						continue;
 					}		
 					
 					if( Vehicle_GetDriver(target) > 0 ) {
-						CPrintToChat(client, "" ...MOD_TAG... " Il y a quelqu'un dans votre véhicule.");
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicle_CantWithdrawPerson");
 						continue;
 					}
 					
@@ -1236,7 +1726,9 @@ public int eventGarageMenu(Handle menu, MenuAction action, int client, int param
 				else if( StrEqual(arg1, "repair") ) {
 					
 					if( rp_GetClientItem(client, ITEM_REPAIR, true) <= 0 ) {
-						CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas de kit de carrosserie en banque.");
+						char item_name[128];
+						rp_GetItemData(ITEM_REPAIR, item_type_name, item_name, sizeof(item_name));
+						CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemMissing", client, item_name);
 						DisplayGarageMenu(client);
 						return;
 					}
@@ -1250,16 +1742,82 @@ public int eventGarageMenu(Handle menu, MenuAction action, int client, int param
 					rp_SetVehicleInt(target, car_health, heal);
 					DisplayGarageMenu(client);
 				}
-				else if( StrEqual(arg1, "battery") ) {
-					if( rp_GetVehicleInt(target, car_owner) != client )
+				else if( StrEqual(arg1, "battery give") ) {
+					if( rp_GetVehicleInt(target, car_battery) != -1 )
 						continue;
+					
+					if( rp_GetClientItem(client, ITEM_BATTERIE, true) <= 0 ) {
+						char item_name[128];
+						rp_GetItemData(ITEM_BATTERIE, item_type_name, item_name, sizeof(item_name));
+						CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemMissing", client, item_name);
+						DisplayGarageMenu(client);
+						return;
+					}
+					rp_ClientGiveItem(client, ITEM_BATTERIE, -1, true);
+					
+					rp_SetVehicleInt(target, car_battery, 0);
+					
+					DisplayGarageMenu(client);
+				}
+				else if( StrEqual(arg1, "boost") ) {
+					if( rp_GetVehicleInt(target, car_boost) != -1 )
+						continue;
+					
+					if( rp_GetClientItem(client, ITEM_BOOST, true) <= 0 ) {
+						char item_name[128];
+						rp_GetItemData(ITEM_BOOST, item_type_name, item_name, sizeof(item_name));
+						CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemMissing", client, item_name);
+						DisplayGarageMenu(client);
+						return;
+					}
+					rp_ClientGiveItem(client, ITEM_BOOST, -1, true);
+
+					rp_SetVehicleInt(target, car_boost, 1);
+					char ScriptPath[PLATFORM_MAX_PATH], buffer[8][64];
+					Entity_GetModel(target, ScriptPath, sizeof(ScriptPath));
+					int amount = ExplodeString(ScriptPath, "/", buffer, sizeof(buffer), sizeof(buffer[]));
+					if( amount > 0 ) {
+						ReplaceString(buffer[amount-1], sizeof(buffer[]), ".mdl", "");
+						Format(ScriptPath, sizeof(ScriptPath), "scripts/vehicles/%s2.txt", buffer[amount-1]);
+						
+						if( !FileExists(ScriptPath) ) {				
+							CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_FromServer", client);
+							ITEM_CANCEL(client, ITEM_BOOST);
+							return;
+						}
+						DispatchKeyValue(target, "vehiclescript", 		ScriptPath);
+						ServerCommand("vehicle_flushscript");
+					}
+					
+					DisplayGarageMenu(client);
+				}
+				else if( StrEqual(arg1, "jump") ) {
+					if( rp_GetVehicleInt(target, car_can_jump) != -1 )
+						continue;
+					
+					
+					if( rp_GetClientItem(client, ITEM_SUSPENSION, true) <= 0 ) {
+						char item_name[128];
+						rp_GetItemData(ITEM_SUSPENSION, item_type_name, item_name, sizeof(item_name));
+						CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemMissing", client, item_name);
+						DisplayGarageMenu(client);
+						return;
+					}
+					rp_ClientGiveItem(client, ITEM_SUSPENSION, -1, true);
+
+					rp_SetVehicleInt(target, car_can_jump, 1);
+					DisplayGarageMenu(client);
+				}
+				else if( StrEqual(arg1, "battery sell") ) {
 
 					if(rp_GetVehicleInt(target, car_battery) >= 420){
-						rp_ClientMoney(client, i_AddToPay, 2000);
+						int toPay = 1500;
+						
+						rp_ClientMoney(client, i_AddToPay, toPay);
 						
 						int capital_id = rp_GetRandomCapital( rp_GetClientJobID(client)  );
-						rp_SetJobCapital( capital_id, rp_GetJobCapital(capital_id)-2000 );
-						CPrintToChat(client, "" ...MOD_TAG... " Vous avez vendu votre batterie. Le virement des 2000$ sera effectué en fin de journée.");
+						rp_SetJobCapital( capital_id, rp_GetJobCapital(capital_id)-toPay );
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicle_Battery_Sell", client, toPay);
 						rp_SetVehicleInt(target, car_battery, -1);
 					}
 					
@@ -1284,7 +1842,7 @@ public int eventGarageMenu2(Handle menu, MenuAction action, int client, int para
 			
 			if( rp_GetClientItem(client, itemID, true) > 0 ) {
 				rp_ClientGiveItem(client, itemID, -1, true);
-				ServerCommand("%s %d %d", szMenuItem, client, itemID);
+				ServerCommand("%s %d 1 %d", szMenuItem, client, itemID);
 			}
 		}
 	}
@@ -1300,23 +1858,30 @@ public int SpawnVehicle(Handle menu, MenuAction action, int client, int param) {
 			char model[128];
 			int max = 0;
 			
+			int skinid = 1;
+			
 			if( StrEqual(arg1, "mustang") ) {
-				Format(model, sizeof(model), "models/natalya/vehicles/natalya_mustang_csgo_2016.mdl");
+				Format(model, sizeof(model), "models/natalya/vehicles/natalya_mustang_csgo_2021.mdl");
 				max = 3;
+			}
+			if( StrEqual(arg1, "victoria") ) {
+				Format(model, sizeof(model), "models/natalya/vehicles/police_crown_victoria_csgo_v2.mdl");
+				max = 3;
+				skinid = 0;
 			}
 			else if( StrEqual(arg1, "moto") ) {
 				Format(model, sizeof(model), "models/natalya/vehicles/dirtbike.mdl");
 			}
 			
-			int skinid = 1;
+			
 			
 			if( rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PEACEFULL ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Build_CannotHere", client);
 				return;
 			}
 			
 			if( countVehicle(client) >= GetConVarInt(g_hMAX_CAR) ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Il y a trop de voitures en circulation pour l'instant.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicle_TooManyCars", client);
 				return;			
 			}
 			
@@ -1330,7 +1895,7 @@ public int SpawnVehicle(Handle menu, MenuAction action, int client, int param) {
 			
 			int car = rp_CreateVehicle(vecOrigin, vecAngles, model, skinid, client);
 			if( !car ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas assez de place ici.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Build_CannotHere", client);
 				return;
 			}
 			
@@ -1338,7 +1903,7 @@ public int SpawnVehicle(Handle menu, MenuAction action, int client, int param) {
 			rp_SetVehicleInt(car, car_item_id, -1);
 			rp_SetVehicleInt(car, car_maxPassager, max);
 			rp_SetClientKeyVehicle(client, car, true);	
-			CreateTimer(360.0, Timer_VehicleRemove, EntIndexToEntRef(car));
+			CreateTimer(24.0 * 60.0, Timer_VehicleRemove, EntIndexToEntRef(car));
 		}
 	}
 }
@@ -1350,28 +1915,53 @@ public Action Timer_VehicleRemove(Handle timer, any ent) {
 	VehicleRemove(ent, true);
 	return Plugin_Handled;
 }
+
+public void OnEntityDestroyed(int entity) {
+	if(entity <= 0 || entity > sizeof(g_bEntityManaged)) {
+		return;
+	}
+	
+	if (g_bEntityManaged[entity]) {
+		g_bEntityManaged[entity] = false;
+		
+		
+		int root = GetEntPropEnt(entity, Prop_Data, "m_hEffectEntity");
+		char tmp[64];
+		for (int i = MaxClients; i <= 2048; i++) {
+			if (!IsValidEdict(i) || !IsValidEntity(i))
+				continue;
+			
+			
+			
+			if( EntRefToEntIndex(rp_GetVehicleInt(i, car_gyro_right)) == entity ) {
+				rp_SetVehicleInt(i, car_gyro_right, 0);
+			}
+			if( EntRefToEntIndex(rp_GetVehicleInt(i, car_gyro_left)) == entity ) {
+				rp_SetVehicleInt(i, car_gyro_left, 0);
+			}
+			
+			GetEdictClassname(i, tmp, sizeof(tmp));
+			if ( (StrEqual(tmp, "point_spotlight") || StrEqual(tmp, "beam") ||  StrEqual(tmp, "spotlight_end") ) && Entity_GetParent(i) == root) {
+				int p = GetEntPropEnt(i, Prop_Data, "m_hEffectEntity");
+				if (p > 0) {
+					AcceptEntityInput(p, "KillHierarchy");
+					int k = GetEntPropEnt(p, Prop_Data, "m_hEndEntity");
+					if( k > 0 )
+						AcceptEntityInput(k, "KillHierarchy");
+				}
+				AcceptEntityInput(i, "KillHierarchy");
+			}
+		}
+		AcceptEntityInput(entity, "KillHierarchy");
+	}
+}
 // ----------------------------------------------------------------------------
 bool IsInGarage(int client) {
 	int app = rp_GetPlayerZoneAppart(client);
 	
-	if( app > 100 && app <= 300 || app == 50 ) {
-		if( rp_GetClientKeyAppartement(client, app) ) {
-			
-			if( app == 50 ) {
-				float min[3] = { -2291.0, -8095.0, -1816.0};
-				float max[3] =  { -1801.0, -7465.0, -1656.0};
-				float origin[3];
-				GetClientAbsOrigin(client, origin);
-				if( origin[0] > min[0] && origin[0] < max[0] &&
-					origin[1] > min[1] && origin[1] < max[1] &&
-					origin[2] > min[2] && origin[2] < max[2] ) {
-					return true;
-				}
-			}
-			else {
-				return true;
-			}
-		}
+	if( rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_PARKING && app > 0 && rp_GetClientKeyAppartement(client, app) ) {
+		return true;
 	}
+
 	return false;
 }

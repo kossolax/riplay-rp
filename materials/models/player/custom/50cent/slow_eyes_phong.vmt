@@ -1,0 +1,12 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/player/custom/50cent/slow_phong"
+	"$bumpmap" "models/player/custom/50cent/slow_eyes_bump"
+
+	"$additive" 1
+
+	"$phong" 			"1"
+	"$phongexponent"		"40"
+	"$phongboost"		"50"
+	"$phongfresnelranges"	"[.05 .1 .2]"
+}

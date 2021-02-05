@@ -103,7 +103,8 @@ enum block_type {
 	BLOCK_GRAVITY,
 	BLOCK_BREAKABLE,
 	BLOCK_COLORIZE,
-	BLOCK_FAKE
+	BLOCK_FAKE,
+	BLOCK_REMOVER
 }
 char g_szType[block_type][32] = {
 	"Normal",
@@ -123,7 +124,8 @@ char g_szType[block_type][32] = {
 	"Gravite",
 	"Cassable",
 	"Colorisant",
-	"Fake"
+	"Fake",
+	"Trou noir"
 };
 
 int tpTypeExit = 0;
@@ -146,7 +148,6 @@ float g_fPending_MIRROR[65];
 float g_fPending_FALL[65];
 float g_fPending_GRAVITY[65];
 
-Handle g_hSDKGetSmoothedVelocity = INVALID_HANDLE;
 Handle g_cMaxHealth = INVALID_HANDLE;
 Handle g_cMaxSnap = INVALID_HANDLE;
 
@@ -176,7 +177,7 @@ public void OnPluginStart() {
 	
 	RegAdminCmd("db_create_physics",Command_create, 		ADMFLAG_SLAY,	"Creates an Entity");
 	RegAdminCmd("db_create_dynamic",Command_create,		 	ADMFLAG_SLAY,	"Creates an Entity");
-	RegAdminCmd("db_create_throw",	Command_create,			ADMFLAG_ROOT,	"Creates and Throw an entity");
+	RegAdminCmd("db_create_throw",	Command_create,			ADMFLAG_SLAY,	"Creates and Throw an entity");
 	RegAdminCmd("db_create_ball",	Command_create,			ADMFLAG_ROOT,	"Creates and Throw an entity");
 	
 	RegAdminCmd("db_create", 		Cmd_CreateMenuc, 		ADMFLAG_SLAY, "Create an Entity");
@@ -190,6 +191,7 @@ public void OnPluginStart() {
 	RegAdminCmd("db_removeevent", 	Command_removeEvent,	ADMFLAG_SLAY,	"Deletes an event");
 	
 	RegAdminCmd("sm_goto", 			Command_GoTo,			ADMFLAG_SLAY,	"Teleport to player");
+	RegAdminCmd("sm_bring", 		Command_Bring,			ADMFLAG_SLAY,	"Teleport a player to you");
 	
 	
 	HookEvent("player_death", 		EventReset, 		EventHookMode_Pre);
@@ -207,6 +209,7 @@ public void OnPluginStart() {
 		OnClientPutInServer(i);
 	}
 }
+
 public Action Command_GoTo(int client, int args) {
 	if( args < 1 || args > 1) {
 		if( client != 0 )
@@ -245,6 +248,51 @@ public Action Command_GoTo(int client, int args) {
 		rp_ClientTeleport(client, vec);
 		
 		ShowActivity(client, "s'est Téléporté sur %N.", target);
+		LogToGame("[ADMIN] %L s'est téléporté sur %L.", client, target);
+	}
+	return Plugin_Handled;
+}
+
+public Action Command_Bring(int client, int args) {
+	if( args < 1 || args > 1) {
+		if( client != 0 )
+			ReplyToCommand(client, "Utilisation: sm_bring \"joueur\"");
+		else
+			PrintToServer("Utilisation: sm_bring \"joueur\"");
+		
+		return Plugin_Handled;
+	}
+	
+	char arg1[64];
+	GetCmdArg(1, arg1, sizeof( arg1 ) );
+	
+	char target_name[MAX_TARGET_LENGTH];
+	int target_list[MAXPLAYERS], target_count;
+	bool tn_is_ml;
+	
+	if ((target_count = ProcessTargetString(
+		arg1,
+		client,
+		target_list,
+		MAXPLAYERS,
+		COMMAND_FILTER_CONNECTED|COMMAND_FILTER_ALIVE,
+		target_name,
+		sizeof(target_name),
+		tn_is_ml)) <= 0)
+	{
+		ReplyToTargetError(client, target_count);
+		return Plugin_Handled;
+	}
+	
+	float vec[3];
+	Entity_GetAbsOrigin(client, vec);
+
+	for (int i = 0; i < target_count; i++) {
+		int target = target_list[i];
+		rp_ClientTeleport(target, vec);
+		
+		ShowActivity(client, "a Téléporté %N.", target);
+		LogToGame("[ADMIN] %L a téléporté %L.", client, target);
 	}
 	return Plugin_Handled;
 }
@@ -441,8 +489,9 @@ public Action Command_getSkin(int Client,int args) {
 	GetEdictClassname(Ent, name, sizeof(name));
 	GetEntPropString(Ent, Prop_Data, "m_ModelName", modelname, 128);
 	GetEntPropString(Ent, Prop_Data, "m_iName", i_targetname, sizeof(i_targetname));
+	int hammer = GetEntProp(Ent, Prop_Data, "m_iHammerID");
 	
-	PrintToChat(Client, "[SKIN] %s [CLASS] %s [ID] %d [PERM-ID] %d [NAME] %s",modelname, name, Ent, (Ent-MaxClients), i_targetname);         
+	PrintToChat(Client, "[SKIN] %s [CLASS] %s [ID] %d [PERM-ID] %d [HAMMER-ID] %d [NAME] %s",modelname, name, Ent, (Ent-MaxClients), hammer, i_targetname);         
 	return Plugin_Handled;
 }
 public Action Command_remove(int client,int args ) {
@@ -601,6 +650,11 @@ public Action Command_create(int client,int args) {
 	}
 	if( StrEqual(arg0, "db_create_throw") ) {
 		isInFront = true;
+		
+		int flags = GetUserFlagBits(client);
+		if( !(flags & ADMFLAG_ROOT) && !(rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_EVENT ) ) {
+			return Plugin_Handled;
+		}
 	}
 	if( StrEqual(arg0, "db_create_ball") ) {
 		isInFront = true;
@@ -617,7 +671,10 @@ public Action Command_create(int client,int args) {
 	}
 	
 	int index = -1;
-	if ( isPhysics ) {
+	if( StrEqual(arg0, "db_create_ball" ) ) {
+		index = CreateEntityByName("prop_sphere");
+	}
+	else if ( isPhysics ) {
 		index = CreateEntityByName("prop_physics_override");
 	}
 	else {
@@ -743,11 +800,12 @@ public Action Command_create(int client,int args) {
 		TeleportEntity(index, NULL_VECTOR, NULL_VECTOR, Push);
 	}
 	else if( StrEqual(arg0, "db_create_ball" ) ) {
-		SetEntityGravity(index, 0.5);
-		Entity_SetTakeDamage(index, DAMAGE_YES);
+		SetEntityGravity(index, 2.8);
+		
 		Entity_SetHealth(index, 100000, true);
-		SDKHook(index, SDKHook_OnTakeDamagePost, OnTakeDamageBall);
 	}
+
+	PrintToConsole(client, "RP_PROPS: Props %d créé", index);
 	
 	return Plugin_Handled;
 }
@@ -864,19 +922,6 @@ public Action EventReset(Handle Evt, const char[] Name, bool Broadcast) {
 	SetEntityGravity(cli, 1.0);
 	
 	OnClientPutInServer(cli);
-}
-public Action OnTakeDamageBall(int victim, int &attacker, int &inflictor, float& damage, int& damagetype) {
-	float vecPos[3];
-	SDKCall(g_hSDKGetSmoothedVelocity, victim, vecPos);
-	PrintToChat(6, "%f %f %f", vecPos[0], vecPos[1], vecPos[2]);
-	
-	vecPos[0] *= 50.0;
-	vecPos[1] *= 50.0;
-	vecPos[2] *= 50.0;
-	int flags = GetEntityFlags(victim);
-	SetEntityFlags(victim, (flags&~FL_ONGROUND) );
-	TeleportEntity(victim, NULL_VECTOR, NULL_VECTOR, vecPos);
-	Entity_SetHealth(victim, 100000, true);
 }
 void Menu_BlockSpawn_Base(int client) {
 	
@@ -1256,9 +1301,32 @@ void BlockType(int client, int index) {
 			SetEntityRenderColor(index, r, g, b, 250);
 			SetEntProp( index, Prop_Send, "m_nSolidType", 0);		
 		}
+		case BLOCK_REMOVER: {
+			
+			SetEntityRenderColor(index, 0, 0, 0, 255);
+			Entity_SetSolidFlags(index, FSOLID_TRIGGER|FSOLID_TRIGGER_TOUCH_DEBRIS|FSOLID_USE_TRIGGER_BOUNDS|FSOLID_VOLUME_CONTENTS);
+			
+			SDKHook(index, SDKHook_Touch, Block_REMOVER);
+		}
 	}
 	
 	SetEntProp(index, Prop_Send, "m_nSkin", 0); 
+}
+public Action Block_REMOVER(int index, int entity) {
+	char classname[64];
+	GetEdictClassname(entity, classname, sizeof(classname));
+	
+	if( StrContains(classname, "prop_physics", false) == 0 || StrContains(classname, "prop_sphere", false) == 0 || StrContains(classname, "player", false) == 0 || StrContains(classname, "weapon_", false) == 0 ) {
+		if( IsValidClient(entity) ) {
+			int heal = GetClientHealth(entity) * 10;
+			SDKHooks_TakeDamage(entity, index, entity, float(heal));
+		}
+		else {
+			Desyntegrate(entity);
+		}
+	}
+	return Plugin_Continue;
+	
 }
 public Action Block_Colorize(int index, int client) {
 	if( IsValidClient(client) ) {
@@ -1361,6 +1429,10 @@ public Action Block_STRIP(int index, int client) {
 				RemoveEdict( wepIdx );
 			}
 		}
+		
+		rp_SetClientBool(client, b_WeaponIsKnife, false);
+		rp_SetClientBool(client, b_WeaponIsHands, true);
+		rp_SetClientBool(client, b_WeaponIsMelee, false);
 		
 		rp_ClientGiveHands(client);
 	}
@@ -1716,7 +1788,7 @@ public void SQL_LoadEvent(Handle owner, Handle row, const char[] error, any clie
 	}
 	CloseHandle(row);
 	if(countLine > 0)
-		DisplayMenu(menu, client, 60);
+		DisplayMenu(menu, client, 60*10);
 	else
 		ReplyToCommand(client, "ERREUR, Aucun event trouvé.");
 		
@@ -1766,7 +1838,7 @@ public int MenuLoadEvent(Handle menu, MenuAction action, int client, int param2)
 				CPrintToChat(client, "" ...MOD_TAG... " Un event est déjà entrain d'être respawn.");
 				return;
 			}
-			for(int i=0;i<310;i++){
+			for(int i=0;i<MAX_ZONES;i++){
 				if(rp_GetZoneBit(i) & BITZONE_EVENT)
 					ServerCommand("rp_force_clean %d full", i);
 			}
@@ -1864,7 +1936,7 @@ public void SQL_RespawnEvent(Handle owner, Handle row, const char[] error, any c
 		if( countEntity() >= max ) {
 			CPrintToChat(client, "ERREUR !!! Votre event à risquer de faire crash le serveur. Trop de props.");
 			
-			for(int i=0;i<310;i++){
+			for(int i=0;i<MAX_ZONES;i++){
 				if(rp_GetZoneBit(i) & BITZONE_EVENT)
 					ServerCommand("rp_force_clean %d full", i);
 			}

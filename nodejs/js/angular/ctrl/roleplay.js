@@ -6,13 +6,17 @@ app.controller('rpUpdate', function($scope, $http, $filter, $location, $routePar
 });
 
 app.controller('mainCtrl', function($scope, $http, $filter, $location, $routeParams, $route, $timeout) {
-  document.title = "Riplay.fr | RolePlay - indexxxxx";
+  document.title = "Riplay.fr | RolePlay - index";
   $scope.Search = $location.search();
   $scope.Params = $routeParams;
   $scope.steamid = _steamid;
   //$scope.isAdmin = (_isAdmin?true:false);
   $scope.isAdmin = false;
   $scope.Math = window.Math;
+
+  $http.get("https://riplay.fr/api/user/admin").then(function(res) {
+      $scope.isAdmin = true;
+  });
 
   $scope.isConnectedToForum = _member_id == null || _member_id == '' ? false:true;
 
@@ -116,7 +120,7 @@ app.controller('rpJobGang', function($scope, $http, $routeParams, $location) {
   $scope.dropCallback = function(event, index, item, external, type) {
     for(var i in $scope.data.notes ) {
       if( $scope.data.notes[i].id == item.id ) {
-        console.log(i);
+        
       }
     }
   };
@@ -192,7 +196,7 @@ app.controller('rpIndex', function($scope, $http, $timeout, $interval, $window, 
   function dateDiff(date1, date2){
     var diff = {}  
     var tmp = Math.abs(date1 - date2);
-    console.log(tmp);
+    
     tmp = Math.floor(tmp/1000);  
     diff.sec = tmp % 60;    
  
@@ -234,7 +238,7 @@ app.controller('rpIndex', function($scope, $http, $timeout, $interval, $window, 
       $scope.end = res.data.end_date;
       $scope.calcEnd = dateDiff(now, $scope.end * 1000);
 
-      console.log(res.data.start_date_f);
+    
       $interval( function() {
         $scope.calcEnd = dateDiff(Date.now(), $scope.end * 1000);
       }, 1000);
@@ -245,7 +249,152 @@ app.controller('rpIndex', function($scope, $http, $timeout, $interval, $window, 
     //
   });
 });
+app.controller('rpCraft', function($scope, $http, $routeParams, $timeout, $interval, $window, $location) {
+  document.title = "Riplay.fr | RolePlay - Les crafts";
 
+  $scope.rnd = Math.random();
+  $scope.me = $routeParams.arg;
+  $scope.$watch('me', function(newValue, old) {
+    $location.path("craft/"+newValue);
+  });
+
+function lookup(data, id, name, desc, amount, size, parent) {
+	var leaf = { id: id, name: name, desc: desc, amount: amount, width: size, height: size, children: [], parent: parent};
+	data.map( k => {
+		if( id == k.itemid ) {
+			lookup(data, k.raw, k.nom, k.description, k.amount, size, leaf);
+		}
+	});
+
+	if( parent )
+		parent.children.push(leaf);
+
+	return leaf;
+}
+function color(type) {
+	switch(parseInt(type)) {
+		case 1: return "#f33";
+		case 2: return "#ff3";
+		case 3: return "#3f3";
+	}
+
+	return "#333";
+}
+function getdesc(type, desc) {
+        switch(parseInt(type)) {
+                case 1: return "Cet objet nécéssite de posséder la spécialité <strong>Forgeron</strong>.";
+                case 2: return "Cet objet nécéssite de posséder la spécialité <strong>Ingénieur</strong>.";
+                case 3: return "Cet objet nécéssite de posséder la spécialité <strong>Alchimiste</strong>.";
+        }
+
+        return desc;
+}
+function render(r, dict) {
+	const size = 40;
+	const border = 4;
+	const version = 2;
+	const type = dict[r.id] ? dict[r.id].type : 0;
+
+	const title = r.name;
+	const desc = getdesc(type, r.desc).replaceAll("'", " ");
+	const amount = r.parent ? (r.amount + "x") : "";
+
+	var parent = $("<div data-toggle='popover' title='"+title+"' data-content='"+desc+"'><img src='/images/roleplay/csgo/craft/"+version+"/"+r.id+".png?v="+$scope.rnd+"' width='100%' height='100%' /><span>"+amount+"</span></div>").css({
+		position: "absolute",
+		top: r.y, left: r.x,
+		width: r.width, height: r.height,
+		border: "2px solid "+color(type)+"",
+		outline: "1px solid black",
+                backgroundColor: "#333"
+	}).appendTo("#tree");
+
+        if( r.children.length == 0 ) {
+		$(parent).css({
+			border: "2px solid white",
+		});
+	}
+	else if( r.children.length == 1 ) {
+		$("<div></div>").css({
+			position: "absolute",
+			top: r.y+r.height,
+			left: r.x+(r.width/2)-border/2,
+			height: size+2,
+			width: border,
+			border: "1px solid black",
+			backgroundColor: ""+color(type)+""
+		}).appendTo("#tree");
+	}
+	else if( r.children.length >= 1 ) {
+		$("<div></div>").css({
+			position: "absolute",
+			top: r.y+r.height,
+			left: r.x+(r.width/2)-border/2,
+			height: size/2+1, width: border,
+			border: "1px solid black",
+			borderBottom: "0",
+			backgroundColor: ""+color(type)+"",
+			zIndex: 2
+		}).appendTo("#tree");
+
+                var p, q;
+		var m = null;
+		r.children.map(c => {
+			$("<div></div>").css({
+				position: "absolute",
+				top: c.y - size/2 + border - 1,
+				left: c.x+(c.width/2)-border/2,
+				height: size/2 - border + 1, width: border,
+				border: "1px solid black",
+				borderTop: "0",
+				zIndex: 2,
+				backgroundColor: ""+color(type)+"",
+			}).appendTo("#tree");
+
+
+			[p, q] = (c.x < r.x) ? [c, r] : [r, c];
+			var n = $("<div></div>").css({
+				position: "absolute",
+				top: r.y+r.height+size/2,
+				left: p.x+(p.width/2)-border/2,
+				height: border,
+				width: (q.x+(q.width/2)) - (p.x+(p.width/2))+border,
+				borderTop: "1px solid black",
+				borderBottom: "1px solid black",
+				borderRight: "1px solid black",
+				backgroundColor: ""+color(type)+""
+			}).appendTo("#tree");
+
+			if( !m ) {
+				m = n;
+			}
+		});
+		$(m).css({ borderLeft: "1px solid black" });
+	}
+
+	r.children.map( m => render(m, dict));
+}
+
+  $http.get("https://riplay.fr/api/items/craft/0").then(function(res) {
+    $scope.craft = res.data;
+
+    if( $scope.me != 0 ) {
+      $http.get("https://riplay.fr/api/items/craft/" + $scope.me).then(function(res) {
+        const data = res.data;
+        const item = $scope.craft.filter( i => i.id == $scope.me )[0];
+
+        const treeData = lookup(data, $routeParams.arg, item.nom, item.description, 1, 50);
+        let dict = {};
+        data.map( k => dict[k.raw] = { name: k.nom, type: k.extra_cmd.split(" ")[1] });
+
+        const layout = new nonLayeredTidyTreeLayout.Layout(new nonLayeredTidyTreeLayout.BoundingBox(20, 40));
+        const { result, boundingBox } = layout.layout(treeData);
+        $("#tree").html("");
+        render(result, dict);
+      });
+    }
+  });
+
+});
 app.controller('rpMap', function($scope, $http, $routeParams, $timeout, $interval, $window, $location) {
 
   document.title = "Riplay.fr | RolePlay - La carte";
@@ -445,7 +594,7 @@ app.controller('rpTribunal', function($scope, $location, $filter, $http, $routeP
     }
 
     $scope.nowDate = $filter('date')(new Date(), "le d/M à HH:mm");
-    $scope.reasonT=['Insultes, Irrespect', 'Meurtre', 'Freekill massif', 'Attitude négative', 'Menaces', 'Abus de ses fonctions', 'Autre, préciser:' ];
+    $scope.reasonT=['Insultes, Irrespect, Menace', 'Vol', 'Meurtre', 'Freekill massif', 'Autre, préciser:' ];
     $scope.reasonCT=['Jail dans une propriétée privée', 'Abus de /jail', 'Jail par déduction', 'Freekill en fonction', 'Abus de perquisition', 'Autre, préciser:' ];
     $scope.reason = $scope.reasonT;
     $scope.typePolice = 0;
@@ -608,6 +757,7 @@ app.controller('rpTribunalCase', function($scope, $location, $routeParams, $http
       $scope.condamner = parseInt(res.data.condamner);
       $scope.acquitter = parseInt(res.data.acquitter);
 
+      $http.get("https://riplay.fr/api/tribunal/next").then(function(res) { $scope.report = res.data; });
 
       $timeout(function() { $scope.disableButton = false; }, 5000);
 
@@ -700,6 +850,25 @@ app.controller('rpTest', function($scope, $http, $routeParams, $location) {
 app.controller('rpDonation', function($scope, $http, $routeParams, $location) {
   document.title = "Riplay.fr | RolePlay - Donation";
   $scope.ppAmount = 20;
+  $scope.ppReward = function(amount) {
+      var ratio = 0;
+      var cadeau = 2;
+
+      if( amount < 5 )       { ratio = 5000; }
+      else if( amount < 10 ) { ratio = 6000; }
+      else if( amount < 20 ) { ratio = 7000; }
+      else if( amount < 30 ) { ratio = 8000; }
+      else if( amount < 40 ) { ratio = 9000; }
+      else if( amount < 50 ) { ratio = 10000; }
+      else                   { ratio = 20000; }
+
+      var paypalFee = 0.35;
+      var paypalComi = 0.034;
+
+      var serv = (amount*(1-paypalComi))-paypalFee;
+
+      return { amount: Math.round(serv*ratio), cadeau: Math.round(amount*2), xp: Math.round(serv*ratio*0.1) };
+  }
 
   $http.get("https://riplay.fr/api/rank/donate").then(function(res) { 
     var data = [];
@@ -728,7 +897,6 @@ app.controller('rpParrainage', function($scope, $http, $routeParams, $location) 
   }
 
   $http.get("https://riplay.fr/api/parrain").then(function(res) { 
-    console.log(res);
     var data = [];
     var pos = 0;
     var need_time = 72000;
@@ -757,8 +925,6 @@ app.controller('rpParrainage', function($scope, $http, $routeParams, $location) 
       $scope.data[index].approuved = 1;
 
       $scope.data = $scope.data;
-
-      console.log(res);
     },function (res){
       $scope.errmessage = "Error";
     });

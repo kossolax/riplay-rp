@@ -6,7 +6,7 @@
 #include <rp_const>
 
 
-#define MAX_BUYWEAPONS			35
+#define MAX_BUYWEAPONS			40
 #define MAX_KEYSELL				200
 #define	MAX_RANK				33
 
@@ -32,8 +32,8 @@
 #define PROPTYPE_BOTH			0
 #define PROPTYPE_SEND			1
 #define PROPTYPE_DATA			2
-#define DAMAGE_NO 			0
-#define DAMAGE_YES 			2
+#define DAMAGE_NO 				0
+#define DAMAGE_YES 				2
 #define SOLID_VPHYSICS	 		6
 #define COLLISION_GROUP_PLAYER 	5
 
@@ -46,17 +46,15 @@
 
 
 #define BUFFER_SIZE			32
-#define ITEM_BANK_LIMIT		500000
 
 char g_szSuperAdmin[][] = {
 	"76561197987342816", // Gozer
 	"76561197976095234", // Genesys
-	"76561198018935404", // Kriax
 	"76561198078500771", // Cubartiste
-	"76561198043944522", // Demox
 	"76561197985083039", // Loolie
-	"76561197985606301", // Just
 	"76561197975247242", // Kosso
+	"76561197975262643", // sky
+	"76561198086680839" // CBKKK
 };
 
 int g_iPlayerCount;
@@ -67,9 +65,7 @@ char szGeneralMenu[64];
 char DeniedCMD[][] = {"coverme", "takepoint", "holdpos", "regroup", "followme", "takingfire", "go", "fallback", "sticktog",
 	"getinpos", "stormfront", "report", "roger", "enemyspot", "needbackup", "sectorclear", "inposition", "reportingin",
 	"getout", "negative","enemydown", "radio1", "radio2", "radio3", "cheer", "compliment", "thanks", "explode", "kill", "r_screenoverlay",
-	"chooseteam", "chooseclass", "joinclass", "spectate", "spec_mode", "cl_spec_mode", "killvector", "teammenu" };
-
-
+	"chooseteam", "chooseclass", "joinclass", "spectate", "spec_mode", "cl_spec_mode", "killvector", "teammenu", "chatwheel_ping", "player_ping" };
 
 bool g_bEvent_Kidnapping = false;
 
@@ -104,7 +100,6 @@ enum KillStack {
 	
 	KillStack_max
 };
-char g_szMonth[12][8] = {	"Jan",	"Fév",	"Mar",	"Avr",	"Mai",	"Juin",	"Juil",	"Août",	"Sept",	"Oct",	"Nov",	"Déc"	};
 
 float g_flVehicleDamage = 1.0;
 Handle g_hAllowDamage;
@@ -133,6 +128,7 @@ int g_iStackCanKill_Count[MAX_PLAYERS+1];
 int g_iJobPlayerTime[MAXPLAYERS + 1][MAX_JOBS + 1];
 int g_iServerRules[server_rules_max][view_as<int>(rules_data_max)];
 
+bool g_bIsHidden[MAXPLAYERS + 1];
 ArrayList g_iChatData[MAX_PLAYERS + 1];
 ArrayList g_iDoubleCompte[MAXPLAYERS + 1];
 ArrayList g_iParentedParticle[MAXPLAYERS + 1];
@@ -148,6 +144,9 @@ float g_flClientFloodTime[MAX_PLAYERS + 1][MAX_PLAYERS + 1][view_as<int>(fd_udat
 Handle g_iClientFloodTimer[MAX_PLAYERS + 1][MAX_PLAYERS + 1][view_as<int>(fd_udata_max)];
 
 float g_flEntityData[MAX_ENTITIES + 1][view_as<int>(building_prop_data_max)];
+float g_flWeaponFireRate[MAX_ENTITIES + 1];
+bool g_bWeaponFireRate[MAX_ENTITIES + 1];
+
 //
 int g_iDoorKnowed[MAX_ENTITIES];
 int g_iDoorCannotForce[MAX_ENTITIES];
@@ -221,20 +220,21 @@ enum itemDATAStack {
 
 int g_iItems[MAX_PLAYERS+1][MAX_ITEMS+1][view_as<int>(STACK_itemStack_max)];
 int g_iItems_BANK[MAX_PLAYERS+1][MAX_ITEMS+1][view_as<int>(STACK_itemStack_max)];
-int g_iItems_SAVE[MAX_PLAYERS+1][MAX_ITEMS+1][view_as<int>(STACK_itemStack_max)];
+
+char g_szItems_SAVE[MAX_PLAYERS+1][64][32];
 
 char g_szPaintBall[11][3][64] = {
-	{	"paintball/pb_babyblue2.vmt",	"0",	"0"	},
-	{	"paintball/pb_black2.vmt",	"0",	"0"	},
-	{	"paintball/pb_blue2.vmt",	"0",	"0"	},
-	{	"paintball/pb_brown2.vmt",	"0",	"0"	},
-	{	"paintball/pb_dark_green2.vmt",	"0",	"0"	},
+	{	"paintball/pb_babyblue2.vmt",		"0",	"0"	},
+	{	"paintball/pb_black2.vmt",			"0",	"0"	},
+	{	"paintball/pb_blue2.vmt",			"0",	"0"	},
+	{	"paintball/pb_brown2.vmt",			"0",	"0"	},
+	{	"paintball/pb_dark_green2.vmt",		"0",	"0"	},
 	{	"paintball/pb_medslateblue2.vmt",	"0",	"0"	},
-	{	"paintball/pb_olive2.vmt",	"0",	"0"	},
-	{	"paintball/pb_red_orange2.vmt",	"0",	"0"	},
-	{	"paintball/pb_red2.vmt",	"0",	"0"	},
-	{	"paintball/pb_violet2.vmt",	"0",	"0"	},
-	{	"paintball/pb_white2.vmt",	"0",	"0"	}
+	{	"paintball/pb_olive2.vmt",			"0",	"0"	},
+	{	"paintball/pb_red_orange2.vmt",		"0",	"0"	},
+	{	"paintball/pb_red2.vmt",			"0",	"0"	},
+	{	"paintball/pb_violet2.vmt",			"0",	"0"	},
+	{	"paintball/pb_white2.vmt",			"0",	"0"	}
 };
 //
 // Cvar's
@@ -251,6 +251,8 @@ char g_szError[1024];
 // Sprites
 int g_cShockWave, g_cGlow, g_cBeam, g_cExplode, g_cScorch, g_cHacked;
 char g_szLastMessage[MAX_PLAYERS+1][5][256];
+char g_szLastLocal[MAX_PLAYERS+1][5][256];
+
 // ------------------------------
 // Vehicle
 //
@@ -287,6 +289,7 @@ float g_flLubrifian[MAX_PLAYERS+1];
 // AFK-Manager
 //
 float g_Position[MAX_PLAYERS+1][3];
+Handle g_hClientMicTimers[MAXPLAYERS + 1];
 // ------------------------------
 // Weapon-Manager
 //
@@ -305,6 +308,7 @@ enum_ball_type g_iKnifeType[MAX_PLAYERS+1];
 int g_iLDR = 0;
 int START_ZONE = MAX_ZONES+1;
 int EVENT_HIDE = 0;
+int EVENT_3RD = 1;
 
 // ------------------------------
 // MUTE ME PLEASE
@@ -318,6 +322,7 @@ Handle g_hAllowSteal = INVALID_HANDLE;
 Handle g_hMAX_ENT = INVALID_HANDLE;
 int g_iEntityLimit = 2000;
 Handle g_hEVENT = INVALID_HANDLE;
+Handle g_hEVENT_3RD = INVALID_HANDLE;
 Handle g_hEVENT_HIDE = INVALID_HANDLE;
 #if defined EVENT_NOEL
 Handle g_hEVENT_NOEL = INVALID_HANDLE;

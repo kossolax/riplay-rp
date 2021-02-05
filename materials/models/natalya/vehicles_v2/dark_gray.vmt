@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture"	"models/natalya/vehicles_v2/dark_gray"
+	"$nocull"	"1"
+}

@@ -100,6 +100,7 @@ public Action Cmd_Smoke(int client, int args) {
 	rp_SetBuildingData(parent, BD_started, GetTime());
 	rp_SetBuildingData(parent, BD_owner, target );
 	rp_SetBuildingData(parent, BD_FromBuild, 0);
+	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
 	
 	return Plugin_Handled;
 }
@@ -222,6 +223,7 @@ public Action Cmd_Ball(int client, int args) {
 	rp_SetBuildingData(node, BD_started, GetTime());
 	rp_SetBuildingData(node, BD_owner, target );
 	rp_SetBuildingData(node, BD_FromBuild, 0);
+	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
 	
 	return Plugin_Handled;
 }
@@ -240,7 +242,7 @@ public void OnEntityDestroyed(int entity) {
 				continue;
 				
 			GetEdictClassname(i, tmp, sizeof(tmp));
-			if (StrEqual(tmp, "point_spotlight") && Entity_GetParent(i) == root) {
+			if ( (StrEqual(tmp, "point_spotlight") || StrEqual(tmp, "beam") ||  StrEqual(tmp, "spotlight_end") ) && Entity_GetParent(i) == root) {
 				int p = GetEntPropEnt(i, Prop_Data, "m_hEffectEntity");
 				if (p > 0) {
 					AcceptEntityInput(p, "KillHierarchy");

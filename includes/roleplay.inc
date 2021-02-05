@@ -17,6 +17,7 @@
 
 // ----------------------------------------------------------------------------
 forward Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbose);
+forward Action RP_OnSentryAttack(int sentry, int client);
 
 // ----------------------------------------------------------------------------
 enum rp_event {
@@ -43,6 +44,7 @@ enum rp_event {
 	RP_OnPlayerBuild,          /* Un joueur utilise la commande /build */
 	RP_OnPlayerUse,             /* Un joueur utilise la commande utiliser (touche E). */
 	RP_OnPlayerCommand,        /* Un joueur execute une commande, /vol, /truc, /bidule. command ne contient ni de !, ni de /. */
+	RP_OnPlayerPreSteal,          /* Un joueur execute le /vol */
 	RP_OnPlayerSteal,          /* Un joueur execute le /vol */
 	RP_OnPlayerZoneChange,     /* Un joueur change de zone */
 
@@ -58,6 +60,7 @@ enum rp_event {
 	RP_PostClientCraft,			/* Après qu'un craft réussisse */
 	
 	RP_PreBuildingCount,		/* Calcule du nombre maximum de plant/machine */
+	RP_PostPickLock,			/* Lorsqu'un kit de crochetage se termine */
 	RP_PostPiedBiche,			/* Lorsqu'un pied de biche se termine */
 	RP_PreClientTeleport,		/* Lorsqu'un joueur tente de se téléporter */
 	RP_PostStealWeapon,			/* Lorsqu'un joueur termine de voler une arme */
@@ -69,7 +72,8 @@ enum rp_event {
 	
 	RP_OnJugementOver,			/* Lorsqu'un jugement est prononcé */
 	RP_OnPlayerPay,
-
+	RP_OnPlayerEmote,
+	RP_OnPlayerGotRaw,
 	
 	RP_EventMax
 }
@@ -92,12 +96,13 @@ typeset rp_event_enum {
 	function Action(int client);								                            /* RP_OnFrameSeconde */
 	function Action(int client, int& amount);						                        /* RP_OnAssurance */
 	function Action(int client);							        	                    /* RP_OnPlayerSpawn */
-	function Action(int victim, int attacker, float& respawn, int& tdm);	                /* RP_OnPlayerDead == return Plugin_Handled = cacher des logs */
-	function Action(int attacker, int victim, char weapon[64], int& tdm);              		/* RP_OnPlayerKill == return Plugin_Handled = cacher des logs */
+	function Action(int victim, int attacker, float& respawn, int& tdm, float& ctx);        /* RP_OnPlayerDead == return Plugin_Handled = cacher des logs */
+	function Action(int attacker, int victim, char weapon[64], int& tdm, float& ctx);       /* RP_OnPlayerKill == return Plugin_Handled = cacher des logs */
 	
 	function Action(int client, float& cooldown);					                        /* RP_OnPlayerBuild */
 	function Action(int client);								                            /* RP_OnPlayerUse */
 	function Action(int client, char[] command, char[] arg);		                       	/* RP_OnPlayerCommand */
+	function Action(int client, int target, float& cooldown);		                       	/* RP_OnPlayerPreSteal */
 	function Action(int client, int target, float& cooldown);		                       	/* RP_OnPlayerSteal */
 	function Action(int client, int newZoneID, int oldZoneID);	                       		/* RP_OnPlayerZoneChange */
 	function Action(int client, int target, float& dist);				                    /* RP_OnPlayerHear Est-ce que client peut entendre target ? */
@@ -112,6 +117,7 @@ typeset rp_event_enum {
 	function Action(int client, int itemID, int& free);										/* RP_PreClientCraft */
 	function Action(int client, int itemID);												/* RP_PostClientCraft */	
 	function Action(int client, int itemID, int & max); 									/* RP_PreBuildingCount */
+	function Action(int client, int doorID, int difficulty, int alarmed);					/* RP_PostPickLock */
 	function Action(int client, int type); 													/* RP_PostPiedBiche */
 	function Action(int client);															/* RP_PreClientTeleport */
 	function Action(int client, int target, int weaponID);									/* RP_PostStealWeapon */
@@ -122,6 +128,8 @@ typeset rp_event_enum {
 	function Action(int client, int jobID, int target, int victim, int& prix, int arg);		/* RP_OnBlackMarket */
 	function Action(int client, int data[6], int charges[28]);								/* RP_OnJugementOver */
 	function Action(int client, int base, int& amount, bool verbose);						/* RP_OnPlayerPay */
+	function Action(int client, const char[] emote, float step);							/* RP_OnPlayerEmote */
+	function Action(int client, int type, int itemID, int& amount); 						/* RP_OnPlayerGotRaw */
 };
 /**
  * Hook un évenement d'un joueur
@@ -248,6 +256,12 @@ native int rp_GetClientGroupID(int client);
  * @param  {[type]} int client        Le joueur
  */
 native void rp_IncrementLuck(int client);
+/**
+ * Ajoute un slot de sauvegarde d'inventaire pour le joueur (Registre)
+ * @param  {[type]} int client        Le joueur
+ * @return bool     Success
+ */
+native bool rp_AddSaveSlot(int client);
 // ----------------------------------------------------------------------------
 //                                                           rp_Is
 // ----------------------------------------------------------------------------
@@ -385,7 +399,7 @@ native int rp_GetClientVehiclePassager(int client);
  * @param  {[type]} int vehicleID     Le véhicule
  * @return  bool    Vrai si le joueur a été correctement placé.
  */
-native bool rp_SetClientVehiclePassager(int client, int vehicleID);
+native bool rp_SetClientVehiclePassager(int client, int vehicleID, int offset = 0, int version = 1);
 /**
  * Définir une propriétée d'un véhicule
  * @param  {[type]} int      vehicleID     le véhicule
@@ -442,7 +456,7 @@ native void rp_SetClientKeyAppartement(int client, int appartID, bool status=fal
 native bool rp_GetClientKeyAppartement(int client, int appartID);
 // ----------------------------------------------------------------------------
 native void rp_ClientForceRelease(int client);
-native void rp_Effect_PropExplode(int entityID, bool tazer = false);					/* Explose un props, s'il est piégé */
+native void rp_Effect_PropExplode(int entityID, int attacker, bool tazer = false);					/* Explose un props, s'il est piégé */
 native void rp_Effect_Smoke(int client, float duration = 30.0);						/* Petit effect de fumée de cigarette */
 native void rp_Effect_VisionTrouble(int client, float duration = 30.0);					/* Trouble la vision d'un joueur */
 native void rp_Effect_ShakingVision(int client, float duration = 30.0);					/* Fait trembler la vue d'un joueur */
@@ -469,7 +483,7 @@ native void rp_ClientRespawn(int client, float time=0.1);							/* Respawn un jo
 native void rp_ClientSave(int client);										/* Sauvegarde les données d'un joueur */
 native void rp_ClientIgnite(int client, float time=10.0, int attacker=0);				/* Brule un joueur pour une certaine durée. */
 native void rp_ClientPoison(int client, float time=10.0, int attacker=0);				/* Empoisone un joueur pour une certaine durée. */
-native void rp_ClientDamage(int client, int damage, int attacker, char[] weapon = "point_hurt", int damageType = DMG_GENERIC);	/* Inflige des dégats à un autre joueur */
+native void rp_ClientDamage(int client, int damage, int attacker, char[] weapon = "point_hurt", int damageType = DMG_GENERIC, bool legit=false);	/* Inflige des dégats à un autre joueur */
 native void rp_ClientColorize(int client, int color[4]={-1,-1,-1,-1});					/* Colorie un joueur. Si 2ème param pas défini la couleur sera soit normal, soit couleur de PvP */
 native void rp_ClientSendToSpawn(int client, bool nearest = false);					/* Téléporte un joueur à un spawn aléatoire. Si "nearest" est vrai. Il s'agit du spawn le plus prêt d'ou le joueur se trouve */
 native void rp_ClientResetSkin(int client);									/* Remet le skin classique d'un joueur */
@@ -502,6 +516,8 @@ native enum_ball_type rp_GetClientKnifeType(int client);							/* Quel est le ty
 native bool rp_GetWeaponStorage(int wepID);									/* L'arme vient-elle de l'armurerie police ? */
 native void rp_SetWeaponStorage(int wepID, bool value);							/* Définir que l'arme vient de l'armurerie police */
 native int rp_GetWeaponGroupID(int wepID);									/* Récupère le groupID d'une arme */
+native void rp_SetWeaponFireRate(int wepID, float value);
+native float rp_GetWeaponFireRate(int wepID);
 typedef GrenadeFunction = function void (int client, int entity);						/* Créer une grenade. Les 2 callback fctExplode et fctThrow sont appelé. Duration = durée avant que le fctExplode soit appelé*/
 native int rp_CreateGrenade(int client, const char[] name, const char[] model, GrenadeFunction fctThrow, GrenadeFunction fctExplode, float duration);
 // ----------------------------------------------------------------------------
@@ -555,11 +571,14 @@ native bool rp_ClientFloodTriggered(int client, int target, fd_user_data type);
 native void rp_ClientAggroIncrement(int client, int target, int damage);
 native bool rp_ClientCanAttack(int client, int target);
 native void rp_ClientOverlays(int client, overlaysImg img, float duration = -1.0);
-native void rp_ClientXPIncrement(int client, int xp=1);
-native void rp_ClientMoney(int client, int_user_data type, int amount);
+native void rp_ClientXPIncrement(int client, int xp=1, bool verbose=false);
+native void rp_ClientMoney(int client, int_user_data type, int amount, bool isSafe = false);
+native bool rp_ClientEmote(int client, const char[] emote);
 // ----------------------------------------------------------------------------
 typedef NextMessageCallback = function void(int client, any data, char[] message);
 native void rp_GetClientNextMessage(int client, any data, NextMessageCallback cb);
+// ----------------------------------------------------------------------------
+native void rp_GetLevelData(rank_level level, rankType typeID, char[] str, int length);			/* Récupère les données d'un levle */
 // ----------------------------------------------------------------------------
 
 enum BM_Int {
@@ -569,8 +588,11 @@ enum BM_Int {
 	BM_Chargeur,
 	BM_PvP,
 	BM_Type,
+	BM_Store,
+	BM_RoF,
 	BM_Max
 }
+#define BM_WeaponNameSize	64
 
 native int rp_WeaponMenu_GetOwner(int wepID);
 native DataPack rp_WeaponMenu_Create();
@@ -581,9 +603,11 @@ native DataPackPos rp_WeaponMenu_GetPosition(DataPack hBuyMenu);
 native DataPackPos rp_WeaponMenu_GetMax(DataPack hBuyMenu);
 native bool rp_WeaponMenu_Add(DataPack hBuyMenu, int weaponID, int owner);
 native void rp_WeaponMenu_Delete(DataPack& hBuyMenu, DataPackPos pos);
-native void rp_WeaponMenu_Get(DataPack hBuyMenu, DataPackPos pos, char weapon[65], int[] data);
+native void rp_WeaponMenu_Get(DataPack hBuyMenu, DataPackPos pos, char weapon[BM_WeaponNameSize], int[] data);
+native int rp_WeaponMenu_Give(DataPack hBuyMenu, DataPackPos pos, int client);
+
 // ----------------------------------------------------------------------------
-#define ACCESS_DENIED(%1)	CPrintToChat(%1, "" ...MOD_TAG... " Vous n'avez pas accès à cette commande.");	return Plugin_Handled
+#define ACCESS_DENIED(%1)	CPrintToChat(%1, "" ...MOD_TAG... " %T.", "No Access", %1);	return Plugin_Handled
 #define ITEM_CANCEL(%1,%2)	rp_ClientGiveItem(%1,%2); rp_SetClientFloat(%1, fl_CoolDown, 0.05)
 
 #define BITZONE_DEFAULT		(0)		// https://www.ts-x.eu/shared_public/bit.html
@@ -600,6 +624,7 @@ native void rp_WeaponMenu_Get(DataPack hBuyMenu, DataPackPos pos, char weapon[65
 #define BITZONE_BLOCKOUT	(1<<10)
 #define BITZONE_BLOCKJAIL	(1<<11)
 #define BITZONE_BLOCKSPEAK	(1<<12)
+#define BITZONE_BLOCKRADAR	(1<<13)
 #define BITZONE_PARKING		(1<<15)
 #define BITZONE_ROAD		(1<<16)
 #define BITZONE_JUSTICEITEM	(1<<18)
@@ -610,8 +635,9 @@ native void rp_WeaponMenu_Get(DataPack hBuyMenu, DataPackPos pos, char weapon[65
 #define BITZONE_EVENT		(1<<23)
 #define BITZONE_VENTE		(1<<24)
 #define BITZONE_PERQUIZ		(1<<25)
+#define BITZONE_LEGIT		(1<<26)
 
-#define MAX_ITEMS	311
+#define MAX_ITEMS	400
 #define MAX_JOBS	230
 
 // ----------------------------------------------------------------------------
@@ -637,6 +663,7 @@ enum bool_user_data {
 	b_Blind,
 	b_KeyReverse,
 	b_Assurance,
+	b_FreeAssurance,
 	b_Beacon,
 	b_Crayon,
 	b_Lube,
@@ -660,6 +687,7 @@ enum bool_user_data {
 	b_HasProtImmu,
 	b_HasQuest,
 	b_IsSearchByTribunal,
+	b_IsInAudiance,
 	b_SpawnToMetro,
 	b_SpawnToTribunal,
 	b_SpawnToTueur,
@@ -672,8 +700,10 @@ enum bool_user_data {
 	ch_Heal,
 	ch_Kevlar,
 	ch_Yeux,
+	ch_Breath,
 	b_WeaponIsHands,
 	b_WeaponIsKnife,
+	b_WeaponIsMelee,
 	b_GameModePassive,
 	b_IsFirstSpawn,
 	b_Debuging,
@@ -684,6 +714,7 @@ enum bool_user_data {
 	b_ItemRecovered,
 	b_IsFreekiller,
 	b_ExitJailMenu,
+	b_JailQHS,
 	b_udata_max
 };
 enum int_user_data {
@@ -694,9 +725,11 @@ enum int_user_data {
 	i_JailTime,
 	i_KnifeTrain,
 	i_KnifeTrainAdmin,
+	i_FistTrainAdmin,
 	i_Esquive,
 	i_LastKilled,
 	i_LastKilled_Reverse,
+	i_LastInflictor,
 	i_Client,
 	i_LastForcedSave,
 	i_ToKill,
@@ -743,6 +776,8 @@ enum int_user_data {
 	i_MaskCount,
 	i_AppartCount,
 	i_LastKillTime,
+	i_LastKillTime_ReduceTDM,
+	i_LastKillTime_ReduceFK,
 	i_AddToPay,
 	i_TimeAFK,
 	i_TimeAFK_today,
@@ -752,7 +787,6 @@ enum int_user_data {
 
 	i_ItemCount,
 	i_ItemBankCount,
-	i_ItemCountSaved,
 	i_ItemBankPrice,
 
 	i_LastAgression,
@@ -766,6 +800,7 @@ enum int_user_data {
 	i_ArtisanXP,
 	i_ArtisanLevel,
 	i_ArtisanPoints,
+	i_ArtisanSpeciality,
 	i_FakeClient,
 	
 	i_KillMonth,
@@ -800,7 +835,9 @@ enum int_user_data {
 	i_AmendeLiscence2,
 	
 	i_SkinDonateur,
-	
+	i_ELO,
+	i_PVPBannedUntil,
+	i_AllowedDismiss,
 	i_udata_max
 };
 enum float_user_data {
@@ -851,6 +888,8 @@ enum fd_user_data {
 	fd_job,
 	fd_kidnapping,
 	fd_ruban,
+	fd_freekill1,
+	fd_freekill2,
 
 	fd_udata_max
 };
@@ -942,6 +981,8 @@ enum building_prop_data {
 	BD_item_id,
 	BD_original_id,
 	BD_FromBuild,
+	BD_HackedBy,
+	BD_HackedTime,
 	
 	building_prop_data_max
 };
@@ -979,6 +1020,7 @@ enum rp_item_type {
 	item_type_dead,
 	item_type_ordered_id,
 	item_type_taxes,
+	item_type_no_bank,
 	item_type_max
 };
 enum rp_job_type {
@@ -1053,7 +1095,7 @@ enum car_data {
 	car_light_g,
 	car_light_b,
 	car_boost,
-	car_thirdperson_id,
+	car_can_jump,
 	car_klaxon,
 	car_owner,
 	car_item_id,
@@ -1063,8 +1105,10 @@ enum car_data {
 	car_battery,
 	car_particle,
 	car_donateur,
+	car_gyro_left,
+	car_gyro_right,
 	
-	car_data_max,
+	car_data_max
 };
 enum type_appart_bonus {
 	appart_bonus_energy,
@@ -1076,6 +1120,7 @@ enum type_appart_bonus {
 	appart_bonus_paye,
 
 	appart_proprio,
+	appart_price,
 
 	appart_bonus_max
 };
@@ -1212,6 +1257,43 @@ enum rankType {
 	rank_type_description,
 	
 	rank_type_max
+};
+enum rank_level {
+	level_none,
+	level_1,
+	level_2,
+	level_3,
+	level_simple_citizen,
+	level_5,
+	level_6,
+	level_owner,
+	level_8,
+	level_9,
+	level_10,
+	level_11,
+	level_12,
+	level_13,
+	level_14,
+	level_15,
+	level_16,
+	level_17,
+	level_18,
+	level_19,
+	level_20,
+	level_21,
+	level_22,
+	level_23,
+	level_24,
+	level_25,
+	level_26,
+	level_27,
+	level_28,
+	level_29,
+	level_30,
+	level_31,
+	level_32,
+	
+	level_max
 };
 enum serverRules {
 	rules_Amendes,

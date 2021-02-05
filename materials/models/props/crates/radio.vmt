@@ -1,0 +1,19 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models\props\crates\radio"
+	"$bumpmap" "models\props\crates\skin_nm"
+	"$nocull" "1"
+	"$blendtintbybasealpha" 1
+
+	"$nodecal" "1"
+	"$colorfix" "{255 255 255}"
+	"Proxies"
+	{
+		"Equals"
+		{
+			srcVar1 $colorfix
+			resultVar	$color
+		}
+	}
+
+}

@@ -25,7 +25,39 @@ public Plugin myinfo = {
 	version = __LAST_REV__, url = "https://www.ts-x.eu"
 };
 int g_cBeam, g_cGlow, g_cShockWave, g_cShockWave2, g_cExplode;
-bool g_bC4Expl[2049];
+#define LAUNCHER_MODEL "models/shells/shell_57.mdl"
+#define LAUNCHER_SCALE	25.0
+#define	FIREWOKRS_SPEED	1000.0
+
+char g_szParticles[][] =  {
+	"Trail",
+	"Trail2",
+	"Trail_01",
+	"Trail3",
+	"Trail4",
+	"Trail_03",
+	"Trail7",
+	"Trail5",
+	"Trail8",
+	"Trail10",
+	"Trail13",
+	"Trail11",
+	"Trail12",
+	"Trail_02",
+	"Trail15",
+	"Trail_04",
+	"trail_money",
+	"trail_heart",
+	"confetti_balloons",
+};
+char g_szTirs[][32] =  { "Firework_Shot_Instant", "Firework_Shot_Fast", "Firework_Shot_Long", "Firework_Shot_Trigger" };
+char g_szPropultion[][32] =  { "Firework_Fuel_Up", "Firework_Fuel_Realistic", "Firework_Fuel_Random", "Firework_Fuel_FollowAim", "Firework_Fuel_FollowPlayer"};
+
+int g_iTirsIndex[2049], g_iParticleIndex[2049], g_iPropultionIndex[2049], g_iFireworkOwner[2049];
+float g_flStart[2049], g_flLastDir[2049][3];
+int g_iFireworksCount[65];
+int g_iMaxFireworks;
+int g_iFreeFirework[65];
 
 // ----------------------------------------------------------------------------
 public Action Cmd_Reload(int args) {
@@ -35,21 +67,74 @@ public Action Cmd_Reload(int args) {
 	return Plugin_Continue;
 }
 public void OnPluginStart() {
-	RegServerCmd("rp_quest_reload", Cmd_Reload);
+	LoadTranslations("core.phrases");
+	LoadTranslations("common.phrases");
+	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.items.phrases");
+	LoadTranslations("roleplay.artificier.phrases");
+	
+	Handle cvar = CreateConVar("rp_fireworks", "10", "Nombre maximum de feu d'artifice autorisé", 0, true, 0.0, true, 100.0);
+	HookConVarChange(cvar, OnCvarChange);
+	g_iMaxFireworks = GetConVarInt(cvar);
+	
+	RegServerCmd("rp_quest_reload", 	Cmd_Reload);
 	RegServerCmd("rp_item_firework",	Cmd_ItemFireWork,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_highjump",	Cmd_ItemHighJump,		"RP-ITEM",	FCVAR_UNREGISTERED);
-	//RegServerCmd("rp_item_mine",		Cmd_ItemMine,			"RP-ITEM",  FCVAR_UNREGISTERED); <-- Désactivé à cause d'un bug CSGO. A réinsérer plus tard :>
 	RegServerCmd("rp_item_bomb",		Cmd_ItemBomb,			"RP-ITEM",  FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_nade",		Cmd_ItemNade,			"RP-ITEM",  FCVAR_UNREGISTERED);
 	
-	for (int i = 1; i <= MaxClients; i++)
+	RegAdminCmd("sm_effect_fireworks", Cmd_Fireworks, 			ADMFLAG_RCON);
+	
+	for (int i = 1; i <= MaxClients; i++) 
 		if( IsValidClient(i) )
 			OnClientPostAdminCheck(i);
 }
-// ----------------------------------------------------------------------------
 public void OnClientPostAdminCheck(int client) {
-	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
+	g_iFreeFirework[client] = 0;
+	rp_HookEvent(client, RP_OnPlayerBuild, fwdOnPlayerBuild);
 }
+public Action fwdOnPlayerBuild(int client, float& cooldown) {
+	if( rp_GetClientJobID(client) != 131 )
+		return Plugin_Continue;
+	
+	g_iFreeFirework[client] = 1;
+	Menu_Main(client);
+	cooldown = 1.0;
+	
+	return Plugin_Stop;
+}
+public Action Cmd_Fireworks(int client, int args) {
+	float delay = GetCmdArgFloat(1);
+	
+	Handle dp;
+	CreateDataTimer(delay, Delay_Fireworks, dp, TIMER_DATA_HNDL_CLOSE);
+	WritePackCell(dp, GetCmdArgInt(2));
+	WritePackCell(dp, GetCmdArgFloat(3));
+	WritePackCell(dp, GetCmdArgFloat(4));
+	WritePackCell(dp, GetCmdArgFloat(5));
+}
+public Action Delay_Fireworks(Handle timer, Handle dp) {
+	float pos[3];
+
+	ResetPack(dp);
+	int id = ReadPackCell(dp);
+	pos[0] = ReadPackCell(dp);
+	pos[1] = ReadPackCell(dp);
+	pos[2] = ReadPackCell(dp);
+	
+	FW_SpawnAtPosition(0, pos, id, 0, 0);
+}
+public void OnCvarChange(Handle cvar, const char[] oldVal, const char[] newVal) {
+	g_iMaxFireworks = StringToInt(newVal);
+}
+public void OnEntityCreated(int ent, const char[] classname) {
+	if( ent > 0 )
+		g_iFireworkOwner[ent] = 0;
+}
+public void OnClientDisconnect(int client) {
+	FW_EXPL(client);
+}
+// ----------------------------------------------------------------------------
 public void OnMapStart() {
 	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt", true);
 	g_cGlow = PrecacheModel("materials/sprites/glow01.vmt", true);
@@ -57,6 +142,23 @@ public void OnMapStart() {
 	g_cShockWave2 = PrecacheModel("materials/sprites/rollermine_shock.vmt", true);
 	g_cExplode = PrecacheModel("materials/sprites/muzzleflash4.vmt", true);
 	PrecacheModel("models/weapons/w_c4_planted.mdl", true);
+	
+	
+	PrecacheModel(LAUNCHER_MODEL);
+	PrecacheSoundAny("weapons/hegrenade/explode3.wav");
+	PrecacheSoundAny("weapons/hegrenade/explode4.wav");
+	PrecacheSoundAny("weapons/hegrenade/explode5.wav");
+	
+	for (int i = 0; i < sizeof(g_szParticles); i++ ) {
+		PrecacheEffect("ParticleEffect");
+		PrecacheParticleEffect(g_szParticles[i]);
+	}
+	
+	
+	PrecacheEffect("ParticleEffect");
+	PrecacheParticleEffect("firework_crate_explosion_01");
+	PrecacheEffect("ParticleEffect");
+	PrecacheParticleEffect("firework_crate_explosion_02");
 }
 // ------------------------------------------------------------------------------
 public Action Cmd_ItemNade(int args) {
@@ -93,11 +195,8 @@ public Action Cmd_ItemNade(int args) {
 	else if( StrEqual(arg1, "emp") ) {
 		rp_CreateGrenade(client, "ctf_nade_emp", "models/grenades/emp/emp.mdl", throwClassic, EMPExplode, 3.0);
 	}
-	else if( StrEqual(arg1, "c4") ) {
-		int ent = rp_CreateGrenade(client, "ctf_nade_c4", "models/weapons/w_c4_planted.mdl", throwCaltrop, C4Explode, 30.0);
-		CPrintToChat(client, "" ...MOD_TAG... " Votre C4 explosera automatiquement dans 30 secondes. Entrez /C4 pour le faire exploser avant.");
-		g_bC4Expl[ent] = true;
-		
+	else if( StrEqual(arg1, "emp2") ) {
+		rp_CreateGrenade(client, "ctf_nade_emp", "models/grenades/emp/emp.mdl", throwClassic, EMPExplode2, 3.0);
 	}
 }
 // ------------------------------------------------------------------------------
@@ -408,12 +507,23 @@ public Action gasShot(Handle timer, any ent) {
 	return Plugin_Handled;
 }
 // ------------------------------------------------------------------------------
+bool boosted[2048];
 public void EMPExplode(int client, int ent) {
 	
 	EmitSoundToAllAny("grenades/emp_explosion.mp3", ent);
 	EmitSoundToAllAny("grenades/emp_explosion.mp3", ent);
 	
+	boosted[ent] = false;
 	CreateTimer(0.75, EMPExplode_Task, ent);
+}
+public void EMPExplode2(int client, int ent) {
+	
+	EMPExplode(client, ent);
+	boosted[ent] = true;
+	
+	// plus bruyant:
+	EmitSoundToAllAny("grenades/emp_explosion.mp3", ent);
+	EmitSoundToAllAny("grenades/emp_explosion.mp3", ent);
 }
 public Action EMPExplode_Task(Handle timer, any ent) {
 	
@@ -432,8 +542,9 @@ public Action EMPExplode_Task(Handle timer, any ent) {
 		
 		GetEdictClassname(i, classname, sizeof(classname));
 		
-		if( StrContains(classname, "player") == 0 || StrContains(classname, "weapon_") == 0 ||
-			StrContains(classname, "rp_cashmachine") == 0 || StrContains(classname, "rp_bigcashmachine") == 0 || StrContains(classname, "rp_mine") == 0 ) {
+		if( StrEqual(classname, "player") || StrContains(classname, "weapon_") == 0 ||
+			StrEqual(classname, "rp_cashmachine")  || StrEqual(classname, "rp_bigcashmachine") ||
+			StrEqual(classname, "rp_mine") || StrEqual(classname, "rp_sentry") ) {
 			
 			if( StrContains(classname, "weapon_knife") == 0 )
 				continue;
@@ -460,16 +571,29 @@ public Action EMPExplode_Task(Handle timer, any ent) {
 			if( StrContains(classname, "weapon_") == 0 && GetEntPropEnt(i, Prop_Send, "m_hOwnerEntity") <= 0 ) {
 				rp_AcceptEntityInput(i, "Kill");
 			}
-			else if( StrContains(classname, "rp_mine_") == 0 ) {
+			else if( StrEqual(classname, "rp_mine")  ) {
 				rp_AcceptEntityInput(i, "Kill");
+			}
+			else if( StrEqual(classname, "rp_sentry")  ) {
+				int owner = rp_GetBuildingData(i, BD_owner);
+				
+				if( !IsValidClient(owner) || (rp_ClientCanAttack(client, owner) && client != owner) )
+					rp_SetBuildingData(i, BD_HackedTime, GetTime() + 20);
 			}
 			else {
 				if( IsValidClient(i) && !(rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_PEACEFULL) ) {
-					kev = rp_GetClientInt(i, i_Kevlar) / 2;
-					damage += float(kev);
 					
+					if( boosted[ent] )
+						kev = rp_GetClientInt(i, i_Kevlar);
+					else
+						kev = rp_GetClientInt(i, i_Kevlar) / 2;
+
+					damage += float(kev);
 					kev -= 50;
 					if( kev < 0 )
+						kev = 0;
+					
+					if( boosted[ent] )
 						kev = 0;
 					
 					rp_SetClientInt(i, i_Kevlar, kev);
@@ -493,102 +617,23 @@ public Action EMPExplode_Task(Handle timer, any ent) {
 	
 	TE_SetupBeamRingPoint(vecOrigin, 1.0, 401.0, g_cShockWave, 0, 0, 20, 0.20, 50.0, 0.0, {255, 255, 255, 255}, 1, 0);
 	TE_SendToAll();
-	TE_SetupBeamRingPoint(vecOrigin, 0.1, 400.0, g_cBeam, 0, 0, 10, 0.20, 50.0, 0.0, {255, 200, 50, 200}, 1, 0);
+	
+	if( boosted[ent] )
+		TE_SetupBeamRingPoint(vecOrigin, 0.1, 400.0, g_cBeam, 0, 0, 10, 0.20, 50.0, 0.0, {50, 255, 200, 200}, 1, 0);
+	else
+		TE_SetupBeamRingPoint(vecOrigin, 0.1, 400.0, g_cBeam, 0, 0, 10, 0.20, 50.0, 0.0, {255, 200, 50, 200}, 1, 0);
+
 	TE_SendToAll();
 	
 	rp_ScheduleEntityInput(ent, 0.25, "KillHierarchy");
-}
-// ------------------------------------------------------------------------------
-public void C4Explode(int client, int ent) {
-	if( !g_bC4Expl[ent] )
-		return;
-	
-	float vecOrigin[3];
-	char sound[128];
-	Entity_GetAbsOrigin(ent, vecOrigin);
-	
-	rp_Effect_Explode(vecOrigin, 400.0, 250.0, client, "nade_c4");
-	
-	TE_SetupExplosion(vecOrigin, g_cExplode, 1.0, 0, 0, 200, 200);
-	TE_SendToAll();
-	
-	Format(sound, sizeof(sound), "weapons/hegrenade/explode%i.wav", Math_GetRandomInt(3, 5));
-	EmitSoundToAllAny(sound, ent);
-	
-	rp_ScheduleEntityInput(ent, 0.25, "KillHierarchy");
-	
-	g_bC4Expl[ent] = false;
-}
-public Action fwdCommand(int client, char[] command, char[] arg) {	
-	if( StrEqual(command, "c4") ) { // C'est pour nous !
-	
-		if( rp_GetClientFloat(client, fl_CoolDown) > GetGameTime() ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez rien utiliser pour encore %.2f seconde(s).", (rp_GetClientFloat(client, fl_CoolDown)-GetGameTime()) );
-			return Plugin_Handled;
-		}
-		
-		char classname[64];
-		for(int i=1; i<2048; i++) {
-			if( !IsValidEdict(i) )
-				continue;
-			if( !IsValidEntity(i) )
-				continue;
-			if( !g_bC4Expl[i] )
-				continue;
-			
-			GetEdictClassname(i, classname, sizeof(classname));
-			
-			if( StrEqual(classname, "ctf_nade_c4") ) {
-
-				int owner = GetEntPropEnt(i, Prop_Send, "m_hOwnerEntity");
-				if( owner != client )
-					continue;
-
-				C4Explode(client, i);
-				continue;
-			}
-		}
-		
-		rp_SetClientFloat(client, fl_CoolDown, GetGameTime() + 2.5);
-		return Plugin_Stop;
-	}
-	return Plugin_Continue;
 }
 // ------------------------------------------------------------------------------
 public Action Cmd_ItemFireWork(int args) {
+	int client = GetCmdArgInt(1);
+	int item_id = GetCmdArgInt(args);
+	rp_ClientGiveItem(client, item_id, 1);
 	
-	int target = GetCmdArgInt(1);
-	
-	CreateTimer(0.1, Fire_Spriteworks01, target);
-	CreateTimer(0.6, Fire_Spriteworks02, target);
-	
-	rp_IncrementSuccess(target, success_list_fireworks);
-}
-
-public Action Fire_Spriteworks01(Handle timer, any client) {
-	float vec[3], vec2[3];
-	GetClientAbsOrigin(client, vec);
-	vec2 = vec; // <-- CA CAY PRATIQUE
-	vec2[2] = vec[2] + 400.0;
-	
-	// TODO <-- Couleur de ligne différente ?
-	TE_SetupBeamPoints( vec, vec2, g_cBeam, 0, 0, 0, 0.8, 2.0, 1.0, 1, 0.0, {255,255,255,50}, 10);
-	TE_SendToAll();
-}
-public Action Fire_Spriteworks02(Handle timer, any client) {
-	float vec[3];
-	GetClientAbsOrigin(client, vec);
-	vec[2] += 400.0;
-	
-	char sound[128];
-	Format(sound, sizeof(sound), "weapons/hegrenade/explode%i.wav", Math_GetRandomInt(3, 5));
-	EmitSoundToAllAny(sound, SOUND_FROM_WORLD, _, _, _, _, _, _, vec);
-	
-	float vecAngle[3]; 
-	rp_Effect_ParticlePath(client, "firework_crate_explosion_01", vec, vecAngle, vec);
-	rp_Effect_ParticlePath(client, "firework_crate_explosion_02", vec, vecAngle, vec);
-	rp_Effect_ParticlePath(client, "firework_crate_ground_sparks_01", vec, vecAngle, vec);
-	
+	CreateTimer(0.1, task_OpenFirework, client);
 }
 public Action Cmd_ItemHighJump(int args) {
 	
@@ -638,7 +683,7 @@ public Action Cmd_ItemBomb(int args) {
 	WritePackCell(dp, EntIndexToEntRef(target) );
 	WritePackCell(dp, client);
 	
-	CPrintToChat(client, "" ...MOD_TAG... " La bombe a été placée et explosera dans 15 secondes.");
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Bomb_WillExplodeIn", client, 15.0);
 	rp_Effect_BeamBox(client, target);
 	
 	float vecTarget[3];
@@ -672,4 +717,334 @@ public Action ItemBombOver(Handle timer, Handle dp) {
 	rp_Effect_Explode(vecOrigin, 100.0, 128.0, client, "weapon_c4");
 	
 	return Plugin_Handled;
+}
+
+// ----------------------------------------------------------------------------
+bool IsAdmin(int client) {
+	return view_as<bool>(GetUserFlagBits(client) & (ADMFLAG_ROOT));
+}
+public Action task_OpenFirework(Handle timer, any client) {
+	Menu_Main(client);
+}
+void Menu_Main(int client) {
+	
+	char tmp[128];
+	rp_GetItemData(ITEM_FEUARTIFICE, item_type_name, tmp, sizeof(tmp));
+	Menu menu = new Menu(hdlMenu);
+	menu.SetTitle("%s:\n ", tmp);
+	
+	int cpt = rp_GetClientItem(client, ITEM_FEUARTIFICE) + g_iFreeFirework[client];
+	if( cpt > g_iMaxFireworks )
+		cpt = g_iMaxFireworks;
+	
+	Format(tmp, sizeof(tmp), "%T\n ", "Firework_Build", client, g_iFireworksCount[client], cpt);
+	menu.AddItem("0", tmp);	
+	Format(tmp, sizeof(tmp), "%T", "Firework_Trail", client, g_szParticles[g_iParticleIndex[client]]);
+	menu.AddItem("1", tmp);
+	Format(tmp, sizeof(tmp), "%T", "Firework_Shot", client, g_szTirs[g_iTirsIndex[client]]);
+	menu.AddItem("2", tmp);
+	Format(tmp, sizeof(tmp), "%T\n ", "Firework_Fuel", client, g_szPropultion[g_iPropultionIndex[client]]);
+	menu.AddItem("3", tmp);
+	
+	Format(tmp, sizeof(tmp), "%T", "Firework_Start", client);
+	menu.AddItem("6", tmp);
+	
+	Format(tmp, sizeof(tmp), "%T", "Firework_Stop", client);
+	menu.AddItem("7", tmp);
+	
+	menu.Display(client, MENU_TIME_FOREVER);
+}
+// ----------------------------------------------------------------------------
+public int hdlMenu(Handle menu, MenuAction action, int client, int param2) {
+	if( action == MenuAction_Select ) {
+		char options[64], expl[4][32];
+		GetMenuItem(menu, param2, options, sizeof(options));
+		
+		ExplodeString(options, " ", expl, sizeof(expl), sizeof(expl[]));
+		
+		int a = StringToInt(expl[0]);
+		
+		Menu subMenu = null;
+		switch( a ) {
+			case 0:	FW_Spawn(client);
+			
+			case 1: g_iParticleIndex[client] = (g_iParticleIndex[client] + 1) % sizeof(g_szParticles);
+			case 2:	g_iTirsIndex[client] = (g_iTirsIndex[client] + 1) % sizeof(g_szTirs);
+			case 3: g_iPropultionIndex[client] = (g_iPropultionIndex[client] + 1) % sizeof(g_szPropultion);			
+			
+			case 6:	FW_FIRE(client);
+			case 7:	FW_EXPL(client);
+		}
+		
+		if( subMenu == null )
+			Menu_Main(client);
+		else
+			subMenu.Display(client, MENU_TIME_FOREVER);
+		
+	}
+	else if( action == MenuAction_End ) {
+		CloseHandle(menu);
+	}
+	return 0;
+}
+// ----------------------------------------------------------------------------
+void FW_Spawn(int client) {
+	if( g_iFireworksCount[client] >= g_iMaxFireworks && !IsAdmin(client) )
+		return;
+	if( !rp_IsBuildingAllowed(client) )
+		return;
+	
+	if( rp_GetClientItem(client, ITEM_FEUARTIFICE) == 0 && !(IsAdmin(client) || g_iFreeFirework[client]>g_iFireworksCount[client]) ) {
+		char tmp[128];
+		rp_GetItemData(ITEM_FEUARTIFICE, item_type_name, tmp, sizeof(tmp));
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemMissing", client, tmp);
+		return;
+	}
+	
+	if( rp_GetClientItem(client, ITEM_FEUARTIFICE) > 0 ) {
+		rp_ClientGiveItem(client, ITEM_FEUARTIFICE, -1);
+	}
+	
+	float pos[3];
+	GetClientAbsOrigin(client, pos);
+	
+	FW_SpawnAtPosition(client, pos, g_iParticleIndex[client], g_iTirsIndex[client], g_iPropultionIndex[client]);
+	g_iFireworksCount[client]++;
+	
+}
+void FW_SpawnAtPosition(int client, float pos[3], int particle, int tir, int propultion) {
+	int ent = CreateEntityByName("hegrenade_projectile");
+	DispatchKeyValue(ent, "classname", "fireworks");
+	DispatchSpawn(ent);
+	Entity_SetModel(ent, LAUNCHER_MODEL);
+	Entity_SetOwner(ent, client);
+	Entity_SetAbsOrigin(ent, pos);
+	SetEntityGravity(ent, 0.1);
+	SetEntProp(ent, Prop_Send, "m_CollisionGroup", COLLISION_GROUP_WEAPON);
+	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
+	SetEntPropFloat(ent,  Prop_Send, "m_flModelScale", LAUNCHER_SCALE);
+	
+	g_iFireworkOwner[ent] = client;
+	g_iParticleIndex[ent] = particle;
+	g_iTirsIndex[ent] = tir;
+	g_iPropultionIndex[ent] = propultion;
+	g_flLastDir[ent][0] = g_flLastDir[ent][1] = 0.0;
+	g_flLastDir[ent][1] = 1.0;
+	
+	if( g_iTirsIndex[ent]  == 0 )
+		CreateTimer(0.0, FW_Launch, ent);
+	if( g_iTirsIndex[ent]  == 1 )
+		CreateTimer(3.0, FW_Launch, ent);
+	if( g_iTirsIndex[ent]  == 2 )
+		CreateTimer(10.0, FW_Launch, ent);
+}
+public Action FW_Launch(Handle timer, any ent) {
+	if( !IsValidEdict(ent) || !IsValidEntity(ent) )
+		return Plugin_Handled;
+	
+	float dir[3];
+	dir[2] = 1.0;
+	ScaleVector(dir, FIREWOKRS_SPEED);
+	
+	TeleportEntity(ent, NULL_VECTOR, NULL_VECTOR, dir);
+	TE_SetupParticle(g_szParticles[g_iParticleIndex[ent]][0], ent, 0);
+	TE_SendToAll(-1.0);
+	g_flStart[ent] = GetTickedTime();
+	
+	SDKHook(ent, SDKHook_Touch, FW_Touch);
+	CreateTimer(0.0, FW_Think, ent, TIMER_REPEAT);
+	
+	return Plugin_Continue;
+}
+public Action FW_Think(Handle timer, any ent) {	
+	if( !IsValidEdict(ent) || !IsValidEntity(ent) )
+		return Plugin_Stop;
+	
+	float dir[3], ang[3], src[3], dst[3];
+	
+	switch( g_iPropultionIndex[ent] ) {
+		case 0: {
+			dir[0] = 0.0;
+			dir[1] = 0.0;
+			dir[2] = 1.0;
+		}
+		case 1: {
+			dir[0] = g_flLastDir[ent][0] + Math_GetRandomFloat(-0.1, 0.1);
+			dir[1] = g_flLastDir[ent][1] + Math_GetRandomFloat(-0.1, 0.1);
+			dir[2] = 1.0;
+		}
+		case 2: {
+			dir[0] = g_flLastDir[ent][0] + Math_GetRandomFloat(-1.0, 1.0);
+			dir[1] = g_flLastDir[ent][1] + Math_GetRandomFloat(-1.0, 1.0);			
+			dir[2] = 1.0 + (g_flLastDir[ent][2] + Math_GetRandomFloat(-1.0, 1.0)) * (GetTickedTime() - g_flStart[ent]) / 10.0;
+		}
+		case 3: {
+			
+			if( g_iFireworkOwner[ent] > 0 ) {
+				Entity_GetAbsOrigin(ent, src); 
+				rp_GetClientTarget(g_iFireworkOwner[ent], dst);
+				
+				for (int i = 0; i <= 2; i++)
+					dir[i] = dst[i] - src[i];
+				
+				
+				if( GetVectorDistance(src, dst, true) <= 64.0*64.0 )
+					FW_Touch(ent, 0);
+			}
+			else {
+				dir[0] = g_flLastDir[ent][0] + Math_GetRandomFloat(-0.1, 0.1);
+				dir[1] = g_flLastDir[ent][1] + Math_GetRandomFloat(-0.1, 0.1);
+				dir[2] = 1.0;
+			}
+		}
+		case 4: {
+			float length = FLT_MAX, tmp;
+			int target;
+			
+			Entity_GetAbsOrigin(ent, src);
+	
+			for (int i = 1; i <= MaxClients; i++) {
+				if( !IsValidClient(i) || !IsPlayerAlive(i) || g_iFireworkOwner[ent] == i)
+					continue;
+						
+				GetClientEyePosition(i, dst);
+				tmp = GetVectorDistance(src, dst, true);
+				
+				if( tmp < length && IsPointVisible(src, dst) ) {
+					length = tmp;
+					target = i;
+				}
+			}
+			
+			if( target > 0 ) {
+				if( length <= (64.0*64.0) )
+					FW_Touch(ent, target);
+				
+				GetClientEyePosition(target, dst);				
+				for (int i = 0; i <= 2; i++)
+					dir[i] = dst[i] - src[i];
+			}
+			else
+				dir[2] = 1.0;
+		}
+	}
+	
+	NormalizeVector(dir, dir);
+	g_flLastDir[ent] = dir;
+	
+	ScaleVector(dir, FIREWOKRS_SPEED);
+	GetVectorAngles(dir, ang);
+	
+	TeleportEntity(ent, NULL_VECTOR, ang, dir);
+	
+	return Plugin_Continue;
+}
+public Action FW_Touch(int ent, int touched) {
+	if( g_flStart[ent]+0.25 < GetTickedTime() ) {
+		SDKUnhook(ent, SDKHook_Touch, FW_Touch);		
+		FW_Explode(ent);
+	}
+}
+void FW_Explode(int ent) {
+	float pos[3];
+	Entity_GetAbsOrigin(ent, pos);
+	pos[2] -= 100.0;
+	char sound[128];
+	Format(sound, sizeof(sound), "weapons/hegrenade/explode%i.wav", Math_GetRandomInt(3, 5));
+	EmitSoundToAllAny(sound, SOUND_FROM_WORLD, _, _, _, _, _, _, pos);
+	
+	TE_SetupParticle("firework_crate_explosion_01", ent, -1);
+	TE_SendToAll(-1.0);
+	TE_SetupParticle("firework_crate_explosion_02", ent, -1);
+	TE_SendToAll(-1.0);
+	
+	SetEntityRenderMode(ent, RENDER_NONE);
+	SetEntityMoveType(ent, MOVETYPE_NONE);
+	
+	if( g_iFireworkOwner[ent] > 0 ) {
+		g_iFireworksCount[g_iFireworkOwner[ent]]--;
+		Menu_Main(g_iFireworkOwner[ent]);
+	
+		rp_IncrementSuccess(g_iFireworkOwner[ent], success_list_fireworks);
+		g_iFireworkOwner[ent] = 0;
+	}
+	AcceptEntityInput(ent, "Kill");
+}
+void FW_FIRE(int client) {
+	float timer = 0.0;
+	
+	for (int i = MaxClients; i <= 2048; i++) {
+		if( g_iFireworkOwner[i] == client && g_iTirsIndex[i] == 3 ) {
+			g_iTirsIndex[i] = 0;
+			CreateTimer(timer, FW_Launch, i);
+			timer += 0.1;
+		}
+	}
+}
+void FW_EXPL(int client) {
+	for (int i = MaxClients; i <= 2048; i++) {
+		if( g_iFireworkOwner[i] == client ) {
+			FW_Explode(i);
+		}
+	}
+}
+// ----------------------------------------------------------------------------
+bool IsPointVisible(const float start[3], const float end[3]) {
+	TR_TraceRayFilter(start, end, MASK_OPAQUE, RayType_EndPoint, TraceEntityFilterStuff);
+	return TR_GetFraction() >= 0.75;
+}
+public bool TraceEntityFilterStuff(int entity, int mask) {
+	return (entity < 0);
+}
+// ----------------------------------------------------------------------------
+void TE_SetupParticle(const char[] name, int entity, int attachmentID) {
+	static int table = INVALID_STRING_TABLE;
+	static int effectIndex = -1;
+	if (table == INVALID_STRING_TABLE)
+		table = FindStringTable("ParticleEffectNames");	
+	if( effectIndex < 0 )
+		effectIndex = GetEffectIndex("ParticleEffect");
+	
+	float dst[3];
+	GetEntPropVector(entity, Prop_Data, "m_vecOrigin", dst);
+	
+	TE_Start("EffectDispatch");
+	TE_WriteNum("m_nHitBox", FindStringIndex(table, name));
+	TE_WriteFloatArray("m_vOrigin.x", dst, 3);
+	TE_WriteFloatArray("m_vStart.x", dst, 3);
+	TE_WriteNum("m_nAttachmentIndex", attachmentID >= 0 ? attachmentID : 0 );
+	TE_WriteNum("entindex", entity);
+	TE_WriteNum("m_fFlags", attachmentID >= 0 ? (1<<0) : 0 );
+	TE_WriteNum("m_nDamageType", attachmentID >= 0 ? 1 : 0);
+	TE_WriteNum("m_iEffectName", effectIndex);
+}
+int GetEffectIndex(const char[] sEffectName) {
+	static int table = INVALID_STRING_TABLE;
+
+	if (table == INVALID_STRING_TABLE)
+		table = FindStringTable("EffectDispatch");
+	
+	int iIndex = FindStringIndex(table, sEffectName);
+	if(iIndex != INVALID_STRING_INDEX)
+		return iIndex;
+	
+	return 0;
+}
+void PrecacheParticleEffect(const char[] sEffectName) {
+	static int table = INVALID_STRING_TABLE;
+	if (table == INVALID_STRING_TABLE)
+		table = FindStringTable("ParticleEffectNames");
+	
+	bool save = LockStringTables(false);
+	AddToStringTable(table, sEffectName);
+	LockStringTables(save);
+}
+void PrecacheEffect(const char[] sEffectName) {
+	static int table = INVALID_STRING_TABLE;
+	if (table == INVALID_STRING_TABLE)
+		table = FindStringTable("EffectDispatch");
+	
+	bool save = LockStringTables(false);
+	AddToStringTable(table, sEffectName);
+	LockStringTables(save);
 }

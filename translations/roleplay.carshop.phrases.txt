@@ -1,0 +1,201 @@
+"Phrases"
+{
+	"Build_SpawnCar"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Faire apparaitre un véhicule pour 6 minutes:"
+		"en"	"Spawn a vehicle for 6 minutes:"
+	}
+	"Vehicle_MayOut"
+	{
+		"fr"	"Vous pouvez éjecter le conducteur avec la commande {red}/out{default}."
+		"en"	"You can eject the driver with the command {red}/out{default}."
+	}
+	"Vehicle_CantCustom"
+	{
+		"fr"		"Il n'est pas possible de personnaliser un véhicule de fonction."
+		"en"		"It's not possible to customize a company car."
+	}
+	"Vehicle_CantWithdraw"
+	{
+		"fr"		"Il n'est pas possible de ranger ce véhicule."
+		"en"		"It's not possible to store this vehicle."
+	}
+	"Vehicle_CantWithdrawBattery"
+	{
+		"fr"		"Il n'est pas possible de ranger ce véhicule, car il lui manque sa batterie."
+		"en"		"It's not possible to store this vehicle because it is missing a battery."
+	}
+	"Vehicle_CantWithdrawDamage"
+	{
+		"fr"		"Il n'est pas possible de ranger ce véhicule, car il est endommagé."
+		"en"		"It's not possible to store this vehicle because it is damaged."
+	}
+	"Vehicle_CantWithdrawPerson"
+	{
+		"fr"		"Il n'est pas possible de ranger ce véhicule, car il y' a quelqu'un a l'intérieur."
+		"en"		"It's not possible to store this vehicle, because there is someone inside."
+	}
+	"Vehicle_Disspawn"
+	{
+		"fr"		"Votre véhicule est restée trop longtemps sans surveillance et a été détruite."
+		"en"		"Your vehicle was left unattended for too long and was destroyed.."
+	}
+	"Vehicle_AskJoin"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} souhaite entrer dans votre véhicule.\n L'acceptez-vous ?"
+		"en"		"{1} wants to enter your vehicle.\n Do you allow him?"
+	}
+	"Vehicle_JoinRefuse"
+	{
+		"fr"		"Le conducteur a refusé votre demande."
+		"en"		"The driver refused your request."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Vehicle_TooManyCars"
+	{
+		"fr"		"Il y a trop de véhicules en circulation pour l'instant."
+		"en"		"There are too many vehicles on the road at the moment."
+	}
+	"Vehicle_YouMustBeInCar"
+	{
+		"fr"		"Vous devez utiliser cet objet dans votre véhicule."
+		"en"		"You must use this item in your vehicle."
+	}
+	"Vehicle_YouAreNotOwner"
+	{
+		"fr"		"Vous n'êtes pas le propriétaire de ce véhicule."
+		"en"		"You are not the owner of this vehicle."
+	}
+	"Vehicle_NotEnoughtRoom"
+	{
+		"fr"		"Il n'y a plus de place dans ce véhicule."
+		"en"		"There is no more room in this vehicle."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Vehicle_CarGiveKey"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} a {green}reçu{default} les clés de votre véhicule."
+		"en"		"{1} has {green}received{default} the keys to your vehicle."
+	}
+	"Vehicle_CarReceiveKey"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez {green}reçu{default} les clés du véhicule de {1}."
+		"en"		"You have {green}received{default} vehicle keys from {1}."
+	}
+	"Vehicle_CarRemoveKey"
+	{
+		"#format"	"{1:s}"
+		"fr"		"{1} a {red}perdu{default} les clés de votre véhicule."
+		"en"		"{1} has {red}lost{default} the keys to your vehicle."
+	}
+	"Vehicle_CarTakeKey"
+	{
+		"#format"	"{1:s}"
+		"fr"		"Vous avez {red}perdu{default} les clés du véhicule de {1}."
+		"en"		"You have {red}lost{default} the keys to the vehicle belonging to {1}."
+	}
+	"Vehicle_CarNone"
+	{
+		"fr"		"Il n'y a personne à qui donner ou retirer la clé."
+		"en"		"There is no one to give or take the key from."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Vehicle_Battery_Full"
+	{
+		"fr"		"Votre batterie est pleine vous pouvez maintenant aller au garage pour la revendre."
+		"en"		"Your battery is full you can now go to the garage to resell it."
+	}
+	"Vehicle_Battery_Tick"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Votre batterie est chargée à {red}{1}%%{default}."
+		"en"		"Your battery is charged to {red}{1}%%{default}."
+	}
+	"Vehicle_Battery_Give"
+	{
+		"fr"		"Vous avez placé une batterie sur votre véhicule."
+		"en"		"You have installed a battery in your vehicle."
+	}
+	"Vehicle_Battery_Sell"
+	{
+		"#format"	"{1:d}"
+		"fr"		"Vous avez vendu votre batterie, un virement de {green}{1}${default} sera effectué en fin de journée."
+		"en"		"You have sold your battery, a transfer of {green}{1}${default} will be made at the end of the day."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Garage"
+	{
+		"fr"		"Votre garage:"
+		"en"		"Your garage:"
+	}
+	"Garage_Disposit"
+	{
+		"fr"		"Ranger votre véhicule"
+		"en"		"Store your vehicle"
+	}
+	"Garage_Withdraw"
+	{
+		"fr"		"Sortir un véhicule"
+		"en"		"Take out a vehicle"
+	}
+	"Garage_Paint"
+	{
+		"fr"		"Peindre votre véhicule"
+		"en"		"Paint your vehicle"
+	}
+	"Garage_PaintAdd"
+	{
+		"#format"	"{1:t}"
+		"fr"		"Ajouter du {1}"
+		"en"		"Add some {1}"
+	}
+	"Garage_Particle"
+	{
+		"fr"		"Ajouter des particules"
+		"en"		"Add particles"
+	}
+	"Garage_Light"
+	{
+		"fr"		"Ajouter des néons"
+		"en"		"Add neon lights"
+	}
+	"Garage_Klaxons"
+	{
+		"fr"		"Changer de klaxon"
+		"en"		"Change the horn"
+	}
+	"Garage_Repair"
+	{
+		"fr"		"Réparer votre véhicule"
+		"en"		"Repair your vehicle"
+	}
+	"Garage_Battery"
+	{
+		"fr"		"Gestion de la batterie"
+		"en"		"Battery management"
+	}
+	"Garage_Place"
+	{
+		"fr"		"Placer une batterie"
+		"en"		"Place a battery"
+	}
+	"Garage_Sell"
+	{
+		"fr"		"Vendre votre batterie"
+		"en"		"Sell your battery"
+	}
+	"Garage_Jump"
+	{
+		"fr"		"Ajouter des suspensions hydrauliques"
+		"en"		"Add hydraulic suspension"
+	}
+	"Garage_Boost"
+	{
+		"fr"		"Ajouter de la nitro"
+		"en"		"Add nitro"
+	}
+}

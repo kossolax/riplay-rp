@@ -12,8 +12,8 @@
 
 public void OnClientPutInServer(int Client) {
 	check_dead(Client);
-	g_iEntityLimit = GetConVarInt(g_hMAX_ENT);
-	g_hAggro[Client] = new ArrayList(KillStack_max, 0);
+	g_iEntityLimit = GetConVarInt(g_hMAX_ENT);	
+	g_hAggro[Client].Clear();
 }
 public void OnClientPostAdminCheck(int Client) {
 	if(!IsFakeClient(Client)) {
@@ -75,7 +75,7 @@ public void OnClientDisconnect(int Client) {
 			RemoveAllFromForward(g_hRPNative[Client][i], plugin);
 	}
 	
-	delete g_hAggro[Client];
+	g_hAggro[Client].Clear();
 	
 	int old = EntRefToEntIndex(g_iUserData[Client][i_FPD]);
 	if( old > 0 ) {
@@ -87,13 +87,13 @@ public void OnClientDisconnect(int Client) {
 	if( g_hTIMER[Client] )
 		delete g_hTIMER[Client];
 	
+	ClientCommand(Client, "r_screenoverlay \"\"");
+	
 	if(!IsFakeClient(Client) && g_bUserData[Client][b_isConnected]) {
 		
 		SendConVarValue(Client, cvar, "1.0");
 		FORCE_STOP(Client);
 		FORCE_Release(Client);
-		
-		
 		
 		for(int i=1; i<=MAX_PLAYERS; i++) {
 			if( !IsValidClient(i) )
@@ -104,41 +104,22 @@ public void OnClientDisconnect(int Client) {
 		}
 		
 		QuestClean(Client);
-		rp_ClientMoney(Client, i_Money, g_iUserData[Client][i_AddToPay]);
+		rp_ClientMoney(Client, i_Bank, g_iUserData[Client][i_AddToPay]);
 		g_iUserData[Client][i_AddToPay] = 0;
+
+		if( g_bUserData[Client][b_Assurance] && !g_bUserData[Client][b_FreeAssurance] )
+			g_iClient_OLD[Client] = 0; // hack foireux
+		
+		if( getNextReboot()-GetTime() > 30 ) {
+			g_bUserData[Client][b_Assurance] = false;
+			g_bUserData[Client][b_FreeAssurance] = false;
+		}
 		StoreUserData(Client);
+		g_bUserData[Client][b_Assurance] = false;
+		g_bUserData[Client][b_FreeAssurance] = false;
 
 		g_bUserData[Client][b_isConnected]  = 0;
 		g_bUserData[Client][b_isConnected2]  = 0;
-		
-		for(int a=1; a<MAX_KEYSELL; a++) {
-			
-			if( g_iAppartBonus[a][appart_proprio] <= 0 )
-				continue;
-			
-			if( g_iAppartBonus[a][appart_proprio] != Client )
-				continue;
-				
-			int rand[MAX_PLAYERS+1], mnt=0;
-			for(int i=1; i<=MAX_PLAYERS; i++) {
-				if( !IsValidClient(i) )
-					continue;
-				if( Client == i )
-					continue;
-				
-				if( g_iDoorOwner_v2[i][a] ) {
-					rand[mnt] = i;
-					mnt++;
-				}
-			}
-			
-			if( mnt > 0 ) {
-				g_iAppartBonus[a][appart_proprio] = rand[GetRandomInt(0, mnt-1)];
-			}
-			else {
-				g_iAppartBonus[a][appart_proprio] = 0;
-			}
-		}
 		
 		char classname[64];
 		for(int i=MaxClients-1; i < MAX_ENTITIES; i++) {
@@ -155,6 +136,7 @@ public void OnClientDisconnect(int Client) {
 					StrContains(classname, "rp_grave") == 0 ||
 					StrContains(classname, "rp_microwave") == 0 ||
 					StrContains(classname, "rp_table") == 0 ||
+					StrContains(classname, "rp_sign") == 0 ||
 					StrContains(classname, "rp_bank") == 0
 					) {
 					rp_AcceptEntityInput(i, "Kill");
@@ -162,6 +144,9 @@ public void OnClientDisconnect(int Client) {
 			}
 		}
 	}
+	
+	g_bUserData[Client][b_isConnected]  = 0;
+	g_bUserData[Client][b_isConnected2]  = 0;
 	
 	return;
 }

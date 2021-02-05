@@ -37,11 +37,11 @@
     <br /><br /><br />
     <div class="row">
       <a class="btn btn-warning" ng-show="$parent.isAdmin" href="#/tribunal/case/{{subParams}}">Page du Tribunal</a>
-      <a class="btn btn-forum" ng-show="$parent.isAdmin" href="/forum/memberlist.php?mode=viewprofile&u={{data.forum_id}}">Profil Forum</a>
+      <a class="btn btn-forum" ng-show="$parent.isAdmin" href="https://forum.riplay.fr/index.php?/profile/{{data.forum_id}}--bot/">Profil Forum</a>
     </div>
    <div class="row">
       <button class="btn btn-success" ng-show="$parent.isAdmin" ng-click="steamid = subParams; toggleModal();">Envoyer argent</button>
-      <a class="btn btn-mp" ng-show="$parent.isAdmin" href="/forum/ucp.php?i=pm&mode=compose&u={{data.forum_id}}">Envoyer un MP</a>
+      <a class="btn btn-mp" ng-show="$parent.isAdmin" href="https://forum.riplay.fr/index.php?/messenger/compose/&to={{data.forum_id}}">Envoyer un MP</a>
    </div>
    <div class="row">
      <button class="btn btn-danger" ng-show="data.job_id>0 && subParams==steamid" rest="delete@/user/job">Quitter mon job</button>

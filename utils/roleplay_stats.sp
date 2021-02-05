@@ -61,6 +61,9 @@ public Plugin myinfo = {
 };
 
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("roleplay.phrases");
+	
 	CreateTimer(120.0, saveStats, _, TIMER_REPEAT);
 	
 	for (int i = 1; i <= MaxClients; i++) {
@@ -105,7 +108,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 
 public Action fwdDataLoaded(int client){
 	rp_SetClientStat(client, i_Money_OnConnection, ( rp_GetClientInt(client, i_Money) + rp_GetClientInt(client, i_Bank) ));
-	rp_SetClientStat(client, i_PVP_OnConnection, rp_GetClientInt(client, i_PVP));
+	rp_SetClientStat(client, i_PVP_OnConnection, rp_GetClientInt(client, i_ELO));
 	rp_SetClientStat(client, i_Vitality_OnConnection, RoundToNearest(rp_GetClientFloat(client, fl_Vitality)) );
 	char steamID[32], query[256];
 	GetClientAuthId(client, AUTH_TYPE, steamID, sizeof(steamID), false);
@@ -245,10 +248,10 @@ public void DisplayStats(int client, bool full){
 		AddMenuItem(menu, "", tmp, ITEMDRAW_DISABLED);
 		Format(tmp, sizeof(tmp), "Argent gagné au loto: %d", rp_GetClientStat(client, i_LotoWon));
 		AddMenuItem(menu, "", tmp, ITEMDRAW_DISABLED);
-		if(rp_GetClientInt(client, i_PVP)-rp_GetClientStat(client, i_PVP_OnConnection) > 0)
-			Format(tmp, sizeof(tmp), "Evolution des points PVP: +%d", rp_GetClientInt(client, i_PVP)-rp_GetClientStat(client, i_PVP_OnConnection));
+		if(rp_GetClientInt(client, i_ELO)-rp_GetClientStat(client, i_PVP_OnConnection) > 0)
+			Format(tmp, sizeof(tmp), "Evolution des points PVP: +%d", rp_GetClientInt(client, i_ELO)-rp_GetClientStat(client, i_PVP_OnConnection));
 		else
-			Format(tmp, sizeof(tmp), "Evolution des points PVP: %d", rp_GetClientInt(client, i_PVP)-rp_GetClientStat(client, i_PVP_OnConnection));
+			Format(tmp, sizeof(tmp), "Evolution des points PVP: %d", rp_GetClientInt(client, i_ELO)-rp_GetClientStat(client, i_PVP_OnConnection));
 		AddMenuItem(menu, "", tmp, ITEMDRAW_DISABLED);
 		Format(tmp, sizeof(tmp), "Nombre de build: %d", rp_GetClientStat(client, i_TotalBuild));
 		AddMenuItem(menu, "", tmp, ITEMDRAW_DISABLED);
@@ -287,11 +290,14 @@ public void DisplayRTStats(int client){
 		Format(tmp, sizeof(tmp), "Au même grade depuis: %.2f heures", float(rp_GetClientPlaytimeJob(client, rp_GetClientInt(client, i_Job), false))/3600.0);
 		AddMenuItem(menu, "", tmp, ITEMDRAW_DISABLED);
 	}
-
-	if( !Weapon_ShouldBeEquip(tmp) ) {
-		AddMenuItem(menu, "", "------ Votre Arme ------", ITEMDRAW_DISABLED);
-		Format(tmp, sizeof(tmp), "Nombre de balles: %d", Weapon_GetPrimaryClip(wep_id));
-		AddMenuItem(menu, "", tmp, ITEMDRAW_DISABLED);
+	
+	if( wep_id > 0 ) {
+		GetEdictClassname(wep_id, tmp, sizeof(tmp));
+		if( !StrEqual(tmp, "weapon_knife") ) {
+			AddMenuItem(menu, "", "------ Votre Arme ------", ITEMDRAW_DISABLED);
+			Format(tmp, sizeof(tmp), "Nombre de balles: %d", Weapon_GetPrimaryClip(wep_id));
+			AddMenuItem(menu, "", tmp, ITEMDRAW_DISABLED);
+		}
 	}
 
 	DisplayMenu(menu, client, 60);

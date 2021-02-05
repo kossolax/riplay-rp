@@ -1,0 +1,7 @@
+"spritecard"
+{
+	"$basetexture" "ex\Flare"
+	$translucent 1
+	$additive 1
+	$depthblend 0
+}

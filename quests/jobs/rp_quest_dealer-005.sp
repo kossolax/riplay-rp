@@ -63,7 +63,9 @@ public void OnClientPostAdminCheck(int client) {
 }
 public Action fwdPiedDeBiche(int client, int type) {
 	if( type == 2 && g_iDoing[client] > 0 && g_iDoneDistrib[client][rp_GetPlayerZone(client)] == 0) {
-		g_iDoneDistrib[client][rp_GetPlayerZone(client)] = 1;
+		int target = getNearestDistrib(client);
+		
+		g_iDoneDistrib[client][rp_GetPlayerZone(target)] = 1;
 		rp_QuestStepComplete(client, g_iDoing[client]);
 	}
 }
@@ -72,10 +74,10 @@ public void Q1_Start(int objectiveID, int client) {
 	
 	menu.SetTitle("Quète: %s", QUEST_NAME);
 	menu.AddItem("", "Interlocuteur anonyme :", ITEMDRAW_DISABLED);
-	menu.AddItem("", "Mon frère, Nous avons une mission de toi.", ITEMDRAW_DISABLED);
+	menu.AddItem("", "Mon frère, Nous avons une mission pour toi.", ITEMDRAW_DISABLED);
 	menu.AddItem("", "Nous voulons faire plier les banquiers.", ITEMDRAW_DISABLED);
 	menu.AddItem("", "Pour ça, vandalise les distributeurs", ITEMDRAW_DISABLED);
-	menu.AddItem("", "présent dans la ville.", ITEMDRAW_DISABLED);
+	menu.AddItem("", "présents dans la ville.", ITEMDRAW_DISABLED);
 	
 	menu.ExitButton = false;
 	menu.Display(client, 60);
@@ -89,6 +91,9 @@ public void Q1_Start(int objectiveID, int client) {
 	rp_HookEvent(client, RP_PostPiedBiche, fwdPiedDeBiche);
 }
 public void Q1_Frame(int objectiveID, int client) {
+	
+	int target = getNearestDistrib(client);
+	rp_Effect_BeamBox(client, target);
 	
 	g_iDuration[client]--;
 	if( g_iDuration[client] <= 0 ) {
@@ -126,4 +131,31 @@ public int MenuNothing(Handle menu, MenuAction action, int client, int param2) {
 		if( menu != INVALID_HANDLE )
 			CloseHandle(menu);
 	}
+}
+int getNearestDistrib(int client) {
+	char classname[64];
+	int ret = 0;
+	float vecSrc[3], vecDst[3], nearest = 9999999.0;
+	GetClientAbsOrigin(client, vecSrc);
+	
+	for (int i = MaxClients; i < MAX_ENTITIES; i++) {
+		if( !IsValidEdict(i) || !IsValidEntity(i) )
+			continue;
+		
+		GetEdictClassname(i, classname, sizeof(classname));
+		if( !StrEqual(classname, "rp_bank") )
+			continue;
+		if( g_iDoneDistrib[client][rp_GetPlayerZone(i)] == 1 )
+			continue;
+		
+		Entity_GetAbsOrigin(i, vecDst);
+		float dist = GetVectorDistance(vecSrc, vecDst);
+		
+		if( dist < nearest ) {
+			dist = nearest;
+			ret = i;
+		}
+	}
+	
+	return ret;
 }

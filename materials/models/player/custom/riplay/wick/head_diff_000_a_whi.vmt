@@ -1,0 +1,11 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/player/custom/riplay/wick/head_diff_000_a_whi"
+	"$bumpmap" "models/player/custom/riplay/wick/head_normal_000"
+	"$phong" "1"
+	$phongboost .04
+	"$phongexponent" "15"
+	"$phongalbedotint" "1"
+	"$phongtint"                    "[.6 .8 1]"
+	"$phongfresnelranges"           "[1 2.5 7]"
+}

@@ -16,7 +16,7 @@ Action OpenBossGestionCle(int client, bool typess = false) {
 	
 	int Ent = GetClientAimTarget(client, false);
 	if( !IsValidDoor(Ent) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser une porte.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_YouMustAim", client, "prop_door_rotating");
 		return Plugin_Handled;
 	}
 	
@@ -24,7 +24,7 @@ Action OpenBossGestionCle(int client, bool typess = false) {
 	
 	if( !g_iDoorJob[g_iUserData[client][i_Job]][door_bdd] ) {
 		if( !IsAdmin(client) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas donner les clés de cette porte.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Door_Cannot_NoKey", client);
 			return Plugin_Handled;
 		}
 	}
@@ -43,14 +43,13 @@ Action OpenBossGestionCle(int client, bool typess = false) {
 		menu = CreateMenu(GestionKeyBoss);
 	}
 	
-	SetMenuTitle(menu, "Gestion des clés\n ");
+	SetMenuTitle(menu, "%T\n ", "Menu_Villa_Key", client);
 	
-	char tmp[255];
-	char tmp2[255];
+	char tmp[256], tmp2[256];
 	
 	if( typess ) {
-		Format(tmp, 254, "-1_%i", door_bdd);	AddMenuItem(menu, tmp, "Tout retirer");
-		Format(tmp, 254, "-2_%i", door_bdd);	AddMenuItem(menu, tmp, "Tout ajouter");
+		Format(tmp, sizeof(tmp), "-1_%i", door_bdd);	Format(tmp2, sizeof(tmp2), "%T", "Door_RemoveAll", client);	AddMenuItem(menu, tmp, tmp2);
+		Format(tmp, sizeof(tmp), "-2_%i", door_bdd);	Format(tmp2, sizeof(tmp2), "%T", "Door_AddAll", client);	AddMenuItem(menu, tmp, tmp2);
 	}
 	
 	
@@ -71,15 +70,8 @@ Action OpenBossGestionCle(int client, bool typess = false) {
 			}
 		}
 		
-		Format(tmp, 254, "%i_%i", i, door_bdd);
-		
-		if( g_iDoorJob[i][door_bdd] ) {
-			Format(tmp2, 254, "Retirer - %s", g_szJobList[i][0]);
-		}
-		else {
-			Format(tmp2, 254, "Ajouter - %s", g_szJobList[i][0]);
-		}
-		
+		Format(tmp, sizeof(tmp), "%i_%i", i, door_bdd);
+		Format(tmp2, sizeof(tmp2), "%T", g_iDoorJob[i][door_bdd] ? "Door_Remove" : "Door_Add", client, g_szJobList[i][job_type_name]);
 		AddMenuItem(menu, tmp, tmp2);
 	}
 	
@@ -211,6 +203,17 @@ stock bool IsPlayerHaveKey( int client, int door, int lock=0) {
 	if( (GetJobPrimaryID(client) == 1 || GetJobPrimaryID(client) == 101) && (GetZoneBit(GetPlayerZone(door)) & BITZONE_PERQUIZ) )
 		return true;
 	
+	
+	if( lock == 2 && (GetJobPrimaryID(client) == 51 || GetJobPrimaryID(client) == 61) ) {
+		int appart = getZoneAppart(door);
+		if( GetJobPrimaryID(client) == 51 && appart > 100 && !IsValidClient(g_iAppartBonus[appart][appart_proprio]) ) {
+			return true;
+		}
+		if( GetJobPrimaryID(client) == 61 && appart > 0 && appart < 50 && !IsValidClient(g_iAppartBonus[appart][appart_proprio]) ) {
+			return true;
+		}
+	}
+	
 	Action c;
 	Call_StartForward( view_as<Handle>(g_hRPNative[client][RP_OnPlayerCheckKey]));
 	Call_PushCell(client);
@@ -258,6 +261,7 @@ stock bool IsPlayerHaveKey( int client, int door, int lock=0) {
 }
 void ToggleDoorLock(int client, int door, int lock_type) {
 	int door_bdd = (door - MaxClients);
+
 	
 	if( !IsValidDoor(door) )
 		return;
@@ -268,27 +272,23 @@ void ToggleDoorLock(int client, int door, int lock_type) {
 	if( IsPlayerHaveKey( client, door, lock_type) ) {
 		// Lock
 		if( lock_type == 1) {
-			if( GetEntProp(door, Prop_Data, "m_bLocked") ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Cette porte était déjà fermée à clé.");
-			}
-			else {
-				CPrintToChat(client, "" ...MOD_TAG... " Cette porte a été fermée à clé.");
+			if( !GetEntProp(door, Prop_Data, "m_bLocked") ) {
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Door_Lock", client);
+				EmitSoundToAllAny("doors/default_locked.wav", door, _, _, _, 0.25);
 			}
 			LockSomeDoor(door_bdd, 1);
 		}
 		// UnLock
 		if( lock_type == 2) {
-			if( !GetEntProp(door, Prop_Data, "m_bLocked") ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Cette porte n'était pas fermée à clé.");
-			}
-			else {
-				CPrintToChat(client, "" ...MOD_TAG... " Cette porte a été déverouillée.");
+			if( GetEntProp(door, Prop_Data, "m_bLocked") ) {
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Door_Unlock", client);
+				EmitSoundToAllAny("doors/latchunlocked1.wav", door, _, _, _, 0.25);
 			}
 			LockSomeDoor(door_bdd, 0);
 		}
 	}
 	else if( IsValidDoor(door) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas la clé de cette porte.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Door_Cannot_NoKey", client);
 	}
 }
 int GetLockType(int door) {
@@ -301,25 +301,24 @@ void ToggleDoor(int client, int door) {
 	int door_bdd = (door - MaxClients);
 	
 	if( IsPlayerHaveKey( client, door, GetLockType(door)) ) {
-		
-		char classname[64];
-		GetEdictClassname(door, classname, 63);
-		
 		if( GetEntProp(door, Prop_Data, "m_bLocked") ) {
 			LockSomeDoor(door_bdd, 1);
-			CPrintToChat(client, "" ...MOD_TAG... " Cette porte est fermée à clé, tapez /unlock pour l'ouvrir.");
-			
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Door_IsLocked", client);
 			return;
-		}
-		else if( StrEqual(classname, "func_door", false) || StrEqual(classname, "func_door_rotating", false)  || StrEqual(classname, "prop_door_rotating", false) ) {
-			ActivateDoor(client, door_bdd);
 		}
 	}
 	else {
 		if( GetEntProp(door, Prop_Data, "m_bLocked") ) {
 			LockSomeDoor(door_bdd, 1);
-			CPrintToChat(client, "" ...MOD_TAG... " Cette porte est fermée à clé et vous n'avez pas la clé.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Door_Cannot_NoKey", client);
+			return;
 		}
+	}
+	
+	char classname[64];
+	GetEdictClassname(door, classname, sizeof(classname));
+	if( StrEqual(classname, "func_door", false) || StrEqual(classname, "func_door_rotating", false)  || StrEqual(classname, "prop_door_rotating", false) ) {
+		ActivateDoor(client, door_bdd);
 	}
 }
 void LockSomeDoor(int door_bdd, int lock) {
@@ -348,6 +347,9 @@ void ActivateDoor(int client, int door_bdd) {
 	int door = (door_bdd + MaxClients);
 	
 	rp_AcceptEntityInput(door, "Toggle", client);
+	if( rp_GetBuildingData(door, BD_Trapped) == 1 ) {
+		rp_Effect_PropExplode(door, client);
+	}
 	
 	door_bdd = g_iDoorDouble[door_bdd];
 	
@@ -355,6 +357,10 @@ void ActivateDoor(int client, int door_bdd) {
 		
 		door = (door_bdd + MaxClients);
 		rp_AcceptEntityInput(door, "Toggle", client);
+		if( rp_GetBuildingData(door, BD_Trapped) == 1 ) {
+			rp_Effect_PropExplode(door, client);
+		}
+
 	}
 }
 

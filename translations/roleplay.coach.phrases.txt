@@ -1,0 +1,144 @@
+"Phrases"
+{
+	"Info_TrainTarget"
+	{
+		"#format"	"{1:s},{2:d},{3:d},{4:d}"
+		"fr"	"{1} a {red}{2}%%{default} d'entraînement au couteau, {red}{3}%%{default} d'ésquive et {red}{4}%%{default} de précision de tir."
+		"en"	"{1} has {red}{2}%%{default} in knife training, {red}{3}%%{default} in dodging and {red}{4}%%{default} in shooting accuracy."
+	}
+	"Info_TrainSelf"
+	{
+		"#format"	"{1:d},{2:d},{3:d}"
+		"fr"	"Vous avez {red}{1}%%{default} d'entraînement au couteau, {red}{2}%%{default} d'ésquive et {red}{3}%%{default} de précision de tir."
+		"en"	"You have {red}{1}%%{default} in knife training, {red}{2}%%{default} in dodging and {red}{3}%%{default} in shooting accuracy."
+	}
+	"Train_Knife"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Votre entraînement au couteau est maintenant de {red}{1}%%{default}."
+		"en"	"Your knife training is now {red}{1}%%{default}."
+	}
+	"Train_Weapon"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Votre entraînement aux armes est maintenant de {red}{1}%%{default}."
+		"en"	"Your weapons training is now {red}{1}%%{default}."
+	}
+	"Train_Esquive"
+	{
+		"#format"	"{1:d}"
+		"fr"	"Votre entraînement à l'auto-défense est maintenant de {red}{1}%%{default}."
+		"en"	"Your self-defense training is now {red}{1}%%{default}."
+	}
+	"Train_Max"
+	{
+		"fr"	"Votre entraînement est déjà maximal."
+		"en"	"Your training is already at its maximum."
+	}
+	"Coach_KnifeGet"
+	{
+		"fr"	"Vous avez ramassé votre couteau de lancé."
+		"en"	"You picked up your throwing knife."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Coach_KnifeInHands"
+	{
+		"fr"	"Vous devez prendre votre couteau en main."
+		"en"	"You must take your knife in hand."
+	}
+	"edit_knife_done"
+	{
+		"fr"		"La modification a été apportée à votre couteau."
+		"en"		"The modification has been made to your knife."
+	}
+	"edit_knife_already"
+	{
+		"fr"		"Vous avez déjà un couteau de ce type."
+		"en"		"You already have this type of knife."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Coach_BasketVitality"
+	{
+		"fr"	"Vous ressentez votre vitalité s'augmenter grâce à votre belle paire de baskets."
+		"en"	"You feel your vitality increase thanks to your hot pair of sneakers."
+	}
+	"Coach_MaskDisapear"
+	{
+		"fr"	"Vous avez perdu votre masque."
+		"en"	"You lost your mask."
+	}
+	"Drink_TooMuchTarget"
+	{
+		"fr"	"Cette personne a visiblement trop bu, il n'est pas raisonable de lui servir un autre verre."
+		"en"	"This person has obviously drunk too much, it's not reasonable to serve him another drink.."
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Ruban"
+	{
+		"fr"	"Sur qui voulez-vous placer ce ruban?"
+		"en"	"Whom do you want to place this ribbon on?"
+	}
+	"Ruban_Target"
+	{
+		"fr"	"Sur la personne en face de moi"
+		"en"	"On the person in front of me"
+	}
+	"Ruban_Myself"
+	{
+		"fr"	"Sur moi-même"
+		"en"	"On myself"
+	}
+	"Ruban_Color"
+	{
+		"fr"	"De quelle couleur doit être le ruban?"
+		"en"	"What color should the ribbon be?"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Cabine"
+	{
+		"fr"	"Cabine d'essayage:"
+		"en"	"Fitting room:"
+	}
+	"Cabine_Try"
+	{
+		"fr"	"Essayer une nouvelle tenue"
+		"en"	"Try on a new outfit"
+	}
+	"Cabine_Buy"
+	{
+		"fr"	"Acheter une nouvelle tenue"
+		"en"	"Buy a new outfit"
+	}
+	"Cabine_Choose"
+	{
+		"fr"	"Choisir une nouvelle tenue:"
+		"en"	"Choose a new outfit:"
+	}
+	"Cabine_Line_Free"
+	{
+		"#format"	"{1:s}"
+		"fr"	"{1} - Gratuit"
+		"en"	"{1} - Free"
+	}
+	"Cabine_Line_Pass"
+	{
+		"#format"	"{1:s},{2:d},{3:s}"
+		"fr"	"{1} - {2}x {3}"
+		"en"	"{1} - {2}x {3}"
+	}
+	"Cabine_Error_Left"
+	{
+		"fr"	"Vous êtes sorti des cabines d'essayage."
+		"en"	"You left the changing rooms."
+	}
+	"Cabine_Error_CT"
+	{
+		"fr"	"Vous ne pouvez pas essayer cela en CT."
+		"en"	"You can't try this in CT."
+	}
+	"Cabine_Error_Prisonner"
+	{
+		"fr"	"Vous ne pouvez pas essayer cela en tant qu'évadé."
+		"en"	"You can't try this as an escapee."
+	}
+}

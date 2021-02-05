@@ -15,6 +15,8 @@
 #include <colors_csgo>	// https://forums.alliedmods.net/showthread.php?p=2205447#post2205447
 #include <smlib>		// https://github.com/bcserv/smlib
 #include <emitsoundany> // https://forums.alliedmods.net/showthread.php?t=237045
+#include <csgo_items>
+#include <givenameditem>
 
 #pragma newdecls required
 #include <roleplay.inc>	// https://www.ts-x.eu
@@ -27,6 +29,30 @@ public Plugin myinfo = {
 
 int g_cBeam, g_cGlow, g_nbMdItems;
 bool g_eMwAct[2048];
+
+char g_szKnife[][] = {
+	"weapon_knife",
+	"weapon_knife_css",
+	"weapon_bayonet",
+	"weapon_knife_flip",
+	"weapon_knife_gut",
+	"weapon_knife_karambit",
+	"weapon_knife_m9_bayonet",
+	"weapon_knife_tactical",
+	"weapon_knife_butterfly",
+	"weapon_knife_falchion",
+	"weapon_knife_push",
+	"weapon_knife_survival_bowie",
+	"weapon_knife_ursus",
+	"weapon_knife_gypsy_jackknife",
+	"weapon_knife_stiletto",
+	"weapon_knife_widowmaker",
+	"weapon_knife_canis",
+	"weapon_knife_cord",
+	"weapon_knife_skeleton",
+	"weapon_knife_outdoor"
+};
+
 // ----------------------------------------------------------------------------
 public Action Cmd_Reload(int args) {
 	char name[64];
@@ -35,13 +61,105 @@ public Action Cmd_Reload(int args) {
 	return Plugin_Continue;
 }
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("common.phrases");
+	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.items.phrases");
+	LoadTranslations("roleplay.mcdo.phrases");
+	
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	RegServerCmd("rp_item_hamburger",	Cmd_ItemHamburger,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_banane",		Cmd_ItemBanane,			"RP-ITEM",	FCVAR_UNREGISTERED);
+	RegServerCmd("rp_item_knife",		Cmd_ItemKnife,			"RP-ITEM",	FCVAR_UNREGISTERED);
+	RegServerCmd("rp_item_microwaves",	Cmd_ItemMicroWave,		"RP-ITEM",	FCVAR_UNREGISTERED);
+	
 	g_nbMdItems = -1;
 	for (int j = 1; j <= MaxClients; j++)
 		if( IsValidClient(j) )
 			OnClientPostAdminCheck(j);
+	
+	
+	char classname[64];
+	for (int i = MaxClients; i <= 2048; i++) {
+		if( !IsValidEdict(i) )
+			continue;
+		if( !IsValidEntity(i) )
+			continue;
+		
+		GetEdictClassname(i, classname, sizeof(classname));
+		if( StrEqual(classname, "rp_microwave") ) {
+			
+			rp_SetBuildingData(i, BD_started, GetTime());
+			rp_SetBuildingData(i, BD_owner, GetEntPropEnt(i, Prop_Send, "m_hOwnerEntity") );
+			
+			CreateTimer(Math_GetRandomFloat(0.25, 5.0), BuildingMicrowave_post, i);
+		}
+	}
+}
+public Action Cmd_ItemMicroWave(int args) {
+	int client = GetCmdArgInt(1);
+	
+	if( BuildingMicrowave(client) == 0 ) {
+		int item_id = GetCmdArgInt(args);
+		
+		ITEM_CANCEL(client, item_id);
+	}
+}
+public Action Cmd_ItemKnife(int args) {
+	int client = GetCmdArgInt(1);
+	rp_ClientGiveItem(client, ITEM_KNIFE);
+	CreateTimer(0.25, task_KNIFE, client);
+}
+
+public Action task_KNIFE(Handle timer, any client) {
+	Handle menu = CreateMenu(MenuKnife);
+	SetMenuTitle(menu, "%T\n ", "Knife_Menu", client);
+	
+	char tmp[128];
+	
+	for (int i = 0; i < sizeof(g_szKnife); i++) {
+		Format(tmp, sizeof(tmp), "%T", g_szKnife[i], client);
+		AddMenuItem(menu, g_szKnife[i], tmp);
+	}
+	
+	SetMenuExitButton(menu, true);
+	DisplayMenu(menu, client, MENU_TIME_DURATION);
+}
+
+int g_iSkinID[65];
+
+public int MenuKnife(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_iParam2) {
+	
+	if (p_oAction == MenuAction_Select && client != 0) {
+		char option[64];
+		GetMenuItem(p_hItemMenu, p_iParam2, option, sizeof(option));
+		
+		if (rp_GetClientItem(client, ITEM_KNIFE) <= 0) {
+			char tmp[128];
+			rp_GetItemData(ITEM_KNIFE, item_type_name, tmp, sizeof(tmp));
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemMissing", client, tmp);
+			return;
+		}
+		
+		if( Client_HasWeapon(client, "weapon_knife") ) {
+			Client_RemoveWeapon(client, "weapon_knife");
+		}
+		
+		g_iSkinID[client] = GiveNamedItem_GetItemDefinitionByClassname(option);
+		int wpn = GivePlayerItem(client, option);
+		
+		FakeClientCommand(client, "use weapon_knife; use weapon_bayonet"); 
+		rp_ClientGiveItem(client, ITEM_KNIFE, -1);
+	}
+	else if (p_oAction == MenuAction_End) {
+		CloseHandle(p_hItemMenu);
+	}
+}
+public void OnGiveNamedItemEx(int client, const char[] Classname) {
+	if(g_iSkinID[client] > 0 && GiveNamedItemEx.IsClassnameKnife(Classname)) {
+		GiveNamedItemEx.ItemDefinition = g_iSkinID[client];
+		g_iSkinID[client] = 0;
+	}
 }
 
 public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbose) {
@@ -54,7 +172,7 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 		int sum = RoundToCeil(float(salary) * multi) - salary;
 		
 		if( verbose )
-			CPrintToChat(client, "" ...MOD_TAG... " Votre vitalité de niveau %d vous fait remporté %d$ supplémentaire.", vit_level, sum);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Pay_Bonus_Vitality", client, vit_level, sum);
 		
 		topay += sum;
 		return Plugin_Changed;
@@ -68,20 +186,6 @@ public void OnMapStart() {
 	g_cGlow = PrecacheModel("materials/sprites/glow01.vmt", true);
 }
 public void OnClientPostAdminCheck(int client){
-	if(g_nbMdItems == -1){
-		int jobID;
-		for(int i = 0; i < MAX_ITEMS; i++){
-			if( rp_GetItemInt(i, item_type_prix) <= 0 )
-				continue;
-			if( rp_GetItemInt(i, item_type_auto) == 1 )
-				continue;
-			jobID = rp_GetItemInt(i, item_type_job_id);
-			if(jobID != 21)
-				continue;
-
-			g_nbMdItems++;
-		}
-	}
 	rp_HookEvent(client, RP_OnPlayerBuild,	fwdOnPlayerBuild);
 }
 // ------------------------------------------------------------------------------
@@ -91,6 +195,8 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	
 	int ent = BuildingMicrowave(client);
 	rp_SetBuildingData(ent, BD_FromBuild, 1);
+	SetEntProp(ent, Prop_Data, "m_iHealth", GetEntProp(ent, Prop_Data, "m_iHealth")/5);
+	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
 	
 	if( ent > 0 )
 		rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
@@ -115,15 +221,13 @@ int BuildingMicrowave(int client) {
 		GetEdictClassname(i, tmp, 63);
 		
 		if( StrEqual(classname, tmp) && rp_GetBuildingData(i, BD_owner) == client ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà un micro-ondes de branché.");
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
 			return 0;
 		}
 	}
 	
 	float vecOrigin[3];
 	GetClientAbsOrigin(client, vecOrigin);
-
-	CPrintToChat(client, "" ...MOD_TAG... " Construction en cours...");
 	
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client, _, _, _, 0.66);
 	
@@ -137,7 +241,7 @@ int BuildingMicrowave(int client) {
 	SetEntityModel(ent,"models/props/cs_office/microwave.mdl");
 	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
 	SetEntProp( ent, Prop_Data, "m_takedamage", 2);
-	SetEntProp( ent, Prop_Data, "m_iHealth", 2000);
+	SetEntProp( ent, Prop_Data, "m_iHealth", 25000);
 	
 	
 	TeleportEntity(ent, vecOrigin, NULL_VECTOR, NULL_VECTOR);
@@ -152,6 +256,8 @@ int BuildingMicrowave(int client) {
 	rp_SetBuildingData(ent, BD_started, GetTime());
 	rp_SetBuildingData(ent, BD_owner, client );
 	rp_SetBuildingData(ent, BD_FromBuild, 0);
+	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
+	
 	g_eMwAct[ent] = true;
 	CreateTimer(3.0, BuildingMicrowave_post, ent);
 	return ent;
@@ -164,12 +270,17 @@ public Action BuildingMicrowave_post(Handle timer, any entity) {
 	int time;
 	int job = rp_GetClientInt(client, i_Job);
 	switch(job){
-		case 21: time = 20;
-		case 22: time = 25;
-		case 23: time = 30;
-		case 24: time = 35;
-		case 25: time = 40;
-		default: time = 40;
+		case 21: time = 60;
+		case 22: time = 60;
+		case 23: time = 65;
+		case 24: time = 65;
+		case 25: time = 70;
+		case 26: time = 70;
+		default: time = 90;
+	}
+
+	if( rp_GetBuildingData(entity, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(entity), zone_type_type) != 21 ) {
+		time *= 2;
 	}
 	
 	rp_SetBuildingData(entity, BD_max, time);
@@ -182,28 +293,40 @@ public Action BuildingMicrowave_post(Handle timer, any entity) {
 	}
 	
 	SetEntProp( entity, Prop_Data, "m_takedamage", 2);
-	SetEntProp( entity, Prop_Data, "m_iHealth", 2000);
 	HookSingleEntityOutput(entity, "OnBreak", BuildingMicrowave_break);
+	SDKHook(entity, SDKHook_OnTakeDamage, DamageMachine);
 	
 	CreateTimer(1.0, Frame_Microwave, entity);
 	rp_HookEvent(client, RP_OnPlayerUse, fwdOnPlayerUse);
 	
 	return Plugin_Handled;
 }
+public Action DamageMachine(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
+	if( !Entity_CanBeBreak(victim, attacker) ) {
+		damage = 0.0;
+		return Plugin_Changed;
+	}
+	return Plugin_Continue;
+}
 public void BuildingMicrowave_break(const char[] output, int caller, int activator, float delay) {
 	
 	int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
-	CPrintToChat(owner,"" ...MOD_TAG... " Votre micro-ondes vient d'être détruit");
 	
 	if( IsValidClient(activator) && IsValidClient(owner) ) {
 		rp_ClientAggroIncrement(activator, owner, 1000);
+	}
+	
+	if( IsValidClient(owner) ) {
+		char tmp[128];
+		GetEdictClassname(caller, tmp, sizeof(tmp));
+		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Build_Destroyed", owner, tmp);
+		rp_UnhookEvent(owner, RP_OnPlayerUse, fwdOnPlayerUse);
 	}
 	
 	float vecOrigin[3];
 	Entity_GetAbsOrigin(caller,vecOrigin);
 	TE_SetupSparks(vecOrigin, view_as<float>({0.0,0.0,1.0}),120,40);
 	TE_SendToAll();
-	rp_UnhookEvent(owner, RP_OnPlayerUse, fwdOnPlayerUse);
 	//rp_Effect_Explode(vecOrigin, 200.0, 600.0, activator, "micro_onde");
 }
 public Action fwdOnPlayerUse(int client) {
@@ -211,8 +334,6 @@ public Action fwdOnPlayerUse(int client) {
 	static float vecOrigin[3],vecOrigin2[3];
 	GetClientAbsOrigin(client, vecOrigin);
 
-	if( rp_GetClientJobID(client) != 21 )
-		return Plugin_Continue;
 
 	Format(tmp2, sizeof(tmp2), "rp_microwave");
 
@@ -222,7 +343,7 @@ public Action fwdOnPlayerUse(int client) {
 		if( !IsValidEntity(i) )
 			continue;
 		
-		GetEdictClassname(i, tmp, 63);
+		GetEdictClassname(i, tmp, sizeof(tmp));
 		if(g_eMwAct[i])
 			continue;
 		
@@ -233,7 +354,13 @@ public Action fwdOnPlayerUse(int client) {
 				int maxtime = rp_GetBuildingData(i, BD_max);
 				if( time >= maxtime &&  rp_GetBuildingData( i, BD_owner )) {
 					rp_SetBuildingData(i, BD_count, 0);
-					giveHamburger(client);
+					
+					if( rp_GetBuildingData(i, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type) == 21)
+						giveHamburger(client, 2);
+					else if( rp_GetPlayerZoneAppart(i) > 0 )
+						giveHamburger(client, 1);
+					else
+						giveHamburger(client, 1);
 				}
 				g_eMwAct[i] = true;
 				CreateTimer(1.0, Frame_Microwave, i);
@@ -247,22 +374,47 @@ public Action Frame_Microwave(Handle timer, any ent) {
 		StopSoundAny(ent, SNDCHAN_AUTO, "ambient/machines/lab_loop1.wav");
 		return Plugin_Handled;
 	}
+	
+	int owner = rp_GetBuildingData(ent, BD_owner);
 	int time = rp_GetBuildingData(ent, BD_count);
 	int maxtime = rp_GetBuildingData(ent, BD_max);
 	if(time >= maxtime){
 		EmitSoundToAllAny("ambient/tones/equip2.wav", ent);
+		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Microwave_Ready", owner);
 		g_eMwAct[ent] = false;
 		return Plugin_Handled;
 	}
 	if(time == 0){
 		EmitSoundToAllAny("ambient/machines/lab_loop1.wav", ent, _, _, _, 0.33);
 	}
-	if( rp_GetClientBool(rp_GetBuildingData(ent, BD_owner), b_IsAFK) == false )
+	
+	if( rp_GetClientInt(owner, i_TimeAFK) <= 60 ) {
 		rp_SetBuildingData(ent, BD_count, ++time);
+	}
 	CreateTimer(1.0, Frame_Microwave, ent);
 	return Plugin_Handled;
 }
-public void giveHamburger(int client){
+void giveHamburger(int client, int amount){
+	char tmp[128];
+	
+	if( g_nbMdItems == -1 ) {
+		int jobID;
+		for(int i = 0; i < MAX_ITEMS; i++){
+			if( rp_GetItemInt(i, item_type_prix) <= 0 )
+				continue;
+			if( rp_GetItemInt(i, item_type_auto) == 1 )
+				continue;
+			jobID = rp_GetItemInt(i, item_type_job_id);
+			if(jobID != 21)
+				continue;
+			
+			rp_GetItemData(i, item_type_extra_cmd, tmp, sizeof(tmp));
+			if( StrEqual(tmp, "rp_item_microwaves") )
+				continue;
+			g_nbMdItems++;
+		}
+	}
+	
 	int mci = Math_GetRandomInt(0, g_nbMdItems);
 	int j = 0, jobID;	
 	for(int i = 0; i < MAX_ITEMS; i++){
@@ -273,9 +425,15 @@ public void giveHamburger(int client){
 		jobID = rp_GetItemInt(i, item_type_job_id);
 		if(jobID != 21)
 			continue;
+		
+		rp_GetItemData(i, item_type_extra_cmd, tmp, sizeof(tmp));
+		if( StrEqual(tmp, "rp_item_microwaves") )
+			continue;
 
 		if(mci == j){
-			rp_ClientGiveItem(client, i, 2);
+			rp_GetItemData(i, item_type_name, tmp, sizeof(tmp));
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Take", client, amount, tmp);
+			rp_ClientGiveItem(client, i, amount);
 			break;
 		}
 		j++;
@@ -304,17 +462,24 @@ public Action Cmd_ItemHamburger(int args) {
 		
 			rp_SetClientFloat(client, fl_Vitality, vita + 256.0);
 			ServerCommand("sm_effect_particles %d Trail12 5 facemask", client);
-			CPrintToChat(client, "" ...MOD_TAG... " Vous ressentez votre vitalité s'augmenter (%.1f -> %.1f).", vita, vita+256.0);
+			FakeClientCommand(client, "say /vita");
 		}
 	}
 	if( StrEqual(arg1, "energy") ) {
 		rp_SetClientFloat(client, fl_Energy, 100.0);
-		
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ressentez votre énergie s'augmenter.");
 	}
 	
 	if( StrEqual(arg1, "fat") ) {
 		float size = rp_GetClientFloat(client, fl_Size);
+		
+		if( size >= 1.65 && rp_GetClientInt(client, i_Kevlar) == 100 ) {
+			ITEM_CANCEL(client, item_id);
+			char item_name[128];
+			rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
+			
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
+			return Plugin_Handled;
+		}
 		
 		rp_SetClientInt(client, i_Kevlar, 100);
 		
@@ -327,7 +492,10 @@ public Action Cmd_ItemHamburger(int args) {
 		
 		if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
+			char item_name[128];
+			rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
+			
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 			return Plugin_Handled;
 		}
 		rp_SetClientBool(client, b_MayUseUltimate, false);
@@ -395,6 +563,16 @@ public Action Cmd_ItemHamburger(int args) {
 				continue;
 			if( StrContains(cmd, "rp_chirurgie") == 0 )
 				continue;
+			if( StrContains(cmd, "rp_item_raw") == 0 )
+				continue;
+			if( rp_GetItemInt(i, item_type_prix) == 0 )
+				continue;
+			
+			rp_GetItemData(i, item_type_name, cmd, sizeof(cmd));
+			if( StrContains(cmd, "BETA", false) == 0 )
+				continue;
+			if( StrContains(cmd, "sactiv", false) == 0 )
+				continue;
 			
 			iItemRand[amount] = i;
 			amount++;
@@ -413,7 +591,7 @@ public Action Cmd_ItemHamburger(int args) {
 		rp_ClientGiveItem(client, rand, 1, true);
 		
 		rp_GetItemData(rand, item_type_name, cmd, sizeof(cmd));
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu comme cadeau: %s", cmd);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Free", client, 1, cmd);
 		
 		if( rand == GetCmdArgInt(args) && StrEqual(arg1, "happymeal") )
 			rp_IncrementSuccess(client, success_list_mcdo);
@@ -441,7 +619,7 @@ public Action Cmd_ItemHamburger(int args) {
 		int rand = iItemRand[ Math_GetRandomInt(0, amount-1) ];
 		rp_ClientGiveItem(client, rand, 1, true);
 		rp_GetItemData(rand, item_type_name, cmd, sizeof(cmd));
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu comme cadeau: %s", cmd);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Free", client, 1, cmd);
 	}
 	else if( StrEqual(arg1, "drugs") ) { // TODO: Move to roleplay_dealer
 		
@@ -464,26 +642,31 @@ public Action Cmd_ItemHamburger(int args) {
 		rp_ClientGiveItem(client, rand, rnd, true);
 		
 		rp_GetItemData(rand, item_type_name, cmd, sizeof(cmd));
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu comme cadeau: %dx %s", rnd, cmd);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Free", client, rnd, cmd);
 	}
 	else if( StrEqual(arg1, "spacy") ) {
 		
 		int wepid = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 		if( !IsValidEntity(wepid) ) {
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "" ...MOD_TAG... " Vous devez porter votre couteau en main.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_KnifeInHands");
 			return Plugin_Handled;
 		}
 		
 		GetEdictClassname(wepid, classname, sizeof(classname));
-		if( !Weapon_ShouldBeEquip(classname) ) {
+		if( !StrEqual(classname, "weapon_knife") ) {
 			ITEM_CANCEL(client, item_id);
-			CPrintToChat(client, "" ...MOD_TAG... " Vous devez porter votre couteau en main.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_KnifeInHands");
+			return Plugin_Handled;
 		}
 		
 		if( !rp_SetClientKnifeType(client, ball_type_fire) ) {
-//			ITEM_CANCEL(client, item_id);
-//			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas utiliser cet item pour le moment.");
+			ITEM_CANCEL(client, item_id);
+			char item_name[128];
+			rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
+			
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
+			return Plugin_Handled;
 		}
 	}
 	return Plugin_Handled;
@@ -497,7 +680,7 @@ public Action Delay_MenuVital(Handle timer, Handle dp) {
 	int count = rp_GetClientItem(client, itemID);
 	
 	Menu menu = CreateMenu(MenuVital);
-	menu.SetTitle("Vous avez %d Hamburger vitaux.\nCombien voulez-vous en manger?\n ", count);
+	menu.SetTitle("%T\n ", "Burger_Menu", client, count);
 		
 	char tmp[64], tmp2[64];
 	float vita = rp_GetClientFloat(client, fl_Vitality);
@@ -507,11 +690,11 @@ public Action Delay_MenuVital(Handle timer, Handle dp) {
 	int cpt = RoundToCeil(delta/256.0);	
 	
 	Format(tmp, sizeof(tmp), "%d %d", itemID, cpt);
-	Format(tmp2, sizeof(tmp2), "Manger %d burgers pour atteindre le niveau suivant", cpt);
+	Format(tmp2, sizeof(tmp2), "%T", "Burger_Menu_NextLevel", client, cpt);
 	menu.AddItem(tmp, tmp2, cpt <= count ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
 	
 	Format(tmp, sizeof(tmp), "%d %d", itemID, count);
-	Format(tmp2, sizeof(tmp2), "Manger tout mes %d burgers", count);
+	Format(tmp2, sizeof(tmp2), "%T", "Burger_Menu_All", client, count);
 	menu.AddItem(tmp, tmp2);
 	
 		
@@ -520,7 +703,7 @@ public Action Delay_MenuVital(Handle timer, Handle dp) {
 			continue;
 		
 		Format(tmp, sizeof(tmp), "%d %d", itemID, amountType[i]);
-		Format(tmp2, sizeof(tmp2), "Manger %d burgers", amountType[i]);
+		Format(tmp2, sizeof(tmp2), "%T", "Burger_Menu_Count", client, amountType[i]);
 		
 		menu.AddItem(tmp, tmp2);
 	}
@@ -537,7 +720,8 @@ public int MenuVital(Handle menu, MenuAction action, int client, int param2) {
 		int amount = StringToInt(tmp[1]);
 		
 		if( rp_GetClientItem(client, itemID) < amount && amount > 0 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas autant d'hamburger.");
+			rp_GetItemData(itemID, item_type_name, szMenuItem, sizeof(szMenuItem));
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Error_ItemNotEnought", client, szMenuItem);
 			return;
 		}
 		
@@ -548,7 +732,7 @@ public int MenuVital(Handle menu, MenuAction action, int client, int param2) {
 		
 		rp_SetClientFloat(client, fl_Vitality, n_vita);
 		ServerCommand("sm_effect_particles %d Trail12 5 facemask", client);
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ressentez votre vitalité s'augmenter (%.1f -> %.1f).", vita, n_vita);
+		FakeClientCommand(client, "say /vita");
 	}
 	else if( action == MenuAction_End ) {
 		if( menu != INVALID_HANDLE )
@@ -566,16 +750,16 @@ public Action Cmd_ItemBanane(int args) {
 	int count;
 	
 	char classname[64], classname2[64];
-	Format(classname, sizeof(classname), "rp_banana_%i", client);
+	Format(classname, sizeof(classname), "rp_banana");
 	
 	for (int i = MaxClients; i <= 2048; i++) {
 		if( !IsValidEdict(i) )
 			continue;
 		GetEdictClassname(i, classname2, sizeof(classname2));
-		if( StrEqual(classname, classname2) ) {
+		if( StrEqual(classname, classname2) && Entity_GetOwner(i) == client) {
 			count++;
 			if( count >= 10 ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous avez posé trop de bananes.");
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
 				ITEM_CANCEL(client, itemID);
 				return Plugin_Handled;
 			}
@@ -610,7 +794,13 @@ public Action Cmd_ItemBanane(int args) {
 	return Plugin_Handled;
 }
 public Action BuildingBanana_touch(int index, int client) {
-	if( !IsValidClient(client) )
+	
+	if( rp_IsValidVehicle(client) ) {
+		rp_AcceptEntityInput(index, "Kill");
+		return Plugin_Handled;
+	}
+	
+	if( !IsValidClient(client) || Client_GetVehicle(client) > 0 || rp_GetClientVehicle(client) > 0 || rp_GetClientVehiclePassager(client) > 0 )
 		return Plugin_Continue;
 	
 	rp_SetClientInt(client, i_LastAgression, GetTime());
@@ -635,7 +825,6 @@ public Action BuildingBanana_touch(int index, int client) {
 	
 	rp_AcceptEntityInput(index, "Kill");
 	SDKUnhook(index, SDKHook_Touch, BuildingBanana_touch);
-	
 	return Plugin_Continue;
 }
 int GetLevelFromVita(float vita) {

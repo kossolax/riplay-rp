@@ -1,0 +1,11 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/player/custom/riplay/momiji/c_mom_a_base_bontan_PP1"
+	"$bumpmap" "models/player/custom/riplay/momiji/c_mom_a_nrm_bontan_N"
+	"$phong" "1"
+	$phongboost .04
+	"$phongexponent" "15"
+	"$phongalbedotint" "1"
+	"$phongtint"                    "[.6 .8 1]"
+	"$phongfresnelranges"           "[1 2.5 7]"
+}

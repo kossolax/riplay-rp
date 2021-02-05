@@ -59,7 +59,22 @@ public OnPluginStart()
 	RegConsoleCmd("sm_pong", Command_Pong, "Start a new Pong game.");
 	RegConsoleCmd("sm_pquit", Command_QuitPong, "Surrender from your current pong game.");
 }
-
+public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
+{
+	RegPluginLibrary("pong");
+	CreateNative("IsClientInPongGame", Native_IsClientInTetrisGame);
+	return APLRes_Success;
+}
+public Native_IsClientInTetrisGame(Handle:plugin, numParams)
+{
+	new client = GetNativeCell(1);
+	if (client < 1 || client > MaxClients)
+	{
+		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index (%d)", client);
+	}
+	
+	return g_iPongGameSession[client] != -1;
+}
 public OnClientDisconnect(client)
 {
 	// Reset pong game

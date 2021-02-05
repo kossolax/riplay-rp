@@ -17,6 +17,8 @@ public void OnGameFrame() {
 	for(int Client = 1; Client <= MaxClients; Client++) {
 		if( !g_bUserData[Client][b_isConnected] )
 			continue;
+		if( !IsValidClient(Client) )
+			continue;
 		if( !IsPlayerAlive(Client) )
 			continue;
 		FORCE_FRAME(Client);
@@ -36,7 +38,7 @@ public void OnGameFrame() {
 	OnGameFrame_10(time);
 }
 void OnGameFrame_01(float time) {
-	static int wasInPVP[65], oldZone[65];
+	static int wasInPVP[65], oldZone[65], wasHUD[65];
 	float pos[3];
 	g_iEntityCount = MaxClients;
 	
@@ -53,6 +55,7 @@ void OnGameFrame_01(float time) {
 		}
 	}
 
+
 	for(int i=MaxClients; i<2048; i++) {
 		if( !IsValidEdict(i) || !IsValidEntity(i) )
 			continue;
@@ -63,9 +66,14 @@ void OnGameFrame_01(float time) {
 		Entity_GetAbsOrigin(i, pos);
 		
 		if( pos[2] <= -10000.0 ) {
-			PrintToChatAll("Un props est tombe hors map... %d - %s", i, g_szEntityName[i]);
+			char tmp[128];
+			GetEdictClassname(i, tmp, sizeof(tmp));
+			PrintToChatAll("%s est hors map", tmp);
 			rp_AcceptEntityInput(i, "Kill");
 		}
+		
+		
+		
 	}
 	if( g_bLoaded ) {
 		if( g_iEntityCount >= g_iEntityLimit ) {
@@ -83,17 +91,30 @@ void OnGameFrame_01(float time) {
 			continue;
 		if( !g_bUserData[Client][b_isConnected] )
 			continue;
+		if( !IsValidClient(Client) )
+			continue;
 		
+		if( GetClientMenu(Client) != MenuSource_None ) {
+			if( wasHUD[Client] ) {
+				SetHudTextParams(0.0125, 0.4, 0.25, 255, 255, 200, 128, 2, 0.0, 0.0, 0.0);
+				ShowHudText(Client, 0, " ");
+			}
+			
+			wasHUD[Client] = false;
+		}
+		else {
+			wasHUD[Client] = true;
+		}
 		
 		blockShot = false;
 		g_iPlayerCount++;
 		
 		if( !IsPlayerAlive(Client) ) {
 			if( g_flUserData[Client][fl_RespawnTime] > time ) {
-				PrintHintText(Client, "<font color='#ff0000'>Vous êtes mort.</font>\nVous allez revivre dans:\n      %.1f seconde%c", g_flUserData[Client][fl_RespawnTime]-time, (g_flUserData[Client][fl_RespawnTime]-time>=2.0?'s':' ') );
+				PrintHintText(Client, "%T", "HUD_RespawnIn", Client, g_flUserData[Client][fl_RespawnTime]-time);
 			}
 			else {
-				PrintHintText(Client, "\nAppuyez sur une touche pour revivre.");
+				PrintHintText(Client, "%T", "HUD_RespawnPress", Client);
 			}
 			
 			check_dead(Client);
@@ -142,14 +163,19 @@ void OnGameFrame_01(float time) {
 		
 		if( g_bUserData[Client][b_GameModePassive] == true && g_iUserData[Client][i_Job] >= 1 && g_iUserData[Client][i_Job] <= 8 ) {
 			g_bUserData[Client][b_GameModePassive] = false;
-			CPrintToChat(Client, "" ...MOD_TAG... " Le mode de jeu passif a été désactivé.");
+			CPrintToChat(Client, "" ...MOD_TAG... " %T", "Passive_Disabled", Client);
+		}
+		
+		if( EVENT_3RD == 0 && rp_GetZoneBit( rp_GetPlayerZone(Client) ) & BITZONE_EVENT ) {
+			ClientCommand(Client, "firstperson");
+			g_iUserData[Client][i_ThirdPerson] = 0;
 		}
 		
 		if( !(rp_GetZoneBit( rp_GetPlayerZone(Client) ) & BITZONE_PVP) && !(rp_GetZoneBit( rp_GetPlayerZone(Client) ) & BITZONE_EVENT)	) {
 			if( !g_bUserData[Client][b_GameModePassive] && rp_GetClientJobID(Client) == 41 && g_iUserData[Client][i_ToKill] > 0 )
 				speed += 0.25;
 
-			if( HasDoctor(Client) ) {
+			if( g_iUserData[Client][i_Sick] > 0 && HasDoctor(Client) ) {
 				if( g_iUserData[Client][i_Sick] == view_as<int>(sick_type_grippe) )
 					speed = 0.66;
 				else if( g_iUserData[Client][i_Sick] == view_as<int>(sick_type_tourista) )
@@ -208,6 +234,9 @@ void OnGameFrame_01(float time) {
 			gravity = speed = 0.0000001;			
 			blockShot = true;
 		}
+		
+		if( g_iCarPassager2[Client] > 0 )
+			blockShot = true;
 		
 		if( g_bIsInCaptureMode && GetZoneBit( nowZone )  & BITZONE_PVP ) {
 			if( speed > 2.0 )
@@ -308,7 +337,7 @@ void OnGameFrame_01(float time) {
 			continue;
 		
 		if( car > 0 ) {
-			PrintHintText(Client, "Voiture: %dHP\nVitesse: %.1fkm/h", rp_GetVehicleInt(car, car_health), float(GetEntProp(car, Prop_Data, "m_nSpeed"))* 1.609);
+			PrintHintText(Client, "%T", "HUD_Vehicle", Client, rp_GetVehicleInt(car, car_health), float(GetEntProp(car, Prop_Data, "m_nSpeed"))* 1.609, GetEntProp(car, Prop_Data, "m_nSpeed"));
 		}
 		else {
 			showPlayerHintBox(Client, rp_GetClientTarget(Client));
@@ -327,6 +356,9 @@ void OnGameFrame_10(float time) {
 	if( last_minutes == g_iMinutes ) 
 		return;
 	
+	GameRules_SetProp("m_bIsDroppingItems", 1, 1, 0, true);
+	GameRules_SetPropFloat("m_fRoundStartTime", GetGameTime(), 0, true);
+	GameRules_SetProp("m_iRoundTime", g_iHours*60 + g_iMinutes, 4, 0, true);
 	last_minutes = g_iMinutes;
 
 	SQL_Reconnect();
@@ -385,9 +417,7 @@ void OnGameFrame_10(float time) {
 
 	if( g_iHours == 1 && g_iMinutes == 1 ) {
 		if(g_bIsBlackFriday) {
-			Format(bfAnnoucement, sizeof(bfAnnoucement), "" ...MOD_TAG... " Journée exceptionnelle du Black Friday ! Profitez d'une réduction de {lightblue}-%iPCT{default} sur tous vos achats !", g_iBlackFriday[1]);
-			ReplaceString(bfAnnoucement, sizeof(bfAnnoucement), "PCT", "%%", true);
-			CPrintToChatAll(bfAnnoucement);
+			CPrintToChatAll("" ...MOD_TAG... " %T", "BlackFriday_ADS", LANG_SERVER, g_iBlackFriday[1]);
 		}
 	}
 
@@ -410,8 +440,18 @@ void OnGameFrame_10(float time) {
 	bool changed = false;
 	float fNow[3];
 	PrintHours(szDates, sizeof(szDates));
+	int t, ct;
 	
 	for (int i = 1; i <= MaxClients; i++) {
+		if( !IsValidClient(i) )
+			continue;
+		
+		int team = GetClientTeam(i);
+		if( team == CS_TEAM_T )
+			t++;
+		else if( team == CS_TEAM_CT )
+			ct++;
+		
 		if ( g_bUserData[i][b_isConnected] ) {
 			
 			jobID = rp_GetClientJobID(i);
@@ -424,16 +464,26 @@ void OnGameFrame_10(float time) {
 				CheckMP(i);
 			}
 			
-			if( g_iUserData[i][i_LastKillTime]+(60) < iTime ) {
+			if( g_iUserData[i][i_LastKillTime_ReduceFK]+(FREEKILL_TIME) < iTime ) {
+				g_iUserData[i][i_KillingSpread]--;
+				g_iUserData[i][i_LastKillTime_ReduceFK] = iTime;
+			}
+			
+			if( g_iUserData[i][i_LastKillTime_ReduceTDM]+(1*60) < iTime ) {
 				g_iUserData[i][i_KillJailDuration]--;
 				changed = true;
 				SetEntProp(i, Prop_Send, "m_iNumRoundKills",  0);
-				g_iUserData[i][i_LastKillTime] = iTime;
+				g_iUserData[i][i_LastKillTime_ReduceTDM] = iTime;
 				
+			}
+			if( g_iUserData[i][i_KillingSpread] < 0 ) {
+				g_iUserData[i][i_KillingSpread] = 0;
 			}
 			if( g_iUserData[i][i_KillJailDuration] < 0 ) {
 				g_iUserData[i][i_KillJailDuration] = 0;
+				g_iUserData[i][i_KillingSpread] = 0; // volontaire.
 			}
+			
 			// TODO: Déplacer ça dans SexShop.
 			if( g_flUserData[i][fl_Alcool] > 0.0 ) {
 				g_flUserData[i][fl_Alcool] -= (0.15/60.0);
@@ -480,10 +530,9 @@ void OnGameFrame_10(float time) {
 					ClientCommand(i, "play common/warning");
 				}
 				
-				if( g_iHours % 6 == 0 ) {
-					g_iUserData[i][i_ContratTotal] -= 1;
-					if( g_iUserData[i][i_ContratTotal] < 0 )
-						g_iUserData[i][i_ContratTotal] = 0;
+				if( g_iHours % 6 == 0 ) {					
+					if( g_iUserData[i][i_ContratTotal] > 0 )
+						g_iUserData[i][i_ContratTotal]--;
 					
 					if( g_iUserData[i][i_MaskCount] < 5 )
 						g_iUserData[i][i_MaskCount]++;
@@ -512,7 +561,7 @@ void OnGameFrame_10(float time) {
 
 				if(infoPeineTime == 180) {
 					if( g_bUserData[i][b_ExitJailMenu] && g_iUserData[i][i_JailTime] > 0 ) {
-						CPrintToChat(i, "{lightblue}[TSX-RP]{default} Tu peux modifier la durée/zone de ton emprisonnement en tapant /peine");
+						CPrintToChat(i, "" ...MOD_TAG... " %T", "Cmd_Peine", i);
 					}
 				}
 
@@ -543,11 +592,11 @@ void OnGameFrame_10(float time) {
 						int MP[] =  { 128, 129, 234, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257 };
 						int rnd = Math_GetRandomInt(0, sizeof(MP) - 1);
 						int qt = (200/rp_GetItemInt(MP[rnd], item_type_prix));
-						CPrintToChat(i, "" ...MOD_TAG... " Vous avez trouvé %d %s", qt, g_szItemList[MP[rnd]][item_type_name]);
+						CPrintToChat(i, "" ...MOD_TAG... " %T", "Item_Found", i, qt, g_szItemList[MP[rnd]][item_type_name]);
 						rp_ClientGiveItem(i, MP[rnd], qt);
 					}
 					if( !g_bUserData[i][b_GameModePassive] && jobID == 171 && Math_GetRandomInt(0, 250) == 42 ) {
-						CPrintToChat(i, "" ...MOD_TAG... " Vous avez trouvé %s", g_szItemList[276][item_type_name]);
+						CPrintToChat(i, "" ...MOD_TAG... " %T", "Item_Found", i, 1, g_szItemList[276][item_type_name]);
 						rp_ClientGiveItem(i, 276);
 					}
 					
@@ -567,7 +616,7 @@ void OnGameFrame_10(float time) {
 					SDKHooks_TakeDamage(i, i, i, 5000.0);
 				}
 				
-				if(jobID == 101 && !g_bUserData[i][b_GameModePassive] && !(GetZoneBit(GetPlayerZone(i)) & (BITZONE_PVP|BITZONE_EVENT)) ) {			
+				if(jobID == 101 && !g_bUserData[i][b_GameModePassive] && !(GetZoneBit(GetPlayerZone(i)) & (BITZONE_PVP|BITZONE_EVENT)) ) {
 					int heal = GetClientHealth(i) + Math_GetRandomInt(1, 5);
 					if( heal > 500 )
 						heal = 500;
@@ -671,11 +720,10 @@ void OnGameFrame_10(float time) {
 					Call_Finish();
 				}
 				// TODO: Déplacer ça dans le job hopital
-				if( !(GetZoneBit(GetPlayerZone(i)) & (BITZONE_PVP|BITZONE_EVENT)) && !(g_iMinutes % 5) ) {
-					if( HasDoctor(i) 
-						&& !(rp_GetZoneBit( rp_GetPlayerZone(i) ) & BITZONE_PVP)
-						&& !(rp_GetZoneBit( rp_GetPlayerZone(i) ) & BITZONE_EVENT) ) {
-						if( g_iUserData[i][i_Sick] == view_as<int>(sick_type_hemoragie) ) {
+				if( g_iUserData[i][i_Sick] == view_as<int>(sick_type_hemoragie) ) {
+					if( !(GetZoneBit(GetPlayerZone(i)) & (BITZONE_PVP|BITZONE_EVENT)) && !(g_iMinutes % 5) ) {
+						if( HasDoctor(i) ) {
+						
 							int heal = GetClientHealth(i) - 5;
 							if( heal <= 0 )
 								heal = 1;
@@ -688,7 +736,7 @@ void OnGameFrame_10(float time) {
 								CreateTimer(f, bleeding, i);
 							
 							if( Math_GetRandomInt(1, 100) == 100 ) {
-								g_iUserData[i][i_Sick] = 0;
+								g_iUserData[i][i_Sick] = view_as<int>(sick_type_none);
 							}
 						}
 						if( IsMedic(i) ) {
@@ -734,6 +782,9 @@ void OnGameFrame_10(float time) {
 					if( StringToInt(g_szZoneList[GetPlayerZone(i)][zone_type_bit]) & BITZONE_HAUTESECU && !g_bUserData[i][b_IsAFK] ) {
 						g_iUserData[i][i_JailTime]--;
 					}
+					if( g_iUserData[i][i_JailTime] <= 0 ){
+						g_bUserData[i][b_JailQHS] = false;
+					}
 					
 					g_iSuccess_last_jail[i] = GetTime();
 					
@@ -763,22 +814,20 @@ void OnGameFrame_10(float time) {
 						}
 
 						g_bUserData[i][b_IsFreekiller] = false;
+						g_bUserData[i][b_JailQHS] = false;
 							
 						rp_ClientResetSkin(i);
 						rp_ClientSendToSpawn(i, true);
-						CPrintToChat(i, "" ...MOD_TAG... " Vous avez été liberé de prison.");
+						CPrintToChat(i, "" ...MOD_TAG... " %T", "JailFree", i);
 					}
 				}
 				
-				if( g_bUserData[i][b_Invisible] ) {
-					
+				if( g_bUserData[i][b_Invisible] ) {	
 					ClientCommand(i, "r_screenoverlay effects/hsv.vmt");
-					
-					if( g_iUserData[i][i_Job] != 1 && g_iUserData[i][i_Job] != 2 && g_iUserData[i][i_Job] != 4 && g_iUserData[i][i_Job] != 5 ) {	
-						if( GetClientSpeed(i) > 200 || g_flUserData[i][fl_invisibleTime] < time ) {
-							CopSetVisible(i);
-						}
+					if( GetClientSpeed(i) > 200 || g_flUserData[i][fl_invisibleTime] < time ) {
+						CopSetVisible(i);
 					}
+
 				}				
 				else if( g_flUserData[i][fl_invisibleTime] > time && g_flUserData[i][fl_invisibleTimeLeft] < time ) {
 					if( GetClientSpeed(i) < 200  && (GetClientButtons(i) & IN_DUCK) && CheckBuild(i, false) ) {
@@ -817,8 +866,10 @@ void OnGameFrame_10(float time) {
 				if( ! IsTutorialOver(i) ) {
 					DisplayTutorial(i);
 				}
-				else {
+				else if( IsClientInTetrisGame(i) || IsClientInSnakeGame(i) || IsClientInPongGame(i) ) {
 					
+				}
+				else {
 					PrintHUD(i, szHUD, sizeof(szHUD));
 					
 					Call_StartForward( view_as<Handle>(g_hRPNative[i][RP_OnPlayerHUD]));
@@ -827,22 +878,26 @@ void OnGameFrame_10(float time) {
 					Call_PushCell(sizeof(szHUD));
 					Call_Finish();
 					
-					Handle mSayPanel = CreatePanel();
-					SetPanelTitle(mSayPanel, szGeneralMenu);
-					DrawPanelItem(mSayPanel, "", ITEMDRAW_SPACER);
-					
-					DrawPanelText(mSayPanel, szHUD);
-					
-					SendPanelToClient(mSayPanel, i, MenuNothing, 2);
-					CreateTimer(1.1, PostKillHandle, mSayPanel);
+					if( GetConVarInt(FindConVar("hostport")) == 27015 ) {
+						Handle mSayPanel = CreatePanel();
+						SetPanelTitle(mSayPanel, szGeneralMenu);
+						DrawPanelItem(mSayPanel, "", ITEMDRAW_SPACER);
+						
+						DrawPanelText(mSayPanel, szHUD);
+						
+						SendPanelToClient(mSayPanel, i, MenuNothing, 2);
+						CreateTimer(1.1, PostKillHandle, mSayPanel);
+					}
+					else {
+						SetHudTextParams(0.0125, 0.35, 2.0, 255, 255, 200, 128, 2, 0.0, 0.0, 0.0);
+						ShowHudText(i, 0, szHUD);
+					}
 				}
 			}
 			
 			if( GetEntProp(i, Prop_Send, "m_bDrawViewmodel") == 1 ) {
-				Handle hud = CreateHudSynchronizer();
-				SetHudTextParams(-1.0, 1.0, 1.1, 19, 213, 45, 255, 2, 0.0, 0.0, 0.0);
-				ShowSyncHudText(i, hud, szDates);
-				CloseHandle(hud);
+				SetHudTextParams(-1.0, 1.0, 2.0, 19, 213, 45, 255, 2, 0.0, 0.0, 0.0);
+				ShowHudText(i, 2, szDates);
 			}
 			
 			CheckNoWonSuccess(i);
@@ -850,35 +905,35 @@ void OnGameFrame_10(float time) {
 			if( (g_iUserData[i][i_Money] + g_iUserData[i][i_Bank]) <= -100 ) {
 				
 				if( (g_iUserData[i][i_Money] + g_iUserData[i][i_Bank]) <= -5000 ) {
-					ServerCommand("amx_ban \"#%i\" \"0\" \"limite -5000$\"", GetClientUserId(i));
+					ServerCommand("amx_ban \"#%i\" \"0\" \"%T\"", GetClientUserId(i), "Ban_Cash", LANG_SERVER, -5000);
 				}
 				else {
-					ServerCommand("amx_ban \"#%i\" \"60\" \"limite -100$\"", GetClientUserId(i));
+					ServerCommand("amx_ban \"#%i\" \"60\" \"%T\"", GetClientUserId(i), "Ban_Cash", LANG_SERVER, -100);
 				}
 				
 				g_iUserData[i][i_Money] = 0;
 				g_iUserData[i][i_Bank] = 0;
 			}
 			if( g_iUserData[i][i_Dette] >= 25000 ) {
-				ServerCommand("amx_ban \"#%i\" \"0\" \"limite -25000$\"", GetClientUserId(i));
+				ServerCommand("amx_ban \"#%i\" \"0\" \"%T\"", GetClientUserId(i), "Ban_Cash", LANG_SERVER, -25000);
 			}
 		}
-		else if( IsValidClient(i) && !IsFakeClient(i) ) {
+		else if( !IsFakeClient(i) ) {
 			Handle mSayPanel = CreatePanel();
 			SetPanelTitle(mSayPanel, szGeneralMenu);
-			DrawPanelText(mSayPanel, " ");
-			DrawPanelText(mSayPanel, "Chargement de vos informations...");
-			DrawPanelText(mSayPanel, "Ceci peut prendre jusqu'à une minute.");
-			DrawPanelText(mSayPanel, " ");
-			DrawPanelText(mSayPanel, " ");
-			DrawPanelText(mSayPanel, " ");
-			DrawPanelText(mSayPanel, "Les serveurs Steam sont peut-être saturé.");
-			DrawPanelText(mSayPanel, "Dans ce cas les délais peuvent être plus long.");
+			
+			Format(szHUD, sizeof(szHUD), "%T", "HUD_LoadingData", i);
+			DrawPanelText(mSayPanel, szHUD);
 			
 			SendPanelToClient(mSayPanel, i, MenuNothing, 2);
 			CreateTimer(1.1, PostKillHandle, mSayPanel);
 		}
 	}
+	
+	
+	
+	SetTeamScore(CS_TEAM_CT, ct);
+	SetTeamScore(CS_TEAM_T, t);
 }
 public void CRON_TIMER() {
 	char szDayOfWeek[12], szHours[12], szMinutes[12], szSecondes[12];
@@ -893,7 +948,7 @@ public void CRON_TIMER() {
 			ServerCommand("rp_force_loto");
 		}
 	}
-	if( StringToInt(szDayOfWeek) == 0  ) {	// Dimanche
+	if( StringToInt(szDayOfWeek) == 5  ) {	// Vendredi
 		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
 			ServerCommand("rp_force_appart");
 		}
@@ -905,48 +960,37 @@ public void CRON_TIMER() {
 	}
 	
 	
-	if( (StringToInt(szHours) ==  4 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 30) ||
-		(StringToInt(szHours) == 16 && StringToInt(szMinutes) == 29 && StringToInt(szSecondes) == 30) 
-		) {	
-		CPrintToChatAll("" ...MOD_TAG... " Le serveur vas {red}redémarrer{default} dans 30 secondes.");
-		CPrintToChatAll("" ...MOD_TAG... " Le serveur vas {red}redémarrer{default} dans 30 secondes.");
-		CPrintToChatAll("" ...MOD_TAG... " Le serveur vas {red}redémarrer{default} dans 30 secondes.");
+	if( (StringToInt(szHours) ==  5 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 30) ) {	
+		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
+		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
+		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
 		ServerCommand("rp_give_assu");
 	}
-	if( (StringToInt(szHours) ==  4 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 59) ||
-		(StringToInt(szHours) == 16 && StringToInt(szMinutes) == 29 && StringToInt(szSecondes) == 59) ) {
-		CPrintToChatAll("" ...MOD_TAG... " Le serveur vas {red}redémarrer{default} MAINTENANT.");
+	if( (StringToInt(szHours) ==  5 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 59) ) {
+		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootNow", LANG_SERVER);
 	}
-	if( (StringToInt(szHours) ==  5 && StringToInt(szMinutes) ==  0 && StringToInt(szSecondes) == 0) ||
-		(StringToInt(szHours) == 16 && StringToInt(szMinutes) == 30 && StringToInt(szSecondes) == 0) ) {
-		CPrintToChatAll("" ...MOD_TAG... " Le serveur vas {red}redémarrer{default} MAINTENANT.");
+	if( (StringToInt(szHours) ==  6 && StringToInt(szMinutes) ==  0 && StringToInt(szSecondes) == 0) ) {
+		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootNow", LANG_SERVER);
 		
 		for(int i = 1; i <= MaxClients; i++)
 			if( IsValidClient(i) )
 				ClientCommand(i, "retry"); // force retry
 		
-		RequestFrame(RebootServer);
+		CreateTimer(0.1, RebootServer);
 	}
-	
-	
-	if( StringToInt(szDayOfWeek) == 3 ) { // Mercredi
+	/*
+	if( StringToInt(szDayOfWeek) == 3 ) { // mercredi
 		if( StringToInt(szHours) == 18 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 18h00m00s
-			ServerCommand("rp_capture active");
-		}
-		if( StringToInt(szHours) == 18 && StringToInt(szMinutes) == 30 && StringToInt(szSecondes) == 0 ) {	// 18h30m00s
-			ServerCommand("rp_capture none");
+			ServerCommand("rp_capture 1");
 		}
 	}
-	if( StringToInt(szDayOfWeek) == 5 ) { // Vendredi
-		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
-			ServerCommand("rp_capture active");
+	if( StringToInt(szDayOfWeek) == 0 ) { // Dimanche
+		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 00 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
+			ServerCommand("rp_capture 1");
 		}
-		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 30 && StringToInt(szSecondes) == 0 ) {	// 21h30m00s
-			ServerCommand("rp_capture none");
-		}
-	}
+	}*/
 }
-public void RebootServer(any none) {
+public Action RebootServer(Handle timer, any none) {
 	ServerCommand("quit");
 	ServerCommand("sv_cheats 1");
 	ServerCommand("crash");

@@ -24,20 +24,23 @@ void setRecoil(int client) {
 		SetEntPropVector(client, Prop_Send, "m_aimPunchAngle", vecAngles);
 	}
 }
-
-public Action OnSetTransmit(int entity, int client) {
-	if( entity == client )
-		return Plugin_Continue;
-
-	if(g_bUserData[entity][b_Invisible] && (g_iUserData[entity][i_Job] == 1 || g_iUserData[entity][i_Job] == 2 || g_iUserData[entity][i_Job] == 4 || g_iUserData[entity][i_Job] == 5)) {
-		if( g_iUserData[client][i_ContratType] >= 1000 )
-			return Plugin_Continue;
-		return Plugin_Handled;
-	}
-	return Plugin_Continue;
-}
 public void OnPreThink(int client) {
 	setRecoil(client);
+	float GameTime = GetGameTime();
+	int btn = GetClientButtons(client);
+	
+	if( btn & IN_ATTACK ) {
+		int wpnid = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
+		
+		if( wpnid > 0 ) {
+			float next = GetEntPropFloat(wpnid, Prop_Send, "m_flNextPrimaryAttack");
+			
+			if( wpnid > 0 && g_flWeaponFireRate[wpnid] > 0.0 && next <= GameTime ) {
+				SetEntPropFloat(wpnid, Prop_Send, "m_flPlaybackRate", g_flWeaponFireRate[wpnid]);
+				g_bWeaponFireRate[wpnid] = true;
+			}
+		}
+	}
 }
 public void OnPostThinkPost(int client) {
 	static int m_flFlashDuration = -1, m_flFlashMaxAlpha = -1;
@@ -50,6 +53,18 @@ public void OnPostThinkPost(int client) {
 	if( g_flUserData[client][fl_Alcool] > 0.0 ) {
 		SetEntDataFloat(client, m_flFlashDuration, GetGameTime()+0.1,true);
 		SetEntDataFloat(client, m_flFlashMaxAlpha, g_flUserData[client][fl_Alcool] * 10.0 + 20.0, true);
+	}
+	
+	float GameTime = GetGameTime();
+	int wpnid = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
+	
+	if( wpnid > 0 && g_bWeaponFireRate[wpnid] ) {		
+		float next = GetEntPropFloat(wpnid, Prop_Send, "m_flNextPrimaryAttack");
+		float rateOfFire = next - GameTime;
+		
+		SetEntPropFloat(wpnid, Prop_Send, "m_flPlaybackRate", g_flWeaponFireRate[wpnid]);
+		SetEntPropFloat(wpnid, Prop_Send, "m_flNextPrimaryAttack", GameTime + rateOfFire/g_flWeaponFireRate[wpnid]);
+		g_bWeaponFireRate[wpnid] = false;
 	}
 }
 public void OnPostThink(int client) {
@@ -105,6 +120,7 @@ public void OnPostThink(int client) {
 }
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon) {
 	static int lastButtons[MAXPLAYERS + 1];
+	static char buffer[128];
 	
 	if( !g_bUserData[client][b_isConnected] || !g_bUserData[client][b_isConnected2] )
 		return Plugin_Continue;
@@ -116,7 +132,14 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		if( g_bUserData[client][b_WeaponIsHands] ) {
 			buttons &= ~IN_ATTACK2;
 			changed = true;
-		}	
+		}
+		
+		if( g_bUserData[client][b_WeaponIsMelee] ) {
+			if( !(rp_GetZoneBit(rp_GetPlayerZone(client)) & (BITZONE_EVENT|BITZONE_PVP) )) {
+				buttons &= ~IN_ATTACK2;
+				changed = true;
+			}
+		}
 	}
 	
 	if( g_bUserData[client][b_KeyReverse] ) {
@@ -162,13 +185,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		}
 	}
 	lastButtons[client] = buttons;
-	
-	if( impulse == 100 ) {
-		if( g_bUserData[client][b_LampePoche] == 0 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas de Lampe de poche utilisable.");
-			return Plugin_Handled;
-		}
-	}
+
 	return changed ? Plugin_Changed : Plugin_Continue;
 }
 

@@ -32,6 +32,9 @@ public Plugin myinfo =  {
 	version = __LAST_REV__, url = "https://www.ts-x.eu"
 };
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("roleplay.phrases");
+	
 	RegAdminCmd("rp_force_maire", 		CmdForceMaire, 			ADMFLAG_ROOT);
 	
 	CreateTimer(HUD_FRAMERATE, Timer_HUD, _, TIMER_REPEAT);
@@ -133,20 +136,6 @@ public void QUERY_SetMaire(Handle owner, Handle handle, const char[] error, any 
 		for (serverRules i = rules_Amendes; i < server_rules_max; i++)
 			rp_SetServerRules(i, rules_Enabled, 0);
 		rp_StoreServerRules();
-		
-		for (int i = 1; i <= MaxClients; i++) {
-			if( !IsValidClient(i) )
-				continue;
-			if( rp_GetClientKeyAppartement(i, 51) ) {
-				rp_SetClientKeyAppartement(i, 51, false );
-				rp_SetClientInt(i, i_AppartCount, rp_GetClientInt(i, i_AppartCount) - 1);
-			}
-			GetClientAuthId(i, AUTH_TYPE, tmp, sizeof(tmp));
-			if( StrEqual(tmp, tmp2) ) {
-				rp_SetClientKeyAppartement(i, 51, true );
-				rp_SetClientInt(i, i_AppartCount, rp_GetClientInt(i, i_AppartCount) + 1);
-			}
-		}
 	}
 }
 public void OnClientPostAdminCheck(int client) {
@@ -259,8 +248,8 @@ void Draw_Mairie_Main(int client) {
 	menu.AddItem("3 0 0", "Règlement communal");
 	if( rp_GetClientInt(client, i_PlayerLVL) >= 30 )
 		menu.AddItem("5 0 0", "Candidature pour la Mairie");
-	if( rp_GetClientInt(client, i_PlayerLVL) >= 600 && rp_GetClientInt(client, i_PlayerLVL) < 1000 )
-		menu.AddItem("6 0 0", "Prestige niveau 600");
+	// if( rp_GetClientInt(client, i_PlayerLVL) >= 600 && rp_GetClientInt(client, i_PlayerLVL) < 1000 )
+	// 	menu.AddItem("6 0 0", "Prestige niveau 600");
 	if( rp_GetClientInt(client, i_PlayerLVL) >= 1000 )
 		menu.AddItem("6 0 0", "Prestige niveau 1000");
 		
@@ -278,7 +267,7 @@ void Draw_Mairie_Prestige(int client, int target) {
 			menu.AddItem("_", "Avantage: 50 cadeaux\n ", ITEMDRAW_DISABLED);
 		}
 		else {
-			menu.AddItem("_", "Avantage: 2 500 000$ cash", ITEMDRAW_DISABLED);
+			menu.AddItem("_", "Avantage: 1 000 000$ cash", ITEMDRAW_DISABLED);
 			menu.AddItem("_", "Avantage: 100 cadeaux\n ", ITEMDRAW_DISABLED);
 		}
 		
@@ -299,9 +288,9 @@ void Draw_Mairie_Prestige(int client, int target) {
 		}
 		else {
 			CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 100 cadeaux dans votre banque.");
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 2 500 000$.");
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 1 000 000$.");
 			rp_ClientGiveItem(client, ITEM_CADEAU, 100, true);
-			rp_ClientMoney(client, i_Bank, 2500000);
+			rp_ClientMoney(client, i_Bank, 1000000);
 		}
 		
 		rp_SetClientInt(client, i_PlayerXP, (3600 * 99) - 10);
@@ -323,20 +312,20 @@ void Draw_Mairie_Candidate(int client, int target, int arg) {
 	else if( target == -1 ) {
 		if( arg == 0 ) {
 			Menu menu = new Menu(Handle_Mairie);
-			Format(tmp, sizeof(tmp), "Vous souhaitez poster votre candidature pour devenir Maire? Celà vous coûtera 250.000$, vous ne serrez pas remboursé si vous perdez les élections.");
+			Format(tmp, sizeof(tmp), "Vous souhaitez poster votre candidature pour devenir Maire? Celà vous coûtera 75.000$, vous ne serrez pas remboursé si vous perdez les élections.");
 			String_WordWrap(tmp, 60);
 			
 			menu.SetTitle("Candidature pour la Mairie\n \n%s\n ", tmp);
 			
 			menu.AddItem("5 0 0", "Annuler, ne pas participer aux élections");
-			menu.AddItem("5 -1 1", "Je confirme ma candidature, je paye 250.000$");
+			menu.AddItem("5 -1 1", "Je confirme ma candidature, je paye 75.000$");
 			
 			menu.Display(client, MENU_TIME_FOREVER);
 		}
 		if( arg == 1 ) {
 			
-			if( (rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 250000 ) {
-				rp_ClientMoney(client, i_Money, -250000);
+			if( (rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 75000 ) {
+				rp_ClientMoney(client, i_Money, -75000);
 				
 				GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
 				
@@ -355,7 +344,7 @@ void Draw_Mairie_Candidate(int client, int target, int arg) {
 }
 public void QUERY_PostCandidate(Handle owner, Handle handle, const char[] error, any client) {
 	if( strlen(error) >= 1  ) {
-		rp_ClientMoney(client, i_Bank, 250000);
+		rp_ClientMoney(client, i_Bank, 75000);
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez déjà posté une candidature, vous avez donc été remboursé.");
 	}
 	else {
@@ -404,8 +393,8 @@ public void QUERY_MairieCandidate(Handle owner, Handle handle, const char[] erro
 		menu.AddItem("", "Il n'y a pas de candidat", ITEMDRAW_DISABLED);
 	}
 
-	if( rp_GetClientInt(client, i_PlayerLVL) >= 90 && !myself && StringToInt(szDayOfWeek) != 1)
-		menu.AddItem("5 -1 0", "Poster ma candidature (250 000$)", ((rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 250000) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
+	if( rp_GetClientInt(client, i_PlayerLVL) >= 90 && !myself && StringToInt(szDayOfWeek) != 100000)
+		menu.AddItem("5 -1 0", "Poster ma candidature (75 000$)", ((rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 75000) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
 	
 	menu.Display(client, MENU_TIME_FOREVER);
 }
@@ -449,7 +438,7 @@ void Draw_Mairie_AddRules(int client, int rulesID=-1, int arg=-1, int target=-1)
 		
 		//menu.AddItem("4 2 0 -1", "Interdir les réductions", rp_GetServerRules(rules_reductions, rules_Enabled) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 		menu.AddItem("4 4 0 -1", "Interdir les braquages", rp_GetServerRules(rules_Braquages, rules_Enabled) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
-		//menu.AddItem("4 5 0 -1", "Interdir un item en pvp", rp_GetServerRules(rules_ItemsDisabled, rules_Enabled) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+		menu.AddItem("4 5 0 -1", "Interdir un item en pvp", rp_GetServerRules(rules_ItemsDisabled, rules_Enabled) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 		menu.AddItem("4 7 0 -1", "Interdir l'hotel des ventes", rp_GetServerRules(rules_ItemsDisabled, rules_Enabled) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 		
 		
@@ -471,7 +460,6 @@ void Draw_Mairie_AddRules(int client, int rulesID=-1, int arg=-1, int target=-1)
 		}
 	}
 	else if( target == -1 ) {
-		/*
 		
 		if( rulesID != 4 ) {
 			for (int i = 1; i < MAX_GROUPS; i+=10) {
@@ -487,7 +475,6 @@ void Draw_Mairie_AddRules(int client, int rulesID=-1, int arg=-1, int target=-1)
 				menu.AddItem(tmp, tmp2);
 			}
 		}
-		*/
 		
 		for (int i = 1; i < MAX_JOBS; i+=10) {
 			if( rp_GetJobInt(i, job_type_quota) <= 0 ) 
@@ -744,6 +731,8 @@ public int Handle_Mairie(Handle menu, MenuAction action, int client, int param2)
 					PrintHintText(client, "Vous êtes enregistré à la mairie, merci !");
 					CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 10 cadeaux dans votre banque.");
 					rp_ClientGiveItem(client, ITEM_CADEAU, 10, true);
+					
+					
 				}
 				
 			}
@@ -756,6 +745,13 @@ public int Handle_Mairie(Handle menu, MenuAction action, int client, int param2)
 				rp_SetClientBool(client, b_PassedRulesTest, true);
 				CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 10 cadeaux dans votre banque.");
 				rp_ClientGiveItem(client, ITEM_CADEAU, 10, true);
+				
+				char query[1024], steamid[64];
+				GetClientAuthId(client, AUTH_TYPE, steamid, sizeof(steamid));
+				
+				Format(query, sizeof(query), "UPDATE `rp_users` SET `no_pyj`=1 WHERE `steamid`='%s'", steamid);
+				SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
+				rp_SetClientBool(client, b_IsNoPyj, true);
 			}
 			else if( c == 1 ) {
 				if( b != 0 )
@@ -790,7 +786,7 @@ void getRulesName(serverRules rulesID, int target, int arg, char[] tmp, int leng
 	char tmp2[64], optionsBuff[4][32];
 	if( arg == 1 ) {
 		switch(rulesID) {
-			case rules_Amendes:			{	Format(tmp, length, "Les amendes sont augmentee de 5 pourcent");				}
+			case rules_Amendes:			{	Format(tmp, length, "Les amendes sont augmentees de 5 pourcent");				}
 			case rules_ItemsPrice:		{	Format(tmp, length, "Les prix des items sont augmentés de 10 pourcent");		}
 			case rules_reductions:		{	Format(tmp, length, "Les reductions sont interdites");							}
 			case rules_Productions:		{	Format(tmp, length, "La production des machines et plants est acceleree");		}

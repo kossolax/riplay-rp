@@ -9,6 +9,11 @@
 	#include "roleplay.sp"
 #endif
 
+public Action cmd_ToggleHide(int client, int args) {
+	g_bIsHidden[client] = !g_bIsHidden[client];
+	
+	return Plugin_Handled;
+}
 public Action cmd_GiveMeXP(int client, int args) {
 	rp_ClientXPIncrement(client, GetCmdArgInt(1));
 	
@@ -27,7 +32,7 @@ public Action cmd_RestartTutorial(int client, int args) {
 }
 public Action cmd_GiveAkDeagle(int client, int args) {
 	if( !IsAdmin(client) ) {
-		ReplyToCommand(client, "Vous n'avez pas acces a cette commande.");
+		ReplyToCommand(client, "%T", "No Access", client);
 		return Plugin_Handled;
 	}
 	char tmp[32];
@@ -43,7 +48,7 @@ public Action cmd_GiveAkDeagle(int client, int args) {
 }
 public Action cmd_Rebuild(int client, int args) {
 	if( !IsAdmin(client) ) {
-		ReplyToCommand(client, "Vous n'avez pas acces a cette commande.");
+		ReplyToCommand(client, "%T", "No Access", client);
 		return Plugin_Handled;
 	}
 	
@@ -58,26 +63,21 @@ public Action cmd_Rebuild(int client, int args) {
 public Action cmd_ForceJob(int client, int args) {
 	
 	if( !IsAdmin(client) ) {
-		ReplyToCommand(client, "Vous n'avez pas acces a cette commande.");
-		//return Plugin_Handled;
+		ReplyToCommand(client, "%T", "No Access", client);
+		return Plugin_Handled;
 	}
+	
 	int target = GetClientAimTarget(client, true);
-	
-	if( !IsValidEntity(target) ) 
+	if( !IsValidEntity(target) || !IsValidClient(target) || !IsPlayerAlive(target) ) {
+		ReplyToCommand(client, "%T", "Error_CannotFindTarget", client);
 		return Plugin_Handled;
-	
-	if( !IsValidClient(target) ) 
-		return Plugin_Handled;
-	
-	if( !IsPlayerAlive(target) ) 
-		return Plugin_Handled;
+	}
 	
 	
-	char TargetName[64];
-	char tmp[255];
-	GetClientName(target, TargetName, 63);
+	char TargetName[64], tmp[256];
+	GetClientName2(target, TargetName, sizeof(TargetName), true);
 	
-	Format(tmp, 254, "Sélectionner un job pour: %s\n ", TargetName);
+	Format(tmp, sizeof(tmp), "%T\n ", "Menu_SelectJobTarget", client, TargetName);
 	
 	// Setup menu
 	Handle hHireMenu = CreateMenu(eventHireMenu);
@@ -88,10 +88,7 @@ public Action cmd_ForceJob(int client, int args) {
 		if( StrEqual(g_szJobList[i][0], "", false) )
 			continue;
 		
-		if( StrEqual(g_szJobList[i][0], " ", false) )
-			continue;
-		
-		Format(tmp, 254, "%d_%d", target, i);
+		Format(tmp, sizeof(tmp), "%d_%d", target, i);
 		AddMenuItem(hHireMenu, tmp, g_szJobList[i][0]);
 		
 	}
@@ -101,14 +98,14 @@ public Action cmd_ForceJob(int client, int args) {
 	
 	return Plugin_Handled;
 }
-
 public Action cmd_ForceMeGroup(int client, int args) {
 
 	int target = client;
 	
-	char tmp[255];
+	char TargetName[64], tmp[256];
+	GetClientName2(target, TargetName, sizeof(TargetName), true);
 	
-	Format(tmp, 254, "Sélectionner un group pour: %N\n ", target);
+	Format(tmp, sizeof(tmp), "%T\n ", "Menu_SelectGroupTarget", client, TargetName);
 	
 	// Setup menu
 	Handle hHireMenu = CreateMenu(eventHireMenu2);
@@ -119,10 +116,7 @@ public Action cmd_ForceMeGroup(int client, int args) {
 		if( StrEqual(g_szGroupList[i][0], "", false) )
 			continue;
 		
-		if( StrEqual(g_szGroupList[i][0], " ", false) )
-			continue;
-		
-		Format(tmp, 254, "%d_%d", target, i);
+		Format(tmp, sizeof(tmp), "%d_%d", target, i);
 		AddMenuItem(hHireMenu, tmp, g_szGroupList[i][0]);
 	}
 	
@@ -134,14 +128,15 @@ public Action cmd_ForceMeGroup(int client, int args) {
 public Action cmd_ForceMeJob(int client, int args) {
 	
 	if( GetConVarInt(FindConVar("hostport")) == 27015 && !IsAdmin(client) ) {
-		ReplyToCommand(client, "Vous n'avez pas acces a cette commande.");
+		ReplyToCommand(client, "%T", "No Access", client);
 		return Plugin_Handled;
 	}
 	int target = client;
 	
-	char tmp[255];
+	char TargetName[64], tmp[256];
+	GetClientName2(target, TargetName, sizeof(TargetName), true);
 	
-	Format(tmp, 254, "Sélectionner un job pour: %N\n ", target);
+	Format(tmp, sizeof(tmp), "%T\n ", "Menu_SelectJobTarget", client, TargetName);
 	
 	// Setup menu
 	Handle hHireMenu = CreateMenu(eventHireMenu);
@@ -152,10 +147,7 @@ public Action cmd_ForceMeJob(int client, int args) {
 		if( StrEqual(g_szJobList[i][0], "", false) )
 			continue;
 		
-		if( StrEqual(g_szJobList[i][0], " ", false) )
-			continue;
-		
-		Format(tmp, 254, "%d_%d", target, i);
+		Format(tmp, sizeof(tmp), "%d_%d", target, i);
 		AddMenuItem(hHireMenu, tmp, g_szJobList[i][0]);
 	}
 	
@@ -171,14 +163,14 @@ public Action cmd_SetMute(int client, int args) {
 	
 	
 	if( args < 2 ) {
-		ReplyToCommand(client, "rp_mute [global|local|vocal|event|give|pvp|kill] \"joueur\"");
-		ReplyToCommand(client, "rp_unmute [global|local|vocal|event|give|pvp|kill] \"joueur\"");
+		ReplyToCommand(client, "rp_mute [global|local|vocal|event|give|pvp|kill] \"target\"");
+		ReplyToCommand(client, "rp_unmute [global|local|vocal|event|give|pvp|kill] \"target\"");
 		return Plugin_Handled;
 	}
 	
 	if( !StrEqual(arg1, "global") && !StrEqual(arg1, "vocal") && !StrEqual(arg1, "local") && !StrEqual(arg1, "event") && !StrEqual(arg1, "give") && !StrEqual(arg1, "pvp")  &&  !StrEqual(arg1, "kill") ) {
-		ReplyToCommand(client, "rp_mute [global|local|vocal|event|give|pvp|kill] \"joueur\"");
-		ReplyToCommand(client, "rp_unmute [global|local|vocal|event|give|pvp|kill] \"joueur\"");
+		ReplyToCommand(client, "rp_mute [global|local|vocal|event|give|pvp|kill] \"target\"");
+		ReplyToCommand(client, "rp_unmute [global|local|vocal|event|give|pvp|kill] \"target\"");
 		return Plugin_Handled;
 	}
 	
@@ -223,11 +215,7 @@ public Action cmd_SetMute(int client, int args) {
 
 public Action cmd_NoclipVip(int client, int args) {
 	if( args < 1 || args > 1) {
-		if( client != 0 )
-			ReplyToCommand(client, "Utilisation: rp_noclip \"joueur\"");
-		else
-			PrintToServer("Utilisation: rp_noclip \"joueur\"");
-		
+		ReplyToCommand(client, "rp_noclip \"target\"");		
 		return Plugin_Handled;
 	}
 	
@@ -260,18 +248,19 @@ public Action cmd_NoclipVip(int client, int args) {
 		
 			if(GetEntityMoveType(target) != MOVETYPE_NOCLIP) {
 				SetEntityMoveType(target, MOVETYPE_NOCLIP);
-				PrintToChatZone(zone, "%N a donné le noclip à %N", client, target);
+				GetClientName2(target, target_name, sizeof(target_name), false);
+				PrintToChatZone(zone, "" ...MOD_TAG... " %T", "Toggled noclip on target", LANG_SERVER, "_s", target_name);
 				rp_HookEvent(target, RP_OnPlayerZoneChange, fwdZoneChange);
 			}
 			else {
 				SetEntityMoveType(target, MOVETYPE_WALK);
-				PrintToChatZone(zone, "%N a enlevé le noclip à %N", client, target);
-				rp_UnhookEvent(client, RP_OnPlayerZoneChange, fwdZoneChange);
+				GetClientName2(target, target_name, sizeof(target_name), false);
+				PrintToChatZone(zone, "" ...MOD_TAG... " %T", "Toggled noclip on target", LANG_SERVER, "_s", target_name);
 			}
 			
 		} 
 		else {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas mettre le NOCLIP VIP.");
+			ReplyToCommand(client, "%T", "No Access", client);
 		}
 	}
 	return Plugin_Handled;
@@ -325,16 +314,12 @@ public Action cmd_GiveWeaponEvent(int client, int args) {
 	
 		if( GetZoneBit( GetPlayerZone(target) ) & BITZONE_EVENT) {
 			
-			if( Weapon_ShouldBeEquip(Arg2) && !Client_HasWeapon(target, Arg2) )
+			if( (StrContains(Arg2, "weapon_knife") == 0 || StrContains(Arg2, "weapon_bayonet") == 0) && Client_HasWeapon(target, "weapon_knife") )
 				continue;
 			
 			int analyse = 3;
 			int wepId = GivePlayerItem(target, Arg2);
 			
-			if( Weapon_ShouldBeEquip(Arg2) )
-				EquipPlayerWeapon(target, wepId);
-			
-			CPrintToChat(target, "" ...MOD_TAG... "Vous avez reçu une arme pour l'event.");
 			CreateTimer(0.1, Timer_CheckWeapon, wepId, TIMER_REPEAT);
 			
 			while(analyse <= args) {
@@ -376,6 +361,11 @@ public Action Timer_CheckWeapon(Handle timer, any wepId) {
 		if( !(GetZoneBit( GetPlayerZone(owner) ) & BITZONE_EVENT) ) {
 			RemovePlayerItem(owner, wepId);
 			rp_AcceptEntityInput(wepId, "Kill");
+			
+			FakeClientCommand(owner, "use weapon_fists");
+			g_bUserData[owner][b_WeaponIsKnife] = false;
+			g_bUserData[owner][b_WeaponIsHands] = true;
+			g_bUserData[owner][b_WeaponIsMelee] = false;
 			return Plugin_Stop;
 		}
 		
@@ -405,30 +395,40 @@ public Action cmd_Damage(int client, int args) {
 	
 	g_Client_AMP[client] = StringToFloat(arg1);
 }
+public Action cmd_ROF(int client, int args) {
+	char arg1[12];
+	GetCmdArg(1, arg1, sizeof(arg1));
+	
+	int wpnid = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
+	g_flWeaponFireRate[wpnid] = StringToFloat(arg1);
+}
 public Action Cmd_ReloadSQL(int client, int args) {
 	LoadServerDatabase();
+	LoadDoors();
 	
-	ReplyToCommand(client, "La config a été mis à jour");
+	ReplyToCommand(client, "%T", "Executed config", client, "rp_csgo");
 	
 	return Plugin_Handled;
 }
 
 public Action cmd_GiveAssurance(int client, int args) {
-	for(int i=1; i<=GetMaxClients(); i++) {
+	for(int i=1; i<=MaxClients; i++) {
 		if( !IsValidClient(i) )
 			continue;
+		
+		if( g_bUserData[i][b_Assurance] == 0 ) {
+			g_bUserData[i][b_FreeAssurance] = 1;
+		}
 		g_bUserData[i][b_Assurance] = 1;
 		
-		CPrintToChat(i, "" ...MOD_TAG... " Votre assurance vous couvre pour %i$.", GetAssurence(i));
+		FakeClientCommand(i, "say /assu");
 		CreateTimer(GetRandomFloat(0.1, 3.0), StoreData, i);
 	}
-	
-	ReplyToCommand(client, "FAIT");
 	
 	return Plugin_Handled;
 }
 public Action Cmd_Save(int client, int args) {
-	for(int i=1; i<=GetMaxClients(); i++) {
+	for(int i=1; i<=MaxClients; i++) {
 		if( !IsValidClient(i) )
 			continue;
 		
@@ -439,19 +439,22 @@ public Action Cmd_Save(int client, int args) {
 }
 
 public Action Cmd_CheckAFK(int client, int args) {
-	if( GetClientCount(false) <= 62 ) {
-		ReplyToCommand(client, "Commande dispo uniquement lorsqu'il ya plus de 62 joueur de co.");
+	
+	if( GetClientCount(false) <= MaxClients-2 ) {
+		ReplyToCommand(client, "%T", "Error_ItemCannotBeUsedForNow", client, "rp_afk");
 		return Plugin_Handled;
 	}
 	
 	int target = getAFK();
 	
 	if( !IsValidClient(target) ) {
-		ReplyToCommand(client, "pas d'afk.");
+		ReplyToCommand(client, "%T", "Error_ItemCannotBeUsedForNow", client, "rp_afk");
 		return Plugin_Handled;
 	}
 	
-	ReplyToCommand(client, "FAIT: %N", target);
+	char targetname[64];
+	GetClientName2(target, targetname, sizeof(targetname), false);
+	ReplyToCommand(client, "%T", "Kicked target", client, targetname);
 	client = target;
 	
 	for(int i=0; i<MAX_ITEMS; i++) { 
@@ -469,18 +472,14 @@ public Action Cmd_CheckAFK(int client, int args) {
 	Format(query, sizeof(query), "INSERT INTO `rp_users2` (`id`, `steamid`, `bank`, `pseudo` ) VALUES (NULL, '%s', '%i', 'slot admin');", SteamID, amount);
 	
 	SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);	
-	KickClient(client, "Un admin vous a kick pour liberer un slot, %i$ vous sera remboursé.", amount);
+	KickClient(client, "%T", "AFK_KickAdmin", client, amount);
 	
 	return Plugin_Handled;
 }
 public Action cmd_Beacon(int client, int args) {
 	
 	if( args < 1 || args > 1) {
-		if( client != 0 )
-			ReplyToCommand(client, "Utilisation: rp_blind \"joueur\"");
-		else
-			PrintToServer("Utilisation: rp_blind \"joueur\"");
-		
+		ReplyToCommand(client, "rp_beacon \"target\"");
 		return Plugin_Handled;
 	}
 	
@@ -508,7 +507,8 @@ public Action cmd_Beacon(int client, int args) {
 	for (int i = 0; i < target_count; i++) {
 		int target = target_list[i];
 		g_bUserData[target][b_Beacon] = 1;
-		ReplyToCommand(client, "[TSX-RP] %N a recu la balise.", target);
+		GetClientName2(target, target_name, sizeof(target_name), false);
+		ReplyToCommand(client, "%T", "Toggled beacon on target", client, "_s", target_name);
 	}
 	return Plugin_Handled;
 }
@@ -530,8 +530,8 @@ public Action CmdGenMapConfig(int client, int args) {
 		ACCESS_DENIED(client);
 	}
 	
-	CPrintToChatAll("" ...MOD_TAG... " Génération de la config en cours,");
-	CPrintToChatAll("----------------------------------------------------------------------------");
+	ReplyToCommand(client, "" ...MOD_TAG... " Generating server config...");
+	ReplyToCommand(client, "----------------------------------------------------------------------------");
 	
 	SQL_LockDatabase(g_hBDD);
 	
@@ -544,9 +544,9 @@ public Action CmdGenMapConfig(int client, int args) {
 	
 	if( args == 1 ) {
 		if( strlen(arg1) > 5 ) {
-			Format(query, 1023, "UPDATE `rp_location_zones` SET `map`='%s' WHERE `map`='%s'", map, arg1);
+			Format(query, sizeof(query), "UPDATE `rp_location_zones` SET `map`='%s' WHERE `map`='%s'", map, arg1);
 			SQL_Query(g_hBDD, query);
-			Format(query, 1023, "UPDATE `rp_location_points` SET `map`='%s' WHERE `map`='%s'", map, arg1);
+			Format(query, sizeof(query), "UPDATE `rp_location_points` SET `map`='%s' WHERE `map`='%s'", map, arg1);
 			SQL_Query(g_hBDD, query);
 		}
 	}
@@ -554,13 +554,13 @@ public Action CmdGenMapConfig(int client, int args) {
 		GetCurrentMap(arg1, sizeof(arg1));
 	}
 	
-	CPrintToChatAll("" ...MOD_TAG... "  Ajout des portes a la base de donnee:");
+	ReplyToCommand(client, "" ...MOD_TAG... "  Adding door:");
 	
-	Format(query, 1023, "DELETE FROM `rp_door_locked` WHERE `map`='%s'", arg1);
+	Format(query, sizeof(query), "DELETE FROM `rp_door_locked` WHERE `map`='%s'", arg1);
 	SQL_Query(g_hBDD, query);
-	Format(query, 1023, "DELETE FROM `rp_jobs_doors` WHERE `map`='%s'", arg1);
+	Format(query, sizeof(query), "DELETE FROM `rp_jobs_doors` WHERE `map`='%s'", arg1);
 	SQL_Query(g_hBDD, query);
-	Format(query, 1023, "DELETE FROM `rp_keys_selling` WHERE `map`='%s'", arg1);
+	Format(query, sizeof(query), "DELETE FROM `rp_keys_selling` WHERE `map`='%s'", arg1);
 	SQL_Query(g_hBDD, query);
 	
 	for(int i=MaxClients; i < GetMaxEntities(); i++) {
@@ -588,7 +588,7 @@ public Action CmdGenMapConfig(int client, int args) {
 			}
 		}
 		
-		Format(query, 1023, "INSERT IGNORE INTO `rp_door_locked` (`id`, `map`, `locked`, `double_door`) VALUES ( '%i', '%s', '1', '%i');", (i-MaxClients), map, double_door);
+		Format(query, sizeof(query), "INSERT IGNORE INTO `rp_door_locked` (`id`, `map`, `locked`, `double_door`) VALUES ( '%i', '%s', '1', '%i');", (i-MaxClients), map, double_door);
 		SQL_Query(g_hBDD, query); totals++;
 		
 		
@@ -602,7 +602,7 @@ public Action CmdGenMapConfig(int client, int args) {
 				
 				if( b == job_own || StringToInt(g_szJobList[b][job_type_ownboss]) == job_own ) {
 					
-					Format(query, 1023, "INSERT IGNORE INTO `rp_jobs_doors` (`map`, `job_id`, `door_id`) VALUES ('%s', '%i','%i');", map, b, door_bdd);
+					Format(query, sizeof(query), "INSERT IGNORE INTO `rp_jobs_doors` (`map`, `job_id`, `door_id`) VALUES ('%s', '%i','%i');", map, b, door_bdd);
 					g_iDoorJob[b][door_bdd] = 1;
 					
 					SQL_Query(g_hBDD, query); sub_totals++;
@@ -635,18 +635,16 @@ public Action CmdGenMapConfig(int client, int args) {
 		
 		if( strlen(data) > 1 ) {
 			//
-			Format(query, 1023, "INSERT INTO `rp_keys_selling` (`id`, `map`, `job_id`, `parent`, `prix`, `name`) VALUES (NULL, '%s', '61', '%s', '0', '%i');", map, data, a);
+			Format(query, sizeof(query), "INSERT INTO `rp_keys_selling` (`id`, `map`, `job_id`, `parent`, `prix`, `name`) VALUES (NULL, '%s', '61', '%s', '0', '%i');", map, data, a);
 			SQL_Query(g_hBDD, query); sub_totals++;
 		}
 	}
 	
 	SQL_UnlockDatabase(g_hBDD);
-	CPrintToChatAll("" ...MOD_TAG... " %i portes ont ete ajoutee, avec %i cle.", totals, sub_totals);	
-	
-	CPrintToChatAll("----------------------------------------------------------------------------");
-	CPrintToChatAll("" ...MOD_TAG... " Redemarage de la config... ");
+	ReplyToCommand(client, "" ...MOD_TAG... " %i doors added with %i keys.", totals, sub_totals);	
+	ReplyToCommand(client, "" ...MOD_TAG... " Reloading... ");
 	ServerCommand("rp_reloadSQL");
-	CPrintToChatAll("----------------------------------------------------------------------------");
+	ReplyToCommand(client, "----------------------------------------------------------------------------");
 	
 	return Plugin_Handled;
 }
@@ -706,7 +704,7 @@ public Action CmdSpawn2_Add(int client, int args) {
 	}
 	
 	if( args != 2 ) {
-		ReplyToCommand(client, "Erreur, utilisation: rp_create_point <type> <message>");
+		ReplyToCommand(client, "rp_create_point <type> <message>");
 		return Plugin_Handled;
 	}
 	
@@ -732,7 +730,6 @@ public Action CmdSpawn_Reload(int client, int args) {
 	if( !IsAdmin(client) ) {
 		ACCESS_DENIED(client);
 	}
-	PrintToChatAll("rechargement des banques...");
 	
 	Handle hQuery;
 	
@@ -740,7 +737,7 @@ public Action CmdSpawn_Reload(int client, int args) {
 	
 	if ((hQuery = SQL_Query(g_hBDD, "SELECT `type`, `message`, `originX`, `originY`, `originZ` FROM `rp_location_points` ORDER BY `id` ASC;")) == INVALID_HANDLE) {
 		SQL_UnlockDatabase(g_hBDD);
-		SetFailState("ERREUR FATAL: Impossible de recupérer la liste des positions-points: %s", g_szError);
+		SetFailState(g_szError);
 	}
 	
 	int i=0;
@@ -794,11 +791,7 @@ public Action CmdBank_reload(int client, int args) {
 
 public Action cmd_SetBlind(int client, int args) {
 	if( args < 1 || args > 1) {
-		if( client != 0 )
-			ReplyToCommand(client, "Utilisation: rp_blind \"joueur\"");
-		else
-			PrintToServer("Utilisation: rp_blind \"joueur\"");
-		
+		ReplyToCommand(client, "rp_blind \"target\"");		
 		return Plugin_Handled;
 	}
 	
@@ -826,8 +819,8 @@ public Action cmd_SetBlind(int client, int args) {
 	for (int i = 0; i < target_count; i++) {
 		int target = target_list[i];
 		g_bUserData[target][b_Blind] = 1;
-		ReplyToCommand(client, "[TSX-RP] %N a été aveuglé.", target);
-		CPrintToChat(target, "" ...MOD_TAG... " L'admin: %N{default} vous a aveuglé.", client);
+		GetClientName2(target, target_name, sizeof(target_name), false);
+		ReplyToCommand(client, "{red}%T{default}", "Toggled blind on target", client, "_s", target_name);
 	}
 	
 	return Plugin_Handled;
@@ -837,11 +830,7 @@ public Action cmd_SetColor(int client, int args) {
 	
 	
 	if( args < 5 || args > 5) {
-		if( client != 0 )
-			ReplyToCommand(client, "Utilisation: rp_color \"joueur\" \"rouge\" \"vert\" \"bleu\" \"alpha\"");
-		else
-			PrintToServer("Utilisation: rp_color \"joueur\" \"rouge\" \"vert\" \"bleu\" \"alpha\"");
-		
+		ReplyToCommand(client, "rp_color \"target\" \"red\" \"green\" \"blue\" \"alpha\"");		
 		return Plugin_Handled;
 	}
 	
@@ -871,7 +860,6 @@ public Action cmd_SetColor(int client, int args) {
 	
 	for (int i = 0; i < target_count; i++) {
 		int target = target_list[i];
-		ReplyToCommand(client, "[TSX-RP] %N a été coloré.", target);
 		Colorize(target, StringToInt(arg2), StringToInt(arg3), StringToInt(arg4), StringToInt(arg5));
 	}
 	
@@ -880,11 +868,7 @@ public Action cmd_SetColor(int client, int args) {
 
 public Action cmd_SetCut(int client, int args) {
 	if( args < 2 || args > 2) {
-		if( client != 0 )
-			ReplyToCommand(client, "Utilisation: rp_cut \"joueur\" \"niveau\"");
-		else
-			PrintToServer("Utilisation: rp_cut \"joueur\" \"niveau\"");
-		
+		ReplyToCommand(client, "rp_cut \"target\" \"damage\"");
 		return Plugin_Handled;
 	}
 	
@@ -914,20 +898,18 @@ public Action cmd_SetCut(int client, int args) {
 	
 	for (int i = 0; i < target_count; i++) {
 		int target = target_list[i];
-		ReplyToCommand(client, "[TSX-RP] %N a a un niveau de cut a %i jusqu'a sa mort.", target, StringToInt(arg2));
+		GetClientName2(target, target_name, sizeof(target_name), false);
+		ReplyToCommand(client, "%T", "Cmd_KnifeDamage", client, target_name, StringToInt(arg2));
 		
 		g_iUserData[target][i_KnifeTrainAdmin] = StringToInt(arg2);
 	}
 	
 	return Plugin_Handled;
 }
-public Action cmd_SetTir(int client, int args) {
+
+public Action cmd_SetFist(int client, int args) {
 	if( args < 2 || args > 2) {
-		if( client != 0 )
-			ReplyToCommand(client, "Utilisation: rp_tir \"joueur\" \"niveau\"");
-		else
-			PrintToServer("Utilisation: rp_tir \"joueur\" \"niveau\"");
-		
+		ReplyToCommand(client, "rp_fist \"player\" \"damage\"");
 		return Plugin_Handled;
 	}
 	
@@ -957,7 +939,49 @@ public Action cmd_SetTir(int client, int args) {
 	
 	for (int i = 0; i < target_count; i++) {
 		int target = target_list[i];
-		ReplyToCommand(client, "[TSX-RP] %N a un niveau de tir a %.2f jusqu'a sa mort.", target, StringToFloat(arg2));
+		GetClientName2(target, target_name, sizeof(target_name), false);
+		ReplyToCommand(client, "%T", "Cmd_HandsDamage", client, target_name, StringToInt(arg2));
+		
+		g_iUserData[target][i_FistTrainAdmin] = StringToInt(arg2);
+	}
+	
+	return Plugin_Handled;
+}
+
+public Action cmd_SetTir(int client, int args) {
+	if( args < 2 || args > 2) {
+		ReplyToCommand(client, "rp_tir \"player\" \"damage\"");
+		return Plugin_Handled;
+	}
+	
+	char arg1[64];
+	GetCmdArg(1, arg1, sizeof( arg1 ) );
+	
+	char arg2[12];
+	GetCmdArg(2, arg2, sizeof(arg2));
+	
+	
+	char target_name[MAX_TARGET_LENGTH];
+	int target_list[MAXPLAYERS], target_count; bool tn_is_ml;
+	
+	if ((target_count = ProcessTargetString(
+	arg1,
+	client,
+	target_list,
+	MAXPLAYERS,
+	COMMAND_FILTER_CONNECTED|COMMAND_FILTER_NO_BOTS|COMMAND_FILTER_NO_MULTI|COMMAND_FILTER_ALIVE,
+	target_name,
+	sizeof(target_name),
+	tn_is_ml)) <= 0)
+	{
+		ReplyToTargetError(client, target_count);
+		return Plugin_Handled;
+	}
+	
+	for (int i = 0; i < target_count; i++) {
+		int target = target_list[i];
+		GetClientName2(target, target_name, sizeof(target_name), false);
+		ReplyToCommand(client, "%T", "Cmd_WeaponDamage", client, target_name, RoundToFloor(StringToFloat(arg2)/8.0*100.0));
 		
 		g_flUserData[target][fl_WeaponTrainAdmin] = StringToFloat(arg2);
 	}
@@ -966,11 +990,7 @@ public Action cmd_SetTir(int client, int args) {
 }
 public Action cmd_UnBlind(int client, int args) {
 	if( args < 1 || args > 1) {
-		if( client != 0 )
-			ReplyToCommand(client, "Utilisation: rp_unblind \"joueur\"");
-		else
-			PrintToServer("Utilisation: rp_unblind \"joueur\"");
-		
+		ReplyToCommand(client, "rp_unblind \"player\"");		
 		return Plugin_Handled;
 	}
 	
@@ -998,19 +1018,15 @@ public Action cmd_UnBlind(int client, int args) {
 	for (int i = 0; i < target_count; i++) {
 		int target = target_list[i];
 		g_bUserData[target][b_Blind] = 0;
-		ReplyToCommand(client, "[TSX-RP] %N a récupéré la vue.", target);
-		CPrintToChat(target, "" ...MOD_TAG... " L'admin: %N{default} vous a rendu la vue.", client);
+		GetClientName2(target, target_name, sizeof(target_name), false);
+		ReplyToCommand(client, "{red}%T{default}", "Toggled blind on target", client, "_s", target_name);
 	}
 	
 	return Plugin_Handled;
 }
 public Action cmd_SetHeal(int client, int args) {
 	if( args < 2 || args > 2) {
-		if( client != 0 )
-			ReplyToCommand(client, "Utilisation: rp_heal \"joueur\" \"hp\"");
-		else
-			PrintToServer("Utilisation: rp_heal \"joueur\" \"hp\"");
-		
+		ReplyToCommand(client, "rp_heal \"player\" \"hp\"");		
 		return Plugin_Handled;
 	}
 	
@@ -1045,7 +1061,6 @@ public Action cmd_SetHeal(int client, int args) {
 			continue;
 		
 		SetEntityHealth(target, heal);
-		ReplyToCommand(client, "[TSX-RP] %N a maintenant: %i HP.", target, heal);
 		g_bUserData[target][b_AdminHeal] = true;
 	}
 	
@@ -1053,11 +1068,7 @@ public Action cmd_SetHeal(int client, int args) {
 }
 public Action cmd_SetKevlar(int client, int args) {
 	if( args < 2 || args > 2) {
-		if( client != 0 )
-			ReplyToCommand(client, "Utilisation: rp_kevlar \"joueur\" \"hp\"");
-		else
-			PrintToServer("Utilisation: rp_kevlar \"joueur\" \"hp\"");
-		
+		ReplyToCommand(client, "rp_kevlar \"player\" \"hp\"");
 		return Plugin_Handled;
 	}
 	
@@ -1092,18 +1103,13 @@ public Action cmd_SetKevlar(int client, int args) {
 			continue;
 		
 		g_iUserData[target][i_Kevlar] = kevlar;
-		ReplyToCommand(client, "[TSX-RP] %N a maintenant: %i de kevlar.", target, kevlar);
 	}
 	
 	return Plugin_Handled;
 }
 public Action cmd_SetTDM(int client, int args) {
 	if( args < 2 || args > 2) {
-		if( client != 0 )
-			ReplyToCommand(client, "Utilisation: rp_tdm \"joueur\" \"nbr\"");
-		else
-			PrintToServer("Utilisation: rp_tdm \"joueur\" \"ndr\"");
-		
+		ReplyToCommand(client, "Utilisation: rp_tdm \"joueur\" \"nbr\"");		
 		return Plugin_Handled;
 	}
 	
@@ -1135,96 +1141,31 @@ public Action cmd_SetTDM(int client, int args) {
 		int target = target_list[i];
 		
 		g_iUserData[target][i_KillJailDuration] = nbr;
-		ReplyToCommand(client, "[TSX-RP] %N a maintenant: %i tête de mort.", target, nbr);
 	}
 	
 	return Plugin_Handled;
 }
-int requester, rq_zone;
-public int Handle_VoteCleanMenu(Menu menu, MenuAction action, int param1, int param2) {
-	if (action == MenuAction_End) {
-		delete menu;
-	}
-	else if( action == MenuAction_Select ) {
-		if( param2 == 0 ) {
-			for(int i=1; i<=MaxClients; i++) {
-				if( !IsValidClient(i) )
-					continue;
-				if (!CheckCommandAccess(i, "sm_chat", ADMFLAG_CHAT)) // On display la réponse que a ceux qui ont le sm_chat, basiquement tous les admins
-					continue;
-				PrintToChat(i, "[TSX-RP] %N ne souhaite pas rp_clean.", param1);
-			}
-		}
-	}
-}
-public void Handle_VoteResults(Menu menu, int num_votes, int num_clients, const int[][] client_info,  int num_items, const int[][] item_info) {
-	if( item_info[0][VOTEINFO_ITEM_INDEX] == 0 && item_info[0][VOTEINFO_ITEM_VOTES] >= 1 ||  item_info[1][VOTEINFO_ITEM_INDEX] == 0 && item_info[1][VOTEINFO_ITEM_VOTES] >= 1 ) {
-		for(int i=1; i<=MaxClients; i++) {
-			if( !IsValidClient(i) )
-				continue;
-			if (!CheckCommandAccess(i, "sm_chat", ADMFLAG_CHAT)) // On display la réponse que a ceux qui ont le sm_chat, basiquement tous les admins
-				continue;
-			PrintToChat(i, "[TSX-RP]  Un ou plusieurs administrateur/VIP ne souhaite(nt) pas rp_clean.");
-		}
-	}
-	else {
-		int total = RunMapCleaner(true, true, rq_zone );
-		for(int i=1; i<=MaxClients; i++) {
-			if( !IsValidClient(i) )
-				continue;
-			if (!CheckCommandAccess(i, "sm_chat", ADMFLAG_CHAT)) // On display la réponse que a ceux qui ont le sm_chat, basiquement tous les admins
-				continue;
-			PrintToChat(i, "[TSX-RP] %i props ont été supprimés par %N.", total, requester);
-		}
-	}
-}
 public Action cmd_CleanMap(int client, int args) {
 	
-	// On lance un menu pour les admin
-	if( IsVoteInProgress() )
-		CancelVote();
-	Handle menu = CreateMenu(Handle_VoteCleanMenu);
-	char tmp[64];
-	Format(tmp, sizeof(tmp), "%N souhaite rp_clean. Êtes-vous d'accord ?\n ", client);
-	SetMenuTitle(menu, tmp);
-	
-	AddMenuItem(menu, "0", "Non");
-	AddMenuItem(menu, "1", "Oui");
-	SetMenuExitButton(menu, false);
-	SetVoteResultCallback(menu, Handle_VoteResults);
-	requester = client;
-	rq_zone = args == 0 ? GetPlayerZone(client) : GetCmdArgInt(1);
-	int clients[65], count = 0;
-	
-	for(int i=1; i<=MaxClients; i++) {
-		if( !IsValidClient(i) )
-			continue;
-		
-		int flags = GetUserFlagBits(i);
-		if(!( flags & ADMFLAG_CHAT)) // On display le menu que a ceux qui ont le sm_chat, basiquement tous les admins
-			continue;
-		clients[count++] = i;
+	int total = 0;
+	for(int i=0;i<MAX_ZONES;i++){
+		if(rp_GetZoneBit(i) & BITZONE_EVENT) {
+			total += RunMapCleaner(true, true,i);
+		}
 	}
 	
-	VoteMenu(menu, clients, count, 25);	
-	
+	ReplyToCommand(client, "%T", "Cmd_Clean", client, total);
 	return Plugin_Handled;
 }
 public Action cmd_CleanMapForce(int client, int args) {
 	
 	int total = RunMapCleaner(true, true, GetCmdArgInt(1) );
-	if( client > 0 )
-		PrintToChat(client, "[TSX-RP] %i props ont été supprimés.", total);
-	
+	ReplyToCommand(client, "%T", "Cmd_Clean", client, total);
 	return Plugin_Handled;
 }
 public Action cmd_SetClear(int client, int args) {
 	if( args < 1 || args > 1) {
-		if( client != 0 )
-			ReplyToCommand(client, "Utilisation: rp_clear \"joueur\"");
-		else
-			PrintToServer("Utilisation: rp_clear \"joueur\"");
-		
+		ReplyToCommand(client, "rp_clear \"target\"");
 		return Plugin_Handled;
 	}
 	
@@ -1257,7 +1198,8 @@ public Action cmd_SetClear(int client, int args) {
 		
 		SetEntPropFloat(client, Prop_Send, "m_flModelScale", 1.0);
 		
-		ReplyToCommand(client, "[TSX-RP] %N a été réinitialisé.", target);
+		GetClientName2(target, target_name, sizeof(target_name), false);
+		ReplyToCommand(client, "%T", "Cmd_Clear", client, target_name);
 	}
 	
 	return Plugin_Handled;
@@ -1267,13 +1209,17 @@ public Action cmd_ForceUnlock(int client, int args) {
 	int ent = GetClientAimTarget(client, false);
 	
 	if( IsValidDoor(ent) ) {
+		
+		if( GetEntProp(ent, Prop_Data, "m_bLocked") ) {
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Door_Unlock", client);
+			EmitSoundToAllAny("doors/latchunlocked1.wav", ent, _, _, _, 0.25);
+		}
+		
 		SetEntProp(ent, Prop_Data, "m_bLocked", 0);
 		int door_bdd = g_iDoorDouble[ent - MaxClients ] + MaxClients;
 		if( door_bdd > MaxClients )
 			SetEntProp(door_bdd, Prop_Data, "m_bLocked", 0);
 	}
-	
-	
 	
 	return Plugin_Handled;
 }
@@ -1281,6 +1227,12 @@ public Action cmd_ForceLock(int client, int args) {
 	int ent = GetClientAimTarget(client, false);
 	
 	if( IsValidDoor(ent) ) {
+		
+		if( !GetEntProp(ent, Prop_Data, "m_bLocked") ) {
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Door_Lock", client);
+			EmitSoundToAllAny("doors/default_locked.wav", ent, _, _, _, 0.25);
+		}
+		
 		SetEntProp(ent, Prop_Data, "m_bLocked", 1);
 		int door_bdd = g_iDoorDouble[ent - MaxClients ] + MaxClients;
 		if( door_bdd > MaxClients )
@@ -1304,7 +1256,7 @@ public Action cmd_GiveCash(int client, int args) {
 public Action cmd_GiveItem(int client, int args) {
 	
 	if( GetConVarInt(FindConVar("hostport")) == 27015 && !IsAdmin(client) ) {
-		ReplyToCommand(client, "Vous n'avez pas acces a cette commande.");
+		ReplyToCommand(client, "%T", "No Access", client);
 		return Plugin_Handled;
 	}
 	

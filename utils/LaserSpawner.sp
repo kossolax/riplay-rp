@@ -2,42 +2,41 @@
 #include <sdktools>
 #include <sdkhooks>
 #include <phun>
+#include <smlib>
 
-#define MAX_LASER		50
+#pragma newdecls required
+
 #define MAX_CUBES		10
 #define	MAX_CUBES_SUP	50
 #define TICK_RATE		1.0
 
-new Float:g_fLaserStarts[MAX_LASER][3];
-new Float:g_fLaserEnds[MAX_LASER][3];
-new g_iHaveStart[MAX_LASER];
-new g_iHaveEnd[MAX_LASER];
-new g_iLaserSpawned[MAX_LASER];
+float g_fLaserCubeMins[MAX_CUBES][3];
+float g_fLaserCubeMaxs[MAX_CUBES][3];
+float g_fLaserCubeCenter[MAX_CUBES][3];
+float g_flLaserCubeTick[MAX_CUBES][2];
 
-new Float:g_fLaserCubeMins[MAX_CUBES][MAX_CUBES];
-new Float:g_fLaserCubeMaxs[MAX_CUBES][MAX_CUBES];
-new Float:g_fLaserCubeCenter[MAX_CUBES][MAX_CUBES];
-new Float:g_flLaserCubeTick[MAX_CUBES][2];
+int g_iLaserCubeSpawned[MAX_CUBES];
+int g_iLaserCubeSuppLine[MAX_CUBES];
+int g_iLaserCubeXray[MAX_CUBES];
+int g_iLaserCubeNODamage[MAX_CUBES];
+int g_iLaserCubePeaceFULL[MAX_CUBES];
+int g_iLaserCubeCORD_TIME[MAX_CUBES];
+int g_iLaserCubeCORD_ANG[MAX_CUBES];
+int g_iLaserCubeCORD_SPEED[MAX_CUBES];
+float g_flLaserCubeEDIT_SIZE[MAX_CUBES];
 
-new g_iLaserCubeSpawned[MAX_CUBES];
-new g_iLaserCubeSuppLine[MAX_CUBES];
-new g_iLaserCubeXray[MAX_CUBES];
-new g_iLaserCubeNODamage[MAX_CUBES];
-new g_iLaserCubePeaceFULL[MAX_CUBES];
-new Float:g_flLaserCubeEDIT_SIZE[MAX_CUBES];
-
-new Float:g_flLastDamage[2049];
+float g_flLastDamage[2049];
 
 
-new g_sprite = -1;
-new g_sprite2 = -1;
-new g_cLaser = -1;
+int g_sprite = -1;
+int g_sprite2 = -1;
+int g_cLaser = -1;
 
-new g_iClientCubeID[65];
+int g_iClientCubeID[65];
 bool g_iClientBeam[65];
 
 
-public Plugin:myinfo = 
+public Plugin myinfo = 
 {
 	name = "Laser Spawner",
 	author = "KoSSoLaX",
@@ -46,20 +45,13 @@ public Plugin:myinfo =
 	url = "http://www.ts-x.eu"
 }
 
-#define PROPTYPE_FAILED -3
-#define PROPTYPE_WRONGPROP -2
-#define PROPTYPE_BADENT -1
-#define PROPTYPE_BOTH 0
-#define PROPTYPE_SEND 1
-#define PROPTYPE_DATA 2
-
-public OnPluginStart() {
+public void OnPluginStart() {
 	
 	RegAdminCmd("sm_laser_cube", Cmd_LaserMenu, ADMFLAG_BAN);
 	RegAdminCmd("sm_laser_cube_size", Cmd_LaserCube_size, ADMFLAG_BAN);
 	RegAdminCmd("sm_laser_beacon", Cmd_LaserBeacon, ADMFLAG_BAN);
 	
-	for(new i=1;i<=MaxClients; i++) {
+	for(int i=1;i<=MaxClients; i++) {
 		if( !IsValidClient(i) )
 			continue;
 		
@@ -95,25 +87,25 @@ public Action Cmd_LaserBeacon(int client, int args) {
 	}
 	return Plugin_Handled;
 }
-public OnClientPutInServer(client) {
+public void OnClientPutInServer(int client) {
 	SDKHook(client, SDKHook_OnTakeDamage,	OnTakeDamage);
 	g_iClientBeam[client] = false;
 }
-public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damagetype) {
+public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype) {
 	
-	new bool:changed = false;
+	bool changed = false;
 	
-	for(new id=0; id<MAX_CUBES; id++) {
+	for(int id=0; id<MAX_CUBES; id++) {
 		if( g_iLaserCubeSpawned[id] && g_iLaserCubePeaceFULL[id] ) {
 			//
 			// Calcule des l'origine des pointes du cube
-			new Float:fMin[3], Float:fMax[3];
-			for(new i=0; i<=2; i++) {
+			float fMin[3], fMax[3];
+			for(int i=0; i<=2; i++) {
 				fMin[i] = g_fLaserCubeCenter[id][i] + g_fLaserCubeMins[id][i];
 				fMax[i] = g_fLaserCubeCenter[id][i] + g_fLaserCubeMaxs[id][i];
 			}
 			
-			new Float:vecOrigin[3];
+			float vecOrigin[3];
 			GetClientAbsOrigin(victim, vecOrigin);
 			if( PointInArea(vecOrigin, fMin, fMax) )
 				changed = true;
@@ -140,21 +132,14 @@ public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damage
 	return Plugin_Continue;
 	
 }
-public Action:Cmd_LaserCube_size(client, args) {
-	new String:arg1[12];
+public Action Cmd_LaserCube_size(int client, int args) {
+	char arg1[12];
 	GetCmdArg(1, arg1, sizeof(arg1));
 	
 	g_flLaserCubeEDIT_SIZE[ g_iClientCubeID[client] ] = StringToFloat(arg1);
 	return Plugin_Handled;
 }
-public OnMapStart() {
-	
-	for(new i=0; i<MAX_LASER; i++) {
-		g_iHaveStart[i] = 0;
-		g_iHaveEnd[i] = 0;
-		g_iLaserSpawned[i] = 0;
-		
-	}
+public void OnMapStart() {
 	
 	if( GetUserMessageType() == UM_Protobuf ) {
 		// CSGO
@@ -168,14 +153,61 @@ public OnMapStart() {
 	}
 }
 
-public OnGameFrame() {	
+public void OnGameFrame() {	
 	
-	for(new id=0; id<MAX_CUBES; id++) {
+	for(int id=0; id<MAX_CUBES; id++) {
 		if( g_iLaserCubeSpawned[id] ) {
+			
+			if( g_iLaserCubeCORD_TIME[id] > 0 ) {
+				float rot[3], ang[3], res[3];
+				rot[0] = (g_fLaserCubeMaxs[id][0] - g_fLaserCubeMins[id][0]) / 2.0;
+				rot[1] = (g_fLaserCubeMaxs[id][1] - g_fLaserCubeMins[id][1]) / 2.0;
+				rot[2] = (g_fLaserCubeMaxs[id][2] - g_fLaserCubeMins[id][2]) / 2.0;				
+				g_iLaserCubeCORD_ANG[id] = (g_iLaserCubeCORD_ANG[id] + g_iLaserCubeCORD_SPEED[id]) % 360;
+				
+				ang[0] = float(g_iLaserCubeCORD_ANG[id]);
+				
+				Math_RotateVector(rot, ang, res);
+				
+				float src[3], dst[3];
+				
+			 	src[0] = g_fLaserCubeCenter[id][0] + res[0] + (g_fLaserCubeMins[id][0]+g_fLaserCubeMaxs[id][0]/2.0);
+			 	src[1] = g_fLaserCubeCenter[id][1] + res[1] - (g_fLaserCubeMins[id][1]+g_fLaserCubeMaxs[id][1]/2.0);
+			 	src[2] = g_fLaserCubeCenter[id][2] + res[2] + (g_fLaserCubeMins[id][2]+g_fLaserCubeMaxs[id][2]/2.0);
+			 	
+			 	dst[0] = g_fLaserCubeCenter[id][0] + res[0] + (g_fLaserCubeMins[id][0]+g_fLaserCubeMaxs[id][0]/2.0);
+			 	dst[1] = g_fLaserCubeCenter[id][1] + res[1] + (g_fLaserCubeMins[id][1]+g_fLaserCubeMaxs[id][1]/2.0);
+			 	dst[2] = g_fLaserCubeCenter[id][2] + res[2] + (g_fLaserCubeMins[id][2]+g_fLaserCubeMaxs[id][2]/2.0);
+			 	
+				g_flLaserCubeTick[id][1] = GetGameTime() + TICK_RATE;				
+				
+				if( g_iLaserCubeNODamage[id] == 1 ) {
+					TE_SetupBeamPoints( src, dst, g_sprite, 0, 0, 10, 0.25, 1.0, 1.0, 1, 0.0, {255, 10, 10, 250}, 10);
+					TE_SendToAll();
+					
+					TE_SetupBeamRingPoint(src, 1.0, 2.0, g_sprite, g_sprite, 0, 0, 0.1, 1.0, 0.0, { 0, 255, 0, 255 }, 0, 0);
+					TE_SendToAll();
+					TE_SetupBeamRingPoint(dst, 1.0, 2.0, g_sprite, g_sprite, 0, 0, 0.1, 1.0, 0.0, { 0, 255, 0, 255 }, 0, 0);
+					TE_SendToAll();
+					TraceKillingBeam(id, src, dst, false, 0.25);
+				}
+				else {
+					TE_SetupBeamPoints( src, dst, g_sprite, 0, 0, 10, 0.25, 1.0, 1.0, 0, 0.0, {10, 255, 10, 250}, 10);
+					TE_SendToAll();
+					
+					TE_SetupBeamRingPoint(src, 1.0, 2.0, g_sprite, g_sprite, 0, 0, 0.1, 1.0, 0.0, { 255, 0, 0, 255 }, 0, 0);
+					TE_SendToAll();
+					TE_SetupBeamRingPoint(dst, 1.0, 2.0, g_sprite, g_sprite, 0, 0, 0.1, 1.0, 0.0, { 255, 0, 0, 255 }, 0, 0);
+					TE_SendToAll();
+				}
+				
+				
+				continue;
+			}
 			
 			//
 			// Calcule des l'origine des pointes du cube
-			new Float:f_points[8][3];
+			float f_points[8][3];
 			
 			f_points[0][0] = g_fLaserCubeCenter[id][0] + g_fLaserCubeMaxs[id][0];
 			f_points[0][1] = g_fLaserCubeCenter[id][1] + g_fLaserCubeMaxs[id][1];
@@ -228,12 +260,12 @@ public OnGameFrame() {
 			TraceKillingBeam( id, f_points[3], f_points[7], true);
 			
 			if( g_iLaserCubeSuppLine[id] > 0 ) {
-				new amount = g_iLaserCubeSuppLine[id];
+				int amount = g_iLaserCubeSuppLine[id];
 				
-				for(new i=0; i<amount; i++) {
+				for(int i=0; i<amount; i++) {
 					
-					new Float:starts[3];
-					new Float:ends[3];
+					float starts[3];
+					float ends[3];
 					
 					starts[0] = f_points[4][0];
 					starts[1] = f_points[4][1];
@@ -245,10 +277,10 @@ public OnGameFrame() {
 					
 					TraceKillingBeam( id, starts, ends, true);
 				}
-				for(new i=0; i<amount; i++) {
+				for(int i=0; i<amount; i++) {
 					
-					new Float:starts[3];
-					new Float:ends[3];
+					float starts[3];
+					float ends[3];
 					
 					starts[0] = f_points[5][0];
 					starts[1] = f_points[5][1];
@@ -260,10 +292,10 @@ public OnGameFrame() {
 					
 					TraceKillingBeam( id, starts, ends, true);
 				}
-				for(new i=0; i<amount; i++) {
+				for(int i=0; i<amount; i++) {
 					
-					new Float:starts[3];
-					new Float:ends[3];
+					float starts[3];
+					float ends[3];
 					
 					starts[0] = f_points[6][0];
 					starts[1] = f_points[6][1];
@@ -275,10 +307,10 @@ public OnGameFrame() {
 					
 					TraceKillingBeam( id, starts, ends, true);
 				}
-				for(new i=0; i<amount; i++) {
+				for(int i=0; i<amount; i++) {
 					
-					new Float:starts[3];
-					new Float:ends[3];
+					float starts[3];
+					float ends[3];
 					
 					starts[0] = f_points[7][0];
 					starts[1] = f_points[7][1];
@@ -291,10 +323,10 @@ public OnGameFrame() {
 					TraceKillingBeam( id, starts, ends, true);
 				}
 				
-				for(new i=0; i<amount; i++) {
+				for(int i=0; i<amount; i++) {
 					
-					new Float:starts[3];
-					new Float:ends[3];
+					float starts[3];
+					float ends[3];
 					
 					starts[0] = f_points[1][0] + ((g_fLaserCubeMaxs[id][0]-g_fLaserCubeMins[id][0])/(amount+1)*(i+1));
 					starts[1] = f_points[1][1];
@@ -306,10 +338,10 @@ public OnGameFrame() {
 					
 					TraceKillingBeam( id, starts, ends, true);
 				}
-				for(new i=0; i<amount; i++) {
+				for(int i=0; i<amount; i++) {
 					
-					new Float:starts[3];
-					new Float:ends[3];
+					float starts[3];
+					float ends[3];
 					
 					starts[0] = f_points[5][0] + ((g_fLaserCubeMaxs[id][0]-g_fLaserCubeMins[id][0])/(amount+1)*(i+1));
 					starts[1] = f_points[5][1];
@@ -325,15 +357,6 @@ public OnGameFrame() {
 			
 			if( g_flLaserCubeTick[id][0] < GetGameTime() ) 
 				g_flLaserCubeTick[id][0] = GetGameTime() + TICK_RATE;
-		}
-	}
-	for(new i=0; i<MAX_LASER; i++) {
-		if( g_iLaserSpawned[i] ) {
-			
-			TraceKillingBeam( i, g_fLaserStarts[i], g_fLaserEnds[i] );
-			
-			if( g_flLaserCubeTick[i][1] < GetGameTime() ) 
-				g_flLaserCubeTick[i][1] = GetGameTime() + TICK_RATE;
 		}
 	}
 	
@@ -367,25 +390,23 @@ public OnGameFrame() {
 	}
 }
 
-stock TraceKillingBeam( id, Float:start[3], Float:end[3], bool:IsCube=false) {
+stock void TraceKillingBeam( int id, float start[3], float end[3], bool IsCube=false, float time=TICK_RATE) {
 	
 	if( GetVectorDistance(start, end) <= 2.5 ) {
 		return;
 	}
 	
-	if(  IsCube && g_flLaserCubeTick[id][0] < GetGameTime() ||
-		!IsCube && g_flLaserCubeTick[id][1] < GetGameTime()
-	) {
+	if( IsCube && g_flLaserCubeTick[id][0] < GetGameTime() ) {
 		
 		if(  IsCube && g_flLaserCubeTick[id][0] < 1.0 ||
 			!IsCube && g_flLaserCubeTick[id][1] < 1.0
 		) {
 			
 			if( g_iLaserCubeXray[id] ) {
-				TE_SetupBeamPoints( start, end, g_sprite2, 0, 0, 10, TICK_RATE, 1.0, 1.0, 0, 0.0, {10, 255, 10, 250}, 10);
+				TE_SetupBeamPoints( start, end, g_sprite2, 0, 0, 10, time, 1.0, 1.0, 0, 0.0, {10, 255, 10, 250}, 10);
 			}
 			else {
-				TE_SetupBeamPoints( start, end, g_sprite, 0, 0, 10, TICK_RATE, 1.0, 1.0, 0, 0.0, {10, 255, 10, 250}, 10);
+				TE_SetupBeamPoints( start, end, g_sprite, 0, 0, 10, time, 1.0, 1.0, 0, 0.0, {10, 255, 10, 250}, 10);
 			}
 			
 			TE_SendToAll();
@@ -393,21 +414,21 @@ stock TraceKillingBeam( id, Float:start[3], Float:end[3], bool:IsCube=false) {
 		else {
 			
 			if( g_iLaserCubeXray[id] ) {
-				TE_SetupBeamPoints( start, end, g_sprite2, 0, 0, 10, TICK_RATE, 1.0, 1.0, 0, 0.0, {255, 10, 10, 250}, 10);
+				TE_SetupBeamPoints( start, end, g_sprite2, 0, 0, 10, time, 1.0, 1.0, 0, 0.0, {255, 10, 10, 250}, 10);
 			}
 			else {
-				TE_SetupBeamPoints( start, end, g_sprite, 0, 0, 10, TICK_RATE, 1.0, 1.0, 0, 0.0, {255, 10, 10, 250}, 10);
+				TE_SetupBeamPoints( start, end, g_sprite, 0, 0, 10, time, 1.0, 1.0, 0, 0.0, {255, 10, 10, 250}, 10);
 			}
 			TE_SendToAll();
 		}
 	}
 	
 	if( g_iLaserCubeNODamage[id] ) {
-		new Handle:trace = TR_TraceRayFilterEx( start, end, MASK_ALL, RayType_EndPoint, TraceFilter, id);
+		Handle trace = TR_TraceRayFilterEx( start, end, MASK_ALL, RayType_EndPoint, TraceFilter, id);
 		
 		if( TR_DidHit( trace ) ) {
 			
-			new index = TR_GetEntityIndex( trace );
+			int index = TR_GetEntityIndex( trace );
 			
 			if( index > 0 ) {				
 				SDKHooks_TakeDamage(index, index, index, 10000.0, DMG_ENERGYBEAM);
@@ -420,7 +441,7 @@ stock TraceKillingBeam( id, Float:start[3], Float:end[3], bool:IsCube=false) {
 	
 	return;
 }
-public bool:TraceFilter(entity, contentmask, any:id) {
+public bool TraceFilter(int entity, int contentmask, any id) {
 	if( entity == 0 )
 		return false;
 	
@@ -437,9 +458,9 @@ public bool:TraceFilter(entity, contentmask, any:id) {
 	
 	return false;
 }
-public Action:Cmd_LaserMenu(client, args) {
+public Action Cmd_LaserMenu(int client, int args) {
 	
-	new String:arg1[12];
+	char arg1[12];
 	GetCmdArg(1, arg1, sizeof(arg1));
 	
 	g_iClientCubeID[client] = StringToInt(arg1);
@@ -447,9 +468,9 @@ public Action:Cmd_LaserMenu(client, args) {
 	
 	return Plugin_Handled;
 }
-public EditingLaser(client) {
+void EditingLaser(int client) {
 	
-	new Handle:menu = CreateMenu(EditingLaserHandler);
+	Handle menu = CreateMenu(EditingLaserHandler);
 	SetMenuTitle(menu, "Modifier un laser-cube:");
 	
 	AddMenuItem(menu, "spawn", 		"Spawn");
@@ -487,19 +508,115 @@ public EditingLaser(client) {
 		AddMenuItem(menu, "peacefull",	"PeaceFULL OFF");
 	}
 	
+	AddMenuItem(menu, "corde",	"Corde à sauter");
+	
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, MENU_TIME_FOREVER);
 	
 	g_flLaserCubeTick[ g_iClientCubeID[client] ][0] = 0.0;
 }
-public EditingLaserHandler(Handle:menu, MenuAction:action, client, param2) {
+void EditingLaserCorde(int client) {
+	
+	Handle menu = CreateMenu(EditingLaserCordeHandler);
+	SetMenuTitle(menu, "Modifier un laser-cube:");
+	
+	if( g_iLaserCubeCORD_TIME[g_iClientCubeID[client]] ) {
+		AddMenuItem(menu, "corde",	"Corde à sauter ON");
+	}
+	else {
+		AddMenuItem(menu, "corde",	"Corde à sauter OFF");
+	}
+	
+	if( g_iLaserCubeNODamage[g_iClientCubeID[client]] ) {
+		AddMenuItem(menu, "damage",	"Degat ON");
+	}
+	else {
+		AddMenuItem(menu, "damage",	"Degat OFF");
+	}
+	
+	AddMenuItem(menu, "corde_p",	"Accélérer");
+	AddMenuItem(menu, "corde_m",	"Ralentir");
+	AddMenuItem(menu, "corde_i",	"Inverser");
+	AddMenuItem(menu, "corde_s",	"Stop");
+	AddMenuItem(menu, "corde_r",	"Reset");
+	
+	SetMenuPagination(menu, false);
+	SetMenuExitButton(menu, true);
+	
+	DisplayMenu(menu, client, MENU_TIME_FOREVER);
+}
+public int EditingLaserCordeHandler(Handle menu, MenuAction action, int client, int param2) {
 	if( action == MenuAction_Select ) {
-		new String:options[64];
+		char options[64];
+		GetMenuItem(menu, param2, options, 63);
+		
+		if( StrEqual( options, "corde", false) ) {
+			if( g_iLaserCubeCORD_TIME[g_iClientCubeID[client]] == 0 ) {
+				g_iLaserCubeCORD_TIME[g_iClientCubeID[client]] = GetGameTickCount();
+				g_iLaserCubeCORD_SPEED[g_iClientCubeID[client]] = 0;
+				g_iLaserCubeNODamage[g_iClientCubeID[client]] = 0;
+				g_iLaserCubeCORD_ANG[g_iClientCubeID[client]] = 180;
+			}
+			else {
+				g_iLaserCubeCORD_TIME[g_iClientCubeID[client]] = 0;
+				g_iLaserCubeNODamage[g_iClientCubeID[client]] = 0;
+			}
+			
+			EditingLaserCorde(client);
+		}
+		else if( StrEqual( options, "corde_p", false) ) {
+			if( g_iLaserCubeCORD_SPEED[g_iClientCubeID[client]] >= 0 ) {
+				g_iLaserCubeCORD_SPEED[g_iClientCubeID[client]] += 1;
+			}
+			else {
+				g_iLaserCubeCORD_SPEED[g_iClientCubeID[client]] -= 1;
+			}
+			
+			EditingLaserCorde(client);
+		}
+		else if( StrEqual( options, "corde_m", false) ) {
+			if( g_iLaserCubeCORD_SPEED[g_iClientCubeID[client]] < 0 ) {
+				g_iLaserCubeCORD_SPEED[g_iClientCubeID[client]] += 1;
+			}
+			else if( g_iLaserCubeCORD_SPEED[g_iClientCubeID[client]] > 0 ) {
+				g_iLaserCubeCORD_SPEED[g_iClientCubeID[client]] -= 1;
+			}
+			
+			EditingLaserCorde(client);
+		}
+		else if( StrEqual( options, "corde_i", false) ) {
+			g_iLaserCubeCORD_SPEED[g_iClientCubeID[client]] *= -1;
+			EditingLaserCorde(client);
+		}
+		else if( StrEqual( options, "corde_s", false) ) {
+			g_iLaserCubeCORD_SPEED[g_iClientCubeID[client]] = 0;
+			EditingLaserCorde(client);
+		}
+		else if( StrEqual( options, "corde_r", false) ) {
+			g_iLaserCubeCORD_SPEED[g_iClientCubeID[client]] = 0;
+			g_iLaserCubeCORD_ANG[g_iClientCubeID[client]] = 180;
+			g_iLaserCubeNODamage[g_iClientCubeID[client]] = 0;
+			EditingLaserCorde(client);
+		}
+		else if( StrEqual( options, "damage", false) ) {
+			if( g_iLaserCubeNODamage[g_iClientCubeID[client]] == 0 ) {
+				g_iLaserCubeNODamage[g_iClientCubeID[client]] = 1;
+			}
+			else {
+				g_iLaserCubeNODamage[g_iClientCubeID[client]] = 0;
+			}
+			EditingLaserCorde(client);
+		}
+	}
+}
+public int EditingLaserHandler(Handle menu, MenuAction action, int client, int param2) {
+	if( action == MenuAction_Select ) {
+		char options[64];
 		GetMenuItem(menu, param2, options, 63);
 		
 		if( StrEqual( options, "spawn", false) ) {
 			
-			new Float:f_origin[3];
+			float f_origin[3];
 			GetClientAbsOrigin(client, f_origin);
 			
 			g_fLaserCubeMins[g_iClientCubeID[client]][0] = 0.0;
@@ -517,6 +634,7 @@ public EditingLaserHandler(Handle:menu, MenuAction:action, client, param2) {
 			g_iLaserCubeSpawned[g_iClientCubeID[client]] = 1;
 			
 			g_flLaserCubeEDIT_SIZE[g_iClientCubeID[client]] = 10.0;
+			g_iLaserCubeCORD_TIME[g_iClientCubeID[client]] = 0;
 			
 			EditingLaser(client);
 		}
@@ -555,6 +673,9 @@ public EditingLaserHandler(Handle:menu, MenuAction:action, client, param2) {
 			}
 			EditingLaser(client);
 		}
+		else if( StrEqual( options, "corde", false) ) {
+			EditingLaserCorde(client);
+		}
 		else if( StrEqual( options, "add_line", false) ) {
 			
 			g_iLaserCubeSuppLine[g_iClientCubeID[client]]++;
@@ -583,24 +704,23 @@ public EditingLaserHandler(Handle:menu, MenuAction:action, client, param2) {
 		}
 		else if( StrEqual( options, "ins", false) ) {
 			
-			new Float:fMin[3], Float:fMax[3];
-			for(new i=0; i<=2; i++) {
+			float fMin[3], fMax[3];
+			for(int i=0; i<=2; i++) {
 				fMin[i] = g_fLaserCubeCenter[g_iClientCubeID[client]][i] + g_fLaserCubeMins[g_iClientCubeID[client]][i];
 				fMax[i] = g_fLaserCubeCenter[g_iClientCubeID[client]][i] + g_fLaserCubeMaxs[g_iClientCubeID[client]][i];
 			}
 			
-			for( new i=1; i<= 2049; i++) {
+			for( int i=1; i<= 2049; i++) {
 				if( !IsValidEdict(i) )
 					continue;
 				if( !IsValidEntity(i) )
 					continue;
 				
-				new prop_type = FindPropType(i, "m_vecOrigin");
-				if( prop_type == PROPTYPE_SEND ) {
-					new Float:vecPos[3];
+				if( HasEntProp(i, Prop_Send, "m_vecOrigin") ) {
+					float vecPos[3];
 					GetEntPropVector(i, Prop_Send, "m_vecOrigin", vecPos);
 					if( PointInArea(vecPos, fMin, fMax) ) {
-						decl String:classname[128];
+						char classname[128];
 						GetEdictClassname(i, classname, 127);
 						PrintToConsole(client, "%d %s", i, classname);
 					}
@@ -611,15 +731,15 @@ public EditingLaserHandler(Handle:menu, MenuAction:action, client, param2) {
 			
 			
 			
-			for(new i=0; i<3; i++ ) {
+			for(int i=0; i<3; i++ ) {
 				if( g_fLaserCubeMins[g_iClientCubeID[client]][i] > g_fLaserCubeMaxs[g_iClientCubeID[client]][i] ) {
-					new Float:vecTemp = g_fLaserCubeMins[g_iClientCubeID[client]][i];
+					float vecTemp = g_fLaserCubeMins[g_iClientCubeID[client]][i];
 					g_fLaserCubeMins[g_iClientCubeID[client]][i] = g_fLaserCubeMaxs[g_iClientCubeID[client]][i];
 					g_fLaserCubeMaxs[g_iClientCubeID[client]][i] = vecTemp;
 				}
 			}
 			
-			new String:query[1024];
+			char query[1024];
 			Format(query, 1023, "INSERT INTO `rp_location_zones` (`id`, `zone_name`, `min_x`, `min_y`, `min_z`, `max_x`, `max_y`, `max_z` )");
 			Format(query, 1023, "%s VALUES ( NULL, 'NOM_ZONE', '%i', '%i', '%i', '%i', '%i', '%i' );", 
 			query, 
@@ -649,25 +769,7 @@ public EditingLaserHandler(Handle:menu, MenuAction:action, client, param2) {
 		CloseHandle(menu);
 	}	
 }
-stock FindPropType(entity,const String:prop[]) {
-	if(!IsValidEntity(entity))
-		return PROPTYPE_BADENT;
-	
-	new bool:NetClsName;
-	new PropSend = -1;
-	
-	decl String:NetClass[50]="empty";
-	NetClsName=GetEntityNetClass(entity,NetClass,sizeof(NetClass));
-	
-	if(NetClsName) {
-		PropSend=FindSendPropOffs(NetClass,prop);
-		if(PropSend !=- 1)
-			return PROPTYPE_SEND;
-	}
-		
-	return PROPTYPE_FAILED;
-}
-stock bool:PointInArea(Float:f_Points[3], Float:f_Mins[3], Float:f_Maxs[3]) {
+stock bool PointInArea(float f_Points[3], float f_Mins[3], float f_Maxs[3]) {
 	
 	if(	f_Points[0] <= f_Maxs[0] && f_Points[1] <= f_Maxs[1] && f_Points[2] <= f_Maxs[2] &&
 		f_Points[0] >= f_Mins[0] && f_Points[1] >= f_Mins[1] && f_Points[2] >= f_Mins[2] ) {
@@ -676,8 +778,8 @@ stock bool:PointInArea(Float:f_Points[3], Float:f_Mins[3], Float:f_Maxs[3]) {
 	
 	return false;
 }
-public EditingLaserOrigin(client) {
-	new Handle:menu = CreateMenu(EditingLaserOriginHandler);
+void EditingLaserOrigin(int client) {
+	Handle menu = CreateMenu(EditingLaserOriginHandler);
 	SetMenuTitle(menu, "Modifier un laser-cube:");
 	
 	AddMenuItem(menu, "monter", 	"Monter");
@@ -692,9 +794,9 @@ public EditingLaserOrigin(client) {
 	
 	g_flLaserCubeTick[ g_iClientCubeID[client] ][0] = 0.0;
 }
-public EditingLaserOriginHandler(Handle:menu, MenuAction:action, client, param2) {
+public int EditingLaserOriginHandler(Handle menu, MenuAction action, int client, int param2) {
 	if( action == MenuAction_Select ) {
-		new String:options[64];
+		char options[64];
 		GetMenuItem(menu, param2, options, 63);
 		
 		if( StrEqual( options, "monter", false) ) {
@@ -734,8 +836,8 @@ public EditingLaserOriginHandler(Handle:menu, MenuAction:action, client, param2)
 		CloseHandle(menu);
 	}	
 }
-public EditingLaserSize(client) {
-	new Handle:menu = CreateMenu(EditingLaserSizeHandler);
+void EditingLaserSize(int client) {
+	Handle menu = CreateMenu(EditingLaserSizeHandler);
 	SetMenuTitle(menu, "Modifier un laser-cube:");
 	
 	AddMenuItem(menu, "grandir", 	"Grandir");
@@ -750,9 +852,9 @@ public EditingLaserSize(client) {
 	
 	g_flLaserCubeTick[ g_iClientCubeID[client] ][0] = 0.0;
 }
-public EditingLaserSizeHandler(Handle:menu, MenuAction:action, client, param2) {
+public int EditingLaserSizeHandler(Handle menu, MenuAction action, int client, int param2) {
 	if( action == MenuAction_Select ) {
-		new String:options[64];
+		char options[64];
 		GetMenuItem(menu, param2, options, 63);
 		
 		if( StrEqual( options, "grandir", false) ) {

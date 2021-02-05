@@ -10,6 +10,23 @@
 	#include "roleplay.sp"
 #endif 
 
+public MRESReturn DHooks_OnVoicePost(int client, Handle hReturn, Handle hParams) {
+	if( g_hClientMicTimers[client] != INVALID_HANDLE ) {
+		delete g_hClientMicTimers[client];
+	}
+	
+	g_hClientMicTimers[client] = CreateTimer(0.5, Timer_ClientMicUsage, client);
+	return MRES_Ignored;
+}  
+public Action Timer_ClientMicUsage(Handle hTimer, int client) {	
+	if( g_hClientMicTimers[client] != hTimer ) {
+		return Plugin_Handled;
+	}
+	
+	g_hClientMicTimers[client] = INVALID_HANDLE;
+	return Plugin_Handled;
+}
+
 public Action EventFlashPlayer(Handle event, const char[] name, bool dontBroadcast) {
 	int client = GetClientOfUserId(GetEventInt(event, "userid"));
 	
@@ -35,12 +52,16 @@ public void EventFirstSpawn(int client) {
 public Action HUD_WarnDisconnect(Handle timer, any client) {
 	if( !g_bUserData[client][b_ItemRecovered] )
 		return;
+	char tmp[128];
 	
-	Menu menu = new Menu(HUD_WarnDisconnect_Handler);
-	menu.SetTitle("Attention\n \nVous avez déconnecté avec\ndes objets dans votre inventaires.\nCette fois, ils vous ont été rendu.\n\nPensez à les déposer en banque,\nafin d'éviter de mauvaise surprise.");
-	menu.AddItem("no", "Pardon?");
-	menu.AddItem("yes", "J'ai compris, je ferai plus attention.");
-	menu.Display(client, 2);
+	
+	
+	if( rp_ClientCanDrawPanel(client) ) {
+		Menu menu = new Menu(HUD_WarnDisconnect_Handler);
+		menu.SetTitle("%T", "HUD_WarnDisconnect", client);
+		Format(tmp, sizeof(tmp), "%T", "Understand", client); menu.AddItem("yes", tmp);
+		menu.Display(client, 2);
+	}
 	
 	if( g_bUserData[client][b_ItemRecovered] )
 		CreateTimer(1.0, HUD_WarnDisconnect, client);
@@ -75,21 +96,19 @@ public Action EventZoom(Handle ev, const char[] name, bool dontBroadcast) {
 		}
 	}
 }
-
-public Action OnWeaponSwitch(int Client, int weapon) {
+public Action OnWeaponCanSwitchTo(int Client, int weapon) {
 	static char szWeapon[32];
 	GetEdictClassname(weapon, szWeapon, sizeof(szWeapon));
 	
-	g_bUserData[Client][b_WeaponIsKnife] = (StrContains(szWeapon, "weapon_knife") == 0 || StrContains(szWeapon, "weapon_bayonet") == 0);
-	g_bUserData[Client][b_WeaponIsHands] = (StrContains(szWeapon, "weapon_fists") == 0);
-	
 	if( g_flUserData[Client][fl_TazerTime] > GetGameTime() || Client_GetVehicle(Client) > 0 ) {
-		
-		if( !g_bUserData[Client][b_WeaponIsHands]  ) {
-			FakeClientCommand(Client, "use weapon_fists");
+		if( StrContains(szWeapon, "weapon_fists") != 0 ) {
 			return Plugin_Handled;
 		}
 	}
+	
+	g_bUserData[Client][b_WeaponIsKnife] = (StrContains(szWeapon, "weapon_knife") == 0 || StrContains(szWeapon, "weapon_bayonet") == 0);
+	g_bUserData[Client][b_WeaponIsHands] = (StrContains(szWeapon, "weapon_fists") == 0);
+	g_bUserData[Client][b_WeaponIsMelee] = (StrContains(szWeapon, "weapon_melee") == 0);
 	
 	return Plugin_Continue;
 }
@@ -150,6 +169,15 @@ public Action OnWeaponCanUse(int client, int weapon) {
 	if( (g_iWeaponStolen[weapon]+30) > GetTime() ) {
 		g_flUserData[client][fl_LastStolen] = GetGameTime();
 	}
+	
+	char classname[64];
+	GetEntityClassname(weapon, classname, sizeof(classname));
+	if( StrEqual(classname, "weapon_knife") ) {
+		if( !Client_HasWeapon(client, classname) ) {
+			EquipPlayerWeapon(client, weapon);
+			return Plugin_Continue;
+		}
+	}
 
 	return Plugin_Continue;
 }
@@ -174,7 +202,6 @@ public Action CS_OnCSWeaponDrop(int client, int weapon) {
 		}
 		
 		g_iWeaponStolen[weapon] = GetTime();
-		g_iWeaponFromStore[weapon] = 0;
 	}
 
 	return Plugin_Continue;
@@ -271,11 +298,8 @@ public Action Command_LAW2(int client, const char[] command, int argc) {
 }
 
 
-public Action EventPlayerTeam(Handle ev, const char[] name, bool broadcast) {
-	int client = GetClientOfUserId(GetEventInt(ev, "userid"));
-	
+public Action EventPlayerTeam(Handle ev, const char[] name, bool broadcast) {	
 	SetEventBool(ev, "silent", true);
-//	SetEventBroadcast(ev, true);
 
 	return Plugin_Changed;
 }
@@ -285,7 +309,6 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	if( IsFakeClient(Client) )
 		return Plugin_Continue;
 	
-	bool test = false;
 	g_iCarPassager2[Client] = 0;
 	SetClientViewEntity(Client, Client);
 	
@@ -300,6 +323,7 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	FakeClientCommand(Client, "use weapon_fists");
 	g_bUserData[Client][b_WeaponIsKnife] = false;
 	g_bUserData[Client][b_WeaponIsHands] = true;
+	g_bUserData[Client][b_WeaponIsMelee] = false;
 	
 	if( g_iUserData[Client][i_ThirdPerson] == 1 )
 		ClientCommand(Client, "thirdperson");
@@ -348,11 +372,7 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 		g_iUserData[Client][i_Kevlar] = 250;
 	}
 
-	StripWeapons(Client);
-	
-	if( IsInPVP(Client) )
-		GroupColor(Client);
-	
+	StripWeapons(Client);	
 
 	CreateTimer(0.1, OnPlayerSpawnPost, GetClientUserId(Client));
 
@@ -365,10 +385,7 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	if( g_bUserData[Client][b_isConnected] && g_bUserData[Client][b_isConnected2] )
 		ServerCommand("sm_effect_fading %i 1.0", Client);
 
-	if( g_iUserData[Client][i_Malus] > GetTime() ) {
-		CPrintToChat(Client, "" ...MOD_TAG... " Vous avez un malus pour encore: %.1f minute(s).", (float(g_iUserData[Client][i_Malus]-GetTime())/60.0) );
-	}
-	else {
+	if( g_iUserData[Client][i_Malus] < GetTime() ) {
 		g_iUserData[Client][i_Malus] = 0;
 	}
 
@@ -388,10 +405,12 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	}
 
 	SetClientViewEntity(Client, Client);
-	SetEntProp(Client, Prop_Data, "m_iAmmo", 100, _, 19);
 	
 	if( g_iUserData[Client][i_KnifeTrainAdmin] >= 0 ) {
 		g_iUserData[Client][i_KnifeTrainAdmin] = -1;
+	}
+	if( g_iUserData[Client][i_FistTrainAdmin] >= 0 ) {
+		g_iUserData[Client][i_FistTrainAdmin] = -1;
 	}
 	if( g_flUserData[Client][fl_WeaponTrainAdmin] >= 0.0 ) {
 		g_flUserData[Client][fl_WeaponTrainAdmin] = -1.0;
@@ -430,24 +449,22 @@ public Action OnPlayerSpawnPost(Handle timer, any userid) {
 public void ClientConVar(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue) {
 	if( StrEqual(cvarName, "cl_downloadfilter", false) ) {
 		if( StrEqual(cvarValue, "all") == false ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Des problemes d'affichage? Entrez cl_downloadfilter all dans votre console puis relancer CS:GO.");
-		}
-	}
-	if( StrEqual(cvarName, "cl_disablehtmlmotd", false) ) {
-		if( StrEqual(cvarValue, "0") == false ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Des problemes d'affichage? Entrez cl_disablehtmlmotd 0 dans votre console puis relancer CS:GO.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "cl_downloadfilter", client);
 		}
 	}
 	if( StrEqual(cvarName, "cl_join_advertise", false) ) {
 		if( StrEqual(cvarValue, "2") == false && Math_GetRandomInt(0, 4) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Entrez cl_join_advertise 2 pour que vos amis puissent vous rejoindre facilement.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "cl_join_advertise", client);
 		}
 	}
 	
 }
 public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
+	static char weapon[64], client_name[128], target_name[128];
 	int Client = GetClientOfUserId(GetEventInt(ev, "userid"));
 	int Attacker = GetClientOfUserId(GetEventInt(ev, "attacker"));
+	GetEventString(ev, "weapon", weapon, sizeof(weapon));
+	
 	float time = GetGameTime();
 	float respawn = float(g_iUserData[Client][i_KillJailDuration]) + 5.0;
 	
@@ -455,23 +472,36 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 	respawn = Math_Clamp(respawn, 10.0, 40.0);
 	
 	if( GotPvPvPBonus(Client, cap_bunker) )
-		respawn /= 2.0;
+		respawn *= 0.75;
 	if( g_iUserData[Client][i_PlayerLVL] >= 650 )
-		respawn /= 2.0;
+		respawn *= 0.75;
 	
-
-	int killDuration = getKillContext(Attacker, Client);
-	if( g_iKillLegitime[Attacker][Client] >= GetTime() ) {
-		killDuration = 1;
-		if( GetClientTeam(Attacker) == CS_TEAM_CT )
-			killDuration = 0;
+	
+	float killAcceleration = getKillAcceleration(Attacker, Client, g_iUserData[Client][i_LastInflictor], weapon);
+	int killDuration = 5;
+	if( g_iKillLegitime[Attacker][Client] >= GetTime() || rp_GetZoneBit(rp_GetPlayerZone(Client)) & BITZONE_LEGIT ) {
+		killDuration = 0;
+	}
+	
+	if( Client_GetVehicle(Client) > 0 ) {
+		int vehicleID = Client_GetVehicle(Client);
+		
+		for(int i=1; i<=MaxClients; i++) {
+			if( !IsValidClient(i) )
+				continue;
+			if( g_iCarPassager[vehicleID][i] )
+				LeaveVehiclePassager(i, vehicleID);
+		}
 	}
 	
 	g_iUserStat[Client][i_Deaths]++;
 	showGraveMenu(Client);
 	
-	char weapon[64];
-	GetEventString(ev, "weapon", weapon, sizeof(weapon));
+	
+	
+	GetClientName2(Client, client_name, sizeof(client_name), false);
+	if( IsValidClient(Attacker) )
+		GetClientName2(Attacker, target_name, sizeof(target_name), false);
 
 	g_iCarPassager2[Client] = 0;
 
@@ -483,7 +513,6 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 		if( IsValidClient(Attacker) )
 			g_iHideNextLog[Attacker][Client] = 1;
 
-		CPrintToChat(Client, "" ...MOD_TAG... " Vous êtes mort dans %s, vous allez revivre dans 1 seconde.", g_szZoneList[GetPlayerZone(Client)][zone_type_name]);
 		g_flUserData[Client][fl_RespawnTime] = time + 1.0 + Math_GetRandomFloat(-0.33, 0.33);
 		
 		for(int i=1; i<=MaxClients; i++) {
@@ -492,10 +521,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 			if( zone_victim != GetPlayerZone(i) )
 				continue;
 
-			if( Attacker <= 0 || Attacker == Client )
-				CPrintToChat(i, "" ...MOD_TAG... " %N{default} s'est tué.", Client);
-			else
-				CPrintToChat(i, "" ...MOD_TAG... " %N{default} a tué %N{default}.", Attacker, Client);
+			CPrintToChat(i, "" ...MOD_TAG... " %T", ( Attacker <= 0 || Attacker == Client ) ? "Kill_Self" : "Kill_Target", i, client_name, target_name);
 		}
 		return Plugin_Continue;
 	}
@@ -503,7 +529,6 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 	if( GetZoneBit( zone_victim ) & BITZONE_EVENT && GetConVarInt(g_hEVENT) == 3 ) {
 		g_flUserData[Client][fl_RespawnTime] = time + 1.0 + Math_GetRandomFloat(-0.33, 0.33);
 		rp_ClientTeleport(Client, view_as<float>({4682.0, 11182.0, -2311.0}));
-		CPrintToChat(Client, "" ...MOD_TAG... " Vous êtes mort en event, vous allez revivre dans 1 seconde.");
 	}
 
 	if( IsValidClient(g_iUserData[Client][i_BurnedBy]) && g_flUserData[Client][fl_Burning] > GetGameTime() && !IsValidClient(Attacker) ) {
@@ -518,6 +543,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 	Call_PushCell(Attacker);
 	Call_PushCellRef(respawn);
 	Call_PushCellRef(killDuration);
+	Call_PushCellRef(killAcceleration);
 	Call_Finish(a);
 	
 	if( IsValidClient(Attacker) ) {
@@ -526,6 +552,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 		Call_PushCell(Client);
 		Call_PushString(weapon);
 		Call_PushCellRef(killDuration);
+		Call_PushCellRef(killAcceleration);
 		Call_Finish(b);
 	}
 	
@@ -569,10 +596,21 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 			g_iUserData[Attacker][i_LastKilled_Reverse] = Client;
 
 			if( g_iHideNextLog[Attacker][Client] == 0 ) {
-				if( !(GetZoneBit( GetPlayerZone(Attacker) ) & BITZONE_EVENT || GetZoneBit( GetPlayerZone(Attacker) ) & BITZONE_PVP) ) {
-					g_iUserData[Attacker][i_KillJailDuration] += killDuration;
+				if( !(GetZoneBit( GetPlayerZone(Client) ) & BITZONE_EVENT || GetZoneBit( GetPlayerZone(Client) ) & BITZONE_PVP) ) {
+					
+					if( killDuration > 1 ) {
+						if( killAcceleration >= 0.75 ) {
+							if( rp_ClientFloodTriggered(Attacker, Client, fd_freekill1) )
+								rp_ClientFloodIncrement(Attacker, Client, fd_freekill2, float(FREEKILL_TIME));
+							rp_ClientFloodIncrement(Attacker, Client, fd_freekill1, float(FREEKILL_TIME));
+						}
+						g_iUserData[Attacker][i_KillingSpread]++;
+					}
+					
+					g_iUserData[Attacker][i_KillJailDuration] += RoundToCeil(Pow(float(g_iUserData[Attacker][i_KillingSpread]*killDuration), killAcceleration));
+					g_iUserData[Attacker][i_LastKillTime_ReduceTDM] = GetTime();
+					g_iUserData[Attacker][i_LastKillTime_ReduceFK] = GetTime();
 					g_iUserData[Attacker][i_LastKillTime] = GetTime();
-					g_iUserData[Attacker][i_KillingSpread] += (killDuration > 1 ? 1:0);
 				}
 
 
@@ -599,21 +637,14 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 					SetEntProp(Attacker, Prop_Send, "m_iNumRoundKills",  0);
 			}
 			
-			if( GetClientTeam(Client) == CS_TEAM_CT ) {
-				if( !IsInPVP(Client) && g_iHideNextLog[Attacker][Client] == 0 ) {
-					g_iUserData[Attacker][i_KillJailDuration] += killDuration;
-				}
-			}
-			
 			if( g_iHideNextLog[Attacker][Client] == 0 ) {
-				if( g_iUserData[Attacker][i_KillJailDuration] >= 120 ) {
+				
+				if( g_iUserData[Attacker][i_KillJailDuration] >= AUTOKICK_TDM ) {
 					g_bUserData[Attacker][b_IsFreekiller] = true;
 					ServerCommand("rp_SendToJail %d 0", Attacker);
 					
 					if( rp_GetClientInt(Attacker, i_JailTime) < g_iUserData[Attacker][i_KillJailDuration] * 60 )
 						rp_SetClientInt(Attacker, i_JailTime, g_iUserData[Attacker][i_KillJailDuration] * 60);
-				
-					KickClient(Attacker, "Vous avez été kické pour FREEKILL abusif");
 				}
 			}
 			
@@ -624,7 +655,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 	if( Client ) {
 
 		if( g_bUserData[Client][b_Beacon] == 1 ) {
-			CPrintToChatAll("" ...MOD_TAG... " %N{default} a été tué.", Client);
+			CPrintToChatAll("" ...MOD_TAG... " %T", ( Attacker <= 0 || Attacker == Client ) ? "Kill_Self" : "Kill_Target", LANG_SERVER, client_name, target_name);
 			g_bUserData[Client][b_Beacon] = 0;
 		}
 		
@@ -643,10 +674,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 
 			int flags = GetUserFlagBits(i);
 			if (flags & ADMFLAG_GENERIC || flags & ADMFLAG_ROOT) {
-				if( Attacker <= 0 || Attacker == Client )
-					CPrintToChat(i, "" ...MOD_TAG... " %N{default} s'est tué.", Client);
-				else
-					CPrintToChat(i, "" ...MOD_TAG... " %N{default} a tué %N{default}.", Attacker, Client);
+				CPrintToChat(i, "" ...MOD_TAG... " %T", ( Attacker <= 0 || Attacker == Client ) ? "Kill_Self" : "Kill_Target", i, client_name, target_name);
 			}
 		}
 	}
@@ -668,7 +696,6 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 		}
 		
 		if( g_flUserData[Client][fl_RespawnTime] < time && respawn > 0.25 ) {
-			CPrintToChat(Client, "" ...MOD_TAG... " Vous êtes mort en zone pvp.");
 			respawn = 1.0;
 			
 			if( g_bIsInCaptureMode ) {
@@ -677,7 +704,6 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 		}
 	}
 	else if( g_bIsInCaptureMode && GetGroupPrimaryID(Client) > 0 ) {
-		CPrintToChat(Client, "" ...MOD_TAG... " Vous êtes mort pendant une capture pvp.");
 		respawn = 1.0;
 	}
 	
@@ -711,6 +737,25 @@ public Action EventBlockMessage(Handle ev, const char[] name, bool  bd) {
 	}
 
 	return Plugin_Continue;
+}
+public Action EventPlayerFire(Handle ev, const char[] name, bool  bd) {
+	int client = GetClientOfUserId(GetEventInt(ev, "userid"));
+	char weapon[64];
+	GetEventString(ev, "weapon", weapon, sizeof(weapon));
+	
+	if( !IsPlayerAlive(client) )
+		return Plugin_Continue;
+	
+	if( g_bUserData[client][b_WeaponIsMelee] ) {
+		if( StrContains(weapon, "weapon_hammer") == 0 || StrContains(weapon, "weapon_spanner") == 0 || StrContains(weapon, "weapon_axe") == 0 ) {
+			float hit[3];
+			if( rp_GetTargetHull(client, hit, 56.0) >= 0 ) {
+				// TBD
+			}
+		}
+	}
+	
+	return Plugin_Continue;	
 }
 public Action EventPlayerShot(Handle ev, const char[] name, bool  bd) {
 

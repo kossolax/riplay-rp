@@ -11,8 +11,8 @@
 
 int getZoneAppart(int client) {
 	
-	static float g_flLastCheck[65] = 0.0;
-	static g_iLastData[65];
+	static float g_flLastCheck[MAX_ENTITIES+1] = 0.0;
+	static g_iLastData[MAX_ENTITIES+1];
 	
 	if( g_flLastCheck[client] > GetGameTime() ) {
 		return g_iLastData[client];
@@ -152,6 +152,9 @@ int GetPlayerZone(int client, float cacheTime = 0.15) {
 			GetEntPropVector(vehicle, Prop_Send, "m_vecOrigin", f_ClientOrigin);
 		else
 			GetEntPropVector(client, Prop_Send, "m_vecOrigin", f_ClientOrigin);
+	}
+	else if( Entity_GetParent(client) > 0 ) {
+		GetEntPropVector(Entity_GetParent(client), Prop_Send, "m_vecOrigin", f_ClientOrigin);
 	}
 	else {
 		GetEntPropVector(client, Prop_Send, "m_vecOrigin", f_ClientOrigin);

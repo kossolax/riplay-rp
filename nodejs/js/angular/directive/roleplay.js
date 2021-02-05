@@ -155,7 +155,7 @@ exports = module.exports = function(app) {
           str = str.substring(1);
 
         var method = str.split("@");
-
+       
         if( confir == '!' ) {
           scope.$parent.showAlert = true;
           scope.$parent.messageAlert = "Êtes vous sur de vouloir \""+element.html()+"\" ?";
@@ -167,18 +167,18 @@ exports = module.exports = function(app) {
           method[1] = "https://riplay.fr/api" + method[1];
           $http({url: method[1], method: method[0].toUpperCase()})
           .then(function(res) { 
-            if( res.hasOwnProperty("redirect") ) { 
-              $location.path(res.redirect); 
+            if( res.data.redirect ) { 
+              $location.path(res.data.redirect); 
             } 
+            if( attr.redirect ) {
+              $location.path(attr.redirect);
+            }
             scope.$parent.showAlert = true; 
-            scope.$parent.messageAlert = 
+            scope.$parent.messageAlert = res.data.message;
             res.message; scope.$parent.messageTitle = "Okay";  
-          /*})
-          .error(function (res) {*/
           },function (res){
             scope.$parent.showAlert = true; 
-            scope.$parent.messageAlert = res.message; 
-            console.log(res.message);
+            scope.$parent.messageAlert = res.data.message; 
             scope.$parent.messageTitle = "Erreur"; 
           });
         }

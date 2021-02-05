@@ -63,7 +63,7 @@ char g_szSuccessData[view_as<int>(success_list_all)][view_as<int>(success_type_a
 	{ "fireworks", "Un beau spectacle", "Exploser plus de 100 feux d'artifice.", "100" , "0" },
 	{ "assurance", "L'assurance à vie", "S'assurer 10x contre les crashs.", "10" , "0" },
 	{ "no_tech", "Non à la contrebande", "Détruire plus de 250 machines à faux billets.", "250" , "0" },
-	{ "no_18th", "Non à la contrebande II", "Tuer plus de 25 membres des 18th lorsqu'ils volent une arme.", "25" , "0" },
+	{ "no_18th", "Non à la contrebande II", "Tuer plus de 25 membres des Dealer lorsqu'ils volent une arme.", "25" , "0" },
 	{ "million", "Le million, le million, le million", "Posséder plus d'un million de $.", "1000000" , "0" },
 	{ "pas_vu_pas_pris", "Pas vu, pas pris", "Ne pas se faire voler pendant plus d'une semaine RP.", "7" , "0" },
 	{ "pissing", "J'te pisse au cul", "Étant complètement bourré, pisser sur un policier pendant plus de 30 secondes.", "30" , "0" },
@@ -79,10 +79,10 @@ char g_szSuccessData[view_as<int>(success_list_all)][view_as<int>(success_type_a
 	{ "kidnapping", "Kidnapping", "Enlever un joueur, et obtenir la rancon.", "1" , "0" },
 	{ "killpvp2", "Tuerie !", "Tuer 7 membres d'un autre gang en PvP lors d'une capture, sans mourir.", "7" , "0" },
 	{ "alcool_abuse", "L'alcoolique anonyme", "Boire plus de 1000 boissons alcoolisées.", "1000" , "0" },
-	{ "tel", "Dring dring…", "Atteindre le niveau 5 sur chacune des missions téléphoniques.", "10" , "0" },
-	{ "w_friends", "Entre amis", "Parrainer 5 joueurs.", "5" , "1" },
-	{ "w_friends2", "Entre amis II", "Parrainer 10 joueurs.", "10" , "1" },
-	{ "w_friends3", "Entre amis III", "Parrainer 15 joueurs.", "15" , "1" },
+	{ "tel", "En quête de sens", "Réussir 100 quêtes.", "100" , "0" },
+	{ "w_friends", "Entre amis", "Parrainer 5 joueurs.", "5" , "0" },
+	{ "w_friends2", "Entre amis II", "Parrainer 10 joueurs.", "10" , "0" },
+	{ "w_friends3", "Entre amis III", "Parrainer 15 joueurs.", "15" , "0" },
 	{ "bon_patron", "Bon patron", "En jeu, engager 50 nouveaux joueurs différents dans son propre job.", "50" , "0" },
 	{ "rainbow", "Arc en ciel", "Utiliser 12 crayons de couleurs.", "12" , "0" },
 	{ "hdv", "Hôtel des ventes", "Vendre 10 lots d'objets dans l'Hôtel des ventes.", "10" , "1" },
@@ -111,6 +111,7 @@ int g_iSuccess_last_chat[MAX_PLAYERS+1];
 int g_iSuccess_last_pas_vu_pas_pris[MAX_PLAYERS+1];
 int g_iSuccess_last_faster_dead[MAX_PLAYERS+1];
 char g_szSuccess_last_give[MAX_PLAYERS+1][10][32];
+int g_iSuccess_last_vengeur[MAX_PLAYERS + 1];
 
 public Action cmd_SuccessTest(int client, int args) {
 	CheckNoWonSuccess(client);
@@ -125,8 +126,8 @@ void Draw_Success(int client, int type) {
 	menu.SetTitle("Vos succès\n ");
 	
 	if( type == -1 ) {
-		menu.AddItem("-2", "Mes succès accompli");
-		menu.AddItem("-3", "Les succès à faire");
+		Format(tmp, sizeof(tmp), "%T", "Success_Done", client); menu.AddItem("-2", tmp);
+		Format(tmp, sizeof(tmp), "%T", "Success_Todo", client); menu.AddItem("-3", tmp);
 	}
 	else if( type == -2 ) {
 		int size = success_list_all;
@@ -282,6 +283,14 @@ void CheckNoWonSuccess(int client) {
 			}
 		}
 		g_iUserSuccess[client][success_list_cpt][sd_count] = amount2;
+		
+		if( CanMakeSuccess(client, success_list_tel) ) {
+			char query[4096], steamID[64];
+			GetClientAuthId(client, AUTH_TYPE, steamID, sizeof(steamID));
+			
+			Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_quest_book` WHERE `completed`='1' AND `steamid`='%s';", steamID);
+			SQL_TQuery(g_hBDD, SQL_CheckQuestCount, query, client);
+		}
 	}
 	
 	if( g_iGroundEntity[client] > 0 && Math_GetRandomInt(1, 7) == 5 ) {
@@ -321,9 +330,23 @@ void CheckNoWonSuccess(int client) {
 			
 	}
 }
+public void SQL_CheckQuestCount(Handle owner, Handle hQuery, const char[] error, any client) {
+	if( SQL_FetchRow(hQuery) ) {
+		
+		
+		int ldr = SQL_FetchInt(hQuery, 0);
+		if( CanMakeSuccess(client, success_list_tel) ) {
+			g_iUserSuccess[client][success_list_tel][sd_count] = ldr - (100 * g_iUserSuccess[client][success_list_tel][sd_achieved]);
+			
+			if( g_iUserSuccess[client][success_list_tel][sd_count] >= StringToInt(g_szSuccessData[success_list_tel][success_type_max_objective]) ) {
+				WonSuccess(client, success_list_tel);
+			}
+		}
+	}
+}
 
 void CheckDeadSuccess(int Client, int Attacker) {
-	int time = GetTime() - (31*24*60*60);
+	//int time = GetTime() - (31*24*60*60);
 	
 	if( Attacker == 0  ) {
 		if( g_iSuccess_last_shot[Client][1]+(5) > GetTime() ) {
@@ -331,7 +354,7 @@ void CheckDeadSuccess(int Client, int Attacker) {
 		}
 	}
 	else {
-		if( g_iUserData[Client][i_LastVol] > 1 && g_iUserData[Client][i_LastVol]+10 >= GetTime() ) {
+		if( g_iSuccess_last_vengeur[Client] > 1 && g_iSuccess_last_vengeur[Client]+7 >= GetTime() ) {
 			IncrementSuccess(Attacker, success_list_vengeur);
 		}
 		if( g_bUserData[Client][b_Invisible] ) {
@@ -364,6 +387,12 @@ void CheckDeadSuccess(int Client, int Attacker) {
 		if( GetClientTeam(Client) == CS_TEAM_CT ) {
 			g_iSuccess_last_mafia[Attacker] = GetTime();
 			g_iSuccess_last_armu[Attacker][2] = GetTime();
+			g_iSuccess_last_vengeur[Attacker] = GetTime();
+			
+			for (int i = 1; i <= MaxClients; i++ ) {
+				if( IsValidClient(i) && IsPlayerAlive(i) && CanMakeSuccess(i, success_list_vengeur) )
+					rp_ClientAggroIncrement(Attacker, i, 1000);
+			}
 		}
 		if( IsArmu(Client) ) {
 			g_iSuccess_last_armu[Attacker][1] = GetTime();
@@ -375,14 +404,15 @@ void WonSuccess(int client, int success) {
 	
 	if( IsValidClient(client) && CanMakeSuccess(client, success) && g_bUserData[client][b_isConnected] && g_bUserData[client][b_isConnected2] && IsTutorialOver(client) ) {
 		
-		char szSteamID[64], query[1024];
+		char szSteamID[64], query[1024], clientname[128];
 		GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 		
 		g_iUserSuccess[client][success][sd_last] = GetTime();
 		g_iUserSuccess[client][success][sd_count] = 0;
 		g_iUserSuccess[client][success][sd_achieved]++;
 		
-		CPrintToChatAllEx(client, "" ...MOD_TAG... " %N{default} a remporté le succès {lightblue}%s{default}", client, g_szSuccessData[success][success_type_name]); 
+		GetClientName2(client, clientname, sizeof(clientname), false);
+		CPrintToChatAllEx(client, "" ...MOD_TAG... " %T", "Success_Win", client, clientname, g_szSuccessData[success][success_type_name]); 
 		rp_ClientXPIncrement(client, 500);
 		
 		LogToGame("[TSX-RP] [SUCCES] %N (%s) a remporté le succès: %s", client, szSteamID, g_szSuccessData[success][success_type_name]);

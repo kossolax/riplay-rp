@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models/player/custom/swagirl/hair_diff_000_a_uni"	
+$translucent "1"
+}

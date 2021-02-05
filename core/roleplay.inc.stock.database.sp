@@ -9,6 +9,16 @@
 	#include "roleplay.sp"
 #endif
 
+void UpdateDatabase(int old_version) {
+	int version = old_version;
+	int target_version = 0;
+	
+	
+	
+	if( old_version != target_version ) {
+		ServerCommand("crash");
+	}
+}
 
 void loadServerRules(Handle hQuery) {
 	char split[2] = ";";	
@@ -54,13 +64,15 @@ void LoadServerDatabase() {
 	int longip = GetConVarInt(hostip);
 	
 	Format(strIP, sizeof(strIP),"%d.%d.%d.%d", (longip >> 24) & 0xFF, (longip >> 16) & 0xFF, (longip >> 8 )	& 0xFF, longip & 0xFF);
-	Format(query, sizeof(query), "SELECT `id`, `alias`, `bunkerCap`, `capVilla`, `capItem`, `villaOwner`, U.`name` as `villaOwnerName`, `pvprow`, S.`rules`, `maire`, `annonces`, U2.`name` as `mairieName` FROM `rp_servers` S LEFT JOIN `rp_users` U ON U.`steamid`=S.`villaOwner` LEFT JOIN `rp_users` U2 ON U2.`steamid`=S.`maire` WHERE S.`ip`='%s' AND `port`='%i' LIMIT 1;", strIP, GetConVarInt(port_cvar));
+	Format(query, sizeof(query), "SELECT `id`, `alias`, `bunkerCap`, `capVilla`, `capItem`, `villaOwner`, U.`name` as `villaOwnerName`, `pvprow`, S.`rules`, `maire`, `annonces`, U2.`name` as `mairieName`, `dbversion` FROM `rp_servers` S LEFT JOIN `rp_users` U ON U.`steamid`=S.`villaOwner` LEFT JOIN `rp_users` U2 ON U2.`steamid`=S.`maire` WHERE S.`ip`='%s' AND `port`='%i' LIMIT 1;", strIP, GetConVarInt(port_cvar));
 	
 	Handle hQuery;
 	g_iSID = -1;
 
 	SQL_LockDatabase(g_hBDD);
 	SQL_Query(g_hBDD, "SET NAMES 'utf8'");
+	
+	int dbversion = -1;
 	
 	if ((hQuery = SQL_Query(g_hBDD, query)) == INVALID_HANDLE) {
 		LogToGame(query);
@@ -76,7 +88,6 @@ void LoadServerDatabase() {
 
 			g_iCapture[cap_bunker] = SQL_FetchInt(hQuery, 2);
 			g_iCapture[cap_villa] = SQL_FetchInt(hQuery, 3);
-			//g_iCapture[cap_disableItem] = SQL_FetchInt(hQuery, 5);
 			SQL_FetchString(hQuery, 5, g_szVillaOwner[villaOwnerID], sizeof(g_szVillaOwner[]));
 			if( !SQL_IsFieldNull(hQuery, 6) )
 				SQL_FetchString(hQuery, 6, g_szVillaOwner[villaOwnerName], sizeof(g_szVillaOwner[]));
@@ -99,6 +110,10 @@ void LoadServerDatabase() {
 			
 			if( !SQL_IsFieldNull(hQuery, 11) )
 				SQL_FetchString(hQuery, 11, g_szVillaOwner[maireName], sizeof(g_szVillaOwner[]));
+			
+			int tmp_dbversion = SQL_FetchInt(hQuery, 12);
+			if( tmp_dbversion > dbversion )
+				dbversion = tmp_dbversion;
 		}
 
 		if( g_iSID <= 0 ) {
@@ -108,6 +123,8 @@ void LoadServerDatabase() {
 		}
 	}
 	
+	UpdateDatabase(dbversion);
+	
 	Format(query, sizeof(query), "SELECT `bf_date`, `bf_reduction` FROM `rp_servers` WHERE `id` = %i", g_iSID);
 
 	if ((hQuery = SQL_Query(g_hBDD, query)) == INVALID_HANDLE) {
@@ -115,7 +132,7 @@ void LoadServerDatabase() {
 		g_bIsBlackFriday = false;
 	}
 	else {
-		if(SQL_FetchRow(hQuery) > 0) {
+		if( SQL_FetchRow(hQuery) ) {
 			g_iBlackFriday[0] = SQL_FetchInt(hQuery, 0);
 			g_iBlackFriday[1] = SQL_FetchInt(hQuery, 1);
 
@@ -182,7 +199,7 @@ void LoadServerDatabase() {
 	}
 	//
 	// Chargement des items
-	if ((hQuery = SQL_Query(g_hBDD, "SELECT `id`, `nom`, `extra_cmd`, `reuse_delay`, `give_hp`, `job_id`, `prix`, `auto_use`, `dead`, `taxes` FROM `rp_items` ORDER BY `job_id` ASC, `prix` ASC, `id` ASC;")) == INVALID_HANDLE) {
+	if ((hQuery = SQL_Query(g_hBDD, "SELECT `id`, `nom`, `extra_cmd`, `reuse_delay`, `give_hp`, `job_id`, `prix`, `auto_use`, `dead`, `taxes`, `no_bank` FROM `rp_items` ORDER BY `job_id` ASC, `prix` ASC, `id` ASC;")) == INVALID_HANDLE) {
 		SetFailState("ERREUR FATAL: Impossible de recupérer la liste des objects: %s", g_szError);
 	}
 	i=0;
@@ -199,10 +216,8 @@ void LoadServerDatabase() {
 		SQL_FetchString(hQuery, 7, g_szItemList[id][item_type_auto], sizeof(g_szItemList[][]));
 		SQL_FetchString(hQuery, 8, g_szItemList[id][item_type_dead], sizeof(g_szItemList[][]));
 		SQL_FetchString(hQuery, 9, g_szItemList[id][item_type_taxes], sizeof(g_szItemList[][]));
+		SQL_FetchString(hQuery, 10, g_szItemList[id][item_type_no_bank], sizeof(g_szItemList[][]));
 		
-
-
-
 		SQL_FetchString(hQuery, 0, g_szItemListOrdered[i][item_type_ordered_id], sizeof(g_szItemListOrdered[][]));
 		SQL_FetchString(hQuery, 1, g_szItemListOrdered[i][item_type_name], sizeof(g_szItemListOrdered[][]));
 		SQL_FetchString(hQuery, 2, g_szItemListOrdered[i][item_type_extra_cmd], sizeof(g_szItemListOrdered[][]));
@@ -213,6 +228,7 @@ void LoadServerDatabase() {
 		SQL_FetchString(hQuery, 7, g_szItemListOrdered[i][item_type_auto], sizeof(g_szItemListOrdered[][]));
 		SQL_FetchString(hQuery, 8, g_szItemListOrdered[i][item_type_dead], sizeof(g_szItemListOrdered[][]));
 		SQL_FetchString(hQuery, 9, g_szItemListOrdered[i][item_type_taxes], sizeof(g_szItemListOrdered[][]));
+		SQL_FetchString(hQuery, 10, g_szItemListOrdered[i][item_type_no_bank], sizeof(g_szItemListOrdered[][]));
 	}
 
 	//
@@ -318,6 +334,8 @@ void LoadServerDatabase() {
 		SQL_FetchString(hQuery, 2, g_szSellingKeys[ door_id ][key_type_parent], 255);
 		SQL_FetchString(hQuery, 3, g_szSellingKeys[ door_id ][key_type_prix], 255);
 		SQL_FetchString(hQuery, 4, g_szSellingKeys[ door_id ][key_type_name], 255);
+		
+		g_iAppartBonus[door_id][appart_price] = StringToInt(g_szSellingKeys[ door_id ][key_type_prix]);
 	}
 	//
 	//
@@ -410,7 +428,7 @@ void updateBlackFriday(int day, int reduction) {
 	int date = g_iBlackFriday[0] + ((7 - index) * (24*60*60)) + ((24*60*60) * day) + (12*60*60);
 
 	FormatTime(szDate, sizeof(szDate), "%e/%m/%Y/00/00/01", date);
-	int timestamp = DateToTimestamp(szDate) - (13*60*60); // delete 13 hours
+	int timestamp = DateToTimestamp(szDate);
 
 	g_iBlackFriday[0] = timestamp;
 	g_iBlackFriday[1] = reduction;
@@ -425,12 +443,12 @@ public Action StoreData(Handle timer, any client) {
 public void showCagnotteInfo(Handle owner, Handle hQuery, const char[] error, any client) {
 	if( SQL_FetchRow(hQuery) ) {
 		// g_iLOTO;
-		CPrintToChat(client, "" ...MOD_TAG... " %N{default} vous avez gratté %d tickets, la cagnotte totale est de: %d$", client, SQL_FetchInt(hQuery, 0), rp_GetServerInt(lotoCagnotte));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Loterry_Count", client, SQL_FetchInt(hQuery, 0), rp_GetServerInt(lotoCagnotte));
 	}
 }
 public void SQL_SetLoteryAmount(Handle owner, Handle hQuery, const char[] error, any none) {
 	if( SQL_FetchRow(hQuery) ) {
-		Format(g_szVillaOwner[lotoCagnotte], sizeof(g_szVillaOwner[]), "%d", 100000 + SQL_FetchInt(hQuery, 0) * 420);
+		Format(g_szVillaOwner[lotoCagnotte], sizeof(g_szVillaOwner[]), "%d", 100000 + SQL_FetchInt(hQuery, 0) * 350);
 		ServerCommand("sm_effect_loto %s", g_szVillaOwner[lotoCagnotte]);
 	}
 }
@@ -498,23 +516,26 @@ void StoreUserData(int client) {
 	int max = g_iUserData[client][i_ItemBankCount], size = max * 18 + 1;
 	char[] in_bank = new char[ size ];
 	
-	for (int i = 0; i < max; i++)
-		Format(in_bank, size, "%s%d,%d;", in_bank, g_iItems_BANK[client][i][STACK_item_id], g_iItems_BANK[client][i][STACK_item_amount]);
+	for (int i = 0; i < max; i++) {
+		int object_id = g_iItems_BANK[client][i][STACK_item_id];
+		if( StringToInt(g_szItemList[object_id][item_type_no_bank]) == 1 )
+			continue;
+		
+		Format(in_bank, size, "%s%d,%d;", in_bank, object_id, g_iItems_BANK[client][i][STACK_item_amount]);
+	}
 	
-	max = (g_bUserData[client][b_Assurance] || g_iClient_OLD[client] == 0) ? g_iUserData[client][i_ItemCount] : 0;
+	max = (g_bUserData[client][b_Assurance] || g_iClient_OLD[client] == 0 || true) ? g_iUserData[client][i_ItemCount] : 0;
 	size = max * 18 + 1;
 	char[] in_item = new char[ size ];
 	
-	for (int i = 0; i < max; i++)
-		Format(in_item, size, "%s%d,%d;", in_item, g_iItems[client][i][STACK_item_id], g_iItems[client][i][STACK_item_amount]);
+	for (int i = 0; i < max; i++) {
+		int object_id = g_iItems[client][i][STACK_item_id];
+		if( StringToInt(g_szItemList[object_id][item_type_no_bank]) == 1 )
+			continue;
+			
+		Format(in_item, size, "%s%d,%d;", in_item, object_id, g_iItems[client][i][STACK_item_amount]);
+	}
 
-	max = g_iUserData[client][i_ItemCountSaved];
-	size = max * 18 + 1;
-	char[] in_save = new char[ size ];
-
-	for (int i = 0; i < max; i++)
-		Format(in_save, size, "%s%d,%d;", in_save, g_iItems_SAVE[client][i][STACK_item_id], g_iItems_SAVE[client][i][STACK_item_amount]);
-	
 	
 	max = MAX_JOBS;
 	size = max * 18 + 1;
@@ -535,23 +556,23 @@ void StoreUserData(int client) {
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
 		"UPDATE `rp_users` SET `name`='%s', `money`='%i', `bank`='%i', `job_id`='%i', `jailled`='%i', `train`='%i',", 
-		nickbuffer, g_iUserData[client][i_Money], g_iUserData[client][i_Bank], g_iUserData[client][i_Job], g_iUserData[client][i_JailTime], g_iUserData[client][i_KnifeTrain]);
+		nickbuffer, g_iUserData[client][i_Money], g_iUserData[client][i_Bank]+g_iUserData[client][i_AddToPay], g_iUserData[client][i_Job], g_iUserData[client][i_JailTime], g_iUserData[client][i_KnifeTrain]);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
 		"%s `permi_lege`='%i', `permi_lourd`='%i', `permi_vente`='%i', `permi_lege_start`='%i', `permi_lourd_start`='%i', `train_weapon`='%f', `group_id`='%i',",
 		MysqlQuery, g_bUserData[client][b_License1], g_bUserData[client][b_License2], g_bUserData[client][b_LicenseSell], g_iUserData[client][i_StartLicense1], g_iUserData[client][i_StartLicense2], g_flUserData[client][fl_WeaponTrain], g_iUserData[client][i_Group]);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
-		"%s `vitality`='%f', `pay_to_bank`='%i', `have_card`='%i', `have_account`='%i', `in_bank`='%s', `in_item`='%s', `in_save`='%s', `ip`='%s',",
-		MysqlQuery, g_flUserData[client][fl_Vitality], g_bUserData[client][b_PayToBank], g_bUserData[client][b_HaveCard], g_bUserData[client][b_HaveAccount], in_bank, in_item, in_save, IP);
+		"%s `vitality`='%f', `pay_to_bank`='%i', `have_card`='%i', `have_account`='%i', `in_bank`='%s', `in_item`='%s', `ip`='%s',",
+		MysqlQuery, g_flUserData[client][fl_Vitality], g_bUserData[client][b_PayToBank], g_bUserData[client][b_HaveCard], g_bUserData[client][b_HaveAccount], in_bank, in_item, IP);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
-		"%s `malus`='%i', `freekill`='%i', `freekiller`='%i', `assurance`='%i', `train_esquive`='%i', `skin`='%s', `skin_id`='%d', ",
-		MysqlQuery, g_iUserData[client][i_Malus], g_iUserData[client][i_KillJailDuration], g_bUserData[client][b_IsFreekiller], GetAssurence(client), g_iUserData[client][i_Esquive], g_szUserData[client][sz_Skin], g_iUserData[client][i_SkinDonateur]);
+		"%s `malus`='%i', `freekill`='%i', `freekiller`='%i', `assurance`='%i', `freeassu`='%i', `train_esquive`='%i', `skin`='%s', `skin_id`='%d', ",
+		MysqlQuery, g_iUserData[client][i_Malus], g_iUserData[client][i_KillJailDuration], g_bUserData[client][b_IsFreekiller], GetAssurence(client), g_bUserData[client][b_FreeAssurance], g_iUserData[client][i_Esquive], g_szUserData[client][sz_Skin], g_iUserData[client][i_SkinDonateur]);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
-		"%s `sick`='%i', `tuto`='%i', `TimePlayedJob`='%d', `artisan_xp`='%d', `artisan_lvl`='%d', `artisan_points`='%d',  `artisan_fatigue`='%f', ",
-		MysqlQuery, g_iUserData[client][i_Sick], g_iUserData[client][i_Tutorial], g_iUserData[client][i_TimePlayedJob],  g_iUserData[client][i_ArtisanXP],  g_iUserData[client][i_ArtisanLevel],  g_iUserData[client][i_ArtisanPoints],  g_flUserData[client][fl_ArtisanFatigue]);
+		"%s `sick`='%i', `tuto`='%i', `TimePlayedJob`='%d', `artisan_xp`='%d', `artisan_lvl`='%d', `artisan_points`='%d', `artisan_fatigue`='%f', `artisan_spe`='%d', ",
+		MysqlQuery, g_iUserData[client][i_Sick], g_iUserData[client][i_Tutorial], g_iUserData[client][i_TimePlayedJob],  g_iUserData[client][i_ArtisanXP],  g_iUserData[client][i_ArtisanLevel],  g_iUserData[client][i_ArtisanPoints],  g_flUserData[client][fl_ArtisanFatigue],  g_iUserData[client][i_ArtisanSpeciality]);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
 		"%s `xp`='%i', `level`='%i', `prestige`='%i', `passive`='%d', ",
@@ -566,8 +587,8 @@ void StoreUserData(int client) {
 		MysqlQuery, fname, lname, g_bUserData[client][b_PassedRulesTest], jobplaytime, g_iUserData[client][i_GiveXP], g_iUserData[client][i_Dette]);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
-		"%s `amende_permi_lege`='%i',`amende_permi_lourd`='%i' WHERE `steamid`='%s';",
-		MysqlQuery, g_iUserData[client][i_AmendeLiscence2], g_iUserData[client][i_AmendeLiscence1], SteamID);
+		"%s `jail_qhs`='%i', `amende_permi_lege`='%i',`amende_permi_lourd`='%i', `points`='%i', `pvp_banned`='%i', `allowed_dismiss`='%i' WHERE `steamid`='%s';",
+		MysqlQuery, g_bUserData[client][b_JailQHS], g_iUserData[client][i_AmendeLiscence2], g_iUserData[client][i_AmendeLiscence1], g_iUserData[client][i_ELO], g_iUserData[client][i_PVPBannedUntil], g_iUserData[client][i_AllowedDismiss], SteamID);
 
 	SQL_TQuery(g_hBDD, SQL_QueryCallBack, MysqlQuery);
 	
@@ -593,7 +614,6 @@ void SynFromWeb() {
 	static char tmp[64];
 	
 	steamid[0] = 0;
-	int count = 0;
 	
 	for(int i=0; i<=MaxClients; i++) {
 		if( !IsValidClient(i) )
@@ -608,19 +628,16 @@ void SynFromWeb() {
 		
 		GetClientAuthId(i, AUTH_TYPE, tmp, sizeof(tmp), false);
 		Format(steamid, sizeof(steamid), "%s,'%s'", steamid, tmp);
-		
-		count++;
 	}
 	
+	Format(steamid, sizeof(steamid), "%s,'CAPITAL'", steamid);
 	steamid[0] = ' ';
 	
-	if( count > 0 ) {
-		Format(query, sizeof(query), "%s WHERE `steamid` IN (%s)", base, steamid);
-		SQL_TQuery(g_hBDD, SynFromWeb_call, query, 0, DBPrio_Low);
-	}
+	Format(query, sizeof(query), "%s WHERE `steamid` IN (%s)", base, steamid);
+	SQL_TQuery(g_hBDD, SynFromWeb_call, query, 0, DBPrio_Low);
 }
 
-public void SynFromWeb_call(Handle owner, Handle hQuery, const char[] error, any Client) {
+public void SynFromWeb_call(Handle owner, Handle hQuery, const char[] error, any none) {
 	static char query[1024];
 	static char szPseudo[64], szSteamID[64], szSteamID2[64], szRaison[256], SteamID[64];
 	
@@ -637,13 +654,13 @@ public void SynFromWeb_call(Handle owner, Handle hQuery, const char[] error, any
 		int jail = SQL_FetchInt(hQuery, 7);
 		SQL_FetchString(hQuery, 8, szRaison, sizeof(szRaison));
 		int id = SQL_FetchInt(hQuery, 9);
-		int timestamp = SQL_FetchInt(hQuery, 10);
+		//int timestamp = SQL_FetchInt(hQuery, 10);
 		int itemID = SQL_FetchInt(hQuery, 11);
 		int itemAmount = SQL_FetchInt(hQuery, 12);
 		int itemToBank = SQL_FetchInt(hQuery, 13);
 		int xp = SQL_FetchInt(hQuery, 14);
 		
-        char szId[8];
+		char szId[8];
 		Format(szId, sizeof(szId), "%d", id);
 
 		if( g_hSynProcessed.GetValue(szId, id) ) continue; // On execute pas 2 fois une syn
@@ -697,69 +714,6 @@ public void SynFromWeb_call(Handle owner, Handle hQuery, const char[] error, any
 				}
 				
 			}
-			/*
-			else {
-				
-				if( jail != -1 && timestamp+(7*24*60*60) > GetTime() )
-					continue;
-				if( timestamp+(1*60*60) > GetTime() )
-					continue;
-				
-				if( money != 0 ) {
-					Format(query, sizeof(query), "UPDATE `rp_users` SET `money`=`money`+%d WHERE `steamid`='%s' LIMIT 1;", money, szSteamID);
-					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-					LogToGame("[TSX-RP] [SYN] [MONEY] Console<0><%s><> à reçu %d$ par %s (%s).", szSteamID, money, szPseudo, szSteamID2);
-
-				}
-				if( bank != 0 ) {
-					Format(query, sizeof(query), "UPDATE `rp_users` SET `bank`=`bank`+%d WHERE `steamid`='%s' LIMIT 1;", bank, szSteamID);
-					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-					LogToGame("[TSX-RP] [SYN] [MONEY] Console<0><%s><> à reçu %d$ par %s (%s).", szSteamID, bank, szPseudo, szSteamID2);
-				}
-				if( job_id != -1 ) {
-					if( job_id == 0 ) {
-						Format(query, sizeof(query), "UPDATE `rp_users` SET `job_id`=%d, `TimePlayedJob`=0 WHERE `steamid`='%s' LIMIT 1;", job_id, szSteamID);
-					}
-					else {
-						Format(query, sizeof(query), "UPDATE `rp_users` SET `job_id`=%d WHERE `steamid`='%s' LIMIT 1;", job_id, szSteamID);
-					}
-					
-					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-					LogToGame("[TSX-RP] [SYN] [JOB] Console<0><%s><> était INCONU et est maintenant %s par %s (%s).", szSteamID, g_szJobList[job_id][job_type_name], szPseudo, szSteamID2);
-				}
-				if( group_id != -1 ) {
-					Format(query, sizeof(query), "UPDATE `rp_users` SET `group_id`=%d WHERE `steamid`='%s' LIMIT 1;", group_id, szSteamID);
-					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-					
-					LogToGame("[TSX-RP] [SYN] [GROUP] Console<0><%s><> était INCONU et est maintenant %s par %s (%s).", szSteamID, g_szGroupList[group_id][job_type_name], szPseudo, szSteamID2);
-				}
-				if( jail != -1 ) {
-					Format(query, sizeof(query), "UPDATE `rp_users` SET `jailled`=`jailled`+'%d' WHERE `steamid`='%s' LIMIT 1;", jail, szSteamID);
-					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-					
-					LogToGame("[TSX-RP] [SYN] [JAIL] Console<0><%s><> %d heures pour %s par %s (%s).", szSteamID, jail/60, szRaison, szPseudo, szSteamID2);
-
-				}
-				if( xp != 0 ) {
-					Format(query, sizeof(query), "UPDATE `rp_users` SET `xp`=`xp`+'%d' WHERE `steamid`='%s' LIMIT 1;", xp, szSteamID);
-					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-					
-					LogToGame("[TSX-RP] [SYN] [XP] Console<0><%s><> %d XP.", szSteamID, xp);
-
-				}
-				if( itemID != -1 ) {
-					if( itemToBank ) 
-						Format(query, sizeof(query), "UPDATE `rp_users` SET `in_bank`=CONCAT(`in_bank`,'%d,%d;') WHERE `steamid`='%s' LIMIT 1;", itemID, itemAmount, szSteamID);
-					else
-						Format(query, sizeof(query), "UPDATE `rp_users` SET `in_item`=CONCAT(`in_item`,'%d,%d;') WHERE `steamid`='%s' LIMIT 1;", itemID, itemAmount, szSteamID);
-					
-					SQL_TQuery(g_hBDD, SQL_QueryCallBack, query);
-					
-					LogToGame("[TSX-RP] [SYN] [ITEM-TRANSFERT] Console<0><%s><> %d %s pour %s (%s)", szSteamID, itemAmount, g_szItemList[itemID][item_type_name], szPseudo, szSteamID2);
-
-				}
-			}
-			*/
 			
 			g_hSynProcessed.SetValue(szId, id, false);
 
@@ -822,8 +776,7 @@ void ResetUserData(int client) {
 	g_flUserData[client][fl_Size] = 1.0;
 	g_iClientQuests[client][questID] = -1;
 	g_iClientQuests[client][stepID] = -1;
-	
-	
+	g_iCurrentKill[client] = 0;
 	
 	for(int i=0; i<MAX_KEYSELL; i++) {
 		g_iDoorOwner_v2[client][i] = 0;
@@ -844,6 +797,9 @@ void ResetUserData(int client) {
 		Format(g_szSuccess_last_give[client][i], 31, "");
 	}
 	
+	if( g_iGrabbing[client] > 0 ) {
+		SDKUnhook(g_iGrabbing[client], SDKHook_Touch, OnForceTouch);
+	}
 	g_iGrabbing[client] = 0;
 	g_iMayGrabAll[client] = 1;
 	
@@ -852,8 +808,12 @@ void ResetUserData(int client) {
 	g_flLubrifian[client] = 0.0;
 	
 	g_iUserData[client][i_KnifeTrainAdmin] = -1;
+	g_iUserData[client][i_FistTrainAdmin] = -1;
 	g_flUserData[client][fl_WeaponTrainAdmin] = -1.0;
 	
+	Format(g_szItems_SAVE[client][0], sizeof(g_szItems_SAVE[][]), "%T", "Item_Register", client, 1);
+	for( int i=1; i<sizeof(g_szItems_SAVE[]); i++ )
+		Format(g_szItems_SAVE[client][i], sizeof(g_szItems_SAVE[][]), "");
 	
 	for(int i=1; i<2048; i++) {
 		if( !IsValidEdict(i) )
@@ -880,6 +840,7 @@ void ResetUserData(int client) {
 	g_iUserData[client][i_Disposed] = 10;
 	g_iUserData[client][i_PlayerLVL] = 1;
 	g_bUserData[client][b_GameModePassive] = true;
+	g_iUserData[client][i_ELO] = 1500;
 	g_iDoubleCompte[client].Clear();
 }
 void LoadUserData(int Client) {
@@ -894,15 +855,17 @@ void LoadUserData(int Client) {
 		Format(query, sizeof(query), 
 			"SELECT `money`, `bank`, `job_id`, `jailled`, `skin`, `train`, `permi_lege`, `permi_lourd`, `permi_vente`, `passive`, `train_weapon`,");
 		Format(query, sizeof(query),
-			"%s `group_id`, `vitality`, UNIX_TIMESTAMP(`last_connected`), `pay_to_bank`, `have_card`, `in_bank`, `in_item`, `in_save`, `have_account`,", query);
+			"%s `group_id`, `vitality`, UNIX_TIMESTAMP(`last_connected`), `pay_to_bank`, `have_card`, `in_bank`, `in_item`, `jail_qhs`, `have_account`,", query);
 		Format(query, sizeof(query),
 			"%s `malus`, `tuto`, `donateur`, `donateur`, `freekill`, `TimePlayedJob`, `assurance`, `train_esquive`, `sick`, `avocat`, `hasVilla`,", query);
 		Format(query, sizeof(query),
 			"%s `artisan_xp`, `artisan_lvl`, `artisan_points`, `artisan_fatigue`, `kill`, `death`, `kill2`, `death2`, `jrouge`, `jbleu`, `xp`, ", query);
 		Format(query, sizeof(query),
-			"%s `level`, `prestige`, `female`, `birthday`, `birthmonth`, `lastname`, `firstname`, `rules`, `jobplaytime`, `adminxp`, `dette`, `time_played`, ", query, SteamID); 
+			"%s `level`, `prestige`, `female`, `birthday`, `birthmonth`, `lastname`, `firstname`, `rules`, `jobplaytime`, `adminxp`, `dette`, `time_played`, ", query); 
 		Format(query, sizeof(query),
-			"%s `permi_lege_start`, `permi_lourd_start`, `freekiller`, `amende_permi_lege`, `amende_permi_lourd`, `skin_id` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
+			"%s `permi_lege_start`, `permi_lourd_start`, `freekiller`, `amende_permi_lege`, `amende_permi_lourd`, `skin_id`, `freeassu`, `points`, `pvp_banned`, ", query); 
+		Format(query, sizeof(query),
+			"%s `allowed_dismiss`, `artisan_spe` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
 
 		SQL_TQuery(g_hBDD, LoadUserData_2, query, Client, DBPrio_High);
 		
@@ -938,9 +901,14 @@ public void Check_2(Handle owner, Handle handle, const char[] error, any data) {
 	
 	g_iClient_OLD[data] = 1;
 	
-	if( !SQL_FetchRow(handle) ) {
+	if( !SQL_FetchRow(handle) && GetConVarInt(FindConVar("hostport")) == 27015 ) {
 		g_iClient_OLD[data] = 0;
 	}
+	
+	if( g_iUserData[data][i_PlayerLVL] >= 12 )
+		g_iClient_OLD[data] = 1;
+	if( g_iDoubleCompte[data].Length >= 1 )
+		g_iClient_OLD[data] = 1;
 	
 	if(  handle != INVALID_HANDLE )
 		CloseHandle(handle);
@@ -993,6 +961,9 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		
 		Format(MysqlQuery, sizeof(MysqlQuery), "INSERT IGNORE INTO `rp_success` (`steamid`) VALUES ('%s');", SteamID);
 		SQL_TQuery(g_hBDD, SQL_QueryCallBack, MysqlQuery);
+
+		Format(MysqlQuery, sizeof(MysqlQuery), "INSERT IGNORE INTO `rp_itemsaves` (`steamid`, `slot`, `name`, `save`) VALUES ('%s', 0, 'Registre 1', '');", SteamID);
+		SQL_TQuery(g_hBDD, SQL_QueryCallBack, MysqlQuery);
 		
 		LoadUserData(Client);
 		return;
@@ -1019,6 +990,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		g_iUserData[Client][i_LastTime] = SQL_FetchInt(hQuery, 13);
 		g_bUserData[Client][b_PayToBank] = SQL_FetchInt(hQuery, 14);
 		g_bUserData[Client][b_HaveCard] = SQL_FetchInt(hQuery, 15);
+		g_bUserData[Client][b_JailQHS] = SQL_FetchInt(hQuery, 18);
 		g_bUserData[Client][b_HaveAccount] = SQL_FetchInt(hQuery, 19);
 		g_iUserData[Client][i_Malus] = SQL_FetchInt(hQuery, 20);
 		g_iUserData[Client][i_Tutorial] = SQL_FetchInt(hQuery, 21);
@@ -1035,6 +1007,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		g_iUserData[Client][i_ArtisanLevel] = SQL_FetchInt(hQuery, 32);
 		g_iUserData[Client][i_ArtisanPoints] = SQL_FetchInt(hQuery, 33);
 		g_flUserData[Client][fl_ArtisanFatigue] = SQL_FetchFloat(hQuery, 34);
+		g_iUserData[Client][i_ArtisanSpeciality] = SQL_FetchInt(hQuery, 64);
 		g_iUserData[Client][i_KillMonth] = SQL_FetchInt(hQuery, 35);
 		g_iUserData[Client][i_DeathMonth] = SQL_FetchInt(hQuery, 36);
 		g_iUserData[Client][i_Kill31Days] = SQL_FetchInt(hQuery, 37);
@@ -1060,6 +1033,11 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		g_iUserData[Client][i_AmendeLiscence2] = SQL_FetchInt(hQuery, 57);
 		g_iUserData[Client][i_AmendeLiscence1] = SQL_FetchInt(hQuery, 58);
 		g_iUserData[Client][i_SkinDonateur] = SQL_FetchInt(hQuery, 59);
+		g_iUserData[Client][i_ELO] = SQL_FetchInt(hQuery, 61);
+		g_iUserData[Client][i_PVPBannedUntil] = SQL_FetchInt(hQuery, 62);
+		g_iUserData[Client][i_AllowedDismiss] = SQL_FetchInt(hQuery, 63);
+		// 64 = artisan spe
+		int freeassu = SQL_FetchInt(hQuery, 60);
 
 		SQL_FetchString(hQuery, 47, g_szUserData[Client][sz_LastName], sizeof(g_szUserData[][]));
 		SQL_FetchString(hQuery, 48, g_szUserData[Client][sz_FirstName], sizeof(g_szUserData[][]));		
@@ -1069,29 +1047,38 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		if( g_flUserData[Client][fl_ArtisanFatigue] <= 0.0 )
 			g_flUserData[Client][fl_ArtisanFatigue] = 0.0;
 		
-		g_flUserData[Client][fl_Vitality] -= float(now_time - g_iUserData[Client][i_LastTime]) / 45.0;
-		if( g_flUserData[Client][fl_Vitality] <= 0.0 )
-			g_flUserData[Client][fl_Vitality] = 0.0;
+		#if FREEZE_VITALITY != 1
+			g_flUserData[Client][fl_Vitality] -= float(now_time - g_iUserData[Client][i_LastTime]) / 45.0;
+			if( g_flUserData[Client][fl_Vitality] <= 0.0 )
+				g_flUserData[Client][fl_Vitality] = 0.0;
+		#endif
 		
 		if( g_iUserData[Client][i_LastTime]+(1*60*60) < now_time )
 			g_iUserData[Client][i_Sick] = 0;
 		
 		
 		g_iUserData[Client][i_LastKillTime] = GetTime();
+		g_bIsHidden[Client] = false;
+
+		if( StrEqual(SteamID, "76561197975247242") ) {
+			g_bIsHidden[Client] = true;
+		}
+		
 		
 		// ------------
 		//		Récupération des items mis en banque
 		//
 		loadItem_Bank(Client, hQuery);
-		loadItem_Preset(Client, hQuery);
 		loadItem_Item(Client, hQuery);
 		
+		ItemSave_LoadNames(Client);
+
 		updateBankCost(Client);
 		
 		loadJobPlayTime(Client, hQuery);
 		
 		
-		if( GetGameTime() <= (15.0*60.0) || GetConVarInt(g_hItemBackup) == 1 ) {	
+		if( freeassu == 1 && GetGameTime() <= (15.0*60.0) || freeassu == 0 ) {	
 			if( assurance >= 0 ) {
 				int assuWr;
 				if( !g_hSynAssuWritten.GetValue(SteamID, assuWr) ){
@@ -1163,25 +1150,25 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 	SDKHook(Client, SDKHook_PostThink,		OnPostThink);
 	SDKHook(Client, SDKHook_PostThinkPost,	OnPostThinkPost);
 	
-	//SDKHook(Client, SDKHook_SetTransmit,	OnSetTransmit);
 	SDKHook(Client, SDKHook_WeaponCanUse,	OnWeaponCanUse);
-	SDKHook(Client, SDKHook_WeaponSwitch,	OnWeaponSwitch);
+	SDKHook(Client, SDKHook_WeaponCanSwitchTo,	OnWeaponCanSwitchTo);
 	SDKHook(Client, SDKHook_WeaponEquip,	WeaponEquip);
 	
 	#if defined USING_VEHICLE
 	SDKHook(Client, SDKHook_PreThinkPost,	vehicle_OnPreThinkPost);
 	#endif
-	DHookEntity(g_hTeleport, false, Client);	
+	DHookEntity(g_hTeleport, false, Client);
+	DHookEntity(g_hOnVoiceTransmit, true, Client);
 	
 	CS_SwitchTeam(Client, CS_TEAM_T);
 
-	//char URL[128];
-	//Format(URL, sizeof(URL), "https://www.ts-x.eu/api/user/double/steamid/%s", SteamID);
+	char URL[128];
+	Format(URL, sizeof(URL), "http://5.196.39.48:8080/user/double/steamid/%s", SteamID);
 	
-	//Handle req = SteamWorks_CreateHTTPRequest(k_EHTTPMethodGET, URL);
-	//SteamWorks_SetHTTPCallbacks(req, OnSteamWorksHTTPComplete);
-	//SteamWorks_SetHTTPRequestContextValue(req, Client);
-	//SteamWorks_SendHTTPRequest(req);
+	Handle req = SteamWorks_CreateHTTPRequest(k_EHTTPMethodGET, URL);
+	SteamWorks_SetHTTPCallbacks(req, OnSteamWorksHTTPComplete);
+	SteamWorks_SetHTTPRequestContextValue(req, Client);
+	SteamWorks_SendHTTPRequest(req);
 	
 	Call_StartForward( view_as<Handle>(g_hRPNative[Client][RP_OnPlayerDataLoaded]));
 	Call_PushCell(Client);
@@ -1233,6 +1220,9 @@ void loadItem_Bank(int Client, Handle hQuery) {
 		
 		if( objet_id <= 0 || objet_id > MAX_ITEMS || rp_GetItemInt(objet_id, item_type_auto) == 1 )
 			continue;
+		if( rp_GetItemInt(objet_id, item_type_no_bank) == 1 )
+			continue;
+		
 		if( StrEqual(g_szItemList[objet_id][item_type_extra_cmd], "UNKNOWN") ) {
 			g_iUserData[Client][i_Bank] += StringToInt(g_szItemList[objet_id][item_type_prix]) * objet_amount;
 			continue;
@@ -1245,49 +1235,12 @@ void loadItem_Bank(int Client, Handle hQuery) {
 	
 	for (int i = 0; i < size; i++) {
 		if( g_iItems_BANK[Client][i][STACK_item_amount] < 0 ) {
-			rp_ClientMoney(Client, i_Bank, -(rp_GetItemInt(g_iItems_BANK[Client][i][STACK_item_id], item_type_prix) * -g_iItems_BANK[Client][i][STACK_item_amount]));
+			rp_ClientMoney(Client, i_Bank, -(rp_GetItemInt(g_iItems_BANK[Client][i][STACK_item_id], item_type_prix) * -g_iItems_BANK[Client][i][STACK_item_amount]), true);
 			rp_ClientGiveItem(Client, g_iItems_BANK[Client][i][STACK_item_id], -g_iItems_BANK[Client][i][STACK_item_amount], true);
 		}
 	}
 }
-void loadItem_Preset(int Client, Handle hQuery) {
-	char split[2] = ";";
-	char buffer[BUFFER_SIZE], buffer2[BUFFER_SIZE], szData[2][BUFFER_SIZE];
-	int size = (BUFFER_SIZE+SQL_FetchSize(hQuery, 18));
-	char[] data = new char[size];
-	
-	SQL_FetchString(hQuery, 18, data, size);	
-	int c_pos = 0;
-	
-	for(int i=0; i<=MAX_ITEMS; i++){
-		g_iItems_SAVE[Client][i][STACK_item_id] = 0;
-		g_iItems_SAVE[Client][i][STACK_item_amount] = 0;
-	}
-	// ------------
-	//	Stocker sous le format: id,amount;id,amount;
-	//
-	while( SplitString(data, split, buffer, BUFFER_SIZE) != -1 ) {
-		
-		Format(buffer2, BUFFER_SIZE, "%s%s", buffer, split);
-		RemoveString(data, buffer2, false);
-		ExplodeString(buffer, ",", szData, sizeof(szData), BUFFER_SIZE);
-			
-		int objet_id = StringToInt(szData[0]);
-		int objet_amount = StringToInt(szData[1]);
-			
-		if( objet_id <= 0 || objet_id > MAX_ITEMS)
-			continue;
-		if( StrEqual(g_szItemList[objet_id][item_type_extra_cmd], "UNKNOWN") )
-			continue;
-		if( objet_amount <= 0 )
-			continue;
-			
-		g_iItems_SAVE[Client][c_pos][STACK_item_id]     = objet_id;
-		g_iItems_SAVE[Client][c_pos][STACK_item_amount] = objet_amount;
-		c_pos++;
-	}
-	g_iUserData[Client][i_ItemCountSaved] = c_pos;
-}
+
 void loadItem_Item(int Client, Handle hQuery) {
 	char split[2] = ";";
 	char buffer[BUFFER_SIZE], buffer2[BUFFER_SIZE], szData[2][BUFFER_SIZE];
@@ -1310,6 +1263,8 @@ void loadItem_Item(int Client, Handle hQuery) {
 		
 		if( objet_id <= 0 || objet_id > MAX_ITEMS || rp_GetItemInt(objet_id, item_type_auto) == 1 )
 			continue;
+		if( rp_GetItemInt(objet_id, item_type_no_bank) == 1 )
+			continue;
 	
 		rp_ClientGiveItem(Client, objet_id, objet_amount);
 		g_bUserData[Client][b_ItemRecovered] = true;
@@ -1319,7 +1274,7 @@ void loadItem_Item(int Client, Handle hQuery) {
 public int OnSteamWorksHTTPComplete(Handle HTTPRequest, bool fail, bool success, EHTTPStatusCode statusCode, any client) {
 	static Handle regex;
 	if( regex == INVALID_HANDLE )
-		regex = CompileRegex("(STEAM_1:[0-1]:[0-9]{1,14})");
+		regex = CompileRegex("\"(\\d+)\"");
 	
 	if (success && statusCode == k_EHTTPStatusCode200OK )  { 
 		int size;
@@ -1332,8 +1287,10 @@ public int OnSteamWorksHTTPComplete(Handle HTTPRequest, bool fail, bool success,
 		
 		while( MatchRegex(regex, tmp) >= 2 ) {
 			
-			GetRegexSubString(regex, 0, tmp2, sizeof(tmp2));
+			GetRegexSubString(regex, 1, tmp2, sizeof(tmp2));
 			g_iDoubleCompte[client].PushString(tmp2);
+			g_iClient_OLD[client] = 1;
+			
 			ReplaceString(tmp, size, tmp2, "");
 		}
 		
@@ -1429,4 +1386,148 @@ public void CheckMute_2(Handle owner, Handle handle, const char[] error, any dat
 		
 		g_bUserData[data][dest] = true;
 	}
+}
+
+void ItemSave_SetItems(int client, int saveid){
+	char SteamID[32];
+	int max = g_iUserData[client][i_ItemCount];
+	int size = max * 18 + 128;
+	char[] query = new char[ size ];
+	GetClientAuthId(client, AUTH_TYPE, SteamID, sizeof(SteamID), false);
+
+	Format(query, size, "UPDATE rp_itemsaves SET save='");
+
+	for (int i = 0; i < max; i++) {
+		int object_id = g_iItems[client][i][STACK_item_id];
+		if( StringToInt(g_szItemList[object_id][item_type_no_bank]) == 1 )
+			continue;
+		
+		Format(query, size, "%s%d,%d;", query, object_id, g_iItems[client][i][STACK_item_amount]);
+	}
+
+	Format(query, size, "%s' WHERE steamid='%s' AND slot=%d", query, SteamID, saveid);
+
+	SQL_TQuery(g_hBDD, SQL_QueryCallBack, query, client);
+}
+
+void ItemSave_SetName(int client, int saveid, char[] name){
+	strcopy(g_szItems_SAVE[client][saveid], sizeof(g_szItems_SAVE[][]), name);
+	
+	char query[128];
+	GetClientAuthId(client, AUTH_TYPE, query, sizeof(query), false);
+	Format(query, sizeof(query), "UPDATE rp_itemsaves SET name='%s' WHERE steamid='%s' AND slot=%d", name, query, saveid);
+
+	SQL_TQuery(g_hBDD, SQL_QueryCallBack, query, client);
+}
+
+bool ItemSave_AddSave(int client){
+	char query[128];
+	for(int i=0; i<sizeof(g_szItems_SAVE[]); i++){
+		if(StrEqual(g_szItems_SAVE[client][i], "")){
+			Format(g_szItems_SAVE[client][i], sizeof(g_szItems_SAVE[][]), "%T", "Item_Register", client, i+1);
+			GetClientAuthId(client, AUTH_TYPE, query, sizeof(query), false);
+			Format(query, sizeof(query), "INSERT INTO rp_itemsaves (steamid, slot, name, save) VALUES ('%s', %d, '%s', '')", query, i, g_szItems_SAVE[client][i]);
+
+			SQL_TQuery(g_hBDD, SQL_QueryCallBack, query, client);
+			
+			return true;
+		}
+	}
+	return false;
+}
+
+void ItemSave_Withdraw(int client, int saveid){
+	char query[128];
+	GetClientAuthId(client, AUTH_TYPE, query, sizeof(query), false);
+	Format(query, sizeof(query), "SELECT name, save FROM rp_itemsaves WHERE steamid='%s' AND slot=%d", query, saveid);
+
+	SQL_TQuery(g_hBDD, itemSave_Withdraw_2, query, client, DBPrio_High);
+}
+
+public void itemSave_Withdraw_2(Handle owner, Handle hQuery, const char[] error, any client){
+	SQL_FetchRow(hQuery);
+	int amount;
+	int inBank;
+	char split[2] = ";";
+	char buffer[BUFFER_SIZE], buffer2[BUFFER_SIZE], szData[2][BUFFER_SIZE];
+	int size = (BUFFER_SIZE+SQL_FetchSize(hQuery, 1));
+	char[] data = new char[size];
+	char tmp[128];
+	
+	SQL_FetchString(hQuery, 1, data, size);	
+	// ------------
+	//	Stocké sous le format: id,amount;id,amount;
+	//
+	amount = g_iUserData[client][i_ItemCount];
+	for (int pos=0; pos < amount ; pos++) {
+		int objet_id = g_iItems[client][pos][STACK_item_id];
+		
+		if( StringToInt(g_szItemList[objet_id][item_type_no_bank]) == 1 )
+			continue;
+		
+		rp_ClientGiveItem(client, objet_id, g_iItems[client][pos][STACK_item_amount], true);
+		LogToGame("[TSX-RP] [BANK-ITEM] %L a déposé: %d %s", client, g_iItems[client][pos][STACK_item_amount], g_szItemList[objet_id][item_type_name]);
+		g_iItems[client][pos][STACK_item_id] = g_iItems[client][pos][STACK_item_amount] = 0;
+	}
+	
+	g_iUserData[client][i_ItemCount] = 0;
+
+	while( SplitString(data, split, buffer, BUFFER_SIZE) != -1 ) {
+		
+		Format(buffer2, BUFFER_SIZE, "%s%s", buffer, split);
+		RemoveString(data, buffer2, false);
+		ExplodeString(buffer, ",", szData, sizeof(szData), BUFFER_SIZE);
+			
+		int objet_id = StringToInt(szData[0]);
+		int objet_amount = StringToInt(szData[1]);
+			
+		if( objet_id <= 0 || objet_id > MAX_ITEMS)
+			continue;
+		if( StringToInt(g_szItemList[objet_id][item_type_no_bank]) == 1 )
+			continue;
+		if( StrEqual(g_szItemList[objet_id][item_type_extra_cmd], "UNKNOWN") )
+			continue;
+		if( objet_amount <= 0 )
+			continue;
+
+		inBank = rp_GetClientItem(client, objet_id, true);
+		
+		rp_GetItemData(objet_id, item_type_name, tmp, sizeof(tmp));
+
+		if( inBank < objet_amount ){
+			if(inBank > 0)
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Item_NotEnough", client, objet_amount-inBank, tmp);
+			else
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Item_NoMore", client, tmp, objet_amount-inBank);
+			
+			objet_amount = inBank;
+		}
+		
+		rp_ClientGiveItem(client, objet_id, -objet_amount, true);
+		rp_ClientGiveItem(client, objet_id, objet_amount, false);
+		
+		LogToGame("[TSX-RP] [BANK-ITEM] %L a retiré: %d %s", client, objet_amount, g_szItemList[objet_id][item_type_name]);
+	}
+	SQL_FetchString(hQuery, 0, buffer, BUFFER_SIZE);
+	CloseHandle(hQuery);
+}
+
+void ItemSave_LoadNames(int client){
+	char query[128];
+	GetClientAuthId(client, AUTH_TYPE, query, sizeof(query), false);
+	Format(query, sizeof(query), "SELECT slot, name FROM rp_itemsaves WHERE steamid='%s'", query);
+
+	SQL_TQuery(g_hBDD, itemSave_LoadNames_2, query, client, DBPrio_High);
+}
+
+public void itemSave_LoadNames_2(Handle owner, Handle handle, const char[] error, any client) {
+	if( handle == INVALID_HANDLE ) {
+		LogError("[SQL] [ERROR] %s", error);
+	}
+	
+	while( SQL_FetchRow(handle) ) {
+		SQL_FetchString(handle, 1, g_szItems_SAVE[client][SQL_FetchInt(handle, 0)], sizeof(g_szItems_SAVE[][]));
+	}
+
+	CloseHandle(handle);
 }
