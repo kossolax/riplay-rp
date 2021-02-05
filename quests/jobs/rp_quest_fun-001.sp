@@ -495,7 +495,7 @@ public void OnThink(int entity)
 	
 
 	if( g_iStep[client] >= CHECKPOINTS ) {
-		if( g_iObjectiveID[client] > 0 )
+		if( g_iObjectiveID[client] > 0 ) {
 			rp_QuestStepComplete(client, g_iObjectiveID[client]);
 			g_iObjectiveID[client] = -1;
 		}

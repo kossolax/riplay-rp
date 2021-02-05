@@ -589,6 +589,7 @@ enum BM_Int {
 	BM_PvP,
 	BM_Type,
 	BM_Store,
+	BM_RoF,
 	BM_Max
 }
 #define BM_WeaponNameSize	64

@@ -88,6 +88,7 @@ public int Native_rp_WeaponMenu_Add(Handle plugin, int numParams) {
 	data[view_as<int>(BM_PvP)] = rp_GetWeaponGroupID(weaponID);
 	data[view_as<int>(BM_Type)] = view_as<int>(rp_GetWeaponBallType(weaponID));
 	data[view_as<int>(BM_Store)] = g_iWeaponFromStore[weaponID];
+	data[view_as<int>(BM_RoF)] = view_as<int>(g_flWeaponFireRate[weaponID]);
 	
 	hBuyMenu.Reset();
 	DataPackPos pos = hBuyMenu.ReadCell();
@@ -192,6 +193,9 @@ public int Native_rp_WeaponMenu_Give(Handle plugin, int numParams) {
 		SetEntProp(wepid, Prop_Send, "m_iClip1", data[BM_Munition]);
 		SetEntProp(wepid, Prop_Send, "m_iPrimaryReserveAmmoCount", data[BM_Chargeur]);
 	}
+	
+	float rof = view_as<float>(data[view_as<int>(BM_RoF)]);
+	g_flWeaponFireRate[weaponID] = data[view_as<int>(BM_RoF)] = view_as<int>();
 	
 	EquipPlayerWeapon(client, wepid);
 	

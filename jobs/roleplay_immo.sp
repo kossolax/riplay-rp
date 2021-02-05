@@ -1899,7 +1899,7 @@ stock int Entity_GetGroundOrigin(int entity, float pos[3]) {
 	target[2] = source[2] - 999999.9;
 	
 	Handle tr;
-	tr = TR_TraceRayFilterEx(source, target, MASK_SOLID_BRUSHONLY, RayType_EndPoint, PVE_Filter, entity);
+	tr = TR_TraceRayFilterEx(source, target, MASK_SOLID_BRUSHONLY, RayType_EndPoint, PVE_Filter);
 	if (tr)
 		TR_GetEndPosition(pos, tr);
 	delete tr;
@@ -1907,8 +1907,6 @@ stock int Entity_GetGroundOrigin(int entity, float pos[3]) {
 public bool PVE_Filter(int entity, int contentsMask, any data) {
 	if( entity == 0 )
 		return true;
-	if( entity == data || entity < MaxClients )
-		return false;
 	return true;
 }
 
