@@ -195,7 +195,7 @@ public int Native_rp_WeaponMenu_Give(Handle plugin, int numParams) {
 	}
 	
 	float rof = view_as<float>(data[view_as<int>(BM_RoF)]);
-	g_flWeaponFireRate[weaponID] = data[view_as<int>(BM_RoF)] = view_as<int>();
+	g_flWeaponFireRate[weaponID] = data[view_as<int>(BM_RoF)];
 	
 	EquipPlayerWeapon(client, wepid);
 	
