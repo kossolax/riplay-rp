@@ -4,7 +4,7 @@
 	"TUTO_Jobs_Recommanded"
 	{
 		"fr"		"Recommandé"
-		"en"		"Recommanded"
+		"en"		"Recommended"
 	}
 	"TUTO_Jobs_Fun"
 	{
@@ -35,7 +35,7 @@
 	"TUTO_1_Text"
 	{
 		"fr"		"C'est votre première connexion, vous devez donc faire notre tutoriel afin de vous familiariser avec ce mode de jeu. A la fin de celui-ci vous gagnerez 20.000$: la monnaie du jeu.\n \n Ce mode Roleplay est une sorte de simulation de vie: vous pouvez avoir de l'argent, un emploi etc.\n \n→ Rendez-vous devant la statue de la place de l'indépendance afin de commencer votre apprentissage.\n \n Les flèches vous guideront tout au long de ce tutoriel."
-		"en"		"This is your first connection, so you must do our tutorial in order to familiarize yourself with this gamemode. At the end of it you will earn $20,000 in game currency.\n \n In this gamemode you can earn money, a job & more.\n \n→ Meet in front of the statue in Independence Square to start your tutorial.\n \n The arrows will guide you through this tutorial."
+		"en"		"This is your first connection, so you must do our tutorial in order to familiarize yourself with this gamemode. At the end of it you will earn $20,000 in game currency.\n \n In this gamemode you can earn money, a job & more.\n \n→ Meet in front of the statue at Independence Square to start your tutorial.\n \n The arrows will guide you through this tutorial."
 	}
 	"TUTO_2_Title"
 	{
@@ -45,7 +45,7 @@
 	"TUTO_2_Text"
 	{
 		"fr"		"Princeton est la ville dans laquelle vous êtes, c'est la map du serveur. La justice y fait souvent défaut. De nombreux meurtres y sont commis, et parfois impunis.\n \n Bien que de nombreux citoyens s'entretuent sachez, avant tout, que vous risquez de rester de longues minutes en prison pour de telles actions.\n \n→ Rendez-vous devant le commissariat afin de continuer votre apprentissage."
-		"en"		"Princeton is the name of the city you have just moved to! Although justice is often lacking as murders and criminal activity often goes unpunished.\n \n Many citizens commit murder which can result in long prison sentences.\n \n→ Meet in front of the police station to continue your training."		
+		"en"		"Princeton is the name of the city you have just moved to! Although justice is often lacking as murders and criminal activity often go unpunished.\n \n Many citizens commit murder which can result in long prison sentences.\n \n→ Meet in front of the police station to continue your training."		
 	}
 	"TUTO_3_Title"
 	{
@@ -75,7 +75,7 @@
 	"TUTO_5_Text"
 	{
 		"fr"		"Sachez qu'un policier n'a pas le droit de mettre en prison pour des faits qui ne se sont pas déroulés devant ses yeux. Si vous connaissez le nom de la personne qui vous a tué et qu'un juge est présent, adressez-vous à lui.\n \n En vérifiant l'historique du serveur, le juge appliquera une condamnation adaptée aux faits reprochés. (Meurtre, vol, ...)\n \n→ Rendez-vous devant le tribunal."
-		"en"		"Be aware that police do not have the right ot put into prison for facts which did not take place before his eyes. If you know the name of the person who killed you and that a judge is present, contact him.\n \n By checking the history of the server, the Judge will apply a sentence appropriate to the charges. (Murder, theft, etc)\n \n→ Appointment in court."		
+		"en"		"Be aware that police do not have the right to put you into prison for facts which did not take place before their eyes. If you know the name of the person who killed you and that a judge is present, contact him.\n \n By checking the history of the server, the Judge will apply a sentence appropriate to the charges. (Murder, theft, etc)\n \n→ Appointment in court."		
 	}
 	"TUTO_6_Title"
 	{
@@ -85,7 +85,7 @@
 	"TUTO_6_Text"
 	{
 		"fr"		"Les flèches vous dirige vers l'armurerie où vous pourrez vous procurer des armes. N'oubliez pas d'acheter un permis de port d'arme à un banquier. Dans le cas contraire un policier est en droit de vous arrêter. Restez discret, rangez la dans votre poche! Une arme a été ajoutée dans votre inventaire.\n \n→ Entrez la commande /rp (ou /item) dans le chat général, Appuyez sur la touche 1 afin de l'utiliser."
-		"en"		"The arrows direct you to the armory where you can get weapons. Do not forget to buy a license to carry a weapon from a banker. Otherwise a police officer is entitled to stop you. Stay discreet and put it in your pocket! A weapon has been added to your inventory.\n \n→ Enter the command /rp or /item) in general chat, then press the 1 key to use it."		
+		"en"		"The arrows direct you to the armory where you can get weapons. Do not forget to buy a license to carry a weapon which can be purchasedfrom a banker. Otherwise a police officer is entitled to stop you for carrying an unlicensed weapon. Stay discreet and put it in your pocket! A weapon has been added to your inventory.\n \n→ Enter the command /rp or /item) in general chat, then press the 1 key to use it."		
 	}
 	"TUTO_7_Title"
 	{
