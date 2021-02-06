@@ -707,22 +707,22 @@
 	"Hint_Door_Close"
 	{
 		"fr"		"<font color='#ff0000'>fermée</font>"
-		"en"		"<font color='#ff0000'>fermée</font>"
+		"en"		"<font color='#ff0000'>Closed</font>"
 	}
 	"Hint_Door_Open"
 	{
 		"fr"		"<font color='#00ff00'>ouverte</font>"
-		"en"		"<font color='#00ff00'>ouverte</font>"
+		"en"		"<font color='#00ff00'>Opened</font>"
 	}
 	"Hint_Door_WithoutKey"
 	{
 		"fr"		"Vous n'avez <font color='#ff0000'>pas les clés</font>."
-		"en"		"You have <font color='#ff0000'>not the keys</font>."
+		"en"		"You don't have the <font color='#ff0000'>keys</font>."
 	}
 	"Hint_Door_WithKey"
 	{
 		"fr"		"Vous avez <font color='#00ff00'>les clés</font>."
-		"en"		"You have <font color='#00ff00'>the keys</font>."
+		"en"		"You have the <font color='#00ff00'>keys</font>."
 	}
 	"Hint_ATM"
 	{
