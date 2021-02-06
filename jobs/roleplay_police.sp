@@ -625,7 +625,7 @@ public Action Cmd_Tazer(int client) {
 		CPrintToChat(client, ""...MOD_TAG..." %T", "Tazer_player_target", client, target_name);
 		LogToGame("[TSX-RP] [TAZER] %L a tazé %N dans %d.", client, target, rp_GetPlayerZone(target));
 		
-		TazerCooldown(client);
+		TazerCooldown(client, 1.0);
 	}
 	else {
 		if (GetClientTeam(client) == CS_TEAM_T && job != 1 && job != 2 && job != 4 && job != 5 && job != 6 && job != 7) {
@@ -804,13 +804,13 @@ public Action Cmd_Tazer(int client) {
 				tmp, rp_GetClientJobID(client), GetTime(), 1, "TAZER", reward);
 			
 			SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery);
-			TazerCooldown(client);
+			TazerCooldown(client, 0.5);
 		}
 	}
 	return Plugin_Handled;
 }
 
-void TazerCooldown(int client) {
+void TazerCooldown(int client, float base) {
 	int job = rp_GetClientInt(client, i_Job);
 	float time = 10.0;
 	
@@ -818,18 +818,34 @@ void TazerCooldown(int client) {
 	switch (job) {
 		case 1:time = 0.001;
 		case 101:time = 0.001;
+		
 		case 2:time = 0.5;
 		case 102:time = 0.5;
+		
+		case 3:time = 2.0;
+		case 103:time = 2.0;
+		
 		case 4:time = 4.0;
+		case 104:time = 4.0;
+		
 		case 5:time = 6.0;
+		case 105:time = 6.0;
+		
 		case 6:time = 7.0;
+		case 106:time = 7.0;
+		
 		case 7:time = 8.0;
+		case 107:time = 8.0;
+		
 		case 8:time = 9.0;
+		case 108:time = 9.0;
+		
 		case 9:time = 10.0;
+		case 109:time = 10.0;
 		
 		default:time = 10.0;
 	}
-	CreateTimer(time, AllowStealing, client);
+	CreateTimer(time*base, AllowStealing, client);
 }
 public Action Cmd_InJail(int client) {
 	char tmp[256];
