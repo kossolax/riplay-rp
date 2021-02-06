@@ -1,0 +1,178 @@
+"Phrases"
+{
+	// ----------------------------------
+	"TUTO_Jobs_Recommanded"
+	{
+		"fr"		"Recommandé"
+		"en"		"Recommanded"
+	}
+	"TUTO_Jobs_Fun"
+	{
+		"fr"		"Amusant"
+		"en"		"Funny"
+	}
+	"TUTO_Jobs_Hard"
+	{
+		"fr"		"Difficile"
+		"en"		"Difficult"
+	}
+	"TUTO_Jobs_Selling"
+	{
+		"fr"		"Commercial"
+		"en"		"Commercial"
+	}
+	"TUTO_Jobs_Unrecommanded"
+	{
+		"fr"		"Non recommandé"
+		"en"		"Unrecommanded"
+	}
+	// ----------------------------------
+	"TUTO_1_Title"
+	{
+		"fr"		"== Bienvenue sur le serveur RolePlay"
+	}
+	"TUTO_1_Text"
+	{
+		"fr"		"C'est votre première connexion, vous devez donc faire notre tutoriel afin de vous familiariser avec ce mode de jeu. A la fin de celui-ci vous gagnerez 20.000$: la monnaie du jeu.\n \n Ce mode Roleplay est une sorte de simulation de vie: vous pouvez avoir de l'argent, un emploi etc.\n \n→ Rendez-vous devant la statue de la place de l'indépendance afin de commencer votre apprentissage.\n \n Les flèches vous guideront tout au long de ce tutoriel."
+	}
+	"TUTO_2_Title"
+	{
+		"fr"		"== Objectif 1: La ville"
+	}
+	"TUTO_2_Text"
+	{
+		"fr"		"Princeton est la ville dans laquelle vous êtes, c'est la map du serveur. La justice y fait souvent défaut. De nombreux meurtres y sont commis, et parfois impunis.\n \n Bien que de nombreux citoyens s'entretuent sachez, avant tout, que vous risquez de rester de longues minutes en prison pour de telles actions.\n \n→ Rendez-vous devant le commissariat afin de continuer votre apprentissage."
+	}
+	"TUTO_3_Title"
+	{
+		"fr"		"== Objectif 2: Le commissariat"
+	}
+	"TUTO_3_Text"
+	{
+		"fr"		"Selon le règlement de la police, vous pouvez être mis en prison dans ce commissariat pour différentes raisons.\n \nLes principales raisons d’incarcération sont: Le meurtre ou la tentative de meurtre, le tir dans la rue, le vol, les nuisances sonores, le trafic illégal...\n \n Votre futur emploi définira votre camp. Par exemple, un mafieux vole de l'argent, un mercenaire exécute des contrats, un policier tentera de les en empêcher.\n \n→ Rendez-vous devant la banque."
+	}
+	"TUTO_4_Title"
+	{
+		"fr"		"== Objectif 3: Mettre son argent en sécurité"
+	}
+	"TUTO_4_Text"
+	{
+		"fr"		"Dans un premier temps pour éviter de vous faire voler votre argent, déposez-le en banque.\n \nPour cela, positionnez-vous devant un distributeur, utilisez votre touche action (E). Selectionnez l'action déposer argent. Déposez-y le montant que vous souhaitez\n \nSachez tout de même que les banquiers vendent des cartes et des comptes bancaires qui vous faciliterons la vie plus tard sur le serveur.\n \n→ Déposez tout votre argent en banque."
+	}
+	"TUTO_5_Title"
+	{
+		"fr"		"== Objectif 4: Le Tribunal"
+	}
+	"TUTO_5_Text"
+	{
+		"fr"		"Sachez qu'un policier n'a pas le droit de mettre en prison pour des faits qui ne se sont pas déroulés devant ses yeux. Si vous connaissez le nom de la personne qui vous a tué et qu'un juge est présent, adressez-vous à lui.\n \n En vérifiant l'historique du serveur, le juge appliquera une condamnation adaptée aux faits reprochés. (Meurtre, vol, ...)\n \n→ Rendez-vous devant le tribunal."
+	}
+	"TUTO_6_Title"
+	{
+		"fr"		"== Objectif 5: L'armurerie"
+	}
+	"TUTO_6_Text"
+	{
+		"fr"		"Les flèches vous dirige vers l'armurerie où vous pourrez vous procurer des armes. N'oubliez pas d'acheter un permis de port d'arme à un banquier. Dans le cas contraire un policier est en droit de vous arrêter. Restez discret, rangez la dans votre poche! Une arme a été ajoutée dans votre inventaire.\n \n→ Entrez la commande /rp (ou /item) dans le chat général, Appuyez sur la touche 1 afin de l'utiliser."
+	}
+	"TUTO_7_Title"
+	{
+		"fr"		"== Objectif 6: Les appartements"
+	}
+	"TUTO_7_Text"
+	{
+		"fr"		"Un appartement vous permet d'augmenter votre paye. Lorsque vous aurez décroché votre premier emploi, il est généralement conseillé de louer un appart. Celui-ci vous donne de l'énergie et vous rend votre vie. Vous pouvez aussi y cacher différents objets du jeu, tel que les machines à faux-billets plants de drogue, armes, etc.\n \n→ Rendez-vous devant les appartements afin de continuer votre apprentissage."
+	}
+	"TUTO_8_Title"
+	{
+		"fr"		"== Objectif 7: Un trafic illégal"
+	}
+	"TUTO_8_Text"
+	{
+		"fr"		"Une imprimante à faux-billets et un plant de drogue ont été ajoutés à votre inventaire.\n \nTrouvez-vous une cachette, et utilisez ces objets (/rp ou /item). Si vous êtes mal caché, un policier est en droit de vous arrêter !\n \n→ Déposez une machine, et un plant dedrogue afin de continuer votre apprentissage."
+	}
+	"TUTO_9_Title"
+	{
+		"fr"		"== Objectif 8: Le Tchat général"
+	}
+	"TUTO_9_Text"
+	{
+		"fr"		"Le Chat est divisé en plusieurs catégories:\n \n- Le Chat général, celui qui permet de communiquer avec tout citoyen présent en ville, mais aussi d'exécuter diverses commandes (comme le /item qu'on vient de voir).\n \n - Le Chat équipe, permet de communiquer avec les citoyens à coté de vous.\n \n→ Faites un coucou dans le chat local (Touche u) afin de continuer votre apprentissage."
+	}
+	"TUTO_10_Title"
+	{
+		"fr"		"== Objectif 9: Les quêtes"
+	}
+	"TUTO_10_Text"
+	{
+		"fr"		"Les téléphones de la ville sont très utiles pour gagner de l'argent facilement. De temps à autres, ceux-ci se mettent à sonner. Si vous décrochez, un colis vous est envoyé par hélicoptère.\n \nDe plus, de nombreuses quêtes sont disponibles selon votre job. Il suffit de se rendre à un téléphone pour débuter l'une d'entre elle.\n \n→ Décrochez au téléphonne à l'aide de votre touche utiliser (E par défaut)."
+	}
+	"TUTO_10b_Text"
+	{
+		"fr"		"Un hélicoptère vous envois un colis. Il sera envoyé près de vous, dans la rue du commerce."
+	}
+	"TUTO_11_Title"
+	{
+		"fr"		"== Objectif 10: Les commandes utiles"
+	}
+	"TUTO_11_Text"
+	{
+		"fr"		"Il existe de nombreuses commandes sur le serveur. La plupart liées à votre métier, que vous apprendrez sur le tas.\n - /give montant permet de donner votre argent\n- /vendre pour vendre un objet\n- /job Permet de voir les différents jobs connectés\nAfin de trouver un emploi, jetez un oeil à cette commande. Elle permet de voir qui est chef, vous saurez donc à qui vous adresser pour trouver un emploi.\n \n→ Rendez-vous maintenant sur la place Station"
+	}
+	"TUTO_12_Title"
+	{
+		"fr"		"== Objectif 11: Le mot de la fin"
+	}
+	"TUTO_12_Text"
+	{
+		"fr"		"Derniers conseils avant de vous laisser partir sur de bonnes bases.\n \n- Nous sommes sur CSGO, pas sur ARMA ni GMOD. Il y a des meurtres en ville, armez vous.\n - Seul les policiers et les juges sont là pour sanctionner les meurtres.\n- Trouvez vous un job\n- Faites un tour sur notre Discord\n \nBon jeu!\n→ Rendez-vous a coté l'hôpital afin de commencer votre aventure RolePlay."
+	}
+	"TUTO_13_Title"
+	{
+		"fr"		"== Parrainage"
+	}
+	"TUTO_13_Text"
+	{
+		"fr"		"Quelqu'un de présent vous a t-il invité à jouer sur notre serveur?  Si oui, qui?"
+	}
+	"TUTO_13b_Text"
+	{
+		"fr"		"Personne m'a invité"
+	}
+	"TUTO_Finish"
+	{
+		"#format" "{1:s},{2:s}"
+		"fr"		"{1} vient de terminer son tutoriel, il est {2}. Aidez le!"
+	}
+	"TUTO_Jobs_Title"
+	{
+		"fr"		"== Vos premiers job vous sont offerts"
+	}
+	"TUTO_Jobs_Text"
+	{
+		"fr"		"Sachez que plus tard, vous devrez le trouver vous-même et être recruté par le chef d'un job.\n "
+	}
+	"TUTO_Jobs_Confirm"
+	{
+		"#format" "{1:s}"
+		"fr"		"Vous avez choisis comme métier:\n {1}."
+	}
+	"TUTO_Jobs_Confirm_Yes"
+	{
+		"fr"		"Je confirme mon choix"
+	}
+	"TUTO_Jobs_Confirm_No"
+	{
+		"fr"		"Je veux choisir un autre job"
+	}
+	"TUTO_Jobs_Confirm_Done"
+	{
+		"#format" "{1:s},{2:d},{3:d}"
+		"fr"		"Vous avez choisis {1}, il vous reste {2}/{3} job(s) offert(s)"
+	}
+	"TUTO_Jobs_None"
+	{
+		"fr"		"Quelqu'un a un autre job pour moi"
+	}
+	
+}

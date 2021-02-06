@@ -260,8 +260,15 @@ stock void String_WordWrap(char[] s, int wrapline) {
 	int i, k, wraploc, lastwrap;
 	
 	for (i = 0; s[i] != '\0'; ++i, ++wraploc) {
+		
+		if( s[i] == '\n' ) {
+			wraploc = 0;
+			lastwrap = i + 1;
+		}
+		
 		if (wraploc >= wrapline) {
 			for (k = i; k > 0; --k) {
+				
 				if (k - lastwrap <= wrapline && s[k] == ' ') {
 					s[k] = '\n';
 					lastwrap = k + 1;

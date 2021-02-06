@@ -33,7 +33,7 @@ public Plugin myinfo = {
 
 int g_iQuest;
 
-char qualif[][] =  	{ "Recommandé", "Amusant", "Difficile", "Métier de vente", "Non recommandé"};
+char qualif[][] =  	{ "TUTO_Jobs_Recommanded", "TUTO_Jobs_Fun", "TUTO_Jobs_Hard", "TUTO_Jobs_Selling", "TUTO_Jobs_Unrecommanded"};
 int g_iJob[] =  			{ 15, 26, 36, 46, 56, 65, 76, 87, 96, 116, 135, 176, 216, 226};
 int g_iRecom[MAX_JOBS];
 int g_iDefaultJob[MAXPLAYERS];
@@ -45,6 +45,12 @@ int g_iDisableAsk[65];
 
 int g_iQ9, g_iQ12;
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("common.phrases");
+	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.items.phrases");
+	LoadTranslations("roleplay.quests.story.phrases");
+	
 	g_iRecom[116] = 0;
 	g_iRecom[87] = g_iRecom[96] = g_iRecom[226] = 1;
 	g_iRecom[46] = g_iRecom[36] = 2;
@@ -127,24 +133,16 @@ public void Q1_Frame(int objectiveID, int client) {
 	GetClientAbsOrigin(client, origin);
 	
 	if( rp_ClientCanDrawPanel(client) ) {
+		char title[128], text[2048];
 		Handle panel = CreatePanel();
 		
-		SetPanelTitle(panel, "== Bienvenue sur le serveur RolePlay");
-		DrawPanelText(panel, " C'est votre première connexion,");
-		DrawPanelText(panel, "vous devez donc faire notre tutoriel ");
-		DrawPanelText(panel, "afin de vous familiariser avec ce mode");
-		DrawPanelText(panel, "de jeu. A la fin de celui-ci vous");
-		DrawPanelText(panel, "gagnerez 20.000$: la monnaie du jeu");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, " Ce mode Roleplay est une sorte de simulation");
-		DrawPanelText(panel, "de vie: vous pouvez avoir de l'argent,");
-		DrawPanelText(panel, "un emploi etc.");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, "→ Rendez-vous devant la statue de la");
-		DrawPanelText(panel, "place de l'indépendance afin de commencer");
-		DrawPanelText(panel, "votre apprentissage.");
-		DrawPanelText(panel, "Les flèches vous guideront tout");
-		DrawPanelText(panel, "au long de ce tutoriel.");
+		Format(title, sizeof(title), "%T", "TUTO_1_Title", client);
+		Format(text, sizeof(text), "%T", "TUTO_1_Text", client);
+		
+		String_WordWrap(text, 40);
+		
+		SetPanelTitle(panel, title);
+		DrawPanelText(panel, text);
 		
 		rp_SendPanelToClient(panel, client, 1.1);
 		CreateTimer(1.1, PostKillHandle, panel);
@@ -163,21 +161,16 @@ public void Q2_Frame(int objectiveID, int client) {
 	GetClientAbsOrigin(client, origin);
 	
 	if( rp_ClientCanDrawPanel(client) ) {
-		
+		char title[128], text[2048];
 		Handle panel = CreatePanel();
 		
-		SetPanelTitle(panel, "== Objectif 1: La ville");
-		DrawPanelText(panel, " Princeton est la ville dans laquelle");
-		DrawPanelText(panel, "vous êtes, c'est la map du serveur. La ");
-		DrawPanelText(panel, "justice y fait souvent défaut. De nombreux");
-		DrawPanelText(panel, "meurtres y sont commis, et parfois impunis.");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, " Bien que de nombreux citoyens s'entretuent");
-		DrawPanelText(panel, "sachez, avant tout, que vous risquez de rester");
-		DrawPanelText(panel, "de longues minutes en prison pour de telles actions.");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, "→ Rendez-vous devant le commissariat afin");
-		DrawPanelText(panel, "de continuer votre apprentissage.");
+		Format(title, sizeof(title), "%T", "TUTO_2_Title", client);
+		Format(text, sizeof(text), "%T", "TUTO_2_Text", client);
+		
+		String_WordWrap(text, 40);
+		
+		SetPanelTitle(panel, title);
+		DrawPanelText(panel, text);
 		
 		rp_SendPanelToClient(panel, client, 1.1);
 		CreateTimer(1.1, PostKillHandle, panel);
@@ -195,33 +188,22 @@ public void Q3_Frame(int objectiveID, int client) {
 	GetClientAbsOrigin(client, origin);
 	
 	if( rp_ClientCanDrawPanel(client) ) {
-		
+		char title[128], text[2048];
 		Handle panel = CreatePanel();
 		
-		SetPanelTitle(panel, "== Objectif 2: Le commissariat");
-		DrawPanelText(panel, " Selon le règlement de la police, vous");
-		DrawPanelText(panel, "pouvez être mis en prison dans ce");
-		DrawPanelText(panel, "commissariat pour différentes raisons.");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, " Les principales raisons d’incarcération");
-		DrawPanelText(panel, "sont: Le meurtre ou la tentative");
-		DrawPanelText(panel, "de meurtre, le tir dans la rue, le vol,");
-		DrawPanelText(panel, "les nuisances sonores, le trafic illégal");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, " Votre futur emploi définira votre");
-		DrawPanelText(panel, "camp. Par exemple, un mafieux vole de l'argent,");
-		DrawPanelText(panel, "un mercenaire exécute des contrats, un");
-		DrawPanelText(panel, "policier tentera de les en empêcher.");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, "→ Rendez-vous devant la banque.");
+		Format(title, sizeof(title), "%T", "TUTO_3_Title", client);
+		Format(text, sizeof(text), "%T", "TUTO_3_Text", client);
+		
+		String_WordWrap(text, 40);
+		
+		SetPanelTitle(panel, title);
+		DrawPanelText(panel, text);
 		
 		rp_SendPanelToClient(panel, client, 1.1);
 		CreateTimer(1.1, PostKillHandle, panel);
 	}
 	
-	if( GetVectorDistance(target, origin) < 64.0 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 2500$.");
-		
+	if( GetVectorDistance(target, origin) < 64.0 ) {		
 		if( rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank) < 2500 ) {
 			rp_ClientMoney(client, i_Money, 2500);
 		}
@@ -241,24 +223,16 @@ public void Q4_Frame(int objectiveID, int client) {
 	GetClientAbsOrigin(client, origin);
 	
 	if( rp_ClientCanDrawPanel(client) ) {
-		
+		char title[128], text[2048];
 		Handle panel = CreatePanel();
 		
-		SetPanelTitle(panel, "== Objectif 3: Mettre son argent en sécurité");
-		DrawPanelText(panel, " Dans un premier temps pour éviter de vous");
-		DrawPanelText(panel, "faire voler votre argent, déposez-le");
-		DrawPanelText(panel, "en banque.");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, " Pour cela, positionnez-vous devant un");
-		DrawPanelText(panel, "distributeur, utilisez votre touche action (E).");
-		DrawPanelText(panel, "Selectionnez l'action déposer argent.");
-		DrawPanelText(panel, "Déposez-y le montant que vous souhaitez");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, " Sachez tout de même que les banquiers vendent");
-		DrawPanelText(panel, "des cartes et des comptes bancaires qui vous");
-		DrawPanelText(panel, "faciliterons la vie plus tard sur le serveur.");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, "→ Déposez tout votre argent en banque.");
+		Format(title, sizeof(title), "%T", "TUTO_4_Title", client);
+		Format(text, sizeof(text), "%T", "TUTO_4_Text", client);
+		
+		String_WordWrap(text, 40);
+		
+		SetPanelTitle(panel, title);
+		DrawPanelText(panel, text);
 		
 		rp_SendPanelToClient(panel, client, 1.1);
 		CreateTimer(1.1, PostKillHandle, panel);
@@ -277,22 +251,16 @@ public void Q5_Frame(int objectiveID, int client) {
 	GetClientAbsOrigin(client, origin);
 	
 	if( rp_ClientCanDrawPanel(client) ) {
-		
+		char title[128], text[2048];
 		Handle panel = CreatePanel();
 		
-		SetPanelTitle(panel, "== Objectif 4: Le Tribunal");
-		DrawPanelText(panel, " Sachez qu'un policier n'a pas le droit de mettre");
-		DrawPanelText(panel, "en prison pour des faits qui ne se sont pas déroulés devant");
-		DrawPanelText(panel, "ses yeux.");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, " Si vous connaissez le nom de la personne qui vous a tué");
-		DrawPanelText(panel, "et qu'un juge est présent, adressez-vous à lui.");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, " En vérifiant l'historique du serveur, le juge ");
-		DrawPanelText(panel, "appliquera une condamnation adaptée aux faits");
-		DrawPanelText(panel, "reprochés. (Meurtre, vol, ...)");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, "→ Rendez-vous devant le tribunal.");
+		Format(title, sizeof(title), "%T", "TUTO_5_Title", client);
+		Format(text, sizeof(text), "%T", "TUTO_5_Text", client);
+		
+		String_WordWrap(text, 40);
+		
+		SetPanelTitle(panel, title);
+		DrawPanelText(panel, text);
 		
 		rp_SendPanelToClient(panel, client, 1.1);
 		CreateTimer(1.1, PostKillHandle, panel);
@@ -300,10 +268,12 @@ public void Q5_Frame(int objectiveID, int client) {
 
 
 	if( GetVectorDistance(target, origin) < 128.0 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu en récompense 1 Desert Eagle.");
-		
 		int itemid = 150;
-		if( rp_GetClientItem(client, itemid) == false && rp_GetClientItem(client, itemid, true) == false ) {
+		char tmp[128];
+		rp_GetItemData(itemid, item_type_name, tmp, sizeof(tmp));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Give", 1, tmp);
+		
+		if( rp_GetClientItem(client, itemid) == 0 && rp_GetClientItem(client, itemid, true) == 0 ) {
 			rp_ClientGiveItem(client, itemid);
 		}
 		else if( rp_GetClientItem(client, itemid, true) ) {
@@ -322,22 +292,16 @@ public void Q6_Frame(int objectiveID, int client) {
 	GetClientAbsOrigin(client, origin);
 	
 	if( rp_ClientCanDrawPanel(client) ) {
-		
+		char title[128], text[2048];
 		Handle panel = CreatePanel();
 		
-		SetPanelTitle(panel, "== Objectif 5: L'armurerie");
-		DrawPanelText(panel, " Les flèches vous dirige vers l'armurerie où ");
-		DrawPanelText(panel, "vous pourrez vous procurer des armes.");
-		DrawPanelText(panel, "N'oubliez pas d'acheter un permis");
-		DrawPanelText(panel, "de port d'arme à un banquier. Dans le cas contraire");
-		DrawPanelText(panel, "un policier est en droit de vous arrêter.");
-		DrawPanelText(panel, " Restez discret, rangez la dans votre poche!");
-		DrawPanelText(panel, " Une arme a été ajoutée dans votre inventaire.");
-		DrawPanelText(panel, "→ Entrez la commande /rp (ou /item) dans le chat général,");
-		DrawPanelText(panel, "Appuyez sur la touche 1 afin de l'utiliser");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, " Notez que votre inventaire disparaît en cas");
-		DrawPanelText(panel, "de déconnexion.");
+		Format(title, sizeof(title), "%T", "TUTO_6_Title", client);
+		Format(text, sizeof(text), "%T", "TUTO_6_Text", client);
+		
+		String_WordWrap(text, 40);
+		
+		SetPanelTitle(panel, title);
+		DrawPanelText(panel, text);
 		
 		rp_SendPanelToClient(panel, client, 1.1);
 		CreateTimer(1.1, PostKillHandle, panel);
@@ -355,22 +319,16 @@ public void Q7_Frame(int objectiveID, int client) {
 	GetClientAbsOrigin(client, origin);
 	
 	if( rp_ClientCanDrawPanel(client) ) {
-		
+		char title[128], text[2048];
 		Handle panel = CreatePanel();
 		
-		SetPanelTitle(panel, "== Objectif 6: Les appartements");
-		DrawPanelItem(panel, "", ITEMDRAW_SPACER);
-		DrawPanelText(panel, " Un appartement vous permet d'augmenter");
-		DrawPanelText(panel, "votre paye. Lorsque vous aurez décroché");
-		DrawPanelText(panel, "votre premier emploi, il est généralement");
-		DrawPanelText(panel, "conseillé de louer un appart. Celui-ci");
-		DrawPanelText(panel, "vous donne de l'énergie et vous rend votre vie.");
-		DrawPanelText(panel, "Vous pouvez aussi y cacher différents objets");
-		DrawPanelText(panel, "du jeu, tel que les machines à faux-billets");
-		DrawPanelText(panel, "plants de drogue, armes, etc.");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, "→ Rendez-vous devant les appartements afin");
-		DrawPanelText(panel, "de continuer votre apprentissage.");
+		Format(title, sizeof(title), "%T", "TUTO_7_Title", client);
+		Format(text, sizeof(text), "%T", "TUTO_7_Text", client);
+		
+		String_WordWrap(text, 40);
+		
+		SetPanelTitle(panel, title);
+		DrawPanelText(panel, text);
 		
 		rp_SendPanelToClient(panel, client, 1.1);
 		CreateTimer(1.1, PostKillHandle, panel);
@@ -384,7 +342,11 @@ public void Q7_Frame(int objectiveID, int client) {
 		if( rp_GetClientItem(client, 103, false) + rp_GetClientItem(client, 103, true) <= 0 )
 			rp_ClientGiveItem(client, 103);
 		
-		CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu en récompense 1 Plant de drogue et 1 Machine à faux-billets.");
+		char tmp[128];
+		rp_GetItemData(81, item_type_name, tmp, sizeof(tmp));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Give", 1, tmp);
+		rp_GetItemData(103, item_type_name, tmp, sizeof(tmp));
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Give", 1, tmp);
 		
 		rp_QuestStepComplete(client, objectiveID);
 	}
@@ -397,23 +359,16 @@ public void Q8_Frame(int objectiveID, int client) {
 	GetClientAbsOrigin(client, origin);
 	
 	if( rp_ClientCanDrawPanel(client) ) {
-		
+		char title[128], text[2048];
 		Handle panel = CreatePanel();
 		
-		SetPanelTitle(panel, "== Objectif 7: Un trafic illégal");
-		DrawPanelItem(panel, "", ITEMDRAW_SPACER);
-		DrawPanelText(panel, " Une imprimante à faux-billets et un plant");
-		DrawPanelText(panel, "de drogue ont été ajoutés à votre");
-		DrawPanelText(panel, "inventaire.");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, " Trouvez-vous une cachette, et utilisez");
-		DrawPanelText(panel, "ces objets (/rp ou /item). Si vous êtes mal");
-		DrawPanelText(panel, "caché, un policier est en droit de vous");
-		DrawPanelText(panel, "arrêter ! ");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, "→ Déposez une machine, et un plant de");
-		DrawPanelText(panel, "drogue afin de continuer votre");
-		DrawPanelText(panel, "apprentissage.");
+		Format(title, sizeof(title), "%T", "TUTO_8_Title", client);
+		Format(text, sizeof(text), "%T", "TUTO_8_Text", client);
+		
+		String_WordWrap(text, 40);
+		
+		SetPanelTitle(panel, title);
+		DrawPanelText(panel, text);
 		
 		rp_SendPanelToClient(panel, client, 1.1);
 		CreateTimer(1.1, PostKillHandle, panel);
@@ -428,25 +383,16 @@ public void Q8_Frame(int objectiveID, int client) {
 }
 public void Q9_Frame(int objectiveID, int client) {
 	if( rp_ClientCanDrawPanel(client) ) {
-		
+		char title[128], text[2048];
 		Handle panel = CreatePanel();
 		
-		SetPanelTitle(panel, "== Objectif 8: Le Tchat général");
-		DrawPanelItem(panel, "", ITEMDRAW_SPACER);
-		DrawPanelText(panel, " Le Tchat est divisé en plusieurs");
-		DrawPanelText(panel, "catégories.");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, " Le Tchat général, celui qui permet");
-		DrawPanelText(panel, "de communiquer avec tout citoyen");
-		DrawPanelText(panel, "présent en ville, mais aussi d'exécuter");
-		DrawPanelText(panel, "diverses commandes (comme le /item qu'on vient de voir).");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, " Le Tchat équipe, permet de communiquer");
-		DrawPanelText(panel, "avec les citoyens à coté de vous.");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, "→ Faites un coucou dans le chat local");
-		DrawPanelText(panel, "(Touche u) afin de continuer votre");
-		DrawPanelText(panel, "apprentissage.");
+		Format(title, sizeof(title), "%T", "TUTO_9_Title", client);
+		Format(text, sizeof(text), "%T", "TUTO_9_Text", client);
+		
+		String_WordWrap(text, 40);
+		
+		SetPanelTitle(panel, title);
+		DrawPanelText(panel, text);
 		
 		rp_SendPanelToClient(panel, client, 1.1);
 		CreateTimer(1.1, PostKillHandle, panel);
@@ -504,9 +450,17 @@ public Action fwdUsePhone(int client) {
 		rp_UnhookEvent(client, RP_OnPlayerUse, fwdUsePhone);
 		rp_QuestStepComplete(client, g_iQ92);
 		
-		Handle panel = CreateMenu(MenuNothing);
-		SetMenuTitle(panel, "== Objectif 9: Les quêtes\n\n Un hélicoptère vous envois un colis.\nIl sera envoyé près de vous,\ndans la rue du commerce.");
-		AddMenuItem(panel, "_", "Récupérez le.", ITEMDRAW_DISABLED);
+		char title[128], text[2048];
+		Handle panel = CreatePanel();
+		
+		Format(title, sizeof(title), "%T", "TUTO_10_Title", client);
+		Format(text, sizeof(text), "%T", "TUTO_10b_Text", client);
+		
+		String_WordWrap(text, 40);
+		
+		SetPanelTitle(panel, title);
+		DrawPanelText(panel, text);
+		
 		DisplayMenu(panel, client, 10);
 	}
 }
@@ -533,21 +487,15 @@ public void Q92_Frame(int objectiveID, int client) {
 			EmitSoundToClientAny(client, "DeadlyDesire/princeton/ambiant/phone1.mp3", SOUND_FROM_WORLD, _, _, _, _, _, _, target);
 		}
 		
-		SetPanelTitle(panel, "== Objectif 9: Les quêtes");
-		DrawPanelItem(panel, "", ITEMDRAW_SPACER);
-		DrawPanelText(panel, " Les téléphones de la ville sont très");
-		DrawPanelText(panel, "utiles pour gagner de l'argent facilement.");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, " De temps à autres, ceux-ci se mettent");
-		DrawPanelText(panel, "à sonner. Si vous décrochez, un colis");
-		DrawPanelText(panel, "vous est envoyé par hélicoptère.");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, " De plus, de nombreuses quêtes sont disponibles");
-		DrawPanelText(panel, "selon votre job. Il suffit de se rendre");
-		DrawPanelText(panel, "à un téléphone pour débuter l'une d'entre elle.");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, "→ Décrochez au téléphonne à l'aide");
-		DrawPanelText(panel, "de votre touche utiliser (E par défaut).");
+		char title[128], text[2048];
+		
+		Format(title, sizeof(title), "%T", "TUTO_10_Title", client);
+		Format(text, sizeof(text), "%T", "TUTO_10_Text", client);
+		
+		String_WordWrap(text, 40);
+		
+		SetPanelTitle(panel, title);
+		DrawPanelText(panel, text);
 		
 		rp_SendPanelToClient(panel, client, 1.1);
 		CreateTimer(1.1, PostKillHandle, panel);
@@ -559,23 +507,16 @@ public void Q10_Frame(int objectiveID, int client) {
 	GetClientAbsOrigin(client, origin);
 	
 	if( rp_ClientCanDrawPanel(client) ) {
-		
+		char title[128], text[2048];
 		Handle panel = CreatePanel();
 		
-		SetPanelTitle(panel, "== Objectif 10: Les commandes utiles");
-		DrawPanelItem(panel, "", ITEMDRAW_SPACER);
-		DrawPanelText(panel, " Il existe de nombreuses commandes sur le");
-		DrawPanelText(panel, "serveur. La plupart liées à votre");
-		DrawPanelText(panel, "métier, que vous apprendrez sur le tas.");
-		DrawPanelText(panel, " - /give montant permet de donner votre argent");
-		DrawPanelText(panel, " - /vendre pour vendre un objet");
-		DrawPanelText(panel, " - /job Permet de voir les différents jobs connectés");
-		DrawPanelText(panel, " Afin de trouver un emploi, jetez un oeil à cette");
-		DrawPanelText(panel, "commande. Elle permet de voir qui est chef,");
-		DrawPanelText(panel, "vous saurez donc à qui vous adresser pour trouver");
-		DrawPanelText(panel, "un emploi.");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, "→ Rendez-vous maintenant sur la place Station");
+		Format(title, sizeof(title), "%T", "TUTO_11_Title", client);
+		Format(text, sizeof(text), "%T", "TUTO_11_Text", client);
+		
+		String_WordWrap(text, 40);
+		
+		SetPanelTitle(panel, title);
+		DrawPanelText(panel, text);
 		
 		rp_SendPanelToClient(panel, client, 1.1);
 		CreateTimer(1.1, PostKillHandle, panel);
@@ -594,27 +535,16 @@ public void Q12_Frame(int objectiveID, int client) {
 	GetClientAbsOrigin(client, origin);
 	
 	if( rp_ClientCanDrawPanel(client) ) {
-		
+		char title[128], text[2048];
 		Handle panel = CreatePanel();
 		
-		SetPanelTitle(panel, "== Objectif 11: Le mot de la fin");
-		DrawPanelItem(panel, "", ITEMDRAW_SPACER);
-		DrawPanelText(panel, " Derniers conseils avant de vous laisser");
-		DrawPanelText(panel, "partir sur de bonnes bases.");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, "- Nous sommes sur CSGO, pas sur ARMA ni GMOD.");
-		DrawPanelText(panel, "Il y a des meurtres en ville, armez vous.");
-		DrawPanelText(panel, "- Seul les policiers et les juges sont là pour");
-		DrawPanelText(panel, "sanctionner les meurtres. CACHEZ-VOUS.");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, "- Trouvez vous un job");
-		DrawPanelText(panel, "- Décrochez le rang no-pyj");
-		DrawPanelText(panel, "- Faites un tour sur notre Discord");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, " Bon jeu!");
-		DrawPanelText(panel, " ");
-		DrawPanelText(panel, "→ Rendez-vous a coté l'hôpital afin de");
-		DrawPanelText(panel, "commencer votre aventure RolePlay.");
+		Format(title, sizeof(title), "%T", "TUTO_12_Title", client);
+		Format(text, sizeof(text), "%T", "TUTO_12_Text", client);
+		
+		String_WordWrap(text, 40);
+		
+		SetPanelTitle(panel, title);
+		DrawPanelText(panel, text);
 		
 		rp_SendPanelToClient(panel, client, 1.1);
 		CreateTimer(1.1, PostKillHandle, panel);
@@ -632,14 +562,18 @@ public void Q13_Frame(int objectiveID, int client) {
 	if( rp_ClientCanDrawPanel(client) ) {
 		g_iQ12 = objectiveID;
 		
-		Handle menu = CreateMenu(MenuSelectParrain);
-		SetMenuTitle(menu, "== Parrainage\n ");
-					
-		AddMenuItem(menu, "", "Quelqu'un de présent vous a t-il invité",		ITEMDRAW_DISABLED);
-		AddMenuItem(menu, "", "à jouer sur notre serveur?  Si oui, qui?",		ITEMDRAW_DISABLED);
+		char title[128];
 		
-		AddMenuItem(menu, "none", "Personne, j'ai connu autrement le serveur");
-//		AddMenuItem(menu, "youtube", "Youtube, en regardant une vidéo");
+		Handle menu = CreateMenu(MenuSelectParrain);
+		SetMenuTitle(menu, "%T", "TUTO_13_Title", client);
+					
+		
+		Format(title, sizeof(title), "%T", "TUTO_13_Text", client);
+		String_WordWrap(title, 40);
+		AddMenuItem(menu, "", title, ITEMDRAW_DISABLED); 
+		
+		Format(title, sizeof(title), "%T", "TUTO_13b_Text", client);
+		AddMenuItem(menu, "none", title);
 				
 		char szSteamID[64], szName[128];
 		for( int i=1;i<=MaxClients; i++) {
@@ -687,7 +621,7 @@ public void Q14_Start(int objectiveID, int client) {
 	rp_SetClientInt(client, i_AllowedDismiss, FREE_JOB);
 }
 public void Q14_Frame(int objectiveID, int client) {
-	char tmp[128];
+	char tmp[128], tmp2[128];
 	
 	if( g_iDefaultJob[client] > 0 ) {
 		int job = g_iDefaultJob[client];
@@ -696,13 +630,15 @@ public void Q14_Frame(int objectiveID, int client) {
 	}
 	else if( rp_GetClientInt(client, i_Job) > 0 ) {
 		rp_GetJobData(rp_GetClientInt(client, i_Job), job_type_name, tmp, sizeof(tmp));
+		GetClientName2(client, tmp2, sizeof(tmp2), false);
 		
 		for (int i = 1; i <= MaxClients; i++) {
 			if( !IsValidClient(i) )
 				continue;
 			if( i == client )
 				continue;
-			CPrintToChat(i, "" ...MOD_TAG... " %N{default} vient de terminer son tutorial, il est %s. Aidez le !", client, tmp);
+			
+			CPrintToChat(i, "" ...MOD_TAG... " %T", "TUTO_Finish", i, tmp2, tmp);
 		}
 		rp_QuestStepComplete(client, objectiveID);
 	}
@@ -711,7 +647,7 @@ public void Q14_Frame(int objectiveID, int client) {
 	}
 }
 public int MenuSelectJob(Handle menu, MenuAction action, int client, int param2) {
-	char options[64];
+	char options[64], tmp[128];
 	if( action == MenuAction_Select ) {
 		GetMenuItem(menu, param2, options, sizeof(options));
 		int job = StringToInt(options);
@@ -725,12 +661,16 @@ public int MenuSelectJob(Handle menu, MenuAction action, int client, int param2)
 			
 			Handle menu2 = CreateMenu(MenuSelectJob);
 			
-			Format(options, sizeof(options), "%s: %s", qualif[g_iRecom[job]], options);
-			SetMenuTitle(menu2, "== Vos premiers job vous sont offerts\nVous avez choisis comme métier\n%s\n \nSachez que plus tard, vous devrez le trouver\nVOUS-MÊME et être recruté par le chef d'un job.\n---------------------", options);
+			Format(options, sizeof(options), "%T: %s", qualif[g_iRecom[job]], client, options);
+			SetMenuTitle(menu2, "%T\n%T\n%T", "TUTO_Jobs_Title", client, "TUTO_Jobs_Confirm", client, options, "TUTO_Jobs_Text", client);
 			
 			Format(options, sizeof(options), "%d", job);
-			AddMenuItem(menu2, "0", "Je veux choisir un autre job");
-			AddMenuItem(menu2, options, "Je confirme mon choix");
+			
+			Format(tmp, sizeof(tmp), "%T", "TUTO_Jobs_Confirm_No", client);
+			AddMenuItem(menu2, "0", tmp);
+
+			Format(tmp, sizeof(tmp), "%T", "TUTO_Jobs_Confirm_Yes", client);
+			AddMenuItem(menu2, options, tmp);
 			SetMenuExitButton(menu2, true);
 			DisplayMenu(menu2, client, 60);
 		}
@@ -739,7 +679,7 @@ public int MenuSelectJob(Handle menu, MenuAction action, int client, int param2)
 			rp_SetClientInt(client, i_AllowedDismiss, rp_GetClientInt(client, i_AllowedDismiss) - 1);
 			rp_GetJobData(job, job_type_name, options, sizeof(options));
 			
-			CPrintToChat(client, "" ...MOD_TAG... " Vous avez choisis %s, il vous reste %d/%d job(s) offert(s)", options, rp_GetClientInt(client, i_AllowedDismiss), FREE_JOB);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "TUTO_Jobs_Confirm_Done", client, options, rp_GetClientInt(client, i_AllowedDismiss), FREE_JOB);
 		}
 	}
 	else if( action == MenuAction_End ) {
@@ -776,16 +716,17 @@ public void Q14_Done(int objectiveID, int client) {
 
 	Format(szQuery, sizeof(szQuery), "DELETE FROM `rp_users3` WHERE `steamid`='%s';", szSteamID);
 	SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery);
-	
-	
-	CPrintToChat(client, "" ...MOD_TAG... " Voici une invitation pour rejoindre notre discord: {green}https://discord.gg/hw4GSSw{default}");
+	//CPrintToChat(client, "" ...MOD_TAG... " Voici une invitation pour rejoindre notre discord: {green}https://discord.gg/hw4GSSw{default}");
 }
 void drawJobMenu(int client) {
 	char tmp[128], tmp2[8];
 	Handle menu = CreateMenu(MenuSelectJob);
-	SetMenuTitle(menu, "== Vos premiers job vous sont offerts\n ");
-	AddMenuItem(menu, "", "Sachez que plus tard, vous devrez le trouver", ITEMDRAW_DISABLED);
-	AddMenuItem(menu, "", "vous-même et être recruté par le chef d'un job.\n ", ITEMDRAW_DISABLED);
+	SetMenuTitle(menu, "%T", "TUTO_Jobs_Title", client);
+	
+	Format(tmp, sizeof(tmp), "%T", "TUTO_Jobs_Text", client);
+	String_WordWrap(tmp, 40);
+	
+	AddMenuItem(menu, "", tmp, ITEMDRAW_DISABLED);
 	
 	int limit = 3;
 	ArrayList dbl = rp_GetClientDouble(client);
@@ -798,14 +739,16 @@ void drawJobMenu(int client) {
 			continue;
 		
 		rp_GetJobData(g_iJob[i], job_type_name, tmp, sizeof(tmp));
-		Format(tmp, sizeof(tmp), "%s: %s", qualif[g_iRecom[g_iJob[i]]], tmp);
+		Format(tmp, sizeof(tmp), "%T: %s", qualif[g_iRecom[g_iJob[i]]], client, tmp);
 		Format(tmp2, sizeof(tmp2), "%d", g_iJob[i]+1000);
 		AddMenuItem(menu, tmp2, tmp);
 		cpt++;
 	}
 	
-	if( rp_IsTutorialOver(client) )
-		AddMenuItem(menu, "-1", "Quelqu'un a un autre job pour moi");
+	if( rp_IsTutorialOver(client) ) {
+		Format(tmp, sizeof(tmp), "%T", "TUTO_Jobs_None", client);
+		AddMenuItem(menu, "-1", tmp);
+	}
 	
 	SetMenuExitButton(menu, true);
 	
