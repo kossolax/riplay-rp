@@ -89,7 +89,7 @@
 	}
 	"TUTO_8_Text"
 	{
-		"fr"		"Une imprimante à faux-billets et un plant de drogue ont été ajoutés à votre inventaire.\n \nTrouvez-vous une cachette, et utilisez ces objets (/rp ou /item). Si vous êtes mal caché, un policier est en droit de vous arrêter !\n \n→ Déposez une machine, et un plant dedrogue afin de continuer votre apprentissage."
+		"fr"		"Une imprimante à faux-billets et un plant de drogue ont été ajoutés à votre inventaire.\n \nTrouvez-vous une cachette, et utilisez ces objets (/rp ou /item). Si vous êtes mal caché, un policier est en droit de vous arrêter !\n \n→ Déposez une machine, et un plant de drogue afin de continuer votre apprentissage."
 	}
 	"TUTO_9_Title"
 	{
@@ -125,7 +125,7 @@
 	}
 	"TUTO_12_Text"
 	{
-		"fr"		"Derniers conseils avant de vous laisser partir sur de bonnes bases.\n \n- Nous sommes sur CSGO, pas sur ARMA ni GMOD. Il y a des meurtres en ville, armez vous.\n - Seul les policiers et les juges sont là pour sanctionner les meurtres.\n- Trouvez vous un job\n- Faites un tour sur notre Discord\n \nBon jeu!\n→ Rendez-vous a coté l'hôpital afin de commencer votre aventure RolePlay."
+		"fr"		"Derniers conseils avant de vous laisser partir sur de bonnes bases.\n \n- Nous sommes sur CSGO, pas sur ARMA ni GMOD. Il y a des meurtres en ville, armez vous.\n - Seuls les policiers et les juges sont là pour sanctionner les meurtres.\n- Trouvez vous un job\n- Faites un tour sur notre Discord\n \nBon jeu!\n→ Rendez-vous a coté l'hôpital afin de commencer votre aventure RolePlay."
 	}
 	"TUTO_13_Title"
 	{

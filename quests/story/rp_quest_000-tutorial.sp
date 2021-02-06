@@ -250,7 +250,7 @@ public void Q5_Frame(int objectiveID, int client) {
 	
 	GetClientAbsOrigin(client, origin);
 	
-	if( rp_ClientCanDrawPanel(client) ) {
+	//if( rp_ClientCanDrawPanel(client) ) {
 		char title[128], text[2048];
 		Handle panel = CreatePanel();
 		
@@ -264,14 +264,14 @@ public void Q5_Frame(int objectiveID, int client) {
 		
 		rp_SendPanelToClient(panel, client, 1.1);
 		CreateTimer(1.1, PostKillHandle, panel);
-	}
+	//}
 
 
 	if( GetVectorDistance(target, origin) < 128.0 ) {
 		int itemid = 150;
 		char tmp[128];
 		rp_GetItemData(itemid, item_type_name, tmp, sizeof(tmp));
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Give", 1, tmp);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Give", client, 1, tmp);
 		
 		if( rp_GetClientItem(client, itemid) == 0 && rp_GetClientItem(client, itemid, true) == 0 ) {
 			rp_ClientGiveItem(client, itemid);
@@ -344,9 +344,9 @@ public void Q7_Frame(int objectiveID, int client) {
 		
 		char tmp[128];
 		rp_GetItemData(81, item_type_name, tmp, sizeof(tmp));
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Give", 1, tmp);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Give", client, 1, tmp);
 		rp_GetItemData(103, item_type_name, tmp, sizeof(tmp));
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Give", 1, tmp);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Give", client, 1, tmp);
 		
 		rp_QuestStepComplete(client, objectiveID);
 	}
