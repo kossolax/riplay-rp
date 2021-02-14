@@ -387,37 +387,44 @@ public int MenuJobs2(Handle p_hItemMenu, MenuAction p_oAction, int client, int p
 			char tmp[128], tmp2[128];
 
 			if(rp_GetClientInt(target, i_Job)%10 == 1 || rp_GetClientInt(target, i_Job)%10 == 2 && jobid !=1 && jobid != 101){
+				Format(tmp, sizeof(tmp), "%T", "Ask_Recrut", client);
 				Format(tmp2, sizeof(tmp2), "%i_-1", target);
-				AddMenuItem(menu, tmp2, "%T", "Ask_Recrut", client);
+				AddMenuItem(menu, tmp2, tmp);
 				amount++;
 			}
 			if(jobid == 91){
+				Format(tmp, sizeof(tmp), "%T", "Ask_Picklock", client);
 				Format(tmp2, sizeof(tmp2), "%i_-2", target);
-				AddMenuItem(menu, tmp2, "%T", "Ask_Picklock", client);
+				AddMenuItem(menu, tmp2, tmp);
 				amount++;
 			}
 			if(jobid == 181){
+				Format(tmp, sizeof(tmp), "%T", "Ask_Weapon", client);
 				Format(tmp2, sizeof(tmp2), "%i_-3", target);
-				AddMenuItem(menu, tmp2, "%T", "Ask_Weapon", client);
+				AddMenuItem(menu, tmp2, tmp);
 				amount++;
 			}
 			if(rp_GetClientInt(target, i_Avocat) > 0) {
+				Format(tmp, sizeof(tmp), "%T", "Ask_Avocat", client);
 				Format(tmp2, sizeof(tmp2), "%i_-5", target);
-				AddMenuItem(menu, tmp2, "%T", "Ask_Avocat", client);
+				AddMenuItem(menu, tmp2, tmp);
 				amount++;
 			}
 			if(jobid == 101) {
+				Format(tmp, sizeof(tmp), "%T", "Ask_Judge", client);
 				Format(tmp2, sizeof(tmp2), "%i_-4", target);
-				AddMenuItem(menu, tmp2, "%T", "Ask_Judge", client);
+				AddMenuItem(menu, tmp2, tmp);
 				amount++;
 			}
 			if(jobid == 61) {
+				Format(tmp, sizeof(tmp), "%T", "Ask_Appart", client);
 				Format(tmp2, sizeof(tmp2), "%i_-6", target);
-				AddMenuItem(menu, tmp2, "%T", "Ask_Appart", client);
+				AddMenuItem(menu, tmp2, tmp);
 				amount++;
-				
+
+				Format(tmp, sizeof(tmp), "%T", "Ask_Clean", client);
 				Format(tmp2, sizeof(tmp2), "%i_-7", target);
-				AddMenuItem(menu, tmp2, "%T", "Ask_Clean", client);
+				AddMenuItem(menu, tmp2, tmp);
 				amount++;
 			}
 			else{
