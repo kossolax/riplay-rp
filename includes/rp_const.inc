@@ -19,10 +19,12 @@
 	#if RP_LANG_TYPE==2
 			#define MOD_TAG					"{lightblue}[TEST]{default}"
 			#define MOD_URL					"https://tbd/"
+			#define MOD_DISCORD			"https://discord.gg/tbd"
 	#endif
 #else
 	#define MOD_TAG					"{lightblue}[RIPLAY.FR]{default}"
 	#define MOD_URL					"https://rpweb.riplay.fr/"
+	#define MOD_DISCORD			"https://discord.gg/hw4GSSw"
 #endif
 
 //#define DEBUG

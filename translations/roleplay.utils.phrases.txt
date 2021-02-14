@@ -60,4 +60,122 @@
 		"#format"	"{1:s}"
 		"fr"	"La demande a été envoyée à {1}"
 	}
+	
+	// ----------------------------------------------------------------------------------------------
+	"Ads_JoinDiscord"
+	{
+		"fr"	"Rejoignez notre serveur {green}discord{default} <3!"
+	}
+	
+	"Cmd_SteamID"
+	{
+		"#format"	"{1:s},{2:s}
+		"fr"	"Votre SteamID est: {1} ({2})"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"Menu_Sell"
+	{
+		"fr"	"Vendre"
+	}
+	"Menu_Steal"
+	{
+		"fr"	"Voler"
+	}
+	"Menu_Train"
+	{
+		"fr"	"Informations entraînement"
+	}
+	"Menu_Heal"
+	{
+		"fr"	"Informations entraînement"
+	}
+	"Menu_Search"
+	{
+		"fr"	"Vérifier les permis"
+	}
+	"Menu_Jail"
+	{
+		"fr"	"Mettre en prison"
+	}
+	"Menu_Tazer"
+	{
+		"fr"	"Coup de tazer"
+	}
+	"Menu_Out"
+	{
+		"fr"	"Faire sortir la personne"
+	}
+	"Menu_Give"
+	{
+		"fr"	"Donner de l'argent"
+	}
+	"Menu_Door"
+	{
+		"fr"	"Une porte"
+	}
+	"Menu_Door_Unlock"
+	{
+		"fr"	"Déverrouiller la porte"
+	}
+	"Menu_Door_Lock"
+	{
+		"fr"	"Verrouiller la porte"
+	}
+	"Menu_Door_Perquiz"
+	{
+		"fr"	"Perquisitionner"
+	}
+	"Menu_Item"
+	{
+		"fr"	"Ouvrir l'inventaire"
+	}
+	"Menu_Passif"
+	{
+		"fr"	"Changer le mode de jeu"
+	}
+	"Menu_Tb"
+	{
+		"fr"	"Gestion des audiences"
+	}
+	"Menu_Mort"
+	{
+		"fr"	"Faire revivre les morts"
+	}
+	"Menu_Build"
+	{
+		"fr"	"Construire"
+	}
+	"Menu_Shownote"
+	{
+		"fr"	"Information sur mon job"
+	}
+	"Menu_Job"
+	{
+		"fr"	"Appeler un joueur"
+	}
+	"Menu_GPS"
+	{
+		"fr"	"Trouver un lieu sur la carte"
+	}
+	"Menu_Aide"
+	{
+		"fr"	"Besoin d'aide"
+	}
+	"Menu_Stats"
+	{
+		"fr"	"Statistiques"
+	}
+	"Menu_Report"
+	{
+		"fr"	"Signaler un mauvais comportement"
+	}
+	
+	"Menu_DoNotReOpen"
+	{
+		"fr"	"Ne plus ouvrir ce menu automatiquement"
+	}
+	"Menu_DoNotReOpen_Confirm"
+	{
+		"fr"	"Vous pouvez réouvrir ce menu avec {green}/menu{default}."
+	}
 }
