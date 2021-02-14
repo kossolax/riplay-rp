@@ -275,11 +275,6 @@
 		"fr"		"{1} a ajouté la note: {red}{2}{default}."
 		"en"		"{1} added the note: {red}{2}{default}."
 	}
-	"Cmd_ListOfPlayer"
-	{
-		"fr"		"Liste des personnes:"
-		"en"		"List of players:"
-	}
 	"Cmd_ListOfPlayer_None"
 	{
 		"fr"		"Il y'a personne."

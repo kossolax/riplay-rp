@@ -22,7 +22,7 @@
 
 Handle g_vAllTalk;
 bool g_bAllTalk = false;
-bool g_bMayTalk[65];
+int g_iMayTalk[65];
 
 public Plugin myinfo = {
 	name = "Utils: VoiceProximity", author = "KoSSoLaX",
@@ -41,6 +41,7 @@ public void OnPluginStart() {
 	LoadTranslations("plugin.basecommands");
 	LoadTranslations("roleplay.phrases");
 	LoadTranslations("roleplay.core.phrases");
+	LoadTranslations("roleplay.utils.phrases");
 
 	RegServerCmd("rp_quest_reload", Cmd_Reload);	
 	for (int i = 1; i <= MaxClients; i++)
@@ -60,7 +61,8 @@ public void OnCvarChange(Handle cvar, const char[] oldVal, const char[] newVal) 
 	}
 }
 public void OnClientPostAdminCheck(int client) {
-	g_bMayTalk[client] = true;
+	g_iMayTalk[client] = GetTime();
+	
 	rp_HookEvent(client, RP_OnPlayerHear, fwdHear);
 	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 }
@@ -82,17 +84,16 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 			ACCESS_DENIED(client);
 		}
 		if( BaseComm_IsClientGagged(client) || rp_GetClientBool(client, b_IsMuteGlobal) ) {
-			PrintToChat(client, "\x04[\x02MUTE\x01]\x01: Vous avez été interdit d'utiliser le chat global.");
+			CPrintToChat(client, "" ...MOD_TAG... "%T", "Banned_GlobalTalk", client);
 			return Plugin_Handled;
 		}
 		if( rp_GetClientJobID(client) != 1 && rp_GetClientJobID(client) != 101 ) {
-			if( !g_bMayTalk[client] ) {
-					CPrintToChat(client, "" ...MOD_TAG... " Vous devez attendre encore quelques secondes, avant d'utiliser à nouveau le chat annonce.");
-					return Plugin_Handled;
+			if( g_iMayTalk[client] > GetTime() ) {
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_YouMustWaitToTalk", client, g_iMayTalk[client] - GetTime());
+				return Plugin_Handled;
 			}
 			
-			g_bMayTalk[client] = false;
-			CreateTimer(10.0, AllowTalking, client);
+			g_iMayTalk[client] = GetTime() + 10;
 		}
 		
 		CPrintToChatAll("%T", "Chat_Talk", LANG_SERVER, name, "Chat_TAG_EMOTE", arg);
@@ -105,7 +106,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 			ACCESS_DENIED(client);
 		}
 		if( BaseComm_IsClientGagged(client) || rp_GetClientBool(client, b_IsMuteLocal) ) {
-			PrintToChat(client, "\x04[\x02MUTE\x01]\x01: Vous avez été interdit d'utiliser le chat local.");
+			CPrintToChat(client, "" ...MOD_TAG... "%T", "Banned_LocalTalk", client);
 			return Plugin_Handled;
 		}
 
@@ -139,7 +140,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 		}
 
 		if( BaseComm_IsClientGagged(client) || rp_GetClientBool(client, b_IsMuteLocal) ) {
-			PrintToChat(client, "\x04[\x02MUTE\x01]\x01: Vous avez été interdit d'utiliser le chat local.");
+			CPrintToChat(client, "" ...MOD_TAG... "%T", "Banned_LocalTalk", client);
 			return Plugin_Handled;
 		}
 
@@ -238,32 +239,29 @@ public Action fwdHear(int client, int target, float& dist) {
 }
 public Action OnClientSayCommand(int client, const char[] command, const char[] sArgs){
 	if((strcmp(sArgs, "thetime", false) == 0) || (strcmp(sArgs, "timeleft", false) == 0) || (strcmp(sArgs, "/ff", false) == 0) || (strcmp(sArgs, "ff", false) == 0) || (strcmp(sArgs, "currentmap", false) == 0) || (strcmp(sArgs, "nextmap", false) == 0)){
-		if( rp_GetClientBool(client, b_IsMuteGlobal) ) {
-			PrintToChat(client, "\x04[\x02MUTE\x01]\x01: Vous avez été interdit d'utiliser le chat.");
-			return Plugin_Stop;
+		if( BaseComm_IsClientGagged(client) || rp_GetClientBool(client, b_IsMuteGlobal) ) {
+			CPrintToChat(client, "" ...MOD_TAG... "%T", "Banned_GlobalTalk", client);
+			return Plugin_Handled;
 		}
-		if( !g_bMayTalk[client] ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous devez attendre encore quelques secondes.");
-			return Plugin_Stop;
+		
+		if( g_iMayTalk[client] > GetTime() ) {
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_YouMustWaitToTalk", client, g_iMayTalk[client] - GetTime());
+			return Plugin_Handled;
 		}
-		g_bMayTalk[client] = false;
-		CreateTimer(10.0, AllowTalking, client);
+		
+		g_iMayTalk[client] = GetTime() + 10;
 	}
 	return Plugin_Continue;
 }
-public Action AllowTalking(Handle timer, any client) {
-	#if defined DEBUG
-	PrintToServer("AllowTalking");
-	#endif
-	g_bMayTalk[client] = true;
-}
-
 void Cmd_job(int client) {
+	char tmp[128];
 	Handle jobmenu = CreateMenu(MenuJobs);
-	SetMenuTitle(jobmenu, "Liste des jobs disponibles\n ");
-	AddMenuItem(jobmenu, "-1", "Tout afficher");
+	SetMenuTitle(jobmenu, "%T\n ", "Jobs_ListAvailable", client);
 	
-	char tmp[12], tmp2[64];
+	Format(tmp, sizeof(tmp), "%T", "Jobs_All", client);
+	AddMenuItem(jobmenu, "-1", tmp);
+	
+	char tmp2[64];
 	bool bJob[MAX_JOBS];
 	bool hasAvocat;
 
@@ -288,8 +286,10 @@ void Cmd_job(int client) {
 		if (!hasAvocat) hasAvocat = ( rp_GetClientInt(i, i_Avocat) > 0 );
 	}
 	
-	if( hasAvocat )
-		AddMenuItem(jobmenu, "-2", "Avocats");
+	if( hasAvocat ) {
+		Format(tmp, sizeof(tmp), "%T", "Job_Advocat", client);
+		AddMenuItem(jobmenu, "-2", tmp);
+	}
 	
 	char tmp3[2][64];
 
@@ -314,7 +314,8 @@ public int MenuJobs(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_
 		char szMenuItem[8];
 		if (GetMenuItem(p_hItemMenu, p_iParam2, szMenuItem, sizeof(szMenuItem))){
 			Handle menu = CreateMenu(MenuJobs2);
-			SetMenuTitle(menu, "Liste des employés connectés\n ");
+
+			SetMenuTitle(menu, "%T\n ", "Cmd_ListOfPlayer", client);
 			int jobid = StringToInt(szMenuItem);
 			int amount = 0;
 			char tmp[128], tmp2[128];
@@ -333,11 +334,11 @@ public int MenuJobs(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_
 				int ijob = rp_GetClientInt(i, i_Job);
 				rp_GetJobData(ijob, job_type_name, tmp, sizeof(tmp));
 				
-				if( rp_GetClientJobID(i) == 1 && CS_TEAM_T ) {
-					if( rp_GetClientInt(client, i_KillJailDuration) > 1) {
-						Format(tmp, sizeof(tmp), "Criminel");
+				if( rp_GetClientJobID(i) == 1 ) {
+					if( rp_GetClientInt(client, i_KillJailDuration) >= 1) {
+						Format(tmp, sizeof(tmp), "%T", "ScoreBar_TAG_Criminal", client);
 					} else {
-						Format(tmp, sizeof(tmp), "Gendarmerie");
+						Format(tmp, sizeof(tmp), "%T", "ScoreBar_TAG_Police", client);
 					}
 				}
 
@@ -378,7 +379,8 @@ public int MenuJobs2(Handle p_hItemMenu, MenuAction p_oAction, int client, int p
 		char szMenuItem[8];
 		if (GetMenuItem(p_hItemMenu, p_iParam2, szMenuItem, sizeof(szMenuItem))){
 			Handle menu = CreateMenu(MenuJobs3);
-			SetMenuTitle(menu, "Que voulez vous lui demander ?\n ");
+			SetMenuTitle(menu, "%T\n ", "Ask_What", client);
+			
 			int target = StringToInt(szMenuItem);
 			int jobid = rp_GetClientJobID(target);
 			int amount = 0;
@@ -386,36 +388,36 @@ public int MenuJobs2(Handle p_hItemMenu, MenuAction p_oAction, int client, int p
 
 			if(rp_GetClientInt(target, i_Job)%10 == 1 || rp_GetClientInt(target, i_Job)%10 == 2 && jobid !=1 && jobid != 101){
 				Format(tmp2, sizeof(tmp2), "%i_-1", target);
-				AddMenuItem(menu, tmp2, "Demander à être recruté");
+				AddMenuItem(menu, tmp2, "%T", "Ask_Recrut", client);
 				amount++;
 			}
 			if(jobid == 91){
 				Format(tmp2, sizeof(tmp2), "%i_-2", target);
-				AddMenuItem(menu, tmp2, "Demander pour un crochetage de porte");
+				AddMenuItem(menu, tmp2, "%T", "Ask_Picklock", client);
 				amount++;
 			}
 			if(jobid == 181){
 				Format(tmp2, sizeof(tmp2), "%i_-3", target);
-				AddMenuItem(menu, tmp2, "Acheter / Vendre une arme");
+				AddMenuItem(menu, tmp2, "%T", "Ask_Weapon", client);
 				amount++;
 			}
 			if(rp_GetClientInt(target, i_Avocat) > 0) {
 				Format(tmp2, sizeof(tmp2), "%i_-5", target);
-				AddMenuItem(menu, tmp2, "Demander ses services d'avocat");
+				AddMenuItem(menu, tmp2, "%T", "Ask_Avocat", client);
 				amount++;
 			}
 			if(jobid == 101) {
 				Format(tmp2, sizeof(tmp2), "%i_-4", target);
-				AddMenuItem(menu, tmp2, "Demander pour une audience");
+				AddMenuItem(menu, tmp2, "%T", "Ask_Judge", client);
 				amount++;
 			}
 			if(jobid == 61) {
 				Format(tmp2, sizeof(tmp2), "%i_-6", target);
-				AddMenuItem(menu, tmp2, "Demander un Appartement");
+				AddMenuItem(menu, tmp2, "%T", "Ask_Appart", client);
 				amount++;
 				
 				Format(tmp2, sizeof(tmp2), "%i_-7", target);
-				AddMenuItem(menu, tmp2, "Demander un nettoyage");
+				AddMenuItem(menu, tmp2, "%T", "Ask_Clean", client);
 				amount++;
 			}
 			else{
@@ -450,37 +452,42 @@ public int MenuJobs3(Handle p_hItemMenu, MenuAction p_oAction, int client, int p
 		char szMenuItem[16];
 		if (GetMenuItem(p_hItemMenu, p_iParam2, szMenuItem, sizeof(szMenuItem))){
 						
-			char data[2][32], tmp[128];
+			char data[2][32], tmp[128], tmp2[128];
 			ExplodeString(szMenuItem, "_", data, sizeof(data), sizeof(data[]));
 			int target = StringToInt(data[0]);
 			int item_id = StringToInt(data[1]);
 			
 			if( rp_ClientFloodTriggered(client, target, fd_job) ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez appeler %N, pour le moment.", target);
+				GetClientName2(target, tmp, sizeof(tmp), false);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, tmp);
 				return;
 			}
 			rp_ClientFloodIncrement(client, target, fd_job, 10.0);
 			
 			char zoneName[64];
 			rp_GetZoneData(rp_GetPlayerZone(client), zone_type_name, zoneName, sizeof(zoneName));
+	
+			GetClientName2(client, tmp, sizeof(tmp), false);
+			
 			switch(item_id){
-				case -1: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} aimerait être recruté, il est actuellement: %s", client, zoneName);
-				case -2: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} a besoin d'un crochetage de porte, il est actuellement: %s", client, zoneName);
-				case -3: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} aimerait acheter ou vendre une arme, il est actuellement: %s", client, zoneName);
-				case -4: {
-					CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} a besoin d'un juge, il est actuellement: %s", client, zoneName);
-					LogToGame("[TSX-RP] [CALL] %L a demandé les services de juge de %L", client, target);
-				}
-				case -5: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} a besoin d'un avocat, il est actuellement: %s", client, zoneName);
-				case -6: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} souhaiterait acheter un appartement. Il est actuellement: %s", client, zoneName);
-				case -7: CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} souhaiterait nettoyer son appartement. Il est actuellement: %s", client, zoneName);
+				case -1: Format(tmp2, sizeof(tmp2), "%T", "Ask_Recrut", client);
+				case -2: Format(tmp2, sizeof(tmp2), "%T", "Ask_Picklock", client);
+				case -3: Format(tmp2, sizeof(tmp2), "%T", "Ask_Weapon", client);
+				case -4: Format(tmp2, sizeof(tmp2), "%T", "Ask_Judge", client);
+				case -5: Format(tmp2, sizeof(tmp2), "%T", "Ask_Avocat", client);
+				case -6: Format(tmp2, sizeof(tmp2), "%T", "Ask_Appart", client);
+				case -7: Format(tmp2, sizeof(tmp2), "%T", "Ask_Clean", client);
+				case -8: Format(tmp2, sizeof(tmp2), "%T", "Ask_Craft", client);
 				default: {
-					rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
-					CPrintToChat(target, "" ...MOD_TAG... " Le joueur %N{default} a besoin de {lime}%s{default}, il est actuellement: %s", client, tmp, zoneName);
-					LogToGame("[TSX-RP] [CALL] %L a demandé %s à %L", client, tmp, target);
+					rp_GetItemData(item_id, item_type_name, tmp2, sizeof(tmp2));
 				}
 			}
-			CPrintToChat(client, "" ...MOD_TAG... " La demande a été envoyée à %N{default}.", target);
+			
+			CPrintToChat(target, "" ...MOD_TAG... " %T", "Ask_Done", client, tmp, zoneName, tmp2);
+			
+			GetClientName2(target, tmp, sizeof(tmp), false);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Ask_Send", client, tmp);
+			
 			ClientCommand(target, "play buttons/blip1.wav");
 			rp_Effect_BeamBox(target, client, NULL_VECTOR, 122, 122, 0);
 			Handle dp;

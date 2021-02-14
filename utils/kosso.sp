@@ -9,7 +9,7 @@
 
 #pragma newdecls required
 #include <roleplay.inc>	// https://www.ts-x.eu
-#include <audio>
+//#include <audio>
 
 #pragma newdecls required
 
@@ -22,12 +22,12 @@ public Plugin myinfo = {
 };
 
 
-AudioPlayer api;
+//AudioPlayer api;
 int g_cBeam;
 bool g_bHasBag[65];
 
 public void OnPluginStart() {
-	RegConsoleCmd("sm_audio2", 		Cmd_Audio);
+	//RegConsoleCmd("sm_audio2", 		Cmd_Audio);
 	RegConsoleCmd("player_ping", block);
 	RegConsoleCmd("chatwheel_ping", block);
 	RegConsoleCmd("drop", Drop);
@@ -322,7 +322,7 @@ public void think(int car) {
 
 	old[car] = count;
 }
-
+/*
 public Action Cmd_Audio(int client, int args) {
 	
 	api = new AudioPlayer();
@@ -348,7 +348,7 @@ public Action Cmd_Audio(int client, int args) {
 	
 	return Plugin_Handled;
 }
-
+*/
 public Action block(int client, int args) {
 	return Plugin_Handled;
 }

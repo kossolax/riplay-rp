@@ -1,0 +1,63 @@
+"Phrases"
+{
+	"Ask_What"
+	{
+		"fr"	"Que voulez vous lui demander ?"
+	}
+	
+	"Ask_Recrut"
+	{
+		"fr"	"être recruté"
+	}
+	
+	"Ask_Picklock"
+	{
+		"fr"	"crocheter une porte"
+	}
+	
+	"Ask_Weapon"
+	{
+		"fr"	"acheter ou vendre une arme"
+	}
+	
+	"Ask_Avocat"
+	{
+		"fr"	"un service d'avocat"
+	}
+	
+	"Ask_Judge"
+	{
+		"fr"	"une audiance"
+	}
+	
+	"Ask_Appart"
+	{
+		"fr"	"un appartement"
+	}
+	
+	"Ask_Clean"
+	{
+		"fr"	"nettoyer son appartement"
+	}
+	
+	"Ask_Craft"
+	{
+		"fr"	"crafter un item"
+	}
+	
+	"Ask_Item"
+	{
+		"fr"	"un item"
+	}
+	"Ask_Done"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"fr"	"{1} aimerait {green}{3}{default}, il est actuellement {2}"
+	}
+	
+	"Ask_Send"
+	{
+		"#format"	"{1:s}"
+		"fr"	"La demande a été envoyée à {1}"
+	}
+}

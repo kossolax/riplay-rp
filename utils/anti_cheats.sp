@@ -252,6 +252,12 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 		return Plugin_Handled;
 	}
 	
+	if( impulse != 0 ) {
+		LogToGame(PREFIX ... " [CHEAT] %L impulse %d", client, impulse);
+		impulse = 0;
+		return Plugin_Handled;
+	}
+	
 	if( IsBadCoordLong(vel[0]) || IsBadCoordLong(vel[1]) || IsBadCoordLong(vel[2]) ) {
 		LogToGame(PREFIX ... " [CRASH-VELOCITY] %L %.1f %.1f %.1f", client, vel[0], vel[1], vel[2]);
 		return Plugin_Handled;
