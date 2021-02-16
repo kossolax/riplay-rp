@@ -556,7 +556,7 @@ public Action fwdOnFrame(int client) {
 		fwdLoaded(client);
 	}
 	
-	if( appart > 0 && rp_GetClientKeyAppartement(client, appart) ) {
+	if( appart > 0 && (rp_GetClientKeyAppartement(client, appart)||rp_GetClientJobID(client)==61)  ) {
 		for (int j = 0; j < g_iDirtyCount[appart]; j++) {
 			dst = g_flDirtPos[appart][j];
 			dst[2] += 8.0;
