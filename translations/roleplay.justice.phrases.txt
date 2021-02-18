@@ -695,8 +695,8 @@
 	"Tribunal_Menu_Switch_Confirm"
 	{
 		"#format"	"{1:s},{2:s}"
-		"fr"	"Le Juge {red}{1}{default} cède sa place au Juge {red}{1}{default}."
-		"en"	"Judge {red}{1}{default} concedes to Judge {red}{1}{default}."
+		"fr"	"Le Juge {red}{1}{default} cède sa place au Juge {red}{2}{default}."
+		"en"	"Judge {red}{1}{default} concedes to Judge {red}{2}{default}."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tribunal_Menu_Juge"

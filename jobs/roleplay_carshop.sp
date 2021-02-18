@@ -887,6 +887,12 @@ public void OnThink(int ent) {
 	SetEntPropFloat(ent, Prop_Data, "m_flTurnOffKeepUpright", 1.0);
 	SetEntProp(ent, Prop_Send, "m_bEnterAnimOn", 0);
 	
+	if( GetEntProp(ent, Prop_Data, "m_nWaterLevel") > 0 ) {
+		if( rp_GetVehicleInt(ent, car_health) > 0 ) {
+			rp_SetVehicleInt(ent, car_health, rp_GetVehicleInt(ent, car_health) - 1);
+		}
+	}
+	
 	if( rp_GetVehicleInt(ent, car_can_jump) == 1 ) {
 		int player = Vehicle_GetDriver(ent);
 		if( player > 0 && IsValidClient(player) && (GetClientButtons(player) & IN_DUCK) ) {

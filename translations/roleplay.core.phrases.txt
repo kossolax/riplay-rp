@@ -216,7 +216,7 @@
 	}
 	"Cmd_Peine"
 	{
-		"fr"		"Vous pouvez modifier la durée/zone de ton emprisonnement en tapant {red}/peine{default}."
+		"fr"		"Vous pouvez modifier la durée/zone de votre emprisonnement en tapant {red}/peine{default}."
 		"en"		"You can change the duration/area of your detention by typing {red}/penaltydefault}."
 	}
 	"Cmd_RebootIn"
@@ -249,7 +249,7 @@
 	"Cmd_Vita"
 	{
 		"#format"	"{1:.1f},{2:d}"
-		"fr"		"Vous avez êtes maintenant niveau {green}{2}{default} en vitalité avec {green}{1}{default} point(s)."
+		"fr"		"Vous êtes maintenant niveau {green}{2}{default} en vitalité avec {green}{1}{default} point(s)."
 		"en"		"You are now level {green}{2}{default} in vitality with {green}{1}{default} points(s)."
 	}
 	"Cmd_REV"

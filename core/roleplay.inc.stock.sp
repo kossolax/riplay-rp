@@ -494,9 +494,11 @@ int ExplosionDamage(float origin[3], float damage, float lenght, int activator=0
 		
 		g_iUserData[activator][i_LastAgression] = GetTime();
 		DealDamage(i, RoundFloat(dmg), activator, DMG_BLAST, weapon);
-		if( IsValidClient(i) )
+
+		if( IsValidClient(i) ) {
 			rp_ClientAggroIncrement(activator, i, RoundFloat(dmg));
-		res++;
+			res++;
+		}
 	}
 	
 	MakeRadiusPush2(origin, lenght, (damage * 2.0));

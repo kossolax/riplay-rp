@@ -364,7 +364,7 @@ public Action Cmd_ItemPoison(int args) {
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
-	if( rp_GetClientFloat(client, fl_LastPoison) > GetGameTime() ) {
+	if( rp_GetClientFloat(target, fl_LastPoison) > GetGameTime() ) {
 		ITEM_CANCEL(client, item_id);
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "poison_immune", client);
 		return Plugin_Handled;
@@ -411,10 +411,12 @@ public Action Cmd_ItemFullHeal(int args) {
 }
 public Action Cmd_ItemProtImmu(int args) {
 	int client = GetCmdArgInt(1);
+	int vendeur = GetCmdArgInt(2);
 	int item_id = GetCmdArgInt(args);
 	
 	if( rp_GetClientBool(client, b_HasProtImmu) ) {
-		ITEM_CANCEL(client, item_id);
+		rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+		
 		char tmp[128];
 		rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemAlreadyEnable", client, tmp);

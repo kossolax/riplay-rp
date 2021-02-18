@@ -426,7 +426,7 @@ public Action Delay_MenuLoto(Handle timer, Handle dp) {
 	if( amount == -1 )
 		menu.SetTitle("%T\n ", "Lotery_Cagnotte", client, count);
 	else
-		menu.SetTitle("%T\n ", "Lotery_Cagnotte", client, count, amount);
+		menu.SetTitle("%T\n ", "Lotery_Ticket", client, count, amount);
 		
 	char tmp[64], tmp2[64];
 		
