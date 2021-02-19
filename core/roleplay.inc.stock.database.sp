@@ -1079,7 +1079,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		
 		
 		if( freeassu == 1 && GetGameTime() <= (15.0*60.0) || freeassu == 0 ) {	
-			if( assurance >= 0 ) {
+			if( assurance > 0 ) {
 				int assuWr;
 				if( !g_hSynAssuWritten.GetValue(SteamID, assuWr) ){
 					char szQuery[1024];

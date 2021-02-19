@@ -351,7 +351,7 @@ void AFK_Check(int client) {
 		if( g_iUserData[client][i_PlayerLVL] < 100 )
 			rp_ClientXPIncrement(client);
 		
-		if( g_bUserData[client][b_IsFirstSpawn] && IsTutorialOver(client) ) {
+		if( g_bUserData[client][b_IsFirstSpawn] ) {
 			EventFirstSpawn(client);
 			
 			g_bUserData[client][b_IsFirstSpawn] = false;

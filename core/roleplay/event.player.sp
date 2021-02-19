@@ -44,10 +44,10 @@ public void EventFirstSpawn(int client) {
 	if( g_iUserData[client][i_PlayerLVL] < 12 )
 		g_bUserData[client][b_GameModePassive] = true;
 	
-	if( g_bUserData[client][b_ItemRecovered] && g_iClient_OLD[client] == 0 && g_iUserData[client][i_JailTime] == 0 )
+	if( g_bUserData[client][b_ItemRecovered] && g_iClient_OLD[client] == 0 && g_iUserData[client][i_JailTime] == 0 && IsTutorialOver(client) )
 		CreateTimer(1.0, HUD_WarnDisconnect, client);
 
-	ServerCommand("sm_force_discord_group %N", client);
+	ServerCommand("sm_force_discord_group %d", client);
 }
 public Action HUD_WarnDisconnect(Handle timer, any client) {
 	if( !g_bUserData[client][b_ItemRecovered] )

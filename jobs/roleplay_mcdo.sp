@@ -569,9 +569,9 @@ public Action Cmd_ItemHamburger(int args) {
 				continue;
 			
 			rp_GetItemData(i, item_type_name, cmd, sizeof(cmd));
-			if( StrContains(cmd, "BETA", false) == 0 )
+			if( StrContains(cmd, "BETA", false) >= 0 )
 				continue;
-			if( StrContains(cmd, "sactiv", false) == 0 )
+			if( StrContains(cmd, "sactiv", false) >= 0 )
 				continue;
 			
 			iItemRand[amount] = i;

@@ -684,7 +684,7 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 		
 		from_id = g_iUserData[client][i_Job];
 		g_iUserData[client][i_Job] = to_id;
-		ServerCommand("sm_force_discord_group %N", client);
+		ServerCommand("sm_force_discord_group %d", client);
 		
 		if( to_id > 0 ) {
 			if( IsValidClient(invoker) )
