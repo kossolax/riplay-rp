@@ -1714,34 +1714,36 @@ public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int 
 				return 0;
 				
 			int wepid = rp_WeaponMenu_Give(g_hBuyMenu_Weapons, position, client);
-			rp_SetWeaponStorage(wepid, data[BM_Store] == 1);
-			rp_WeaponMenu_Delete(g_hBuyMenu_Weapons, position);
-			
-			rp_ClientMoney(client, i_Money, -data[BM_Prix]);
-			
-			if( IsValidClient(data[BM_Owner]) && rp_GetClientJobID(data[BM_Owner]) == 91 ) {
-				float taxe = data[BM_Owner] == client ? getTaxe(client) : 0.5;
+			if( wepid > 0 ) {
+				rp_SetWeaponStorage(wepid, data[BM_Store] == 1);
+				rp_WeaponMenu_Delete(g_hBuyMenu_Weapons, position);
 				
-				int payClient = RoundToCeil(float(data[BM_Prix]) * (1.0 - taxe));
-				int payCapital = RoundToCeil(float(data[BM_Prix]) * (taxe));
+				rp_ClientMoney(client, i_Money, -data[BM_Prix]);
 				
-				rp_ClientMoney(data[BM_Owner], i_AddToPay, payClient);
-				rp_SetJobCapital(91, rp_GetJobCapital(91) + payCapital);
+				if( IsValidClient(data[BM_Owner]) && rp_GetClientJobID(data[BM_Owner]) == 91 ) {
+					float taxe = data[BM_Owner] == client ? getTaxe(client) : 0.5;
+					
+					int payClient = RoundToCeil(float(data[BM_Prix]) * (1.0 - taxe));
+					int payCapital = RoundToCeil(float(data[BM_Prix]) * (taxe));
+					
+					rp_ClientMoney(data[BM_Owner], i_AddToPay, payClient);
+					rp_SetJobCapital(91, rp_GetJobCapital(91) + payCapital);
+				}
+				else {
+					rp_SetJobCapital(91, rp_GetJobCapital(91) + data[BM_Prix]);
+				}
+				
+				LogToGame("[TSX-RP] [ITEM-VENDRE] %L a vendu 1 %s a %L", client, name, client);
+				
+				Call_StartForward(rp_GetForwardHandle(client, RP_OnBlackMarket));
+				Call_PushCell(client);
+				Call_PushCell(91);
+				Call_PushCell(client);
+				Call_PushCell(client);
+				Call_PushCellRef(data[BM_Prix]);
+				Call_PushCell(rp_GetClientInt(client, i_LastVolAmount) - 100);
+				Call_Finish();
 			}
-			else {
-				rp_SetJobCapital(91, rp_GetJobCapital(91) + data[BM_Prix]);
-			}
-			
-			LogToGame("[TSX-RP] [ITEM-VENDRE] %L a vendu 1 %s a %L", client, name, client);
-			
-			Call_StartForward(rp_GetForwardHandle(client, RP_OnBlackMarket));
-			Call_PushCell(client);
-			Call_PushCell(91);
-			Call_PushCell(client);
-			Call_PushCell(client);
-			Call_PushCellRef(data[BM_Prix]);
-			Call_PushCell(rp_GetClientInt(client, i_LastVolAmount) - 100);
-			Call_Finish();
 		}
 	}
 	else if (p_oAction == MenuAction_End) {

@@ -15,7 +15,7 @@
 
 #include <sdkhooks>
 #include <cstrike>
-#include <csgo_items>
+#include <csgoitems>
 
 stock bool Weapon_IsMelee(int wep) {
 	char classname[64];
@@ -709,8 +709,8 @@ stock void rp_ClientSwitchWeapon(int client, int wepid, int target = -1) {
 	g = rp_GetWeaponGroupID(wepid);
 	ammo = Weapon_GetPrimaryClip(wepid);
 	Client_GetWeaponPlayerAmmoEx(client, wepid, ammo1);
-	index = GetEntProp(wepid, Prop_Send, "m_iItemDefinitionIndex");
-	CSGO_GetItemDefinitionNameByIndex(index, wepname, sizeof(wepname));
+	index = GetEntProp(wepid, Prop_Send, "m_iItemDefinitionIndex"); 
+	CSGOItems_GetWeaponClassNameByDefIndex(index, wepname, sizeof(wepname));
 	
 	RemovePlayerItem(client, wepid);
 	RemoveEdict(wepid);
@@ -833,7 +833,7 @@ public Action rp_ClientRemoveProp(int client, int target, int item_id) {
 stock int rp_GetWeaponPrice(int weaponID) {
 	char classname[65], tmp[255], tmp2[255];
 	int index = GetEntProp(weaponID, Prop_Send, "m_iItemDefinitionIndex");
-	CSGO_GetItemDefinitionNameByIndex(index, classname, sizeof(classname));
+	CSGOItems_GetWeaponClassNameByDefIndex(index, classname, sizeof(classname));
 	
 	for (int i = 1; i < MAX_ITEMS; i++) {
 		rp_GetItemData(i, item_type_extra_cmd, tmp, sizeof(tmp));

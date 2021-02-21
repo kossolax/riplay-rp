@@ -485,9 +485,10 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 				
 				rp_WeaponMenu_Get(g_iCustomBank[target], pos, name, data);
 				int wepid = rp_WeaponMenu_Give(g_iCustomBank[target], pos, client);
-				rp_WeaponMenu_Delete(g_iCustomBank[target], pos);
-				
-				g_iWeaponFromStore[wepid] = data[BM_Store];
+				if( wepid > 0 ) {
+					rp_WeaponMenu_Delete(g_iCustomBank[target], pos);	
+					g_iWeaponFromStore[wepid] = data[BM_Store];
+				}
 			}
 			#if defined EVENT_APRIL
 			else if( StrEqual( options, "admin") ) {

@@ -38,7 +38,7 @@ void RedrawWeapon(int target) {
 	
 	int id = WeaponsGetDeployedWeaponIndex(target);
 	int index = GetEntProp(id, Prop_Send, "m_iItemDefinitionIndex");
-	CSGO_GetItemDefinitionNameByIndex(index, weapon, sizeof(weapon));
+	CSGOItems_GetWeaponClassNameByDefIndex(index, weapon, sizeof(weapon));
 	
 	enum_ball_type wep_type = g_iWeaponsBallType[id];
 	int g = g_iWeaponsGroup[id];

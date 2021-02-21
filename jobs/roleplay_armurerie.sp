@@ -514,7 +514,7 @@ public Action Cmd_ItemRedraw(int args) {
 	}
 	
 	int index = GetEntProp(wep_id, Prop_Send, "m_iItemDefinitionIndex");
-	CSGO_GetItemDefinitionNameByIndex(index, classname, sizeof(classname));
+	CSGOItems_GetWeaponClassNameByDefIndex(index, classname, sizeof(classname));
 	
 	enum_ball_type wep_type = rp_GetWeaponBallType(wep_id);
 	int g = rp_GetWeaponGroupID(wep_id);

@@ -17,7 +17,7 @@
 #include <colors_csgo>	// https://forums.alliedmods.net/showthread.php?p=2205447#post2205447
 #include <smlib>		// https://github.com/bcserv/smlib
 #include <emitsoundany> // https://forums.alliedmods.net/showthread.php?t=237045
-#include <csgo_items>   // https://forums.alliedmods.net/showthread.php?t=243009
+#include <csgoitems>   // https://forums.alliedmods.net/showthread.php?t=243009
 
 #include <roleplay.inc>	// https://www.ts-x.eu
 #include <advanced_motd>// https://forums.alliedmods.net/showthread.php?t=232476
@@ -2075,25 +2075,26 @@ public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int 
 			if (rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money) < data[BM_Prix])
 				return 0;
 			
-			rp_WeaponMenu_Give(g_hBuyMenu, position, client);
-			rp_WeaponMenu_Delete(g_hBuyMenu, position);
-			rp_ClientMoney(client, i_Money, -data[BM_Prix]);
-			
-			int rnd = rp_GetRandomCapital(1);
-			rp_SetJobCapital(1, RoundFloat(float(rp_GetJobCapital(1)) + float(data[BM_Prix]) * 0.75));
-			rp_SetJobCapital(101, RoundFloat(float(rp_GetJobCapital(101)) + float(data[BM_Prix]) * 0.25));
-			
-			rp_SetJobCapital(rnd, rp_GetJobCapital(rnd) - data[BM_Prix]);
-			LogToGame("[TSX-RP] [ITEM-VENDRE] %L a vendu 1 %s a %L", client, name, client);
-			
-			Call_StartForward(rp_GetForwardHandle(client, RP_OnBlackMarket));
-			Call_PushCell(client);
-			Call_PushCell(1);
-			Call_PushCell(client);
-			Call_PushCell(client);
-			Call_PushCellRef(data[BM_Prix]);
-			Call_PushCell(rp_GetClientInt(client, i_LastVolAmount) - 100);
-			Call_Finish();
+			if( rp_WeaponMenu_Give(g_hBuyMenu, position, client) > 0 ) {
+				rp_WeaponMenu_Delete(g_hBuyMenu, position);
+				rp_ClientMoney(client, i_Money, -data[BM_Prix]);
+				
+				int rnd = rp_GetRandomCapital(1);
+				rp_SetJobCapital(1, RoundFloat(float(rp_GetJobCapital(1)) + float(data[BM_Prix]) * 0.75));
+				rp_SetJobCapital(101, RoundFloat(float(rp_GetJobCapital(101)) + float(data[BM_Prix]) * 0.25));
+				
+				rp_SetJobCapital(rnd, rp_GetJobCapital(rnd) - data[BM_Prix]);
+				LogToGame("[TSX-RP] [ITEM-VENDRE] %L a vendu 1 %s a %L", client, name, client);
+				
+				Call_StartForward(rp_GetForwardHandle(client, RP_OnBlackMarket));
+				Call_PushCell(client);
+				Call_PushCell(1);
+				Call_PushCell(client);
+				Call_PushCell(client);
+				Call_PushCellRef(data[BM_Prix]);
+				Call_PushCell(rp_GetClientInt(client, i_LastVolAmount) - 100);
+				Call_Finish();
+			}
 		}
 	}
 	else if (p_oAction == MenuAction_End) {
@@ -2149,7 +2150,8 @@ bool canWeaponBeAddedInPoliceStore(int weaponID) {
 		return false;
 	
 	int index = GetEntProp(weaponID, Prop_Send, "m_iItemDefinitionIndex");
-	CSGO_GetItemDefinitionNameByIndex(index, classname, sizeof(classname));
+	CSGOItems_GetWeaponClassNameByDefIndex(index, classname, sizeof(classname));
+	
 	if (StrContains(classname, "default") >= 0 || StrContains(classname, "fists") >= 0)
 		return false;
 	

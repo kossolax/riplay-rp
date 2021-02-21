@@ -70,7 +70,7 @@ public int Native_rp_WeaponMenu_Add(Handle plugin, int numParams) {
 	
 	char weapon[BM_WeaponNameSize];
 	int index = GetEntProp(weaponID, Prop_Send, "m_iItemDefinitionIndex");
-	CSGO_GetItemDefinitionNameByIndex(index, weapon, sizeof(weapon));
+	CSGOItems_GetWeaponClassNameByDefIndex(index, weapon, sizeof(weapon));
 	if( StrEqual(weapon, "weapon_default") ) {
 		GetEntityClassname(weaponID, weapon, sizeof(weapon));
 	}
@@ -170,7 +170,7 @@ public int Native_rp_WeaponMenu_Give(Handle plugin, int numParams) {
 	}
 
 	Format(weapon, sizeof(weapon), "weapon_%s", weapon);
-	
+		
 	int wepid = GivePlayerItem(client, weapon);
 	if (data[BM_Munition] != -1) {
 		Weapon_SetPrimaryClip(wepid, data[BM_Munition]);
@@ -179,7 +179,6 @@ public int Native_rp_WeaponMenu_Give(Handle plugin, int numParams) {
 		SetEntProp(wepid, Prop_Send, "m_iClip1", data[BM_Munition]);
 		SetEntProp(wepid, Prop_Send, "m_iPrimaryReserveAmmoCount", data[BM_Chargeur]);
 	}
-	
 	RemovePlayerItem(client, wepid);
 	
 	rp_SetWeaponBallType(wepid, view_as<enum_ball_type>(data[BM_Type]));

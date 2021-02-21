@@ -30,7 +30,10 @@ public Plugin myinfo = {
 };
 public void OnPluginStart() {
 	LoadTranslations("core.phrases");
+	LoadTranslations("common.phrases");
 	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.core.phrases");
+	LoadTranslations("roleplay.utils.phrases");
 	
 	for (int i = 1; i <= MaxClients; i++)
 		if( IsValidClient(i) )
@@ -250,7 +253,7 @@ void openMenuGeneral(int client) {
 		menu.AddItem("mort", tmp);
 	}
 	
-	Format(tmp, sizeof(tmp), "%T", "Menu_Construire", client);
+	Format(tmp, sizeof(tmp), "%T", "Menu_Build", client);
 	menu.AddItem("build", tmp);
 	
 	Format(tmp, sizeof(tmp), "%T", "Menu_Shownote", client);
