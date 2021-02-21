@@ -16,7 +16,7 @@
 #include <colors_csgo>
 #include <smlib>
 #include <regex>
-#include <csgo_items>
+#include <csgoitems>
 #include <emitsoundany>
 #include <basecomm>
 #include <SteamWorks>
