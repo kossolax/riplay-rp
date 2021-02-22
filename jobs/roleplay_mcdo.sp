@@ -15,7 +15,6 @@
 #include <colors_csgo>	// https://forums.alliedmods.net/showthread.php?p=2205447#post2205447
 #include <smlib>		// https://github.com/bcserv/smlib
 #include <emitsoundany> // https://forums.alliedmods.net/showthread.php?t=237045
-#include <csgoitems>
 #include <givenameditem>
 
 #pragma newdecls required
