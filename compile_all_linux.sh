@@ -12,7 +12,7 @@ _compile() {
     scripting/spcomp64 -i includes -i core -i scripting "$1" "-o=compiled/$fileout"
 }
 
-files=`find . -type f -name "*.sp" | grep -E "^\./(jobs|quests|utils|weapons|others)/"`
+files=`find . -type f -name "*.sp" | grep -E "^\./(jobs|quests|utils|cwm|others)/"`
 files="$files
 ./core/roleplay.sp" 
 
