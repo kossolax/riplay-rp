@@ -11,7 +11,7 @@
 #pragma semicolon 1
 
 #include <sourcemod>
-#include <csgoitems>   // https://forums.alliedmods.net/showthread.php?t=243009
+#include <eitems>   // https://forums.alliedmods.net/showthread.php?t=243009
 #include <colors_csgo>	// https://forums.alliedmods.net/showthread.php?p=2205447#post2205447
 #include <smlib>		// https://github.com/bcserv/smlib
 
@@ -514,7 +514,7 @@ public Action Cmd_ItemRedraw(int args) {
 	}
 	
 	int index = GetEntProp(wep_id, Prop_Send, "m_iItemDefinitionIndex");
-	CSGOItems_GetWeaponClassNameByDefIndex(index, classname, sizeof(classname));
+	eItems_GetWeaponClassNameByDefIndex(index, classname, sizeof(classname));
 	
 	enum_ball_type wep_type = rp_GetWeaponBallType(wep_id);
 	int g = rp_GetWeaponGroupID(wep_id);

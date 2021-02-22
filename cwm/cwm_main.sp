@@ -7,7 +7,7 @@
 #include <emitsoundany>
 #include <colors_csgo>
 #include <dhooks>
-#include <csgo_items>
+#include <eitems>
 #include <SteamWorks>
 
 #include <custom_weapon_mod.inc>
@@ -467,7 +467,7 @@ public int Native_CWM_Spawn(Handle plugin, int numParams) {
 	SetEntData(entity, FindSendPropInfo("CBaseAttributableItem", "m_nFallbackPaintKit"), GetRandomInt(1, 2048));
 	SetEntData(entity, FindSendPropInfo("CBaseAttributableItem", "m_nFallbackStatTrak"), -1);
 	
-	SetEntProp(entity, Prop_Send, "m_iItemDefinitionIndex", CSGO_GetItemDefinitionIndexByName(g_sStack[id][WSS_ReplaceWeapon]));
+	SetEntProp(entity, Prop_Send, "m_iItemDefinitionIndex", eItems_GetWeaponDefIndexByClassName(g_sStack[id][WSS_ReplaceWeapon]));
 #endif
 
 	SetEntityModel(entity, g_sStack[id][WSS_WModel]);
@@ -537,7 +537,7 @@ public Action CWM_Spawn_Post(Handle timer, any entity) {
 	}
 	
 	if( id >= 0 )
-		SetEntProp(entity, Prop_Send, "m_iItemDefinitionIndex", CSGO_GetItemDefinitionIndexByName(tmp));
+		SetEntProp(entity, Prop_Send, "m_iItemDefinitionIndex", eItems_GetWeaponDefIndexByClassName(tmp));
 } 
 public int Native_CWM_ShootHull(Handle plugin, int numParams) {
 	float src[3], ang[3], hit[3], dst[3], min[3], max[3];

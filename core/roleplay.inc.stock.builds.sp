@@ -70,7 +70,7 @@ public int Native_rp_WeaponMenu_Add(Handle plugin, int numParams) {
 	
 	char weapon[BM_WeaponNameSize];
 	int index = GetEntProp(weaponID, Prop_Send, "m_iItemDefinitionIndex");
-	CSGOItems_GetWeaponClassNameByDefIndex(index, weapon, sizeof(weapon));
+	eItems_GetWeaponClassNameByDefIndex(index, weapon, sizeof(weapon));
 	if( StrEqual(weapon, "weapon_default") ) {
 		GetEntityClassname(weaponID, weapon, sizeof(weapon));
 	}

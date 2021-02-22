@@ -17,7 +17,7 @@
 #include <colors_csgo>	// https://forums.alliedmods.net/showthread.php?p=2205447#post2205447
 #include <smlib>		// https://github.com/bcserv/smlib
 #include <emitsoundany> // https://forums.alliedmods.net/showthread.php?t=237045
-#include <csgoitems>   // https://forums.alliedmods.net/showthread.php?t=243009
+#include <eItems>   // https://forums.alliedmods.net/showthread.php?t=243009
 
 #include <roleplay.inc>	// https://www.ts-x.eu
 #include <advanced_motd>// https://forums.alliedmods.net/showthread.php?t=232476
@@ -2150,7 +2150,7 @@ bool canWeaponBeAddedInPoliceStore(int weaponID) {
 		return false;
 	
 	int index = GetEntProp(weaponID, Prop_Send, "m_iItemDefinitionIndex");
-	CSGOItems_GetWeaponClassNameByDefIndex(index, classname, sizeof(classname));
+	eItems_GetWeaponClassNameByDefIndex(index, classname, sizeof(classname));
 	
 	if (StrContains(classname, "default") >= 0 || StrContains(classname, "fists") >= 0)
 		return false;
