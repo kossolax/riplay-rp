@@ -7,7 +7,7 @@
 #include <emitsoundany>
 #include <colors_csgo>
 #include <dhooks>
-#include <eitems>
+#include <eItems>
 #include <SteamWorks>
 
 #include <custom_weapon_mod.inc>

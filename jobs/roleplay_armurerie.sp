@@ -11,7 +11,7 @@
 #pragma semicolon 1
 
 #include <sourcemod>
-#include <eitems>   // https://forums.alliedmods.net/showthread.php?t=243009
+#include <eItems>   	// https://forums.alliedmods.net/showthread.php?t=243009
 #include <colors_csgo>	// https://forums.alliedmods.net/showthread.php?p=2205447#post2205447
 #include <smlib>		// https://github.com/bcserv/smlib
 
