@@ -520,54 +520,66 @@
 	"Sell_Tribunal"
 	{
 		"fr"		"Le Tribunal de princeton a {red}gelé vos ventes{default}, car vous êtes recherché depuis trop longtemps."
+		"en"		"The Princeton Court has {red}frozen your sales {default}because you have been wanted for too long"		
 	}
 	"Buy_Tribunal"
 	{
 		"fr"		"Le Tribunal de princeton a {red}gelé ses achats{default}, car il est recherché depuis trop longtemps."
+		"en"		"The Princeton Court has {red}frozen your purchases {default}because you have been wanted for too long."
 	}
 	"Sell_Error_Door"
 	{
 		"fr"		"Cette porte n'est pas une porte d'un appartement."
+		"en"		"This door is not a door to an apartment"
 	}
 	"Sell_BlackFriday"
 	{
 		"#format"	"{1:d}"
 		"fr"	"BLACKFRIDAY: -{1}% de réduction!"
+		"en"		"BLACKFRIDAY: {1}% discount!"
 	}
 	"Sell_Title"
 	{
 		"fr"	"Sélectionner un objet à vendre"
+		"en"		"Select an item to sell"
 	}
 	"Sell_Amount"
 	{
 		"fr"	"Sélectionner combien en vendre"
+		"en"		"Select how many to sell"
 	}
 	"Sell_Confirm"
 	{
 		"#format"	"{1:s}"
 		"fr"	"Êtes vous sur de vouloir vendre {1}?"
+		"en"		"Are you sure you want to sell {1}?"
 	}
 	"Sell_Chirurgien_Zone"
 	{
 		"fr"	"Vous devez viser un joueur sur la table d'operation."
+		"en"		"You must target a player on the operating table."
 	}
 	"Sell_Chirurgien_Job"
 	{
 		"fr"	"Vous n'êtes pas en capacité d'effectuer des opérations chirugicales."
+		"en"		"You are not able to perform surgical operations."
 	}
 	"Sell_Contrat_Justice"
 	{
 		"#format"	"{1:s}"
 		"fr"	"{1} doit être un membre de la justice pour utiliser ce type de contrat."
+		"en"		"{1} must be a member of the court to use this type of contract."
 	}
 	"Sell_Contrat_Kidnapping"
 	{
 		"fr"	"Impossible d'effectuer un autre kidnapping pour le moment."
+		"en"		"Cannot perform another kidnapping at this time."
 	}
 	"Sell_Contrat_Level"
 	{
 		"#format"	"{1:s},{2:d},{3:s}"
 		"fr"	"{1} doit être au moins niveau {1} ({red}{2}{default}), afin d'effectuer un contrat kidnapping."
+		"en"		"{1} must be at least level {1} ({red} {2} {default}), in order to perform a kidnapping contract."
 	}
 	
 	
@@ -575,56 +587,68 @@
 	{
 		"#format"	"{1:s},{2:s}"
 		"fr"		"{1} vous propose un {2}\nQui souhaitez-vous assassiner ?"
+		"en"		"{1} offers you a {2} \nWho do you want to assassinate?"
 	}
 	"Sell_Ask_Contrat_Confirm"
 	{
 		"#format"	"{1:s},{2:s},{3:s},{4:d}"
 		"fr"		"{1} vous propose d'acheter\n{2} contre {3} pour {4}$"
+		"en"		"{1} offers you to buy \n {2} against {3} for ${4}"
 	}
 	"Sell_Ask_Appart"
 	{
 		"#format"	"{1:s},{2:d},{3:s},{4:d},{5:d}"
 		"fr"		"{1} vous propose d'acheter\n{2} {3} (n°{4}) pour {5}$"
+		"en"		"{1} offers you to buy \n {2} {3} (n° {4}) for ${5}"
 	}
 	"Sell_Ask_Item"
 	{
 		"#format"	"{1:s},{2:d},{3:s},{4:d}"
 		"fr"		"{1} vous propose d'acheter\n{2} {3} pour {4}"
+		"en"		"{1} offers you to buy\n {2} {3} for ${4}"
 	}
 	"Sell_Confirm"
 	{
 		"fr"		"Confirmez-vous l'achat?"
+		"en"		"Are you confirming the purchase?"
 	}
 	"Sell_Money"
 	{
 		"#format"	"{1:s},{2:s}"
 		"fr"		"Argent sur vous: {1}$, en banque: {2}$"
+		"en"		"Money on you: {1} $, in bank: ${2}"
 	}
 	"Sell_PayCash"
 	{
 		"fr"		"Je confirme et je paie en cash"
+		"en"		"I confirm and I pay in cash"
 	}
 	"Sell_PayCard"
 	{
 		"fr"		"Je confirme et je paie par carte"
+		"en"		"I confirm and I pay by card"
 	}
 	"Sell_Refuse"
 	{
 		"fr"		"Je refuse l'achat"
+		"en"		"I refuse the purchase"
 	}
 	"Sell_Refused"
 	{
 		"fr"		"Le client a refusé l'achat."
+		"en"		"The customer refused the purchase."
 	}
 	
 	"Sell_Bought"
 	{
 		"#format"	"{1:d},{2:s},{3:s}"
 		"fr"		"Vous avez acheté {green}{1} {2}{default} à {green}{3}{default}."
+		"en"		"You bought {green}{1} {2}{default} at {green}{3}{default}."
 	}
 	"Sell_Sold"
 	{
 		"#format"	"{1:d},{2:s},{3:s}"
 		"fr"		"Vous avez vendu {green}{1} {2}{default} à {green}{3}{default}."
+		"en"		"You sold {green}{1} {2}{default} to {green}{3}{default}."
 	}
 }
