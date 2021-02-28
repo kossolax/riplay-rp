@@ -768,7 +768,7 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 					hidden = true;
 					
 					if( rp_GetClientItem(client, ITEM_CHEQUE) <= 0 ) {
-						rp_GetItemData(name, ITEM_CHEQUE, item_type_name, sizeof(name));
+						rp_GetItemData(ITEM_CHEQUE, item_type_name, name, sizeof(name));
 						CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemMissing", client, name);
 						return;
 					}
