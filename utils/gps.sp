@@ -307,7 +307,7 @@ public Action CmdGps2(int client) {
 		menu.AddItem("0", tmp);
 	}
 	
-	int zone = [12, 121, 289, 118, 247, 100, 90, 101, 272, 266, 298, 226, 95, 222, 236, 69, 299, 172, 6, 3];
+	int zone[] = {12, 121, 289, 118, 247, 100, 90, 101, 272, 266, 298, 226, 95, 222, 236, 69, 299, 172, 6, 3};
 	
 	for (int i = 0; i < sizeof(zone); i++) {
 		Format(tmp, sizeof(tmp), "%d", i);
