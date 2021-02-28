@@ -28,7 +28,7 @@ public int MOTD_OnSteamWorksHTTPComplete(Handle HTTPRequest, bool fail, bool suc
 		GetClientAuthId(client, AuthId_SteamID64, szSteamID, sizeof(szSteamID));
 		Format(tmp, sizeof(tmp), URL_PATH, szSteamID);
 		
-		CPrintToChat(client, "" ...MOD_TAG... " Pour afficher cette page, appuyez sur [TAB] puis sur le bouton [SITE-WEB] en bas à gauche du tableau des scores.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "MOTD", client);
 	}
 	
 	delete HTTPRequest;

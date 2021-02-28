@@ -516,4 +516,115 @@
 		"fr"	"Rapporter un mauvais comportement"
 		"en"	"Report bad behavior"
 	}
+	// ----------------------------------------------------------------------------------------------
+	"Sell_Tribunal"
+	{
+		"fr"		"Le Tribunal de princeton a {red}gelé vos ventes{default}, car vous êtes recherché depuis trop longtemps."
+	}
+	"Buy_Tribunal"
+	{
+		"fr"		"Le Tribunal de princeton a {red}gelé ses achats{default}, car il est recherché depuis trop longtemps."
+	}
+	"Sell_Error_Door"
+	{
+		"fr"		"Cette porte n'est pas une porte d'un appartement."
+	}
+	"Sell_BlackFriday"
+	{
+		"#format"	"{1:d}"
+		"fr"	"BLACKFRIDAY: -{1}% de réduction!"
+	}
+	"Sell_Title"
+	{
+		"fr"	"Sélectionner un objet à vendre"
+	}
+	"Sell_Amount"
+	{
+		"fr"	"Sélectionner combien en vendre"
+	}
+	"Sell_Confirm"
+	{
+		"#format"	"{1:s}"
+		"fr"	"Êtes vous sur de vouloir vendre {1}?"
+	}
+	"Sell_Chirurgien_Zone"
+	{
+		"fr"	"Vous devez viser un joueur sur la table d'operation."
+	}
+	"Sell_Chirurgien_Job"
+	{
+		"fr"	"Vous n'êtes pas en capacité d'effectuer des opérations chirugicales."
+	}
+	"Sell_Contrat_Justice"
+	{
+		"#format"	"{1:s}"
+		"fr"	"{1} doit être un membre de la justice pour utiliser ce type de contrat."
+	}
+	"Sell_Contrat_Kidnapping"
+	{
+		"fr"	"Impossible d'effectuer un autre kidnapping pour le moment."
+	}
+	"Sell_Contrat_Level"
+	{
+		"#format"	"{1:s},{2:d},{3:s}"
+		"fr"	"{1} doit être au moins niveau {1} ({red}{2}{default}), afin d'effectuer un contrat kidnapping."
+	}
+	
+	
+	"Sell_Ask_Contrat"
+	{
+		"#format"	"{1:s},{2:s}"
+		"fr"		"{1} vous propose un {2}\nQui souhaitez-vous assassiner ?"
+	}
+	"Sell_Ask_Contrat_Confirm"
+	{
+		"#format"	"{1:s},{2:s},{3:s},{4:d}"
+		"fr"		"{1} vous propose d'acheter\n{2} contre {3} pour {4}$"
+	}
+	"Sell_Ask_Appart"
+	{
+		"#format"	"{1:s},{2:d},{3:s},{4:d},{5:d}"
+		"fr"		"{1} vous propose d'acheter\n{2} {3} (n°{4}) pour {5}$"
+	}
+	"Sell_Ask_Item"
+	{
+		"#format"	"{1:s},{2:d},{3:s},{4:d}"
+		"fr"		"{1} vous propose d'acheter\n{2} {3} pour {4}"
+	}
+	"Sell_Confirm"
+	{
+		"fr"		"Confirmez-vous l'achat?"
+	}
+	"Sell_Money"
+	{
+		"#format"	"{1:s},{2:s}"
+		"fr"		"Argent sur vous: {1}$, en banque: {2}$"
+	}
+	"Sell_PayCash"
+	{
+		"fr"		"Je confirme et je paie en cash"
+	}
+	"Sell_PayCard"
+	{
+		"fr"		"Je confirme et je paie par carte"
+	}
+	"Sell_Refuse"
+	{
+		"fr"		"Je refuse l'achat"
+	}
+	"Sell_Refused"
+	{
+		"fr"		"Le client a refusé l'achat."
+	}
+	
+	"Sell_Bought"
+	{
+		"#format"	"{1:d},{2:s},{3:s}"
+		"fr"		"Vous avez acheté {green}{1} {2}{default} à {green}{3}{default}."
+	}
+	"Sell_Sold"
+	{
+		"#format"	"{1:d},{2:s},{3:s}"
+		"fr"		"Vous avez vendu {green}{1} {2}{default} à {green}{3}{default}."
+	}
 }

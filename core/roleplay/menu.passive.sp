@@ -15,7 +15,7 @@ void Draw_PassiveMenu(int client) {
 	char tmp[128];
 	
 	Menu menu = new Menu(Menu_Passive);
-	menu.SetTitle("Quel est votre mode de jeu préféré?\n ");
+	menu.SetTitle("%T\n ", "Cmd_Passive", client);
 	
 	Format(tmp, sizeof(tmp), "%T\n ", "Cmd_Passive_Enable", client); menu.AddItem("1", tmp);
 	Format(tmp, sizeof(tmp), "%T", "Cmd_Passive_Disable", client); menu.AddItem("2", tmp);

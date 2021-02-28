@@ -50,7 +50,7 @@ void BankATM_transfer(int client, int type) {
 		AddMenuItem(menu, "10000",	"10 000$"); 	// 5
 		AddMenuItem(menu, "100000",	"100 000$"); 	// 6
 		if( type < 3  ) {
-			Format(tmp1, sizeof(tmp1), "%T", "BankATM_transfer_all", client); AddMenuItem(menu, "0", "Tout mon argent"); // 9 
+			Format(tmp1, sizeof(tmp1), "%T", "BankATM_transfer_all", client); AddMenuItem(menu, "0", tmp1); // 9 
 		}
 		
 		SetMenuPagination(menu, false); // ...

@@ -878,20 +878,14 @@ void OnGameFrame_10(float time) {
 					Call_PushCell(sizeof(szHUD));
 					Call_Finish();
 					
-					if( GetConVarInt(FindConVar("hostport")) == 27015 ) {
-						Handle mSayPanel = CreatePanel();
-						SetPanelTitle(mSayPanel, szGeneralMenu);
-						DrawPanelItem(mSayPanel, "", ITEMDRAW_SPACER);
-						
-						DrawPanelText(mSayPanel, szHUD);
-						
-						SendPanelToClient(mSayPanel, i, MenuNothing, 2);
-						CreateTimer(1.1, PostKillHandle, mSayPanel);
-					}
-					else {
-						SetHudTextParams(0.0125, 0.35, 2.0, 255, 255, 200, 128, 2, 0.0, 0.0, 0.0);
-						ShowHudText(i, 0, szHUD);
-					}
+					Handle mSayPanel = CreatePanel();
+					SetPanelTitle(mSayPanel, szGeneralMenu);
+					DrawPanelItem(mSayPanel, "", ITEMDRAW_SPACER);
+					
+					DrawPanelText(mSayPanel, szHUD);
+					
+					SendPanelToClient(mSayPanel, i, MenuNothing, 2);
+					CreateTimer(1.1, PostKillHandle, mSayPanel);
 				}
 			}
 			

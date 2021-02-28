@@ -28,6 +28,10 @@ char loadNode[] = "SELECT `id`, `x`, `y`, `z`, `zoneid` FROM `rp_gps_node`;";
 char loadArc[] = "SELECT A.`id`, `src`, `dst`, `length`, length(`zone_type`) as `private`, A.`zoneID` FROM `rp_gps_arc` A INNER JOIN `rp_csgo`.`rp_location_zones` Z ON Z.`id`=A.`zoneID`;";
 
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("common.phrases");
+	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.utils.phrases");
 	
 	RegAdminCmd("rp_gps_edit",	CmdGpsMenu, ADMFLAG_ROOT);
 	RegServerCmd("sm_effect_gps", 		CmdGps);	
@@ -294,38 +298,23 @@ public Action CmdGps(int args) {
 }
 public Action CmdGps2(int client) {
 	
+	char tmp[128], tmp2[128];
 	Menu menu = CreateMenu(handleMenu);
-	menu.SetTitle("Ou souhaitez-vous allez?");
+	menu.SetTitle("%T\n ", "Menu_GPS", client);
 	
 	if( g_hTimer[client] ) {
-		menu.AddItem("0", "Arrêter le guidage");
+		Format(tmp, sizeof(tmp), "%T", "Menu_GPS_Close", client);
+		menu.AddItem("0", tmp);
 	}
 	
-	menu.AddItem("12", "Le commissariat");
-	menu.AddItem("121", "L'hôpital");
-	menu.AddItem("289", "Le tribunal");
-	menu.AddItem("118", "La banque");
-	menu.AddItem("247", "La villa de la mafia");
+	int zone = [12, 121, 289, 118, 247, 100, 90, 101, 272, 266, 298, 226, 95, 222, 236, 69, 299, 172, 6, 3];
 	
-	menu.AddItem("100", "L'armurerie");
-	menu.AddItem("90", "Les coachs");
-	menu.AddItem("101", "La planque technicien");
-	
-	menu.AddItem("272", "La planque des artisans");
-	menu.AddItem("266", "L'agence immobilière");
-	menu.AddItem("298", "Le concessionaire");
-	
-	menu.AddItem("226", "La planque des mercenaires");
-	menu.AddItem("95", "La planque des dealers");
-	menu.AddItem("222", "La planque des artificiers");
-	menu.AddItem("236", "Le sexshop");
-	
-	menu.AddItem("69", "Le mcdonald");
-	menu.AddItem("299", "Le casino");
-	menu.AddItem("172", "La planque des vendeurs de skin");
-	
-	menu.AddItem("6", "Le bar Le-Requin");
-	menu.AddItem("3", "La discothèque");
+	for (int i = 0; i < sizeof(zone); i++) {
+		Format(tmp, sizeof(tmp), "%d", i);
+		rp_GetZoneData(zone[i], zone_type_name, tmp2, sizeof(tmp2));
+		
+		menu.AddItem(tmp, tmp2);
+	}
 	
 	menu.Display(client, MENU_TIME_FOREVER);
 	

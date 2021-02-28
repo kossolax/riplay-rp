@@ -209,6 +209,7 @@ public void OnEntityDestroyed(int entity) {
 							int wepid1 = GivePlayerItem(player, name);
 							int wepid = GivePlayerItem(player, name);
 							RemovePlayerItem(player, wepid);
+							
 							TeleportEntity(wepid, vec, NULL_VECTOR, rnd);
 							RemovePlayerItem(player, wepid1);
 							RemoveEdict(wepid1);

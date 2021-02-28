@@ -1292,6 +1292,7 @@ enum rank_level {
 	level_30,
 	level_31,
 	level_32,
+	level_haut_conseiller = 306,
 	
 	level_max
 };
