@@ -651,23 +651,23 @@ public int eventGiveMenu_2Bis(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 			
 			
 			Format(tmp, sizeof(tmp), "%i_%i_%i_%i_1_%i_%d", client, id, amount, item_type, day, reduction);
-			Format(tmp2, sizeof(tmp2), "%T", "Sell_PayCash", target)
+			Format(tmp2, sizeof(tmp2), "%T", "Sell_PayCash", target);
 			AddMenuItem(hGiveMenu, tmp, tmp2);
 			
 			Format(tmp, sizeof(tmp), "%i_%i_%i_%i_5_%i_%d", client, id, amount, item_type, day, reduction);
-			Format(tmp2, sizeof(tmp2), "%T", "Sell_PayCard", target)
+			Format(tmp2, sizeof(tmp2), "%T", "Sell_PayCard", target);
 			AddMenuItem(hGiveMenu, tmp, tmp2, g_bUserData[target][b_HaveCard] == 1 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 			
 			if( target != client ) {
 				Format(tmp, sizeof(tmp), "%i_%i_%i_%i_2_%i_%d", client, id, amount, item_type, day, reduction);
-				Format(tmp2, sizeof(tmp2), "%T", "Sell_Refuse", target)
+				Format(tmp2, sizeof(tmp2), "%T", "Sell_Refuse", target);
 				AddMenuItem(hGiveMenu, tmp, tmp2);
 				
 				
 				AddMenuItem(hGiveMenu, "vide", "-----------------", ITEMDRAW_DISABLED);
 				
 				Format(tmp, sizeof(tmp), "%i_-1_-1_%i_3_%i_%d", client, item_type, day, reduction);
-				Format(tmp2, sizeof(tmp2), "%T", "Ignore", target)
+				Format(tmp2, sizeof(tmp2), "%T", "Ignore", target);
 				AddMenuItem(hGiveMenu, tmp, tmp2);
 			}
 			SetMenuExitButton(hGiveMenu, true);
