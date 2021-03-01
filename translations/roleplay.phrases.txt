@@ -179,6 +179,7 @@
 		"en"	"Disabled"
 	}
 	// ----------------------------------------------------------------------------------------------
+	"MOTD"
 	{
 		"fr"	"Pour afficher cette page, appuyez sur [{green}TAB{default}] puis sur le bouton [{green}SITE-WEB{default}] en bas à gauche du tableau des scores."
 		"en"	"To display this page, press [{green}TAB{default}] then the [{green}WEBSITE{default}] button at the bottom left of the scoreboard."
