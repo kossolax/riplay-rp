@@ -183,7 +183,7 @@
 		"fr"	"Trouver un lieu sur la carte"
 		"en"	"Locate a place on the map"
 	}
-	Menu_GPS_Close"
+	"Menu_GPS_Close"
 	{
 		"fr"	"Arrêter le guidage"
 		"en"	"Stop guiding"
