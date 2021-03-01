@@ -638,7 +638,7 @@ public int eventGiveMenu_2Bis(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 				Format(tmp, sizeof(tmp), "%s%T\n", tmp, "Sell_BlackFriday", target, g_iBlackFriday[1]);
 			}
 			
-			Format(tmp, sizeof(tmp), "%s\n%T\n ", tmp, "Sell_Confirm", target);
+			Format(tmp, sizeof(tmp), "%s\n%T\n ", tmp, "Buy_Confirm", target);
 
 			char szMoney[128], szBank[128];
 			String_NumberFormat(g_iUserData[target][i_Money],	szMoney,sizeof(szMoney));

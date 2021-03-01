@@ -607,7 +607,7 @@
 		"fr"		"{1} vous propose d'acheter\n{2} {3} pour {4}"
 		"en"		"{1} offers you to buy\n {2} {3} for ${4}"
 	}
-	"Sell_Confirm"
+	"Buy_Confirm"
 	{
 		"fr"		"Confirmez-vous l'achat?"
 		"en"		"Are you confirming the purchase?"
