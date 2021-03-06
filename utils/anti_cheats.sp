@@ -63,6 +63,17 @@ public void OnPluginStart() {
 	AddCommandListener(OnCheatCommand, "give");
 	AddCommandListener(OnCheatCommand, "ent_create");
 	AddCommandListener(OnCheatCommand, "ent_remove");
+	
+	char name[128];
+	int flags;
+	bool isCommand;
+	Handle cvar = FindFirstConCommand(name, sizeof(name), isCommand, flags);
+	do {
+		if ( isCommand && (flags & FCVAR_CHEAT)) {
+			AddCommandListener(OnCheatCommand_LOG, name);
+		}
+	} while( FindNextConCommand(cvar, name, sizeof(name), isCommand, flags) );
+	
 	g_cVarCheat = FindConVar("sv_cheats");
 	
 	if( (g_iMaxAngleHistory = TIME_TO_TICK(0.5)) > sizeof(g_fEyeAngles[]) ) {
@@ -146,7 +157,7 @@ public void OnCvarChange(Handle cvar, const char[] oldVal, const char[] newVal) 
 public void OnClientPostAdminCheck(int client) {
 	int flags = GetUserFlagBits(client);
 	
-	if ( !(flags & ADMFLAG_CHEATS || flags & ADMFLAG_ROOT) && GetConVarInt(FindConVar("hostport")) == 27015 ) {
+	if ( !(flags & ADMFLAG_ROOT) && GetConVarInt(FindConVar("hostport")) == 27015 ) {
 		SendConVarValue(client, g_cVarCheat, "0");
 		CreateTimer(60.0, task_ClientCheckConVar, GetClientUserId(client));
 	}
@@ -215,6 +226,11 @@ public Action Hook_Transmit(int client, int target) {
 	return Plugin_Continue;
 }
 // ------------------------------------------------- CHEAT-CMD --------------------
+public Action OnCheatCommand_LOG(int client, const char[] command, int argc) {
+	LogToGame("[CHEAT-CMD-WARN] %L used command: %s", client, command);
+
+	return Plugin_Continue;
+}
 public Action OnCheatCommand(int client, const char[] command, int argc) {
 	LogToGame("[CHEAT-CMD] %L used command: %s", client, command);
 	
@@ -319,7 +335,7 @@ public Action task_ClientCheckConVar(Handle timer, any client) {
 		return Plugin_Handled;
 	
 	
-	//QueryClientConVar(client, "sv_cheats", ClientConVar, 0);
+	QueryClientConVar(client, "sv_cheats", ClientConVar, 0);
 	QueryClientConVar(client, "r_drawothermodels",ClientConVar, 1);
 	QueryClientConVar(client, "mat_wireframe", ClientConVar, 0);
 	QueryClientConVar(client, "r_drawrenderboxes", ClientConVar, 0);
@@ -331,7 +347,7 @@ public void ClientConVar(QueryCookie cookie, int client, ConVarQueryResult resul
 	char tmp[12];
 	Format(tmp, sizeof(tmp), "%d", value);
 	
-	if( !StrEqual(cvarValue, tmp) || result == ConVarQuery_Protected)
+	if( !StrEqual(cvarValue, tmp) || result == ConVarQuery_Protected )
 		LogToGame(PREFIX ... " [CONVAR] %L %s %s", client, cvarName, cvarValue);
 } 
 // ------------------------------------------------- AIM-BOT --------------------

@@ -673,7 +673,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 		if( IsValidClient(i) ) {
 
 			int flags = GetUserFlagBits(i);
-			if (flags & ADMFLAG_GENERIC || flags & ADMFLAG_ROOT) {
+			if ( flags & ADMFLAG_ROOT ) {
 				CPrintToChat(i, "" ...MOD_TAG... " %T", ( Attacker <= 0 || Attacker == Client ) ? "Kill_Self" : "Kill_Target", i, client_name, target_name);
 			}
 		}
