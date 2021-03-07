@@ -27,7 +27,7 @@
 	}
 	"Ask_Judge"
 	{
-		"fr"	"une audiance"
+		"fr"	"une audience"
 		"en"	"a hearing" 
 	}
 	"Ask_Appart"
