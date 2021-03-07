@@ -55,7 +55,7 @@ enum rp_event {
 	RP_OnPlayerHUD,            /* A chaque fois que le HUD à gauche se refresh */
 	RP_OnPlayerHINT,			/* A chaque fois que le HINT apparait */
 	RP_OnPlayerCheckKey,	   /* A chaque vérification s'il a la clé */
-	RP_OnResellWeapon,		   /* Revente d'arme au marché noire */
+	RP_OnResellWeapon,		   /* Revente d'arme au marché noir */
 	RP_PreClientCraft,			/* Avant qu'un craft se fasse, permet de changer le cout */
 	RP_PostClientCraft,			/* Après qu'un craft réussisse */
 	
@@ -68,7 +68,7 @@ enum rp_event {
 	RP_PreClientSendToJail,		/* Lorsqu'nu joueur envois un autre en taule */
 	RP_PostClientSendToJail,		/* Lorsqu'nu joueur envois un autre en taule */
 	RP_OnClientTazedItem,		/* Lorsqu'un joueur taze quelque chose */
-	RP_OnBlackMarket,			/* Lorsqu'un joueur achète quelque chose au marché noire */
+	RP_OnBlackMarket,			/* Lorsqu'un joueur achète quelque chose au marché noir */
 	
 	RP_OnJugementOver,			/* Lorsqu'un jugement est prononcé */
 	RP_OnPlayerPay,
