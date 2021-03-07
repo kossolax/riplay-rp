@@ -22,7 +22,7 @@
 			<p ng-show="success.count_to_unlock == success.max && success.max > 0">Terminé !</p>
 			<p ng-show="success.achieved > 0" style="color: green">Vous avez accomplis ce succès {{ success.achieved }} fois</p>
 			<p ng-show="success.last_achieved > 0"><b>Dernier accomplissement le {{ success.last_achieved | date: 'dd-MM-yyyy'}}</b></p>
-			<p ng-show="success.last_achieved <= 0 || success.count_to_unlock == 0" style="color: red">Vous n'avez jamais accomplis ce succès</p>
+			<p ng-show="success.achieved <= 0 || success.count_to_unlock == 0" style="color: red">Vous n'avez jamais accomplis ce succès</p>
 		</div>
 	 </div>
 	</div>
