@@ -50,8 +50,8 @@ float g_fMaxs[3][3] = {
 	{ 32.0, 32.0, 8.0 }
 };
 char g_szSkins[9][32] = {
-	"Intérieur: Noire",
-	"Bord: Noire",
+	"Intérieur: Noir",
+	"Bord: Noir",
 	"Bord: Bleu",
 	"Bord: Vert",
 	"Bord: Orange",
