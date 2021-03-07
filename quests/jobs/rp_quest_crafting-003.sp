@@ -48,6 +48,7 @@ public bool fwdCanStart(int client) {
 }
 
 public void Q1_Start(int objectiveID, int client) {
+	g_iStep[client] = 0;
 	rp_ClientGiveItem(client, 355);
 	rp_HookEvent(client, RP_OnPlayerGotRaw, OnPlayerGotRaw);
 }

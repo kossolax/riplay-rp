@@ -16,7 +16,7 @@
 #include <colors_csgo>
 #include <smlib>
 #include <regex>
-#include <csgo_items>
+#include <eItems>
 #include <emitsoundany>
 #include <basecomm>
 #include <SteamWorks>
@@ -29,7 +29,7 @@
 
 #define USING_VEHICLE
 //#define EVENT_APRIL
-#define EVENT_NOEL
+//#define EVENT_NOEL
 //#define EVENT_BIRTHDAY
 
 #if defined GAME_CSGO
@@ -192,10 +192,11 @@ public void OnPluginStart() {
 	//
 	// Cvar:
 	//
-	g_hAllowItem 		= CreateConVar("rp_allow_item", "1", "Autorise ou non l'utilisation des items.", _, true, 0.0, false, 1.0);
+	g_hAllowItem 		= CreateConVar("rp_allow_item", "1", "Autorise ou non l'utilisation des items.", _, true, 0.0, false, 2.0);
 	g_hSick				= CreateConVar("rp_sick", "1");
 	g_hMAX_ENT 			= CreateConVar("rp_max_entity",	"1800", "PAS TOUCHE", FCVAR_UNREGISTERED, true, 1000.0, true, 2000.0);
 	g_hEVENT			= CreateConVar("rp_event",	"0");
+	g_hEVENT_3RD		= CreateConVar("rp_event_3rd",	"1");
 	g_hEVENT_HIDE			= CreateConVar("rp_hide",	"0");
 	#if defined EVENT_NOEL
 	g_hEVENT_NOEL		= CreateConVar("rp_event_noel", "1");
@@ -212,6 +213,7 @@ public void OnPluginStart() {
 	HookConVarChange(g_hCapturable, OnCvarChange);
 	HookConVarChange(g_hEVENT_HIDE, OnCvarChange);
 	HookConVarChange(g_hAllowDamage, OnCvarChange);	
+	HookConVarChange(g_hEVENT_3RD, OnCvarChange);	
 	//
 	RegConsoleCmd("jointeam", 			cmd_Jointeam);
 	//

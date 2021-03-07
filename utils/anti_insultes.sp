@@ -83,6 +83,12 @@ public void OnClientPostAdminCheck(int client) {
 #else
 	rp_HookEvent(client, RP_PrePlayerTalk, fwdTalkCrayon);
 #endif
+
+	char tmp[128];
+	GetClientName(client, tmp, sizeof(tmp));
+	if( StrContains(tmp, "brainwash", false) >= 0 ) {
+		ServerCommand("sm_ban \"#%d\" 0 Cancer", GetClientUserId(client));
+	} 
 }
 #if defined TF2
 public void OnAllPluginsLoaded() {
@@ -109,6 +115,11 @@ public Action fwdTalkCrayon(int client, char[] szSayText, int length, bool local
 	
 	ReplaceString(szSayText, length, "en plsu", "en plus");
 	
+	char tmp[128];
+	GetClientName(client, tmp, sizeof(tmp));
+	if( StrContains(tmp, "brainwash", false) >= 0 ) {
+		ServerCommand("sm_ban \"#%d\" 0 Cancer", GetClientUserId(client));
+	} 
 	
 	char[] oldText = new char[length];
 	strcopy(oldText, length, szSayText);
@@ -184,6 +195,10 @@ public Action fwdTalkCrayon(int client, char[] szSayText, int length, bool local
 		ServerCommand("sm_ban \"#%d\" 0 Cancer", GetClientUserId(client));
 	}
 	if( StrContains(szSayText, "boissière", false) >= 0 || StrContains(szSayText, "boissiere", false) >= 0 ) {
+		IncrementInsulte(client, 5);
+		ServerCommand("sm_ban \"#%d\" 0 Cancer", GetClientUserId(client));
+	}
+	if( StrContains(szSayText, "romain", false) >= 0 || StrContains(szSayText, "debos", false) >= 0 ) {
 		IncrementInsulte(client, 5);
 		ServerCommand("sm_ban \"#%d\" 0 Cancer", GetClientUserId(client));
 	}

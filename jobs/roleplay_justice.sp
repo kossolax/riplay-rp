@@ -85,8 +85,6 @@ int g_iTribunalData[3][view_as<int>(td_Max)];
 char g_szJugementDATA[65][3][32];
 bool g_bClientDisconnected[65];
 
-int g_iXpAudience[] = { 10, 20, 30, 40, 50, 60, 80, 100, 120, 150, 180, 220, 250, 300 };
-
 #define isTribunalDisponible(%1) (g_iTribunalData[%1][td_Owner]<=0?true:false)
 #define GetTribunalZone(%1) (%1==1?TRIBUNAL_1:TRIBUNAL_2)
 #define GetTribunalJail(%1) (%1==1?TRIBUJAIL_1:TRIBUJAIL_2)
@@ -239,6 +237,8 @@ public Action Cmd_Jugement(int client, char[] arg) {
 	if( type != 3 ) {
 		Format(query, sizeof(query), "INSERT INTO `rp_csgo`.`rp_users2` (`steamid`, `xp`, `pseudo`) (SELECT `steamid`, '100', 'Tribunal Forum' FROM `rp_report`.`site_report_votes` WHERE `reportid`=%d AND `vote`=%d GROUP BY `steamid`)", id, type == 1 ? 1 : 0);
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
+		
+		rp_ClientXPIncrement(client, 250);
 	}
 	
 	if( type == 1 ) {
@@ -268,6 +268,13 @@ Action Draw_Menu(int client) {
 		return Plugin_Stop;
 	if( rp_GetClientInt(client, i_Job) == 107 && !FormationCanBeMade(type) )
 		return Plugin_Stop;
+	
+	if( rp_GetClientInt(client, i_KillJailDuration) > 1 && GetClientTeam(client) == CS_TEAM_T) {
+		ACCESS_DENIED(client);
+	}
+	if( rp_GetClientInt(client, i_JailTime) > 1 && GetClientTeam(client) == CS_TEAM_T ) {
+		ACCESS_DENIED(client);
+	}
 	
 	
 	if( isTribunalDisponible(type) ) {
@@ -453,9 +460,7 @@ Menu AUDIENCE_Articles(int type, int a, int b, int c) {
 		}
 	}
 	else if( a == 1 && b >= 0 ) {
-		
 		if( StringToInt(g_szArticles[b][4]) == -1 && c != 42 ) {
-			
 			g_iTribunalData[type][td_Dedommagement2] += c;
 			if( g_iTribunalData[type][td_Dedommagement2] < 0 )
 				g_iTribunalData[type][td_Dedommagement2] = 0;
@@ -1244,23 +1249,11 @@ void SQL_Insert(int type, int condamne, int condamnation, int heure, int amende)
 	
 	if( IsValidClient(g_iTribunalData[type][td_AvocatPlaignant]) ) {
 		GetClientAuthId(g_iTribunalData[type][td_AvocatPlaignant], AUTH_TYPE, szSteamID[3], sizeof(szSteamID[]));
-		//rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatPlaignant], rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_Avocat));
-
-		if(rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_LawyerAudience) < 300) {
-			rp_SetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_LawyerAudience, rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_LawyerAudience) + 1);
-			int xp = calculAudienceXp(rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_LawyerAudience));
-			rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatPlaignant], xp);
-		}
+		rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatPlaignant], rp_GetClientInt(g_iTribunalData[type][td_AvocatPlaignant], i_Avocat)/2, true);
 	}
 	if( IsValidClient(g_iTribunalData[type][td_AvocatSuspect]) ) {
 		GetClientAuthId(g_iTribunalData[type][td_AvocatSuspect], AUTH_TYPE, szSteamID[4], sizeof(szSteamID[]));
-		//rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatSuspect], rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_Avocat));
-
-		if(rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_LawyerAudience) < 300) {
-			rp_SetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_LawyerAudience, rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_LawyerAudience) + 1);
-			int xp = calculAudienceXp(rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_LawyerAudience));
-			rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatSuspect], xp);
-		}
+		rp_ClientXPIncrement(g_iTribunalData[type][td_AvocatSuspect], rp_GetClientInt(g_iTribunalData[type][td_AvocatSuspect], i_Avocat)/2, true);
 	}
 	
 	Format(query, sizeof(query), "INSERT INTO `rp_audiences` (`id`, `juge`, `plaignant`, `suspect`, `avocat-plaignant`, `avocat-suspect`, `temps`, `condamne`, `charges`, `condamnation`, `heure`, `amende`, `dedommage`) VALUES(NULL,");
@@ -1338,20 +1331,6 @@ float getAvocatRatio(int client) {
 	if (pay < 300)	return 0.75;
 	return 1.0;
 	
-}
-int calculAudienceXp(int numb) {
-	int value = 0;
-
-	for(int i = 0; i < sizeof(g_iXpAudience); i++) {
-		if(g_iXpAudience[i] <= numb)
-			value = i;
-	}
-
-	if(value > 0) {
-		value = g_iXpAudience[value] / 2;
-	}
-
-	return value;
 }
 // ----------------------------------------------------------------------------
 public Action Cmd_ItemEnquete(int args) {

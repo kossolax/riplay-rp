@@ -64,6 +64,7 @@ public bool fwdCanStart(int client) {
 }
 
 public void Q1_Start(int objectiveID, int client) {
+	g_iStep[client] = 0;
 	if( !Client_HasWeapon(client, "weapon_melee") ) {
 		ServerCommand("rp_giveitem_melee %s 0 %d 0", QUEST_WEAPON, client);
 	}

@@ -70,7 +70,7 @@ public int Native_rp_WeaponMenu_Add(Handle plugin, int numParams) {
 	
 	char weapon[BM_WeaponNameSize];
 	int index = GetEntProp(weaponID, Prop_Send, "m_iItemDefinitionIndex");
-	CSGO_GetItemDefinitionNameByIndex(index, weapon, sizeof(weapon));
+	eItems_GetWeaponClassNameByDefIndex(index, weapon, sizeof(weapon));
 	if( StrEqual(weapon, "weapon_default") ) {
 		GetEntityClassname(weaponID, weapon, sizeof(weapon));
 	}
@@ -88,6 +88,7 @@ public int Native_rp_WeaponMenu_Add(Handle plugin, int numParams) {
 	data[view_as<int>(BM_PvP)] = rp_GetWeaponGroupID(weaponID);
 	data[view_as<int>(BM_Type)] = view_as<int>(rp_GetWeaponBallType(weaponID));
 	data[view_as<int>(BM_Store)] = g_iWeaponFromStore[weaponID];
+	data[view_as<int>(BM_RoF)] = view_as<int>(g_flWeaponFireRate[weaponID]);
 	
 	hBuyMenu.Reset();
 	DataPackPos pos = hBuyMenu.ReadCell();
@@ -154,6 +155,51 @@ public int Native_rp_WeaponMenu_Get(Handle plugin, int numParams) {
 	SetNativeString(3, weapon, sizeof(weapon));
 	SetNativeArray(4, data, view_as<int>(BM_Max));
 }
+public int Native_rp_WeaponMenu_Give(Handle plugin, int numParams) {
+	DataPack hBuyMenu = view_as<DataPack>(GetNativeCell(1));
+	DataPackPos pos = GetNativeCell(2);
+	int client = GetNativeCell(3);
+	
+	char weapon[BM_WeaponNameSize];
+	int[] data = new int[view_as<int>(BM_Max)];
+	hBuyMenu.Position = pos;
+	hBuyMenu.ReadString(weapon, sizeof(weapon));
+	
+	for (int i = 0; i < view_as<int>(BM_Max); i++) {
+		data[i] = hBuyMenu.ReadCell();
+	}
+
+	Format(weapon, sizeof(weapon), "weapon_%s", weapon);
+		
+	int wepid = GivePlayerItem(client, weapon);
+	if (data[BM_Munition] != -1) {
+		Weapon_SetPrimaryClip(wepid, data[BM_Munition]);
+		Weapon_SetPrimaryAmmoCount(wepid, data[BM_Chargeur]);
+		
+		SetEntProp(wepid, Prop_Send, "m_iClip1", data[BM_Munition]);
+		SetEntProp(wepid, Prop_Send, "m_iPrimaryReserveAmmoCount", data[BM_Chargeur]);
+	}
+	RemovePlayerItem(client, wepid);
+	
+	rp_SetWeaponBallType(wepid, view_as<enum_ball_type>(data[BM_Type]));
+	if (data[BM_PvP] > 0)
+		rp_SetWeaponGroupID(wepid, rp_GetClientGroupID(client));
+	
+	if (data[BM_Munition] != -1) {
+		Weapon_SetPrimaryClip(wepid, data[BM_Munition]);
+		Weapon_SetPrimaryAmmoCount(wepid, data[BM_Chargeur]);
+		
+		SetEntProp(wepid, Prop_Send, "m_iClip1", data[BM_Munition]);
+		SetEntProp(wepid, Prop_Send, "m_iPrimaryReserveAmmoCount", data[BM_Chargeur]);
+	}
+	
+	float rof = view_as<float>(data[view_as<int>(BM_RoF)]);
+	g_flWeaponFireRate[wepid] = data[view_as<int>(BM_RoF)];
+	
+	EquipPlayerWeapon(client, wepid);
+	
+	return wepid;
+}
 
 
 public Action WeaponEquip(int client, int weapon) {
@@ -163,23 +209,30 @@ public Action WeaponEquip(int client, int weapon) {
 }
 
 void showGraveMenu(int client) {
-	char tmp[128];
+	char tmp[128], tmp2[128];
+	
 	if( !g_bUserData[client][b_HasGrave] )
 		return;
-	if( !IsPlayerAlive(client) )
+	if( IsPlayerAlive(client) )
 		return;
 	if( g_bIsInCaptureMode )
 		return;
-	
+	if( !rp_ClientCanDrawPanel(client) )
+		return;
 	
 	Handle menu = CreateMenu(eventTombSwitch);
 	SetMenuTitle(menu, "%T\n ", "Tomb_Dead", client);
 	
-	Format(tmp, sizeof(tmp), "%T", "Tomb_RespawnTomb", client);	AddMenuItem(menu, "tomb", tmp);
-	Format(tmp, sizeof(tmp), "%T", "Tomb_RespawnMap", client);	AddMenuItem(menu, "any", tmp);
+	Format(tmp2, sizeof(tmp2), "[%T]", "Enabled", client);
 	
-	SetMenuExitButton(menu, false);
-	DisplayMenu(menu, client, 5);
+	Format(tmp, sizeof(tmp), "%T%s", "Tomb_RespawnTomb", client, g_bUserData[client][b_SpawnToGrave] ? "" : tmp2);
+	AddMenuItem(menu, "tomb", tmp, g_bUserData[client][b_SpawnToGrave] ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+	
+	Format(tmp, sizeof(tmp), "%T%s", "Tomb_RespawnMap", client, g_bUserData[client][b_SpawnToGrave] ? tmp2 : "");
+	AddMenuItem(menu, "any", tmp, g_bUserData[client][b_SpawnToGrave] ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+	
+	SetMenuExitButton(menu, true);
+	DisplayMenu(menu, client, 3);
 }
 bool CheckBuild(int client, bool showMsg = true) {
 	if( IsInVehicle(client) ) {

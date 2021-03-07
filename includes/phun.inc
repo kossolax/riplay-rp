@@ -690,19 +690,21 @@ public bool IsMoveAble(int ent) {
 	if( !HasEntProp(ent, Prop_Send, "m_vecVelocity") && !HasEntProp(ent, Prop_Data, "m_vecAbsVelocity") )
 		return false;
 	
-	
 	GetEdictClassname(ent, classname, sizeof(classname));
-	if( StrContains(classname, "door", false) == 0 )
+	
+	if( StrContains(classname, "rp_moneybag") == 0 )
 		return false;
-	if( StrContains(classname, "prop_p", false) == 0 )
+	if( StrContains(classname, "door") == 0 )
+		return false;
+	if( StrContains(classname, "prop_p") == 0 )
 		return true;
-	if( StrContains(classname, "weapon_", false) == 0 )
+	if( StrContains(classname, "weapon_") == 0 )
 		return true;
-	if( StrContains(classname, "chicken", false) == 0 )
+	if( StrContains(classname, "chicken") == 0 )
 		return true;
-	if( StrContains(classname, "rp_", false) == 0 )
+	if( StrContains(classname, "rp_") == 0 )
 		return true;
-	if( StrContains(classname, "bonbon_entity", false) == 0 )
+	if( StrContains(classname, "bonbon_entity") == 0 )
 		return true;
 	
 	return false;
@@ -912,7 +914,8 @@ stock void TargetBeamBox(int client, int target, float vecTarget[3] = {0.0, 0.0,
 	TE_SetupBeamPoints(vecOrigin, vecTarget, _cPhysicBeam, 0, 0, 0, 1.0, 2.0, 2.0, 0, 0.0, color, 0);
 	TE_SendToClient(client);
 	
-	SetupBeamPoints2(vecOrigin, vecTarget, "materials/sprites/physbeam.vmt", 1.0, 2.0, 2.0, color, client);
+	TE_SetupBeamPoints(vecTarget, vecOrigin, _cPhysicBeam, 0, 0, 0, 1.0, 2.0, 2.0, 0, 0.0, color, 0);
+	TE_SendToClient(client);
 	
 	if( target > 0 ) {
 		float position[3], min[3], max[3], f_points[8][3];

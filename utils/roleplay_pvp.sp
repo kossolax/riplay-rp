@@ -30,8 +30,9 @@ enum quest_teams {
 	
 	TEAM_MAX
 };
+
 #define		ACCELERATION_FACTOR	1
-#define		LEAVING_TIME		(30/ACCELERATION_FACTOR)
+#define		LEAVING_TIME		(2*60/ACCELERATION_FACTOR)
 
 // -----------------------------------------------------------------------------------------------------------------
 enum flag_data { data_group, data_skin, data_red, data_green, data_blue, data_time, data_owner, data_lastOwner, flag_data_max };
@@ -44,11 +45,10 @@ Handle g_hGodTimer[65], g_hKillTimer[65];
 bool g_bIsInCaptureMode = false;
 int g_cBeam;
 StringMap g_hGlobalDamage, g_hGlobalSteamID;
-enum damage_data { gdm_shot, gdm_touch, gdm_damage, gdm_hitbox, gdm_elo, gdm_flag, gdm_kill, gdm_dead, gdm_team, gdm_score, gdm_area, gdm_max };
+enum damage_data { gdm_shot, gdm_touch, gdm_damage, gdm_hitbox, gdm_elo, gdm_lastkill_to, gdm_lastkill_by, gdm_flag, gdm_kill, gdm_dead, gdm_team, gdm_score, gdm_area, gdm_group, gdm_max };
 TopMenu g_hStatsMenu;
 TopMenuObject g_hStatsMenu_Shoot, g_hStatsMenu_Head, g_hStatsMenu_Damage, g_hStatsMenu_Flag, g_hStatsMenu_ELO, g_hStatsMenu_SCORE, g_hStatsMenu_KILL, g_hStatsMenu_DEAD, g_hStatsMenu_RATIO;
 int g_iPlayerTeam[2049], g_stkTeam[view_as<int>(TEAM_MAX)][MAXPLAYERS + 1], g_stkTeamCount[view_as<int>(TEAM_MAX)], g_iTeamScore[view_as<int>(TEAM_MAX)];
-int g_iScores[MAX_GROUPS];
 int g_iLeaving[65];
 
 // -----------------------------------------------------------------------------------------------------------------
@@ -469,12 +469,6 @@ public Action FlagThink(Handle timer, any data) {
 	CreateTimer(0.25, FlagThink, data);
 	return Plugin_Handled;
 }
-public Action SDKHideFlag(int from, int to ) {
-	if( g_iFlagData[from][data_owner] == to && rp_GetClientInt(to, i_ThirdPerson) == 0) {
-		return Plugin_Handled;
-	}
-	return Plugin_Continue;
-}
 // -----------------------------------------------------------------------------------------------------------------
 void CAPTURE_Start() {
 	CAPTURE_CHANGE_STATE(ps_begin);
@@ -739,9 +733,6 @@ void STATE_ENTER_BEGIN() {
 	g_bIsInCaptureMode = true;
 	bool botFound = false;
 	
-	for(int i=0; i<MAX_GROUPS; i++)
-		g_iScores[i] = 0;
-	
 	g_iTeamScore[TEAM_RED] = g_iTeamScore[TEAM_BLUE] = 0;
 
 	for(int i=1; i<=MaxClients; i++) {
@@ -919,14 +910,28 @@ void STATE_ENTER_END_OF_ROUND() {
 }
 void STATE_ENTER_REWARD() {
 	char tmp[64], optionsBuff[2][64];
+	
+	int gScore[MAX_GROUPS];
+	StringMapSnapshot KeyList = g_hGlobalDamage.Snapshot();
+	int[] array = new int[gdm_max];
+	int nbrParticipant = KeyList.Length;
+	
+	for (int i = 0; i < nbrParticipant; i++) {
+		KeyList.GetKey(i, tmp, sizeof(tmp));
+		g_hGlobalDamage.GetArray(tmp, array, gdm_max);
+		
+		gScore[array[gdm_group]] += array[gdm_score];
+	}
+	
+	
 	int winner, maxPoint, totalPoints;
 	for(int i=1; i<MAX_GROUPS; i++) {
-		if( maxPoint > g_iScores[i] )
+		if( maxPoint > gScore[i] )
 			continue;
 
 		winner = i;
-		maxPoint = g_iScores[i];
-		totalPoints += g_iScores[i];
+		maxPoint = gScore[i];
+		totalPoints += gScore[i];
 	}
 			
 	rp_GetGroupData(winner, group_type_name, tmp, sizeof(tmp));
@@ -934,6 +939,21 @@ void STATE_ENTER_REWARD() {
 	
 	if( rp_GetCaptureInt(cap_bunker) != winner ) {
 		rp_SetCaptureInt(cap_pvpRow, 1);
+		
+		for (int i = 1; i <= MaxClients; i++) {
+			if( !IsValidClient(i) )
+				continue;
+			
+			if( rp_GetClientKeyAppartement(i, 51) ) {
+				rp_SetClientKeyAppartement(i, 51, false);
+				rp_SetClientInt(i, i_AppartCount, rp_GetClientInt(i, i_AppartCount) - 1);
+			}
+			
+			if( rp_GetClientGroupID(i) == winner ) {
+				rp_SetClientKeyAppartement(i, 51, true );
+				rp_SetClientInt(i, i_AppartCount, rp_GetClientInt(i, i_AppartCount) + 1);
+			}
+		}
 	}
 	else {
 		rp_SetCaptureInt(cap_pvpRow, rp_GetCaptureInt(cap_pvpRow)+1);
@@ -1059,7 +1079,7 @@ void CAPTURE_Reward() {
 				EmitSoundToClientAny(client, g_szSoundList[snd_Congratulations], _, 6, _, _, 1.0);
 			}
 			else {
-				if( array[gdm_flag] >= 1 || array[gdm_kill] >= 1 ) {
+				if( array[gdm_flag] >= 1 || array[gdm_kill] >= 1 || array[gdm_score] >= 50 ) {
 					amount = (array[gdm_score] / 50) + 1;
 					EmitSoundToClientAny(client, g_szSoundList[snd_YouHaveLostTheMatch], _, 6, _, _, 1.0);
 				}
@@ -1069,6 +1089,7 @@ void CAPTURE_Reward() {
 				}
 			}
 			
+			
 			if( amount > 0 ) {
 				char tmp[128];
 				rp_ClientGiveItem(client, 215, amount, true);
@@ -1077,7 +1098,7 @@ void CAPTURE_Reward() {
 				CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu %d %s, en récompense de la capture.", amount, tmp);
 			}
 			
-			rp_ClientXPIncrement(client, array[gdm_score]);
+			rp_ClientXPIncrement(client, array[gdm_score]*2);
 		}
 	}
 }
@@ -1098,11 +1119,13 @@ public Action fwdSpawn(int client) {
 public Action fwdSpawn_ToMetro(Handle timer, any client) {
 	if( IsValidClient(client) ) {
 		teleportToZone(client, METRO_BELMON);
+		setTeamSkin(client, g_hGodTimer[client] != INVALID_HANDLE);
 	}
 }
 public Action fwdSpawn_ToRespawn(Handle timer, any client) {
 	if( g_iPlayerTeam[client] == view_as<int>(TEAM_RED) && IsValidClient(client) ) {
 		teleportToZone(client, ZONE_RESPAWN);
+		setTeamSkin(client, g_hGodTimer[client] != INVALID_HANDLE);
 	}
 }
 bool CanTP(float pos[3], int client) {
@@ -1139,10 +1162,7 @@ public Action fwdDead(int victim, int attacker, float& respawn, int& tdm, float&
 		GDM_RegisterDie(victim);
 		
 		
-		int points = GDM_ELOKill(attacker, victim, dropped);
-		if( dropped )
-			points += RoundFloat(float(points)*0.25);
-			
+		int points = GDM_ELOKill(attacker, victim, dropped);			
 		PrintHintText(attacker, "Kill !\n <font color='#33ff33'>+%d</span> points !", points);
 		g_flClientLastScore[attacker] = GetGameTime();
 		rp_IncrementSuccess(attacker, success_list_killpvp2);
@@ -1197,6 +1217,8 @@ public Action fwdStealItem(int client, int target) {
 	return Plugin_Continue;
 }
 public Action fwdFrame(int client) {
+	static float fLast[65][3];
+	static int count[65];
 	
 	if( g_iCurrentState == view_as<int>(ps_begin) ) {
 		
@@ -1223,22 +1245,34 @@ public Action fwdFrame(int client) {
 	else if( g_iPlayerTeam[client] == view_as<int>(TEAM_RED) || g_iPlayerTeam[client] == view_as<int>(TEAM_BLUE) ) {
 		if( rp_IsInBunkerArea(client) ) {
 			g_iLeaving[client] = 0;
+			float fNow[3];
+			GetClientAbsOrigin(client, fNow);
+			if( GetVectorDistance(fNow, fLast[client]) > 50.0 ) {
+				count[client]++;
+				
+				if( count[client] >= 5 ) {
+					GDM_RegisterWalking(client);
+					count[client] = 0;
+				}
+			}
+			
+			fLast[client] = fNow;
 		}
 		else if( IsPlayerAlive(client) ) {
+
 			g_iLeaving[client]++;
 			
-			if( g_iLeaving[client] >= LEAVING_TIME+30 ) {
+			if( g_iLeaving[client] >= LEAVING_TIME+60 ) {
 				addClientToTeam(client, TEAM_BANNED);
 				rp_SetClientInt(client, i_PVPBannedUntil, GetTime() + 8 * 24 * 60 * 60);
 			}
-			else if( g_iLeaving[client] == LEAVING_TIME ) {
+			else if( g_iLeaving[client] >= LEAVING_TIME && g_iLeaving[client] % 10 == 0 ) {
 				EmitSoundToClientAny(client, g_szSoundList[snd_YouAreLeavingTheBattlefield], _, _, _, _, ANNONCES_VOLUME);
 				warnLeaving(client);
-			}
-			else if( g_iLeaving[client] >= LEAVING_TIME && rp_ClientCanDrawPanel(client) ) {
-				warnLeaving(client);
-			}
+			}			
 		}
+		
+		setTeamSkin(client, g_hGodTimer[client] != INVALID_HANDLE);
 		
 		if( rp_GetClientVehicle(client) <= 0 ) {
 			ClientCommand(client, "firstperson");
@@ -1623,8 +1657,6 @@ void CTF_FlagTouched(int client, int flag) {
 	CreateTimer(0.5, SwitchToFirst, client);
 	
 	EmitSoundToClientAny(client, g_szSoundList[snd_YouHaveTheFlag], _, _, _, _, ANNONCES_VOLUME);
-	
-	//SDKHook(flag, SDKHook_SetTransmit, SDKHideFlag);
 }
 public Action CTF_SpawnFlag_Delay(Handle timer, any ent2) {
 	TeleportEntity(ent2, view_as<float>({30.0, 0.0, 0.0}), view_as<float>({0.0, 90.0, 0.0}), NULL_VECTOR);
@@ -1659,6 +1691,8 @@ void GDM_SaveTeam(int client) {
 	g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
 	
 	array[gdm_team] = g_iPlayerTeam[client];
+	array[gdm_group] = rp_GetClientGroupID(client);
+	
 	g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
 }
 void GDM_RegisterHit(int client, int damage=0, int hitbox=0) {
@@ -1681,7 +1715,16 @@ void GDM_RegisterFlag(int client, int score) {
 	g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
 	array[gdm_flag]++;
 	array[gdm_score] += score;
-	g_iScores[rp_GetClientGroupID(client)] += score;
+	
+	g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
+}
+void GDM_RegisterWalking(int client) {
+	char szSteamID[32];
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID));
+	
+	int[] array = new int[gdm_max];
+	g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
+	array[gdm_score]++;
 	
 	g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
 }
@@ -1693,7 +1736,6 @@ void GDM_RegisterArea(int client) {
 	g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
 	array[gdm_area]++;
 	array[gdm_score]++;
-	g_iScores[rp_GetClientGroupID(client)]++;
 	
 	g_hGlobalDamage.SetArray(szSteamID, array, gdm_max);
 }
@@ -1753,12 +1795,18 @@ int GDM_ELOKill(int client, int target, bool flag = false) {
 	tElo = RoundFloat(float(victim[gdm_elo]) + ELO_FACTEUR_K * (0.0 - tDelta));
 	
 	int tmp = cElo - attacker[gdm_elo];
+	if( attacker[gdm_lastkill_to] != target && victim[gdm_lastkill_by] != client )
+		tmp += 20;
+	if( flag )
+		tmp += 10;
+	
 	g_iTeamScore[ g_iPlayerTeam[client] ] += tmp;
+	
 	attacker[gdm_score] += tmp;
 	attacker[gdm_elo] = cElo;
+	
 	victim[gdm_elo] = tElo;
 	
-	g_iScores[rp_GetClientGroupID(client)] += tmp;
 	rp_SetClientInt(client, i_ELO, cElo);
 	rp_SetClientInt(target, i_ELO, tElo);
 	
@@ -1884,7 +1932,6 @@ void GDM_Resume() {
 void Client_SetSpawnProtect(int client, bool status) {
 	if( status == true ) {
 		rp_HookEvent(client, RP_OnPlayerDead, fwdGodPlayerDead);
-		SDKHook(client, SDKHook_SetTransmit, fwdGodHideMe);
 		SDKHook(client, SDKHook_PreThink, fwdGodThink);
 		float duration = 10.0;
 		if( g_iPlayerTeam[client] == view_as<int>(TEAM_RED) )
@@ -1894,10 +1941,11 @@ void Client_SetSpawnProtect(int client, bool status) {
 		g_hGodTimer[client] = CreateTimer(duration, GOD_Expire, client);
 		SetEntProp(client, Prop_Data, "m_takedamage", 0);
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez %d secondes de spawn-protection.", RoundFloat(duration));
+		
+		setTeamSkin(client, true);	
 	}
 	else {
 		rp_UnhookEvent(client, RP_OnPlayerDead, fwdGodPlayerDead);
-		SDKUnhook(client, SDKHook_SetTransmit, fwdGodHideMe);
 		SDKUnhook(client, SDKHook_PreThink, fwdGodThink);
 		if( g_hGodTimer[client] != INVALID_HANDLE )
 			delete g_hGodTimer[client];
@@ -1909,16 +1957,11 @@ void Client_SetSpawnProtect(int client, bool status) {
 	}
 }
 public Action fwdGodThink(int client) {
-	int wep = Client_GetWeapon(client, "weapon_knife");
+	int wep = Client_GetWeapon(client, "weapon_fists");
 	if( wep > 0 && IsValidEdict(wep) && IsValidEntity(wep) ) {
 		SetEntPropFloat(wep, Prop_Send, "m_flNextPrimaryAttack", GetGameTime() + 0.25);
 		SetEntPropFloat(wep, Prop_Send, "m_flNextSecondaryAttack", GetGameTime() + 0.25);
 	}
-}
-public Action fwdGodHideMe(int client, int target) {
-	if( client != target )
-		return Plugin_Handled;
-	return Plugin_Continue;
 }
 public Action fwdGodPlayerDead(int client, int attacker, float& respawn, int& tdm, float& ctx) {
 	Client_SetSpawnProtect(client, false);
@@ -2101,6 +2144,8 @@ void shuffleTeams() {
 	int sPlayers[MAXPLAYERS][2];
 	int pCount = 0;
 	
+	int def = 0, att = 0;
+	
 	for (int i = 1; i <= MaxClients; i++) {
 		if( !IsValidClient(i) )
 			continue;
@@ -2109,20 +2154,55 @@ void shuffleTeams() {
 			continue;
 		
 		if( rp_GetClientGroupID(i) == rp_GetCaptureInt(cap_bunker) ) {
-			addClientToTeam(i, TEAM_RED);
+			def++;
 		}
 		else {
-			sPlayers[pCount][0] = i;
-			sPlayers[pCount][1] = rp_GetClientInt(i, i_ELO) + GetRandomInt(-50, 50);
-			pCount++;
+			att++;
 		}
 	}
 	
-	SortCustom2D(sPlayers, pCount, Sort_ByELO);
-	
-	for (int i = 0; i < pCount; i++) {
-		// addClientToTeam(sPlayers[i][0], teams[lastTeam++ % sizeof(teams)]);
-		addClientToTeam(sPlayers[i][0], getWorstTeam());
+	if( def <= att ) {
+		for (int i = 1; i <= MaxClients; i++) {
+			if( !IsValidClient(i) )
+				continue;
+			
+			if ( g_iPlayerTeam[i] != view_as<int>(TEAM_PENDING) )
+				continue;
+			
+			if( rp_GetClientGroupID(i) == rp_GetCaptureInt(cap_bunker) ) {
+				addClientToTeam(i, TEAM_RED);
+			}
+			else {
+				sPlayers[pCount][0] = i;
+				sPlayers[pCount][1] = rp_GetClientInt(i, i_ELO);
+				pCount++;
+			}
+		}
+		
+		SortCustom2D(sPlayers, pCount, Sort_ByELO);
+		
+		for (int i = 0; i < pCount; i++) {
+			addClientToTeam(sPlayers[i][0], getWorstTeam());
+		}
+	}
+	else {
+		for (int i = 1; i <= MaxClients; i++) {
+			if( !IsValidClient(i) )
+				continue;
+			
+			if ( g_iPlayerTeam[i] != view_as<int>(TEAM_PENDING) )
+				continue;
+			
+			sPlayers[pCount][0] = i;
+			sPlayers[pCount][1] = rp_GetClientInt(i, i_ELO);
+			pCount++;
+		}
+		
+		SortCustom2D(sPlayers, pCount, Sort_ByELO);
+		
+		for (int i = 0; i < pCount; i++) {
+			addClientToTeam(sPlayers[i][0], teams[lastTeam++ % sizeof(teams)]);
+		}
 	}
 }
 int getWorstTeam() {
@@ -2141,10 +2221,24 @@ public int Sort_ByELO(int[] a, int[] b, const int[][] array, Handle hndl) {
 	return b[1] - a[1];
 }
 
-void setTeamSkin(int client) {
-	if( g_iPlayerTeam[client] == view_as<int>(TEAM_RED) )
-		SetEntityModel(client, "models/player/custom_player/legacy/ctm_sas.mdl");
-	else if( g_iPlayerTeam[client] == view_as<int>(TEAM_BLUE) )
-		SetEntityModel(client, "models/player/custom_player/legacy/tm_phoenix.mdl");
-	rp_ClientColorize(client);
+void setTeamSkin(int client, bool invisible = false ) {
+	char path[PLATFORM_MAX_PATH];
+	
+	if( IsPlayerAlive(client) ) {
+		Entity_GetModel(client, path, sizeof(path));
+		
+		if( g_iPlayerTeam[client] == view_as<int>(TEAM_RED) ) {
+			if( !StrEqual(path, "models/player/custom_player/legacy/ctm_sas.mdl") )
+				SetEntityModel(client, "models/player/custom_player/legacy/ctm_sas.mdl");
+		}
+		else if( g_iPlayerTeam[client] == view_as<int>(TEAM_BLUE) ) {
+			if( !StrEqual(path, "models/player/custom_player/legacy/tm_phoenix.mdl") )
+				SetEntityModel(client, "models/player/custom_player/legacy/tm_phoenix.mdl");
+		}
+	}
+	
+	if( invisible )
+		rp_ClientColorize(client, {0, 0, 0, 0});
+	else
+		rp_ClientColorize(client);
 }

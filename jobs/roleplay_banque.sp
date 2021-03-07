@@ -608,6 +608,10 @@ public Action DamageATM(int victim, int &attacker, int &inflictor, float &damage
 		damage *= 25.0;
 		return Plugin_Changed;
 	}
+	else if( !Entity_CanBeBreak(victim, attacker) ) {
+		damage = 0.0;
+		return Plugin_Changed;
+	}
 	
 	return Plugin_Continue;
 }
@@ -652,10 +656,10 @@ void DisplayMetroMenu(int client) {
 	AddMenuItem(menu, "metro_pvp", 		tmp, (zone == 200) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	
 	Format(tmp, sizeof(tmp), "%T", "Metro_Hell", client);
-	AddMenuItem(menu, "metro_event", tmp, GetConVarInt(g_hEVENT) != 5? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+	AddMenuItem(menu, "metro_mine", tmp, (zone == 155) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	
 	if( rp_GetClientKeyAppartement(client, 50) ) {
-		Format(tmp, sizeof(tmp), "%T", "Metro_Event", client);
+		Format(tmp, sizeof(tmp), "%T", "Metro_Villa", client);
 		AddMenuItem(menu, "metro_villa", tmp, (zone == 245) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	}
 	
@@ -679,7 +683,7 @@ public int eventMetroMenu(Handle menu, MenuAction action, int client, int param2
 		
 		int Max, i, hours, min, iLocation[MAX_LOCATIONS];
 		
-		for( i=0; i<150; i++ ) {
+		for( i=0; i<MAX_LOCATIONS; i++ ) {
 			rp_GetLocationData(i, location_type_base, tmp, sizeof(tmp));
 			
 			if( StrEqual(tmp, options, false) ) {
@@ -861,6 +865,7 @@ public Action BuildingSIGN_post(Handle timer, any entity) {
 	
 	SetEntProp(entity, Prop_Data, "m_takedamage", 2);
 	HookSingleEntityOutput(entity, "OnBreak", BuildingSIGN_break);
+	SDKHook(entity, SDKHook_OnTakeDamage, DamageMachine);
 	
 	g_iSignPermission[entity] = 1;
 	g_hSignData[entity] = new ArrayList(255);
@@ -870,6 +875,13 @@ public Action BuildingSIGN_post(Handle timer, any entity) {
 	g_hSignData[entity].PushString(tmp);
 	
 	return Plugin_Handled;
+}
+public Action DamageMachine(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
+	if( !Entity_CanBeBreak(victim, attacker) ) {
+		damage = 0.0;
+		return Plugin_Changed;
+	}
+	return Plugin_Continue;
 }
 public void OnEntityDestroyed(int entity) {
 	if( entity > 0 && g_hSignData[entity] ) {

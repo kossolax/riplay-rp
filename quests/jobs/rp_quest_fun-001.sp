@@ -28,6 +28,7 @@
 
 
 int g_iQuest, g_iDuration[MAXPLAYERS + 1], g_iStep[MAXPLAYERS + 1], g_iVehicle[MAXPLAYERS+1], g_iEssai[MAXPLAYERS + 1], g_iQ2[MAXPLAYERS + 1], g_iSkip[MAXPLAYERS+1];
+int g_iObjectiveID[MAXPLAYERS + 1];
 float g_flTemps[MAXPLAYERS + 1], g_flBestTime[MAXPLAYERS + 1];
 
 bool g_bVerif[MAXPLAYERS + 1], g_bRecompense[MAXPLAYERS + 1];
@@ -92,6 +93,11 @@ public bool fwdCanStart(int client)
 			continue;
 			
 		if(rp_GetClientJobID(i) == 51)
+			return true;
+	}
+	
+	for (int i = 50; i < 200; i++) { // villa + garage
+		if( rp_GetClientKeyAppartement(client, i) )
 			return true;
 	}
 	
@@ -305,12 +311,9 @@ public void Q3_Frame(int objectiveID, int client)
 	}
 	
 	g_iDuration[client]--;
+	g_iObjectiveID[client] = objectiveID;
 	
-	if (g_iStep[client] == CHECKPOINTS)
-	{
-		rp_QuestStepComplete(client, objectiveID);
-	}
-	else if (g_iDuration[client] <= 0)
+	if (g_iDuration[client] <= 0)
 		rp_QuestStepFail(client, objectiveID);
 	else {
 		Circle(client, g_iStep[client]);
@@ -355,6 +358,7 @@ public void Q3_Done(int objectiveID, int client)
 		giveGain(client);
 	}	
 	
+	SDKUnhook(g_iVehicle[client], SDKHook_Think, OnThink);
 	g_iEssai[client]--;
 }
 
@@ -481,13 +485,20 @@ public Action Timer_3(Handle timer, any client)
 public void OnThink(int entity)
 {
 	
-	int client = rp_GetVehicleInt(entity, car_owner);
+	int client = Vehicle_GetDriver(entity);
+	
+	if( !IsValidClient(client) )
+		return;
+		
 	if(!IsValidEntity(g_iVehicle[client]))
 		return;
 	
-	if(!IsValidClient(client) || g_iStep[client] == CHECKPOINTS)
-	{
-		SDKUnhook(entity, SDKHook_Think, OnThink);
+
+	if( g_iStep[client] >= CHECKPOINTS ) {
+		if( g_iObjectiveID[client] > 0 ) {
+			rp_QuestStepComplete(client, g_iObjectiveID[client]);
+			g_iObjectiveID[client] = -1;
+		}
 		return;
 	}
 	
@@ -541,8 +552,6 @@ public int MenuEssai(Handle menu, MenuAction action, int client, int param2) {
 		if(StrEqual(options, "1"))
 		{		
 			g_iSkip[client] = 2;
-			
-			SDKUnhook(g_iVehicle[client], SDKHook_Think, OnThink);
 			
 			g_iEssai[client] = 0;
 			g_bRecompense[client] = true;

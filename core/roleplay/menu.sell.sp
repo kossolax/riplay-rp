@@ -15,12 +15,12 @@ void DrawVendreMenu(int client) {
 	int jobID = rp_GetClientJobID(client);
 	
 	if( jobID == 0 || jobID == 1 || jobID == 101 || jobID == 181 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez rien vendre.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T.", "No Access", client);
 		return;
 	}
 	
 	if( g_iUserData[client][i_SearchLVL] >= 4 ) {
-		CPrintToChat(client, "" ...MOD_TAG... " Le Tribunal de princeton a gelé vos ventes car vous êtes recherché depuis trop longtemps.");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Sell_Tribunal", client);
 		return;
 	}
 	
@@ -53,7 +53,7 @@ void DrawVendreMenu(int client) {
 		}
 		
 		if( can == -1 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Cette porte n'est pas une porte d'un appartement.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Sell_Error_Door", client);
 			return;
 		}
 		
@@ -62,7 +62,7 @@ void DrawVendreMenu(int client) {
 				continue;
 			
 			if( g_iDoorOwner_v2[i][can] ) {
-				CPrintToChat(client, "" ...MOD_TAG... " %N{default} est déjà propriétaire de cet appartement.", i);
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Appart_AlreadySell", client);
 				return;
 			}
 		}
@@ -79,7 +79,7 @@ void DrawVendreMenu(int client) {
 		}
 		
 		if( item_id == -1 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas louer cet appartement.");
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Sell_Error_Door", client);
 			return;
 		}
 		
@@ -88,11 +88,10 @@ void DrawVendreMenu(int client) {
 
 		Handle menu = CreateMenu(eventGiveMenu_2Bis); // _2
 
-		Format(title, sizeof(title), "Sélectionner a qui louer cet appartement\n");
+		Format(title, sizeof(title), "%T\n ", "Cmd_ListOfPlayer", client);
 
 		if(g_bIsBlackFriday) {
-			Format(title, sizeof(title), "%sBLACKFRIDAY: -%iPCT de réduction \n", title, g_iBlackFriday[1]);
-			ReplaceString(title, sizeof(title), "PCT", "%%", true);
+			Format(title, sizeof(title), "%s%T\n ", title, "Sell_BlackFriday", client, g_iBlackFriday[1]);
 		}
 
 		SetMenuTitle(menu, title);
@@ -120,23 +119,18 @@ void DrawVendreMenu(int client) {
 		if(playercount > 0) {
 			SetMenuExitButton(menu, true);
 			DisplayMenu(menu, client, MENU_TIME_DURATION);
-		} else {
-			CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas de joueurs éligibles à l'achat de cet appartement.");
 		}
 	}
 	else {
-		char tmp[255];
-		char tmp2[255];
-		char title[256];
+		char tmp[256], tmp2[256], title[256];
 
 		// Setup menu
 		Handle hGiveMenu = CreateMenu(eventGiveMenu_1);
 
-		Format(title, sizeof(title), "Sélectionner un objet à vendre\n");
+		Format(title, sizeof(title), "%T\n ", "Sell_Title", client);
 
 		if(g_bIsBlackFriday) {
-			Format(title, sizeof(title), "%sBLACKFRIDAY: -%iPCT de réduction \n", title, g_iBlackFriday[1]);
-			ReplaceString(title, sizeof(title), "PCT", "%%", true);
+			Format(title, sizeof(title), "%s%T\n ", title, "Sell_BlackFriday", client, g_iBlackFriday[1]);
 		}
 
 		SetMenuTitle(hGiveMenu, title);
@@ -171,6 +165,11 @@ void DrawVendreMenu(int client) {
 			// Tueur & PvP
 			if( g_iUserData[client][i_Job] == 44 || g_iUserData[client][i_Job] == 45 || g_iUserData[client][i_Job] == 46 ) {
 				if( StrContains(g_szItemListOrdered[i][item_type_extra_cmd], "rp_giveitem_pvp", false) == 0 )
+					continue;
+			}
+			// Tueur & Kidnapping
+			if( g_iUserData[client][i_Job] == 45 || g_iUserData[client][i_Job] == 46 ) {
+				if( StrContains(g_szItemListOrdered[i][item_type_extra_cmd], "kidnapping", false) >= 0 )
 					continue;
 			}
 			// Technicien & Photocopieuse
@@ -220,23 +219,16 @@ public int eventGiveMenu_1(Handle p_hItemMenu, MenuAction p_oAction, int client,
 					int target = rp_GetClientTarget(client);
 					
 					if( !IsValidClient(target) || StringToInt(g_szZoneList[GetPlayerZone(target)][zone_type_type]) != 14 ) {
-						CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser un joueur sur la table d'operation.");
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Sell_Chirurgien", client);
 						return;
 					}
 					if( StringToInt(g_szZoneList[GetPlayerZone(client)][zone_type_type]) != 14 ) {
-						CPrintToChat(client, "" ...MOD_TAG... " Vous devez être sur la table d'operation.");
-						return;
-					}
-
-					if(g_iUserData[client][i_Job] == 13 && g_flUserData[target][fl_TazerTime] > GetGameTime()) {
-						CPrintToChat(client, "" ...MOD_TAG... " Vous ne pouvez pas bénéficier de plusieurs chirurgies en même temps, merci de patienter.");
-						CPrintToChat(target, "" ...MOD_TAG... " %N{default} ne peux pas bénéficier de plusieurs chirurgies en même temps, merci de patienter.", target);
-						
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Sell_Chirurgien", client);
 						return;
 					}
 				}
 				else {
-					CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas chirurgien..");
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Sell_Chirurgien_Job", client);
 					return;
 				}
 			}
@@ -252,12 +244,12 @@ public int eventGiveMenu_1(Handle p_hItemMenu, MenuAction p_oAction, int client,
 					hGiveMenu = CreateMenu(eventGiveMenu_2Bis);
 				}
 				
-				SetMenuTitle(hGiveMenu, "Etes vous sur de vouloir vendre %s?\n ", g_szItemList[i][item_type_name]);
+				SetMenuTitle(hGiveMenu, "%T\n ", "Sell_Confirm", client, g_szItemList[i][item_type_name]);
 				
 				char tmp[64];
 				Format( tmp, 63, "%i_1_%i_0_0", i, type);
 				
-				AddMenuItem(hGiveMenu, tmp, "Je confirme");
+				AddMenuItem(hGiveMenu, tmp, "Yes");
 				
 				SetMenuPagination(hGiveMenu, MENU_NO_PAGINATION);
 				SetMenuExitButton(hGiveMenu, true);
@@ -274,7 +266,7 @@ public int eventGiveMenu_1(Handle p_hItemMenu, MenuAction p_oAction, int client,
 					hGiveMenu = CreateMenu(eventGiveMenu_2Bis);
 				}
 				
-				SetMenuTitle(hGiveMenu, "Sélectionner combien en vendre\n ");
+				SetMenuTitle(hGiveMenu, "%T:\n ", "Sell_Amount", client);
 				
 				AddItemForVending(hGiveMenu, i, type, 1, client);		// 1
 				AddItemForVending(hGiveMenu, i, type, 2, client);		// 2
@@ -366,38 +358,38 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 		if (GetMenuItem(p_hItemMenu, p_iParam2, szMenuItem, sizeof(szMenuItem))) {
 			int target = rp_GetClientTarget(client);
 			if( !IsValidClient(target) ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser un joueur.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_CannotFindTarget", client);
 				return;
 			}
 			if( g_iBlockedTime[target][client] != 0 ) {
 				if( (g_iBlockedTime[target][client]+(6*60)) >= GetTime() ) {
-					CPrintToChat(client, "" ...MOD_TAG... " Ce client ne vous répondra pas.");
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_TargetIgnore", client);
 					return;
 				}
 			}
 			if( client != target && (IsAtBankPoint(client) || IsAtBankPoint(target)) ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Ce joueur est trop proche d'un distributeur pour effectuer une transaction.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_Command_Here", client);
 				return;
 			}
 			
 			if( g_iUserData[target][i_SearchLVL] >= 4 ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Le Tribunal de princeton a gelé vos achats car vous êtes recherché depuis trop longtemps.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Buy_Tribunal", client);
 				return;
 			}
 			
 			if( (GetZoneBit(GetPlayerZone(client))  & BITZONE_BLOCKSELL) ||
 				(StringToInt(g_szZoneList[ GetPlayerZone(target) ][zone_type_bit]) & BITZONE_BLOCKSELL)
 				) {
-				CPrintToChat(client, "" ...MOD_TAG... " Il n'est pas possible de vendre dans cette zone.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_Command_Here", client);
 				return;
 			}
 			
 			if( GetClientMenu(target) != MenuSource_None && GetClientMenu(target) != MenuSource_RawPanel ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Ce joueur semble occupé.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_TargetIgnore", client);
 				return;
 			}
 			if( !IsTutorialOver(target) ) {
-				CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas terminé le tutorial.", target);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_TargetIgnore", client);
 				return;
 			}
 			
@@ -420,18 +412,21 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 			}
 			else if( StrContains(buffer, "justice") == 0 ) {
 				if( !(rp_GetClientJobID(target) == 101 && GetClientTeam(target) == CS_TEAM_CT) ) {
-					CPrintToChat(client, "" ...MOD_TAG... " %N{default} doit être un membre de la justice pour utiliser ce type de contrat.");
+					GetClientName2(target, name, sizeof(name), false);
+					CPrintToChat(client, "" ...MOD_TAG... "%T", "Sell_Contrat_Justice", client, name);
 					return;
 				}
 				type = 1004;
 			}
 			else if( StrContains(buffer, "kidnapping") == 0 ) {
 				if( g_bEvent_Kidnapping == true ) {
-					CPrintToChat(client, "" ...MOD_TAG... " Impossible d'effectuer un autre kidnapping avant 6h, midi, 18h ou minuit.");
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Sell_Contrat_Kidnapping");
 					return;
 				}
 				if( g_iUserData[target][i_PlayerLVL] < 306 ) {
-					CPrintToChat(client, "" ...MOD_TAG... " %N{default} doit être au moins de niveau 306 \"Haut conseillé\", afin d'effectuer un contrat kidnapping.", target);
+					rp_GetLevelData(level_haut_conseiller, rank_type_name, tmp, sizeof(tmp));
+					GetClientName2(target, name, sizeof(name), false);
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Sell_Contrat_Level", client, name, 306, tmp);
 					return;
 				}
 				type = 1005;
@@ -443,12 +438,13 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 				type = 1007;
 			}
 			else {
-				CPrintToChat(client, "" ...MOD_TAG... " ERR. Type de contrat inconnu.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_FromServer", client);
 				return;
 			}
 			
 			Handle hGiveMenu = CreateMenu(eventGiveMenu_2Bis);
-			Format(tmp, sizeof(tmp), "%N vous propose un %s\nQui souhaitez-vous assassiner ?\n ", client, g_szItemList[StringToInt(data[0])][item_type_name]);
+			GetClientName2(client, name, sizeof(name), true);
+			Format(tmp, sizeof(tmp), "%T\n ", "Sell_Ask_Contrat", target, name, g_szItemList[StringToInt(data[0])][item_type_name]);
 			SetMenuTitle(hGiveMenu, tmp);
 			
 			
@@ -486,33 +482,28 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 					continue;
 				
 				if( type == 1005 && rp_ClientFloodTriggered(0, i, fd_kidnapping) ) {
-					Format(name, sizeof(name), "%N - Trop de kidnapping", i);
 					AddMenuItem(hGiveMenu, "_", name, ITEMDRAW_DISABLED);
 					count++;
 					continue;
 				}
 				
 				if( g_iUserData[i][i_ContratTotal] >= 2 && type != 1004 ) {
-					Format(name, sizeof(name), "%N - Trop de contrat", i);
 					AddMenuItem(hGiveMenu, "_", name, ITEMDRAW_DISABLED);
 					count++;
 					continue;
 				}
 				if( IsClientInJail(i) && type != 1004 ) {
-					Format(name, sizeof(name), "%N - En jail", i);
 					AddMenuItem(hGiveMenu, "_", name, ITEMDRAW_DISABLED);
 					count++;
 					continue;
 				}
 				if( g_bUserData[i][b_IsAFK] && type != 1004  ) {
-					Format(name, sizeof(name), "%N - AFK", i);
 					AddMenuItem(hGiveMenu, "_", name, ITEMDRAW_DISABLED);
 					count++;
 					continue;
 				}
 				
 				if( GetGroupPrimaryID(i) > 0 && g_bIsInCaptureMode ) {
-					Format(name, sizeof(name), "%N - Capture en cours", i);
 					AddMenuItem(hGiveMenu, "_", name, ITEMDRAW_DISABLED);
 					count++;
 					continue;
@@ -564,35 +555,35 @@ public int eventGiveMenu_2Bis(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 			
 			if( !IsValidClient(target) ) {
 				DrawVendreMenu(client);
-				CPrintToChat(client, "" ...MOD_TAG... " Vous devez viser un joueur.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_CannotFindTarget", client);
 				return;
 			}
 			
 			
 			if( g_iBlockedTime[target][client] != 0 ) {
 				if( (g_iBlockedTime[target][client]+(6*60)) >= GetTime() ) {
-					CPrintToChat(client, "" ...MOD_TAG... " Ce client ne vous répondra pas.");
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_TargetIgnore", client);
 					return;
 				}
 			}
 			if( client != target && (IsAtBankPoint(client) || IsAtBankPoint(target)) ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Ce joueur est trop proche d'un distributeur pour effectuer une transaction.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_Command_Here", client);
 				return;
 			}
 			
 			if( (GetZoneBit(GetPlayerZone(client))  & BITZONE_BLOCKSELL) ||
 				(StringToInt(g_szZoneList[ GetPlayerZone(target) ][zone_type_bit]) & BITZONE_BLOCKSELL)
 				) {
-				CPrintToChat(client, "" ...MOD_TAG... " Il n'est pas possible de vendre dans cette zone.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_Command_Here", client);
 				return;
 			}
 			
 			if( GetClientMenu(target) != MenuSource_None && GetClientMenu(target) != MenuSource_RawPanel ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Ce joueur semble occupé.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_TargetIgnore", client);
 				return;
 			}
 			if( !IsTutorialOver(target) ) {
-				CPrintToChat(client, "" ...MOD_TAG... " %N{default} n'a pas terminé le tutorial.", target);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_TargetIgnore", client);
 				return;
 			}
 			
@@ -620,37 +611,39 @@ public int eventGiveMenu_2Bis(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 				prix = prix - ((prix * g_iBlackFriday[1]) / 100);
 			}
 			
-			char tmp[512];
+			char tmp[512], tmp2[128], name[128], name2[128];
+			
+			GetClientName2(client, name, sizeof(name), false);
 			
 			if( StrContains(g_szItemList[id][item_type_extra_cmd], "rp_give_appart_door") == 0 ) {
-				Format(tmp, sizeof(tmp), "%N vous propose d'acheter\n%i %s (n°%s) pour %i$\n", 
-				client, amount, g_szItemList[id][item_type_name], g_szSellingKeys[day][key_type_name], prix );
+				Format(tmp, sizeof(tmp), "%T\n", 
+				"Sell_Ask_Appart", target, name, amount, g_szItemList[id][item_type_name], StringToInt(g_szSellingKeys[day][key_type_name]), prix );
 			}
 			if( StrContains(g_szItemList[id][item_type_extra_cmd], "rp_item_contrat") == 0 ) {
-				Format(tmp, sizeof(tmp), "%N vous propose d'acheter\n%s contre %N pour %d$\n", 
-				client, g_szItemList[id][item_type_name], day, prix);
+				GetClientName2(day, name2, sizeof(name2), false);
+				
+				Format(tmp, sizeof(tmp), "%T\n", 
+				"Sell_Ask_Contrat_Confirm", target, name, g_szItemList[id][item_type_name], name2, prix);
 			}
 			else {
-				Format(tmp, sizeof(tmp), "%N vous propose d'acheter\n%i %s pour %i$\n", 
-				client, amount, g_szItemList[id][item_type_name], prix);
+				Format(tmp, sizeof(tmp), "%T\n", 
+				"Sell_Ask_Item", target, name, amount, g_szItemList[id][item_type_name], prix);
 			}
 			
 			if( reduction > 0 ) {
-				Format(tmp, sizeof(tmp), "%s Réduction de %dPCT !\n", tmp, reduction);
-				ReplaceString(tmp, sizeof(tmp), "PCT", "%%", true);
+				Format(tmp, sizeof(tmp), "%s%T\n", tmp, "Sell_BlackFriday", target, reduction);
 			}
 
 			if(g_bIsBlackFriday) {
-				Format(tmp, sizeof(tmp), "%sBLACKFRIDAY: -%iPCT de réduction\n", tmp, g_iBlackFriday[1]);
-				ReplaceString(tmp, sizeof(tmp), "PCT", "%%", true);
+				Format(tmp, sizeof(tmp), "%s%T\n", tmp, "Sell_BlackFriday", target, g_iBlackFriday[1]);
 			}
 			
-			Format(tmp, sizeof(tmp), "%s\nConfirmez-vous l'achat?\n ", tmp);
+			Format(tmp, sizeof(tmp), "%s\n%T\n ", tmp, "Buy_Confirm", target);
 
 			char szMoney[128], szBank[128];
 			String_NumberFormat(g_iUserData[target][i_Money],	szMoney,sizeof(szMoney));
 			String_NumberFormat(g_iUserData[target][i_Bank],	szBank,	sizeof(szBank));
-			Format(tmp, sizeof(tmp), "%s\nArgent sur vous: %s$, en banque: %s$\n ", tmp, szMoney, szBank);
+			Format(tmp, sizeof(tmp), "%s\n%T\n ", tmp, "Sell_Money", target, szMoney, szBank);
 			
 			// Setup menu
 			Handle hGiveMenu = CreateMenu(eventGiveMenu_3);
@@ -658,27 +651,24 @@ public int eventGiveMenu_2Bis(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 			
 			
 			Format(tmp, sizeof(tmp), "%i_%i_%i_%i_1_%i_%d", client, id, amount, item_type, day, reduction);
+			Format(tmp2, sizeof(tmp2), "%T", "Sell_PayCash", target);
+			AddMenuItem(hGiveMenu, tmp, tmp2);
 			
-			AddMenuItem(hGiveMenu, tmp, "Je confirme l'achat");
-			
-			if( g_bUserData[target][b_HaveCard] == 1 ) {
-				Format(tmp, sizeof(tmp), "%i_%i_%i_%i_5_%i_%d", client, id, amount, item_type, day, reduction);
-				AddMenuItem(hGiveMenu, tmp, "Je souhaite payer via ma carte bancaire.");
-			}
-			else {
-				Format(tmp, sizeof(tmp), "%i_%i_%i_%i_5_%i_%d", client, id, amount, item_type, day, reduction);
-				AddMenuItem(hGiveMenu, tmp, "Je souhaite payer via ma carte bancaire.", ITEMDRAW_DISABLED);
-			}
+			Format(tmp, sizeof(tmp), "%i_%i_%i_%i_5_%i_%d", client, id, amount, item_type, day, reduction);
+			Format(tmp2, sizeof(tmp2), "%T", "Sell_PayCard", target);
+			AddMenuItem(hGiveMenu, tmp, tmp2, g_bUserData[target][b_HaveCard] == 1 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 			
 			if( target != client ) {
 				Format(tmp, sizeof(tmp), "%i_%i_%i_%i_2_%i_%d", client, id, amount, item_type, day, reduction);
-				AddMenuItem(hGiveMenu, tmp, "Je refuse l'achat");
+				Format(tmp2, sizeof(tmp2), "%T", "Sell_Refuse", target);
+				AddMenuItem(hGiveMenu, tmp, tmp2);
 				
 				
 				AddMenuItem(hGiveMenu, "vide", "-----------------", ITEMDRAW_DISABLED);
 				
 				Format(tmp, sizeof(tmp), "%i_-1_-1_%i_3_%i_%d", client, item_type, day, reduction);
-				AddMenuItem(hGiveMenu, tmp, "Ignorer ce joueur");
+				Format(tmp2, sizeof(tmp2), "%T", "Ignore", target);
+				AddMenuItem(hGiveMenu, tmp, tmp2);
 			}
 			SetMenuExitButton(hGiveMenu, true);
 			DisplayMenu(hGiveMenu, target, MENU_TIME_DURATION/2);
@@ -696,7 +686,7 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 		
 		if (GetMenuItem(p_hItemMenu, p_iParam2, szMenuItem, sizeof(szMenuItem))) {
 			
-			char data[7][32];
+			char data[7][32], name[128];
 			ExplodeString(szMenuItem, "_", data, sizeof(data), sizeof(data[]));
 			
 			int vendeur = StringToInt(data[0]);
@@ -710,16 +700,17 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			
 			if( type == 3 ) {
 				g_iBlockedTime[client][vendeur] = GetTime();
-				CPrintToChat(vendeur, "" ...MOD_TAG... " Le client a refusé l'achat et vous ignorera pour 6 heures.");
-				CPrintToChat(client, "" ...MOD_TAG... " Vous ignorerez les demandes d'achat de %N{default} pour 6 heures.", vendeur);
+				
+				GetClientName2(vendeur, name, sizeof(name), false);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Ignore_For", name, 6);
 				return;
 			}
 			if( type == 2 ) {
-				CPrintToChat(vendeur, "" ...MOD_TAG... " Le client a refusé l'achat.");
+				CPrintToChat(vendeur, "" ...MOD_TAG... " %T", "Sell_Refused", vendeur);
 				return;
 			}
 			if( IsTueur(vendeur) && g_iUserData[vendeur][i_ToKill] != 0 && IsValidClient(g_iUserData[vendeur][i_ToKill]) && StrContains(g_szItemList[ item_id ][item_type_extra_cmd], "rp_item_contrat") == 0) {
-				CPrintToChat(vendeur, "" ...MOD_TAG... " Vous êtes déjà en contrat.");
+				CPrintToChat(vendeur, "" ...MOD_TAG... " %T", "Sell_Refused", vendeur);
 				return;
 			}
 			
@@ -741,7 +732,7 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			}
 
 			if( item_type == 0 && StrContains(g_szItemList[item_id][item_type_extra_cmd], "rp_item_respawn") == 0 && IsPlayerAlive(client) ) {
-				CPrintToChat(vendeur, "" ...MOD_TAG... " Le joueur est en vie.");
+				CPrintToChat(vendeur, "" ...MOD_TAG... " %T", "Sell_Refused", vendeur);
 				return;
 			}
 			bool hidden = false;
@@ -777,7 +768,8 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 					hidden = true;
 					
 					if( rp_GetClientItem(client, ITEM_CHEQUE) <= 0 ) {
-						CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez plus de chèque.");
+						rp_GetItemData(ITEM_CHEQUE, item_type_name, name, sizeof(name));
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemMissing", client, name);
 						return;
 					}
 					
@@ -786,7 +778,7 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			}
 			
 			if( !IsValidClient(vendeur) ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Votre vendeur s'est déconnecté.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_TargetIgnore", client);
 				return;
 			}
 			
@@ -796,8 +788,8 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			
 			if( type == 5 ) {
 				if( g_iUserData[client][i_Bank] < RoundFloat(prixItem - reduc) ) {
-					CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent.");
-					CPrintToChat(vendeur, "" ...MOD_TAG... " Le client n'a pas assez d'argent.");
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_NotEnoughtMoney", client);
+					CPrintToChat(vendeur, "" ...MOD_TAG... " %T", "Sell_Refused", vendeur);
 					
 					if( hidden ) {
 						rp_GetClientItem(client, ITEM_CHEQUE);
@@ -808,8 +800,8 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			}
 			else {
 				if( g_iUserData[client][i_Money] < RoundFloat(prixItem - reduc) ) {
-					CPrintToChat(client, "" ...MOD_TAG... " Vous n'avez pas assez d'argent.");
-					CPrintToChat(vendeur, "" ...MOD_TAG... " Le client n'a pas assez d'argent.");
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_NotEnoughtMoney", client);
+					CPrintToChat(vendeur, "" ...MOD_TAG... " %T", "Sell_Refused", vendeur);
 					
 					if( hidden ) {
 						rp_ClientGiveItem(client, ITEM_CHEQUE);
@@ -869,8 +861,11 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			}
 			
 			if( item_type == 0 ) {
-				CPrintToChat(vendeur, "" ...MOD_TAG... " Vous avez vendu %i %s à %N.", amount, g_szItemList[ item_id ][item_type_name], client);
-				CPrintToChat(client, "" ...MOD_TAG... " Vous avez acheté %i %s de %N.", amount, g_szItemList[ item_id ][item_type_name], vendeur);
+				GetClientName2(client, name, sizeof(name), false);
+				CPrintToChat(vendeur, "" ...MOD_TAG... " %T", "Sell_Sold", vendeur, amount, g_szItemList[ item_id ][item_type_name], name);
+
+				GetClientName2(vendeur, name, sizeof(name), false);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Sell_Bought", client, amount, g_szItemList[ item_id ][item_type_name], name);
 				
 				if( g_iClient_OLD[vendeur] && !g_bUserData[vendeur][b_LicenseSell] ) {
 					int z = StringToInt(g_szZoneList[GetPlayerZone(vendeur)][zone_type_type]);

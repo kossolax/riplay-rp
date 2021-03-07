@@ -9,6 +9,16 @@
 	#include "roleplay.sp"
 #endif
 
+void UpdateDatabase(int old_version) {
+	int version = old_version;
+	int target_version = 0;
+	
+	
+	
+	if( old_version != target_version ) {
+		ServerCommand("crash");
+	}
+}
 
 void loadServerRules(Handle hQuery) {
 	char split[2] = ";";	
@@ -54,13 +64,15 @@ void LoadServerDatabase() {
 	int longip = GetConVarInt(hostip);
 	
 	Format(strIP, sizeof(strIP),"%d.%d.%d.%d", (longip >> 24) & 0xFF, (longip >> 16) & 0xFF, (longip >> 8 )	& 0xFF, longip & 0xFF);
-	Format(query, sizeof(query), "SELECT `id`, `alias`, `bunkerCap`, `capVilla`, `capItem`, `villaOwner`, U.`name` as `villaOwnerName`, `pvprow`, S.`rules`, `maire`, `annonces`, U2.`name` as `mairieName` FROM `rp_servers` S LEFT JOIN `rp_users` U ON U.`steamid`=S.`villaOwner` LEFT JOIN `rp_users` U2 ON U2.`steamid`=S.`maire` WHERE S.`ip`='%s' AND `port`='%i' LIMIT 1;", strIP, GetConVarInt(port_cvar));
+	Format(query, sizeof(query), "SELECT `id`, `alias`, `bunkerCap`, `capVilla`, `capItem`, `villaOwner`, U.`name` as `villaOwnerName`, `pvprow`, S.`rules`, `maire`, `annonces`, U2.`name` as `mairieName`, `dbversion` FROM `rp_servers` S LEFT JOIN `rp_users` U ON U.`steamid`=S.`villaOwner` LEFT JOIN `rp_users` U2 ON U2.`steamid`=S.`maire` WHERE S.`ip`='%s' AND `port`='%i' LIMIT 1;", strIP, GetConVarInt(port_cvar));
 	
 	Handle hQuery;
 	g_iSID = -1;
 
 	SQL_LockDatabase(g_hBDD);
 	SQL_Query(g_hBDD, "SET NAMES 'utf8'");
+	
+	int dbversion = -1;
 	
 	if ((hQuery = SQL_Query(g_hBDD, query)) == INVALID_HANDLE) {
 		LogToGame(query);
@@ -76,7 +88,6 @@ void LoadServerDatabase() {
 
 			g_iCapture[cap_bunker] = SQL_FetchInt(hQuery, 2);
 			g_iCapture[cap_villa] = SQL_FetchInt(hQuery, 3);
-			//g_iCapture[cap_disableItem] = SQL_FetchInt(hQuery, 5);
 			SQL_FetchString(hQuery, 5, g_szVillaOwner[villaOwnerID], sizeof(g_szVillaOwner[]));
 			if( !SQL_IsFieldNull(hQuery, 6) )
 				SQL_FetchString(hQuery, 6, g_szVillaOwner[villaOwnerName], sizeof(g_szVillaOwner[]));
@@ -99,6 +110,10 @@ void LoadServerDatabase() {
 			
 			if( !SQL_IsFieldNull(hQuery, 11) )
 				SQL_FetchString(hQuery, 11, g_szVillaOwner[maireName], sizeof(g_szVillaOwner[]));
+			
+			int tmp_dbversion = SQL_FetchInt(hQuery, 12);
+			if( tmp_dbversion > dbversion )
+				dbversion = tmp_dbversion;
 		}
 
 		if( g_iSID <= 0 ) {
@@ -107,6 +122,8 @@ void LoadServerDatabase() {
 			return;
 		}
 	}
+	
+	UpdateDatabase(dbversion);
 	
 	Format(query, sizeof(query), "SELECT `bf_date`, `bf_reduction` FROM `rp_servers` WHERE `id` = %i", g_iSID);
 
@@ -1062,7 +1079,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		
 		
 		if( freeassu == 1 && GetGameTime() <= (15.0*60.0) || freeassu == 0 ) {	
-			if( assurance >= 0 ) {
+			if( assurance > 0 ) {
 				int assuWr;
 				if( !g_hSynAssuWritten.GetValue(SteamID, assuWr) ){
 					char szQuery[1024];
@@ -1133,7 +1150,6 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 	SDKHook(Client, SDKHook_PostThink,		OnPostThink);
 	SDKHook(Client, SDKHook_PostThinkPost,	OnPostThinkPost);
 	
-	//SDKHook(Client, SDKHook_SetTransmit,	OnSetTransmit);
 	SDKHook(Client, SDKHook_WeaponCanUse,	OnWeaponCanUse);
 	SDKHook(Client, SDKHook_WeaponCanSwitchTo,	OnWeaponCanSwitchTo);
 	SDKHook(Client, SDKHook_WeaponEquip,	WeaponEquip);
@@ -1396,6 +1412,7 @@ void ItemSave_SetItems(int client, int saveid){
 
 void ItemSave_SetName(int client, int saveid, char[] name){
 	strcopy(g_szItems_SAVE[client][saveid], sizeof(g_szItems_SAVE[][]), name);
+	
 	char query[128];
 	GetClientAuthId(client, AUTH_TYPE, query, sizeof(query), false);
 	Format(query, sizeof(query), "UPDATE rp_itemsaves SET name='%s' WHERE steamid='%s' AND slot=%d", name, query, saveid);

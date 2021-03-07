@@ -50,7 +50,7 @@ void BankATM_transfer(int client, int type) {
 		AddMenuItem(menu, "10000",	"10 000$"); 	// 5
 		AddMenuItem(menu, "100000",	"100 000$"); 	// 6
 		if( type < 3  ) {
-			Format(tmp1, sizeof(tmp1), "%T", "BankATM_transfer_all", client); AddMenuItem(menu, "0", "Tout mon argent"); // 9 
+			Format(tmp1, sizeof(tmp1), "%T", "BankATM_transfer_all", client); AddMenuItem(menu, "0", tmp1); // 9 
 		}
 		
 		SetMenuPagination(menu, false); // ...
@@ -480,34 +480,15 @@ public int BankATM_type(Handle menu, MenuAction action, int client, int param2) 
 				
 				char name[BM_WeaponNameSize];
 				int[] data = new int[view_as<int>(BM_Max)];
-				rp_WeaponMenu_Get(g_iCustomBank[target], view_as<DataPackPos>(StringToInt(expl[1])), name, data);
 				
-				Format(name, sizeof(name), "weapon_%s", name);
+				DataPackPos pos = view_as<DataPackPos>(StringToInt(expl[1]));
 				
-				int iWeaponSlot = -1;
-			
-				for(int lp; lp < MAX_BUYWEAPONS; lp++) {
-					if (strcmp(g_szBuyWeapons[lp][0], name) == 0) {
-						iWeaponSlot = StringToInt(g_szBuyWeapons[lp][2]);
-						break;
-					}
+				rp_WeaponMenu_Get(g_iCustomBank[target], pos, name, data);
+				int wepid = rp_WeaponMenu_Give(g_iCustomBank[target], pos, client);
+				if( wepid > 0 ) {
+					rp_WeaponMenu_Delete(g_iCustomBank[target], pos);	
+					g_iWeaponFromStore[wepid] = data[BM_Store];
 				}
-					
-				int wepid = GivePlayerItem(client, name);
-				
-				rp_SetWeaponBallType(wepid, view_as<enum_ball_type>(data[BM_Type]));
-				if(data[BM_PvP] > 0)
-					rp_SetWeaponGroupID(wepid, rp_GetClientGroupID(client));
-				
-				if( data[BM_Munition] != -1 ) {
-					SetEntProp(wepid, Prop_Send, "m_iClip1", data[BM_Munition]);
-					SetEntProp(wepid, Prop_Send, "m_iPrimaryReserveAmmoCount", data[BM_Chargeur]);
-				}
-				
-				g_iWeaponFromStore[wepid] = data[BM_Store];
-				
-				rp_WeaponMenu_Delete(g_iCustomBank[target], view_as<DataPackPos>(StringToInt(expl[1])));
-					
 			}
 			#if defined EVENT_APRIL
 			else if( StrEqual( options, "admin") ) {
@@ -575,8 +556,10 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 							break;
 						}
 
-						Format(tmp, sizeof(tmp), "save %d", i);			
-						AddMenuItem(menu, tmp, g_szItems_SAVE[client][i]);
+						Format(tmp, sizeof(tmp), "save %d", i);	
+						Format(tmp2, sizeof(tmp2), "%s", g_szItems_SAVE[client][i]);
+						
+						AddMenuItem(menu, tmp, tmp2);
 					}
 				}
 				else if( StringToInt(buff[2]) == 0 ){
@@ -595,7 +578,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 				}
 				else {
 					int config = StringToInt(buff[1]);
-					if( StringToInt(buff[2]) == 1 ){
+					if( StringToInt(buff[2]) == 1 ) {
 						menu = CreateMenu(MenuNothing);
 						SetMenuTitle(menu, "%T\n%s\n ", "DrawBankTransfer_save", client, g_szItems_SAVE[client][config]);
 						
@@ -603,7 +586,8 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 						AddMenuItem(menu, "_", tmp, ITEMDRAW_DISABLED);
 						
 						rp_GetClientNextMessage(client, config, fwdBankSetSaveName);
-					} else if( StringToInt(buff[2]) == 2 ){
+					}
+					else if( StringToInt(buff[2]) == 2 ) {
 						ItemSave_SetItems(client, config);
 						return;
 					}
@@ -875,11 +859,15 @@ public int DrawBankTransfer_4(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 }
 
 public void fwdBankSetSaveName(int client, int save, char[] message) {
-	char tmp[32];
-	SQL_EscapeString(g_hBDD, message, tmp, sizeof(tmp));
+	TrimString(message);
+	
+	char tmp[32], tmp2[32*2+1];
+	Format(tmp, sizeof(tmp), "%s", message);
+	
+	SQL_EscapeString(g_hBDD, tmp, tmp2, sizeof(tmp2));
 	
 	if( strlen(message) >= 3 ) {
-		ItemSave_SetName(client, save, tmp);
+		ItemSave_SetName(client, save, tmp2);
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "DrawBankTransfer_rename_done", client);
 		DrawBankTransfer(client);
 	}

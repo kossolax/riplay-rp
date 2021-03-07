@@ -502,9 +502,10 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 		
 		if( verbose && HasImmo() && !rp_GetClientBool(client, b_IsAFK) ) {
 			if( g_iDirtyCount[appart] < 10 ) {
-				Entity_GetGroundOrigin(client, g_flDirtPos[appart][g_iDirtyCount[appart]]);
-				g_iDirtType[appart][g_iDirtyCount[appart]] = GetRandomInt(1, sizeof(g_cDirt) - 1);
-				g_iDirtyCount[appart]++;
+				Handle dp;
+				CreateDataTimer(0.1, task_AddDirt, dp, TIMER_DATA_HNDL_CLOSE);
+				WritePackCell(dp, client);
+				WritePackCell(dp, appart);
 			}
 		}
 		
@@ -516,11 +517,26 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 	}
 	return Plugin_Continue;
 }
+public Action task_AddDirt(Handle timer, Handle dp) {
+	ResetPack(dp);
+	int client = ReadPackCell(dp);
+	int appart = ReadPackCell(dp);
+	
+	if( IsValidClient(client) && g_iDirtyCount[appart] < 10 ) {
+		
+		Entity_GetGroundOrigin(rp_GetClientEntity(client), g_flDirtPos[appart][g_iDirtyCount[appart]]);
+		 
+		g_iDirtType[appart][g_iDirtyCount[appart]] = GetRandomInt(1, sizeof(g_cDirt) - 1);
+		g_iDirtyCount[appart]++;
+	}
+}
 public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 	rp_HookEvent(client, RP_OnPlayerDataLoaded, fwdLoaded);
 	rp_HookEvent(client, RP_OnPlayerBuild,	fwdOnPlayerBuild);
 	rp_HookEvent(client, RP_OnPlayerUse, fwdOnPlayerUse);
+	rp_HookEvent(client, RP_OnFrameSeconde, fwdOnFrame);
+	
 	
 	g_bDataLoaded[client] = false;
 	for (int i = 0; i < 64; i++) {
@@ -531,8 +547,32 @@ public void OnClientPostAdminCheck(int client) {
 	GetClientAuthId(client, AUTH_TYPE, steamid, sizeof(steamid));
 	Format(query, sizeof(query), "SELECT `appartid`, `props` FROM `rp_appart` WHERE `steamid`='%s';", steamid);
 	SQL_TQuery(rp_GetDatabase(), SQL_QueryProps, query, client, DBPrio_Low);
+}
+public Action fwdOnFrame(int client) {
+	int appart = rp_GetPlayerZoneAppart(client);
+	float src[3], dst[3];
 	
+	if( appart > 0 ) {
+		fwdLoaded(client);
+	}
 	
+	if( appart > 0 && (rp_GetClientKeyAppartement(client, appart)||rp_GetClientJobID(client)==61)  ) {
+		for (int j = 0; j < g_iDirtyCount[appart]; j++) {
+			dst = g_flDirtPos[appart][j];
+			dst[2] += 8.0;
+			
+			TE_SetupBeamRingPoint(dst, 32.0, 33.0, g_cBeam, g_cGlow, 0, 0, 1.0, 8.0, 0.0, {200, 32, 32, 50}, 0, 0);
+			TE_SendToClient(client);
+			
+			if( GetRandomInt(0, 10) ) {
+				GetClientAbsOrigin(client, src);
+				src[2] += 32.0;
+				
+				TE_SetupBeamPoints(src, dst, g_cBeam, g_cGlow, 0, 0, 1.0, 8.0, 8.0, 0, 0.0, { 200, 32, 32, 50 }, 0);
+				TE_SendToClient(client);
+			}
+		}
+	}
 }
 public void SQL_QueryProps(Handle owner, Handle hQuery, const char[] error, any client) {
 	static char save[PLATFORM_MAX_PATH * 1 * 64 + 1024], data[64][PLATFORM_MAX_PATH + 256], row[8][PLATFORM_MAX_PATH];
@@ -609,14 +649,31 @@ public void OnClientDisconnect(int client) {
 public Action fwdLoaded(int client) {
 	
 	if( rp_GetClientBool(client, b_HasVilla) ) {
-		rp_SetClientKeyAppartement(client, 50, true);
-		rp_SetClientInt(client, i_AppartCount, rp_GetClientInt(client, i_AppartCount) + 1);
+		if( rp_GetClientKeyAppartement(client, 50) == false ) {
+			rp_SetClientKeyAppartement(client, 50, true);
+			rp_SetClientInt(client, i_AppartCount, rp_GetClientInt(client, i_AppartCount) + 1);
+		}
+	}
+	else {
+		if( rp_GetClientKeyAppartement(client, 50) == true ) {
+			rp_SetClientKeyAppartement(client, 50, false);
+			rp_SetClientInt(client, i_AppartCount, rp_GetClientInt(client, i_AppartCount) - 1);
+		}
 	}
 	
 	if( rp_GetClientGroupID(client) > 0 && rp_GetCaptureInt(cap_bunker) == rp_GetClientGroupID(client) ) {
-		rp_SetClientKeyAppartement(client, 51, true );
-		rp_SetClientInt(client, i_AppartCount, rp_GetClientInt(client, i_AppartCount) + 1);
+		if( rp_GetClientKeyAppartement(client, 51) == false ) {
+			rp_SetClientKeyAppartement(client, 51, true );
+			rp_SetClientInt(client, i_AppartCount, rp_GetClientInt(client, i_AppartCount) + 1);
+		}
 	}
+	else {
+		if( rp_GetClientKeyAppartement(client, 51) == true ) {
+			rp_SetClientKeyAppartement(client, 51, false);
+			rp_SetClientInt(client, i_AppartCount, rp_GetClientInt(client, i_AppartCount) - 1);
+		}
+	}
+	
 }
 public Action fwdOnPlayerUse(int client) {
 	if( rp_GetClientJobID(client) != 61 )
@@ -1080,7 +1137,7 @@ public int MenuPropAppart(Handle menu, MenuAction action, int client, int param2
 				return;
 			}
 		}
-		if( g_bAppartCanBeSaved[appart] == false ) {
+		if( appart < 50 && g_bAppartCanBeSaved[appart] == false ) {
 			char item_name[128];
 			rp_GetItemData(ITEM_PROP_APPART, item_type_name, item_name, sizeof(item_name));
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
@@ -1390,9 +1447,17 @@ public Action BuildingTomb_post(Handle timer, any entity) {
 	
 	rp_Effect_BeamBox(client, entity, NULL_VECTOR, 0, 255, 100);
 	SetEntProp(entity, Prop_Data, "m_takedamage", 2);
+	SDKHook(entity, SDKHook_OnTakeDamage, DamageMachine);
 	
 	HookSingleEntityOutput(entity, "OnBreak", BuildingTomb_break);
 	return Plugin_Handled;
+}
+public Action DamageMachine(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
+	if( !Entity_CanBeBreak(victim, attacker) ) {
+		damage = 0.0;
+		return Plugin_Changed;
+	}
+	return Plugin_Continue;
 }
 public void BuildingTomb_break(const char[] output, int caller, int activator, float delay) {
 	
@@ -1465,7 +1530,7 @@ void GetClientFrontLocationData( int client, float position[3], float angles[3],
 
 public Action Cmd_InfoColoc(int client){
 	if(rp_GetClientInt(client, i_AppartCount) == 0){
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "Appart_None");
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Appart_None", client);
 		return Plugin_Handled;
 	}
 	char tmp[128];
@@ -1582,7 +1647,7 @@ public void SQL_BedVillaMenu(Handle owner, Handle hQuery, const char[] error, an
 	FormatTime(szDayOfWeek, 11, "%w");
 	FormatTime(szHours, 11, "%H");
 	
-	if( StringToInt(szDayOfWeek) == 0 && StringToInt(szHours) < 21 ) {	// Dimanche avant 21h
+	if( StringToInt(szDayOfWeek) == 5 && StringToInt(szHours) < 21 && rp_GetClientBool(client, b_HasVilla) == false ) {	// Vendredi avant 21h
 		Format(tmp, sizeof(tmp), "%T", "Menu_Villa_Bed", client);
 		AddMenuItem(menu, "miser", tmp);
 	}
@@ -1717,7 +1782,7 @@ public int bedVillaMenu_BED(Handle p_hItemMenu, MenuAction p_oAction, int client
 			FormatTime(szDayOfWeek, 11, "%w");
 			FormatTime(szHours, 11, "%H");
 			
-			if( StringToInt(szDayOfWeek) == 0 && StringToInt(szHours) < 21 ) {	// Dimanche avant 21h
+			if( StringToInt(szDayOfWeek) == 5 && StringToInt(szHours) < 21 ) {	// Vendredi avant 21h
 			
 				GetClientAuthId(client, AUTH_TYPE, sql, sizeof(sql));
 				Format(sql, sizeof(sql), "INSERT INTO `rp_bid` (`steamid`, `amount`) VALUES ('%s', '%d') ON DUPLICATE KEY UPDATE `amount`=`amount`+%d;", sql, amount, amount);
@@ -1834,7 +1899,7 @@ stock int Entity_GetGroundOrigin(int entity, float pos[3]) {
 	target[2] = source[2] - 999999.9;
 	
 	Handle tr;
-	tr = TR_TraceRayFilterEx(source, target, MASK_SOLID_BRUSHONLY, RayType_EndPoint, PVE_Filter, entity);
+	tr = TR_TraceRayFilterEx(source, target, MASK_SOLID_BRUSHONLY, RayType_EndPoint, PVE_Filter);
 	if (tr)
 		TR_GetEndPosition(pos, tr);
 	delete tr;
@@ -1842,8 +1907,6 @@ stock int Entity_GetGroundOrigin(int entity, float pos[3]) {
 public bool PVE_Filter(int entity, int contentsMask, any data) {
 	if( entity == 0 )
 		return true;
-	if( entity == data || entity < MaxClients )
-		return false;
 	return true;
 }
 

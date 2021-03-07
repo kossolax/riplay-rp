@@ -75,7 +75,7 @@ public void Q1_Start(int objectiveID, int client) {
 	menu.AddItem("", "Mon frère, Nous avons une mission pour toi.", ITEMDRAW_DISABLED);
 	menu.AddItem("", "Nous voulons faire plier les banquiers", ITEMDRAW_DISABLED);
 	menu.AddItem("", "Pour ça, vole l'argent des distributeurs", ITEMDRAW_DISABLED);
-	menu.AddItem("", "présents dans les métros de la ville.", ITEMDRAW_DISABLED);
+	menu.AddItem("", "présents dans la ville.", ITEMDRAW_DISABLED);
 	
 	menu.ExitButton = false;
 	menu.Display(client, 60);
@@ -83,7 +83,9 @@ public void Q1_Start(int objectiveID, int client) {
 	g_iDuration[client] = 12 * 60;
 	g_iStep[client] = 0;
 	g_iDoing[client] = objectiveID;
-	g_iDoneDistrib[client][METRO_STATION] = g_iDoneDistrib[client][METRO_PAIX] = g_iDoneDistrib[client][METRO_INNO] = g_iDoneDistrib[client][METRO_BELMON] = 0;
+	for (int i = 0; i < MAX_ZONES; i++)
+		g_iDoneDistrib[client][i] = 0;
+	
 	rp_HookEvent(client, RP_PostPiedBiche, fwdPiedDeBiche);
 }
 public void Q1_Frame(int objectiveID, int client) {

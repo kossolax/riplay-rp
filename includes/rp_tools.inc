@@ -15,8 +15,48 @@
 
 #include <sdkhooks>
 #include <cstrike>
-#include <csgo_items>
+#include <eItems>
 
+stock bool Weapon_IsMelee(int wep) {
+	char classname[64];
+	GetEdictClassname(wep, classname, sizeof(classname));
+	
+	if( StrContains(classname, "weapon_knife") == 0 )
+		return true;
+	if( StrContains(classname, "weapon_melee") == 0 )
+		return true;
+	if( StrContains(classname, "weapon_fists") == 0 )
+		return true;
+	if( StrContains(classname, "weapon_zeus") == 0 || StrContains(classname, "weapon_taser") == 0 )
+		return true;
+	
+	return false;
+}
+stock int rp_GetClientEntity(int client) {
+	
+	int source = GetEntPropEnt(client, Prop_Send, "m_hVehicle");
+	if( source <= 0 )
+		source = rp_GetClientVehiclePassager(client);
+	if( source <= 0 )
+		source = Entity_GetParent(client);
+	if( source <= 0 )
+		source = client;
+	
+	return source;
+}
+stock bool Entity_CanBeBreak(int entity, int client) {
+	char tmp[128];
+	
+	if( IsValidClient(client) ) {
+		if( rp_GetClientJobID(client) == 91 )
+			return false;
+		
+		if( rp_GetZoneBit(rp_GetPlayerZone(entity)) & BITZONE_PERQUIZ )
+			return false;
+	}
+
+	return true;
+}
 stock float Math_Lerp(float a, float b, float n) {
 	return (1 - n) * a + n * b;
 }
@@ -220,8 +260,15 @@ stock void String_WordWrap(char[] s, int wrapline) {
 	int i, k, wraploc, lastwrap;
 	
 	for (i = 0; s[i] != '\0'; ++i, ++wraploc) {
+		
+		if( s[i] == '\n' ) {
+			wraploc = 0;
+			lastwrap = i + 1;
+		}
+		
 		if (wraploc >= wrapline) {
 			for (k = i; k > 0; --k) {
+				
 				if (k - lastwrap <= wrapline && s[k] == ' ') {
 					s[k] = '\n';
 					lastwrap = k + 1;
@@ -662,8 +709,8 @@ stock void rp_ClientSwitchWeapon(int client, int wepid, int target = -1) {
 	g = rp_GetWeaponGroupID(wepid);
 	ammo = Weapon_GetPrimaryClip(wepid);
 	Client_GetWeaponPlayerAmmoEx(client, wepid, ammo1);
-	index = GetEntProp(wepid, Prop_Send, "m_iItemDefinitionIndex");
-	CSGO_GetItemDefinitionNameByIndex(index, wepname, sizeof(wepname));
+	index = GetEntProp(wepid, Prop_Send, "m_iItemDefinitionIndex"); 
+	CSGOItems_GetWeaponClassNameByDefIndex(index, wepname, sizeof(wepname));
 	
 	RemovePlayerItem(client, wepid);
 	RemoveEdict(wepid);
@@ -786,7 +833,7 @@ public Action rp_ClientRemoveProp(int client, int target, int item_id) {
 stock int rp_GetWeaponPrice(int weaponID) {
 	char classname[65], tmp[255], tmp2[255];
 	int index = GetEntProp(weaponID, Prop_Send, "m_iItemDefinitionIndex");
-	CSGO_GetItemDefinitionNameByIndex(index, classname, sizeof(classname));
+	eItems_GetWeaponClassNameByDefIndex(index, classname, sizeof(classname));
 	
 	for (int i = 1; i < MAX_ITEMS; i++) {
 		rp_GetItemData(i, item_type_extra_cmd, tmp, sizeof(tmp));

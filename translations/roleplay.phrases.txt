@@ -7,7 +7,6 @@
 	}
 	"Error_Command_ForNow"
 	{
-		"#format"	"{1:s}"
 		"fr"		"Vous ne pouvez pas utiliser cette commande pour le moment."
 		"en"		"You cannot use this command for now."
 	}
@@ -169,6 +168,22 @@
 		"fr"	"Le code de confirmation est incorrect."
 		"en"	"The confirmation code is incorrect."
 	}
+	"Enabled"
+	{
+		"fr"	"Activé"
+		"en"	"Enabled"
+	}
+	"Disabled"
+	{
+		"fr"	"Désactivé"
+		"en"	"Disabled"
+	}
+	// ----------------------------------------------------------------------------------------------
+	"MOTD"
+	{
+		"fr"	"Pour afficher cette page, appuyez sur [{green}TAB{default}] puis sur le bouton [{green}SITE-WEB{default}] en bas à gauche du tableau des scores."
+		"en"	"To display this page, press [{green}TAB{default}] then the [{green}WEBSITE{default}] button at the bottom left of the scoreboard."
+	}
 	// ----------------------------------------------------------------------------------------------
 	"Pay_Bonus_Appart"
 	{
@@ -279,6 +294,11 @@
 	}
 	
 	// ----------------------------------------------------------------------------------------------
+	"Cmd_ListOfPlayer"
+	{
+		"fr"		"Liste des personnes:"
+		"en"		"List of players:"
+	}
 	// ----------------------------------------------------------------------------------------------
 	"Jobs_All"
 	{
@@ -299,6 +319,11 @@
 	{
 		"fr"	"Personne"
 		"en"	"No one" 
+	}
+	"Job_Advocat"
+	{
+		"fr"	"Avocat"
+		"en"	"Advocate"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Cmd_TargetIsToFar"
@@ -407,7 +432,7 @@
 	"Build_Destroyed"
 	{
 		"#format"	"{1:t}"
-		"fr"	"{1} a été détruite."
+		"fr"	"{1} a été détruit(e)."
 		"en"	"{1} was destroyed."
 	}
 	// ----------------------------------------------------------------------------------------------

@@ -36,19 +36,20 @@ enum Colors
 	Color_D,
 	Color_Purple,
 	Color_Darkrange,
-	Color_Orange
+	Color_Orange,
+	Color_White
 }
 
 /* Colors' properties */
-new String:CTag[][] = {"{default}", "{darkred}", "{pink}", "{green}", "{lightgreen}", "{lime}", "{red}", "{grey}", "{olive}", "{a}", "{lightblue}", "{blue}", "{d}", "{purple}", "{darkorange}", "{orange}"};
-new String:CTagCode[][] = {"\x01", "\x02", "\x03", "\x04", "\x05", "\x06", "\x07", "\x08", "\x09", "\x0A", "\x0B", "\x0C", "\x0D", "\x0E", "\x0F", "\x10"};
-new bool:CTagReqSayText2[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+new String:CTag[][] = {"{default}", "{darkred}", "{pink}", "{green}", "{lightgreen}", "{lime}", "{red}", "{grey}", "{olive}", "{a}", "{lightblue}", "{blue}", "{d}", "{purple}", "{darkorange}", "{orange}", "{white}"};
+new String:CTagCode[][] = {"\x01", "\x02", "\x03", "\x04", "\x05", "\x06", "\x07", "\x08", "\x09", "\x0A", "\x0B", "\x0C", "\x0D", "\x0E", "\x0F", "\x10", "\x01"};
+new bool:CTagReqSayText2[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
 new bool:CEventIsHooked = false;
 new bool:CSkipList[MAXPLAYERS+1] = {false,...};
 
 /* Game default profile */
-new bool:CProfile_Colors[] = {true, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false};
-new CProfile_TeamIndex[] = {NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX};
+new bool:CProfile_Colors[] = {true, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+new CProfile_TeamIndex[] = {NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX, NO_INDEX};
 new bool:CProfile_SayText2 = false;
 
 /**
@@ -482,6 +483,7 @@ stock CSetupProfile()
 		CProfile_Colors[Color_Purple] = true;
 		CProfile_Colors[Color_Grey] = true;
 		CProfile_Colors[Color_Orange] = true;
+		CProfile_Colors[Color_White] = true;
 		CProfile_TeamIndex[Color_Red] = 2;
 		CProfile_TeamIndex[Color_Blue] = 3;
 		CProfile_SayText2 = true;

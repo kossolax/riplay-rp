@@ -15,7 +15,7 @@
 #include <colors_csgo>	// https://forums.alliedmods.net/showthread.php?p=2205447#post2205447
 #include <smlib>		// https://github.com/bcserv/smlib
 #include <emitsoundany> // https://forums.alliedmods.net/showthread.php?t=237045
-#include <csgo_items>
+#include <givenameditem>
 
 #pragma newdecls required
 #include <roleplay.inc>	// https://www.ts-x.eu
@@ -124,6 +124,9 @@ public Action task_KNIFE(Handle timer, any client) {
 	SetMenuExitButton(menu, true);
 	DisplayMenu(menu, client, MENU_TIME_DURATION);
 }
+
+int g_iSkinID[65];
+
 public int MenuKnife(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_iParam2) {
 	
 	if (p_oAction == MenuAction_Select && client != 0) {
@@ -141,8 +144,9 @@ public int MenuKnife(Handle p_hItemMenu, MenuAction p_oAction, int client, int p
 			Client_RemoveWeapon(client, "weapon_knife");
 		}
 		
+		g_iSkinID[client] = GiveNamedItem_GetItemDefinitionByClassname(option);
 		int wpn = GivePlayerItem(client, option);
-		//SetEntProp(wpn, Prop_Send, "m_iItemDefinitionIndex", CSGO_GetItemDefinitionIndexByName(option));
+		
 		FakeClientCommand(client, "use weapon_knife; use weapon_bayonet"); 
 		rp_ClientGiveItem(client, ITEM_KNIFE, -1);
 	}
@@ -150,6 +154,13 @@ public int MenuKnife(Handle p_hItemMenu, MenuAction p_oAction, int client, int p
 		CloseHandle(p_hItemMenu);
 	}
 }
+public void OnGiveNamedItemEx(int client, const char[] Classname) {
+	if(g_iSkinID[client] > 0 && GiveNamedItemEx.IsClassnameKnife(Classname)) {
+		GiveNamedItemEx.ItemDefinition = g_iSkinID[client];
+		g_iSkinID[client] = 0;
+	}
+}
+
 public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbose) {
 	
 	int vit_level = GetLevelFromVita(rp_GetClientFloat(client, fl_Vitality));
@@ -282,11 +293,19 @@ public Action BuildingMicrowave_post(Handle timer, any entity) {
 	
 	SetEntProp( entity, Prop_Data, "m_takedamage", 2);
 	HookSingleEntityOutput(entity, "OnBreak", BuildingMicrowave_break);
+	SDKHook(entity, SDKHook_OnTakeDamage, DamageMachine);
 	
 	CreateTimer(1.0, Frame_Microwave, entity);
 	rp_HookEvent(client, RP_OnPlayerUse, fwdOnPlayerUse);
 	
 	return Plugin_Handled;
+}
+public Action DamageMachine(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
+	if( !Entity_CanBeBreak(victim, attacker) ) {
+		damage = 0.0;
+		return Plugin_Changed;
+	}
+	return Plugin_Continue;
 }
 public void BuildingMicrowave_break(const char[] output, int caller, int activator, float delay) {
 	
@@ -549,9 +568,9 @@ public Action Cmd_ItemHamburger(int args) {
 				continue;
 			
 			rp_GetItemData(i, item_type_name, cmd, sizeof(cmd));
-			if( StrContains(cmd, "BETA", false) == 0 )
+			if( StrContains(cmd, "BETA", false) >= 0 )
 				continue;
-			if( StrContains(cmd, "sactiv", false) == 0 )
+			if( StrContains(cmd, "sactiv", false) >= 0 )
 				continue;
 			
 			iItemRand[amount] = i;
@@ -622,7 +641,7 @@ public Action Cmd_ItemHamburger(int args) {
 		rp_ClientGiveItem(client, rand, rnd, true);
 		
 		rp_GetItemData(rand, item_type_name, cmd, sizeof(cmd));
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Free", client, 1, cmd);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Free", client, rnd, cmd);
 	}
 	else if( StrEqual(arg1, "spacy") ) {
 		
@@ -774,7 +793,13 @@ public Action Cmd_ItemBanane(int args) {
 	return Plugin_Handled;
 }
 public Action BuildingBanana_touch(int index, int client) {
-	if( !IsValidClient(client) )
+	
+	if( rp_IsValidVehicle(client) ) {
+		rp_AcceptEntityInput(index, "Kill");
+		return Plugin_Handled;
+	}
+	
+	if( !IsValidClient(client) || Client_GetVehicle(client) > 0 || rp_GetClientVehicle(client) > 0 || rp_GetClientVehiclePassager(client) > 0 )
 		return Plugin_Continue;
 	
 	rp_SetClientInt(client, i_LastAgression, GetTime());
@@ -799,7 +824,6 @@ public Action BuildingBanana_touch(int index, int client) {
 	
 	rp_AcceptEntityInput(index, "Kill");
 	SDKUnhook(index, SDKHook_Touch, BuildingBanana_touch);
-	
 	return Plugin_Continue;
 }
 int GetLevelFromVita(float vita) {

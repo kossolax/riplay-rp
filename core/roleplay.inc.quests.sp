@@ -22,25 +22,12 @@ public int Native_rp_QuestCreateInstance(Handle plugin, int numParams) {
 		if( !PrecacheModel(model) )
 			return -1;
 	
-	int ent = CreateEntityByName("prop_dynamic_glow");
+	int ent = CreateEntityByName("prop_dynamic");
 	DispatchKeyValue(ent, "model", model);
 	DispatchSpawn(ent);
 	TeleportEntity(ent, position, NULL_VECTOR, NULL_VECTOR);
-	g_iOriginOwner[ent] = client;
-
-	AcceptEntityInput(ent, "TurnOn");
-	AcceptEntityInput(ent, "SetGlowEnabled");
-	SetEntProp(ent, Prop_Send, "m_bShouldGlow", 1);
-	SetEntProp(ent, Prop_Send, "m_clrGlow", 255);
-	
-	SDKHook(ent, SDKHook_SetTransmit, Hook_Transmit);
 	
 	return ent;
-}
-public Action Hook_Transmit(int entity, int client) {
-	if( g_iOriginOwner[entity] != client )
-		return Plugin_Handled;
-	return Plugin_Continue;
 }
 public Action Cmd_StartQuest(int args) {
 	int client = GetCmdArgInt(1);

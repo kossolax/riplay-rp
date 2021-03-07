@@ -30,7 +30,10 @@ public Plugin myinfo = {
 };
 public void OnPluginStart() {
 	LoadTranslations("core.phrases");
+	LoadTranslations("common.phrases");
 	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.core.phrases");
+	LoadTranslations("roleplay.utils.phrases");
 	
 	for (int i = 1; i <= MaxClients; i++)
 		if( IsValidClient(i) )
@@ -67,8 +70,8 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 	return Plugin_Continue;
 }
 public Action showDiscord(int client) {
-	CPrintToChatAll("" ...MOD_TAG..." Rejoignez notre serveur {green}discord{default} <3!");
-	CPrintToChatAll("" ...MOD_TAG... " https://discord.gg/hw4GSSw");
+	CPrintToChatAll("" ...MOD_TAG..." %T", "Ads_JoinDiscord", LANG_SERVER);
+	CPrintToChatAll("" ...MOD_TAG... " " ... MOD_DISCORD ..."");
 	return Plugin_Continue;
 }
 public Action showSteamID(int client) {
@@ -87,7 +90,7 @@ public Action showSteamID(int client) {
 		
 		PrintToConsole(client, "%N %s (%s)", i, tmp2, tmp);
 		if( i == client )
-			CPrintToChat(client, "" ...MOD_TAG... " Votre SteamID est: %s (%s)", tmp2, tmp);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_SteamID", client, tmp2, tmp);
 	}
 	
 	PrintToConsole(client, "============================================================ ");
@@ -122,72 +125,95 @@ void openMenuInteractif(int client) {
 	int jobID = rp_GetClientJobID(client);
 	int optionCount = 0;
 	
+	char tmp[128];
+	
 	Menu menu = CreateMenu(menuOpenMenu);
 	menu.SetTitle("RolePlay\n ");
 	
 	if( IsValidClient(target) ) {
 		bool hear = rp_IsTargetHear(client, target);
 		
-		menu.SetTitle("RolePlay: %N\n ", target);
+		GetClientName2(target, tmp, sizeof(tmp), true);
+		menu.SetTitle("RolePlay: %s\n ", tmp);
 		
 		if( near && ((jobID >= 11 && jobID <= 81) || jobID >= 111) ) {
-			menu.AddItem("vendre", "Vendre");
+			Format(tmp, sizeof(tmp), "%T", "Menu_Sell", client);
+			menu.AddItem("vendre", tmp);
 			optionCount++;
 		}
 		
 		
 		if( veryNear && rp_GetClientBool(client, b_MaySteal) && (jobID == 81 || jobID == 91) ) {
-			menu.AddItem("vol", "Voler le joueur");
+			Format(tmp, sizeof(tmp), "%T", "Menu_Steal", client);
+			menu.AddItem("vol", tmp);
 			optionCount++;
 		}
 		
 		if( near && jobID == 71 ) {
-			menu.AddItem("cutinfo", "Informations entraînement");
+			Format(tmp, sizeof(tmp), "%T", "Menu_Train", client);
+			menu.AddItem("cutinfo", tmp);
 			optionCount++;
 		}
 		
 		if( near && jobID == 11 ) {
-			menu.AddItem("heal", "Soigner le joueur");
+			Format(tmp, sizeof(tmp), "%T", "Menu_Heal", client);
+			menu.AddItem("heal", tmp);
 			optionCount++;
 		}
 		
 		
 		if( hear && (jobID == 1 || jobID == 101) ) {
-			menu.AddItem("search", "Vérifier les permis");
-			menu.AddItem("jail", "Mettre en prison");
-			menu.AddItem("tazer", "Coup de tazer");
+			Format(tmp, sizeof(tmp), "%T", "Menu_Search", client);
+			menu.AddItem("search", tmp);
+			
+			Format(tmp, sizeof(tmp), "%T", "Menu_Jail", client);
+			menu.AddItem("jail", tmp);
+			
+			Format(tmp, sizeof(tmp), "%T", "Menu_Tazer", client);
+			menu.AddItem("tazer", tmp);
 			optionCount++;
 		}
 		
 		
 		
 		if( hear && jobID > 0 && rp_GetPlayerZone(target) == rp_GetPlayerZone(client) && rp_GetZoneInt(client, zone_type_type) == jobID ) {
-			menu.AddItem("out", "Sortir le joueur");
+			Format(tmp, sizeof(tmp), "%T", "Menu_Out", client);
+			menu.AddItem("out", tmp);
 		}
 		
 		
 		if( near && rp_GetClientInt(client, i_Money) > 0 && !rp_IsClientNew(client) ) {
-			menu.AddItem("give", "Donner de l'argent");
+			Format(tmp, sizeof(tmp), "%T", "Menu_Give", client);
+			menu.AddItem("give", tmp);
 			optionCount++;
 		}
 	}
 	else if( rp_IsValidDoor(target) ) {
-		menu.SetTitle("RolePlay: Une porte\n ");
+		menu.SetTitle("RolePlay: %T\n ", "Menu_Door", client);
 		
 		int doorID = rp_GetDoorID(target);
 		if( doorID > 0 && rp_GetClientKeyDoor(client, doorID) ) {
 			if( GetEntProp(target, Prop_Data, "m_bLocked") ) 
-				menu.AddItem("unlock", "Déverrouiller la porte");
+				Format(tmp, sizeof(tmp), "%T", "Menu_Door_Unlock", client);
 			else
-				menu.AddItem("lock", "Verrouiller la porte");
+				Format(tmp, sizeof(tmp), "%T", "Menu_Door_Lock", client);
+			
+			if( GetEntProp(target, Prop_Data, "m_bLocked") ) 
+				menu.AddItem("unlock", tmp);
+			else
+				menu.AddItem("lock", tmp);
 			
 			optionCount++;
 		}
 		
-		if( jobID == 1 && rp_GetClientInt(client, i_Job) <= 7 )
-			menu.AddItem("perquiz", "Perquisitionner");
-		if( jobID == 101 )
-			menu.AddItem("perquiz", "Perquisitionner");
+		if( jobID == 1 && rp_GetClientInt(client, i_Job) <= 7 ) {
+			Format(tmp, sizeof(tmp), "%T", "Menu_Door_Perquiz", client);
+			menu.AddItem("perquiz", tmp);
+		}
+		if( jobID == 101 ) {
+			Format(tmp, sizeof(tmp), "%T", "Menu_Door_Perquiz", client);
+			menu.AddItem("perquiz", tmp);
+		}
 	}
 	
 	if( optionCount == 0 ) {
@@ -195,7 +221,8 @@ void openMenuInteractif(int client) {
 		return;
 	}
 	
-	menu.AddItem("exit", "Ne plus ouvrir ce menu automatiquement");
+	Format(tmp, sizeof(tmp), "%T", "Menu_DoNotReOpen", client);
+	menu.AddItem("exit", tmp);
 	menu.Pagination = 8;
 	menu.Display(client, 30);
 	
@@ -207,30 +234,45 @@ void openMenuGeneral(int client) {
 	Menu menu = CreateMenu(menuOpenMenu);
 	menu.SetTitle("RolePlay\n ");
 	
-	menu.AddItem("item", "Ouvrir l'inventaire");
-	menu.AddItem("passif", "Changer le mode de jeu");
+	
+	char tmp[128];
+	Format(tmp, sizeof(tmp), "%T", "Menu_Item", client);
+	menu.AddItem("item", tmp);
+
+	Format(tmp, sizeof(tmp), "%T", "Menu_Passif", client);
+	menu.AddItem("passif", tmp);
 	
 	if( jobID == 101 && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 101 ) {
-		menu.AddItem("tb", "Gestion des audiences");
+		Format(tmp, sizeof(tmp), "%T", "Menu_Tb", client);
+		menu.AddItem("tb", tmp);
 	}
-	
+
 	
 	if( jobID == 11 ) {
-		menu.AddItem("mort", "Faire revivre les morts");
+		Format(tmp, sizeof(tmp), "%T", "Menu_Mort", client);
+		menu.AddItem("mort", tmp);
 	}
-	if( jobID == 11 || jobID == 21 || jobID == 31 || jobID == 51 || jobID == 71 || jobID == 81 || jobID == 111 || jobID == 171 || jobID == 191 || jobID == 211 || jobID == 221 ) {
-		menu.AddItem("build", "Construire");
-	}
-	if( jobID >= 0 ) {
-		menu.AddItem("shownote", "Information sur mon job");
-	}
-	menu.AddItem("job", "Appeler un joueur");
-	menu.AddItem("gps", "Trouver un lieu sur la carte");
-	menu.AddItem("aide", "Besoin d'aide");
-	menu.AddItem("stats", "Statistiques");
-	menu.AddItem("report", "Signaler un mauvais comportement");
 	
+	Format(tmp, sizeof(tmp), "%T", "Menu_Build", client);
+	menu.AddItem("build", tmp);
 	
+	Format(tmp, sizeof(tmp), "%T", "Menu_Shownote", client);
+	menu.AddItem("shownote", tmp);
+	
+	Format(tmp, sizeof(tmp), "%T", "Menu_Job", client);
+	menu.AddItem("job", tmp);
+	
+	Format(tmp, sizeof(tmp), "%T", "Menu_GPS", client);
+	menu.AddItem("gps", tmp);
+	
+	Format(tmp, sizeof(tmp), "%T", "Menu_Aide", client);
+	menu.AddItem("aide", tmp);
+	
+	Format(tmp, sizeof(tmp), "%T", "Menu_Stats", client);
+	menu.AddItem("stats", tmp);
+	
+	Format(tmp, sizeof(tmp), "%T", "Menu_Report", client);
+	menu.AddItem("report", tmp);
 	
 	menu.Display(client, 30);
 	
@@ -245,7 +287,7 @@ public int menuOpenMenu(Handle hItem, MenuAction oAction, int client, int param)
 					return;
 				
 				Menu menu = CreateMenu(menuOpenMenu);
-				menu.SetTitle("RolePlay: Donner de l'argent\n ");
+				menu.SetTitle("RolePlay: %T\n ", "Menu_Give", client);
 				if( rp_GetClientInt(client, i_Money) >= 1 ) menu.AddItem("give 1", "1$");
 				if( rp_GetClientInt(client, i_Money) >= 10 ) menu.AddItem("give 10", "10$");
 				if( rp_GetClientInt(client, i_Money) >= 100 ) menu.AddItem("give 100", "100$");
@@ -257,7 +299,7 @@ public int menuOpenMenu(Handle hItem, MenuAction oAction, int client, int param)
 				return;
 			}
 			if( StrEqual(options, "exit") ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez réouvrir ce menu avec /menu.");
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Menu_DoNotReOpen_Confirm", client);
 				g_bClosed[client] = true;
 				return;
 			}

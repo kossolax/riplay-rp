@@ -8,7 +8,7 @@
 	"Item_Register"
 	{
 		"#format"	"{1:d}"
-		"fr"	"Registre n°{1}"
+		"fr"	"Registre {1}"
 		"en"	"Register {1}"
 	}
 	"Item_Count"

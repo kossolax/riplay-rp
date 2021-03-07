@@ -419,7 +419,7 @@ public void Cmd_ItemCutThrow_TOUCH(int rocket, int entity) {
 	int attacker = GetEntPropEnt(rocket, Prop_Send, "m_hOwnerEntity");
 	bool touched = false;
 	
-	if( entity > 0 && IsValidEdict(entity) && IsValidEntity(entity) ) {
+	if( entity > 0 && IsValidEdict(entity) && IsValidEntity(entity) && entity != attacker ) {
 		
 		GetEdictClassname(entity, classname, sizeof(classname));
 		
@@ -1557,10 +1557,18 @@ public Action BuildingKevlarBox_post(Handle timer, any entity) {
 	
 	SetEntProp( entity, Prop_Data, "m_takedamage", 2);
 	HookSingleEntityOutput(entity, "OnBreak", BuildingKevlarBox_break);
+	SDKHook(entity, SDKHook_OnTakeDamage, DamageMachine);
 	
 	CreateTimer(1.0, Frame_KevlarBox, EntIndexToEntRef(entity));
 	
 	return Plugin_Handled;
+}
+public Action DamageMachine(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
+	if( !Entity_CanBeBreak(victim, attacker) ) {
+		damage = 0.0;
+		return Plugin_Changed;
+	}
+	return Plugin_Continue;
 }
 public void BuildingKevlarBox_break(const char[] output, int caller, int activator, float delay) {
 	

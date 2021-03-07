@@ -136,20 +136,6 @@ public void QUERY_SetMaire(Handle owner, Handle handle, const char[] error, any 
 		for (serverRules i = rules_Amendes; i < server_rules_max; i++)
 			rp_SetServerRules(i, rules_Enabled, 0);
 		rp_StoreServerRules();
-		
-		for (int i = 1; i <= MaxClients; i++) {
-			if( !IsValidClient(i) )
-				continue;
-			if( rp_GetClientKeyAppartement(i, 51) ) {
-				rp_SetClientKeyAppartement(i, 51, false );
-				rp_SetClientInt(i, i_AppartCount, rp_GetClientInt(i, i_AppartCount) - 1);
-			}
-			GetClientAuthId(i, AUTH_TYPE, tmp, sizeof(tmp));
-			if( StrEqual(tmp, tmp2) ) {
-				rp_SetClientKeyAppartement(i, 51, true );
-				rp_SetClientInt(i, i_AppartCount, rp_GetClientInt(i, i_AppartCount) + 1);
-			}
-		}
 	}
 }
 public void OnClientPostAdminCheck(int client) {
@@ -452,7 +438,7 @@ void Draw_Mairie_AddRules(int client, int rulesID=-1, int arg=-1, int target=-1)
 		
 		//menu.AddItem("4 2 0 -1", "Interdir les réductions", rp_GetServerRules(rules_reductions, rules_Enabled) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 		menu.AddItem("4 4 0 -1", "Interdir les braquages", rp_GetServerRules(rules_Braquages, rules_Enabled) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
-		//menu.AddItem("4 5 0 -1", "Interdir un item en pvp", rp_GetServerRules(rules_ItemsDisabled, rules_Enabled) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+		menu.AddItem("4 5 0 -1", "Interdir un item en pvp", rp_GetServerRules(rules_ItemsDisabled, rules_Enabled) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 		menu.AddItem("4 7 0 -1", "Interdir l'hotel des ventes", rp_GetServerRules(rules_ItemsDisabled, rules_Enabled) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 		
 		
@@ -745,6 +731,8 @@ public int Handle_Mairie(Handle menu, MenuAction action, int client, int param2)
 					PrintHintText(client, "Vous êtes enregistré à la mairie, merci !");
 					CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 10 cadeaux dans votre banque.");
 					rp_ClientGiveItem(client, ITEM_CADEAU, 10, true);
+					
+					
 				}
 				
 			}
@@ -757,6 +745,13 @@ public int Handle_Mairie(Handle menu, MenuAction action, int client, int param2)
 				rp_SetClientBool(client, b_PassedRulesTest, true);
 				CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 10 cadeaux dans votre banque.");
 				rp_ClientGiveItem(client, ITEM_CADEAU, 10, true);
+				
+				char query[1024], steamid[64];
+				GetClientAuthId(client, AUTH_TYPE, steamid, sizeof(steamid));
+				
+				Format(query, sizeof(query), "UPDATE `rp_users` SET `no_pyj`=1 WHERE `steamid`='%s'", steamid);
+				SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
+				rp_SetClientBool(client, b_IsNoPyj, true);
 			}
 			else if( c == 1 ) {
 				if( b != 0 )

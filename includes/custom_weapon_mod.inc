@@ -6,7 +6,7 @@
 #include <cstrike>
 
 #define CSGO_RENAME_WEAPON	1	// WARNING: this might ban your tokken. You also need to add a bones named "v_weapon.uid" out of player's view.
-#define CSGO_FIX_STARTRAK	0	// WARNING: this might ban your tokken.
+#define CSGO_FIX_STARTRAK	1	// WARNING: this might ban your tokken.
 #define CSGO_FIX_SPAWN		0	// some old version of sourcemod require this.
 #define USE_VSCRIPT			0	// do you have vscript extension running on your serv?
 #define SLOT_REDIRECT		0	// WARNING: this might ban your tokken.
@@ -74,6 +74,7 @@ native void CWM_SetEntityFloat(int entity, CWM_DataFloat data, float value);
 native float CWM_GetEntityFloat(int entity, CWM_DataFloat data);
 
 native bool CWM_IsCustom(int entity);
+native void CWM_GetName(int entity, char name[PLATFORM_MAX_PATH]);
 
 native void CWM_ZoomIn(int client, int entity, int fov, int speed=1);
 native void CWM_ZoomOut(int client, int entity, int fov, int speed=1);
@@ -269,6 +270,8 @@ stock void AddSoundToDownloadsTable(char file[PLATFORM_MAX_PATH]) {
 	if( FileExists(tmp, true) )
 		AddFileToDownloadsTable(tmp);
 }
+#if defined _tsxrp_included_
+#else
 public Action Cmd_PluginReloadSelf(int args) {
 	static char name[64];
 	GetPluginFilename(INVALID_HANDLE, name, sizeof(name));
@@ -294,6 +297,7 @@ stock bool IsValidClient(int client) {
 	
 	return true;
 }
+#endif
 stock bool IsClientZooming(int client) {
 	int fov = GetEntProp(client, Prop_Send, "m_iFOV");
 	if( fov == 0 || fov == 90 )

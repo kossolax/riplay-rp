@@ -195,6 +195,9 @@ public Action Cmd_ItemNade(int args) {
 	else if( StrEqual(arg1, "emp") ) {
 		rp_CreateGrenade(client, "ctf_nade_emp", "models/grenades/emp/emp.mdl", throwClassic, EMPExplode, 3.0);
 	}
+	else if( StrEqual(arg1, "emp2") ) {
+		rp_CreateGrenade(client, "ctf_nade_emp", "models/grenades/emp/emp.mdl", throwClassic, EMPExplode2, 3.0);
+	}
 }
 // ------------------------------------------------------------------------------
 public void throwMirvlet(int client, int ent) {
@@ -504,12 +507,23 @@ public Action gasShot(Handle timer, any ent) {
 	return Plugin_Handled;
 }
 // ------------------------------------------------------------------------------
+bool boosted[2048];
 public void EMPExplode(int client, int ent) {
 	
 	EmitSoundToAllAny("grenades/emp_explosion.mp3", ent);
 	EmitSoundToAllAny("grenades/emp_explosion.mp3", ent);
 	
+	boosted[ent] = false;
 	CreateTimer(0.75, EMPExplode_Task, ent);
+}
+public void EMPExplode2(int client, int ent) {
+	
+	EMPExplode(client, ent);
+	boosted[ent] = true;
+	
+	// plus bruyant:
+	EmitSoundToAllAny("grenades/emp_explosion.mp3", ent);
+	EmitSoundToAllAny("grenades/emp_explosion.mp3", ent);
 }
 public Action EMPExplode_Task(Handle timer, any ent) {
 	
@@ -528,8 +542,9 @@ public Action EMPExplode_Task(Handle timer, any ent) {
 		
 		GetEdictClassname(i, classname, sizeof(classname));
 		
-		if( StrContains(classname, "player") == 0 || StrContains(classname, "weapon_") == 0 ||
-			StrContains(classname, "rp_cashmachine") == 0 || StrContains(classname, "rp_bigcashmachine") == 0 || StrContains(classname, "rp_mine") == 0 ) {
+		if( StrEqual(classname, "player") || StrContains(classname, "weapon_") == 0 ||
+			StrEqual(classname, "rp_cashmachine")  || StrEqual(classname, "rp_bigcashmachine") ||
+			StrEqual(classname, "rp_mine") || StrEqual(classname, "rp_sentry") ) {
 			
 			if( StrContains(classname, "weapon_knife") == 0 )
 				continue;
@@ -556,16 +571,29 @@ public Action EMPExplode_Task(Handle timer, any ent) {
 			if( StrContains(classname, "weapon_") == 0 && GetEntPropEnt(i, Prop_Send, "m_hOwnerEntity") <= 0 ) {
 				rp_AcceptEntityInput(i, "Kill");
 			}
-			else if( StrContains(classname, "rp_mine_") == 0 ) {
+			else if( StrEqual(classname, "rp_mine")  ) {
 				rp_AcceptEntityInput(i, "Kill");
+			}
+			else if( StrEqual(classname, "rp_sentry")  ) {
+				int owner = rp_GetBuildingData(i, BD_owner);
+				
+				if( !IsValidClient(owner) || (rp_ClientCanAttack(client, owner) && client != owner) )
+					rp_SetBuildingData(i, BD_HackedTime, GetTime() + 20);
 			}
 			else {
 				if( IsValidClient(i) && !(rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_PEACEFULL) ) {
-					kev = rp_GetClientInt(i, i_Kevlar) / 2;
-					damage += float(kev);
 					
+					if( boosted[ent] )
+						kev = rp_GetClientInt(i, i_Kevlar);
+					else
+						kev = rp_GetClientInt(i, i_Kevlar) / 2;
+
+					damage += float(kev);
 					kev -= 50;
 					if( kev < 0 )
+						kev = 0;
+					
+					if( boosted[ent] )
 						kev = 0;
 					
 					rp_SetClientInt(i, i_Kevlar, kev);
@@ -589,7 +617,12 @@ public Action EMPExplode_Task(Handle timer, any ent) {
 	
 	TE_SetupBeamRingPoint(vecOrigin, 1.0, 401.0, g_cShockWave, 0, 0, 20, 0.20, 50.0, 0.0, {255, 255, 255, 255}, 1, 0);
 	TE_SendToAll();
-	TE_SetupBeamRingPoint(vecOrigin, 0.1, 400.0, g_cBeam, 0, 0, 10, 0.20, 50.0, 0.0, {255, 200, 50, 200}, 1, 0);
+	
+	if( boosted[ent] )
+		TE_SetupBeamRingPoint(vecOrigin, 0.1, 400.0, g_cBeam, 0, 0, 10, 0.20, 50.0, 0.0, {50, 255, 200, 200}, 1, 0);
+	else
+		TE_SetupBeamRingPoint(vecOrigin, 0.1, 400.0, g_cBeam, 0, 0, 10, 0.20, 50.0, 0.0, {255, 200, 50, 200}, 1, 0);
+
 	TE_SendToAll();
 	
 	rp_ScheduleEntityInput(ent, 0.25, "KillHierarchy");

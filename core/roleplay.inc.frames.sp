@@ -17,6 +17,8 @@ public void OnGameFrame() {
 	for(int Client = 1; Client <= MaxClients; Client++) {
 		if( !g_bUserData[Client][b_isConnected] )
 			continue;
+		if( !IsValidClient(Client) )
+			continue;
 		if( !IsPlayerAlive(Client) )
 			continue;
 		FORCE_FRAME(Client);
@@ -36,7 +38,7 @@ public void OnGameFrame() {
 	OnGameFrame_10(time);
 }
 void OnGameFrame_01(float time) {
-	static int wasInPVP[65], oldZone[65];
+	static int wasInPVP[65], oldZone[65], wasHUD[65];
 	float pos[3];
 	g_iEntityCount = MaxClients;
 	
@@ -69,6 +71,9 @@ void OnGameFrame_01(float time) {
 			PrintToChatAll("%s est hors map", tmp);
 			rp_AcceptEntityInput(i, "Kill");
 		}
+		
+		
+		
 	}
 	if( g_bLoaded ) {
 		if( g_iEntityCount >= g_iEntityLimit ) {
@@ -86,7 +91,20 @@ void OnGameFrame_01(float time) {
 			continue;
 		if( !g_bUserData[Client][b_isConnected] )
 			continue;
+		if( !IsValidClient(Client) )
+			continue;
 		
+		if( GetClientMenu(Client) != MenuSource_None ) {
+			if( wasHUD[Client] ) {
+				SetHudTextParams(0.0125, 0.4, 0.25, 255, 255, 200, 128, 2, 0.0, 0.0, 0.0);
+				ShowHudText(Client, 0, " ");
+			}
+			
+			wasHUD[Client] = false;
+		}
+		else {
+			wasHUD[Client] = true;
+		}
 		
 		blockShot = false;
 		g_iPlayerCount++;
@@ -146,6 +164,11 @@ void OnGameFrame_01(float time) {
 		if( g_bUserData[Client][b_GameModePassive] == true && g_iUserData[Client][i_Job] >= 1 && g_iUserData[Client][i_Job] <= 8 ) {
 			g_bUserData[Client][b_GameModePassive] = false;
 			CPrintToChat(Client, "" ...MOD_TAG... " %T", "Passive_Disabled", Client);
+		}
+		
+		if( EVENT_3RD == 0 && rp_GetZoneBit( rp_GetPlayerZone(Client) ) & BITZONE_EVENT ) {
+			ClientCommand(Client, "firstperson");
+			g_iUserData[Client][i_ThirdPerson] = 0;
 		}
 		
 		if( !(rp_GetZoneBit( rp_GetPlayerZone(Client) ) & BITZONE_PVP) && !(rp_GetZoneBit( rp_GetPlayerZone(Client) ) & BITZONE_EVENT)	) {
@@ -394,9 +417,7 @@ void OnGameFrame_10(float time) {
 
 	if( g_iHours == 1 && g_iMinutes == 1 ) {
 		if(g_bIsBlackFriday) {
-			Format(bfAnnoucement, sizeof(bfAnnoucement), "" ...MOD_TAG... " %T", "BlackFriday_ADS", LANG_SERVER, g_iBlackFriday[1]);
-			ReplaceString(bfAnnoucement, sizeof(bfAnnoucement), "PCT", "%%", true);
-			CPrintToChatAll(bfAnnoucement);
+			CPrintToChatAll("" ...MOD_TAG... " %T", "BlackFriday_ADS", LANG_SERVER, g_iBlackFriday[1]);
 		}
 	}
 
@@ -595,7 +616,7 @@ void OnGameFrame_10(float time) {
 					SDKHooks_TakeDamage(i, i, i, 5000.0);
 				}
 				
-				if(jobID == 101 && !g_bUserData[i][b_GameModePassive] && !(GetZoneBit(GetPlayerZone(i)) & (BITZONE_PVP|BITZONE_EVENT)) ) {			
+				if(jobID == 101 && !g_bUserData[i][b_GameModePassive] && !(GetZoneBit(GetPlayerZone(i)) & (BITZONE_PVP|BITZONE_EVENT)) ) {
 					int heal = GetClientHealth(i) + Math_GetRandomInt(1, 5);
 					if( heal > 500 )
 						heal = 500;
@@ -849,7 +870,6 @@ void OnGameFrame_10(float time) {
 					
 				}
 				else {
-					
 					PrintHUD(i, szHUD, sizeof(szHUD));
 					
 					Call_StartForward( view_as<Handle>(g_hRPNative[i][RP_OnPlayerHUD]));
@@ -870,10 +890,8 @@ void OnGameFrame_10(float time) {
 			}
 			
 			if( GetEntProp(i, Prop_Send, "m_bDrawViewmodel") == 1 ) {
-				Handle hud = CreateHudSynchronizer();
-				SetHudTextParams(-1.0, 1.0, 1.1, 19, 213, 45, 255, 2, 0.0, 0.0, 0.0);
-				ShowSyncHudText(i, hud, szDates);
-				CloseHandle(hud);
+				SetHudTextParams(-1.0, 1.0, 2.0, 19, 213, 45, 255, 2, 0.0, 0.0, 0.0);
+				ShowHudText(i, 2, szDates);
 			}
 			
 			CheckNoWonSuccess(i);
@@ -924,7 +942,7 @@ public void CRON_TIMER() {
 			ServerCommand("rp_force_loto");
 		}
 	}
-	if( StringToInt(szDayOfWeek) == 0  ) {	// Dimanche
+	if( StringToInt(szDayOfWeek) == 5  ) {	// Vendredi
 		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
 			ServerCommand("rp_force_appart");
 		}
@@ -936,20 +954,16 @@ public void CRON_TIMER() {
 	}
 	
 	
-	if( (StringToInt(szHours) ==  4 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 30) ||
-		(StringToInt(szHours) == 16 && StringToInt(szMinutes) == 29 && StringToInt(szSecondes) == 30) 
-		) {	
+	if( (StringToInt(szHours) ==  5 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 30) ) {	
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
 		ServerCommand("rp_give_assu");
 	}
-	if( (StringToInt(szHours) ==  4 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 59) ||
-		(StringToInt(szHours) == 16 && StringToInt(szMinutes) == 29 && StringToInt(szSecondes) == 59) ) {
+	if( (StringToInt(szHours) ==  5 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 59) ) {
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootNow", LANG_SERVER);
 	}
-	if( (StringToInt(szHours) ==  5 && StringToInt(szMinutes) ==  0 && StringToInt(szSecondes) == 0) ||
-		(StringToInt(szHours) == 16 && StringToInt(szMinutes) == 30 && StringToInt(szSecondes) == 0) ) {
+	if( (StringToInt(szHours) ==  6 && StringToInt(szMinutes) ==  0 && StringToInt(szSecondes) == 0) ) {
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootNow", LANG_SERVER);
 		
 		for(int i = 1; i <= MaxClients; i++)
@@ -958,15 +972,13 @@ public void CRON_TIMER() {
 		
 		CreateTimer(0.1, RebootServer);
 	}
-	/*
-	if( StringToInt(szDayOfWeek) == 5 ) { // Vendredi
-		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
+	if( StringToInt(szDayOfWeek) == 3 ) { // mercredi
+		if( StringToInt(szHours) == 18 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 18h00m00s
 			ServerCommand("rp_capture 1");
 		}
 	}
-	*/
-	if( StringToInt(szDayOfWeek) == 0 ) { // Dimanche, temporaire --- TODO: TO REMOVE.
-		if( StringToInt(szHours) == 17 && StringToInt(szMinutes) == 30 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
+	if( StringToInt(szDayOfWeek) == 0 ) { // Dimanche
+		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 00 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
 			ServerCommand("rp_capture 1");
 		}
 	}

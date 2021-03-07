@@ -133,47 +133,22 @@ void addToGroup(int client, int amount) {
 	
 	SetGroupCapital(group, GetGroupCapital(group) );
 }
-
-void GroupColor(int client) {
-	
-	if( !IsValidClient(client) ) {
-		client = GetEntPropEnt(client, Prop_Send, "m_hOwnerEntity");
-	}
-	
-	int group = GetGroupPrimaryID(client);
-	if( group > 0 ) {		
-		if( strlen(g_szGroupList[group][group_type_skin]) > 10 && Client_GetVehicle(client) <= 0 && GetConVarInt(FindConVar("rp_capture")) == 0 ) {
-			SetEntityModel(client, g_szGroupList[group][group_type_skin]);
-		}
-	}
-	else {
-		Colorize(client, 255, 255, 255, 255);
-	}
-}
-
 int GetGroupPrimaryID(int client) {
+	int group_id = g_iUserData[client][i_Group];
 	
-	static float g_flLastCheck[MAX_PLAYERS+1] = 0.0;
-	static g_iLastData[MAX_PLAYERS+1];
-	
-	if( g_flLastCheck[client] > GetGameTime() ) {
-		return g_iLastData[client];
+	if( StringToInt( g_szGroupList[ group_id ][job_type_isboss] ) != 1 ) {
+		group_id = StringToInt( g_szGroupList[ group_id ][job_type_ownboss] );
 	}
 	
+	return group_id;
+}
+int GetGroupID(int group_id) {
 	
-	
-	g_flLastCheck[client] = GetGameTime() + 10.0;
-	g_iLastData[client] = g_iUserData[client][i_Group];
-	
-	if( g_iLastData[client] <= 0 ) {
-		return g_iLastData[client];
+	if( StringToInt( g_szGroupList[ group_id ][job_type_isboss] ) != 1 ) {
+		group_id = StringToInt( g_szGroupList[ group_id ][job_type_ownboss] );
 	}
 	
-	if( StringToInt( g_szGroupList[ g_iLastData[client] ][group_type_chef] ) != 1 ) {
-		g_iLastData[client] = StringToInt( g_szGroupList[ g_iLastData[client] ][group_type_own_chef] );
-	}
-	
-	return g_iLastData[client];
+	return group_id;
 }
 void SetGroupCapital(int group_id, int amount) {
 	if( group_id <= 0 ) {

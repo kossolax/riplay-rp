@@ -72,8 +72,8 @@
 	"SlotMachine_Win_Jeton"
 	{
 		"#format"	"{1:d}"
-		"fr"	"Vous avez gagné {green}{1}{default} jeton(s)!"
-		"en"	"You won {green}{1}{default} token(s)!"
+		"fr"	"Vous avez gagné {1} jeton(s)!"
+		"en"	"You won {1} token(s)!"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Dice_One"
@@ -174,8 +174,8 @@
 	"Lotery_Cagnotte_Second"
 	{
 		"#format"	"{1:s},{2:d}"
-		"fr"	"suivi de.... {1}{default} qui remporte {yellow}{2}{default}$!"
-		"en"	"followed by.... {1}{default} who wins {yellow}${2}{default}!"
+		"fr"	"suivi de.... {1}{default} qui remporte {orange}{2}{default}$!"
+		"en"	"followed by.... {1}{default} who wins {orange}${2}{default}!"
 	}
 	"Lotery_Cagnotte_Third"
 	{
@@ -209,6 +209,7 @@
 	}
 	"Jeton_Which_Money_Give"
 	{
+		"#format"	"{1:d}"
 		"fr"	"Vous avez reçu {green}{1}{default}$!"
 		"en"	"You have received {green}${1}{default}!"
 	}

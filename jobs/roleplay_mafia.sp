@@ -621,6 +621,17 @@ public Action Cmd_ItemPiedBiche(int args) {
 	
 	return Plugin_Handled;
 }
+public Action callHacked(Handle timer, any target) {
+	target = EntRefToEntIndex(target);
+	if( IsValidEdict(target) && IsValidEntity(target) ) {
+		int owner = rp_GetBuildingData(target, BD_owner);
+		int hacked = rp_GetBuildingData(target, BD_HackedBy);
+		
+		if( IsValidClient(owner) && IsValidClient(hacked) && rp_GetClientJobID(hacked) == 91 ) {
+			CPrintToChat(owner, "" ...MOD_TAG... " %T", "Crowbar_FauxBillet", owner);
+		}
+	}
+}
 public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 	ResetPack(dp);
 	int client = ReadPackCell(dp);
@@ -728,7 +739,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				if( IsValidClient(owner) ) {
 					rp_SetBuildingData(target, BD_HackedBy, client);
 					rp_SetBuildingData(target, BD_HackedTime, GetTime());
-					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Crowbar_FauxBillet", owner);
+					CreateTimer(1.0 * 60.0, callHacked, EntIndexToEntRef(target));
 				}
 				
 				Entity_SetHealth(target, Entity_GetHealth(target) - Entity_GetMaxHealth(target) / 10);
@@ -740,7 +751,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				if( IsValidClient(owner) ) {
 					rp_SetBuildingData(target, BD_HackedBy, client);
 					rp_SetBuildingData(target, BD_HackedTime, GetTime());
-					CPrintToChat(owner, "" ...MOD_TAG... " %T", "Crowbar_FauxBillet", owner);
+					CreateTimer(1.0 * 60.0, callHacked, EntIndexToEntRef(target));
 				}
 				
 				Entity_SetHealth(target, Entity_GetHealth(target) - Entity_GetMaxHealth(target) / 10);
@@ -1307,6 +1318,7 @@ bool disapear(int client) {
 		return false;
 
 	int zoneJob = rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type);
+	int appart = rp_GetPlayerZoneAppart(client);
 	
 	int rndClient[65], rndCount;
 	if( zoneJob == 1 ) {
@@ -1316,7 +1328,7 @@ bool disapear(int client) {
 			}
 		}
 	}
-	else {
+	if( zoneJob > 1 ) {
 		for (int i = 1; i <= MaxClients; i++) {
 			if( IsValidClient(i) && GetClientTeam(i) != CS_TEAM_CT && !IsFakeClient(i) && rp_GetClientJobID(i) == zoneJob && i != client ) {
 				Entity_GetModel(i, model, sizeof(model));
@@ -1324,16 +1336,26 @@ bool disapear(int client) {
 					rndClient[rndCount++] = i;
 			}
 		}
-		if( rndCount == 0 ) {
-			for (int i = 1; i <= MaxClients; i++) {
-				if( IsValidClient(i) && GetClientTeam(i) != CS_TEAM_CT && !IsFakeClient(i) && rp_GetClientJobID(i) != 91 && i != client ) {
-					Entity_GetModel(i, model, sizeof(model));
-					if( StrContains(model, "sprisioner", false) == -1 )
-						rndClient[rndCount++] = i;
-				}
+	}
+	if( appart > 0 ) {
+		for (int i = 1; i <= MaxClients; i++) {
+			if( IsValidClient(i) && GetClientTeam(i) != CS_TEAM_CT && !IsFakeClient(i) && rp_GetClientKeyAppartement(i, appart) && i != client ) {
+				Entity_GetModel(i, model, sizeof(model));
+				if( StrContains(model, "sprisioner", false) == -1 )
+					rndClient[rndCount++] = i;
 			}
 		}
 	}
+	if( rndCount == 0 ) {
+		for (int i = 1; i <= MaxClients; i++) {
+			if( IsValidClient(i) && GetClientTeam(i) != CS_TEAM_CT && !IsFakeClient(i) && rp_GetClientJobID(i) != 91 && i != client ) {
+				Entity_GetModel(i, model, sizeof(model));
+				if( StrContains(model, "sprisioner", false) == -1 )
+					rndClient[rndCount++] = i;
+			}
+		}
+	}
+
 	if( rndCount == 0 )
 		return false;
 	int rnd = Math_GetRandomInt(0, rndCount - 1);
@@ -1690,46 +1712,38 @@ public int Menu_BuyWeapon(Handle p_hMenu, MenuAction p_oAction, int client, int 
 			
 			if (rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money) < data[BM_Prix])
 				return 0;
-			Format(name, sizeof(name), "weapon_%s", name);
 				
-			int wepid = GivePlayerItem(client, name);			
-			rp_SetWeaponBallType(wepid, view_as<enum_ball_type>(data[BM_Type]));
-			if (data[BM_PvP] > 0)
-				rp_SetWeaponGroupID(wepid, rp_GetClientGroupID(client));
-			
-			if (data[BM_Munition] != -1) {
-				SetEntProp(wepid, Prop_Send, "m_iClip1", data[BM_Munition]);
-				SetEntProp(wepid, Prop_Send, "m_iPrimaryReserveAmmoCount", data[BM_Chargeur]);
-			}
-			rp_SetWeaponStorage(wepid, data[BM_Store] == 1);
-			rp_WeaponMenu_Delete(g_hBuyMenu_Weapons, position);
-			
-			
-			rp_ClientMoney(client, i_Money, -data[BM_Prix]);
-			
-			if( IsValidClient(data[BM_Owner]) && rp_GetClientJobID(data[BM_Owner]) == 91 ) {
-				float taxe = data[BM_Owner] == client ? getTaxe(client) : 0.5;
+			int wepid = rp_WeaponMenu_Give(g_hBuyMenu_Weapons, position, client);
+			if( wepid > 0 ) {
+				rp_SetWeaponStorage(wepid, data[BM_Store] == 1);
+				rp_WeaponMenu_Delete(g_hBuyMenu_Weapons, position);
 				
-				int payClient = RoundToCeil(float(data[BM_Prix]) * (1.0 - taxe));
-				int payCapital = RoundToCeil(float(data[BM_Prix]) * (taxe));
+				rp_ClientMoney(client, i_Money, -data[BM_Prix]);
 				
-				rp_ClientMoney(data[BM_Owner], i_AddToPay, payClient);
-				rp_SetJobCapital(91, rp_GetJobCapital(91) + payCapital);
+				if( IsValidClient(data[BM_Owner]) && rp_GetClientJobID(data[BM_Owner]) == 91 ) {
+					float taxe = data[BM_Owner] == client ? getTaxe(client) : 0.5;
+					
+					int payClient = RoundToCeil(float(data[BM_Prix]) * (1.0 - taxe));
+					int payCapital = RoundToCeil(float(data[BM_Prix]) * (taxe));
+					
+					rp_ClientMoney(data[BM_Owner], i_AddToPay, payClient);
+					rp_SetJobCapital(91, rp_GetJobCapital(91) + payCapital);
+				}
+				else {
+					rp_SetJobCapital(91, rp_GetJobCapital(91) + data[BM_Prix]);
+				}
+				
+				LogToGame("[TSX-RP] [ITEM-VENDRE] %L a vendu 1 %s a %L", client, name, client);
+				
+				Call_StartForward(rp_GetForwardHandle(client, RP_OnBlackMarket));
+				Call_PushCell(client);
+				Call_PushCell(91);
+				Call_PushCell(client);
+				Call_PushCell(client);
+				Call_PushCellRef(data[BM_Prix]);
+				Call_PushCell(rp_GetClientInt(client, i_LastVolAmount) - 100);
+				Call_Finish();
 			}
-			else {
-				rp_SetJobCapital(91, rp_GetJobCapital(91) + data[BM_Prix]);
-			}
-			
-			LogToGame("[TSX-RP] [ITEM-VENDRE] %L a vendu 1 %s a %L", client, name, client);
-			
-			Call_StartForward(rp_GetForwardHandle(client, RP_OnBlackMarket));
-			Call_PushCell(client);
-			Call_PushCell(91);
-			Call_PushCell(client);
-			Call_PushCell(client);
-			Call_PushCellRef(data[BM_Prix]);
-			Call_PushCell(rp_GetClientInt(client, i_LastVolAmount) - 100);
-			Call_Finish();
 		}
 	}
 	else if (p_oAction == MenuAction_End) {

@@ -17,18 +17,19 @@ int getNextReboot() {
 	static char szDate05[64], szDate16[64];
 	
 	int now = GetTime();
-	FormatTime(szDate05, sizeof(szDate05), "%e/%m/%Y/5/00/05", now);
-	FormatTime(szDate16, sizeof(szDate16), "%e/%m/%Y/16/30/05", now);
+	FormatTime(szDate05, sizeof(szDate05), "%e/%m/%Y/6/00/05", now);
+//	FormatTime(szDate16, sizeof(szDate16), "%e/%m/%Y/16/30/05", now);
 	
 	int iDate05 = DateToTimestamp(szDate05);
 	if( iDate05 < now )
 		iDate05 += (24 * 60 * 60);
 	
-	int iDate16 = DateToTimestamp(szDate16);
-	if( iDate16 < now )
-		iDate16 += (24 * 60 * 60);
+//	int iDate16 = DateToTimestamp(szDate16);
+//	if( iDate16 < now )
+//		iDate16 += (24 * 60 * 60);
 	
-	int next = iDate05 > iDate16 ? iDate16 : iDate05;
+//	int next = iDate05 > iDate16 ? iDate16 : iDate05;
+	int next = iDate05;
 	
 	return next;
 }
@@ -350,7 +351,7 @@ void AFK_Check(int client) {
 		if( g_iUserData[client][i_PlayerLVL] < 100 )
 			rp_ClientXPIncrement(client);
 		
-		if( g_bUserData[client][b_IsFirstSpawn] && IsTutorialOver(client) ) {
+		if( g_bUserData[client][b_IsFirstSpawn] ) {
 			EventFirstSpawn(client);
 			
 			g_bUserData[client][b_IsFirstSpawn] = false;
@@ -493,9 +494,11 @@ int ExplosionDamage(float origin[3], float damage, float lenght, int activator=0
 		
 		g_iUserData[activator][i_LastAgression] = GetTime();
 		DealDamage(i, RoundFloat(dmg), activator, DMG_BLAST, weapon);
-		if( IsValidClient(i) )
+
+		if( IsValidClient(i) ) {
 			rp_ClientAggroIncrement(activator, i, RoundFloat(dmg));
-		res++;
+			res++;
+		}
 	}
 	
 	MakeRadiusPush2(origin, lenght, (damage * 2.0));
@@ -1006,10 +1009,6 @@ stock void SpawnBonbon( float origin[3], int owner = 0) {
 	ScheduleEntityInput(id, 60.0, "Kill");
 	
 	ServerCommand("sm_effect_particles %d Trail5 10", id);
-	if( owner > 0 ) {
-		g_iOriginOwner[id] = owner;
-		SDKHook(id, SDKHook_SetTransmit, Hook_Transmit);
-	}
 	return;
 }
 public void BonbonEntityGotTouch(int touched, int toucher) {

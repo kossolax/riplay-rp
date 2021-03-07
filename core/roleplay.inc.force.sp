@@ -573,12 +573,6 @@ bool MayMoveThisEntity(int client, int ent) {
 			return true;
 		if( IsValidVehicle(ent) && IsAllowed_car(client, ent) )
 			return true;
-		
-		char classname[64];
-		GetEdictClassname(ent, classname, sizeof(classname));
-		if( StrContains(classname, "rp_banana") == 0 ) {
-			return true;
-		}
 	}
 	else if( g_iMayGrabAll[client] == 2 ) {
 		

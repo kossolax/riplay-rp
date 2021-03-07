@@ -1068,6 +1068,11 @@ public Action BuildingPlant_post(Handle timer, any entity) {
 	return Plugin_Handled;
 }
 public Action DamagePlant(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
+	if( !Entity_CanBeBreak(victim, attacker) ) {
+		damage = 0.0;
+		return Plugin_Changed;
+	}
+	
 	if( IsValidClient(attacker) && attacker == inflictor ) {
 		
 		char sWeapon[32];
@@ -1397,7 +1402,8 @@ public Action ItemPickLockOver_18th(Handle timer, Handle dp) {
 		CreateTimer(10.0, AllowStealing, client);
 		return Plugin_Handled;
 	}
-	if( (rp_IsClientNew(target) || (rp_GetClientJobID(target)==41 && rp_GetClientInt(target, i_ToKill) > 0) || (rp_GetWeaponBallType(wepid) == ball_type_nosteal)) && Math_GetRandomInt(0,3) != 0 ) {
+	
+	if( rp_IsClientNew(target) || (rp_GetClientJobID(target)==41 && rp_GetClientInt(target, i_ToKill) > 0) || (rp_GetWeaponBallType(wepid) == ball_type_nosteal) ) {
 		CPrintToChat(client, ""...MOD_TAG..." %T", "Steal_Failed", client);
 		CreateTimer(5.0, AllowStealing, client);
 		return Plugin_Handled;
@@ -1611,8 +1617,8 @@ void getItemFromMarket(int client, int itemID, int amount) {
 			GetClientAuthId(stackClient[rnd], AUTH_TYPE, SteamID, sizeof(SteamID), false);
 			GetClientAuthId(client, AUTH_TYPE, targetSteamID, sizeof(targetSteamID), false);
 			char szQuery[1024];
-			Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`, `to_steamid`) VALUES (NULL, '%s', '%i', '%i', '0', '%i', '%s', '%i', '%s');",
-			SteamID, rp_GetClientJobID(stackClient[rnd]), GetTime(), itemID, buffer, 1, targetSteamID);
+			Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`, `reduction`, `to_steamid`) VALUES (NULL, '%s', '%i', '%i', '0', '%i', '%s', '%i', '%i', '%s');",
+			SteamID, rp_GetClientJobID(stackClient[rnd]), GetTime(), itemID, buffer, 1, money, targetSteamID);
 			SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery);
 		}
 		

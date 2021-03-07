@@ -7,7 +7,7 @@
 #include <emitsoundany>
 #include <colors_csgo>
 #include <dhooks>
-#include <csgo_items>
+#include <eItems>
 #include <SteamWorks>
 
 #include <custom_weapon_mod.inc>
@@ -173,6 +173,7 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 	CreateNative("CWM_GetId", Native_CWM_GetId);
 	CreateNative("CWM_RefreshHUD", Native_CWM_RefreshHUD);
 	CreateNative("CWM_IsCustom", Native_CWM_IsCustom);
+	CreateNative("CWM_GetName", Native_CWM_GetName);
 	
 	CreateNative("CWM_ZoomIn", Native_CWM_ZoomIn);
 	CreateNative("CWM_ZoomOut", Native_CWM_ZoomOut);
@@ -201,16 +202,28 @@ public Action Cmd_Spawn(int client, int args) {
 	int id;
 	if (g_hNamedIdentified.GetValue(tmp, id)) {
 		
-		if( args == 2 ) {
-			int target_list[MAXPLAYERS], target_count; bool tn_is_ml;
-			if ( (target_count = ProcessTargetString(tmp2, client, target_list, MAXPLAYERS,
-				COMMAND_FILTER_ALIVE|COMMAND_FILTER_NO_IMMUNITY, tmp3, sizeof(tmp3), tn_is_ml)) <= 0) {
-				ReplyToTargetError(client, target_count);
-				return Plugin_Handled;
-			}
+		if( args >= 2 ) {
 			
-			for (int i = 0; i < target_count; i++)
-				CWM_Spawn(id, target_list[i], pos, ang);
+			if (StrContains(tmp2, "#") == 0 ) {
+				ReplaceString(tmp2, sizeof(tmp2), "#", "");
+				int target = GetClientOfUserId(StringToInt(tmp2));
+				if( IsValidClient(target) )
+					CWM_Spawn(id, target, pos, ang);
+			}
+			else if( IsValidClient(StringToInt(tmp2)) ) {
+				CWM_Spawn(id, StringToInt(tmp2), pos, ang);
+			}
+			else {
+				int target_list[MAXPLAYERS], target_count; bool tn_is_ml;
+				if ( (target_count = ProcessTargetString(tmp2, client, target_list, MAXPLAYERS,
+					COMMAND_FILTER_ALIVE|COMMAND_FILTER_NO_IMMUNITY, tmp3, sizeof(tmp3), tn_is_ml)) <= 0) {
+					ReplyToTargetError(client, target_count);
+					return Plugin_Handled;
+				}
+				
+				for (int i = 0; i < target_count; i++)
+					CWM_Spawn(id, target_list[i], pos, ang);
+			}
 		}
 		else if (client > 0) {
 			GetClientAimedLocation(client, pos, ang);
@@ -446,7 +459,7 @@ public int Native_CWM_Spawn(Handle plugin, int numParams) {
 #endif
 
 #if CSGO_RENAME_WEAPON == 1
-	//SetEntDataString(entity, FindSendPropInfo("CBaseAttributableItem", "m_szCustomName"), g_sStack[id][WSS_Fullname], 128);
+	SetEntDataString(entity, FindSendPropInfo("CBaseAttributableItem", "m_szCustomName"), g_sStack[id][WSS_Fullname], 128);
 #endif
 
 #if CSGO_FIX_STARTRAK == 1
@@ -454,7 +467,7 @@ public int Native_CWM_Spawn(Handle plugin, int numParams) {
 	SetEntData(entity, FindSendPropInfo("CBaseAttributableItem", "m_nFallbackPaintKit"), GetRandomInt(1, 2048));
 	SetEntData(entity, FindSendPropInfo("CBaseAttributableItem", "m_nFallbackStatTrak"), -1);
 	
-	SetEntProp(entity, Prop_Send, "m_iItemDefinitionIndex", CSGO_GetItemDefinitionIndexByName(g_sStack[id][WSS_ReplaceWeapon]));
+	SetEntProp(entity, Prop_Send, "m_iItemDefinitionIndex", eItems_GetWeaponDefIndexByClassName(g_sStack[id][WSS_ReplaceWeapon]));
 #endif
 
 	SetEntityModel(entity, g_sStack[id][WSS_WModel]);
@@ -464,6 +477,8 @@ public int Native_CWM_Spawn(Handle plugin, int numParams) {
 	g_fEntityData[entity][WSF_NextAttack] = GetGameTime();
 	g_iEntityData[entity][WSI_ShotFired] = 0;
 	g_iEntityData[entity][WSI_Identifier] = id;
+	
+	g_iEntityData[entity][WSI_AttackDamage] = g_iStack[id][WSI_AttackDamage];
 	
 	g_iEntityData[entity][WSI_Bullet] = g_iStack[id][WSI_MaxBullet];
 	g_iEntityData[entity][WSI_Ammunition] = g_iStack[id][WSI_MaxAmmunition];
@@ -522,7 +537,7 @@ public Action CWM_Spawn_Post(Handle timer, any entity) {
 	}
 	
 	if( id >= 0 )
-		SetEntProp(entity, Prop_Send, "m_iItemDefinitionIndex", CSGO_GetItemDefinitionIndexByName(tmp));
+		SetEntProp(entity, Prop_Send, "m_iItemDefinitionIndex", eItems_GetWeaponDefIndexByClassName(tmp));
 } 
 public int Native_CWM_ShootHull(Handle plugin, int numParams) {
 	float src[3], ang[3], hit[3], dst[3], min[3], max[3];
@@ -557,7 +572,7 @@ public int Native_CWM_ShootHull(Handle plugin, int numParams) {
 
 			if (IsBreakable(target)) {
 				
-				Entity_Hurt(target, g_iStack[id][WSI_AttackDamage], client, DMG_CRUSH, g_sStack[id][WSS_Name]);
+				Entity_Hurt(target, g_iEntityData[wpnid][WSI_AttackDamage], client, DMG_CRUSH|DMG_SLASH, g_sStack[id][WSS_Name]);
 				
 				if (IsValidClient(target)) {
 					TE_SetupBloodSprite(hit, view_as<float>( { 0.0, 0.0, 0.0 } ), { 255, 0, 0, 255 }, 16, 0, 0);
@@ -619,13 +634,13 @@ public int Native_CWM_ShootRay(Handle plugin, int numParams) {
 				float physcale = 8.0; // TODO: Use cvar: phys_pushscale
 				SubtractVectors(hit, src, nor);
 				NormalizeVector(nor, nor);
-				ScaleVector(nor, float(g_iStack[id][WSI_AttackDamage]) * physcale);
+				ScaleVector(nor, float(g_iEntityData[wpnid][WSI_AttackDamage]) * physcale);
 				TeleportEntity(target, NULL_VECTOR, NULL_VECTOR, nor);
 			}
 			
 			if (IsBreakable(target)) {
 				
-				Entity_Hurt(target, g_iStack[id][WSI_AttackDamage], client, DMG_CRUSH, g_sStack[id][WSS_Name]);
+				Entity_Hurt(target, g_iEntityData[wpnid][WSI_AttackDamage], client, DMG_CRUSH, g_sStack[id][WSS_Name]);
 				
 				if (IsValidClient(target)) {
 					TE_SetupBloodSprite(hit, nor, { 255, 0, 0, 255 }, 16, 0, 0);
@@ -673,7 +688,8 @@ public int Native_CWM_ShootDamage(Handle plugin, int numParams) {
 	int id = g_iEntityData[wpnid][WSI_Identifier];
 	
 	if (IsBreakable(target)) {
-		Entity_Hurt(target, g_iStack[id][WSI_AttackDamage], client, DMG_CRUSH, g_sStack[id][WSS_Name]);
+		Entity_Hurt(target, g_iEntityData[wpnid][WSI_AttackDamage], client, DMG_CRUSH, g_sStack[id][WSS_Name]);
+		
 		if (IsValidClient(target)) {
 			TE_SetupBloodSprite(hit, view_as<float>( { 0.0, 0.0, 0.0 } ), { 255, 0, 0, 255 }, 16, 0, 0);
 			TE_SendToAll();
@@ -692,7 +708,7 @@ public int Native_CWM_ShootExplode(Handle plugin, int numParams) {
 	int entity = GetNativeCell(3);
 	float radius = view_as<float>(GetNativeCell(4));
 	int id = g_iEntityData[wpnid][WSI_Identifier];
-	float falloff = float(g_iStack[id][WSI_AttackDamage]) / radius;
+	float falloff = float(g_iEntityData[wpnid][WSI_AttackDamage]) / radius;
 	float src[3], dst[3], distance, min[3], max[3], hit[3], fraction;
 	Handle tr;
 	Entity_GetAbsOrigin(entity, src);
@@ -772,8 +788,8 @@ public int Native_CWM_ShootProjectile(Handle plugin, int numParams) {
 	SetEntityMoveType(ent, MOVETYPE_FLYGRAVITY);
 	
 	Entity_SetSolidType(ent, SOLID_VPHYSICS);
-	Entity_SetSolidFlags(ent, FSOLID_TRIGGER );
-	Entity_SetCollisionGroup(ent, COLLISION_GROUP_PLAYER | COLLISION_GROUP_PLAYER_MOVEMENT);	
+	Entity_SetSolidFlags(ent, FSOLID_TRIGGER);
+	Entity_SetCollisionGroup(ent, COLLISION_GROUP_PLAYER);	
 	
 	if (!StrEqual(model, NULL_MODEL)) {
 		if (!IsModelPrecached(model))
@@ -797,7 +813,7 @@ public int Native_CWM_ShootProjectile(Handle plugin, int numParams) {
 	ScaleVector(vecDir, speed);
 	
 	
-	float delta[3] =  { 32.0, -16.0, -12.0 };
+	float delta[3] =  { 32.0, -4.0, -12.0 };
 	Math_RotateVector(delta, vecAngles, delta);
 	vecOrigin[0] += delta[0];
 	vecOrigin[1] += delta[1];
@@ -821,6 +837,10 @@ public int Native_CWM_RefreshHUD(Handle plugin, int numParams) {
 public int Native_CWM_IsCustom(Handle plugin, int numParams) {
 	int entity = GetNativeCell(1);
 	return view_as<int>(g_iEntityData[entity][WSI_Identifier] >= 0);
+}
+public int Native_CWM_GetName(Handle plugin, int numParams) {
+	int id = GetNativeCell(1);
+	SetNativeString(2, g_sStack[id][WSS_Name], sizeof(g_sStack[][]));
 }
 public int Native_CWM_ZoomIn(Handle plugin, int numParams) {
 	int client = GetNativeCell(1);
@@ -1187,8 +1207,10 @@ public Action OnPlayerRunCmd(int client, int& btn, int & impulse, float vel[3], 
 public MRESReturn CCSPlayer_GetPlayerMaxSpeed(int client, Handle hReturn, Handle hParams) {
 
 #if DEBUG_MAXSPEED == 1
-	float speed = DHookGetReturn(hReturn);
-	PrintToChatAll("%f", speed);
+	if (g_bHasCustomWeapon[client]) {
+		float speed = DHookGetReturn(hReturn);
+		PrintToChat(21, "%f", speed);
+	}
 	return MRES_Ignored;
 #else
 	if (g_bHasCustomWeapon[client]) {
@@ -1438,7 +1460,7 @@ stock void CWM_Attack(int client, int wpnid) {
 				CWM_Recoil(client, wpnid);
 			}
 			
-			if (g_iEntityData[wpnid][WSI_Bullet] == 0)
+			if (g_iEntityData[wpnid][WSI_Bullet] == 0 && g_iEntityData[wpnid][WSI_State] == 0 )
 				CreateTimer(g_fStack[id][WSF_AttackSpeed], CWM_ReloadBatch, wpnid);
 		}
 	}
@@ -1471,6 +1493,9 @@ stock void CWM_AttackPost(int client, int wpnid) {
 	Call_PushCell(client);
 	Call_PushCell(wpnid);
 	Call_Finish(a);
+	
+	if (g_iEntityData[wpnid][WSI_Bullet] == 0 )
+		CreateTimer(g_fStack[id][WSF_AttackSpeed], CWM_ReloadBatch, wpnid);
 	
 }
 stock void CWM_Attack2(int client, int wpnid) {
@@ -1619,7 +1644,7 @@ public Action CWM_ProjectileTouch(int ent, int target) {
 		Call_Finish(a);
 		
 		if (a == Plugin_Continue && IsBreakable(target)) {
-			Entity_Hurt(target, g_iStack[id][WSI_AttackDamage], g_iEntityData[wpnid][WSI_Owner], DMG_GENERIC, g_sStack[id][WSS_Name]);
+			Entity_Hurt(target, g_iEntityData[wpnid][WSI_AttackDamage], g_iEntityData[wpnid][WSI_Owner], DMG_GENERIC, g_sStack[id][WSS_Name]);
 		}
 		
 		if (a != Plugin_Stop) {
@@ -1669,6 +1694,8 @@ public bool IsBreakable(int ent) {
 	if (StrContains(classname, "chicken", false) == 0)
 		return true;
 	if (StrContains(classname, "monster_generic", false) == 0)
+		return true;
+	if (StrContains(classname, "rp_", false) == 0)
 		return true;
 	
 	return false;

@@ -7,7 +7,6 @@
 #include <colors_csgo>
 #include <smlib>
 #include <regex>
-#include <csgo_items>
 #include <emitsoundany>
 
 #include <websocket>

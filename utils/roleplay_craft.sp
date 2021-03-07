@@ -17,10 +17,11 @@
 #include <smlib>		// https://github.com/bcserv/smlib
 #include <colors_csgo>	// https://forums.alliedmods.net/showthread.php?p=2205447#post2205447
 #include <emitsoundany> // https://forums.alliedmods.net/showthread.php?t=237045
-#include <collisionhook> // https://forums.alliedmods.net/showthread.php?t=197815
+//#include <collisionhook> // https://forums.alliedmods.net/showthread.php?t=197815
 
 #pragma newdecls required
 #include <roleplay.inc>	// https://www.ts-x.eu
+#include <custom_weapon_mod.inc>
 
 #define	STONE_HP			1
 #define TREE_HP				1
@@ -40,6 +41,7 @@
 #define SENTRY_ANGLE		0.5
 
 Handle g_hOnSentryAttack;
+bool g_bBuilding[65];
 
 enum {
 	STATE_TURN_LEFT,
@@ -74,7 +76,7 @@ int g_iTreeID[2049], g_iStoneID[2049];
 int g_iStoneCount = 0;
 int g_cBeam;
 int g_iMaxRandomMineral;
-int g_iMeleeHP[65][4]; // 0 = canne, 1 = marteau, 2 = hache, 3 = spanner
+int g_iMeleeHP[2049][4]; // 0 = canne, 1 = marteau, 2 = hache, 3 = spanner
 
 ArrayList g_iSpawn;
 
@@ -100,7 +102,7 @@ public Action Cmd_Reload(int args) {
 }
 
 public Action CH_ShouldCollide(int ent1, int ent2, bool& result) {
-//	PrintToChatAll("collide - %d -- %d -- %d", ent1, ent2, result);
+	
 	return Plugin_Continue;
 }
 public Action CH_PassFilter(int ent1, int ent2, bool& result) {
@@ -127,6 +129,10 @@ public Action CH_PassFilter(int ent1, int ent2, bool& result) {
 }
 
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("common.phrases");
+	LoadTranslations("roleplay.phrases");
+	
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	
 	RegServerCmd("rp_item_fish", 		Cmd_Fish,			"RP-ITEM",	FCVAR_UNREGISTERED);
@@ -139,6 +145,27 @@ public void OnPluginStart() {
 	for (int i = 1; i <= MaxClients; i++)
 		if( IsValidClient(i) )
 			OnClientPostAdminCheck(i);
+	
+	char tmp[128];
+	for (int i = 1; i <= 2048; i++) {
+		if( !IsValidEdict(i) || !IsValidEntity(i) )
+			continue;
+		
+		GetEdictClassname(i, tmp, sizeof(tmp));
+		
+		if( StrEqual(tmp, "rp_sentry") ) {
+			SDKHook(i, SDKHook_Think, OnThink);
+		}
+		
+		if( StrEqual(tmp, "weapon_melee") ) {
+			if( IsMeleeHammer(i) )
+				g_iMeleeHP[i][1] = MELEE_HP;
+			if( IsMeleeAxe(i) )
+				g_iMeleeHP[i][2] = MELEE_HP;
+			if( IsMeleeSpanner(i) )
+				g_iMeleeHP[i][3] = MELEE_HP;
+		}
+	}
 	
 	g_iMaxRandomMineral = 0;
 	for (int i = 0; i < sizeof(g_szStone); i++) {
@@ -277,6 +304,64 @@ public Action Cmd_Sentry(int args) {
 	int client = GetCmdArgInt(1);
 	int item_id = GetCmdArgInt(args);
 	
+	if( !rp_IsBuildingAllowed(client) ) {
+		ITEM_CANCEL(client, item_id);
+		return Plugin_Handled;
+	}
+	
+	int zone = rp_GetPlayerZone(client);
+	int job = rp_GetZoneInt(zone, zone_type_type);
+	int appart = rp_GetPlayerZoneAppart(client);
+	int group = rp_GetClientGroupID(client);
+	
+	bool pvp = rp_IsInPVP(client);
+	
+	char classname[64], tmp[64];
+	Format(classname, sizeof(classname), "rp_sentry");
+	
+	int pvpGangCount = 0;
+	
+	for(int i=1; i<=2048; i++) {
+		if( !IsValidEdict(i) )
+			continue;
+		if( !IsValidEntity(i) )
+			continue;
+			
+		GetEdictClassname(i, tmp, sizeof(tmp));
+		
+		if( StrEqual(classname, tmp) ) {
+			if( rp_GetBuildingData(i, BD_owner) == client ) {
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
+				ITEM_CANCEL(client, item_id);
+				return Plugin_Handled;
+			}
+			if( job > 0 && rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type) == job ) {
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
+				ITEM_CANCEL(client, item_id);
+				return Plugin_Handled;
+			}
+			if( appart > 0 && rp_GetPlayerZoneAppart(i) == appart ) {
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
+				ITEM_CANCEL(client, item_id);
+				return Plugin_Handled;
+			}
+			if( pvp && Entity_GetDistance(client, i) <= 512.0 ) {
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
+				ITEM_CANCEL(client, item_id);
+				return Plugin_Handled;
+			}
+			if( pvp && rp_IsInPVP(i) && rp_GetClientGroupID(rp_GetBuildingData(i, BD_owner)) == group ) {
+				pvpGangCount++;
+			}
+		}
+	}
+	
+	if( pvpGangCount >= 2 ) {
+		CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
+		ITEM_CANCEL(client, item_id);
+		return Plugin_Handled;
+	}	
+
 	float pos[3], ang[3];
 	Entity_GetAbsOrigin(client, pos);
 	Entity_GetAbsAngles(client, ang);
@@ -284,10 +369,47 @@ public Action Cmd_Sentry(int args) {
 	int ent = CreateSentry(client, pos, ang);
 	rp_SetBuildingData(ent, BD_owner, client);
 	rp_SetBuildingData(ent, BD_item_id, item_id);
-	
-	SetEntProp( ent, Prop_Data, "m_iHealth", 100000);
+	SetEntProp( ent, Prop_Data, "m_iHealth", 50000);
 	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
 	
+	ServerCommand("sm_effect_fading \"%i\" \"5.0\" \"0\"", ent);
+	EmitSoundToAllAny("player/ammo_pack_use.wav", client, _, _, _, 0.66);
+	
+	rp_HookEvent(client, RP_OnPlayerDead, fwdDead, 5.0);
+	rp_HookEvent(client, RP_PrePlayerPhysic, fwdFrozen, 5.0);
+	rp_SetClientFloat(client, fl_TazerTime, GetGameTime() + 5.0);
+	rp_SetClientFloat(client, fl_FrozenTime, GetGameTime() + 5.0);
+	
+	SetEntityMoveType(ent, MOVETYPE_NONE);
+	CreateTimer(5.0, BuildingSentry_post, ent);
+	g_bBuilding[client] = true;
+	
+	return Plugin_Handled;
+}
+public Action fwdDead(int client) {
+	g_bBuilding[client] = false;
+}
+public Action fwdFrozen(int client, float& speed, float& gravity) {
+	speed = 0.0;
+	gravity = 0.0; 
+	return Plugin_Stop;
+}
+public Action BuildingSentry_post(Handle timer, any ent) {
+	if( !IsValidEdict(ent) && !IsValidEntity(ent) ) {
+		return Plugin_Handled;
+	}
+	
+	int client = rp_GetBuildingData(ent, BD_owner);
+	if( g_bBuilding[client] == false ) {
+		int item_id = rp_GetBuildingData(ent, BD_item_id);
+		ITEM_CANCEL(client, item_id);
+		AcceptEntityInput(ent, "Kill");
+		return Plugin_Handled;
+	}
+
+	SDKHook(ent, SDKHook_Think, OnThink);
+	g_bBuilding[client] = false;
+	return Plugin_Handled;
 }
 public Action Cmd_GiveItem(int args) {
 	char Arg1[64];
@@ -299,13 +421,19 @@ public Action Cmd_GiveItem(int args) {
 	int ent = GivePlayerItem(client, Arg1);
 	
 	if( StrEqual(Arg1, "weapon_hammer") ) {
-		g_iMeleeHP[client][1] = MELEE_HP;
+		g_iMeleeHP[ent][1] = MELEE_HP;
+		if( rof > 1 )
+			g_iMeleeHP[ent][1] = RoundFloat(rof*float(MELEE_HP));
 	}
 	if( StrEqual(Arg1, "weapon_axe") ) {
-		g_iMeleeHP[client][2] = MELEE_HP;
+		g_iMeleeHP[ent][2] = MELEE_HP;
+		if( rof > 1 )
+			g_iMeleeHP[ent][2] = RoundFloat(rof*float(MELEE_HP));
 	}
 	if( StrEqual(Arg1, "weapon_spanner") ) {
-		g_iMeleeHP[client][3] = MELEE_HP;
+		g_iMeleeHP[ent][3] = MELEE_HP;
+		if( rof > 1 )
+			g_iMeleeHP[ent][3] = RoundFloat(rof*float(MELEE_HP));
 	}
 	
 	if( rof > 1.0 ) {
@@ -803,7 +931,15 @@ public void RemoveStone(int ref) {
 }
 public Action OnPropDamage(int victim, int& attacker, int& inflictor, float& damage, int& damagetype, int& weapon, float damageForce[3], float damagePosition[3]) {
 	static char tmp[128];
-
+	
+	if( weapon == -1 && attacker != inflictor && IsValidClient(attacker) ) {
+		weapon = GetEntPropEnt(attacker, Prop_Data, "m_hActiveWeapon");
+		if( IsMeleeChainSaw(weapon) ) {
+			inflictor = attacker;
+		}
+	}
+	
+	
 	if( attacker == inflictor && damagetype & DMG_SLASH ) {
 		GetEdictClassname(victim, tmp, sizeof(tmp));
 		
@@ -826,15 +962,16 @@ public Action OnPropDamage(int victim, int& attacker, int& inflictor, float& dam
 					Call_Finish(a);
 					rp_ClientGiveItem(attacker, itemID, amount);
 					
-					g_iMeleeHP[attacker][1]--;
-					if( g_iMeleeHP[attacker][1] <= 0 ) {
+					g_iMeleeHP[weapon][1]--;
+					if( g_iMeleeHP[weapon][1] <= 0 ) {
 						rp_ScheduleEntityInput(weapon, 0.1, "Kill");
 						FakeClientCommand(attacker, "use weapon_fists");
 					}
 				}
 			}
 		}
-		if( StrEqual(tmp, "rp_wood") && IsMeleeAxe(weapon) ) {
+		
+		if( StrEqual(tmp, "rp_wood") && (IsMeleeAxe(weapon)||IsMeleeChainSaw(weapon)) ) {
 			
 			int amount = 1;
 			Action a;
@@ -848,13 +985,21 @@ public Action OnPropDamage(int victim, int& attacker, int& inflictor, float& dam
 			rp_ClientGiveItem(attacker, ITEM_BOIS, amount);
 			AcceptEntityInput(victim, "Break");
 			
-			g_iMeleeHP[attacker][2]--;
-			if( g_iMeleeHP[attacker][2] <= 0 ) {
-				rp_ScheduleEntityInput(weapon, 0.1, "Kill");
-				FakeClientCommand(attacker, "use weapon_fists");
+			if( IsMeleeAxe(weapon) ) {
+				g_iMeleeHP[weapon][2]--;
+				if( g_iMeleeHP[weapon][2] <= 0 ) {
+					rp_ScheduleEntityInput(weapon, 0.1, "Kill");
+					FakeClientCommand(attacker, "use weapon_fists");
+				}
 			}
 		}
-		if( StrEqual(tmp, "rp_tree") && IsMeleeAxe(weapon) ) {
+		
+
+		if( StrEqual(tmp, "rp_tree") && (IsMeleeAxe(weapon)||IsMeleeChainSaw(weapon)) ) {
+			if( IsMeleeChainSaw(weapon) ) {
+				damage *= 5.0;
+			}
+			
 			SetEntProp(victim, Prop_Data, "m_iHealth", Entity_GetHealth(victim) - RoundFloat(damage));
 			if( Entity_GetHealth(victim) <= 0 ) {
 				
@@ -943,9 +1088,7 @@ int CreateSentry(int owner, float pos[3], float ang[3]) {
 	SetEntityMoveType(ent, MOVETYPE_FLYGRAVITY);
 	SetEntProp(ent, Prop_Data, "m_lifeState", 0);
 	
-	TeleportEntity(ent, pos, ang, NULL_VECTOR);
-	SDKHook(ent, SDKHook_Think, OnThink);
-	
+	TeleportEntity(ent, pos, ang, NULL_VECTOR);	
 	return ent;
 }
 void getTargetAngle(int ent, int target, float& tilt, float& yaw) {
@@ -1089,12 +1232,15 @@ int getEnemy(int ent, float src[3], float ang[3], float& tilt, float threshold) 
 	
 	return nearest;
 }
+
 public void OnThink(int ent) {
 	float tilt = GetEntPropFloat(ent, Prop_Send, "m_flPoseParameter", 0);
 	float yaw = GetEntPropFloat(ent, Prop_Send, "m_flPoseParameter", 1);
 	float last = GetEntPropFloat(ent, Prop_Data, "m_flLastAttackTime");
 	int state = GetEntProp(ent, Prop_Data, "m_iInteractionState");
 	int oldEnemy = GetEntPropEnt(ent, Prop_Data, "m_hInteractionPartner");
+	bool disabled = rp_GetBuildingData(ent, BD_HackedTime) > GetTime();
+	int owner = Entity_GetOwner(ent);
 
 	int damage = 10;
 	float push = 128.0;
@@ -1106,6 +1252,20 @@ public void OnThink(int ent) {
 	Entity_GetAbsOrigin(ent, src);
 	Entity_GetAbsAngles(ent, ang);
 	src[2] += 43.0; 
+	
+	if( disabled || !IsValidClient(owner) ) {
+		
+		if( GetRandomInt(0, 3) == 0 ) {
+			GetAngleVectors(ang, dir, NULL_VECTOR, NULL_VECTOR);
+			rp_Effect_ParticlePath(ent, "env_sparks_omni", src, ang, src);
+		}
+		
+		if( !IsValidClient(owner) ) {
+			SDKHooks_TakeDamage(ent, ent, ent, 1.0, ent);
+		}
+		
+		return;
+	}
 	
 	ang[0] = ang[0] + (yaw-0.5) * 90.0;
 	ang[1] = ang[1] + AngleMod(180.0 + (tilt * 360.0));
@@ -1125,15 +1285,15 @@ public void OnThink(int ent) {
 	int newEnemy = getEnemy(ent, src, ang, tilt, threshold);
 	if( newEnemy > 0 ) {
 		if( oldEnemy == 0 )
-			EmitAmbientSoundAny("survival/turret_sawplayer_01.wav", NULL_VECTOR, ent);
+			EmitSoundToAllAny("survival/turret_sawplayer_01.wav", ent);
 		
 		moveToTarget(ent, newEnemy, speed, tilt, yaw);
 		
 		if( last+fire < GetGameTime() ) {
-			EmitAmbientSoundAny("weapons/m249/m249-1.wav", NULL_VECTOR, ent, _, _, _, SNDPITCH_HIGH);
+			EmitSoundToAllAny("weapons/m249/m249-1.wav", ent, _, _, _, 0.5, SNDPITCH_HIGH);
 			SetEntPropFloat(ent, Prop_Data, "m_flLastAttackTime", GetGameTime());
 			
-			Handle trace = TR_TraceRayFilterEx(src, ang, MASK_SHOT, RayType_Infinite, TraceEntityFilterSelf, ent);
+			Handle trace = TR_TraceRayFilterEx(src, ang, MASK_SHOT, RayType_Infinite, TraceEntityFilterSentry, ent);
 			if( TR_DidHit(trace) ) {
 				TR_GetEndPosition(dst, trace);
 				int victim = TR_GetEntityIndex(trace);
@@ -1148,8 +1308,14 @@ public void OnThink(int ent) {
 					AddVectors(vel, dir, dir);
 					TeleportEntity(victim, NULL_VECTOR, NULL_VECTOR, dir);
 					if( damage > 0 ) {
-						rp_SetClientInt(victim, i_LastInflictor, ent);
-						SDKHooks_TakeDamage(victim, ent, Entity_GetOwner(ent), float(damage), ent);
+						if( IsValidClient(victim) )
+							rp_SetClientInt(victim, i_LastInflictor, ent);
+						
+						if( rp_IsInPVP(victim) )
+							SDKHooks_TakeDamage(victim, ent, Entity_GetOwner(ent), float(damage)*1.5, ent);
+						else
+							SDKHooks_TakeDamage(victim, ent, Entity_GetOwner(ent), float(damage), ent);
+						
 					}
 				}
 				
@@ -1157,11 +1323,14 @@ public void OnThink(int ent) {
 				TE_SendToAll();
 			}
 			delete trace;
+			
+			//TR_EnumerateEntities(src, ang, MASK_ALL, RayType_Infinite, enumerator, ent);
+			
 		}
 	}
 	else {
 		if( oldEnemy > 0 )
-			EmitAmbientSoundAny("survival/turret_lostplayer_03.wav", NULL_VECTOR, ent);
+			EmitSoundToAllAny("survival/turret_lostplayer_03.wav", ent);
 		
 		if( state == STATE_TURN_LEFT ) {
 			tilt += speed;
@@ -1169,7 +1338,7 @@ public void OnThink(int ent) {
 			if( tilt > 0.5 + SENTRY_ANGLE/2 ) {
 				tilt = 0.5 + SENTRY_ANGLE/2;
 				state = STATE_TURN_RIGHT;
-				EmitAmbientSoundAny("survival/turret_idle_01.wav", NULL_VECTOR, ent);
+				EmitSoundToAllAny("survival/turret_idle_01.wav", ent);
 			}
 		}
 		else {
@@ -1184,11 +1353,15 @@ public void OnThink(int ent) {
 		
 		int max = Entity_GetMaxHealth(ent);
 		int health = GetEntProp(ent, Prop_Data, "m_iHealth");
-		if( health < max ) {
-			health += 1;
-			if( health > max )
-				health = max;
-			SetEntProp(ent, Prop_Data, "m_iHealth", health);
+		if( health < max && health > max*9/10 ) {
+			
+			if( GetRandomInt(0, 1) == 0 ) {
+				health += 1;
+				if( health > max )
+					health = max;
+			
+				SetEntProp(ent, Prop_Data, "m_iHealth", health);
+			}
 		}
 		
 		if( yaw+speed > 0.5 && yaw-speed < 0.5 )
@@ -1242,10 +1415,32 @@ bool IsMeleeSpanner(int weapon) {
 	}
 	return false;
 }
+stock bool IsMeleeChainSaw(int weapon) {
+	static char tmp[PLATFORM_MAX_PATH];
+	
+	if( CWM_IsCustom(weapon) ) {
+		int id = CWM_GetEntityInt(weapon, WSI_Identifier);
+		CWM_GetName(id, tmp);
+		
+		if( StrEqual(tmp, "chainsaw") )
+			return true;
+	}
+	return false;
+}
 float AngleMod(float flAngle) { 
     flAngle = (360.0 / 65536) * (RoundToNearest(flAngle * (65536.0 / 360.0)) & 65535); 
     return flAngle; 
 }
 public bool TraceEntityFilterSelf(int entity, int contentsMask, any data) {
 	return entity != data;
+}
+public bool TraceEntityFilterSentry(int entity, int contentsMask, any data) {
+	if( entity == 0 )
+		return true;
+	if( entity == data )
+		return false;
+	if( rp_IsMoveAble(entity) )
+		return true;
+	
+	return false;
 }

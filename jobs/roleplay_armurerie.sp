@@ -11,7 +11,7 @@
 #pragma semicolon 1
 
 #include <sourcemod>
-#include <csgo_items>   // https://forums.alliedmods.net/showthread.php?t=243009
+#include <eItems>   	// https://forums.alliedmods.net/showthread.php?t=243009
 #include <colors_csgo>	// https://forums.alliedmods.net/showthread.php?p=2205447#post2205447
 #include <smlib>		// https://github.com/bcserv/smlib
 
@@ -104,25 +104,16 @@ public Action Cmd_ItemBallType(int args) {
 	GetCmdArg(1, arg1, sizeof(arg1));
 	
 	int client = GetCmdArgInt(2);
-	int wepid = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+	int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 	int item_id = GetCmdArgInt(args);
 	
-	
-	if( !IsValidEntity(wepid) ) {
+	if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
 	
-	char classname[64];
-	GetEdictClassname(wepid, classname, sizeof(classname));
-	if( StrEqual(classname, "weapon_knife") ) {
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
-		ITEM_CANCEL(client, item_id);
-		return Plugin_Handled;
-	}
-	
-	if( rp_GetWeaponBallType(wepid) == ball_type_braquage ) {
+	if( rp_GetWeaponBallType(wep_id) == ball_type_braquage ) {
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
@@ -159,7 +150,7 @@ public Action Cmd_ItemBallType(int args) {
 		type = ball_type_notk;
 	}
 	
-	if( type == ball_type_none || rp_GetWeaponBallType(wepid) == type ) {
+	if( type == ball_type_none || rp_GetWeaponBallType(wep_id) == type ) {
 		ITEM_CANCEL(client, item_id);
 		char item_name[128];
 		rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
@@ -168,7 +159,7 @@ public Action Cmd_ItemBallType(int args) {
 		return Plugin_Handled;
 	}
 	
-	rp_SetWeaponBallType(wepid, type);
+	rp_SetWeaponBallType(wep_id, type);
 	
 	return Plugin_Handled;
 }
@@ -181,14 +172,13 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 		return Plugin_Continue;
 
 	int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-	char wep_name[32], tmp1[128], tmp2[128];
-	GetEdictClassname(wep_id, wep_name, sizeof(wep_name));
 	
-	if( StrEqual(wep_name, "weapon_knife") ) {
+	if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
 		return Plugin_Stop;
 	}
-
+	
+	char tmp1[64], tmp2[64];
 	Handle menu = CreateMenu(ModifyWeapon);
 	SetMenuTitle(menu, "%T\n ", "edit_weapon", client);
 	
@@ -233,15 +223,13 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 			strcopy(type, 31, data[0]);
 			int price = StringToInt(data[1]);
 			int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-			char wep_name[32];
-			GetEdictClassname(wep_id, wep_name, sizeof(wep_name));
 
-			if( StrEqual(wep_name, "weapon_knife") ) {
+			if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
 				return;
 			}
 
-			if(StrEqual(type, "pvp")){
+			if( StrEqual(type, "pvp") ){
 				Handle menupvp = CreateMenu(ModifyWeaponPVP);
 				char tmp[64], tmp2[64];
 				SetMenuTitle(menupvp, "%T\n ", "edit_weapon_gang", client);
@@ -299,6 +287,12 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 					ServerCommand("rp_item_redraw %i 74", client);
 				}
 				else if(StrEqual(type, "sanandreas")){
+					
+					int itemId = 22;
+					if( GetConVarInt(FindConVar("rp_capture")) == 1 && rp_GetServerRules(rules_ItemsDisabled, rules_Enabled) == 1 && rp_GetServerRules(rules_ItemsDisabled,rules_Target) == itemId ) {
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_CannotUseItemInPvP", client);
+						return;
+					}
 
 					char classname[64];
 					
@@ -320,7 +314,13 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 				rp_ClientMoney(client, i_Money, -price);
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
 				rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
-				rp_SetJobCapital( 111, rp_GetJobCapital(111)+price );
+				
+				if( StrEqual(type, "fire") || StrEqual(type, "explode") || StrEqual(type, "paintball") ){
+					rp_SetJobCapital( 131, rp_GetJobCapital(131)+price );
+				}
+				else {
+					rp_SetJobCapital( 111, rp_GetJobCapital(111)+price );
+				}
 				FakeClientCommand(client, "say /build");
 
 			}
@@ -359,10 +359,8 @@ public int ModifyWeaponPVP(Handle p_hItemMenu, MenuAction p_oAction, int client,
 			int groupid = StringToInt(data[0]);
 			int price = StringToInt(data[1]);
 			int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-			char wep_name[32];
-			GetEdictClassname(wep_id, wep_name, 31);
 
-			if( StrEqual(wep_name, "weapon_knife") ) {
+			if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
 				return;
 			}
@@ -400,10 +398,7 @@ public Action fwdWeapon(int victim, int attacker, float &damage, int wepID, floa
 		case ball_type_caoutchouc: {
 			damage *= 0.0;
 			
-			if( rp_IsInPVP(victim) ) {
-				TeleportEntity(victim, NULL_VECTOR, NULL_VECTOR, vecNull);
-				damage *= 0.5;
-				
+			if( rp_IsInPVP(victim) && !(rp_GetZoneBit(rp_GetPlayerZone(victim)) & BITZONE_PERQUIZ) ) {				
 				rp_SetClientFloat(victim, fl_FrozenTime, GetGameTime() + 1.5);
 				if(!rp_GetClientBool(victim, ch_Yeux))
 					ServerCommand("sm_effect_flash %d 1.5 180", victim);
@@ -519,7 +514,7 @@ public Action Cmd_ItemRedraw(int args) {
 	}
 	
 	int index = GetEntProp(wep_id, Prop_Send, "m_iItemDefinitionIndex");
-	CSGO_GetItemDefinitionNameByIndex(index, classname, sizeof(classname));
+	eItems_GetWeaponClassNameByDefIndex(index, classname, sizeof(classname));
 	
 	enum_ball_type wep_type = rp_GetWeaponBallType(wep_id);
 	int g = rp_GetWeaponGroupID(wep_id);

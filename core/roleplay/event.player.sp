@@ -44,10 +44,10 @@ public void EventFirstSpawn(int client) {
 	if( g_iUserData[client][i_PlayerLVL] < 12 )
 		g_bUserData[client][b_GameModePassive] = true;
 	
-	if( g_bUserData[client][b_ItemRecovered] && g_iClient_OLD[client] == 0 && g_iUserData[client][i_JailTime] == 0 )
+	if( g_bUserData[client][b_ItemRecovered] && g_iClient_OLD[client] == 0 && g_iUserData[client][i_JailTime] == 0 && IsTutorialOver(client) )
 		CreateTimer(1.0, HUD_WarnDisconnect, client);
 
-	ServerCommand("sm_force_discord_group %N", client);
+	ServerCommand("sm_force_discord_group %d", client);
 }
 public Action HUD_WarnDisconnect(Handle timer, any client) {
 	if( !g_bUserData[client][b_ItemRecovered] )
@@ -372,11 +372,7 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 		g_iUserData[Client][i_Kevlar] = 250;
 	}
 
-	StripWeapons(Client);
-	
-	if( IsInPVP(Client) )
-		GroupColor(Client);
-	
+	StripWeapons(Client);	
 
 	CreateTimer(0.1, OnPlayerSpawnPost, GetClientUserId(Client));
 
@@ -677,7 +673,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 		if( IsValidClient(i) ) {
 
 			int flags = GetUserFlagBits(i);
-			if (flags & ADMFLAG_GENERIC || flags & ADMFLAG_ROOT) {
+			if ( flags & ADMFLAG_ROOT ) {
 				CPrintToChat(i, "" ...MOD_TAG... " %T", ( Attacker <= 0 || Attacker == Client ) ? "Kill_Self" : "Kill_Target", i, client_name, target_name);
 			}
 		}

@@ -308,6 +308,7 @@ enum_ball_type g_iKnifeType[MAX_PLAYERS+1];
 int g_iLDR = 0;
 int START_ZONE = MAX_ZONES+1;
 int EVENT_HIDE = 0;
+int EVENT_3RD = 1;
 
 // ------------------------------
 // MUTE ME PLEASE
@@ -321,6 +322,7 @@ Handle g_hAllowSteal = INVALID_HANDLE;
 Handle g_hMAX_ENT = INVALID_HANDLE;
 int g_iEntityLimit = 2000;
 Handle g_hEVENT = INVALID_HANDLE;
+Handle g_hEVENT_3RD = INVALID_HANDLE;
 Handle g_hEVENT_HIDE = INVALID_HANDLE;
 #if defined EVENT_NOEL
 Handle g_hEVENT_NOEL = INVALID_HANDLE;

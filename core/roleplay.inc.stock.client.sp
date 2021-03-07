@@ -178,10 +178,7 @@ public Action SendToGrave(Handle timer, any client) {
 			vecOrigin[2] += 5.0;
 			TeleportClient(client, vecOrigin, vecAngles, NULL_VECTOR);			
 			
-			if( IsInPVP(i) )
-				GroupColor(client);
-			else
-				Colorize(client, 255, 255, 255, 255);
+			Colorize(client, 255, 255, 255, 255);
 			return;
 		}
 	}
@@ -687,13 +684,13 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 		
 		from_id = g_iUserData[client][i_Job];
 		g_iUserData[client][i_Job] = to_id;
-		ServerCommand("sm_force_discord_group %N", client);
+		ServerCommand("sm_force_discord_group %d", client);
 		
 		if( to_id > 0 ) {
 			if( IsValidClient(invoker) )
 				GetClientName2(invoker, szPseudo, sizeof(szPseudo), false);
 
-			if( from_id == 0 || GetJobID(from_id) != GetJobID(to_id) )
+			if( from_id == 0 || GetJobID(from_id) != GetJobID(to_id) || from_id == to_id )
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Hire", client, g_szJobList[to_id][job_type_name], szPseudo);
 			else if( from_id > to_id )
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Upgrade", client, g_szJobList[to_id][job_type_name], szPseudo);
@@ -733,7 +730,7 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 			if( IsValidClient(invoker) )
 				GetClientName2(invoker, szPseudo, sizeof(szPseudo), false);
 
-			if( from_id == 0 )
+			if( from_id == 0 || GetGroupID(from_id) != GetGroupID(to_id) || from_id == to_id )
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Hire", client, g_szGroupList[to_id][group_type_name], szPseudo);
 			else if( from_id > to_id )
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Upgrade", client, g_szGroupList[to_id][group_type_name], szPseudo);
@@ -1072,9 +1069,6 @@ int GetAssurence(int client, bool forced = false) {
 void CopSetVisible(int client) {
 	
 	ClientCommand(client, "r_screenoverlay 0");
-	
-	if( IsInPVP(client) )
-		GroupColor(client);
 	Colorize(client, 255, 255, 255, 255);
 	
 	g_bUserData[client][b_Invisible] = 0;

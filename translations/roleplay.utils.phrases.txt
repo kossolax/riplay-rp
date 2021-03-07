@@ -1,0 +1,216 @@
+"Phrases"
+{
+	"Ask_What"
+	{
+		"fr"	"Que voulez vous lui demander ?"
+		"en"	"What do you want to ask him?"
+	}
+	"Ask_Recrut"
+	{
+		"fr"	"être recruté"
+		"en" 	"To be recruited"
+	}
+	"Ask_Picklock"
+	{
+		"fr"	"crocheter une porte"
+		"en"	"Pick a door"
+	}
+	"Ask_Weapon"
+	{
+		"fr"	"acheter ou vendre une arme"
+		"en"	"buy or sell a weapon"
+	}
+	"Ask_Avocat"
+	{
+		"fr"	"un service d'avocat"
+		"en"	"a lawyer's service"
+	}
+	"Ask_Judge"
+	{
+		"fr"	"une audiance"
+		"en"	"a hearing" 
+	}
+	"Ask_Appart"
+	{
+		"fr"	"un appartement"
+		"en"	"an apartment"
+	}
+	"Ask_Clean"
+	{
+		"fr"	"nettoyer son appartement"
+		"en"	"clean your apartment" 
+	}
+	"Ask_Craft"
+	{
+		"fr"	"crafter un item"
+		"en"	"craft an item"
+	}
+	"Ask_Item"
+	{
+		"fr"	"un item"
+		"en"	"an item"
+	}
+	"Ask_Done"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"fr"	"{1} aimerait {green}{3}{default}, il est actuellement {2}"
+		"en"	"{1} would like {green}{3}{default}, they are currently {2}"
+	}
+	"Ask_Send"
+	{
+		"#format"	"{1:s}"
+		"fr"	"La demande a été envoyée à {1}"
+		"en"	"The request has been sent to {1}"
+	}
+ 
+	// ----------------------------------------------------------------------------------------------
+	"Ads_JoinDiscord"
+	{
+		"fr"	"Rejoignez notre serveur {green}discord{default} <3!"
+		"en"	"Join our discord server {green}discord.gg/kzg{default} <3!"
+	}
+ 
+	"Cmd_SteamID"
+	{
+		"#format"	"{1:s},{2:s}"
+		"fr"	"Votre SteamID est: {1} ({2})"
+		"en"	"Your SteamID is: {1} ({2})"
+	}
+	// ----------------------------------------------------------------------------------------------
+
+	"Menu_Sell"
+	{
+		"fr"	"Vendre"
+		"en"	"Sell"
+	}
+	"Menu_Steal"
+	{
+		"fr"	"Voler"
+		"en"	"Steal"
+	}
+	"Menu_Train"
+	{
+		"fr"	"Informations entraînement"
+		"en"	"Training information"
+	}
+	"Menu_Heal"
+	{
+		"fr"	"Informations entraînement"
+		"en"	"Healing information"
+	}
+	"Menu_Search"
+	{
+		"fr"	"Vérifier les permis"
+		"en"	"Permit checks"
+	}
+	"Menu_Jail"
+	{
+		"fr"	"Mettre en prison"
+		"en"	"Put in prison"
+	}
+	"Menu_Tazer"
+	{
+		"fr"	"Coup de tazer"
+		"en"	"Tazer shot"
+	}
+	"Menu_Out"
+	{
+		"fr"	"Faire sortir la personne"
+		"en"	"Get the person out"
+	}
+	"Menu_Give"
+	{
+		"fr"	"Donner de l'argent"
+		"en"	"Give money"
+	}
+	"Menu_Door"
+	{
+		"fr"	"Une porte"
+		"en"	"A door"
+	}
+	"Menu_Door_Unlock"
+	{
+		"fr"	"Déverrouiller la porte"
+		"en"	"Unlock the door"
+	}
+	"Menu_Door_Lock"
+	{
+		"fr"	"Verrouiller la porte"
+		"en"	"Lock the door"
+	}
+	"Menu_Door_Perquiz"
+	{
+		"fr"	"Perquisitionner"
+		"en"	"Search"
+	}
+	"Menu_Item"
+	{
+		"fr"	"Ouvrir l'inventaire"
+		"en"	"Open inventory"
+	}
+	"Menu_Passif"
+	{
+		"fr"	"Changer le mode de jeu"
+		"en"	"Change to passive"
+	}
+	"Menu_Tb"
+	{
+		"fr"	"Gestion des audiences"
+		"en"	"Audience management"
+	}
+	"Menu_Mort"
+	{
+		"fr"	"Faire revivre les morts"
+		"en"	"To revive the dead"
+	}
+	"Menu_Build"
+	{
+		"fr"	"Construire"
+		"en"	"Build"
+	}
+	"Menu_Shownote"
+	{
+		"fr"	"Information sur mon job"
+		"en"	"Information about my job"
+	}
+	"Menu_Job"
+	{
+		"fr"	"Appeler un joueur"
+		"en"	"Call a player"
+	}
+	"Menu_GPS"
+	{
+		"fr"	"Trouver un lieu sur la carte"
+		"en"	"Locate a place on the map"
+	}
+	"Menu_GPS_Close"
+	{
+		"fr"	"Arrêter le guidage"
+		"en"	"Stop guiding"
+	}
+	"Menu_Aide"
+	{
+		"fr"	"Besoin d'aide"
+		"en"	"Need help"
+	}
+	"Menu_Stats"
+	{
+		"fr"	"Statistiques"
+		"en"	"Statistics"
+	}
+	"Menu_Report"
+	{
+		"fr"	"Signaler un mauvais comportement"
+		"en"	"Report bad behaviour"
+	}
+	"Menu_DoNotReOpen"
+	{
+		"fr"	"Ne plus ouvrir ce menu automatiquement"
+		"en"	"Do not automatically open this menu"
+	}
+	"Menu_DoNotReOpen_Confirm"
+	{
+		"fr"	"Vous pouvez réouvrir ce menu avec {green}/menu{default}."
+		"en"	"You can reopen this menu with {green}/menu{defualt}."
+	}
+}

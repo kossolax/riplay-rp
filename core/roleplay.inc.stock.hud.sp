@@ -38,7 +38,12 @@ void PrintHUD(int client, char[] szHUD, int size) {
 	
 	int group = g_iUserData[client][i_Group];
 	
-	Format(szHUD, size, "");
+	if( GetConVarInt(FindConVar("hostport")) == 27015 ) {
+		Format(szHUD, size, "");
+	}
+	else {
+		Format(szHUD, size, "%s\n \n", szGeneralMenu);
+	}
 	
 	if( g_iUserData[client][i_Dette] > 0 ) {
 		Format(szHUD, size, "%s%T\n", szHUD, "HUD_Dept", client, szDette);

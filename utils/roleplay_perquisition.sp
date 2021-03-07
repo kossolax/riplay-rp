@@ -198,7 +198,11 @@ void INIT_PERQUIZ(int client, int zone, int target, int type) {
 	if( isZoneInPerquiz(zone) )
 		return;
 
-	if( type == 0) resp = GetPerquizResp(zone);
+	if( type == 0) {
+		resp = GetPerquizResp(zone, true);
+		if( resp == 0 )
+			GetPerquizResp(zone, false);
+	}
 
 	setPerquizData(client, zone, target, resp, type, 0);
 	
@@ -298,7 +302,7 @@ void END_PERQUIZ(int zone, bool abort) {
 	rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
 	LogToGame("[PERQUIZ] Une perquisition est terminée dans %s.", tmp);
 	PrintToChatPoliceZone(zone, "{red} =================================={default} ");
-	PrintToChatPoliceZone(zone, "{red}[TSX-RP] [POLICE]{default} La perquisition dans %s est %s.", tmp, abort ? "annulée" : "terminée");
+	PrintToChatPoliceZone(zone, "{red}"... MOD_TAG ..." [POLICE]{default} La perquisition dans %s est %s.", tmp, abort ? "annulée" : "terminée");
 	PrintToChatPoliceZone(zone, "{red} =================================={default} ");
 	
 	if( !abort ) {
@@ -412,7 +416,7 @@ public Action TIMER_PERQUIZ(Handle timer, any zone) {
 		if( array[PQ_timeout] == 20 ) {
 			rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
 			PrintToChatPoliceZone(zone, "{red} =================================={default} ");
-			PrintToChatPoliceZone(zone, "{red}[TSX-RP] [POLICE]{default} La perquisition dans %s sera annulée, si aucun flic n'est présent dans les 10 secondes.", tmp);
+			PrintToChatPoliceZone(zone, "{red}"... MOD_TAG ..." [POLICE]{default} La perquisition dans %s sera annulée, si aucun flic n'est présent dans les 10 secondes.", tmp);
 			PrintToChatPoliceZone(zone, "{red} =================================={default} ");
 		}
 		else if( array[PQ_timeout] >= 30 ) {
@@ -435,7 +439,11 @@ public Action TIMER_PERQUIZ_LOOKUP(Handle timer, any zone) {
 		return Plugin_Stop;
 	}
 	
-	if ( !IsValidClient(array[PQ_resp])) array[PQ_resp] = GetPerquizResp(zone);
+	if ( !IsValidClient(array[PQ_resp]) ) {
+		array[PQ_resp] = GetPerquizResp(zone, true);
+		if( array[PQ_resp] == 0 )
+			GetPerquizResp(zone, false);
+	}
 
 	bool canStart = (array[PQ_timeout] >= 60 || !IsValidClient(array[PQ_resp]));
 	
@@ -445,8 +453,8 @@ public Action TIMER_PERQUIZ_LOOKUP(Handle timer, any zone) {
 			rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
 			
 			PrintToChatPoliceZone(zone, "{red} =================================={default} ");
-			PrintToChatPoliceZone(zone, "{red}[TSX-RP] [POLICE]{default} une perquisition commencera dans: %i secondes", 60 - array[PQ_timeout]);
-			PrintToChatPoliceZone(zone, "{red}[TSX-RP] [POLICE]{default} %N{default} est prié de se présenter à %s.", array[PQ_resp], tmp);
+			PrintToChatPoliceZone(zone, "{red}"... MOD_TAG ..." [POLICE]{default} une perquisition commencera dans: %i secondes", 60 - array[PQ_timeout]);
+			PrintToChatPoliceZone(zone, "{red}"... MOD_TAG ..." [POLICE]{default} %N{default} est prié de se présenter à %s.", array[PQ_resp], tmp);
 			PrintToChatPoliceZone(zone, "{red} =================================={default} ");
 		}
 		
@@ -469,31 +477,32 @@ public Action TIMER_PERQUIZ_LOOKUP(Handle timer, any zone) {
 	return Plugin_Continue;
 }
 // ----------------------------------------------------------------------------
-int GetPerquizResp(int zone) {
+int GetPerquizResp(int zone, bool afkCheck) {
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
 	if( StrEqual(tmp, "bunker") )
-		return GetPerquizRespByGroup( rp_GetCaptureInt(cap_bunker) );
+		return GetPerquizRespByGroup( rp_GetCaptureInt(cap_bunker), afkCheck);
 	else if( StrEqual(tmp, "villa") )
-		return GetPerquizRespByGroup( rp_GetCaptureInt(cap_villa) );
+		return GetPerquizRespByGroup( rp_GetCaptureInt(cap_villa), afkCheck);
 	else if( StrEqual(tmp, "mairie") )
-		return GetPerquizRespMaire();
+		return GetPerquizRespMaire(); 
 	else if( StrContains(tmp, "appart_") == 0 ) {
 		ReplaceString(tmp, sizeof(tmp), "appart_", "");
-		return GetPerquizRespByAppart(StringToInt(tmp));
+		return GetPerquizRespByAppart(StringToInt(tmp), afkCheck);
 	}
 	else
-		return GetPerquizRespByJob(StringToInt(tmp));
+		return GetPerquizRespByJob(StringToInt(tmp), afkCheck);
 }
-int GetPerquizRespByAppart(int appartID) {
+int GetPerquizRespByAppart(int appartID, bool afkCheck) {
 	int zone;
 	int res = 0;
 	int owner = rp_GetAppartementInt(appartID, appart_proprio);
 	
-	
 	for(int i=1; i<=MaxClients; i++) {
 		if( !IsValidClient(i) )
+			continue;
+		if( afkCheck && rp_GetClientBool(i, b_IsAFK) )
 			continue;
 		zone = rp_GetZoneBit(rp_GetPlayerZone(i));
 		
@@ -508,13 +517,15 @@ int GetPerquizRespByAppart(int appartID) {
 	}
 	return res;
 }
-int GetPerquizRespByJob(int job_id) {
+int GetPerquizRespByJob(int job_id, bool afkCheck) {
 	int zone;	
 	int min = 9999;
 	int res = 0;
 	
 	for(int i=1; i<=MaxClients; i++) {
 		if( !IsValidClient(i) )
+			continue;
+		if( afkCheck && rp_GetClientBool(i, b_IsAFK) )
 			continue;
 		zone = rp_GetZoneBit(rp_GetPlayerZone(i));
 		
@@ -530,13 +541,15 @@ int GetPerquizRespByJob(int job_id) {
 	
 	return res;
 }
-int GetPerquizRespByGroup(int gang_id) {
+int GetPerquizRespByGroup(int gang_id, bool afkCheck) {
 	int zone;	
 	int min = 9999;
 	int res = 0;
 	
 	for(int i=1; i<=MaxClients; i++) {
 		if( !IsValidClient(i) )
+			continue;
+		if( afkCheck && rp_GetClientBool(i, b_IsAFK) )
 			continue;
 		zone = rp_GetZoneBit(rp_GetPlayerZone(i));
 		
@@ -818,6 +831,9 @@ bool hasCopInZone(int zone) {
 			continue;
 		if( rp_GetClientInt(i, i_KidnappedBy) > 0 )
 			continue;
+		if( GetPlayerWeaponSlot(i, CS_SLOT_PRIMARY) <= 0 &&  GetPlayerWeaponSlot(i, CS_SLOT_SECONDARY) <= 0 )
+			continue;
+		
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
 		if( StrEqual(tmp, tmp2) )
 			return true;

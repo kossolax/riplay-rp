@@ -311,7 +311,8 @@ public Action Cmd_ItemNano(int args) {
 		
 		if( target > 0 ) {
 		
-			if( (rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PVP) || rp_GetBuildingData(target, BD_owner) == client ) {
+			if( ((rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PVP) || rp_GetBuildingData(target, BD_owner) == client) && !(rp_GetZoneBit(rp_GetPlayerZone(target)) & BITZONE_PERQUIZ) ) {
+				
 				rp_ClientRemoveProp(client, target, item_id);
 				return Plugin_Handled;
 			}
@@ -520,11 +521,16 @@ public Action BuildingCashMachine_post(Handle timer, any entity) {
 	SetEntProp( entity, Prop_Data, "m_takedamage", 2);
 	
 	HookSingleEntityOutput(entity, "OnBreak", BuildingCashMachine_break);
+	SDKHook(entity, SDKHook_OnTakeDamage, DamageMachine);
 	
 	return Plugin_Handled;
 }
-public void BuildingCashMachine_use(const char[] output, int caller, int activator, float delay) {
-	PrintToChatAll("used");
+public Action DamageMachine(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
+	if( !Entity_CanBeBreak(victim, attacker) ) {
+		damage = 0.0;
+		return Plugin_Changed;
+	}
+	return Plugin_Continue;
 }
 public void BuildingCashMachine_break(const char[] output, int caller, int activator, float delay) {
 	CashMachine_Destroy(caller);
@@ -775,6 +781,7 @@ public Action BuildingBigCashMachine_post(Handle timer, any entity) {
 	SetEntProp( entity, Prop_Data, "m_takedamage", 2);
 	
 	HookSingleEntityOutput(entity, "OnBreak", BuildingCashMachine_break);
+	SDKHook(entity, SDKHook_OnTakeDamage, DamageMachine);
 	
 	return Plugin_Handled;
 }

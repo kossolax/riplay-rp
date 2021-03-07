@@ -4,21 +4,18 @@ exports = module.exports = function(app) {
   app.filter('prettyBan', function() {
     return function(game) {
       switch(game) {
-        case "tf": return "de jouer à nos serveurs TF2";
-        case "csgo": return "de jouer à nos serveurs CSGO";
-        case "cstrike": return "de jouer à nos serveurs CSS";
-        case "teamspeak": return "de parler sur notre TeamSpeak";
-        case "forum": return "d'utiliser notre forum";
+        case "csgo": return "est interdit de jouer à nos serveurs CSGO";
+        case "forum": return "est interdit d'utiliser notre forum";
 
         case "ALL": return "a été bannis notre communauté";
 
-        case "rp-local": return "de parler dans le chat local";
-        case "rp-global": return "de parler dans chat global";
-        case "rp-vocal": return "de parler dans chat vocal";
-        case "rp-event": return "de participer à des events";
-        case "rp-pvp": return "de participer aux captures PvP et d'être dans un gang";
-        case "rp-kill": return "de commettre des meurtres";
-        case "rp-give": return "de donner de l'argent aux autres joueurs";
+        case "rp-local": return "est interdit de parler dans le chat local";
+        case "rp-global": return "est interdit de parler dans chat global";
+        case "rp-vocal": return "est interdit de parler dans chat vocal";
+        case "rp-event": return "est interdit de participer à des events";
+        case "rp-pvp": return "est interdit de participer aux captures PvP et d'être dans un gang";
+        case "rp-kill": return "est interdit de commettre des meurtres";
+        case "rp-give": return "est interdit de donner de l'argent aux autres joueurs";
 
         case "tribunal": return "été mis en prison";
 

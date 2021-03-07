@@ -185,13 +185,13 @@
 	// ----------------------------------------------------------------------------------------------
 	"Menu_Villa"
 	{
-		"fr"		"Enchère de la Villa:\nJusqu'à dimanche 21 heures"
-		"en"		"Auction of the Villa:\nUntil Sunday 9:00pm"
+		"fr"		"Enchère de la Villa:\nJusqu'à vendredi 21 heures"
+		"en"		"Auction of the Villa:\nUntil Friday 9:00pm"
 	}
 	"Menu_Bed"
 	{
-		"fr"		"Combien souhaitez-vous miser?\n Attention, vous ne serrez remboursé\nqu'à la fin des enchères (dimanche 21 heures)"
-		"en"		"How much would you like to bet?\n Attention, you will be refunded\nonly at the end of the auction (Sunday 9:00pm)"
+		"fr"		"Combien souhaitez-vous miser?\n Attention, vous ne serrez remboursé\nqu'à la fin des enchères (vendredi 21 heures)"
+		"en"		"How much would you like to bet?\n Attention, you will be refunded\nonly at the end of the auction (Friday 9:00pm)"
 	}
 	"Menu_Villa_Bed"
 	{
@@ -222,7 +222,7 @@
 	}
 	"Tomb_RespawnMap"
 	{
-		"fr"		"Revivre sur n'importe où"
+		"fr"		"Revivre n'importe où"
 		"en"		"Respawn elsewhere"
 	}
 }

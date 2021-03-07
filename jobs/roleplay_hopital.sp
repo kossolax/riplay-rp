@@ -129,7 +129,8 @@ public Action Cmd_ItemChirurgie(int args) {
 			rp_GetClientBool(client, ch_Jump) &&
 			rp_GetClientBool(client, ch_Regen) &&
 			rp_GetClientBool(client, ch_Heal) &&
-			rp_GetClientBool(client, ch_Heal) ) {
+			rp_GetClientBool(client, ch_Heal) &&
+			rp_GetClientBool(client, ch_Breath) ) {
 			rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
 			return Plugin_Handled;
 		}
@@ -152,6 +153,10 @@ public Action Cmd_ItemChirurgie(int args) {
 		return Plugin_Handled;
 	}
 	if( StrEqual(arg1, "heal") && rp_GetClientBool(client, ch_Heal) ) {
+		rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+		return Plugin_Handled;
+	}
+	if( StrEqual(arg1, "breath") && rp_GetClientBool(client, ch_Breath) ) {
 		rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
 		return Plugin_Handled;
 	}
@@ -213,8 +218,16 @@ public Action Cmd_ItemChirurgie(int args) {
 			rp_HookEvent(client, RP_OnPlayerSpawn, fwdSpawn);
 		rp_SetClientBool(client, ch_Heal, true);
 	}
+	if( StrEqual(arg1, "breath") || StrEqual(arg1, "full") ) {
+		if( !rp_GetClientBool(client, ch_Breath))
+			rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruBreath);
+		rp_SetClientBool(client, ch_Breath, true);
+	}
 	
 	return Plugin_Handled;
+}
+public Action fwdChiruBreath(int client) {
+	SetEntProp(client, Prop_Data, "m_nWaterLevel", 0);
 }
 public Action ChiruEffect(Handle timer, Handle dp) {
 	ResetPack(dp);
@@ -351,7 +364,7 @@ public Action Cmd_ItemPoison(int args) {
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
-	if( rp_GetClientFloat(client, fl_LastPoison) > GetGameTime() ) {
+	if( rp_GetClientFloat(target, fl_LastPoison) > GetGameTime() ) {
 		ITEM_CANCEL(client, item_id);
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "poison_immune", client);
 		return Plugin_Handled;
@@ -398,10 +411,12 @@ public Action Cmd_ItemFullHeal(int args) {
 }
 public Action Cmd_ItemProtImmu(int args) {
 	int client = GetCmdArgInt(1);
+	int vendeur = GetCmdArgInt(2);
 	int item_id = GetCmdArgInt(args);
 	
 	if( rp_GetClientBool(client, b_HasProtImmu) ) {
-		ITEM_CANCEL(client, item_id);
+		rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+		
 		char tmp[128];
 		rp_GetItemData(item_id, item_type_name, tmp, sizeof(tmp));
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemAlreadyEnable", client, tmp);
@@ -659,10 +674,18 @@ public Action BuildingHealBox_post(Handle timer, any entity) {
 	
 	SetEntProp( entity, Prop_Data, "m_takedamage", 2);
 	HookSingleEntityOutput(entity, "OnBreak", BuildingHealBox_break);
+	SDKHook(entity, SDKHook_OnTakeDamage, DamageMachine);
 	
 	CreateTimer(1.0, Frame_HealBox, EntIndexToEntRef(entity));
 	
 	return Plugin_Handled;
+}
+public Action DamageMachine(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
+	if( !Entity_CanBeBreak(victim, attacker) ) {
+		damage = 0.0;
+		return Plugin_Changed;
+	}
+	return Plugin_Continue;
 }
 public void BuildingHealBox_break(const char[] output, int caller, int activator, float delay) {
 		

@@ -38,6 +38,7 @@ enum craft_book {
 StringMap g_hReceipe;
 int g_iItemCraftType[MAX_ITEMS];
 int g_iItemCraftGoal[MAX_ITEMS];
+int g_iSpeciality[16];
 
 bool g_bCanCraft[65][MAX_ITEMS];
 bool g_bInCraft[65];
@@ -87,12 +88,7 @@ public void OnPluginStart() {
 			OnClientPostAdminCheck(i);
 }
 public void OnAllPluginsLoaded() {
-	SQL_TQuery(rp_GetDatabase(), SQL_LoadReceipe, "\
-	( \
-	    SELECT `itemid`, `raw`, `amount`, SUBSTRING_INDEX(`extra_cmd`, ' ', -1) `rate` FROM `rp_craft` C INNER JOIN `rp_items` I ON C.`raw`=I.`id` WHERE `extra_cmd` LIKE 'rp_item_primal%' \
-	    UNION \
-	    SELECT `itemid`, `raw`, `amount`, 0 as `rate` FROM `rp_craft` C INNER JOIN `rp_items` I ON C.`raw`=I.`id` WHERE `extra_cmd` LIKE 'rp_item_raw%' \
-	) ORDER BY `itemid`, `raw`", 0, DBPrio_Low);
+	SQL_TQuery(rp_GetDatabase(), SQL_LoadReceipe, "SELECT `itemid`, `raw`, `amount`, CAST(SUBSTRING_INDEX(`extra_cmd`, 'rp_item_primal ', -1) AS INT) `rate` FROM `rp_craft` C INNER JOIN `rp_items` I ON C.`raw`=I.`id` ORDER BY `C`.`itemid` ASC", 0, DBPrio_Low);
 	
 	SQL_TQuery(rp_GetDatabase(), SQL_LoadReceipe2, "\
 		SELECT * FROM ( \
@@ -104,6 +100,8 @@ public void OnAllPluginsLoaded() {
 				)  \
 				AND A.itemid IN (SELECT itemid FROM rp_craft C INNER JOIN rp_items I ON I.id=C.raw WHERE I.extra_cmd LIKE 'rp_item_raw%')  \
 			) A WHERE `extra_cmd`<>'UNKNOWN'", 0, DBPrio_Low);
+	
+	SQL_TQuery(rp_GetDatabase(), SQL_LoadSpe, "SELECT `artisan_spe`, COUNT(*) FROM `rp_users` WHERE `artisan_spe`<>0 AND `last_connected` > NOW() - INTERVAL 1 MONTH GROUP BY `artisan_spe`");
 }
 public Action CmdSetFatigue(int client, int args) {
 	float f = GetCmdArgFloat(2);
@@ -172,6 +170,16 @@ public Action Cmd_ItemCraftBook(int args) {
 	
 	displayStatsMenu(client);
 	return Plugin_Handled;
+}
+public void SQL_LoadSpe(Handle owner, Handle hQuery, const char[] error, any client) {
+	g_iSpeciality[0] = 0;
+	while( SQL_FetchRow(hQuery) ) {
+		int spe = SQL_FetchInt(hQuery, 0);
+		int itm = SQL_FetchInt(hQuery, 1);
+		
+		g_iSpeciality[spe] = itm;
+		g_iSpeciality[0] += itm;
+	}
 }
 public void SQL_LoadReceipe2(Handle owner, Handle hQuery, const char[] error, any client) {
 	for (int i = 0; i < MAX_ITEMS; i++) {
@@ -281,14 +289,14 @@ public Action Cmd_ChooseSpec(int client, int confirm) {
 		String_WordWrap(tmp1, 50);
 		String_WordWrap(tmp2, 50);
 		
-		Format(tmp1, sizeof(tmp1), "%T\n \n%s\n \n%s\n ", "Artisan_Menu", client, "Empty_String", tmp1, tmp2);
+		Format(tmp1, sizeof(tmp1), " %s\n \n %s\n ", tmp1, tmp2);
 		
 		Handle menu = CreateMenu(eventChooseSpec);
 		SetMenuTitle(menu, tmp1);
 		
-		Format(tmp1, sizeof(tmp1), "%T", "Artisan_Spec_1", client); AddMenuItem(menu, "-1", tmp1);
-		Format(tmp1, sizeof(tmp1), "%T", "Artisan_Spec_2", client); AddMenuItem(menu, "-2", tmp1);
-		Format(tmp1, sizeof(tmp1), "%T", "Artisan_Spec_3", client); AddMenuItem(menu, "-3", tmp1);
+		Format(tmp1, sizeof(tmp1), "%T - %d%%", "Artisan_Spec_1", client, RoundFloat(100.0*g_iSpeciality[1]/g_iSpeciality[0])); AddMenuItem(menu, "-1", tmp1);
+		Format(tmp1, sizeof(tmp1), "%T - %d%%", "Artisan_Spec_2", client, RoundFloat(100.0*g_iSpeciality[2]/g_iSpeciality[0])); AddMenuItem(menu, "-2", tmp1);
+		Format(tmp1, sizeof(tmp1), "%T - %d%%", "Artisan_Spec_3", client, RoundFloat(100.0*g_iSpeciality[3]/g_iSpeciality[0])); AddMenuItem(menu, "-3", tmp1);
 		
 		DisplayMenu(menu, client, MENU_TIME_DURATION);
 	}
@@ -315,6 +323,9 @@ public Action Cmd_ChooseSpec(int client, int confirm) {
 	else if( confirm > 0 ) {
 		rp_SetClientInt(client, i_ArtisanSpeciality, confirm);
 		rp_ClientSave(client);
+		
+		g_iSpeciality[0] += 1;
+		g_iSpeciality[confirm] += 1;
 		
 		Format(tmp1, sizeof(tmp1), "Artisan_Spec_%d", confirm);
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Artisan_Change", client, tmp1);
@@ -1308,7 +1319,15 @@ public Action BuildingTABLE_post(Handle timer, any entity) {
 	rp_Effect_BeamBox(client, entity, NULL_VECTOR, 255, 255, 0);
 	SetEntProp(entity, Prop_Data, "m_takedamage", 2);
 	HookSingleEntityOutput(entity, "OnBreak", BuildingTABLE_break);
+	SDKHook(entity, SDKHook_OnTakeDamage, DamageMachine);
 	return Plugin_Handled;
+}
+public Action DamageMachine(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
+	if( !Entity_CanBeBreak(victim, attacker) ) {
+		damage = 0.0;
+		return Plugin_Changed;
+	}
+	return Plugin_Continue;
 }
 public void BuildingTABLE_break(const char[] output, int caller, int activator, float delay) {
 	

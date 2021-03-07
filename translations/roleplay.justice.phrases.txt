@@ -631,7 +631,7 @@
 	}
 	"Tribunal_Menu_Dedo_Amount"
 	{
-		"#format"	"{1:s},{2:d}"
+		"#format"	"{1:t},{2:d}"
 		"fr"	"Quel est la valeur de {1}?\n    {2}$"
 		"en"	"What is the worth of {1}?\n    {2}$"
 	}
@@ -655,8 +655,8 @@
 	"Tribunal_Menu_Dedo_Given"
 	{
 		"#format"	"{1:s},{2:s},{3:d}"
-		"fr"	"{red}{1}{fault} a dédommagé {red}{2}{default} de {red}{3}{default}$."
-		"en"	"{red}{1}{fault} has compensated {red}{2}{default} for {red}{3}{default}$."
+		"fr"	"{red}{1}{default} a dédommagé {red}{2}{default} de {red}{3}{default}$."
+		"en"	"{red}{1}{default} has compensated {red}{2}{default} for {red}{3}{default}$."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tribunal_Menu_Acquitter"
@@ -695,8 +695,8 @@
 	"Tribunal_Menu_Switch_Confirm"
 	{
 		"#format"	"{1:s},{2:s}"
-		"fr"	"Le Juge {red}{1}{default} cède sa place au Juge {red}{1}{default}."
-		"en"	"Judge {red}{1}{default} concedes to Judge {red}{1}{default}."
+		"fr"	"Le Juge {red}{1}{default} cède sa place au Juge {red}{2}{default}."
+		"en"	"Judge {red}{1}{default} concedes to Judge {red}{2}{default}."
 	}
 	// ----------------------------------------------------------------------------------------------
 	"Tribunal_Menu_Juge"

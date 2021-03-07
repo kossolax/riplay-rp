@@ -113,9 +113,18 @@ public Action Command_Say(int client, int args) {
 		return Plugin_Handled;
 	}
 	else if(
-		strcmp(szSayTrig, "!craft", false) == 0 || strcmp(szSayTrig, "/craft", false) == 0
+		strcmp(szSayTrig, "!recycl", false) == 0 || strcmp(szSayTrig, "/recycl", false) == 0 ||
+		strcmp(szSayTrig, "!recycler", false) == 0 || strcmp(szSayTrig, "/recycler", false) == 0 ||
+		strcmp(szSayTrig, "!recyclage", false) == 0 || strcmp(szSayTrig, "/recyclage", false) == 0
 		) {
 		RP_ShowMOTD(client, MOD_URL ... "craft.php");
+
+		return Plugin_Handled;
+	}
+	else if(
+		strcmp(szSayTrig, "!craft", false) == 0 || strcmp(szSayTrig, "/craft", false) == 0
+		) {
+		RP_ShowMOTD(client, MOD_URL ... "/#/craft/0");
 
 		return Plugin_Handled;
 	}
@@ -746,7 +755,7 @@ public Action Command_Say(int client, int args) {
 
 		if( (g_iUserData[client][i_Money]+g_iUserData[client][i_Bank]) < 100 ) {
 			ACCESS_DENIED(client);
-		}
+		}		
 
 		if( g_bUserData[client][b_MaySteal] == 0 ) {
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_Command_ForNow", client);
@@ -758,6 +767,11 @@ public Action Command_Say(int client, int args) {
 
 		if( !IsPlayerAlive(target) )
 			return Plugin_Handled;
+		
+		
+		if( g_iUserData[client][i_KillJailDuration] >= 1 || g_iUserData[target][i_KillJailDuration] >= 1 ) {
+			ACCESS_DENIED(client);
+		}
 
 		if( !IsTueur(client) ) {
 			char clientname[64], targetname[64];
@@ -801,7 +815,7 @@ public Action Command_Say(int client, int args) {
 		}
 		
 		rp_ClientMoney(client, i_Money, -100);
-		SetJobCapital(141,	(GetJobCapital(41)+50) );
+		SetJobCapital(41,	(GetJobCapital(41)+50) );
 		SetJobCapital(1,	(GetJobCapital(1)+50) );
 
 		LogToGame("[TSX-RP] [ENQUETE] %L a regardé %L", client, target);
@@ -885,6 +899,8 @@ public Action Command_Say(int client, int args) {
 	}
 	else if(
 		strcmp(szSayTrig, "!deletenote", false) == 0		|| strcmp(szSayTrig, "/deletenote", false) == 0 ||
+		strcmp(szSayTrig, "!delnote", false) == 0		|| strcmp(szSayTrig, "/delnote", false) == 0 ||
+		strcmp(szSayTrig, "!delnotes", false) == 0		|| strcmp(szSayTrig, "/delnotes", false) == 0 ||
 		strcmp(szSayTrig, "!deletenotes", false) == 0			|| strcmp(szSayTrig, "/deletenotes", false) == 0
 		) {
 
@@ -1322,11 +1338,11 @@ public Action Command_Say(int client, int args) {
 			return Plugin_Handled;
 		}
 		
-		if( g_bUserData[client][b_IsSearchByTribunal] ) {
+		if( g_bUserData[client][b_IsSearchByTribunal] && rp_GetClientJobID(target) != 101 ) {
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_Give_Tribunal", client);
 			return Plugin_Handled;
 		}
-		if( g_iUserData[client][i_SearchLVL] >= 1 ) {
+		if( g_iUserData[client][i_SearchLVL] >= 1 && rp_GetClientJobID(target) != 101 ) {
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_Give_Tribunal", client);
 			return Plugin_Handled;
 		}	
@@ -1501,7 +1517,7 @@ public Action Command_Say(int client, int args) {
 	char tag[32];
 	Format(tag, sizeof(tag), "Empty_String");
 	if( g_bIsHidden[client] == false ) {
-		if( flags & ADMFLAG_ROOT || flags & ADMFLAG_CHEATS ) {
+		if( flags & ADMFLAG_ROOT || flags & ADMFLAG_CONFIG ) {
 			Format(tag, sizeof(tag), "Chat_TAG_Admin"); 
 		}
 		else if( flags & ADMFLAG_KICK ) {

@@ -207,6 +207,7 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 	CreateNative("rp_WeaponMenu_Add", Native_rp_WeaponMenu_Add);
 	CreateNative("rp_WeaponMenu_Delete", Native_rp_WeaponMenu_Delete);
 	CreateNative("rp_WeaponMenu_Get", Native_rp_WeaponMenu_Get);
+	CreateNative("rp_WeaponMenu_Give", Native_rp_WeaponMenu_Give);
 	
 	CreateNative("rp_GetForwardHandle", Native_GetForwardHandle);
 	CreateNative("rp_GetClientNextMessage", Native_rp_GetClientNextMessage);
@@ -478,6 +479,7 @@ public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
 	char tmp[128];
 	int client = view_as<int>(GetNativeCell(1));
 	int xp = view_as<int>(GetNativeCell(2));
+	bool verbose = view_as<bool>(GetNativeCell(3));
 	
 	if( !IsTutorialOver(client) )
 		return 0;
@@ -496,14 +498,11 @@ public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
 
 	g_iUserData[client][i_PlayerXP] += xp;
 
-	if( xp >= 100 )
+	if( xp >= 100 || verbose )
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "LEVEL_XP", client, xp);
 	
 	while( g_iUserData[client][i_PlayerXP] >= (g_iUserData[client][i_PlayerLVL] * 3600) ) {
 		g_iUserData[client][i_PlayerLVL]++;
-		
-		if( !g_bUserData[client][b_IsFirstSpawn] && IsPlayerAlive(client) )
-			ServerCommand("sm_effect_particles %d levelup 10", client);
 		
 		int a = RoundToFloor(SquareRoot(float(g_iUserData[client][i_PlayerLVL])));
 		int b = a * (a + 1);
@@ -523,6 +522,8 @@ public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
 				rp_ClientGiveItem(client, ITEM_CADEAU, 25);
 			}
 			
+			if( !g_bUserData[client][b_IsFirstSpawn] && IsPlayerAlive(client) )
+				ServerCommand("sm_effect_particles %d levelup 10", client);
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "LEVEL_RANK", client, g_iUserData[client][i_PlayerLVL], g_szLevelList[ g_iUserData[client][i_PlayerRank] ][rank_type_name]);
 		}
 		else {
@@ -601,12 +602,6 @@ void ClientAgroDecrement(int client) {
 		if( tmp[KillStack_time] < GetTime() ) {
 			g_hAggro[client].Erase(0);
 			g_iAggro[client][ tmp[KillStack_target] ] -= tmp[KillStack_damage];
-			
-			
-			if( g_hAggro[client].Length == 0 ) {
-				delete g_hAggro[client];
-				g_hAggro[client] = new ArrayList(KillStack_max, 0);
-			}
 		}
 		else {
 			break;
@@ -1175,10 +1170,7 @@ public int Native_rpClientColorize(Handle plugin, int numParams) {
 	
 	if( color[0] == -1 ) {
 		if( client > MaxClients || g_bUserData[client][b_Invisible] == false ) {
-			if( IsInPVP(client) )
-				GroupColor(client);
-			else
-				Colorize(client, 255, 255, 255, 255);
+			Colorize(client, 255, 255, 255, 255);
 		}
 	}
 	else {

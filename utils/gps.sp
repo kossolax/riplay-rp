@@ -17,18 +17,21 @@ public Plugin myinfo = {
 #define	MAX_NODE	2048
 #define MAX_ARC		MAX_NODE
 #define SERV_IP		"5.196.39.48"
-//#define SERV_IP		"109.88.12.57"
 
-Handle g_hBDD, g_Socket, g_hShow[65];
+Handle g_Socket, g_hShow[65];
 char g_szQuery[1024];
 float g_flNode[MAX_NODE][3];
 int g_iArc[MAX_ARC][4], g_cLaser, g_cBeam, g_iMarked[65];
 int g_iTarget[65];
 Handle g_hTimer[65];
-char loadNode[] = "SELECT `id`, `x`, `y`, `z`, `zoneid` FROM `fireblue`.`rp_gps_node`;";
-char loadArc[] = "SELECT A.`id`, `src`, `dst`, `length`, length(`zone_type`) as `private`, A.`zoneID` FROM `fireblue`.`rp_gps_arc` A INNER JOIN `rp_csgo`.`rp_location_zones` Z ON Z.`id`=A.`zoneID`;";
+char loadNode[] = "SELECT `id`, `x`, `y`, `z`, `zoneid` FROM `rp_gps_node`;";
+char loadArc[] = "SELECT A.`id`, `src`, `dst`, `length`, length(`zone_type`) as `private`, A.`zoneID` FROM `rp_gps_arc` A INNER JOIN `rp_csgo`.`rp_location_zones` Z ON Z.`id`=A.`zoneID`;";
 
 public void OnPluginStart() {
+	LoadTranslations("core.phrases");
+	LoadTranslations("common.phrases");
+	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.utils.phrases");
 	
 	RegAdminCmd("rp_gps_edit",	CmdGpsMenu, ADMFLAG_ROOT);
 	RegServerCmd("sm_effect_gps", 		CmdGps);	
@@ -58,15 +61,12 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 public void OnMapStart() {
 	g_cLaser = PrecacheModel("materials/vgui/hud/icon_arrow_up.vmt");
 	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt");
-	
-	
-	g_hBDD = SQL_Connect("rp_gps", true, g_szQuery, sizeof(g_szQuery));
-	if (g_hBDD == INVALID_HANDLE) {
-		SetFailState("Connexion impossible: %s", g_szQuery);
-	}
-	
-	SQL_TQuery(g_hBDD, SQL_LoadNode, loadNode);
 }
+
+public void OnAllPluginsLoaded() {	
+	SQL_TQuery(rp_GetDatabase(), SQL_LoadNode, loadNode);
+}
+	
 public void SQL_LoadNode(Handle owner, Handle hQuery, const char[] error, any none) {
 	int i;
 	while( SQL_FetchRow(hQuery) ) {
@@ -80,12 +80,12 @@ public void SQL_LoadNode(Handle owner, Handle hQuery, const char[] error, any no
 		int zone2 = rp_GetZoneFromPoint(g_flNode[i]);
 		
 		if( zone1 != zone2 ) {
-			Format(g_szQuery, sizeof(g_szQuery), "UPDATE `fireblue`.`rp_gps_node` SET `zoneid`='%d' WHERE `id`= %d;", zone2, i);
-			SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
+			Format(g_szQuery, sizeof(g_szQuery), "UPDATE `rp_gps_node` SET `zoneid`='%d' WHERE `id`= %d;", zone2, i);
+			SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, g_szQuery, 0);
 		}
 	}
 	
-	SQL_TQuery(g_hBDD, SQL_LoadArc, loadArc);
+	SQL_TQuery(rp_GetDatabase(), SQL_LoadArc, loadArc);
 }
 public void SQL_LoadArc(Handle owner, Handle hQuery, const char[] error, any none) {
 	int i;
@@ -102,15 +102,12 @@ public void SQL_LoadArc(Handle owner, Handle hQuery, const char[] error, any non
 		int zone3 = rp_GetZoneFromPoint(g_flNode[g_iArc[i][1]]);
 		
 		if( !(zone1 == zone2 || zone1 == zone3) ) {
-			Format(g_szQuery, sizeof(g_szQuery), "UPDATE `fireblue`.`rp_gps_arc` SET `zoneid`='%d' WHERE `id`= %d;", zone2, i);
-			SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
+			Format(g_szQuery, sizeof(g_szQuery), "UPDATE `rp_gps_arc` SET `zoneid`='%d' WHERE `id`= %d;", zone2, i);
+			SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, g_szQuery, 0);
 		}
 	}
 }
 // ----------------------------------------- EVENT
-public void OnMapEnd() {
-	CloseHandle(g_hBDD);
-}
 public void OnSocketConnected(Handle hSock, any blah) {
 	SocketSetOption(hSock, SocketKeepAlive, true);
 }
@@ -203,11 +200,11 @@ public int MenuGps(Handle menu, MenuAction action, int client, int param2) {
 				GetClientAbsOrigin(client, vec);
 				vec[2] += 32.0;
 				
-				Format(g_szQuery, sizeof(g_szQuery), "INSERT INTO `fireblue`.`rp_gps_node` (`id`, `x`, `y`, `z`, `zoneID`) VALUES (NULL, '%d', '%d', '%d', '%d');", 
+				Format(g_szQuery, sizeof(g_szQuery), "INSERT INTO `rp_gps_node` (`id`, `x`, `y`, `z`, `zoneID`) VALUES (NULL, '%d', '%d', '%d', '%d');", 
 				RoundFloat(vec[0]), RoundFloat(vec[1]), RoundFloat(vec[2]), rp_GetZoneFromPoint(vec));
 				
-				SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
-				SQL_TQuery(g_hBDD, SQL_LoadNode, loadNode);
+				SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, g_szQuery, 0);
+				SQL_TQuery(rp_GetDatabase(), SQL_LoadNode, loadNode);
 			}
 			else if( StrEqual(szMenu, "delNode") ) {
 				float vec[3];
@@ -217,12 +214,12 @@ public int MenuGps(Handle menu, MenuAction action, int client, int param2) {
 				int node = findNearestNode(vec);
 				PrintToChatAll("%d", node);
 				
-				Format(g_szQuery, sizeof(g_szQuery), "DELETE FROM `fireblue`.`rp_gps_arc` WHERE `src`=%d OR `dst`= %d;", node, node);
-				SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
-				Format(g_szQuery, sizeof(g_szQuery), "DELETE FROM `fireblue`.`rp_gps_node` WHERE `id`= %d;", node);
-				SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
+				Format(g_szQuery, sizeof(g_szQuery), "DELETE FROM `rp_gps_arc` WHERE `src`=%d OR `dst`= %d;", node, node);
+				SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, g_szQuery, 0);
+				Format(g_szQuery, sizeof(g_szQuery), "DELETE FROM `rp_gps_node` WHERE `id`= %d;", node);
+				SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, g_szQuery, 0);
 				
-				SQL_TQuery(g_hBDD, SQL_LoadNode, loadNode);
+				SQL_TQuery(rp_GetDatabase(), SQL_LoadNode, loadNode);
 			}
 			else if( StrEqual(szMenu, "markNode") ) {
 				
@@ -241,11 +238,11 @@ public int MenuGps(Handle menu, MenuAction action, int client, int param2) {
 				int end = findNearestNode(pos);
 				int dst = RoundFloat( GetVectorDistance(g_flNode[start], g_flNode[end]) );
 				
-				Format(g_szQuery, sizeof(g_szQuery), "INSERT INTO `fireblue`.`rp_gps_arc` (`id`, `src`, `dst`, `length`, `zoneID`) VALUES (NULL, '%d', '%d', '%d', '%d');", 
+				Format(g_szQuery, sizeof(g_szQuery), "INSERT INTO `rp_gps_arc` (`id`, `src`, `dst`, `length`, `zoneID`) VALUES (NULL, '%d', '%d', '%d', '%d');", 
 				start, end, dst, rp_GetZoneFromPoint(g_flNode[start]));
 				
-				SQL_TQuery(g_hBDD, SQL_QueryCallBack, g_szQuery, 0);
-				SQL_TQuery(g_hBDD, SQL_LoadArc, loadArc);
+				SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, g_szQuery, 0);
+				SQL_TQuery(rp_GetDatabase(), SQL_LoadArc, loadArc);
 			}
 			else if( StrEqual(szMenu, "fermer") ) {
 				delete g_hShow[client];
@@ -301,38 +298,23 @@ public Action CmdGps(int args) {
 }
 public Action CmdGps2(int client) {
 	
+	char tmp[128], tmp2[128];
 	Menu menu = CreateMenu(handleMenu);
-	menu.SetTitle("Ou souhaitez-vous allez?");
+	menu.SetTitle("%T\n ", "Menu_GPS", client);
 	
 	if( g_hTimer[client] ) {
-		menu.AddItem("0", "Arrêter le guidage");
+		Format(tmp, sizeof(tmp), "%T", "Menu_GPS_Close", client);
+		menu.AddItem("0", tmp);
 	}
 	
-	menu.AddItem("12", "Le commissariat");
-	menu.AddItem("121", "L'hôpital");
-	menu.AddItem("289", "Le tribunal");
-	menu.AddItem("118", "La banque");
-	menu.AddItem("247", "La villa de la mafia");
+	int zone[] = {12, 121, 289, 118, 247, 100, 90, 101, 272, 266, 298, 226, 95, 222, 236, 69, 299, 172, 6, 3};
 	
-	menu.AddItem("100", "L'armurerie");
-	menu.AddItem("90", "Les coachs");
-	menu.AddItem("101", "La planque technicien");
-	
-	menu.AddItem("272", "La planque des artisans");
-	menu.AddItem("266", "L'agence immobilière");
-	menu.AddItem("298", "Le concessionaire");
-	
-	menu.AddItem("226", "La planque des mercenaires");
-	menu.AddItem("95", "La planque des dealers");
-	menu.AddItem("222", "La planque des artificiers");
-	menu.AddItem("236", "Le sexshop");
-	
-	menu.AddItem("69", "Le mcdonald");
-	menu.AddItem("299", "Le casino");
-	menu.AddItem("172", "La planque des vendeurs de skin");
-	
-	menu.AddItem("6", "Le bar Le-Requin");
-	menu.AddItem("3", "La discothèque");
+	for (int i = 0; i < sizeof(zone); i++) {
+		Format(tmp, sizeof(tmp), "%d", i);
+		rp_GetZoneData(zone[i], zone_type_name, tmp2, sizeof(tmp2));
+		
+		menu.AddItem(tmp, tmp2);
+	}
 	
 	menu.Display(client, MENU_TIME_FOREVER);
 	

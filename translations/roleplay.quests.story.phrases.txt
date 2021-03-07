@@ -1,0 +1,214 @@
+"Phrases"
+{
+	// ----------------------------------
+	"TUTO_Jobs_Recommanded"
+	{
+		"fr"		"Recommandé"
+		"en"		"Recommended"
+	}
+	"TUTO_Jobs_Fun"
+	{
+		"fr"		"Amusant"
+		"en"		"Funny"
+	}
+	"TUTO_Jobs_Hard"
+	{
+		"fr"		"Difficile"
+		"en"		"Difficult"
+	}
+	"TUTO_Jobs_Selling"
+	{
+		"fr"		"Commercial"
+		"en"		"Commercial"
+	}
+	"TUTO_Jobs_Unrecommanded"
+	{
+		"fr"		"Non recommandé"
+		"en"		"Unrecommended"
+	}
+	// ----------------------------------
+	"TUTO_1_Title"
+	{
+		"fr"		"== Bienvenue sur le serveur RolePlay"
+		"en"		"== Welcome to the RolePlay server"		
+	}
+	"TUTO_1_Text"
+	{
+		"fr"		"C'est votre première connexion, vous devez donc faire notre tutoriel afin de vous familiariser avec ce mode de jeu. A la fin de celui-ci vous gagnerez 20.000$: la monnaie du jeu.\n \n Ce mode Roleplay est une sorte de simulation de vie: vous pouvez avoir de l'argent, un emploi etc.\n \n→ Rendez-vous devant la statue de la place de l'indépendance afin de commencer votre apprentissage.\n \n Les flèches vous guideront tout au long de ce tutoriel."
+		"en"		"This is your first connection, so you must do our tutorial in order to familiarize yourself with this gamemode. At the end of it you will earn $20,000 in game currency.\n \nIn this gamemode you can earn money, a job & more.\n \n→Meet in front of the statue at Independence Square to start your tutorial.\n \n→The arrows will guide you through this tutorial."
+	}
+	"TUTO_2_Title"
+	{
+		"fr"		"== Objectif 1: La ville"
+		"en"		"== Objective 1: The City"		
+	}
+	"TUTO_2_Text"
+	{
+		"fr"		"Princeton est la ville dans laquelle vous êtes, c'est la map du serveur. La justice y fait souvent défaut. De nombreux meurtres y sont commis, et parfois impunis.\n \n Bien que de nombreux citoyens s'entretuent sachez, avant tout, que vous risquez de rester de longues minutes en prison pour de telles actions.\n \n→ Rendez-vous devant le commissariat afin de continuer votre apprentissage."
+		"en"		"Princeton is the name of the city you have just moved to! Although justice is often lacking as murders and criminal activity often go unpunished.\n \nMany citizens commit murder which can result in long prison sentences.\n \n→Meet in front of the police station to continue your training."		
+	}
+	"TUTO_3_Title"
+	{
+		"fr"		"== Objectif 2: Le commissariat"
+		"en"		"== Objective 2: The Police Station"		
+	}
+	"TUTO_3_Text"
+	{
+		"fr"		"Selon le règlement de la police, vous pouvez être mis en prison dans ce commissariat pour différentes raisons.\n \nLes principales raisons d’incarcération sont: Le meurtre ou la tentative de meurtre, le tir dans la rue, le vol, les nuisances sonores, le trafic illégal...\n \n Votre futur emploi définira votre camp. Par exemple, un mafieux vole de l'argent, un mercenaire exécute des contrats, un policier tentera de les en empêcher.\n \n→ Rendez-vous devant la banque."
+		"en"		"According to police regulations, you can be put into prison for different reasions.\n \nThe main reasons for incarceration are: Murder or attempted murder, shooting in the street, theft, noise pollution and illegal trafficking.\n \nYour future job will define your way of life. For example, a mobster steals money, a mercenary executes contracts and a policeman will try to prevent crime.\n \n→Meet in front of the bank."		
+	}
+	"TUTO_4_Title"
+	{
+		"fr"		"== Objectif 3: Mettre son argent en sécurité"
+		"en"		"== Objective 3: Put your money into the ATM"		
+	}
+	"TUTO_4_Text"
+	{
+		"fr"		"Dans un premier temps pour éviter de vous faire voler votre argent, déposez-le en banque.\n \nPour cela, positionnez-vous devant un distributeur, utilisez votre touche action (E). Selectionnez l'action déposer argent. Déposez-y le montant que vous souhaitez\n \nSachez tout de même que les banquiers vendent des cartes et des comptes bancaires qui vous faciliterons la vie plus tard sur le serveur.\n \n→ Déposez tout votre argent en banque."
+		"en"		"Firstly to avoid having your money stolen, deposit it into the bank.\n \nTo do this, position yourself in front of an ATM and use your action key (E). Select the deposit money action to deposit any amount you want.\n \nBeaware that bankers sell cards and bank accounts which make your life easier later on in the server.\n \n→Deposit all your money to the bank."		
+	}
+	"TUTO_5_Title"
+	{
+		"fr"		"== Objectif 4: Le Tribunal"
+		"en"		"== Objective 4: The Tribunal"		
+	}
+	"TUTO_5_Text"
+	{
+		"fr"		"Sachez qu'un policier n'a pas le droit de mettre en prison pour des faits qui ne se sont pas déroulés devant ses yeux. Si vous connaissez le nom de la personne qui vous a tué et qu'un juge est présent, adressez-vous à lui.\n \n En vérifiant l'historique du serveur, le juge appliquera une condamnation adaptée aux faits reprochés. (Meurtre, vol, ...)\n \n→ Rendez-vous devant le tribunal."
+		"en"		"Beaware that police do not have the right to put you into prison for facts which did not take place before their eyes. If you know the name of the person who killed you and a judge is present, contact him.\n \nBy checking the history of the server, the Judge will apply a sentence appropriate to the charges. (Murder, theft, etc)\n \n→Appointment in court."		
+	}
+	"TUTO_6_Title"
+	{
+		"fr"		"== Objectif 5: L'armurerie"
+		"en"		"== Objective 5: The Armory"		
+	}
+	"TUTO_6_Text"
+	{
+		"fr"		"Les flèches vous dirige vers l'armurerie où vous pourrez vous procurer des armes. N'oubliez pas d'acheter un permis de port d'arme à un banquier. Dans le cas contraire un policier est en droit de vous arrêter. Restez discret, rangez la dans votre poche! Une arme a été ajoutée dans votre inventaire.\n \n→ Entrez la commande /rp (ou /item) dans le chat général, Appuyez sur la touche 1 afin de l'utiliser."
+		"en"		"The arrows direct you to the armory where you can get weapons. Do not forget to buy a license to carry a weapon which can be purchased from a banker. Otherwise a police officer is allowed to stop you for carrying an unlicensed weapon. Stay discreet and put it in your pocket! A weapon has been added to your inventory.\n \n→Enter the command !rp or !item in general chat, then press the 1 key to use it."		
+	}
+	"TUTO_7_Title"
+	{
+		"fr"		"== Objectif 6: Les appartements"
+		"en"		"== Objective 6: The Apartments"		
+	}
+	"TUTO_7_Text"
+	{
+		"fr"		"Un appartement vous permet d'augmenter votre paye. Lorsque vous aurez décroché votre premier emploi, il est généralement conseillé de louer un appart. Celui-ci vous donne de l'énergie et vous rend votre vie. Vous pouvez aussi y cacher différents objets du jeu, tel que les machines à faux-billets plants de drogue, armes, etc.\n \n→ Rendez-vous devant les appartements afin de continuer votre apprentissage."
+		"en"		"An apartment allows you to increase your pay. When you have landed your first job, it is generally advised to rent an apartment. This gives you energy and gives you back your life. You can hide various game objects such as counterfeit machines, drug plants, weapons, etc.\n \n→ Meet in front of the apartments to continue your tutorial."		
+	}
+	"TUTO_8_Title"
+	{
+		"fr"		"== Objectif 7: Un trafic illégal"
+		"en"		"Objective 7: Illegal trafficking"		
+	}
+	"TUTO_8_Text"
+	{
+		"fr"		"Une imprimante à faux-billets et un plant de drogue ont été ajoutés à votre inventaire.\n \nTrouvez-vous une cachette, et utilisez ces objets (/rp ou /item). Si vous êtes mal caché, un policier est en droit de vous arrêter !\n \n→ Déposez une machine, et un plant de drogue afin de continuer votre apprentissage."
+		"en"		"A counterfeit printer and a drug plant have been added to your inventory.\n \nFind a hiding place and use these items, just type !r or !item.. If you are poorly hidden, a policeman has the right to arrest you!\n \n→Drop a machine and a drug plant to continue the tutorial."		
+	}
+	"TUTO_9_Title"
+	{
+		"fr"		"== Objectif 8: Le Tchat général"
+		"en"		"== Objective 8: General Chat"		
+	}
+	"TUTO_9_Text"
+	{
+		"fr"		"Le Chat est divisé en plusieurs catégories:\n \n- Le Chat général, celui qui permet de communiquer avec tout citoyen présent en ville, mais aussi d'exécuter diverses commandes (comme le /item qu'on vient de voir).\n \n - Le Chat équipe, permet de communiquer avec les citoyens à coté de vous.\n \n→ Faites un coucou dans le chat local (Touche u) afin de continuer votre apprentissage."
+		"en"		"The chat is divided into server categories:\n \n- The General Chat which allows you to communicate with any citizen present in town but can also execute various commands such as !item\n \n- Team Chat allows you to communicate with citizens close by to you.\n \n→ Say hi in the local chat/team chat (U key) to continue your tutorial."		
+	}
+	"TUTO_10_Title"
+	{
+		"fr"		"== Objectif 9: Les quêtes"
+		"en"		"== Objective 9: The Quests"		
+	}
+	"TUTO_10_Text"
+	{
+		"fr"		"Les téléphones de la ville sont très utiles pour gagner de l'argent facilement. De temps à autres, ceux-ci se mettent à sonner. Si vous décrochez, un colis vous est envoyé par hélicoptère.\n \nDe plus, de nombreuses quêtes sont disponibles selon votre job. Il suffit de se rendre à un téléphone pour débuter l'une d'entre elle.\n \n→ Décrochez au téléphonne à l'aide de votre touche utiliser (E par défaut)."
+		"en"		"The telephones in the city are very useful for making easy money. From time to time, they start ringing. If you pick up, a parcel is sent to you via a helicopter.\n \nMany quests are available depending on your job. Just go to a phone and start one of them.\n \n→ Pick up the phone using your use key (E by default)."		
+	}
+	"TUTO_10b_Text"
+	{
+		"fr"		"Un hélicoptère vous envois un colis. Il sera envoyé près de vous, dans la rue du commerce."
+		"en"		"A helicopter sends you a parcel. It will be dropped near the shops."		
+	}
+	"TUTO_11_Title"
+	{
+		"fr"		"== Objectif 10: Les commandes utiles"
+		"en"		"== Objective 10: Useful commands"		
+	}
+	"TUTO_11_Text"
+	{
+		"fr"		"Il existe de nombreuses commandes sur le serveur. La plupart liées à votre métier, que vous apprendrez sur le tas.\n - /give montant permet de donner votre argent\n- /vendre pour vendre un objet\n- /job Permet de voir les différents jobs connectés\nAfin de trouver un emploi, jetez un oeil à cette commande. Elle permet de voir qui est chef, vous saurez donc à qui vous adresser pour trouver un emploi.\n \n→ Rendez-vous maintenant sur la place Station"
+		"en"		"There are many commands on the server. Most of them related to your job which you will learn as you progress.\n→ !give {amount} allows you to give your money.\n→ !sell allows you to sell an item.\n→ !job allows you to see different jobs. In order to find a job, take a look at the /job command. It allows you to see who is the boss so that you will know who to contact to ask for a job.\n \n→ Head to Station Square."		
+	}
+	"TUTO_12_Title"
+	{
+		"fr"		"== Objectif 11: Le mot de la fin"
+		"en"		"== Objective 11: The Final Word"		
+	}
+	"TUTO_12_Text"
+	{
+		"fr"		"Derniers conseils avant de vous laisser partir sur de bonnes bases.\n \n- Nous sommes sur CSGO, pas sur ARMA ni GMOD. Il y a des meurtres en ville, armez vous.\n - Seuls les policiers et les juges sont là pour sanctionner les meurtres.\n- Trouvez vous un job\n- Faites un tour sur notre Discord\n \nBon jeu!\n→ Rendez-vous a coté l'hôpital afin de commencer votre aventure RolePlay."
+		"en"		"Last advice before letting you go enjoy your new life.\n \n- We are on CSGO, not ARMA or GMOD. CSGO has limits. This is the most complex mod every made in the history of CSGO. There are murders in town, arm yourself.\n- Only the police and Judges are there to sanction murderers.\n- Find a job\n- Take a tour of our Discord.gg/kzg\n- Meet near the Hospital to start your Roleplay adventure!"		
+	}
+	"TUTO_13_Title"
+	{
+		"fr"		"== Parrainage"
+		"en"		"== Sponsorship"		
+	}
+	"TUTO_13_Text"
+	{
+		"fr"		"Quelqu'un de présent vous a t-il invité à jouer sur notre serveur?  Si oui, qui?"
+		"en"		"Has anyone here invited you to play on our server? If so, who?"		
+	}
+	"TUTO_13b_Text"
+	{
+		"fr"		"Personne m'a invité"
+		"en"		"Nobody invited me"		
+	}
+	"TUTO_Finish"
+	{
+		"#format" "{1:s},{2:s}"
+		"fr"		"{1} vient de terminer son tutoriel, il est {2}. Aidez le!"
+		"en"		"{1} just finished his tutorial, it's {2}. Help him!"		
+	}
+	"TUTO_Jobs_Title"
+	{
+		"fr"		"== Vos premiers job vous sont offerts"
+		"en"		"== Your first jobs are offered to you"		
+	}
+	"TUTO_Jobs_Text"
+	{
+		"fr"		"Sachez que plus tard, vous devrez le trouver vous-même et être recruté par le chef d'un job.\n "
+		"en"		"Be aware that later you will have to find and be recruited by the leader of a job."		
+	}
+	"TUTO_Jobs_Confirm"
+	{
+		"#format" "{1:s}"
+		"fr"		"Vous avez choisis comme métier:\n {1}."
+		"en"		"You have chosen as your profession:\n {1}."	
+	}
+	"TUTO_Jobs_Confirm_Yes"
+	{
+		"fr"		"Je confirme mon choix"
+		"en"		"I confirm my choice"		
+	}
+	"TUTO_Jobs_Confirm_No"
+	{
+		"fr"		"Je veux choisir un autre job"
+		"en"		"I want to choose another job"		
+	}
+	"TUTO_Jobs_Confirm_Done"
+	{
+		"#format" "{1:s},{2:d},{3:d}"
+		"fr"		"Vous avez choisis {1}, il vous reste {2}/{3} job(s) offert(s)"
+		"en"		"You have chosen {1}, you have {2}/{3} job offer(s)"		
+	}
+	"TUTO_Jobs_None"
+	{
+		"fr"		"Quelqu'un a un autre job pour moi"
+		"en"		"Someone has another job for me"		
+	}
+	
+}

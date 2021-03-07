@@ -24,19 +24,6 @@ void setRecoil(int client) {
 		SetEntPropVector(client, Prop_Send, "m_aimPunchAngle", vecAngles);
 	}
 }
-/*
-public Action OnSetTransmit(int entity, int client) {
-	if( entity == client )
-		return Plugin_Continue;
-
-	if(g_bUserData[entity][b_Invisible] && (g_iUserData[entity][i_Job] == 1 || g_iUserData[entity][i_Job] == 2 || g_iUserData[entity][i_Job] == 4 || g_iUserData[entity][i_Job] == 5)) {
-		if( g_iUserData[client][i_ContratType] >= 1000 )
-			return Plugin_Continue;
-		return Plugin_Handled;
-	}
-	return Plugin_Continue;
-}
-*/
 public void OnPreThink(int client) {
 	setRecoil(client);
 	float GameTime = GetGameTime();
@@ -44,11 +31,14 @@ public void OnPreThink(int client) {
 	
 	if( btn & IN_ATTACK ) {
 		int wpnid = GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
-		float next = GetEntPropFloat(wpnid, Prop_Send, "m_flNextPrimaryAttack");
 		
-		if( wpnid > 0 && g_flWeaponFireRate[wpnid] > 0.0 && next <= GameTime ) {
-			SetEntPropFloat(wpnid, Prop_Send, "m_flPlaybackRate", g_flWeaponFireRate[wpnid]);
-			g_bWeaponFireRate[wpnid] = true;
+		if( wpnid > 0 ) {
+			float next = GetEntPropFloat(wpnid, Prop_Send, "m_flNextPrimaryAttack");
+			
+			if( wpnid > 0 && g_flWeaponFireRate[wpnid] > 0.0 && next <= GameTime ) {
+				SetEntPropFloat(wpnid, Prop_Send, "m_flPlaybackRate", g_flWeaponFireRate[wpnid]);
+				g_bWeaponFireRate[wpnid] = true;
+			}
 		}
 	}
 }
