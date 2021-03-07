@@ -177,7 +177,7 @@ public void Q3_End(int objectiveID, int client) {
 	
 	menu.SetTitle("Quète: %s", QUEST_NAME);
 	menu.AddItem("", "Interlocuteur anonyme :", ITEMDRAW_DISABLED);
-	menu.AddItem("", "Les 18th te remercient pour ta rapidité d'action", ITEMDRAW_DISABLED);
+	menu.AddItem("", "Les dealers te remercient pour ta rapidité d'action", ITEMDRAW_DISABLED);
 	menu.AddItem("", "et t'offrent: [PvP] AK-47.", ITEMDRAW_DISABLED);
 	
 	menu.ExitButton = false;
