@@ -77,11 +77,6 @@ public void OnPluginStart() {
 			
 			CreateTimer(Math_GetRandomFloat(0.0, 2.5), BuildingCashMachine_post, i);
 		}
-		if( rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PEACEFULL ) {
-		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
-		return Plugin_Handled;
-	}
 	}
 }
 public void OnMapStart() {
@@ -446,6 +441,8 @@ int getMaxPerJob(int client) {
 int BuildingCashMachine(int client, bool force=false) {
 	if( !rp_IsBuildingAllowed(client) )
 		return 0;
+		
+	CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client); 
 	
 	char classname[64];
 	Format(classname, sizeof(classname), "rp_cashmachine");
@@ -713,6 +710,8 @@ public Action Cmd_ItemCashBig(int args) {
 int BuildingBigCashMachine(int client) {
 	if( !rp_IsBuildingAllowed(client) )
 		return 0;
+		
+	CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client); 
 	
 	char bigclassname[64];
 	Format(bigclassname, sizeof(bigclassname), "rp_bigcashmachine");
