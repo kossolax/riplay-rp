@@ -507,7 +507,8 @@ public Action Cmd_ItemHamburger(int args) {
 		TE_SetupBeamRingPoint(vecTarget, 10.0, 300.0, g_cBeam, g_cGlow, 0, 15, 0.5, 50.0, 0.0, {255, 255, 0, 50}, 10, 0);
 		TE_SendToAll();
 		
-		ServerCommand("sm_effect_particles %d Trail11 5 facemask", client);
+		ServerCommand("sm_effect_particles %d Trail5 5 footplant_L", client);
+		ServerCommand("sm_effect_particles %d Trail5 5 footplant_R", client);
 		
 		if( rp_IsInPVP(client) ) {			
 			if( rp_GetClientGroupID(client) == rp_GetCaptureInt(cap_bunker) )
