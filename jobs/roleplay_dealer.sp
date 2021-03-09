@@ -720,6 +720,8 @@ public Action fwdOnPlayerBuild(int client, float& cooldown) {
 	if( rp_GetClientJobID(client) != 81 )
 		return Plugin_Continue;
 	
+	CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client); 
+	
 	Handle menu = CreateMenu(MenuBuildingDealer);
 	char tmp[12], tmp2[64];
 			
