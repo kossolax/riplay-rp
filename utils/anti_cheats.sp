@@ -71,6 +71,7 @@ public void OnPluginStart() {
 	do {
 		if ( isCommand && (flags & FCVAR_CHEAT)) {
 			AddCommandListener(OnCheatCommand_LOG, name);
+			LogToGame("[CHEAT-CMD] Hooked %s", name);
 		}
 	} while( FindNextConCommand(cvar, name, sizeof(name), isCommand, flags) );
 	
@@ -347,8 +348,10 @@ public void ClientConVar(QueryCookie cookie, int client, ConVarQueryResult resul
 	char tmp[12];
 	Format(tmp, sizeof(tmp), "%d", value);
 	
-	if( !StrEqual(cvarValue, tmp) || result == ConVarQuery_Protected )
+	if( !StrEqual(cvarValue, tmp) || result == ConVarQuery_Protected ) {
 		LogToGame(PREFIX ... " [CONVAR] %L %s %s", client, cvarName, cvarValue);
+		SendConVarValue(client, FindConVar(cvarName), tmp);
+	}
 } 
 // ------------------------------------------------- AIM-BOT --------------------
 public MRESReturn DHooks_OnTeleport(int client, Handle hParams) {
