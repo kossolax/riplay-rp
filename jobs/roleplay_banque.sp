@@ -494,6 +494,8 @@ public Action fwdOnPlayerBuild(int client, float& cooldown) {
 	SetEntProp(ent, Prop_Data, "m_iHealth", GetEntProp(ent, Prop_Data, "m_iHealth")/5);
 	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
 	
+	CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client); 
+	
 	if( ent > 0 ) {
 		rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
 		rp_ScheduleEntityInput(ent, 120.0, "Kill");
