@@ -81,8 +81,7 @@ public void Q1_Frame(int objectiveID, int client) {
 		rp_QuestStepComplete(client, objectiveID);
 	}
 	else {
-		int v = nearestBlackMarket(client);
-	
+		//int v = nearestBlackMarket(client);
 		PrintHintText(client, "Quête: %s\nTemps restant: %dsec\nObjectif: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME1);
 	}
 }
