@@ -544,7 +544,7 @@ public Action EMPExplode_Task(Handle timer, any ent) {
 		
 		if( StrEqual(classname, "player") || StrContains(classname, "weapon_") == 0 ||
 			StrEqual(classname, "rp_cashmachine")  || StrEqual(classname, "rp_bigcashmachine") ||
-			StrEqual(classname, "rp_mine") || StrEqual(classname, "rp_sentry") ) {
+			StrEqual(classname, "rp_mine") ) {
 			
 			if( StrContains(classname, "weapon_knife") == 0 )
 				continue;
@@ -573,12 +573,6 @@ public Action EMPExplode_Task(Handle timer, any ent) {
 			}
 			else if( StrEqual(classname, "rp_mine")  ) {
 				rp_AcceptEntityInput(i, "Kill");
-			}
-			else if( StrEqual(classname, "rp_sentry")  ) {
-				int owner = rp_GetBuildingData(i, BD_owner);
-				
-				if( !IsValidClient(owner) || (rp_ClientCanAttack(client, owner) && client != owner) )
-					rp_SetBuildingData(i, BD_HackedTime, GetTime() + 20);
 			}
 			else {
 				if( IsValidClient(i) && !(rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_PEACEFULL) ) {
