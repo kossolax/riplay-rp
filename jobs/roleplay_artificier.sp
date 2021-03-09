@@ -546,7 +546,7 @@ public Action EMPExplode_Task(Handle timer, any ent) {
 			StrEqual(classname, "rp_cashmachine")  || StrEqual(classname, "rp_bigcashmachine") ||
 			StrEqual(classname, "rp_mine") ) 
 			
-			else if( boosted[ent] = true || StrEqual(classname, "rp_sentry")){
+			else if( boosted[ent] = true; || StrEqual(classname, "rp_sentry")){
 			
 			if( StrContains(classname, "weapon_knife") == 0 )
 				continue;
