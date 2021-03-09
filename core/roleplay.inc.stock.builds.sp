@@ -255,7 +255,7 @@ bool CheckBuild(int client, bool showMsg = true) {
 			CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
 		return false;
 	}
-	if( GetZoneBit(GetPlayerZone(client) ) & BITZONE_BLOCKBUILD ) {
+	if( GetZoneBit(GetPlayerZone(client) ) & (BITZONE_BLOCKBUILD|BITZONE_BLOCKITEMS) ) {
 		if( showMsg )
 			CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client);
 		return false;
