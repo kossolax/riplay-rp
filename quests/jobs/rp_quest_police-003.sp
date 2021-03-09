@@ -81,10 +81,7 @@ public void Q1_Frame(int objectiveID, int client) {
 		rp_QuestStepComplete(client, objectiveID);
 	}
 	else {
-		int v = nearestBlackMarket(client);
-		if( v > 0 )
-			rp_Effect_BeamBox(client, v, NULL_VECTOR, 255, 255, 255);
-		
+		//int v = nearestBlackMarket(client);
 		PrintHintText(client, "Quête: %s\nTemps restant: %dsec\nObjectif: %s", QUEST_NAME, g_iDuration[client], QUEST_RESUME1);
 	}
 }
@@ -134,15 +131,15 @@ int nearestBlackMarket(int client) {
 	char classname[64];
 	int val = -1;
 	Entity_GetAbsOrigin(client, vecOrigin);
-	
+
 	for (int i = MaxClients; i <= 2048; i++) {
 		if( !IsValidEdict(i) || !IsValidEntity(i) )
 			continue;
-		
+
 		GetEdictClassname(i, classname, sizeof(classname));
 		if( StrEqual(classname, "rp_cashmachine") || StrEqual(classname, "rp_bigcashmachine") || StrEqual(classname, "rp_plant") ) {
 			if( rp_GetBuildingData(i, BD_started)+120 < GetTime() && rp_GetBuildingData(i, BD_owner) != client ) {
-			
+
 				Entity_GetAbsOrigin(i, vecDestination);
 				tmp = GetVectorDistance(vecOrigin, vecDestination);
 				if( tmp < vecMaxDIST ) {
