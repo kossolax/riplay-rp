@@ -346,6 +346,8 @@ public int eventChooseSpec(Handle menu, MenuAction action, int client, int param
 public Action fwdOnPlayerBuild(int client, float& cooldown) {
 	if( rp_GetClientJobID(client) != 31 )
 		return Plugin_Continue;
+		
+	CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client); 
 	
 	bool recyc, spec;
 
