@@ -551,7 +551,6 @@ public Action EMPExplode_Task(Handle timer, any ent) {
 			if( rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_PEACEFULL )
 				continue;
 			
-			
 			GetEntPropVector(i, Prop_Send, "m_vecOrigin", vecOrigin2);
 			
 			if( GetVectorDistance(vecOrigin, vecOrigin2) > 400.0 )
@@ -574,9 +573,9 @@ public Action EMPExplode_Task(Handle timer, any ent) {
 			else if( StrEqual(classname, "rp_mine")  ) {
 				rp_AcceptEntityInput(i, "Kill");
 			}
-			else if( StrEqual(classname, "rp_sentry")  ) {
+			else if( StrEqual(classname, "rp_sentry") && boosted[i]  ) {
 				int owner = rp_GetBuildingData(i, BD_owner);
-				
+
 				if( !IsValidClient(owner) || (rp_ClientCanAttack(client, owner) && client != owner) )
 					rp_SetBuildingData(i, BD_HackedTime, GetTime() + 20);
 			}
