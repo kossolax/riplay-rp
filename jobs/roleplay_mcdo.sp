@@ -192,6 +192,8 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	if( rp_GetClientJobID(client) != 21 )
 		return Plugin_Continue;
 	
+	CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client); 
+	
 	int ent = BuildingMicrowave(client);
 	rp_SetBuildingData(ent, BD_FromBuild, 1);
 	SetEntProp(ent, Prop_Data, "m_iHealth", GetEntProp(ent, Prop_Data, "m_iHealth")/5);
