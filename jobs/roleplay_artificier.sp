@@ -544,13 +544,12 @@ public Action EMPExplode_Task(Handle timer, any ent) {
 		
 		if( StrEqual(classname, "player") || StrContains(classname, "weapon_") == 0 ||
 			StrEqual(classname, "rp_cashmachine")  || StrEqual(classname, "rp_bigcashmachine") ||
-			StrEqual(classname, "rp_mine")|| if( boosted[ent] = true && StrEqual(classname, "rp_sentry")){
+			StrEqual(classname, "rp_mine") || StrEqual(classname, "rp_sentry") ){
 			
 			if( StrContains(classname, "weapon_knife") == 0 )
 				continue;
 			if( rp_GetZoneBit(rp_GetPlayerZone(i)) & BITZONE_PEACEFULL )
 				continue;
-			
 			
 			GetEntPropVector(i, Prop_Send, "m_vecOrigin", vecOrigin2);
 			
