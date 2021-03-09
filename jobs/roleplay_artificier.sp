@@ -97,6 +97,8 @@ public Action fwdOnPlayerBuild(int client, float& cooldown) {
 	if( rp_GetClientJobID(client) != 131 )
 		return Plugin_Continue;
 	
+	CPrintToChat(client, ""...MOD_TAG..." %T", "Build_CannotHere", client); 
+	
 	g_iFreeFirework[client] = 1;
 	Menu_Main(client);
 	cooldown = 1.0;
