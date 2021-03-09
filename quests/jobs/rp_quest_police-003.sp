@@ -129,28 +129,3 @@ int countBlackMarket(int client) {
 	}
 	return amount;
 }
-int nearestBlackMarket(int client) {
-	float vecOrigin[3], vecDestination[3], vecMaxDIST = 999999999.9, tmp;
-	char classname[64];
-	int val = -1;
-	Entity_GetAbsOrigin(client, vecOrigin);
-	
-	for (int i = MaxClients; i <= 2048; i++) {
-		if( !IsValidEdict(i) || !IsValidEntity(i) )
-			continue;
-		
-		GetEdictClassname(i, classname, sizeof(classname));
-		if( StrEqual(classname, "rp_cashmachine") || StrEqual(classname, "rp_bigcashmachine") || StrEqual(classname, "rp_plant") ) {
-			if( rp_GetBuildingData(i, BD_started)+120 < GetTime() && rp_GetBuildingData(i, BD_owner) != client ) {
-			
-				Entity_GetAbsOrigin(i, vecDestination);
-				tmp = GetVectorDistance(vecOrigin, vecDestination);
-				if( tmp < vecMaxDIST ) {
-					vecMaxDIST = tmp;
-					val = i;
-				}
-			}
-		}
-	}
-	return val;
-}
