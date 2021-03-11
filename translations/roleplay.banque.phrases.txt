@@ -52,13 +52,13 @@
 	}
 	"Metro_Event"
 	{
-		"fr"	"Métro: Station événementiel"
+		"fr"	"Métro: Station Événementiel"
 		"en"	"Metro: Event station"
 	}
 	"Metro_Hell"
 	{
-		"fr"	"Métro: Station inconnue"
-		"en"	"Metro: Station unknown"
+		"fr"	"Métro: Station Grand parc"
+		"en"	"Metro: Station Big park"
 	}
 	"Metro_Villa"
 	{
