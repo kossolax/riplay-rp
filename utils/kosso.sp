@@ -51,14 +51,14 @@ public void OnPluginStart() {
 		}
 	}
 	
-	CreateTimer(5.0, test);
+	//CreateTimer(5.0, test);
 }
-// public void OnMapStart() {
+public void OnMapStart() {
 	PrecacheModel("models/props_survival/cash/dufflebag.mdl");
 	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt");
 }
 
-//int CreateBag(float pos[3], float ang[3], float vel[3]) {
+int CreateBag(float pos[3], float ang[3], float vel[3]) {
 	int bag = CreateEntityByName("prop_physics");
 	DispatchKeyValue(bag, "classname", "rp_moneybag");
 	DispatchKeyValue(bag, "solid", "6");
@@ -221,7 +221,7 @@ public Action OnPlayerRunCmd(int client, int& buttons) {
 			}
 		}
 		
-		//if( start[client] > 0.0 ) {
+		if( start[client] > 0.0 ) {
 			if( !(buttons & IN_USE) && (oldButtons[client] & IN_USE) || !found ) {
 				start[client] = 0.0;
 				SetProgressBarTime(client);
@@ -294,7 +294,7 @@ public void think(int car) {
 	
 		float src[3] =  { -32.0, -32.0, -36.0 };
 		
-		//for (int i = 0; i < count; i ++) {
+		for (int i = 0; i < count; i ++) {
 			int col = (i%6)/2;
 			int row = i%2;
 			int dep = i/6;
