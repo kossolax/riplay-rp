@@ -213,9 +213,9 @@ app.controller('rpIndex', function($scope, $http, $timeout, $interval, $window, 
 }
 
   var wed = setDay(3, 18, 0);
-  var fri = setDay(5, 21, 0);
+  var sun = setDay(7, 21, 0);
   var now = new Date();
-  $scope.pvp = ((now-fri)<(now-wed)?wed:fri);
+  $scope.pvp = ((now-sun)<(now-wed)?wed:sun);
 
   $http.get("https://riplay.fr/api/live/stats").then(function(res) {
     var delta = (res.data.time.h*60) + res.data.time.m + parseInt(((new Date())/1000) - res.data.time.t);
