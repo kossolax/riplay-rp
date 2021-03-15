@@ -124,7 +124,7 @@
 	}
 	"TUTO_10_Text"
 	{
-		"fr"		"Les téléphones de la ville sont très utiles pour gagner de l'argent facilement. De temps à autres, ceux-ci se mettent à sonner. Si vous décrochez, un colis vous est envoyé par hélicoptère.\n \nDe plus, de nombreuses quêtes sont disponibles selon votre job. Il suffit de se rendre à un téléphone pour débuter l'une d'entre elle.\n \n→ Décrochez au téléphonne à l'aide de votre touche utiliser (E par défaut)."
+		"fr"		"Les téléphones de la ville sont très utiles pour gagner de l'argent facilement. De temps à autres, ceux-ci se mettent à sonner. Si vous décrochez, un colis vous est envoyé par hélicoptère.\n \nDe plus, de nombreuses quêtes sont disponibles selon votre job. Il suffit de se rendre à un téléphone pour débuter l'une d'entre elle.\n \n→ Décrochez au téléphone à l'aide de votre touche utiliser (E par défaut)."
 		"en"		"The telephones in the city are very useful for making easy money. From time to time, they start ringing. If you pick up, a parcel is sent to you via a helicopter.\n \nMany quests are available depending on your job. Just go to a phone and start one of them.\n \n→ Pick up the phone using your use key (E by default)."		
 	}
 	"TUTO_10b_Text"
