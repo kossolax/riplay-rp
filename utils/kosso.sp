@@ -51,7 +51,7 @@ public void OnPluginStart() {
 		}
 	}
 	
-	CreateTimer(5.0, test);
+	//CreateTimer(5.0, test);
 }
 public void OnMapStart() {
 	PrecacheModel("models/props_survival/cash/dufflebag.mdl");
