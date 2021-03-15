@@ -826,8 +826,22 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			}
 			
 			rp_ClientMoney(client, type == 5 ? i_Bank : i_Money, -RoundFloat(prixItem - reduc), true);
-			rp_ClientMoney(vendeur, i_Money, RoundToFloor(((prixItem * taxe) - reduc) * 0.5), true);
+			
+			if( rp_GetZoneInt(vendeur, zone_type_type) == jobID) {
+			rp_ClientMoney(vendeur, i_Money, RoundToFloor(((prixItem * taxe) - reduc) * 0.6), true);
+			
+			}
+			else {
+			rp_ClientMoney(vendeur, i_Money, RoundToFloor(((prixItem * taxe) - reduc) * 0.5), true); 
+			
+			}
+			if( rp_GetZoneInt(vendeur, zone_type_type) == jobID) {
+			rp_ClientMoney(vendeur, i_AddToPay, RoundToCeil(((prixItem * taxe) - reduc) * 0.6), true);
+			}
+			else {
 			rp_ClientMoney(vendeur, i_AddToPay, RoundToCeil(((prixItem * taxe) - reduc) * 0.5), true);
+			}
+		
 			// ici pour modif gozer
 			
 			// a partir d'ici il reste 80% du prix
