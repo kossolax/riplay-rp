@@ -62,7 +62,7 @@ void ReduceJailTime(int client) {
 	}
 
 	Format(tmp, 255, "%sVous êtes en prison pour encore %.1f heures\n\n ", tmp, (float(g_iUserData[client][i_JailTime])/60.0));
-	// Format(tmp, 255, "%sVous pouvez réduire ce temps de %d heures\nà tout moment pour %i$\n\n ", tmp, reduction, amende);
+	Format(tmp, 255, "%sVous pouvez réduire ce temps de %d heures\nà tout moment pour %i$\n\n ", tmp, reduction, amende);
 
 	SetMenuTitle(menu, tmp);
 
@@ -104,7 +104,7 @@ public int eventPayForLeaving_2(Handle menu, MenuAction action, int iTarget, int
 				rp_ClientMoney(iTarget, i_Money, -amende);
 				
 				if( IsValidClient(g_iUserData[iTarget][i_JailledBy]) ) {
-					rp_ClientMoney(g_iUserData[iTarget][i_JailledBy], i_AddToPay, amende / 4);
+					rp_ClientMoney(g_iUserData[iTarget][i_JailledBy], i_AddToPay, amende / 2);
 					
 					int client = g_iUserData[iTarget][i_JailledBy];
 					if( IsValidClient(client) ) {
@@ -119,22 +119,22 @@ public int eventPayForLeaving_2(Handle menu, MenuAction action, int iTarget, int
 						addToGroup(client, amende/4);
 						SetJobCapital(g_iUserData[iTarget][i_JailledBy], GetJobCapital(g_iUserData[iTarget][i_JailledBy]) + (amende/4)*3 );
 						
-						rp_ClientMoney(client, i_AddToPay, amende / 4);
+						rp_ClientMoney(client, i_AddToPay, amende / 2);
 					}
 					
 					LogToGame("[JAIL] [CAUTION] %L a payé %d$ pour réduire sa jail de %d heures", iTarget, amende, reduction);
 					
 					if( IsPolice(g_iUserData[iTarget][i_JailledBy]) ) {
-						SetJobCapital(1, GetJobCapital(1) + (amende/4)*3 );
+						SetJobCapital(1, GetJobCapital(1) + amende/2 );
 					}
 					if( IsJuge(g_iUserData[iTarget][i_JailledBy]) ) {
-						SetJobCapital(101, GetJobCapital(101) + (amende/4)*3 );
+						SetJobCapital(101, GetJobCapital(101) + amende/2 );
 					}
 					else if( Math_GetRandomInt(1, 2) == 1 ) {
-						SetJobCapital(1, GetJobCapital(1) + (amende/4)*3 );
+						SetJobCapital(1, GetJobCapital(1) + amende/2 );
 					}
 					else {
-						SetJobCapital(101, GetJobCapital(101) + (amende/4)*3 );
+						SetJobCapital(101, GetJobCapital(101) + amende/2 );
 					}
 				}
 				else {
