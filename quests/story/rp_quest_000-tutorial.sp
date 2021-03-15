@@ -99,7 +99,7 @@ public void OnClientPostAdminCheck(int client) {
 	g_iDisableAsk[client] = 0;
 }
 public Action fwdFrame(int client) {
-	if( rp_IsTutorialOver(client) && rp_GetClientInt(client, i_AllowedDismiss) > 0 && rp_GetClientInt(client, i_Job) == 0 && rp_ClientCanDrawPanel(client) && g_iDisableAsk[client] < GetTime() ) {
+	if( rp_IsClientNew(client) && rp_IsTutorialOver(client) && rp_GetClientInt(client, i_AllowedDismiss) > 0 && rp_GetClientInt(client, i_Job) == 0 && rp_ClientCanDrawPanel(client) && g_iDisableAsk[client] < GetTime() ) {
 		drawJobMenu(client);
 	}
 }
