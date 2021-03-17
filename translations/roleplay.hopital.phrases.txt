@@ -35,7 +35,7 @@
 	}
 	"sick_type_hemoragie"
 	{
-		"fr"		"Vous êtes atteint d'hémorragie, prenez une {red}Poche de sang et priez{default}."
+		"fr"		"Vous êtes atteint d'hémorragie, prenez une {red}Poche de sang{default} et priez."
 		"en"		"You are hemorrhaging, take a {red}Blood bag and pray{default}."
 	}
 	"sick_type_poison"
