@@ -31,4 +31,4 @@ jobs:
         env: 
           ftp_password: ${{ secrets.FTPPassword }}
         run: |
-          ncftpput -u rp_test -p $ftp_password cpu-linux.riplay.fr plugins compiled/*
+          ncftpput -u rp_test -p $ftp_password cpu-linux.riplay.fr plugins compiled/* && ncftpput -u rp_test -p $ftp_password cpu-linux.riplay.fr translations translations/*.txt
