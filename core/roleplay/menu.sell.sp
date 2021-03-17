@@ -814,6 +814,13 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			rp_ClientGiveItem(client, item_id, amount);
 			
 			float taxe = StringToFloat(g_szItemList[item_id][item_type_taxes]);
+
+			int vendeurJobID = rp_GetClientJobID(vendeur);
+
+			if(rp_GetZoneInt(rp_GetPlayerZone(vendeur), zone_type_type) == vendeurJobID){
+				taxe *= 1.1;
+			}
+	
 			
 			g_iUserStat[vendeur][i_MoneyEarned_Sales] += RoundFloat(((prixItem * taxe) - reduc) * 1.0);
 			g_iUserData[vendeur][i_Reduction] = reduction;
@@ -839,7 +846,7 @@ public int eventGiveMenu_3(Handle p_hItemMenu, MenuAction p_oAction, int p_iPara
 			RestToLowCapital(rest);
 			// rest = pour calc les low capitals
 
-			SetJobCapital(g_iUserData[vendeur][i_Job], (GetJobCapital(g_iUserData[vendeur][i_Job]) + addcapital));
+			SetJobCapital(vendeurJobID, (GetJobCapital(vendeurJobID) + addcapital));
 			addToGroup(vendeur, RoundFloat(float(prix)/(2.0)));
 			
 			Call_StartForward( view_as<Handle>(g_hRPNative[vendeur][RP_OnPlayerSell]));

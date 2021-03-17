@@ -125,6 +125,10 @@ stock void rp_CANCEL_AUTO_ITEM(int client, int vendeur, int item_id) {
 	float reduc = prix / 100.0 * float(rp_GetClientInt(vendeur, i_Reduction));
 	float taxe = rp_GetItemFloat(item_id, item_type_taxes);
 	int jobID = rp_GetClientJobID(vendeur);
+
+	if(rp_GetZoneInt(rp_GetPlayerZone(vendeur), zone_type_type) == jobID){
+		taxe *= 1.1;
+	}
 	
 	PrintToConsole(client, "DEBUG pour kosso: prix: %f reduc: %f taxe: %f", prix, reduc, taxe);
 	PrintToConsole(client, "DEBUG pour kosso: argent à prendre au vendeur %N: %d", vendeur, -RoundFloat((prix * taxe) - reduc));
