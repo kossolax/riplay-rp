@@ -81,7 +81,7 @@ public Action Cmd_GiveItem(int args) {
 	int ent = GivePlayerItem(client, Arg1);	
 	
 	if( StrContains(Arg1, "weapon_taser") == 0 ) {
-		Weapon_SetPrimaryClip(ent, 1000);
+		Weapon_SetPrimaryClip(ent, 10);
 		SDKHook(ent, SDKHook_Reload, OnWeaponReload);
 	}
 	
@@ -546,7 +546,7 @@ public Action Cmd_ItemSanAndreas(int args) {
 	
 	GetEdictClassname(wepid, classname, sizeof(classname));
 		
-	if( StrContains(classname, "weapon_bayonet") == 0 || StrContains(classname, "weapon_knife") == 0 || StrContains(classname, "weapon_breachcharge") == 0 ) {
+	if( StrContains(classname, "weapon_bayonet") == 0 || StrContains(classname, "weapon_knife") == 0 || StrContains(classname, "weapon_breachcharge") == 0  || StrContains(classname, "weapon_taser") == 0 ) {
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
