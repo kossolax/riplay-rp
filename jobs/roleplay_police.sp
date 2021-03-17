@@ -608,6 +608,7 @@ public Action Cmd_Tazer(int client) {
 			return Plugin_Handled;
 		}
 		
+		rp_ClientReveal(client);
 		rp_Effect_Tazer(client, target);
 		rp_HookEvent(target, RP_PreHUDColorize, fwdTazerBlue, 9.0);
 		rp_HookEvent(target, RP_PrePlayerPhysic, fwdFrozen, 7.5);
