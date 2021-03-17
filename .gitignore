@@ -26,3 +26,4 @@ upload.sh
 .vscode
 *.driveupload
 maps/**
+compil_and_upload.bat
