@@ -70,6 +70,7 @@ void ReduceJailTime(int client) {
 	AddMenuItem(menu, "", "En QHS votre temps passe 2x plus vite mais vous ne pouvez pas y afk", ITEMDRAW_DISABLED);
 
 	AddMenuItem(menu, "cours", "Envoyez moi dans la cour");
+	AddMenuItem(menu, "yes", "Payer pour réduire");
 
 	int qhsPrice = 50 * RoundFloat(float(g_iUserData[client][i_JailTime])/60.0);
 
