@@ -524,6 +524,13 @@ public Action Cmd_ItemRedraw(int args) {
 	RemoveEdict( wep_id );
 	
 	wep_id = GivePlayerItem(client, classname);
+	
+	GetEdictClassname(wep_id, classname, sizeof(classname));
+	if( StrContains(classname, "weapon_taser") == 0 ) {
+		Weapon_SetPrimaryClip(ent, 10);
+		SDKHook(ent, SDKHook_Reload, OnWeaponReload);
+		}
+	
 	rp_SetWeaponBallType(wep_id, wep_type);
 	rp_SetWeaponGroupID(wep_id, g);
 	rp_SetWeaponStorage(wep_id, s);
