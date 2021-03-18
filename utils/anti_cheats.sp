@@ -229,6 +229,11 @@ public Action Hook_Transmit(int client, int target) {
 // ------------------------------------------------- CHEAT-CMD --------------------
 public Action OnCheatCommand_LOG(int client, const char[] command, int argc) {
 	LogToGame("[CHEAT-CMD-WARN] %L used command: %s", client, command);
+	
+	int flags = GetUserFlagBits(client);
+	if( !(flags & ADMFLAG_ROOT) ) {
+		return Plugin_Handled;
+	}
 
 	return Plugin_Continue;
 }
