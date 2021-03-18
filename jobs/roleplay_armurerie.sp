@@ -527,8 +527,8 @@ public Action Cmd_ItemRedraw(int args) {
 	
 	GetEdictClassname(wep_id, classname, sizeof(classname));
 	if( StrContains(classname, "weapon_taser") == 0 ) {
-		Weapon_SetPrimaryClip(ent, 10);
-		SDKHook(ent, SDKHook_Reload, OnWeaponReload);
+		Weapon_SetPrimaryClip(wep_id, 10);
+		SDKHook(wep_id, SDKHook_Reload, OnWeaponReload);
 		}
 	
 	rp_SetWeaponBallType(wep_id, wep_type);
