@@ -553,7 +553,7 @@ public Action Cmd_ItemSanAndreas(int args) {
 	
 	GetEdictClassname(wepid, classname, sizeof(classname));
 		
-	if( StrContains(classname, "weapon_bayonet") == 0 || StrContains(classname, "weapon_knife") == 0 || StrContains(classname, "weapon_breachcharge") == 0  || StrContains(classname, "weapon_taser") == 0 ) {
+	if( StrContains(classname, "weapon_bayonet") == 0 || StrContains(classname, "weapon_knife") == 0 || StrContains(classname, "weapon_breachcharge") == 0  || StrContains(classname, "weapon_taser") == 0 || StrContains(classname, "weapon_fists") == 0 ) {
 		ITEM_CANCEL(client, item_id);
 		return Plugin_Handled;
 	}
