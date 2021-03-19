@@ -281,6 +281,8 @@ void AFK_Check(int client) {
 		same = true;
 	}
 	
+// Anti-afk OnTalk
+/*
 	if( !wasTalking[client] && g_hClientMicTimers[client] != INVALID_HANDLE ) {
 		same = false;
 		wasTalking[client] = true;
@@ -290,7 +292,7 @@ void AFK_Check(int client) {
 		wasTalking[client] = false;	
 	}
 	
-	
+ */
 	if( !g_bUserData[client][b_IsAFK] && g_iUserData[client][i_Job] != 0 ) {
 		g_iUserData[client][i_TimePlayedJob]++;
 		incrementJobPlayTime(client, 1);
