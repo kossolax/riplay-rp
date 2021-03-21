@@ -1080,7 +1080,7 @@ void drawEchange(int client, int target, int jobID) {
 		if( jobID == 0 ) {
 			Format(tmp, sizeof(tmp), "%T", "Jeton_Which_Money_Amount", client, 10000, 125);		menu.AddItem("0 10000 125", tmp, bleu >= 125 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 			Format(tmp, sizeof(tmp), "%T", "Jeton_Which_Money_Amount", client, 100000, 1200);	menu.AddItem("0 100000 1200", tmp, bleu >= 1200 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
-			Format(tmp, sizeof(tmp), "%T", "Jeton_Which_Money_Amount", client, 100000, 11000);	menu.AddItem("0 1000000 11000", tmp, bleu >= 11000 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
+			Format(tmp, sizeof(tmp), "%T", "Jeton_Which_Money_Amount", client, 1000000, 11000);	menu.AddItem("0 1000000 11000", tmp, bleu >= 11000 ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED);
 		}
 		else {
 			for(int i = 0; i < MAX_ITEMS; i++) {
