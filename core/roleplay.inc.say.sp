@@ -482,7 +482,7 @@ public Action Command_Say(int client, int args) {
 		strcmp(szSayTrig, "!b", false) == 0		|| strcmp(szSayTrig, "/b", false) == 0
 		) {
 
-		if( GetZoneBit( GetPlayerZone(client) ) & BITZONE_BLOCKBUILD ) {
+		if( GetZoneBit( GetPlayerZone(client) ) & BITZONE_BLOCKBUILD | BITZONE_BLOCKITEM ) {
 			ACCESS_DENIED(client);
 		}
 		if( g_bUserData[client][b_MayBuild] == 0 || g_iUserData[client][i_KidnappedBy] > 0 ) {
