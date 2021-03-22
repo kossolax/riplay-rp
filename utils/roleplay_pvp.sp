@@ -472,6 +472,7 @@ public Action FlagThink(Handle timer, any data) {
 // -----------------------------------------------------------------------------------------------------------------
 void CAPTURE_Start() {
 	CAPTURE_CHANGE_STATE(ps_begin);
+	ServerCommand(rp_force_clean); // Clean-auto au début de la pvp
 	CreateTimer(1.0, CAPTURE_STATE_TICK);
 }
 void CAPTURE_Stop() {
