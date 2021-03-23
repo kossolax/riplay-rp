@@ -194,8 +194,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 		{"explode", 		"300",	"add_ball_type_explode"},
 		{"revitalisante",	"200",	"add_ball_type_revitalisante"},
 		{"nosteal", 		"75",	"add_ball_type_nosteal"},
-		{"notk", 			"50",	"add_ball_type_notk"},
-		{"braquage",		"500",	"add_ball_type_braquage"}
+		{"notk", 			"50",	"add_ball_type_notk"}
 	};
 	
 	for (int i = 0; i < sizeof(szMenu); i++) {
