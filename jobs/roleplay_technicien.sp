@@ -192,7 +192,7 @@ public Action Cmd_ItemKevlar(int args) {
 	else
 		kev += 50;
 	
-	if( kev > 250 ) {
+	if( kev >= 250 ) {
 		kev = 250;
 		SetEntProp(client, Prop_Send, "m_bHasHelmet", 1);
 		}
