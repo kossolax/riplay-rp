@@ -615,6 +615,7 @@ public Action Frame_KevlarBox(Handle timer, any ent) {
 		
 		kevlar = rp_GetClientInt(client, i_Kevlar);
 		if( kevlar >= 250 ) {
+			kev = 250;
 			SetEntProp(client, Prop_Send, "m_bHasHelmet", 1);
 			continue;
 			}
