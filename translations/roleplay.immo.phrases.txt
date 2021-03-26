@@ -69,7 +69,7 @@
 	"Appart_KeyGiveTo"
 	{
 		"#format"	"{1:d},{2:s}"
-		"fr"		"Les clés de l'appartement n°{red}{1}{default} a été données à {red}{2}{default}."
+		"fr"		"Les clés de l'appartement n°{red}{1}{default} ont été données à {red}{2}{default}."
 		"en"		"The keys of the apartment n°{red}{1}{default} were given to {red}{2}{default}."
 	}
 	"Appart_KeyGiveBy"
