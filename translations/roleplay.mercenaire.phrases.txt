@@ -163,7 +163,7 @@
 	}
 	"Tueur_Kidnapping_Free"
 	{
- 		"fr"	"Vous avez pris la fuite, vous êtes libres !"
+ 		"fr"	"Vous avez pris la fuite, vous êtes libre !"
  		"en"	"You have fled, you are free!"		
 	}
 	"Tueur_Kidnapping_Free_Target"
