@@ -187,15 +187,17 @@ public Action Cmd_ItemKevlar(int args) {
 		return Plugin_Handled;
 	}
 	
+	if( kev <= 250 ) {
+		SetEntProp(client, Prop_Send, "m_bHasHelmet", 1);
+		}
+	
 	if( kev < 100 )
 		kev = 100;
 	else
 		kev += 50;
 	
-	if( kev >= 250 ) {
+	if( kev >= 250 ) 
 		kev = 250;
-		SetEntProp(client, Prop_Send, "m_bHasHelmet", 1);
-		}
 	
 	rp_SetClientInt(client, i_Kevlar, kev);
 	
