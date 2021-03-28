@@ -1631,6 +1631,7 @@ public Action Frame_KevlarBox(Handle timer, any ent) {
 		
 		kevlar = rp_GetClientInt(client, i_Kevlar);
 		if( kevlar >= 250 )
+		SetEntProp(client, Prop_Send, "m_bHasHelmet", 1);
 			continue;
 		
 		Handle trace = TR_TraceRayFilterEx(vecOrigin, vecOrigin2, MASK_SHOT, RayType_EndPoint, FilterToOne, ent);
