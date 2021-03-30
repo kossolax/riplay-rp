@@ -175,9 +175,8 @@ public Action fwdOnFrame(int client) {
 		}
 	}
 	else {
-		if( rp_GetClientJobID(client) == 101 && GetClientTeam(client) == CS_TEAM_CT && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 101 ) {
-			
-			if( GetEntProp(client, Prop_Send, "m_bDrawViewmodel") == 1 ) {
+		if( GetEntProp(client, Prop_Send, "m_bDrawViewmodel") == 1 ) {
+			if( rp_GetClientJobID(client) == 101 && GetClientTeam(client) == CS_TEAM_CT && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 101 ) {
 				if( jugeCanJail() ) {
 					SetHudTextParams(0.0125, 0.0125, 2.0, 19, 213, 45, 255, 2, 0.0, 0.0, 0.0);
 					ShowHudText(client, 1, "%T", "Jail_IsAllowed", client);
@@ -187,15 +186,15 @@ public Action fwdOnFrame(int client) {
 					ShowHudText(client, 1, "%T", "Jail_IsDenied", client);
 				}
 			}
-		}
-		if( rp_GetClientJobID(client) == 1 && rp_GetClientInt(client, i_KillJailDuration) <= 0 ) {
-			if( comicoNonSurveiller() ) {
-				SetHudTextParams(0.0125, 0.0125, 2.0, 213, 19, 45, 255, 2, 0.0, 0.0, 0.0);
-				ShowHudText(client, 1, "%T", "Comico_Free", client);
-			}
-			if (GetClientTeam(client) == CS_TEAM_CT) {
-				SetHudTextParams(0.0125, 0.0250, 2.0, 213, 19, 45, 255, 2, 0.0, 0.0, 0.0);
-				ShowHudText(client, 1, "%T", "Comico_Cops", client);
+			if( rp_GetClientJobID(client) == 1 && rp_GetClientInt(client, i_KillJailDuration) <= 0 ) {
+				if( comicoNonSurveiller() ) {
+					SetHudTextParams(0.0125, 0.0125, 2.0, 213, 19, 45, 255, 2, 0.0, 0.0, 0.0);
+					ShowHudText(client, 1, "%T", "Comico_Free", client);
+				}
+				else if( GetClientTeam(client) == CS_TEAM_CT ) {
+					SetHudTextParams(0.0125, 0.0125, 2.0, 213, 19, 45, 255, 2, 0.0, 0.0, 0.0);
+					ShowHudText(client, 1, "%T", "Comico_Cops", client);
+				}
 			}
 		}
 	}
