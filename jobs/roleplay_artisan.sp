@@ -1291,7 +1291,7 @@ int BuidlingTABLE(int client, int type) {
 	DispatchSpawn(ent);
 	ActivateEntity(ent);
 	
-	SetEntProp( ent, Prop_Data, "m_iHealth", 50000);
+	SetEntProp( ent, Prop_Data, "m_iHealth", 12500);
 	SetEntProp( ent, Prop_Data, "m_takedamage", 0);
 	
 	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
