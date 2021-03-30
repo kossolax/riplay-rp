@@ -52,6 +52,11 @@
 		"fr"		"Cellules non surveillées"
 		"en"		"Unmonitored cells"
 	}
+	"Comico_Cops"
+	{
+		"fr"		"Vous êtes en CT"
+		"en"		"You are in CT"
+	}
 	// ----------------------------------------------------------------------------------------------
 	"JailReason"
 	{
