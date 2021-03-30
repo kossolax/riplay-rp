@@ -57,10 +57,10 @@ void PrintHUD(int client, char[] szHUD, int size) {
 		Format(szHUD, size, "%s%T\n", szHUD, "HUD_Job", client, g_szJobList[ 0 ][job_type_name]);
 	#else
 		int job = g_iUserData[client][i_Job];
-		if( rp_GetClientJobID(client) == 101 && GetClientTeam(client) == CS_TEAM_CT && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 101 ) {
+		if( rp_GetClientJobID(client) == 1 && GetClientTeam(client) == CS_TEAM_CT && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 1 ) {
 			Format(szHUD, size, "%s%T en fonction\n", szHUD, "HUD_Job", client, g_szJobList[ job ][job_type_name]);
 		}
-		else if( rp_GetClientJobID(client) == 101 && GetClientTeam(client) == CS_TEAM_T && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 101 ) {
+		else if( rp_GetClientJobID(client) == 1 && GetClientTeam(client) == CS_TEAM_T && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 1 ) {
 			Format(szHUD, size, "%s%T en civil\n", szHUD, "HUD_Job", client, g_szJobList[ job ][job_type_name]);
 		}
 		else { 
