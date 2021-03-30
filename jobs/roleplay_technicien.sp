@@ -400,7 +400,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	Call_PushCellRef(max);
 	Call_Finish();
 	
-	if(max >= 10000){
+	if(max >= 2500){
 		ent = BuildingCashMachine(client, true);
 		SetEntProp(ent, Prop_Data, "m_iHealth", GetEntProp(ent, Prop_Data, "m_iHealth")/5);
 		cooldown = 3.0;
@@ -491,7 +491,7 @@ int BuildingCashMachine(int client, bool force=false) {
 	SetEntityModel(ent, MODEL_CASH);
 	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
 	SetEntProp( ent, Prop_Data, "m_takedamage", 2);
-	SetEntProp( ent, Prop_Data, "m_iHealth", 10000);
+	SetEntProp( ent, Prop_Data, "m_iHealth", 500);
 	
 	
 	
@@ -753,7 +753,7 @@ int BuildingBigCashMachine(int client) {
 	SetEntityModel(ent, MODEL_CASHBIG);
 	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
 	SetEntProp( ent, Prop_Data, "m_takedamage", 2);
-	SetEntProp( ent, Prop_Data, "m_iHealth", 35000);	
+	SetEntProp( ent, Prop_Data, "m_iHealth", 12500);	
 	
 	vecOrigin[2] -= 16.0;
 	TeleportEntity(ent, vecOrigin, NULL_VECTOR, NULL_VECTOR);
