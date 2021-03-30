@@ -48,14 +48,14 @@ stock bool Entity_CanBeBreak(int entity, int client) {
 	char tmp[128];
 	
 	if( IsValidClient(client) ) {
-		if( rp_GetClientJobID(client) == 91 )
-			return false;
+		if( rp_GetClientJobID(client) == 91 || rp_GetClientJobID(client) == 41)
+			return true;
 		
 		if( rp_GetZoneBit(rp_GetPlayerZone(entity)) & BITZONE_PERQUIZ )
 			return false;
 	}
 
-	return true;
+	return false;
 }
 stock float Math_Lerp(float a, float b, float n) {
 	return (1 - n) * a + n * b;
