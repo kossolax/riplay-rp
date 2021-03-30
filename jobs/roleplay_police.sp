@@ -191,10 +191,6 @@ public Action fwdOnFrame(int client) {
 					SetHudTextParams(0.0125, 0.0125, 2.0, 213, 19, 45, 255, 2, 0.0, 0.0, 0.0);
 					ShowHudText(client, 1, "%T", "Comico_Free", client);
 				}
-				else if( GetClientTeam(client) == CS_TEAM_CT ) {
-					SetHudTextParams(0.0125, 0.0125, 2.0, 213, 19, 45, 255, 2, 0.0, 0.0, 0.0);
-					ShowHudText(client, 1, "%T", "Comico_Cops", client);
-				}
 			}
 		}
 	}
