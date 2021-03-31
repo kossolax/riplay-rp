@@ -54,8 +54,13 @@
 	}
 	"Comico_Cops"
 	{
-		"fr"		"Vous êtes en CT"
-		"en"		"You are in CT"
+		"fr"		"en fonction"
+		"en"		"in function"
+	}
+	"Comico_Uncops"
+	{
+		"fr"		"en civile"
+		"en"		"You in civil"
 	}
 	// ----------------------------------------------------------------------------------------------
 	"JailReason"
