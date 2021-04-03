@@ -54,12 +54,12 @@
 	}
 	"Comico_Cops"
 	{
-		"fr"		"en fonction"
+		"fr"		" en fonction"
 		"en"		"in function"
 	}
 	"Comico_Uncops"
 	{
-		"fr"		"en civile"
+		"fr"		" en civil"
 		"en"		"You in civil"
 	}
 	// ----------------------------------------------------------------------------------------------
