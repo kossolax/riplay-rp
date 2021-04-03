@@ -404,9 +404,6 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 			if( StrContains(buffer, "classic") == 0 ) {
 				type = 1001;
 			}
-			else if( StrContains(buffer, "police") == 0 ) {
-				type = 1002;
-			}
 			else if( StrContains(buffer, "pvp") == 0 ) {
 				type = 1003;
 			}
@@ -456,11 +453,6 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 						continue;
 				}
 				if( !IsTutorialOver(i) )
-					continue;
-				
-				if( type == 1001 && (IsPolice(i) || IsJuge(i))  )
-					continue;
-				if( type == 1002 && !IsPolice(i) && !IsJuge(i) )
 					continue;
 				if( type == 1003 && GetGroupPrimaryID(i) == 0 )
 					continue;
