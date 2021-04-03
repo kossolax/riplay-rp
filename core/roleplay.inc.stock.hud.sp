@@ -58,10 +58,12 @@ void PrintHUD(int client, char[] szHUD, int size) {
 	#else
 		int job = g_iUserData[client][i_Job];
 		if( rp_GetClientJobID(client) == 1 && GetClientTeam(client) == CS_TEAM_CT && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 1 ) {
-			Format(szHUD, size, "%s%T %s %T\n", szHUD, "HUD_Job", client, g_szJobList[ job ][job_type_name], "Comico_Cops", client);
+			Format(szHUD, size, "%s%T", szHUD, "HUD_Job", client, g_szJobList[ job ][job_type_name]);
+			Format(szHUD, size, "%s%T\n", szHUD, "Comico_Cops", client);
 		}
 		else if( rp_GetClientJobID(client) == 1 && GetClientTeam(client) == CS_TEAM_T && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 1 ) {
-			Format(szHUD, size, "%s%T %s %T\n", szHUD, "HUD_Job", client, g_szJobList[ job ][job_type_name], "Comico_Uncops", client);
+			Format(szHUD, size, "%s%T", szHUD, "HUD_Job", client, g_szJobList[ job ][job_type_name]);
+			Format(szHUD, size, "%s%T\n", szHUD, "Comico_Uncops", client);
 		}
 		else { 
 		Format(szHUD, size, "%s%T\n", szHUD, "HUD_Job", client, g_szJobList[ job ][job_type_name]);
