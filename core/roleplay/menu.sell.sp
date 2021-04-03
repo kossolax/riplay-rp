@@ -406,7 +406,7 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 			}
 			else if( StrContains(buffer, "police") == 0 ) {
 				type = 1002;
-			
+			}
 			else if( StrContains(buffer, "pvp") == 0 ) {
 				type = 1003;
 			}
