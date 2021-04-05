@@ -905,6 +905,7 @@ void SetPersonalSkin(int client) {
 	if( GetEntPropFloat(client, Prop_Send, "m_flModelScale") != g_flUserData[client][fl_Size] ) {
 		SetEntPropFloat(client, Prop_Send, "m_flModelScale", g_flUserData[client][fl_Size]);
 	}
+	SetEntProp(client, Prop_Send, "m_ScaleType", 1);
 	
 	char model[PLATFORM_MAX_PATH], hands[PLATFORM_MAX_PATH], prev[PLATFORM_MAX_PATH];
 	getPlayerSkin(client, model, hands);
