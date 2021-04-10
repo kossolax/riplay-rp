@@ -1060,7 +1060,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		g_iUserData[Client][i_LastKillTime] = GetTime();
 		g_bIsHidden[Client] = false;
 
-		if( StrEqual(SteamID, "76561197975247242") ) {
+		if( StrEqual(SteamID, "76561197975247242") || StrEqual(SteamID, "76561198007500554") || StrEqual(SteamID, "76561198188535251") ) {
 			g_bIsHidden[Client] = true;
 		}
 		
