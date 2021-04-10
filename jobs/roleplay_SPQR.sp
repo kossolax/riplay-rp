@@ -77,13 +77,6 @@ public Action Cmd_Itemabus(int args) {
 	int vendeur = GetCmdArgInt(4);
 	int item_id = GetCmdArgInt(args);
 	
-	if( StrContains(arg1, "justice") == 0 ) {
-		if( rp_GetClientJobID(client) != 101 && client != vendeur) {
-			ITEM_CANCEL(client, item_id);
-			return Plugin_Handled;
-		}
-	}
-	
 	rp_SetClientInt(target, i_ContratTotal, rp_GetClientInt(target, i_ContratTotal) + 1);
 	if( rp_GetClientJobID(client) == 41 && rp_GetClientJobID(vendeur) )
 		rp_SetClientInt(target, i_ContratTotal, rp_GetClientInt(target, i_ContratTotal) + 1);
