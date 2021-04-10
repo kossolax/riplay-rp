@@ -573,7 +573,7 @@ public Action EMPExplode_Task(Handle timer, any ent) {
 			else if( StrEqual(classname, "rp_mine")  ) {
 				rp_AcceptEntityInput(i, "Kill");
 			}
-			else if( StrEqual(classname, "rp_sentry") && boosted[i]  ) {
+			else if( StrEqual(classname, "rp_sentry") && boosted[ent]  ) {
 				int owner = rp_GetBuildingData(i, BD_owner);
 
 				if( !IsValidClient(owner) || (rp_ClientCanAttack(client, owner) && client != owner) )
