@@ -1564,6 +1564,10 @@ public Action Cmd_InfoColoc(int client){
 			Format(tmp, sizeof(tmp), "%T", "appart_bonus", client, tmp);
 			AddMenuItem(menu, tmp, tmp,	ITEMDRAW_DISABLED);
 			
+			if( g_flAppartProtection[i] > GetGameTime() ) {
+				Format(tmp, sizeof(tmp), "%f min de protection", g_flAppartProtection[i] - GetGameTime()) / 60.0, client, tmp);
+			}
+			
 			proprio = rp_GetAppartementInt(i, appart_proprio);
 			if( IsValidClient(proprio) ) {
 				GetClientName2(proprio, tmp, sizeof(tmp), true);
