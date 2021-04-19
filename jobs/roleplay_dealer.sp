@@ -1551,7 +1551,7 @@ public int Menu_Market(Handle menu, MenuAction action, int client, int param2) {
 			if( (rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) < prix )
 				return;
 			
-			rp_ClientMoney(client, i_Money, -prix);
+			rp_ClientMoney(client, i_Money, -prix, true);
 			rp_SetClientStat(client, i_MoneySpent_Shop, rp_GetClientStat(client, i_MoneySpent_Shop) + prix);
 
 			getItemFromMarket(client, itemID, amount);
