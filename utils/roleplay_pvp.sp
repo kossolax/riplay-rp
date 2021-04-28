@@ -195,7 +195,7 @@ public void OnPluginStart() {
 	
 	char szDayOfWeek[12];
 	FormatTime(szDayOfWeek, 11, "%w");
-	if( StringToInt(szDayOfWeek) == 0 ) { // Vendredi --- TODO: Change back
+	if( true ) {
 		ServerCommand("tv_enable 1");
 	}
 	
@@ -207,7 +207,7 @@ public void OnConfigsExecuted() {
 	}
 	char szDayOfWeek[12];
 	FormatTime(szDayOfWeek, 11, "%w");
-	if( StringToInt(szDayOfWeek) == 0 ) { // Vendredi --- TODO: Change back
+	if( true ) { // Vendredi --- TODO: Change back
 		ServerCommand("tv_enable 1");
 		//ServerCommand("mp_restartgame 1");
 		ServerCommand("spec_replay_enable 1");
