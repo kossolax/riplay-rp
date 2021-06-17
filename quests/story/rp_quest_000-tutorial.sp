@@ -34,7 +34,7 @@ public Plugin myinfo = {
 int g_iQuest;
 
 char qualif[][] =  	{ "TUTO_Jobs_Recommanded", "TUTO_Jobs_Fun", "TUTO_Jobs_Hard", "TUTO_Jobs_Selling", "TUTO_Jobs_Unrecommanded"};
-int g_iJob[] =  			{ 15, 26, 36, 46, 56, 65, 76, 87, 96, 116, 135, 176, 216, 226};
+int g_iJob[] =  			{ 15, 25, 35, 46, 55, 65, 75, 86, 96, 115, 135, 175, 215, 225};
 int g_iRecom[MAX_JOBS];
 int g_iDefaultJob[MAXPLAYERS];
 
@@ -706,7 +706,7 @@ public void Q14_Done(int objectiveID, int client) {
 	rp_SetClientInt(client, i_Tutorial, 20);
 	
 	rp_ClientGiveItem(client, 223);	
-	rp_ClientMoney(client, i_Bank, 10000);
+	rp_ClientMoney(client, i_Bank, 100000);
 	rp_SetClientBool(client, b_GameModePassive, true);
 	
 	rp_ClientXPIncrement(client, 5000);
