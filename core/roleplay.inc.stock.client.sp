@@ -13,10 +13,7 @@ int getClientBankLimit(int client) {
 	int val = ITEM_BANK_LIMIT;
 	
 	if( g_iUserData[client][i_PlayerLVL] >= 240 )
-		val *= 2;
-	
-	if( g_iUserData[client][i_PlayerPrestige] >= 1 )
-		val *= RoundFloat(Pow(2.0, float(g_iUserData[client][i_PlayerPrestige])));
+		val *= 1;
 	
 	return val;
 }
