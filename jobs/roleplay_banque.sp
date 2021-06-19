@@ -655,6 +655,9 @@ void DisplayMetroMenu(int client) {
 	rp_GetZoneData(201, zone_type_name, tmp, sizeof(tmp));
 	AddMenuItem(menu, "metro_pvp", 		tmp, (zone == 200) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	
+	rp_GetZoneData(328, zone_type_name, tmp, sizeof(tmp));
+	AddMenuItem(menu, "metro_mine", 		tmp, (zone == 317) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+	
 	Format(tmp, sizeof(tmp), "%T", "Metro_Hell", client);
 	AddMenuItem(menu, "metro_mine", tmp, (zone == 155) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	
