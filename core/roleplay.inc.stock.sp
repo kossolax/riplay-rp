@@ -914,6 +914,8 @@ void RP_SpawnBank() {
 				DispatchKeyValue(ent, "solid", "6");
 				
 				SetEntityModel(ent, "models/props_street/bus_stop.mdl");
+				
+				vecAngles[1] += 90.0;
 			}
 			
 			DispatchKeyValue(ent, "classname", tmp);
