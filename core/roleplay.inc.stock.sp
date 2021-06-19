@@ -886,7 +886,7 @@ void RP_SpawnBank() {
 				vecAngles[1] -= 90.0;
 			}
 			else if( StrEqual(type, "bot") ) {
-				Format(tmp, sizeof(tmp), "rp_phone");
+				Format(tmp, sizeof(tmp), "rp_bot");
 				
 				DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_professional_var2.mdl");
 				DispatchKeyValue(ent, "solid", "6");
@@ -897,18 +897,18 @@ void RP_SpawnBank() {
 			}
 			
 			else if( StrEqual(type, "boxbatterie") ) {
-				Format(tmp, sizeof(tmp), "rp_phone");
+				Format(tmp, sizeof(tmp), "rp_batterie");
 				
-				DispatchKeyValue(ent, "model", "models/props/cs_italy/bin01.mdl");
+				DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_professional_var2.mdl");
 				DispatchKeyValue(ent, "solid", "6");
 				
-				SetEntityModel(ent, "models/props/cs_italy/bin01.mdl");
+				SetEntityModel(ent, "models/player/custom_player/legacy/tm_professional_var2.mdl");
 				
 				vecAngles[1] += 90.0;
 			}
 			
 			else if( StrContains(type, "metromine") ) {
-				Format(tmp, sizeof(tmp), "rp_phone");
+				Format(tmp, sizeof(tmp), "rp_metro");
 				
 				DispatchKeyValue(ent, "model", "models/props_street/bus_stop.mdl");
 				DispatchKeyValue(ent, "solid", "6");
