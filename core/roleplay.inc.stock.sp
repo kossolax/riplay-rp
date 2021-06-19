@@ -907,6 +907,14 @@ void RP_SpawnBank() {
 				vecAngles[1] += 90.0;
 			}
 			
+			else if( StrContains(type, "metromine") ) {
+				
+				DispatchKeyValue(ent, "model", "models/props_street/bus_stop.mdl");
+				DispatchKeyValue(ent, "solid", "6");
+				
+				SetEntityModel(ent, "models/props_street/bus_stop.mdl");
+			}
+			
 			DispatchKeyValue(ent, "classname", tmp);
 			
 			DispatchSpawn(ent);
