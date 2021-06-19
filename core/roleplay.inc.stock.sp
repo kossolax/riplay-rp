@@ -896,6 +896,17 @@ void RP_SpawnBank() {
 				vecAngles[1] += 90.0;
 			}
 			
+			else if( StrEqual(type, "boxbatterie") ) {
+				Format(tmp, sizeof(tmp), "rp_batterie");
+				
+				DispatchKeyValue(ent, "model", "models/props/cs_italy/bin01.mdl");
+				DispatchKeyValue(ent, "solid", "6");
+				
+				SetEntityModel(ent, "models/props/cs_italy/bin01.mdl");
+				
+				vecAngles[1] += 90.0;
+			}
+			
 			DispatchKeyValue(ent, "classname", tmp);
 			
 			DispatchSpawn(ent);
