@@ -57,8 +57,8 @@
 	}
 	"Metro_Hell"
 	{
-		"fr"	"Métro: Station Grand parc"
-		"en"	"Metro: Station Big park"
+		"fr"	"Métro: Station Mine"
+		"en"	"Metro: Station Mine"
 	}
 	"Metro_Villa"
 	{
