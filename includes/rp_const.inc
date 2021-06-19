@@ -70,6 +70,10 @@
 
 
 // Models:
+
+#define MODEL_BOTCARSHOP		"models/player/custom_player/legacy/tm_balkan_variantc.mdl"
+#define MODEL_BOTBANQUE			"models/player/custom_player/legacy/tm_professional_var3.mdl"
+#define MODEL_BOTARTISAN		"models/player/custom_player/legacy/tm_balkan_variantg.mdl"
 #define MODEL_ATM 			"models/DeadlyDesire/props/atm01.mdl"
 #define MODEL_CASH			"models/props_mall/cash_register.mdl"
 #define MODEL_CASHBIG		"models/props_interiors/copymachine01.mdl"
