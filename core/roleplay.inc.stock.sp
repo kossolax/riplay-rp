@@ -885,6 +885,16 @@ void RP_SpawnBank() {
 				
 				vecAngles[1] -= 90.0;
 			}
+			else if( StrEqual(type, "bot") ) {
+				Format(tmp, sizeof(tmp), "rp_bot");
+				
+				DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_professional_var2.mdl");
+				DispatchKeyValue(ent, "solid", "6");
+				
+				SetEntityModel(ent, "models/player/custom_player/legacy/tm_professional_var2.mdl");
+				
+				vecAngles[1] += 90.0;
+			}
 			
 			DispatchKeyValue(ent, "classname", tmp);
 			
