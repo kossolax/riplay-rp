@@ -951,9 +951,6 @@ int BuildingPlant(int client, int type) {
 		case 84: max = 7;
 		case 85: max = 6;
 		case 86: max = 5;
-		case 87: max = 4;
-		case 88: max = 4;
-		case 89: max = 4;
 		
 		default: max = 3;
 	}
@@ -1909,14 +1906,12 @@ float getTaxe(int client) {
 	int job = rp_GetClientInt(client, i_Job);
 	float val = 0.5;
 	switch(job) {
-		case 81: val = 0.10;
-		case 82: val = 0.15;
-		case 83: val = 0.20;
-		case 84: val = 0.25;
-		case 85: val = 0.30;
-		case 86: val = 0.35;
-		case 87: val = 0.40;
-		case 88: val = 0.45;
+		case 81: val = 0.20;
+		case 82: val = 0.25;
+		case 83: val = 0.30;
+		case 84: val = 0.35;
+		case 85: val = 0.40;
+		case 86: val = 0.45;
 	}
 	return val;
 }
