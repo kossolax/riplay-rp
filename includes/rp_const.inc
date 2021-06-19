@@ -126,6 +126,7 @@
 #define METRO_STATION	61
 #define METRO_INNO		62
 #define METRO_BELMON	201
+#define METRO_MINE	328
 
 #define ZONE_HALLDEALER	95
 #define	ZONE_VILLA2		156
