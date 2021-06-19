@@ -908,6 +908,7 @@ void RP_SpawnBank() {
 			}
 			
 			else if( StrContains(type, "metromine") ) {
+				Format(tmp, sizeof(tmp), "rp_metro");
 				
 				DispatchKeyValue(ent, "model", "models/props_street/bus_stop.mdl");
 				DispatchKeyValue(ent, "solid", "6");
