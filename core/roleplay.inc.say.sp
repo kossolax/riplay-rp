@@ -1217,6 +1217,10 @@ public Action Command_Say(int client, int args) {
 		if( (GetZoneBit( GetPlayerZone(client) ) & BITZONE_BLOCKOUT) || (GetZoneBit( GetPlayerZone(target) ) & BITZONE_BLOCKOUT) ) {
 			ACCESS_DENIED(client);
 		}
+		
+		if( g_bUserData[client][b_GameModePassive] == true ) {
+			ACCESS_DENIED(client);
+		}
 
 		if( g_bUserData[client][b_MaySteal] == 0) {
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_Command_ForNow", client);
