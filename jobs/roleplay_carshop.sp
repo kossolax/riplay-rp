@@ -1194,7 +1194,7 @@ public Action Timer_VehicleRemoveCheck(Handle timer, any ent) {
 	if( !Vehicle_HasDriver(ent) && (!IsValidClient(owner) || Entity_GetDistance(owner, ent) > 512) )
 		dettachVehicleLight(ent);
 		
-	if( Vehicle_HasDriver(ent) && rp_GetZoneBit(rp_GetPlayerZone(ent) ) & BITZONE_ROAD && GetEntProp(InVehicle, Prop_Data, "m_nSpeed")>=0 ) {
+	if( Vehicle_HasDriver(ent) && rp_GetZoneBit(rp_GetPlayerZone(ent) ) & BITZONE_ROAD && GetEntProp(ent, Prop_Data, "m_nSpeed")>=0 ) {
 		IsNear = true;
 		int driver = GetEntPropEnt(ent, Prop_Send, "m_hPlayer");		
 		if( GetVectorDistance(g_lastpos[ent], vecOrigin) > 128.0 && !rp_GetClientBool(driver, b_IsAFK) ) {
