@@ -49,7 +49,7 @@
 #define FREEKILL_TIME			(2*60)
 #define AUTOKICK_TDM			500
 #define FREEZE_VITALITY			0
-#define ITEM_BANK_LIMIT			(500000*10)
+#define ITEM_BANK_LIMIT			(250000)
 
 
 // DO NOT EDIT BELLOW.
