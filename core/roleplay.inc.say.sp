@@ -1218,7 +1218,7 @@ public Action Command_Say(int client, int args) {
 			ACCESS_DENIED(client);
 		}
 		
-		if( g_bUserData[Client][b_GameModePassive] == true ) {
+		if( g_bUserData[client][b_GameModePassive] == true ) {
 			ACCESS_DENIED(client);
 		}
 
