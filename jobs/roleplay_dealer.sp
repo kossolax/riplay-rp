@@ -992,7 +992,7 @@ int BuildingPlant(int client, int type) {
 		if( rp_GetClientKeyAppartement(client, appart) )
 			max += 1;
 	}
-	if( rp_GetClientInt(client, i_PlayerLVL) >= 110 )
+	if( rp_GetClientInt(client, i_PlayerLVL) >= 204 )
 		max += 2;
 	if( rp_GetClientInt(client, i_PlayerLVL) >= 420 )
 		max += 3;
