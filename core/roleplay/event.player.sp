@@ -339,13 +339,15 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	}
 
 	g_iUserData[Client][i_Kevlar] = 0;
-	if( g_iUserData[Client][i_PlayerLVL] >= 156 )
+	if( g_iUserData[Client][i_PlayerLVL] >= 256 )
 		SetEntityHealth(Client, 200);
-	if( g_iUserData[Client][i_PlayerLVL] >= 380 )
+	if( g_iUserData[Client][i_PlayerLVL] >= 620 )
 		SetEntityHealth(Client, 500);
-	if( g_iUserData[Client][i_PlayerLVL] >= 272 )
+	if( g_iUserData[Client][i_PlayerLVL] >= 464 )
 		 g_iUserData[Client][i_Kevlar] = 100;
-	if( g_iUserData[Client][i_PlayerLVL] >= 462 )
+	if( g_iUserData[Client][i_PlayerLVL] >= 672 )
+		 g_iUserData[Client][i_Kevlar] = 150;
+	if( g_iUserData[Client][i_PlayerLVL] >= 828 )
 		 g_iUserData[Client][i_Kevlar] = 250;
 	if( g_iUserData[Client][i_KnifeTrain] <= 4 )
 		g_iUserData[Client][i_KnifeTrain] = 5;
