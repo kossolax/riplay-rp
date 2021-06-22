@@ -423,7 +423,7 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 					CPrintToChat(client, "" ...MOD_TAG... " %T", "Sell_Contrat_Kidnapping");
 					return;
 				}
-				if( g_iUserData[target][i_PlayerLVL] < 412 ) {
+				if( g_iUserData[target][i_PlayerLVL] < 306 ) {
 					rp_GetLevelData(level_haut_conseiller, rank_type_name, tmp, sizeof(tmp));
 					GetClientName2(target, name, sizeof(name), false);
 					CPrintToChat(client, "" ...MOD_TAG... " %T", "Sell_Contrat_Level", client, name, 306, tmp);

@@ -339,15 +339,13 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	}
 
 	g_iUserData[Client][i_Kevlar] = 0;
-	if( g_iUserData[Client][i_PlayerLVL] >= 256 )
+	if( g_iUserData[Client][i_PlayerLVL] >= 156 )
 		SetEntityHealth(Client, 200);
-	if( g_iUserData[Client][i_PlayerLVL] >= 620 )
+	if( g_iUserData[Client][i_PlayerLVL] >= 380 )
 		SetEntityHealth(Client, 500);
-	if( g_iUserData[Client][i_PlayerLVL] >= 464 )
+	if( g_iUserData[Client][i_PlayerLVL] >= 272 )
 		 g_iUserData[Client][i_Kevlar] = 100;
-	if( g_iUserData[Client][i_PlayerLVL] >= 672 )
-		 g_iUserData[Client][i_Kevlar] = 150;
-	if( g_iUserData[Client][i_PlayerLVL] >= 828 )
+	if( g_iUserData[Client][i_PlayerLVL] >= 462 )
 		 g_iUserData[Client][i_Kevlar] = 250;
 	if( g_iUserData[Client][i_KnifeTrain] <= 4 )
 		g_iUserData[Client][i_KnifeTrain] = 5;
@@ -475,7 +473,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 	
 	if( GotPvPvPBonus(Client, cap_bunker) )
 		respawn *= 0.75;
-	if( g_iUserData[Client][i_PlayerLVL] >= 776 )
+	if( g_iUserData[Client][i_PlayerLVL] >= 650 )
 		respawn *= 0.75;
 	
 	

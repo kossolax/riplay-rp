@@ -59,7 +59,7 @@ public bool fwdCanStart(int client) {
 		return false;
 	if( GetClientCount(true) < 20 )
 		return false;
-	if( rp_GetClientInt(client, i_PlayerLVL) < 568 )
+	if( rp_GetClientInt(client, i_PlayerLVL) < 342 )
 		return false;
 	
 	int job = rp_GetClientJobID(client);

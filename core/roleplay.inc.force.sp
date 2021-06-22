@@ -489,7 +489,7 @@ bool IsAllowed_client(int client) {
 	
 	if( job == rp_GetClientJobID(client) && job != 0 && g_bUserData[client][b_IsNoPyj] )
 		return true;
-	if( g_bUserData[client][b_IsNoPyj] && g_iUserData[client][i_PlayerLVL] >= 880 )
+	if( g_bUserData[client][b_IsNoPyj] && g_iUserData[client][i_PlayerLVL] >= 870 )
 		return true;
 	int type = rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type);
 	

@@ -155,7 +155,7 @@ public bool fwdCanStart(int client) {
 			continue;
 		if( policeMatch(i) )
 			ct++;
-		if( rp_GetClientInt(i, i_PlayerLVL) >= 152 )
+		if( rp_GetClientInt(i, i_PlayerLVL) >= 132 )
 			t++;
 	}
 	
