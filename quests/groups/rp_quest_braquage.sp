@@ -125,7 +125,7 @@ public bool fwdCanStart(int client) {
 		return false;
 	if( rp_GetClientJobID(client) == 1 || rp_GetClientJobID(client) == 101 )
 		return false;
-	if( rp_GetClientInt(client, i_PlayerLVL) < 210 )
+	if( rp_GetClientInt(client, i_PlayerLVL) < 360 )
 		return false;
 	if( GetGameTime() < 60.0*30.0 && GetConVarInt(FindConVar("hostport")) != 27025 )
 		return false;
@@ -155,7 +155,7 @@ public bool fwdCanStart(int client) {
 			continue;
 		if( policeMatch(i) )
 			ct++;
-		if( rp_GetClientInt(i, i_PlayerLVL) >= 132 )
+		if( rp_GetClientInt(i, i_PlayerLVL) >= 152 )
 			t++;
 	}
 	
