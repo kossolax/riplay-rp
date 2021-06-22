@@ -469,7 +469,7 @@ int BuildingCashMachine(int client, bool force=false) {
 		if( rp_GetClientKeyAppartement(client, appart) )
 			max += 3;
 	}
-	if( rp_GetClientInt(client, i_PlayerLVL) >= 182 )
+	if( rp_GetClientInt(client, i_PlayerLVL) >= 308 )
 		max += 2;
 	if( rp_GetClientInt(client, i_PlayerLVL) >= 506 )
 		max += 3;
