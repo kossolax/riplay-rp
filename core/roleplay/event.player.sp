@@ -475,7 +475,7 @@ public Action EventDeath(Handle ev, const char[] name, bool broadcast) {
 	
 	if( GotPvPvPBonus(Client, cap_bunker) )
 		respawn *= 0.75;
-	if( g_iUserData[Client][i_PlayerLVL] >= 650 )
+	if( g_iUserData[Client][i_PlayerLVL] >= 776 )
 		respawn *= 0.75;
 	
 	
