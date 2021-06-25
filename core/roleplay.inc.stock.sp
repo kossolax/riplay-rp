@@ -888,13 +888,13 @@ void RP_SpawnBank() {
 			else if( StrEqual(type, "bot") ) {
 				Format(tmp, sizeof(tmp), "rp_bot");
 				
-				if( rp_GetZoneInt(rp_GetPlayerZone(ent), zone_type_type) == 31 ) {
+				if( rp_GetZoneInt(GetPointZone(vecOrigin), zone_type_type) == 31 ) {
 					DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_balkan_varianth.mdl");
 				}
-				else if( rp_GetZoneInt(rp_GetPlayerZone(ent), zone_type_type) == 51 ) {
+				else if( rp_GetZoneInt(GetPointZone(vecOrigin), zone_type_type) == 51 ) {
 					DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_balkan_varianti.mdl");
 				}
-				else if( rp_GetZoneInt(rp_GetPlayerZone(ent), zone_type_type) == 211 ) {
+				else if( rp_GetZoneInt(GetPointZone(vecOrigin), zone_type_type) == 211 ) {
 					DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_professional_var2.mdl");
 				}
 				else {
