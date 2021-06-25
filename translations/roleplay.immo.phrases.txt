@@ -185,7 +185,7 @@
 	// ----------------------------------------------------------------------------------------------
 	"Menu_Villa"
 	{
-		"fr"		"Enchère de la Villa:\nJusqu'à vendredi 21 heures"
+		"fr"		"Enchère de la Villa non disponible pour le moment" /*"Enchère de la Villa:\nJusqu'à vendredi 21 heures"*/ 
 		"en"		"Auction of the Villa:\nUntil Friday 9:00pm"
 	}
 	"Menu_Bed"
