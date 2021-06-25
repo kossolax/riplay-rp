@@ -70,6 +70,7 @@ public void OnMapStart() {
 	PrecacheModel(MODEL_GRAVE);
 	PrecacheModel("models/props/cs_office/plant01_gib1.mdl");
 	PrecacheModel("models/props_street/mail_dropbox.mdl");
+	PrecacheModel("models/props_street/bus_stop.mdl");
 	//
 	ServerCommand("mp_teamname_1 \"Police\"");
 	ServerCommand("mp_teamname_2 \"Civil\"");
