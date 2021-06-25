@@ -22,6 +22,7 @@ function getFAIL($val) {
 		case 7: $str .= "Vous n'avez pas assez d'argent.";      break;
 		case 8: $str .= "Il est trop tôt pour annuler cette vente.";    break;
 		case 9: $str .= "Impossible de retirer une voiture depuis l'HDV. Utilisez un garage.";    break;
+		case 10: $str .= "La vente d'item PvP n'est pas possible depuis l'HDV.";    break;
 	}
 
 	return $str;
@@ -110,6 +111,10 @@ if( $_GET['action'] == 'item' ) {
 		}
 		if( $price < ($items[$item]['prix']/4) || $price > ($items[$item]['prix']*4) ) {
 			header("Location: index.php?page=hdv&action=idle&erreur=4");
+			exit;
+		}
+		if( $items == "rp_giveitem_pvp" || $items == "rp_item_spawnflag") {
+			header("Location: index.php?page=hdv&action=idle&erreur=10");
 			exit;
 		}
 		mysql_query("LOCK TABLES `rp_trade` WRITE, `rp_users2` WRITE");
