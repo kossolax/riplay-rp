@@ -904,7 +904,7 @@ void RP_SpawnBank() {
 				
 				SetEntityModel(ent, "models/player/custom_player/legacy/tm_professional_var2.mdl");
 				
-				vecAngles[1] += 45.0;
+				vecAngles[1] += 90.0;
 			}
 			
 			else if( StrContains(type, "metromine") ) {
