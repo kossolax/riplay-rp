@@ -130,7 +130,10 @@ public int onMenuOpen(Handle hItem, MenuAction oAction, int client, int param) {
 			
 			rp_ClientMoney(client, i_Money, -price);
 			rp_ClientGiveItem(client, item_id, 1, false);
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Give", client);
+			
+			char name[128];
+			rp_GetItemData(item_id, item_type_name, name, sizeof(name));
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Give", client, 1, name);
 			
 			openSellMenu(client);
 		}
