@@ -36,6 +36,8 @@ public Plugin myinfo =  {
 };
 public void OnPluginStart() {
 	RegServerCmd("rp_quest_reload", Cmd_PluginReloadSelf);
+	LoadTranslations("core.phrases");
+	LoadTranslations("roleplay.phrases");
 }
 public void OnAllPluginsLoaded() {
 	g_iQuest = rp_RegisterQuest(QUEST_UNIQID, QUEST_NAME, QUEST_TYPE, fwdCanStart);
