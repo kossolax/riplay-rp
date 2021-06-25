@@ -899,10 +899,10 @@ void RP_SpawnBank() {
 			else if( StrContains(type, "metromine") ) {
 				Format(tmp, sizeof(tmp), "rp_metro");
 				
-				DispatchKeyValue(ent, "model", "models/props_street/bus_stop.mdl");
+				DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_professional_var2.mdl");
 				DispatchKeyValue(ent, "solid", "6");
 				
-				SetEntityModel(ent, "models/props_street/bus_stop.mdl");
+				SetEntityModel(ent, "models/player/custom_player/legacy/tm_professional_var2.mdl");
 				
 				vecAngles[1] += 90.0;
 			}
