@@ -789,8 +789,8 @@ bool IsInMetro(int client) {
 			}
 		}
 	}
-	int app = rp_GetPlayerZone(client);
-	if( app == 155 ) {
+	int ZonePlayer = rp_GetPlayerZone(client);
+	if( ZonePlayer == 155 ) {
 		float min[3] = { -7469.0, -1446.0, -2336.0 };
 		float max[3] =  { -7279.0, -1366.0, -2226.0 };
 		float origin[3];
