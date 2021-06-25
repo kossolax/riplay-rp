@@ -178,6 +178,16 @@
 		"fr"	"Désactivé"
 		"en"	"Disabled"
 	}
+	"No_News_axe"
+	{
+		"fr"	"Vous n'êtes plus un nouveau joueur, allez chercher une {green}hache{default} chez les artisans ou dans votre banque."
+		"en"	"You are no longer a new player, go get a {green} ax {default} from the craftsmen or from your bank."
+	}
+	"No_News_hammer"
+	{
+		"fr"	"Vous n'êtes plus un nouveau joueur, allez chercher un {green}marteau{default} chez les artisans ou dans votre banque."
+		"en"	"You are no longer a new player, go get a {green}hammer{default} from the craftsmen or your bank."
+	}
 	// ----------------------------------------------------------------------------------------------
 	"MOTD"
 	{
