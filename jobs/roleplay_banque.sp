@@ -792,6 +792,20 @@ bool IsInMetro(int client) {
 			}
 		}
 	}
+	int appp = rp_GetPlayerZone(client);
+	if( appp == 155 ) {
+		if( rp_GetClientKeyAppartement(client, app) ) {
+			float min[3] = { -7469.0, -1446.0, -2336.0 };
+			float max[3] =  { -7279.0, -1366.0, -2226.0 };
+			float origin[3];
+			GetClientAbsOrigin(client, origin);
+			if( origin[0] > min[0] && origin[0] < max[0] &&
+				origin[1] > min[1] && origin[1] < max[1] &&
+				origin[2] > min[2] && origin[2] < max[2] ) {
+				return true;
+			}
+		}
+	}
 	return false;
 }
 
