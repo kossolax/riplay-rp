@@ -655,9 +655,6 @@ void DisplayMetroMenu(int client) {
 	rp_GetZoneData(201, zone_type_name, tmp, sizeof(tmp));
 	AddMenuItem(menu, "metro_pvp", 		tmp, (zone == 200) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	
-	rp_GetZoneData(328, zone_type_name, tmp, sizeof(tmp));
-	AddMenuItem(menu, "metro_mine", 		tmp, (zone == 317) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
-	
 	Format(tmp, sizeof(tmp), "%T", "Metro_Hell", client);
 	AddMenuItem(menu, "metro_mine", tmp, (zone == 155) ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	
@@ -792,8 +789,8 @@ bool IsInMetro(int client) {
 			}
 		}
 	}
-	int appp = rp_GetPlayerZone(client);
-	if( appp == 155 ) {
+	int app = rp_GetPlayerZone(client);
+	if( app == 155 ) {
 		float min[3] = { -7469.0, -1446.0, -2336.0 };
 		float max[3] =  { -7279.0, -1366.0, -2226.0 };
 		float origin[3];
