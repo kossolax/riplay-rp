@@ -885,35 +885,25 @@ void RP_SpawnBank() {
 				
 				vecAngles[1] -= 90.0;
 			}
-			else if( StrEqual(type, "botarti") ) {
-				Format(tmp, sizeof(tmp), "rp_botarti");
+			else if( StrEqual(type, "bot") ) {
+				Format(tmp, sizeof(tmp), "rp_bot");
 				
-				DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_balkan_varianth.mdl");
+				if( rp_GetZoneInt(rp_GetPlayerZone(ent), zone_type_job) == 31 ) {
+					DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_balkan_varianth.mdl");
+				}
+				else if( rp_GetZoneInt(rp_GetPlayerZone(ent), zone_type_job) == 51 ) {
+					DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_balkan_varianti.mdl");
+				}
+				else if( rp_GetZoneInt(rp_GetPlayerZone(ent), zone_type_job) == 211 ) {
+					DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_professional_var2.mdl");
+				}
+				else {
+					DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_professional_var2.mdl");
+				}
+				
+				DispatchKeyValue(ent, "DefaultAnim", "testIdle");
+				DispatchKeyValue(ent, "DisableBoneFollowers", "1");
 				DispatchKeyValue(ent, "solid", "6");
-				
-				SetEntityModel(ent, "models/player/custom_player/legacy/tm_balkan_varianth.mdl");
-				
-				vecAngles[1] += 90.0;
-			}
-			
-			else if( StrEqual(type, "botcar") ) {
-				Format(tmp, sizeof(tmp), "rp_botcar");
-				
-				DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_balkan_varianti.mdl");
-				DispatchKeyValue(ent, "solid", "6");
-				
-				SetEntityModel(ent, "models/player/custom_player/legacy/tm_balkan_varianti.mdl");
-				
-				vecAngles[1] += 90.0;
-			}
-			
-			else if( StrEqual(type, "botbank") ) {
-				Format(tmp, sizeof(tmp), "rp_botbank");
-				
-				DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_professional_var2.mdl");
-				DispatchKeyValue(ent, "solid", "6");
-				
-				SetEntityModel(ent, "models/player/custom_player/legacy/tm_professional_var2.mdl");
 				
 				vecAngles[1] += 90.0;
 			}
