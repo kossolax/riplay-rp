@@ -24,9 +24,17 @@ public Plugin myinfo = {
 	description = "RolePlay - Utils: Bot sell",
 	version = __LAST_REV__, url = "https://riplay.fr"
 };
+public Action Cmd_Reload(int args) {
+	char name[64];
+	GetPluginFilename(INVALID_HANDLE, name, sizeof(name));
+	ServerCommand("sm plugins reload %s", name);
+	return Plugin_Continue;
+}
 public void OnPluginStart() {	
 	LoadTranslations("core.phrases");
 	LoadTranslations("roleplay.phrases");
+	
+	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	
 	for (int i = 1; i <= MaxClients; i++)
 		if( IsValidClient(i) )
