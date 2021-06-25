@@ -888,10 +888,10 @@ void RP_SpawnBank() {
 			else if( StrEqual(type, "botarti") ) {
 				Format(tmp, sizeof(tmp), "rp_botarti");
 				
-				DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_professional_var2.mdl");
+				DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_balkan_varianth.mdl");
 				DispatchKeyValue(ent, "solid", "6");
 				
-				SetEntityModel(ent, "models/player/custom_player/legacy/tm_professional_var2.mdl");
+				SetEntityModel(ent, "models/player/custom_player/legacy/tm_balkan_varianth.mdl");
 				
 				vecAngles[1] += 90.0;
 			}
@@ -899,10 +899,10 @@ void RP_SpawnBank() {
 			else if( StrEqual(type, "botcar") ) {
 				Format(tmp, sizeof(tmp), "rp_botcar");
 				
-				DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_professional_var2.mdl");
+				DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_balkan_varianti.mdl");
 				DispatchKeyValue(ent, "solid", "6");
 				
-				SetEntityModel(ent, "models/player/custom_player/legacy/tm_professional_var2.mdl");
+				SetEntityModel(ent, "models/player/custom_player/legacy/tm_balkan_varianti.mdl");
 				
 				vecAngles[1] += 90.0;
 			}
