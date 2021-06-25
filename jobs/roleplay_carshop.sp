@@ -197,7 +197,7 @@ public Action Check_VehiclePolice(Handle timer, any none) {
 	if( EntRefToEntIndex(g_iVehicleHopital) <= 0 ) {
 		float pos[3] =  {1336.0, -2307.0, -2008.0 };
 		
-		int car = rp_CreateVehicle(view_as<float>({1336.0, -2307.0, 0.0 }), view_as<float>({0.0, 90.0, 0.0}), "models/props/crates/csgo_drop_crate_spectrum_v7.mdl", 0);
+		int car = rp_CreateVehicle(view_as<float>({984.0, -4389.0, 0.0 }), view_as<float>({0.0, 90.0, 0.0}), "models/props/crates/csgo_drop_crate_spectrum_v7.mdl", 0);
 		TeleportEntity(car, pos, NULL_VECTOR, NULL_VECTOR);
 		if( rp_IsValidVehicle(car) ) {
 			SetEntProp(car, Prop_Data, "m_bLocked", 1);
