@@ -71,7 +71,7 @@ public void Q1_Start(int objectiveID, int client) {
 	}
 	
 	else if( ( !rp_IsClientNew(client) ) || !rp_GetClientInt(client, i_Job) == 0 ) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "No_News_axe", client);
+		CPrintToChat(client, " ...MOD_TAG... ", "No_News_axe", client);
 	}
 	
 	rp_HookEvent(client, RP_OnPlayerGotRaw, OnPlayerGotRaw);
