@@ -72,7 +72,7 @@ public void Q1_Start(int objectiveID, int client) {
 		ServerCommand("rp_giveitem_melee %s 0 %d 0", QUEST_WEAPON, client);
 	}
 	
-	else if( ( !rp_IsClientNew(client) ) || rp_GetClientInt(client, i_Job) > 0 ) ) {
+	else if( ( !rp_IsClientNew(client) ) || ( rp_GetClientInt(client, i_Job) > 0 ) ) {
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "No_News_axe", client);
 	}
 	
