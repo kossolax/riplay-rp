@@ -34,8 +34,8 @@
 	}
 	"TUTO_1_Text"
 	{
-		"fr"		"C'est votre première connexion, vous devez donc faire notre tutoriel afin de vous familiariser avec ce mode de jeu. A la fin de celui-ci vous gagnerez 20.000$: la monnaie du jeu.\n \n Ce mode Roleplay est une sorte de simulation de vie: vous pouvez avoir de l'argent, un emploi etc.\n \n→ Rendez-vous devant la statue de la place de l'indépendance afin de commencer votre apprentissage.\n \n Les flèches vous guideront tout au long de ce tutoriel."
-		"en"		"This is your first connection, so you must do our tutorial in order to familiarize yourself with this gamemode. At the end of it you will earn $20,000 in game currency.\n \nIn this gamemode you can earn money, a job & more.\n \n→Meet in front of the statue at Independence Square to start your tutorial.\n \n→The arrows will guide you through this tutorial."
+		"fr"		"C'est votre première connexion, vous devez donc faire notre tutoriel afin de vous familiariser avec ce mode de jeu. A la fin de celui-ci vous gagnerez 100.000$: la monnaie du jeu.\n \n Ce mode Roleplay est une sorte de simulation de vie: vous pouvez avoir de l'argent, un emploi etc.\n \n→ Rendez-vous devant la statue de la place de l'indépendance afin de commencer votre apprentissage.\n \n Les flèches vous guideront tout au long de ce tutoriel."
+		"en"		"This is your first connection, so you must do our tutorial in order to familiarize yourself with this gamemode. At the end of it you will earn $100,000 in game currency.\n \nIn this gamemode you can earn money, a job & more.\n \n→Meet in front of the statue at Independence Square to start your tutorial.\n \n→The arrows will guide you through this tutorial."
 	}
 	"TUTO_2_Title"
 	{
