@@ -85,6 +85,10 @@ void HDV_Sell(int client, int itemID, int quantity, int sellPrice, int confirm) 
 			
 			Format(tmp, sizeof(tmp), "sell %d", itemID);
 			rp_GetItemData(itemID, item_type_name, tmp2, sizeof(tmp2));
+			
+			if( StrContains(tmp2, "PvP") == -1 )
+				continue;
+				
 			menu.AddItem(tmp, tmp2);
 		}
 	}
