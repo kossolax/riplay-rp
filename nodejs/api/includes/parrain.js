@@ -31,9 +31,9 @@ exports = module.exports = function (server) {
     });
 
 
-    var parainnageCash = 300000;
-    var parainnageExp = 3600*35;
-    var filleulCash = 300000;
+    var parainnageCash = 50000;
+    var parainnageExp = 3600*10;
+    var filleulCash = 50000;
     var filleulExp = 3600*5;
 
     /**
