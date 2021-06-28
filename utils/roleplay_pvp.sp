@@ -1072,16 +1072,16 @@ void CAPTURE_Reward() {
 			g_hGlobalDamage.GetArray(szSteamID, array, gdm_max);
 			
 			if( gID == rp_GetCaptureInt(cap_bunker) && g_iPlayerTeam[client] == bestTeam ) {
-				amount = (array[gdm_score] / 50) + 10;
+				amount = (array[gdm_score] / 100);
 				EmitSoundToClientAny(client, g_szSoundList[snd_FlawlessVictory], _, 6, _, _, 1.0);
 			}
 			else if( gID == rp_GetCaptureInt(cap_bunker) || g_iPlayerTeam[client] == bestTeam ) {
-				amount = (array[gdm_score] / 50) + 5;
+				amount = (array[gdm_score] / 50);
 				EmitSoundToClientAny(client, g_szSoundList[snd_Congratulations], _, 6, _, _, 1.0);
 			}
 			else {
 				if( array[gdm_flag] >= 1 || array[gdm_kill] >= 1 || array[gdm_score] >= 50 ) {
-					amount = (array[gdm_score] / 50) + 1;
+					amount = (array[gdm_score] / 50) + 10;
 					EmitSoundToClientAny(client, g_szSoundList[snd_YouHaveLostTheMatch], _, 6, _, _, 1.0);
 				}
 				else {
