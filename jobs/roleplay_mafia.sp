@@ -681,14 +681,14 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 					rp_ClientAggroIncrement(client, owner, 1000);
 				}
 			}
-			difficulty = 5;
+			difficulty = 3;
 		}
 		case 8: { // Distrib Perso
 			int owner = rp_GetBuildingData(target, BD_owner);
 			if( IsValidClient(owner) ) {
 				rp_ClientAggroIncrement(client, owner, 1000);
 			}
-			difficulty = 1;
+			difficulty = 2;
 		}
 	}
 			
