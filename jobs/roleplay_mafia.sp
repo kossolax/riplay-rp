@@ -739,7 +739,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				if( IsValidClient(owner) ) {
 					rp_SetBuildingData(target, BD_HackedBy, client);
 					rp_SetBuildingData(target, BD_HackedTime, GetTime());
-					CreateTimer(1.0 * 60.0, callHacked, EntIndexToEntRef(target));
+					CreateTimer(3.0 * 60.0, callHacked, EntIndexToEntRef(target));
 				}
 				
 				Entity_SetHealth(target, Entity_GetHealth(target) - Entity_GetMaxHealth(target) / 10);
@@ -751,7 +751,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				if( IsValidClient(owner) ) {
 					rp_SetBuildingData(target, BD_HackedBy, client);
 					rp_SetBuildingData(target, BD_HackedTime, GetTime());
-					CreateTimer(1.0 * 60.0, callHacked, EntIndexToEntRef(target));
+					CreateTimer(3.0 * 60.0, callHacked, EntIndexToEntRef(target));
 				}
 				
 				Entity_SetHealth(target, Entity_GetHealth(target) - Entity_GetMaxHealth(target) / 10);
