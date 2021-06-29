@@ -134,7 +134,7 @@ public Action CmdBreakCadenas(int args) {
 	if( g_iDoorDefine_LOCKER[doorID] )
 		difficulte += 0.1;
 	if(rp_GetZoneInt(tzone, zone_type_type) == 51 )
-		difficulty = 5;	
+		difficulte += 5;	
 	
 	if( GetRandomFloat() > difficulte ) {
 		
