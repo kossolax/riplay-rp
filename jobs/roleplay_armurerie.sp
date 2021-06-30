@@ -183,17 +183,17 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	SetMenuTitle(menu, "%T\n ", "edit_weapon", client);
 	
 	char szMenu[][][] = {
-		{"sanandreas",		"150",	"add_bullet_sanAndreas"},
-		{"pvp",				"250",	"add_bullet_pvp"},
-		{"fire",			"250",	"add_ball_type_fire"},
-		{"caoutchouc",		"200",	"add_ball_type_caoutchouc"},
-		{"poison",			"200",	"add_ball_type_poison"},
-		{"vampire",			"200",	"add_ball_type_vampire"},
-		{"paintball",		"50",	"add_ball_type_paintball"},
-		{"reflexive",		"200",	"add_ball_type_reflexive"},
-		{"explode", 		"300",	"add_ball_type_explode"},
-		{"revitalisante",	"200",	"add_ball_type_revitalisante"},
-		{"nosteal", 		"75",	"add_ball_type_nosteal"},
+		{"sanandreas",		"250",	"add_bullet_sanAndreas"},
+		{"pvp",				"750",	"add_bullet_pvp"},
+		/*{"fire",			"750",	"add_ball_type_fire"},*/
+		{"caoutchouc",		"750",	"add_ball_type_caoutchouc"},
+		{"poison",			"750",	"add_ball_type_poison"},
+		{"vampire",			"750",	"add_ball_type_vampire"},
+		/*{"paintball",		"125",	"add_ball_type_paintball"},*/
+		{"reflexive",		"500",	"add_ball_type_reflexive"},
+		/*{"explode", 		"1400",	"add_ball_type_explode"},*/
+		{"revitalisante",	"250",	"add_ball_type_revitalisante"},
+		{"nosteal", 		"100",	"add_ball_type_nosteal"},
 		{"notk", 			"50",	"add_ball_type_notk"}
 	};
 	
