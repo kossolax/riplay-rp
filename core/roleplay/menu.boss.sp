@@ -200,7 +200,7 @@ public int MenuSetPay(Handle menu, MenuAction action, int client, int param2) {
 		int jobid = rp_GetClientJobID(client);
 
 		if( jobid == 11 || jobid == 21 || jobid == 31 || jobid == 51 || jobid == 61 || jobid == 71 || jobid == 81 || jobid == 111 || jobid == 131 || jobid == 171 || jobid == 211 || jobid == 221) {
-			max = 650;
+			max = 500;
 		}
 		
 		if( jobid == 41 || jobid == 91) {
