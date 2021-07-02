@@ -121,6 +121,8 @@ void updateBankCost(int client) {
 			continue;
 		if( itemID == ITEM_JETONROUGE || itemID == ITEM_JETONBLEU )
 			continue;
+		ifif( StrEquals(g_szItemList[itemID][item_type_job_id], "51") || StrEquals(g_szItemList[itemID][item_type_job_id], "31")|| StrEquals(g_szItemList[itemID][item_type_job_id], "211"), "rp_item_raw") == 0 )
+			continue;
 		
 		cost = cost + (StringToInt(g_szItemList[itemID][item_type_prix]) * amount);
 	}
