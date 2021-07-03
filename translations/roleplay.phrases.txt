@@ -185,12 +185,17 @@
 	}
 	"No_News_axe"
 	{
-		"fr"	"Vous n'êtes plus un nouveau joueur, allez chercher une hache chez les artisans ou dans votre banque."
+		"fr"	"Vous n'êtes plus un nouveau joueur, allez chercher {green}une hache{default} chez les {red}artisans{default} ou dans votre banque."
 		"en"	"You are no longer a new player, go get a axe from the craftsmen or from your bank."
 	}
 	"No_News_hammer"
 	{
-		"fr"	"Vous n'êtes plus un nouveau joueur, allez chercher un marteau chez les artisans ou dans votre banque."
+		"fr"	"Vous n'êtes plus un nouveau joueur, allez chercher {green}un marteau{default} chez les {red}artisans{default} ou dans votre banque."
+		"en"	"You are no longer a new player, go get a hammerfrom the craftsmen or your bank."
+	}
+	"No_News_water"
+	{
+		"fr"	"Vous n'êtes plus un nouveau joueur, allez chercher {green}une canne à eau{default} chez les {red}artisans{default} ou dans votre banque."
 		"en"	"You are no longer a new player, go get a hammerfrom the craftsmen or your bank."
 	}
 	// ----------------------------------------------------------------------------------------------
