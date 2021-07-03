@@ -1220,6 +1220,8 @@ public Action Command_Say(int client, int args) {
 		
 		if( g_bUserData[client][b_GameModePassive] == true ) {
 			ACCESS_DENIED(client);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_Command_passif", client);
+			return Plugin_Handled;
 		}
 
 		if( g_bUserData[client][b_MaySteal] == 0) {
