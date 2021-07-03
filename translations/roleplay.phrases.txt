@@ -10,6 +10,11 @@
 		"fr"		"Vous ne pouvez pas utiliser cette commande pour le moment."
 		"en"		"You cannot use this command for now."
 	}
+	"Error_Command_passif"
+	{
+		"fr"		"Vous ne pouvez pas utiliser cette commande en mode passif."
+		"en"		"You cannot use this command in passive mode."
+	}
 	"Error_Command_Here"
 	{
 		"fr"		"Vous ne pouvez pas utiliser cette commande ici."
