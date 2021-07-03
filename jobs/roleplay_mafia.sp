@@ -27,7 +27,7 @@ public Plugin myinfo = {
 	version = __LAST_REV__, url = "https://www.ts-x.eu"
 };
 
-int g_iLastDoor[65][6];
+int g_iLastDoor[65][2];
 int g_iDoorDefine_LOCKER[2049];
 int g_iAppartPickLockCount[200];
 float g_flAppartNewPickLock[200];
@@ -949,7 +949,7 @@ public Action Cmd_ItemPickLock(int args) {
 	int appartID = zoneToAppartID(rp_GetPlayerZone(door));
 	if( appartID > 0 ) {
 		int newPickTime = (appartID == 50 || appartID == 51) ? 60 * 18 : 60 * 12;
-		int appartPickThreshold = (appartID == 50 || appartID == 51) ? 12 : 3;
+		int appartPickThreshold = (appartID == 50 || appartID == 51) ? 18 : 6;
 
 		if(g_flAppartProtection[appartID] > GetGameTime()) {
 			ITEM_CANCEL(client, item_id);
@@ -1077,13 +1077,10 @@ public Action ItemPickLockOver_frame(Handle timer, Handle dp) {
 		rp_SetClientStat(client, i_JobFails, rp_GetClientStat(client, i_JobFails) - 1);
 		rp_SetClientFloat(client, fl_LastCrochettage, GetGameTime());
 		
-		if( g_iLastDoor[client][5] != doorID && g_iLastDoor[client][4] != doorID && g_iLastDoor[client][3] != doorID && g_iLastDoor[client][2] != doorID && g_iLastDoor[client][1] != doorID && g_iLastDoor[client][0] != doorID
+		if( g_iLastDoor[client][2] != doorID && g_iLastDoor[client][1] != doorID && g_iLastDoor[client][0] != doorID
 			&& rp_GetPlayerZone(target) != 91 && rp_GetPlayerZone(client) != 91
 			&& !rp_GetClientKeyDoor(client, doorID) && GetEntProp(target, Prop_Data, "m_bLocked") ) {
 			
-			g_iLastDoor[client][5] = g_iLastDoor[client][4];
-			g_iLastDoor[client][4] = g_iLastDoor[client][3];
-			g_iLastDoor[client][3] = g_iLastDoor[client][2];
 			g_iLastDoor[client][2] = g_iLastDoor[client][1];
 			g_iLastDoor[client][1] = g_iLastDoor[client][0];
 			g_iLastDoor[client][0] = doorID;
