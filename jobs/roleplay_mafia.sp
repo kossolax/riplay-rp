@@ -1077,10 +1077,13 @@ public Action ItemPickLockOver_frame(Handle timer, Handle dp) {
 		rp_SetClientStat(client, i_JobFails, rp_GetClientStat(client, i_JobFails) - 1);
 		rp_SetClientFloat(client, fl_LastCrochettage, GetGameTime());
 		
-		if( g_iLastDoor[client][2] != doorID && g_iLastDoor[client][1] != doorID && g_iLastDoor[client][0] != doorID
+		if( g_iLastDoor[client][5] != doorID && g_iLastDoor[client][1] != doorID && g_iLastDoor[client][0] != doorID
 			&& rp_GetPlayerZone(target) != 91 && rp_GetPlayerZone(client) != 91
 			&& !rp_GetClientKeyDoor(client, doorID) && GetEntProp(target, Prop_Data, "m_bLocked") ) {
 			
+			g_iLastDoor[client][5] = g_iLastDoor[client][4];
+			g_iLastDoor[client][4] = g_iLastDoor[client][3];
+			g_iLastDoor[client][3] = g_iLastDoor[client][2];
 			g_iLastDoor[client][2] = g_iLastDoor[client][1];
 			g_iLastDoor[client][1] = g_iLastDoor[client][0];
 			g_iLastDoor[client][0] = doorID;
