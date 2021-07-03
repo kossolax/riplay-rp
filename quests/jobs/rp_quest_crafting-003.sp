@@ -35,6 +35,8 @@ public Plugin myinfo =  {
 };
 public void OnPluginStart() {
 	RegServerCmd("rp_quest_reload", Cmd_PluginReloadSelf);
+	LoadTranslations("core.phrases");
+	LoadTranslations("roleplay.phrases");
 }
 public void OnAllPluginsLoaded() {
 	g_iQuest = rp_RegisterQuest(QUEST_UNIQID, QUEST_NAME, QUEST_TYPE, fwdCanStart);
@@ -49,7 +51,15 @@ public bool fwdCanStart(int client) {
 
 public void Q1_Start(int objectiveID, int client) {
 	g_iStep[client] = 0;
-	rp_ClientGiveItem(client, 355);
+	if( ( !Client_HasWeapon(client, "weapon_melee") && rp_IsClientNew(client) ) ||
+	    ( !Client_HasWeapon(client, "weapon_melee" ) && rp_GetClientInt(client, i_Job) == 0 ) ) {
+		rp_ClientGiveItem(client, 355);
+	}
+	
+	else if( ( !rp_IsClientNew(client) ) || ( rp_GetClientInt(client, i_Job) > 0 ) ) {
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "No_News_water", client);
+	}
+	
 	rp_HookEvent(client, RP_OnPlayerGotRaw, OnPlayerGotRaw);
 }
 public void Q1_Frame(int objectiveID, int client) {
