@@ -27,7 +27,7 @@ public Plugin myinfo = {
 	version = __LAST_REV__, url = "https://www.ts-x.eu"
 };
 
-int g_iLastDoor[65][3];
+int g_iLastDoor[65][5];
 int g_iDoorDefine_LOCKER[2049];
 int g_iAppartPickLockCount[200];
 float g_flAppartNewPickLock[200];
