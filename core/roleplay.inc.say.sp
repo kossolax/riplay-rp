@@ -378,7 +378,6 @@ public Action Command_Say(int client, int args) {
 			ACCESS_DENIED(client);
 		}
 		if( g_bUserData[client][b_MaySteal] == 0 || g_iUserData[client][i_LastVolCashFlowTime] > GetTime() ) {
-			int client = GetCmdArgInt(1);
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_CannotSteal_Again", client);
 			return Plugin_Handled;
 		}
