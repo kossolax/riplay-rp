@@ -184,7 +184,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	
 	char szMenu[][][] = {
 		{"sanandreas",		"250",	"add_bullet_sanAndreas"},
-		{"pvp",				"750",	"add_bullet_pvp"},
+		{"pvp",				"400",	"add_bullet_pvp"},
 		/*{"fire",			"750",	"add_ball_type_fire"},*/
 		{"caoutchouc",		"750",	"add_ball_type_caoutchouc"},
 		{"poison",			"750",	"add_ball_type_poison"},
