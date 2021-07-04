@@ -338,6 +338,7 @@ public Action Command_Say(int client, int args) {
 		char tmp[256];
 		
 		int count;
+		int client = GetCmdArgInt(1);
 		for(int i=1; i<=MaxClients; i++) {
 			if( !IsValidClient(i) )
 				continue;
