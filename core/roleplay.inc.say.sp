@@ -25,6 +25,7 @@ public Action Command_Say(int client, int args) {
 	}
 
 	int target = rp_GetClientTarget(client);
+	int client = GetCmdArgInt(1);
 
 	char szSayText[256], szSayTrig[33], name[128], cmd[32];
 
@@ -338,7 +339,6 @@ public Action Command_Say(int client, int args) {
 		char tmp[256];
 		
 		int count;
-		int client = GetCmdArgInt(1);
 		for(int i=1; i<=MaxClients; i++) {
 			if( !IsValidClient(i) )
 				continue;
