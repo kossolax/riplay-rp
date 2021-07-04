@@ -365,7 +365,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 		amount = Math_GetRandomInt(1, VOL_MAX);
 
 	if( VOL_MAX > 0 && money >= 1 ) {
-		if( amount > money )
+		if( money >=25 && amount > money )
 			amount = money;
 			
 		float targetStealImmunity = 60.0;
