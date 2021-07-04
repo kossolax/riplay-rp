@@ -107,7 +107,7 @@
 	}
 	"Error_CannotSteal_Again"
 	{
-		"fr"		"Impossible de voler pour encore {red}1{default} minute(s)"
+		"fr"		"Impossible de voler pour encore {red}{1}{default} minute(s)"
 		"en"		"You cannot steal for {red}{1}{default} minute"
 	}
 	"Error_CannotSteal_Target_ForNow"
