@@ -60,7 +60,7 @@ public void Q1_Start(int objectiveID, int client) {
 	
 	menu.SetTitle("Quète: %s", QUEST_NAME);
 	menu.AddItem("", "Interlocuteur anonyme :", ITEMDRAW_DISABLED);
-	menu.AddItem("", "Cher colègue, nous avons besoin de toi.", ITEMDRAW_DISABLED);
+	menu.AddItem("", "Cher collègue, nous avons besoin de toi.", ITEMDRAW_DISABLED);
 	menu.AddItem("", "Les machines à sous sont pleine à", ITEMDRAW_DISABLED);
 	menu.AddItem("", "craquer. Il faut que tu les vides et dépose", ITEMDRAW_DISABLED);
 	menu.AddItem("", "tous l'argent à la banque.", ITEMDRAW_DISABLED);
