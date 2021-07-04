@@ -279,7 +279,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 				continue;
 			
 			job = rp_GetItemInt(i, item_type_job_id);
-			if( job == 0|| job == 91 || job == 101 || job == 181 )
+			if( job == 0|| job == 91 || job == 101 || job == 31 )
 				continue;
 			if( Math_GetRandomInt(0, rp_GetItemInt(i, item_type_prix)+100) > 100 ) 
 				continue;
