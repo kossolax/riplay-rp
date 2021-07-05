@@ -6,6 +6,12 @@
 		"fr"	"Impossible de crocheter cette porte pour encore {red}{1}{default} minute(s)"
 		"en"	"Cannot pick this door for another {red}{1}{default} minute(s)"		
 	}
+	"Mafia_CD_Steal"
+	{
+		"#format"	"{1:.1f}"
+		"fr"		"Impossible de voler pour encore ({red}{1}{default}) minute(s)"
+		"en"		"You cannot steal for {red}{1}{default} minute"
+	}
 	// ----------------------------------------------------------------------------------------------
 	"Mafia_BlackMarket"
 	{
