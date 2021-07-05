@@ -105,11 +105,6 @@
 		"fr"		"Il n'est pas possible de voler pour le moment."
 		"en"		"You cannot steal for now."
 	}
-	"Error_CannotSteal_Again"
-	{
-		"fr"		"Impossible de voler pour encore {red}{1}{default} minute(s)"
-		"en"		"You cannot steal for {red}{1}{default} minute"
-	}
 	"Error_CannotSteal_Target_ForNow"
 	{
 		"fr"		"Il n'est pas possible de voler cette personne pour le moment."
