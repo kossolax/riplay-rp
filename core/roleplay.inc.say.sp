@@ -378,7 +378,7 @@ public Action Command_Say(int client, int args) {
 			ACCESS_DENIED(client);
 		}
 		if( g_bUserData[client][b_MaySteal] == 0 || g_iUserData[client][i_LastVolCashFlowTime] > GetTime() ) {
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_CD_Steal", client, (g_iUserData[client][i_LastVolCashFlowTime]- GetGameTime()) / 60.0);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_CannotSteal_ForNow", client, (g_iUserData[client][i_LastVolCashFlowTime]- GetGameTime()) / 60.0);
 			return Plugin_Handled;
 		}
 		if( GetConVarInt(g_hAllowSteal) == 0 ) {
