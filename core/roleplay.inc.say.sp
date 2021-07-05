@@ -14,6 +14,9 @@
 //	say & say_team
 //
 // say
+public void OnPluginStart() {
+	LoadTranslations("roleplay.mafia.phrases");
+}
 
 public Action Command_Say(int client, int args) {
 	if( !IsValidClient(client) ) {
