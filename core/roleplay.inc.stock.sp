@@ -1104,7 +1104,7 @@ int RunMapCleaner(bool full = false, bool admin = false, int zone = 0) {
 			
 			if( StrContains(classname, "prop_dynamic") == 0 || StrContains(classname, "prop_physics") == 0 ||
 				StrContains(classname, "point_tesla") == 0 || StrContains(classname, "entity_blocker") == 0 ||
-				StrContains(classname, "cfe_player_decal") == 0) {
+				StrContains(classname, "cfe_player_decal") == 0 || StrContains(classname, "cs_ragdoll") == 0) {
 					
 				if( Entity_GetParent(i) > 0 )
 					continue;
