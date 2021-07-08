@@ -42,7 +42,7 @@
 	// ----------------------------------------------------------------------------------------------
 	"Dealer_Crowbar"
 	{
-		"fr"		"Le pied de biche est seulement utilisable sur la {red}place{default} de la justice, un {red}distributeur{default}, {red}l'armurerie{default} police, {red}marché noir{default} mafia ou une {red}voiture{default}."
+		"fr"		"Le pied de biche est seulement utilisable sur la {red}place{default} de l'indépendance, un {red}distributeur{default}, {red}l'armurerie{default} police, {red}marché noir{default} mafia ou une {red}voiture{default}."
 		"en"		"The crowbar can only be used on the {red}place{default} of justice, on a {red}cash machine{default}, {red}armory{default} of the police, {red}black market{default} mafia, or a {red}car{default}."
 	}
 	"Dealer_Crowbar_Car"
