@@ -667,7 +667,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 
 	return Plugin_Stop;
 	
-	/*int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+	int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 	char wep_name[32];
 	GetEdictClassname(wep_id, wep_name, 31);
 	if( StrContains(wep_name, "weapon_bayonet") != 0 && StrContains(wep_name, "weapon_knife") != 0 ) {
@@ -725,9 +725,8 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 		AddMenuItem(menu, "esquive", tmp);
 	}
 	DisplayMenu(menu, client, 60);
-	return Plugin_Handled;*/
+	return Plugin_Handled;
 }
-/*
 public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_iParam2) {
 
 	if (p_oAction == MenuAction_Select) {
@@ -807,7 +806,7 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 		CloseHandle(p_hItemMenu);
 	}
 
-}*/
+}
 
 public Action Cmd_ItemNeedForSpeed(int args) {
 	
