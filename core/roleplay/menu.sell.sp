@@ -105,7 +105,7 @@ void DrawVendreMenu(int client) {
 			
 			if( !(rp_GetDistance(client, i) < MAX_AREA_DIST.0) )
 				continue;
-			if(client == i) 
+			if(client == i && can == -1) 
 				continue;
 			
 			GetClientName2(i, name, 127);
