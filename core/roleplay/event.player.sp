@@ -465,7 +465,7 @@ public Action OnPlayerSpawnPost(Handle timer, any userid) {
 				int player = GetEntPropEnt(i, Prop_Send, "m_hRagdoll");
 				
 				if( player <= 0 || player == client )
-					rp_AcceptEntityInput(ragdoll, "Kill", 0.1);
+					rp_AcceptEntityInput(i, "Kill", 0.1);
 			}
 		}
 	}
