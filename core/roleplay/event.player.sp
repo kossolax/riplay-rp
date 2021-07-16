@@ -442,9 +442,33 @@ public Action EventSpawn(Handle ev, const char[] name, bool broadcast) {
 	return Plugin_Continue;
 }
 public Action OnPlayerSpawnPost(Handle timer, any userid) {
+	char classname[128];
+	
 	int client = GetClientOfUserId(userid);
-	if( IsValidClient(client) )
+	if( IsValidClient(client) ) {
 		SetPersonalSkin(client);
+		
+		int ragdoll = GetEntPropEnt(client, Prop_Send, "m_hRagdoll");
+		if( IsValidEdict(ragdoll) && IsValidEntity(ragdoll) )
+			rp_AcceptEntityInput(ragdoll, "Kill", 0.1);
+		
+		for(int i=1; i<2048; i++) {
+			if( !IsValidEdict(i) )
+				continue;
+			if( !IsValidEdict(i) )
+				continue;
+			if( i == ragdoll )
+				continue;
+			
+			GetEntityClassname(i, classname, sizeof(classname));
+			if( StrEqual(classname, "cs_ragdoll") ) {
+				int player = GetEntPropEnt(i, Prop_Send, "m_hRagdoll");
+				
+				if( player <= 0 || player == client )
+					rp_AcceptEntityInput(ragdoll, "Kill", 0.1);
+			}
+		}
+	}
 }
 public void ClientConVar(QueryCookie cookie, int client, ConVarQueryResult result, const char[] cvarName, const char[] cvarValue) {
 	if( StrEqual(cvarName, "cl_downloadfilter", false) ) {
