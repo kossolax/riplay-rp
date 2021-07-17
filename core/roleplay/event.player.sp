@@ -462,7 +462,7 @@ public Action OnPlayerSpawnPost(Handle timer, any userid) {
 			
 			GetEntityClassname(i, classname, sizeof(classname));
 			if( StrEqual(classname, "cs_ragdoll") ) {
-				int player = GetEntPropEnt(i, Prop_Send, "m_hRagdoll");
+				int player = GetEntPropEnt(i, Prop_Send, "m_hPlayer");
 				
 				if( player <= 0 || player == client )
 					rp_AcceptEntityInput(i, "Kill", 0.1);
