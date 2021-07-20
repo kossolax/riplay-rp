@@ -450,7 +450,7 @@ public Action OnPlayerSpawnPost(Handle timer, any userid) {
 		
 		int ragdoll = GetEntPropEnt(client, Prop_Send, "m_hRagdoll");
 		if( IsValidEdict(ragdoll) && IsValidEntity(ragdoll) )
-			rp_AcceptEntityInput(ragdoll, "Kill", 0.1);
+			ScheduleEntityInput(ragdoll, 0.1, "Kill");
 		
 		for(int i=1; i<2048; i++) {
 			if( !IsValidEdict(i) )
@@ -465,7 +465,7 @@ public Action OnPlayerSpawnPost(Handle timer, any userid) {
 				int player = GetEntPropEnt(i, Prop_Send, "m_hPlayer");
 				
 				if( player <= 0 || player == client )
-					rp_AcceptEntityInput(i, "Kill", 0.1);
+					ScheduleEntityInput(i, 0.1, "Kill");
 			}
 		}
 	}
