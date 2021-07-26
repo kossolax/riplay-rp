@@ -70,11 +70,11 @@ void DrawVendreMenu(int client) {
 		int item_id = -1;
 		
 		switch( StringToInt(g_szSellingKeys[can][key_type_prix]) ) {
-			case 300: item_id = 130;
-			case 450: item_id = 131;
-			case 600: item_id = 72;
-			case 500: item_id = 37;
-			case 750: item_id = 226;
+			case 600: item_id = 130;
+			case 900: item_id = 131;
+			case 1200: item_id = 72;
+			case 1000: item_id = 37;
+			case 1500: item_id = 226;
 			case 50000: item_id = 225;
 		}
 		
