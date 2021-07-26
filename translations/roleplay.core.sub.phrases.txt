@@ -529,7 +529,7 @@
 	}
 	"Sell_Error_Door"
 	{
-		"fr"		"Cette porte n'est pas une porte d'un appartement.looser"
+		"fr"		"Cette porte n'est pas une porte d'un appartement."
 		"en"		"This door is not a door to an apartment"
 	}
 	"Sell_BlackFriday"
