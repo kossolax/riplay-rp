@@ -54,7 +54,6 @@ void DrawVendreMenu(int client) {
 		
 		if( can == -1 ) {
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Sell_Error_Door", client);
-			CPrintToChat(client, "can: %d prix: %d", can, StringToInt(g_szSellingKeys[can][key_type_prix]));
 			return;
 		}
 		
@@ -80,8 +79,7 @@ void DrawVendreMenu(int client) {
 		}
 		
 		if( item_id == -1 ) {
-			// CPrintToChat(client, "" ...MOD_TAG... " %T", "Sell_Error_Door", client);
-			CPrintToChat(client, "can: %d prix: %d", can, StringToInt(g_szSellingKeys[can][key_type_prix]));
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Sell_Error_Door", client);
 			return;
 		}
 		
