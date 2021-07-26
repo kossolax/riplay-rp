@@ -116,30 +116,49 @@ public Action RP_OnSentryAttack(int entity, int target) {
 
 // ----------------------------------------------------------------------------
 public bool fwdCanStart(int client) {
-	if( g_bDoingQuest == true )
+	PrintToConsole("[DEBUG] [BRAQUAGE] Test faisabilité de la quête:");
+	if( g_bDoingQuest == true ) {
+		PrintToConsole("[DEBUG] [BRAQUAGE] la quête est déjà en cours");
 		return false;
-	if( g_bCanMakeQuest == false )
-		return false;
+	}
 	
-	if( GetClientCount() < REQUIRED_T+REQUIRED_CT && GetConVarInt(FindConVar("hostport")) != 27025 )
+	if( g_bCanMakeQuest == false ) {
+		PrintToConsole("[DEBUG] [BRAQUAGE] la quête a été faite il y'a moins d'une heure");
 		return false;
-	if( rp_GetClientJobID(client) == 1 || rp_GetClientJobID(client) == 101 )
+	}
+	
+	if( GetClientCount() < REQUIRED_T+REQUIRED_CT && GetConVarInt(FindConVar("hostport")) != 27025 ) {
+		PrintToConsole("[DEBUG] [BRAQUAGE] pas assez de personne connectée");
 		return false;
-	if( rp_GetClientInt(client, i_PlayerLVL) < 360 )
+	}
+	
+	if( rp_GetClientJobID(client) == 1 || rp_GetClientJobID(client) == 101 ) {
+		PrintToConsole("[DEBUG] [BRAQUAGE] interdit police/justice");
 		return false;
-	if( GetGameTime() < 60.0*30.0 && GetConVarInt(FindConVar("hostport")) != 27025 )
+	}
+		
+	if( rp_GetClientInt(client, i_PlayerLVL) < 360 ) {
+		PrintToConsole("[DEBUG] [BRAQUAGE] trop bas level");
 		return false;
+	}
+	
+	if( GetGameTime() < 60.0*30.0 && GetConVarInt(FindConVar("hostport")) != 27025 ) {
+		PrintToConsole("[DEBUG] [BRAQUAGE] serveur démarré y'a moins de 30min");
+		return false;
+	}
 	
 	char szDayOfWeek[12], szHours[12];
 	FormatTime(szDayOfWeek, 11, "%w");
 	FormatTime(szHours, 11, "%H");
 	if( StringToInt(szDayOfWeek) == 3 ) { // Mercredi
 		if( StringToInt(szHours) >= 17 && StringToInt(szHours) < 19  ) {	// 18h00m00s
+			PrintToConsole("[DEBUG] [BRAQUAGE] période pvp (mercredi)");
 			return false;
 		}
 	}
 	if( StringToInt(szDayOfWeek) == 0 ) { // Vendredi
 		if( StringToInt(szHours) >= 20 && StringToInt(szHours) < 22) {	// 21h00m00s
+			PrintToConsole("[DEBUG] [BRAQUAGE] période pvp (vendredi)");
 			return false;
 		}
 	}
@@ -159,11 +178,16 @@ public bool fwdCanStart(int client) {
 			t++;
 	}
 	
-	if( ct < REQUIRED_CT )
+	if( ct < REQUIRED_CT ) {
+		PrintToConsole("[DEBUG] [BRAQUAGE] pas assez de CT (%d/%d)", ct, REQUIRED_CT);
 		return false;
-	if( t < REQUIRED_T )
+	}
+	if( t < REQUIRED_T ) {
+		PrintToConsole("[DEBUG] [BRAQUAGE] pas assez de CT (%d/%d)", ct, REQUIRED_CT);
 		return false;
+	}
 	
+	PrintToConsole("[DEBUG] [BRAQUAGE] la quête est disponible");
 	return true;
 }
 // ----------------------------------------------------------------------------
