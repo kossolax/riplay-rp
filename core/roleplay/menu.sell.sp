@@ -79,7 +79,8 @@ void DrawVendreMenu(int client) {
 		}
 		
 		if( item_id == -1 ) {
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Sell_Error_Door", client);
+			// CPrintToChat(client, "" ...MOD_TAG... " %T", "Sell_Error_Door", client);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "%can / %key_type_prix ", client);
 			return;
 		}
 		
