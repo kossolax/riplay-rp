@@ -183,7 +183,7 @@ public bool fwdCanStart(int client) {
 		return false;
 	}
 	if( t < REQUIRED_T ) {
-		PrintToConsole(client, "[DEBUG] [BRAQUAGE] pas assez de CT (%d/%d)", ct, REQUIRED_CT);
+		PrintToConsole(client, "[DEBUG] [BRAQUAGE] pas assez de T (%d/%d)", t, REQUIRED_T);
 		return false;
 	}
 	
