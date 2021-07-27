@@ -120,7 +120,7 @@ public void OnPluginStart() {
 	}
 	
 	for(int i=1; i<=MaxClients; i++) {
-		if( !IsValidClient(i) )
+		if( !IsValidClient(i) || IsClientSourceTV(i) || IsFakeClient(i) )
 			continue;
 		OnClientPostAdminCheck(i)
 	}
