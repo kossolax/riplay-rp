@@ -22,7 +22,7 @@
 float g_fEyeAngles[MAXPLAYERS+1][255][3];
 int g_iEyeIndex[MAXPLAYERS + 1];
 int g_iMaxAngleHistory, g_iAttackMax;
-int g_iTriggerDetections[MAXPLAYERS + 1], g_iAimDetections[MAXPLAYERS + 1], g_iTickDetections[MAXPLAYERS+1], g_iCmdDetections[MAXPLAYERS + 1], g_iSpeedDetections[MAXPLAYERS + 1];
+int g_iTriggerDetections[MAXPLAYERS + 1], g_iAimDetections[MAXPLAYERS + 1], g_iTickDetections[MAXPLAYERS + 1], g_iCmdDetections[MAXPLAYERS + 1], g_iSpeedDetections[MAXPLAYERS + 1], g_iFileDetections[MAXPLAYERS + 1], g_ClientChanges[MAXPLAYERS + 1];
 int g_iPrevCmdNum[MAXPLAYERS + 1], g_iPrevTickCount[MAXPLAYERS + 1];
 float g_fDetectedTime[MAXPLAYERS+1], g_fPrevLatency[MAXPLAYERS+1];
 int g_iTicksLeft[MAXPLAYERS+1], g_iMaxTicks;
@@ -58,11 +58,13 @@ public void OnPluginStart() {
 		}
 	}
 	
+	AddCommandListener(OnCommand);
 	AddCommandListener(OnCheatCommand, "noclip");
 	AddCommandListener(OnCheatCommand, "god");
 	AddCommandListener(OnCheatCommand, "give");
 	AddCommandListener(OnCheatCommand, "ent_create");
 	AddCommandListener(OnCheatCommand, "ent_remove");
+	AddCommandListener(OnCrashCommand, "survival_equip");
 	
 	char name[128];
 	int flags;
@@ -70,7 +72,7 @@ public void OnPluginStart() {
 	Handle cvar = FindFirstConCommand(name, sizeof(name), isCommand, flags);
 	do {
 		if ( isCommand && (flags & FCVAR_CHEAT)) {
-			AddCommandListener(OnCheatCommand_LOG, name);
+			AddCommandListener(OnCheatCommand, name);
 			LogToGame("[CHEAT-CMD] Hooked %s", name);
 		}
 	} while( FindNextConCommand(cvar, name, sizeof(name), isCommand, flags) );
@@ -127,6 +129,7 @@ public void OnPluginStart() {
 	flag &= ~FCVAR_CHEAT;
 	SetConVarFlags(FindConVar("weapon_recoil_scale"), flag);
 }
+
 public void OnCvarChange(Handle cvar, const char[] oldVal, const char[] newVal) {
 	if( cvar == g_cVarEnable ) {
 		if( !g_bAntiWallhack && StrEqual(newVal, "1") ) {
@@ -227,16 +230,6 @@ public Action Hook_Transmit(int client, int target) {
 	return Plugin_Continue;
 }
 // ------------------------------------------------- CHEAT-CMD --------------------
-public Action OnCheatCommand_LOG(int client, const char[] command, int argc) {
-	LogToGame("[CHEAT-CMD-WARN] %L used command: %s", client, command);
-	
-	int flags = GetUserFlagBits(client);
-	if( !(flags & ADMFLAG_ROOT) ) {
-		return Plugin_Handled;
-	}
-
-	return Plugin_Continue;
-}
 public Action OnCheatCommand(int client, const char[] command, int argc) {
 	LogToGame("[CHEAT-CMD] %L used command: %s", client, command);
 	
@@ -246,6 +239,47 @@ public Action OnCheatCommand(int client, const char[] command, int argc) {
 	}
 
 	return Plugin_Continue;
+}
+public Action OnCommand(int client, const char[] command, int argc) {
+	if(StrEqual(command, "survival_equip")) {
+		ServerCommand("amx_ban \"#%i\" \"0\" \"%s\"", GetClientUserId(client), "CRASH SERVEUR (banned cmd)");
+		return Plugin_Handled;
+	}
+
+	return Plugin_Continue;
+}
+public Action OnCrashCommand(int client, const char[] command, int argc) {
+	ServerCommand("amx_ban \"#%i\" \"0\" \"%s\"", GetClientUserId(client), "CRASH SERVEUR (banned cmd)");
+
+	return Plugin_Handled;
+}
+public Action OnFileSend(int client, const char[] sFile) {
+	g_iFileDetections[client]++;
+	
+	if( g_iFileDetections[client] >= 64 ) {
+		ServerCommand("amx_ban \"#%i\" \"0\" \"%s\"", GetClientUserId(client), "CRASH SERVEUR (spam download)");
+		return Plugin_Handled;
+	}
+	
+	return Plugin_Continue;
+}
+public Action OnFileReceive(int client, const char[] sFile) {
+	g_iFileDetections[client]++;
+	
+	if( g_iFileDetections[client] >= 64 ) {
+		ServerCommand("amx_ban \"#%i\" \"0\" \"%s\"", GetClientUserId(client), "CRASH SERVEUR (spam upload)");
+		return Plugin_Handled;
+	}
+	
+	return Plugin_Continue;
+}
+public void OnClientSettingsChanged(int client) {
+	g_ClientChanges[client]++;
+	
+	if( g_ClientChanges[client] >= 4096 ) {
+		ServerCommand("amx_ban \"#%i\" \"0\" \"%s\"", GetClientUserId(client), "CRASH SERVEUR (spam cvar)");
+		return;
+	}
 }
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon, int &subtype, int &cmdnum, int &tickcount, int &seed, int mouse[2]) {
 	static int iAttackAmt[MAXPLAYERS + 1], iPrevButtons[MAXPLAYERS + 1];
@@ -270,7 +304,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	if( tickcount == 2147483647 && g_iPrevTickCount[client] == 2147483647 ) {
 		LogToGame(PREFIX ... " [AIR-STUCK] %L", client);
 		PrintToChatAll("[ANTI-CHEAT] %L est tellement mauvais qu'il utilise un %s... et s'est fait grillé.", client, "speedhack");
-		KickClient(client, "cheater");
+		ServerCommand("amx_ban \"#%i\" \"0\" \"%s\"", GetClientUserId(client), "CRASH SERVEUR (tickcount)");
 		return Plugin_Handled;
 	}
 	
@@ -287,7 +321,7 @@ public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3
 	if( IsBadAngleLong(angles[0]) || IsBadAngleLong(angles[1]) || IsBadAngleLong(angles[2]) ) {
 		LogToGame(PREFIX ... " [CRASH-ANGLES] %L %.1f %.1f %.1f", client, angles[0], angles[1], angles[2]);
 		PrintToChatAll("[ANTI-CHEAT] %L est tellement mauvais qu'il utilise un %s... et s'est fait grillé.", client, "aimbot");
-		KickClient(client, "cheater");
+		ServerCommand("amx_ban \"#%i\" \"0\" \"%s\"", GetClientUserId(client), "CRASH SERVEUR (inf angle)");
 		return Plugin_Handled;
 	}
 	
@@ -468,6 +502,10 @@ public Action Timer_DecreaseCount(Handle timer) {
 			g_iCmdDetections[i]--;
 		if( g_iTickDetections[i] >= 32 )
 			g_iTickDetections[i] -= 32;
+		if( g_iFileDetections[i] >= 32 )
+			g_iFileDetections[i] -= 32;
+		if( g_ClientChanges[i] >= 0 )
+			g_ClientChanges[i] -= 128;
 	}
 }
 bool IsBadCoordLong(float vel) {
