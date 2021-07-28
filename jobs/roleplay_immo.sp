@@ -942,12 +942,12 @@ public Action Cmd_ItemGiveAppartDouble(int args) {
 	int price = rp_GetAppartementInt(appartID, appart_price);
 	int max = 0;
 	switch( price ) {
-		case 300: max = 3;
-		case 450: max = 4;
-		case 600: max = 5;
+		case 600: max = 3;
+		case 900: max = 4;
+		case 1200: max = 5;
 		
-		case 500: max = 1;
-		case 750: max = 3;
+		case 1000: max = 1;
+		case 1500: max = 3;
 	}
 	
 	int count = 0;
