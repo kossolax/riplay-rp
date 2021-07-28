@@ -233,30 +233,7 @@ public void OnPluginStart() {
 	int longip = GetConVarInt(hostip);
 	Format(strIP, sizeof(strIP),"%d.%d.%d.%d", (longip >> 24) & 0xFF, (longip >> 16) & 0xFF, (longip >> 8 )	& 0xFF, longip & 0xFF);
 	
-	if( StrEqual(strIP, "5.196.39.50") ) { 
-		Handle KV = CreateKeyValues("sql");
-		KvSetString(KV,"driver",	"mysql");
-		KvSetString(KV,"host",		"5.196.39.48");
-	
-		// a modif quand serv test 
-		if( GetConVarInt(FindConVar("hostport")) == 27015 ) {
-			KvSetString(KV,"user",		"rp_csgo");
-			KvSetString(KV,"database",	"rp_csgo");
-			KvSetString(KV,"pass",		"DYhpWeEaWvDsMDc9");
-		}
-		else {
-			KvSetString(KV,"user",		"rp_test");
-			KvSetString(KV,"database",	"rp_test");
-			KvSetString(KV,"pass",		"pI3SzTTd3Ow1Tsjd");
-		}
-
-		KvSetString(KV,"port",		"3306");
-		g_hBDD = SQL_ConnectCustom(KV, g_szError, sizeof(g_szError), true);
-	}
-	else {
-		g_hBDD = SQL_Connect("roleplay", true, g_szError, sizeof(g_szError));
-	}
-
+	g_hBDD = SQL_Connect("roleplay", true, g_szError, sizeof(g_szError));
 	if( g_hBDD == INVALID_HANDLE ) {
 		SetFailState("ERREUR FATAL: Connexion a la base de donnee impossible: %s", g_szError);
 	}
