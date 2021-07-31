@@ -119,6 +119,10 @@ void updateBankCost(int client) {
 			continue;
 		if( StrContains(g_szItemList[itemID][item_type_extra_cmd], "rp_item_raw") == 0 )
 			continue;
+		if( StrContains(g_szItemList[itemID][item_type_extra_cmd], "rp_item_stuffpvp") == 0 )
+			continue;
+		if( StrContains(g_szItemList[itemID][item_type_extra_cmd], "rp_item_drug") == 0 )
+			continue;
 		if( itemID == ITEM_JETONROUGE || itemID == ITEM_JETONBLEU )
 			continue;
 		if( StrEqual(g_szItemList[itemID][item_type_job_id], "51") || StrEqual(g_szItemList[itemID][item_type_job_id], "31") || StrEqual(g_szItemList[itemID][item_type_job_id], "211") )
