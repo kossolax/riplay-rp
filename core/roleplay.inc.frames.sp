@@ -972,6 +972,27 @@ public void CRON_TIMER() {
 		
 		CreateTimer(0.1, RebootServer);
 	}
+	
+	if( (StringToInt(szHours) ==  13 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 30) ) {	
+		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
+		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
+		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
+		// ServerCommand("rp_give_assu");
+	}
+	if( (StringToInt(szHours) ==  13 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 59) ) {
+		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootNow", LANG_SERVER);
+	}
+	if( (StringToInt(szHours) ==  14 && StringToInt(szMinutes) ==  0 && StringToInt(szSecondes) == 0) ) {
+		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootNow", LANG_SERVER);
+		
+		for(int i = 1; i <= MaxClients; i++)
+			if( IsValidClient(i) )
+				ClientCommand(i, "retry"); // force retry
+		
+		CreateTimer(0.1, RebootServer);
+	}
+	
+	
 	if( StringToInt(szDayOfWeek) == 3 ) { // mercredi
 		if( StringToInt(szHours) == 19 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
 			ServerCommand("rp_capture 1");
