@@ -390,8 +390,9 @@ public void OnConfigsExecuted() {
 	ServerCommand("mp_playerid_delay 0");
 	ServerCommand("mp_playerid_hold 0");
 	/* Config log */	
-	ServerCommand("mp_logdetail 3");
-	ServerCommand("mp_logdetail_items 1");
+	ServerCommand("mp_logdetail 0");
+	ServerCommand("mp_logdetail_items 0");
+	ServerCommand("mp_logloadouts 0");
 	ServerCommand("sv_logflush 1");
 	/* Config team */
 	ServerCommand("mp_humanteam T");
