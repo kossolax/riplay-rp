@@ -488,7 +488,7 @@ public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
 		return 0;
 	}
 	
-	if( g_iUserData[client][i_Job] > 0 && GetJobPrimaryID(client) == g_iUserData[client][i_Job] && g_iUserData[client][i_TimePlayedJob] >= (60*60*100) ) {
+	if( g_iUserData[client][i_Job] > 0 /*&& GetJobPrimaryID(client) == g_iUserData[client][i_Job]*/ && g_iUserData[client][i_TimePlayedJob] >= (60*60*100) ) {
 		float factor = (float(g_iUserData[client][i_TimePlayedJob]) / (60.0 * 60.0 * 1000.0));
 		xp += RoundFloat( float(xp) * factor);
 	}
