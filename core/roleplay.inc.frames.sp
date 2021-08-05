@@ -958,7 +958,7 @@ public void CRON_TIMER() {
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
-		 ServerCommand("rp_give_assu");
+		 //ServerCommand("rp_give_assu");
 	}
 	if( (StringToInt(szHours) ==  3 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 59) ) {
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootNow", LANG_SERVER);
