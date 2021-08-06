@@ -258,6 +258,7 @@ public Action OnFileSend(int client, const char[] sFile) {
 	
 	if( g_iFileDetections[client] >= 64 ) {
 		ServerCommand("amx_ban \"#%i\" \"0\" \"%s\"", GetClientUserId(client), "CRASH SERVEUR (spam download)");
+		g_iFileDetections[client] = 0;
 		return Plugin_Handled;
 	}
 	
@@ -268,6 +269,7 @@ public Action OnFileReceive(int client, const char[] sFile) {
 	
 	if( g_iFileDetections[client] >= 64 ) {
 		ServerCommand("amx_ban \"#%i\" \"0\" \"%s\"", GetClientUserId(client), "CRASH SERVEUR (spam upload)");
+		g_iFileDetections[client] = 0;
 		return Plugin_Handled;
 	}
 	
@@ -278,6 +280,7 @@ public void OnClientSettingsChanged(int client) {
 	
 	if( g_ClientChanges[client] >= 4096 ) {
 		ServerCommand("amx_ban \"#%i\" \"0\" \"%s\"", GetClientUserId(client), "CRASH SERVEUR (spam cvar)");
+		g_ClientChanges[client] = 0;
 		return;
 	}
 }
