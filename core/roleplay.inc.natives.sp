@@ -185,7 +185,7 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 	
 	CreateNative("rp_GetClientTarget", Native_GetClientTarget);
 
-	CreateNative("rp_ClientAggroIncrement", Native_rp_ClientAgroIncrement);
+	CreateNative("rp_ClientAggroIncrement", Native_rp_ClientAggroIncrement);
 	CreateNative("rp_ClientCanAttack", Native_rp_ClientCanAttack);
 	CreateNative("rp_ClientFloodIncrement", Native_rp_ClientFloodIncrement);
 	CreateNative("rp_ClientXPIncrement", Native_rp_ClientXPIncrement);
@@ -548,7 +548,7 @@ void updatePlayerRank(int client) {
 			g_iUserData[client][i_PlayerRank] = a + 1;
 	}
 }
-public int Native_rp_ClientAgroIncrement(Handle plugin, int numParams) {
+public int Native_rp_ClientAggroIncrement(Handle plugin, int numParams) {
 	int client = view_as<int>(GetNativeCell(1));
 	int target = view_as<int>(GetNativeCell(2));
 	int damage = view_as<int>(GetNativeCell(3));
