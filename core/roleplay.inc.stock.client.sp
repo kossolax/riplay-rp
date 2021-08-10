@@ -877,9 +877,10 @@ void getPlayerSkin(int client, char model[PLATFORM_MAX_PATH], char hands[PLATFOR
 			case 106:	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_sas_variantc.mdl");
 			case 105:	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_sas_variantc.mdl");
 			case 104:	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_sas_variantc.mdl");
-			case 103:	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_sas_variantc.mdl");
-			case 102:	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_sas.mdl");
-			case 101:	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_sas_variante.mdl");
+			
+			case 103:	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_sas_variantf.mdl");
+			case 102:	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_sas_variantf.mdl");
+			case 101:	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_sas_variantf.mdl");
 		}
 	}
 
