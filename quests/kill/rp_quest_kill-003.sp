@@ -64,6 +64,7 @@ public bool fwdCanStart(int client) {
 	if( GetClientTeam(client) == CS_TEAM_CT )
 		return false;
 	
+	int job = rp_GetClientJobID(client);
 	if( job == 81 )
 		return false;
 	
