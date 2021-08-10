@@ -61,9 +61,7 @@ public bool fwdCanStart(int client) {
 		return false;
 	if( rp_GetClientInt(client, i_PlayerLVL) < 342 )
 		return false;
-	int job = rp_GetClientJobID(client);
-	
-	if( job == 1 || job == 101 )
+	if( GetClientTeam(client) == CS_TEAM_CT )
 		return false;
 	
 	int count = 0;
