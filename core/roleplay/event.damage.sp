@@ -327,7 +327,7 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 
 		if( StrEqual(sInflictor, "player") && StrContains(sWeapon, "weapon_") == 0 && !g_bUserData[attacker][b_WeaponIsKnife] && attacker == inflictor ) {
 			if( g_iWeaponsGroup[wep_id] > 0 ) {
-				if( IsInPVP(victim) && !(rp_GetZoneBit(victim_zone) & BITZONE_PERQUIZ) ) {
+				if( IsInPVP(victim) && IsInPVP(attacker) && !(rp_GetZoneBit(victim_zone) & BITZONE_PERQUIZ) ) {
 					damage *= 1.5;
 					if( StrEqual(sWeapon, "weapon_awp", false) ) {
 						int fov = GetEntProp(attacker, Prop_Send, "m_iFOV");
