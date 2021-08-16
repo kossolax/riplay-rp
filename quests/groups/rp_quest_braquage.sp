@@ -137,7 +137,7 @@ public bool fwdCanStart(int client) {
 		return false;
 	}
 		
-	if( rp_GetClientInt(client, i_PlayerLVL) < 360 ) {
+	if( rp_GetClientInt(client, i_PlayerLVL) < 210 ) {
 		PrintToConsole(client, "[DEBUG] [BRAQUAGE] trop bas level");
 		return false;
 	}
