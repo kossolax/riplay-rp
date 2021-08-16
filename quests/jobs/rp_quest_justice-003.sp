@@ -51,8 +51,8 @@ public void OnAllPluginsLoaded() {
 // ----------------------------------------------------------------------------
 public bool fwdCanStart(int client) {
 	int job = rp_GetClientInt(client, i_Job);
-	if( job >= 101 && job <= 106 )
-		return (getSerialKillerCount(client)>=2);
+	if( job >= 101 && job <= 106 && getSerialKillerCount(client)>=1 )
+		return true;
 	
 	return false;
 }
