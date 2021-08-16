@@ -1936,7 +1936,7 @@ void Client_SetSpawnProtect(int client, bool status) {
 		SDKHook(client, SDKHook_PreThink, fwdGodThink);
 		float duration = 10.0;
 		if( g_iPlayerTeam[client] == view_as<int>(TEAM_RED) )
-			duration = 15.0;
+			duration = 7.0;
 		if( g_hGodTimer[client] != INVALID_HANDLE )
 			delete g_hGodTimer[client];
 		g_hGodTimer[client] = CreateTimer(duration, GOD_Expire, client);
