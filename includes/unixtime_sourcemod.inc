@@ -194,7 +194,7 @@ stock void UnixToTime( int iTimeStamp_, int &iYear, int &iMonth, int &iDay, int 
 	iSecond = ( iTimeStamp_ % 60 );
 }
 
-stock int TimeToUnix( const int iYear, const int iMonth, const int iDay, const int iHour, const int iMinute, const int iSecond, int iTimeZone = UT_TIMEZONE_UTC ) {
+stock int TimeToUnix( const int iYear, const int iMonth, const int iDay, const int iHour, const int iMinute, const int iSecond, int iTimeZone = UT_TIMEZONE_CET ) {
 	int iIterator, iTimeStamp;
 
 	for( iIterator = 1970; iIterator < iYear ; iIterator ++ )
