@@ -822,26 +822,26 @@ void TazerCooldown(int client, float base) {
 		case 2:time = 0.5;
 		case 102:time = 0.5;
 		
-		case 3:time = 2.0;
-		case 103:time = 2.0;
+		case 3:time = 1.0;
+		case 103:time = 1.0;
 		
-		case 4:time = 4.0;
-		case 104:time = 4.0;
+		case 4:time = 1.0;
+		case 104:time = 1.0;
 		
-		case 5:time = 6.0;
-		case 105:time = 6.0;
+		case 5:time = 2.0;
+		case 105:time = 2.0;
 		
-		case 6:time = 7.0;
-		case 106:time = 7.0;
+		case 6:time = 3.0;
+		case 106:time = 3.0;
 		
-		case 7:time = 8.0;
-		case 107:time = 8.0;
+		case 7:time = 4.0;
+		case 107:time = 4.0;
 		
-		case 8:time = 9.0;
-		case 108:time = 9.0;
+		case 8:time = 5.0;
+		case 108:time = 5.0;
 		
-		case 9:time = 10.0;
-		case 109:time = 10.0;
+		case 9:time = 5.0;
+		case 109:time = 5.0;
 		
 		default:time = 10.0;
 	}
