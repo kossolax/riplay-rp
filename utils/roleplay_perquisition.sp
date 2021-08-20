@@ -164,7 +164,7 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 			}
 		}
 		else if( StrEqual(expl[0], "trafic") ) {
-			int weapon, machine, plant;
+			int weapon, machine, plant, i = 1;
 			
 			countBadThing(expl[1], weapon, plant, machine);
 			
