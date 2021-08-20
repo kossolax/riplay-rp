@@ -25,6 +25,8 @@ public Plugin myinfo = {
 	version = __LAST_REV__, url = "https://www.ts-x.eu"
 };
 int g_cBeam, g_cGlow, g_cShockWave, g_cShockWave2, g_cExplode;
+int g_iClientColor[65][4];
+
 #define LAUNCHER_MODEL "models/shells/shell_57.mdl"
 #define LAUNCHER_SCALE	25.0
 #define	FIREWOKRS_SPEED	1000.0
@@ -66,7 +68,7 @@ public Action Cmd_Reload(int args) {
 	ServerCommand("sm plugins reload %s", name);
 	return Plugin_Continue;
 }
-public void OnPluginStart() {
+/*public void OnPluginStart() {
 	LoadTranslations("core.phrases");
 	LoadTranslations("common.phrases");
 	LoadTranslations("roleplay.phrases");
@@ -89,7 +91,7 @@ public void OnPluginStart() {
 		if( IsValidClient(i) )
 			OnClientPostAdminCheck(i);
 }
-/*public void OnClientPostAdminCheck(int client) {
+public void OnClientPostAdminCheck(int client) {
 	g_iFreeFirework[client] = 0;
 	rp_HookEvent(client, RP_OnPlayerBuild, fwdOnPlayerBuild);
 }
