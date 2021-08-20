@@ -175,7 +175,7 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 			
 			g_bCanPerquiz[client] = false;
 			
-			else if( weapon > 3 || machine > 2 || plant > 2)
+			if( weapon > 3 || machine > 2 || plant > 2)
 				INIT_PERQUIZ(client, zone, 0, 0);
 			else
 				CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas de trafic illégal dans cette planque.");
