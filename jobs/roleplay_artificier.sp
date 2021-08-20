@@ -89,7 +89,7 @@ public void OnPluginStart() {
 		if( IsValidClient(i) )
 			OnClientPostAdminCheck(i);
 }
-public void OnClientPostAdminCheck(int client) {
+/*public void OnClientPostAdminCheck(int client) {
 	g_iFreeFirework[client] = 0;
 	rp_HookEvent(client, RP_OnPlayerBuild, fwdOnPlayerBuild);
 }
@@ -133,6 +133,182 @@ public void OnEntityCreated(int ent, const char[] classname) {
 }
 public void OnClientDisconnect(int client) {
 	FW_EXPL(client);
+}*/
+
+public void OnClientPostAdminCheck(int client) {
+	rp_HookEvent(client, RP_PostTakeDamageWeapon, fwdWeapon);
+	rp_HookEvent(client, RP_OnPlayerBuild, fwdOnPlayerBuild);
+}
+public Action fwdOnPlayerBuild(int client, float& cooldown){
+	if( rp_GetClientJobID(client) != 131 )
+		return Plugin_Continue;
+
+	int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+	
+	if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
+		return Plugin_Stop;
+	}
+	
+	char tmp1[64], tmp2[64];
+	Handle menu = CreateMenu(ModifyWeapon);
+	SetMenuTitle(menu, "%T\n ", "edit_weapon", client);
+	
+	char szMenu[][][] = {
+		{"fire",			"750",	"add_ball_type_fire"},
+		{"paintball",		"125",	"add_ball_type_paintball"},
+		{"explode", 		"1400",	"add_ball_type_explode"},
+	};
+	
+	for (int i = 0; i < sizeof(szMenu); i++) {
+		Format(tmp1, sizeof(tmp1), "%s_%s", szMenu[i][0], szMenu[i][1]);
+		Format(tmp2, sizeof(tmp2), "%T - %s$", szMenu[i][2], client, szMenu[i][1]);
+		AddMenuItem(menu, tmp1, tmp2);
+	}
+	
+	DisplayMenu(menu, client, 60);
+	cooldown = 0.1;
+	
+	return Plugin_Stop;
+}
+
+public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_iParam2) {
+
+	if (p_oAction == MenuAction_Select) {
+		char szMenuItem[32];
+		if (GetMenuItem(p_hItemMenu, p_iParam2, szMenuItem, sizeof(szMenuItem))){
+
+			char data[2][32];
+			ExplodeString(szMenuItem, "_", data, sizeof(data), sizeof(data[]));
+
+			char type[32];
+			strcopy(type, 31, data[0]);
+			int price = StringToInt(data[1]);
+			int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+
+			if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
+				return;
+			}
+
+			if( StrEqual(type, "pvp") ){
+				Handle menupvp = CreateMenu(ModifyWeaponPVP);
+				char tmp[64], tmp2[64];
+				SetMenuTitle(menupvp, "%T\n ", "edit_weapon_gang", client);
+				for(int i=1; i<MAX_GROUPS; i+=10){
+					for(int j=1;j< MAXPLAYERS+1;j++){
+						if( !IsValidClient(j) )
+							continue;
+						if(rp_GetClientGroupID(j)==i){
+							rp_GetGroupData(i, group_type_name, tmp, 63);
+							Format(tmp2,63,"%i_%i",i,price);
+							AddMenuItem(menupvp, tmp2, tmp);
+							break;
+						}
+					}
+				}
+				DisplayMenu(menupvp, client, 60);
+			}
+			else{
+				if((rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money)) < price){
+					CPrintToChat(client, ""...MOD_TAG..." %T", "Error_NotEnoughtMoney", client);
+					return;
+				}
+
+				if(StrEqual(type, "fire")){
+					rp_SetWeaponBallType(wep_id, ball_type_fire);
+				}
+				else if(StrEqual(type, "explode")){
+					rp_SetWeaponBallType(wep_id, ball_type_explode);
+				}
+				else if(StrEqual(type, "paintball")){
+					rp_SetWeaponBallType(wep_id, ball_type_paintball);
+				}
+				
+				
+				rp_ClientMoney(client, i_Money, -price);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
+				rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
+				
+				if( StrEqual(type, "fire") || StrEqual(type, "explode") || StrEqual(type, "paintball") ){
+					rp_SetJobCapital( 131, rp_GetJobCapital(131)+price );
+				}
+				else {
+					rp_SetJobCapital( 111, rp_GetJobCapital(111)+price );
+				}
+				FakeClientCommand(client, "say /build");
+
+			}
+		}
+	}
+	else if (p_oAction == MenuAction_End) {
+		CloseHandle(p_hItemMenu);
+	}
+}
+
+public int ModifyWeaponPVP(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_iParam2){
+
+	if (p_oAction == MenuAction_Select) {
+		char szMenuItem[32];
+		if (GetMenuItem(p_hItemMenu, p_iParam2, szMenuItem, sizeof(szMenuItem))){
+
+			char data[2][32];
+			ExplodeString(szMenuItem, "_", data, sizeof(data), sizeof(data[]));
+
+			int groupid = StringToInt(data[0]);
+			int price = StringToInt(data[1]);
+			int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+
+			if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
+				return;
+			}
+
+			if((rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money)) >= price){
+				rp_ClientMoney(client, i_Money, -price);
+				rp_SetJobCapital( 111, rp_GetJobCapital(111)+price );
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
+			}
+			else{
+				CPrintToChat(client, ""...MOD_TAG..." %T", "Error_NotEnoughtMoney", client);
+				return;
+			}
+
+			rp_SetWeaponGroupID(wep_id, groupid);
+		}
+	}
+	else if (p_oAction == MenuAction_End) {
+		CloseHandle(p_hItemMenu);
+	}
+}
+
+public Action fwdWeapon(int victim, int attacker, float &damage, int wepID, float pos[3]) {
+	bool changed = true;
+	enum_ball_type wepType = rp_GetWeaponBallType(wepID);
+	
+	switch( wepType ) {
+		case ball_type_fire: {
+			rp_ClientIgnite(victim, 10.0, attacker);
+			changed = false;
+		}
+		case ball_type_paintball: {
+			damage *= 1.0;
+			
+			g_iClientColor[victim][0] = Math_GetRandomInt(50, 255);
+			g_iClientColor[victim][1] = Math_GetRandomInt(50, 255);
+			g_iClientColor[victim][2] = Math_GetRandomInt(50, 255);
+			g_iClientColor[victim][3] = Math_GetRandomInt(100, 240);
+
+			rp_HookEvent(victim, RP_PreHUDColorize, fwdColorize, 5.0);
+		}
+		case ball_type_explode: {
+			damage *= 0.8;
+		}
+	}
+	
+	if( changed )
+		return Plugin_Changed;
+	return Plugin_Continue;
 }
 // ----------------------------------------------------------------------------
 public void OnMapStart() {
