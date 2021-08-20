@@ -125,6 +125,11 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 		if( !StrEqual(tmp, expl[1]) )
 			return 0;
+			
+		if (GetPlayerWeaponSlot(client, CS_SLOT_PRIMARY) <= 0 ||  GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY) <= 0) {
+				CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas un Texas ranger, allez chercher une arme et on verra après.");
+				return 0;
+		}
 		
 		if( StrEqual(expl[0], "search") || StrEqual(expl[0], "kidnap") ) {
 			
@@ -164,16 +169,13 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 			}
 		}
 		else if( StrEqual(expl[0], "trafic") ) {
-			int weapon, machine, plant, i = 1;
+			int weapon, machine, plant;
 			
 			countBadThing(expl[1], weapon, plant, machine);
 			
 			g_bCanPerquiz[client] = false;
 			
-			if (GetPlayerWeaponSlot(i, CS_SLOT_PRIMARY) <= 0 ||  GetPlayerWeaponSlot(i, CS_SLOT_SECONDARY) <= 0)
-				CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas un Texas ranger, allez chercher une arme et on verra après.");
-			
-			else if( weapon > 3 || machine > 2 || plant > 2 && GetPlayerWeaponSlot(i, CS_SLOT_PRIMARY) >= 1 ||  GetPlayerWeaponSlot(i, CS_SLOT_SECONDARY) >= 1)
+			else if( weapon > 3 || machine > 2 || plant > 2)
 				INIT_PERQUIZ(client, zone, 0, 0);
 			else
 				CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas de trafic illégal dans cette planque.");
