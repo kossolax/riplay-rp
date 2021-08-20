@@ -170,7 +170,10 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 			
 			g_bCanPerquiz[client] = false;
 			
-			if( weapon > 3 || machine > 2 || plant > 2 )
+			if (GetPlayerWeaponSlot(i, CS_SLOT_PRIMARY) <= 0 ||  GetPlayerWeaponSlot(i, CS_SLOT_SECONDARY) <= 0)
+				CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas un Texas ranger, allez chercher une arme et on verra après.");
+			
+			else if( weapon > 3 || machine > 2 || plant > 2 && GetPlayerWeaponSlot(i, CS_SLOT_PRIMARY) >= 1 ||  GetPlayerWeaponSlot(i, CS_SLOT_SECONDARY) >= 1)
 				INIT_PERQUIZ(client, zone, 0, 0);
 			else
 				CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas de trafic illégal dans cette planque.");
