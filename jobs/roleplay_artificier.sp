@@ -91,20 +91,6 @@ public void OnPluginStart() {
 		if( IsValidClient(i) )
 			OnClientPostAdminCheck(i);
 }
-public void OnClientPostAdminCheck(int client) {
-	g_iFreeFirework[client] = 0;
-	rp_HookEvent(client, RP_OnPlayerBuild, fwdOnPlayerBuild);
-}
-public Action fwdOnPlayerBuild(int client, float& cooldown) {
-	if( rp_GetClientJobID(client) != 131 )
-		return Plugin_Continue;
-	
-	g_iFreeFirework[client] = 1;
-	Menu_Main(client);
-	cooldown = 1.0;
-	
-	return Plugin_Stop;
-}
 public Action Cmd_Fireworks(int client, int args) {
 	float delay = GetCmdArgFloat(1);
 	
