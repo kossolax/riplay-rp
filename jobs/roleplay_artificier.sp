@@ -68,7 +68,7 @@ public Action Cmd_Reload(int args) {
 	ServerCommand("sm plugins reload %s", name);
 	return Plugin_Continue;
 }
-/*public void OnPluginStart() {
+public void OnPluginStart() {
 	LoadTranslations("core.phrases");
 	LoadTranslations("common.phrases");
 	LoadTranslations("roleplay.phrases");
@@ -135,7 +135,7 @@ public void OnEntityCreated(int ent, const char[] classname) {
 }
 public void OnClientDisconnect(int client) {
 	FW_EXPL(client);
-}*/
+}
 
 public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_PostTakeDamageWeapon, fwdWeapon);
