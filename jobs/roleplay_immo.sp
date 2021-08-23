@@ -680,24 +680,22 @@ public Action fwdLoaded(int client) {
 	
 }
 public Action fwdOnPlayerUse(int client) {
-	if( rp_GetClientJobID(client) != 61 )
-		return Plugin_Continue;
-	
-	int appart = rp_GetPlayerZoneAppart(client);
-	
-	if( appart > 0 ) {
-		float src[3];
-		GetClientAbsOrigin(client, src);
-		
-		bool exist = false;
-		for (int j = 0; j < g_iDirtyCount[appart]; j++) {
-			if( GetVectorDistance(g_flDirtPos[appart][j], src) <= 128.0 )
-				exist = true;
-		}
-		
-		if( exist && rp_ClientEmote(client, "Emote_Snap") ) {
-			rp_HookEvent(client, RP_OnPlayerEmote, OnEmote);
-			return Plugin_Handled;
+	if( rp_GetClientJobID(client) == 61 ) {
+		int appart = rp_GetPlayerZoneAppart(client);
+		if( appart > 0 ) {
+			float src[3];
+			GetClientAbsOrigin(client, src);
+			
+			bool exist = false;
+			for (int j = 0; j < g_iDirtyCount[appart]; j++) {
+				if( GetVectorDistance(g_flDirtPos[appart][j], src) <= 128.0 )
+					exist = true;
+			}
+			
+			if( exist && rp_ClientEmote(client, "Emote_Snap") ) {
+				rp_HookEvent(client, RP_OnPlayerEmote, OnEmote);
+				return Plugin_Handled;
+			}
 		}
 	}
 	
@@ -731,12 +729,17 @@ public int eventBedConfirm(Handle menu, MenuAction action, int client, int param
 		char options[64];
 		GetMenuItem(menu, param2, options, sizeof(options));
 		
-		if( StrEqual(options, "yes") && rp_GetClientInt(client, i_Bank) > VILLA_PRICE ) {
-			char szSteamID[32], query[1024];
-			GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
-			Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_villa` WHERE `steamid`='%s';", szSteamID);
-			SQL_TQuery(rp_GetDatabase(), SQL_GetVillaCount, query, client, DBPrio_Low);
-			rp_ClientMoney(client, i_Bank, -VILLA_PRICE);
+		if( StrEqual(options, "yes") ) {
+			if( rp_GetClientInt(client, i_Bank) >= VILLA_PRICE ) {
+				char szSteamID[32], query[1024];
+				GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
+				Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_villa` WHERE `steamid`='%s';", szSteamID);
+				SQL_TQuery(rp_GetDatabase(), SQL_GetVillaCount, query, client, DBPrio_Low);
+				rp_ClientMoney(client, i_Bank, -VILLA_PRICE);
+			}
+			else {
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_NotEnoughtMoney", client);
+			}
 		}
 	}
 	else if( action == MenuAction_End ) {
@@ -1888,10 +1891,15 @@ public void SQL_GetVillaWiner(Handle owner, Handle hQuery, const char[] error, a
 				rp_SetClientKeyAppartement(i, 50, true);
 				rp_SetClientInt(i, i_AppartCount, rp_GetClientInt(i, i_AppartCount) + 1);
 			}
-			
-			Format(szQuery, sizeof(szQuery), "UPDATE `rp_users` SET `hasVilla`='2' WHERE `steamid`='%s'", szSteamID);
-			SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery);
 		}
+		
+		int gain = 50000;
+			
+		CPrintToChatAll("" ...MOD_TAG... " %T", "Villa_Winner", LANG_SERVER, szName, gain);
+		LogToGame("[TSX-RP] [VILLA] %s %s gagne la villa pour %d$", szName, szSteamID, gain);
+		
+		Format(szQuery, sizeof(szQuery), "UPDATE `rp_users` SET `hasVilla`='2' WHERE `steamid`='%s'", szSteamID);
+		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery);
 	}
 	
 	CPrintToChatAll("{lightblue} =================================={default} ");
