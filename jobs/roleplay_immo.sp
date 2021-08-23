@@ -1866,7 +1866,7 @@ public Action CmdForceVilla(int client, int args) {
 }
 public void SQL_GetVillaWiner(Handle owner, Handle hQuery, const char[] error, any none) {
 	CPrintToChatAll("{lightblue} =================================={default} ");
-	char szSteamID[32], szName[64], szSteamID2[32];
+	char szSteamID[32], szName[64], szSteamID2[32], szQuery[1024];
 	
 	while( SQL_FetchRow(hQuery) ) {
 		
