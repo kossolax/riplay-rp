@@ -946,6 +946,9 @@ public void CRON_TIMER() {
 		if( StringToInt(szHours) == 19 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
 			ServerCommand("rp_force_appart");
 		}
+		if( StringToInt(szHours) == 19 && StringToInt(szMinutes) == 30 && StringToInt(szSecondes) == 0 ) {	// 21h30m00s
+			ServerCommand("rp_force_villa");
+		}
 	}
 	if( StringToInt(szDayOfWeek) == 1  ) {	// Lundi
 		if( StringToInt(szHours) == 19 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s

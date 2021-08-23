@@ -1718,7 +1718,7 @@ public void SQL_BedVillaMenu(Handle owner, Handle hQuery, const char[] error, an
 	
 	if( StringToInt(szDayOfWeek) == 5 && StringToInt(szHours) < 21 && rp_GetClientBool(client, b_HasVilla) == false ) {	// Vendredi avant 21h
 		Format(tmp, sizeof(tmp), "%T", "Menu_Villa_Bed", client);
-		/*AddMenuItem(menu, "miser", tmp);*/
+		AddMenuItem(menu, "miser", tmp);
 	}
 	
 	if( StrEqual(steamid, steamid2) ) {
