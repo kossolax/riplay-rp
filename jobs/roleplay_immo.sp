@@ -29,6 +29,9 @@ int g_cBeam, g_cGlow;
 
 #define ITEM_PROP_APPART 77
 #define ITEM_PROP_EXTRER 184
+#define VILLA_PRICE		 50000
+#define MENU_POS			view_as<float>({-8517.4, 829.8, -2303.9})
+
 
 // -----
 float g_flMinsMax[MAX_ZONES][3][3];
@@ -100,7 +103,8 @@ public void OnPluginStart() {
 	RegServerCmd("rp_item_lampe", 		Cmd_ItemLampe,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_jumelle", 	Cmd_ItemLampe,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	
-	RegAdminCmd("rp_force_appart", 		CmdForceAppart, 			ADMFLAG_ROOT);
+	RegAdminCmd("rp_force_appart", 		CmdForceAppart, 		ADMFLAG_ROOT);
+	RegAdminCmd("rp_force_villa", 		CmdForceVilla, 			ADMFLAG_ROOT);
 	
 	for (int i = 1; i <= MaxClients; i++) 
 		if( IsValidClient(i) )
@@ -696,8 +700,66 @@ public Action fwdOnPlayerUse(int client) {
 			return Plugin_Handled;
 		}
 	}
+	
+	if( rp_GetPlayerZone(client) == 316 ) { // mairie
+		float pos[3];
+		char tmp[128];
+		GetClientAbsOrigin(client, pos);
+		
+		if( GetVectorDistance(pos, MENU_POS) < 128.0 ) {
+			
+			Handle menu = CreateMenu(eventBedConfirm);
+			SetMenuTitle(menu, "blablabla");
+			
+			Format(tmp, sizeof(tmp), "Oui, payer %d$!", VILLA_PRICE);
+			AddMenuItem(menu, "yes", tmp);
+			AddMenuItem(menu, "no", "Non");
+			
+			DisplayMenu(menu, client, MENU_TIME_DURATION);
+		}
+	}
+	
 	return Plugin_Continue;
 }
+public int eventBedConfirm(Handle menu, MenuAction action, int client, int param2) {
+	
+	if( action == MenuAction_Select ) {
+		char options[64];
+		GetMenuItem(menu, param2, options, sizeof(options));
+		
+		if( StrEqual(options, "yes") && rp_GetClientInt(client, i_Bank) > VILLA_PRICE ) {
+			char szSteamID[32], query[1024];
+			GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
+			Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_villa` WHERE `steamid`='%s';", szSteamID);
+			SQL_TQuery(rp_GetDatabase(), SQL_GetVillaCount, query, client, DBPrio_Low);
+			rp_ClientMoney(client, i_Bank, -VILLA_PRICE);
+		}
+	}
+	else if( action == MenuAction_End ) {
+		CloseHandle(menu);
+	}
+}
+public void SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, any client) {
+	
+	if( SQL_FetchRow(hQuery) ) {
+		int cpt = SQL_FetchInt(hQuery, 0);
+		
+		if( cpt == 0 ) {
+			char query[1024], szSteamID[32];
+			GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
+			
+			Format(query, sizeof(query), "INSERT INTO `rp_villa` (`id`, `steamid`) VALUES (NULL, '%s');", szSteamID);
+			
+			SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query, 0, DBPrio_High);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Lotery_OnlyOne_Validated", client);
+		}
+		else {
+			rp_ClientMoney(client, i_Bank, VILLA_PRICE);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Lotery_OnlyOne_Refund", client);
+		}
+	}		
+}
+
 public Action OnEmote(int client, const char[] emote, float time) {
 	if( StrEqual(emote, "Emote_Snap") && time >= 0.0 ) {
 		
@@ -1144,7 +1206,7 @@ public int MenuPropAppart(Handle menu, MenuAction action, int client, int param2
 			return;
 		}
 		
-		float min[3], max[3], position[3], ang_eye[3], ang_ent[3], normal[3];
+		float min[3], max[3], position[3], ang_eye[3];
 		float distance = 50.0;
 		
 		int ent = SpawnProp(client, position, ang_eye, model);
@@ -1698,7 +1760,7 @@ public void SQL_BedVillaMenuKey(Handle owner, Handle hQuery, const char[] error,
 		AddMenuItem(menu, steamid, steamid, ITEMDRAW_DISABLED);
 	}
 	
-	if( i < 8 ) {
+	if( i < 4 ) {
 		Format(tmp, sizeof(tmp), "%T", "Menu_Villa_Key", client);
 		AddMenuItem(menu, "add", tmp);
 	}
@@ -1797,14 +1859,47 @@ public int bedVillaMenu_BED(Handle p_hItemMenu, MenuAction p_oAction, int client
 		CloseHandle(p_hItemMenu);
 	}
 }
-public Action CmdForceAppart(int client, int args) {
+public Action CmdForceVilla(int client, int args) {
+	SQL_TQuery(rp_GetDatabase(), SQL_GetVillaWiner, "SELECT U.`steamid`, U.`name` FROM `rp_villa` V INNER JOIN `rp_users` U ON U.`steamid`=V.`steamid` WHERE U.hasVilla=0 ORDER BY RAND() LIMIT 4;");
 	
-	CheckAppart();
 	return Plugin_Handled;
 }
-void CheckAppart() {
-	SQL_TQuery(rp_GetDatabase(), SQL_GetAppartWiner, "SELECT B.`steamid`, `name`, `amount` FROM `rp_bid` B INNER JOIN `rp_users` U ON B.`steamid`=U.`steamid` ORDER BY `amount` DESC;");
+public void SQL_GetVillaWiner(Handle owner, Handle hQuery, const char[] error, any none) {
+	CPrintToChatAll("{lightblue} =================================={default} ");
+	char szSteamID[32], szName[64], szSteamID2[32];
+	
+	while( SQL_FetchRow(hQuery) ) {
+		
+		SQL_FetchString(hQuery, 0, szSteamID, sizeof(szSteamID));
+		SQL_FetchString(hQuery, 1, szName, sizeof(szName));
+		
+		for( int i = 1; i <= MaxClients; i++) {
+			if( !IsValidClient(i) )
+				continue;
+			
+			GetClientAuthId(i, AUTH_TYPE, szSteamID2, sizeof(szSteamID2));
+			
+			if( StrEqual(szSteamID, szSteamID2) ) {
+				rp_SetClientBool(i, b_HasVilla, true);
+				rp_SetClientKeyAppartement(i, 50, true);
+				rp_SetClientInt(i, i_AppartCount, rp_GetClientInt(i, i_AppartCount) + 1);
+			}
+			
+			Format(szQuery, sizeof(szQuery), "UPDATE `rp_users` SET `hasVilla`='2' WHERE `steamid`='%s'", szSteamID);
+			SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, szQuery);
+		}
+	}
+	
+	CPrintToChatAll("{lightblue} =================================={default} ");
+	
+	SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, "TRUNCATE `rp_villa`");
 }
+public Action CmdForceAppart(int client, int args) {
+	SQL_TQuery(rp_GetDatabase(), SQL_GetAppartWiner, "SELECT B.`steamid`, `name`, `amount` FROM `rp_bid` B INNER JOIN `rp_users` U ON B.`steamid`=U.`steamid` ORDER BY `amount` DESC;");
+	
+	return Plugin_Handled;
+}
+
 public void SQL_GetAppartWiner(Handle owner, Handle hQuery, const char[] error, any none) {
 	int gain, place = 0;
 	CPrintToChatAll("{lightblue} =================================={default} ");
