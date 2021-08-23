@@ -703,13 +703,17 @@ public Action fwdOnPlayerUse(int client) {
 	
 	if( rp_GetPlayerZone(client) == 316 ) { // mairie
 		float pos[3];
-		char tmp[128];
+		char tmp[512];
 		GetClientAbsOrigin(client, pos);
 		
 		if( GetVectorDistance(pos, MENU_POS) < 128.0 ) {
 			
 			Handle menu = CreateMenu(eventBedConfirm);
-			SetMenuTitle(menu, "blablabla");
+			
+			char text[512] = "Bonjour à vous citoyens, vous pouvez acheter un ticket ici même pour le tirage au sort afin de remporter une semaine dans une magnifique villa tout confort ! Le ticket est à 50 000$ et il y aura 4 personnes qui seront tirés au sort ! Bonne chance à vous !";
+			Format(tmp, sizeof(tmp), "%s", text); // TODO déplacer ça en trad
+			
+			String_WordWrap(tmp, 50); SetMenuTitle(menu, tmp);
 			
 			Format(tmp, sizeof(tmp), "Oui, payer %d$!", VILLA_PRICE);
 			AddMenuItem(menu, "yes", tmp);
