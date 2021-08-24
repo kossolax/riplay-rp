@@ -849,7 +849,7 @@ void displayStatsMenu(int client) {
 	char tmp[64];
 	
 	if( g_flClientBook[client][book_xp] > GetTickedTime() ) {
-		Format(tmp, sizeof(tmp), "%T", "Artisan_Infos_Bonus_XP", (g_flClientBook[client][book_xp] - GetTickedTime())/60.0);
+		Format(tmp, sizeof(tmp), "%T", "Artisan_Infos_Bonus_XP", (g_flClientBook[client][book_xp] - GetTickedTime()) / 60.0);
 		AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	}
 	if( g_flClientBook[client][book_sleep] > GetTickedTime() ) {
