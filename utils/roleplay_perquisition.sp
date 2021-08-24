@@ -417,13 +417,13 @@ public Action TIMER_PERQUIZ(Handle timer, any zone) {
 	else {
 		array[PQ_timeout]++;
 		
-		if( array[PQ_timeout] == 20 ) {
+		if( array[PQ_timeout] == 30 ) {
 			rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
 			PrintToChatPoliceZone(zone, "{red} =================================={default} ");
 			PrintToChatPoliceZone(zone, "{red}"... MOD_TAG ..." [POLICE]{default} La perquisition dans %s sera annulée, si aucun flic n'est présent dans les 10 secondes.", tmp);
 			PrintToChatPoliceZone(zone, "{red} =================================={default} ");
 		}
-		else if( array[PQ_timeout] >= 30 ) {
+		else if( array[PQ_timeout] >= 40 ) {
 			END_PERQUIZ(zone, true);
 			return Plugin_Stop;
 		}
