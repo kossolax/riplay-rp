@@ -1130,9 +1130,9 @@ int GetMaxKit(int client, int itemID) {
 	int max, job = rp_GetClientInt(client, i_Job);
 	
 	switch( job ) {
-		case 91:	max = 7;
-		case 92:	max = 6;
-		case 93:	max = 5; // parrain
+		case 91:	max = 8;
+		case 92:	max = 7;
+		case 93:	max = 6; // parrain
 		case 94:	max = 5; // pro
 		case 95:	max = 4; // mafieux
 		case 96:	max = 3; // apprenti
@@ -1141,9 +1141,18 @@ int GetMaxKit(int client, int itemID) {
 	
 	if( itemID == ITEM_MAGNETCB)
 		max = 1;
-	if( itemID == ITEM_PIEDBICHE || itemID == ITEM_KITEXPLOSIF )
-		max = RoundToCeil(max / 3.0);
+	if( itemID == ITEM_PIEDBICHE || itemID == ITEM_KITEXPLOSIF ) {
 	
+		switch( job ) {
+		case 91:	max = 6;
+		case 92:	max = 5;
+		case 93:	max = 4; // parrain
+		case 94:	max = 3; // pro
+		case 95:	max = 2; // mafieux
+		case 96:	max = 1; // apprenti
+		default:	max = 0;
+		}
+	}
 	return max;
 }
 int getDoor(int client) {
