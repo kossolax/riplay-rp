@@ -94,6 +94,10 @@ public Action Cmd_Perquiz(int client) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous devez retourner à votre lieu de travail, avant de pouvoir faire une autre perquisition.");
 		return Plugin_Handled;
 	}
+	if (GetPlayerWeaponSlot(client, CS_SLOT_PRIMARY) <= 0 ||  GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY) <= 0) {
+		CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas un Texas ranger, allez chercher une arme et on verra après.");
+		return Plugin_Handled;
+	}
 	
 	Menu menu = new Menu(MenuPerquiz);
 	menu.SetTitle("Quel est le motif de perquisition?\n ");
@@ -125,11 +129,6 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 		if( !StrEqual(tmp, expl[1]) )
 			return 0;
-			
-		if (GetPlayerWeaponSlot(client, CS_SLOT_PRIMARY) <= 0 ||  GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY) <= 0) {
-				CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas un Texas ranger, allez chercher une arme et on verra après.");
-				return 0;
-		}
 		
 		if( StrEqual(expl[0], "search") || StrEqual(expl[0], "kidnap") ) {
 			
