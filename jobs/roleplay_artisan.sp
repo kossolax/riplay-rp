@@ -849,27 +849,27 @@ void displayStatsMenu(int client) {
 	char tmp[64];
 	
 	if( g_flClientBook[client][book_xp] > GetTickedTime() ) {
-		Format(tmp, sizeof(tmp), "%T", "Artisan_Infos_Bonus_XP", (g_flClientBook[client][book_xp] - GetTickedTime()) / 60.0);
+		Format(tmp, sizeof(tmp), "%T", "Artisan_Infos_Bonus_XP", client, (g_flClientBook[client][book_xp] - GetTickedTime()) / 60.0);
 		AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	}
 	if( g_flClientBook[client][book_sleep] > GetTickedTime() ) {
-		Format(tmp, sizeof(tmp), "%T", "Artisan_Infos_Bonus_SLEEP", (g_flClientBook[client][book_sleep] - GetTickedTime()) / 60.0);
+		Format(tmp, sizeof(tmp), "%T", "Artisan_Infos_Bonus_SLEEP", client, (g_flClientBook[client][book_sleep] - GetTickedTime()) / 60.0);
 		AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	}
 	if( g_flClientBook[client][book_focus] > GetTickedTime() ) {
-		Format(tmp, sizeof(tmp), "%T", "Artisan_Infos_Bonus_FOCUS", (g_flClientBook[client][book_focus] - GetTickedTime()) / 60.0);
+		Format(tmp, sizeof(tmp), "%T", "Artisan_Infos_Bonus_FOCUS", client, (g_flClientBook[client][book_focus] - GetTickedTime()) / 60.0);
 		AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	}
 	if( g_flClientBook[client][book_speed] > GetTickedTime() ) {
-		Format(tmp, sizeof(tmp), "%T", "Artisan_Infos_Bonus_SPEED", (g_flClientBook[client][book_speed] - GetTickedTime()) / 60.0);
+		Format(tmp, sizeof(tmp), "%T", "Artisan_Infos_Bonus_SPEED", client, (g_flClientBook[client][book_speed] - GetTickedTime()) / 60.0);
 		AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	}
 	if( g_flClientBook[client][book_luck] > GetTickedTime() ) {
-		Format(tmp, sizeof(tmp), "%T", "Artisan_Infos_Bonus_LUCK", (g_flClientBook[client][book_luck] - GetTickedTime()) / 60.0);
+		Format(tmp, sizeof(tmp), "%T", "Artisan_Infos_Bonus_LUCK", client, (g_flClientBook[client][book_luck] - GetTickedTime()) / 60.0);
 		AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	}
 	if( g_flClientBook[client][book_steal] > GetTickedTime() ) {
-		Format(tmp, sizeof(tmp), "%T", "Artisan_Infos_Bonus_STEAL", (g_flClientBook[client][book_steal] - GetTickedTime()) / 60.0);
+		Format(tmp, sizeof(tmp), "%T", "Artisan_Infos_Bonus_STEAL", client, (g_flClientBook[client][book_steal] - GetTickedTime()) / 60.0);
 		AddMenuItem(menu, tmp, tmp, ITEMDRAW_DISABLED);
 	}
 	
