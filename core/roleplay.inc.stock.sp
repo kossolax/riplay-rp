@@ -655,7 +655,7 @@ public void MoneyEntityGotTouch(int touched, int toucher) {
 		amount *= 100;
 	}
 	else {
-		amount *= 10;
+		amount *= 20;
 	}
 	
 	g_iUserStat[toucher][i_MoneyEarned_Pickup] += amount;
