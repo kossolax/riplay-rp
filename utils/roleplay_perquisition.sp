@@ -94,7 +94,7 @@ public Action Cmd_Perquiz(int client) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous devez retourner à votre lieu de travail, avant de pouvoir faire une autre perquisition.");
 		return Plugin_Handled;
 	}
-	if (GetPlayerWeaponSlot(client, CS_SLOT_PRIMARY) <= 0 ||  GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY) <= 0) {
+	if (GetPlayerWeaponSlot(client, CS_SLOT_PRIMARY) <= 0 && GetPlayerWeaponSlot(client, CS_SLOT_SECONDARY) <= 0) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous n'êtes pas un Texas ranger, allez chercher une arme et on verra après.");
 		return Plugin_Handled;
 	}
