@@ -83,7 +83,7 @@
 	}
 	"Crowbar_Drugs"
 	{
-		"fr"		"Quelqu'un vole votre {red}drogue{default}."
+		"fr"		"Désolé, nous venons de nous aperçevoir que quelqu'un à volé votre {red}drogue{default}."
 		"en"		"Someone is stealing your {red}drug{default}."		
 	}
 	"Crowbar_Distrib"
