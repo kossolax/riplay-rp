@@ -96,7 +96,7 @@ void openSellMenu(int client) {
 		return;
 	
 	int jobZone = rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type);
-	char name[128], key[8];
+	char name[128], key[8], price[64], amount[64];
 	
 	Menu menu = CreateMenu(onMenuOpen);
 	menu.SetTitle("Bienvenue!\n ");
@@ -106,8 +106,9 @@ void openSellMenu(int client) {
 		if( jobZone == rp_GetItemInt(i, item_type_job_id) ) {
 			IntToString(i, key, sizeof(key));
 			rp_GetItemData(i, item_type_name, name, sizeof(name));
+			rp_GetItemData(i, item_type_prix, price, sizeof(price));
 			
-			menu.AddItem(key, name);
+			menu.AddItem(key, name, price);
 		}
 	}
 	
