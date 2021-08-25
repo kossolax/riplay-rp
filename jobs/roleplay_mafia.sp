@@ -634,6 +634,17 @@ public Action callHacked(Handle timer, any target) {
 		}
 	}
 }
+public Action calldrugs(Handle timer, any target) {
+	target = EntRefToEntIndex(target);
+	if( IsValidEdict(target) && IsValidEntity(target) ) {
+		int owner = rp_GetBuildingData(target, BD_owner);
+		int hacked = rp_GetBuildingData(target, BD_HackedBy);
+		
+		if( IsValidClient(owner) && IsValidClient(hacked) && rp_GetClientJobID(hacked) == 91 ) {
+			CPrintToChat(owner, "" ...MOD_TAG... " %T", "Crowbar_Drugs", owner);
+		}
+	}
+}
 public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 	ResetPack(dp);
 	int client = ReadPackCell(dp);
@@ -683,7 +694,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 					rp_ClientAggroIncrement(client, owner, 1000);
 				}
 			}
-			difficulty = 3;
+			difficulty = 2;
 		}
 		case 8: { // Distrib Perso
 			int owner = rp_GetBuildingData(target, BD_owner);
@@ -735,25 +746,25 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				
 			}
 			case 4: { // Imprimante
-				time /= 6.0;
+				time /= 10.0;
 				
 				int owner = rp_GetBuildingData(target, BD_owner);
 				if( IsValidClient(owner) ) {
 					rp_SetBuildingData(target, BD_HackedBy, client);
 					rp_SetBuildingData(target, BD_HackedTime, GetTime());
-					CreateTimer(3.0 * 60.0, callHacked, EntIndexToEntRef(target));
+					CreateTimer(5.0 * 60.0, callHacked, EntIndexToEntRef(target));
 				}
 				
 				Entity_SetHealth(target, Entity_GetHealth(target) - Entity_GetMaxHealth(target) / 10);
 			}
 			case 5: { // Photocopieuse
-				time /= 6.0;
+				time /= 18.0;
 				
 				int owner = rp_GetBuildingData(target, BD_owner);
 				if( IsValidClient(owner) ) {
 					rp_SetBuildingData(target, BD_HackedBy, client);
 					rp_SetBuildingData(target, BD_HackedTime, GetTime());
-					CreateTimer(3.0 * 60.0, callHacked, EntIndexToEntRef(target));
+					CreateTimer(9.0 * 60.0, callHacked, EntIndexToEntRef(target));
 				}
 				
 				Entity_SetHealth(target, Entity_GetHealth(target) - Entity_GetMaxHealth(target) / 10);
@@ -785,7 +796,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 					
 					int owner = rp_GetBuildingData(target, BD_owner);
 					if( IsValidClient(owner) ) {
-						CPrintToChat(owner, "" ...MOD_TAG... " %T", "Crowbar_Drugs", owner);
+						CreateTimer(3.0 * 60.0, calldrugs, EntIndexToEntRef(target));
 						if( rp_GetBuildingData(target, BD_FromBuild) ) {
 							count /= 2;
 							if( count < 0 )
