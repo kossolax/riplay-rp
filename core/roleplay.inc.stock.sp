@@ -326,6 +326,9 @@ void AFK_Check(int client) {
 					g_iUserData[client][i_PlayerXP] -= 180;
 				
 			}
+			if( g_iUserData[client][i_TimeAFK] > (30*60){
+				KickClient(client, "%T", "AFK_Kick", client);
+			}
 			else {				
 				if( !IsClientInJail(client) ) {
 					if( g_iUserData[client][i_TimeAFK] > (4*60*60) ||
