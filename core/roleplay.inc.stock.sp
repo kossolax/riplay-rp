@@ -343,9 +343,9 @@ void AFK_Check(int client) {
 			}
 		}
 		
-		// if( g_iUserData[client][i_TimeAFK] > 30*60 ) {
+		/* if( g_iUserData[client][i_TimeAFK] > 30*60 ) {
 			KickClient(client, "%T", "AFK_Kick", client);
-		}
+		} */
 	}
 	else {
 		if( g_bUserData[client][b_IsAFK] ) {
