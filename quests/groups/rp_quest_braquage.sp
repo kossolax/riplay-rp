@@ -151,7 +151,7 @@ public bool fwdCanStart(int client) {
 	FormatTime(szDayOfWeek, 11, "%w");
 	FormatTime(szHours, 11, "%H");
 	if( StringToInt(szDayOfWeek) == 3 ) { // Mercredi
-		if( StringToInt(szHours) >= 17 && StringToInt(szHours) < 19  ) {	// 18h00m00s
+		if( StringToInt(szHours) >= 20 && StringToInt(szHours) < 22  ) {	// 18h00m00s
 			PrintToConsole(client, "[DEBUG] [BRAQUAGE] période pvp (mercredi)");
 			return false;
 		}
