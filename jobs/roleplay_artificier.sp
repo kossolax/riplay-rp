@@ -74,6 +74,7 @@ public void OnPluginStart() {
 	LoadTranslations("roleplay.phrases");
 	LoadTranslations("roleplay.items.phrases");
 	LoadTranslations("roleplay.artificier.phrases");
+	LoadTranslations("roleplay.armurerie.phrases");
 	
 	Handle cvar = CreateConVar("rp_fireworks", "10", "Nombre maximum de feu d'artifice autorisé", 0, true, 0.0, true, 100.0);
 	HookConVarChange(cvar, OnCvarChange);
