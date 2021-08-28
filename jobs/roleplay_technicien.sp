@@ -558,7 +558,7 @@ public Action Frame_CashMachine(Handle timer, any ent) {
 		return Plugin_Handled;
 	}
 	if( IsValidClient(rp_GetBuildingData(ent, BD_HackedBy)) ) {
-		if( rp_GetBuildingData(ent, BD_HackedTime)+6*60 > GetTime() ) {
+		if( rp_GetBuildingData(ent, BD_HackedTime)+10*60 > GetTime() ) {
 			client = rp_GetBuildingData(ent, BD_HackedBy);
 		}
 		else {
@@ -798,7 +798,7 @@ public Action Frame_BigCashMachine(Handle timer, any ent) {
 		return Plugin_Handled;
 	}
 	if( IsValidClient(rp_GetBuildingData(ent, BD_HackedBy)) ) {
-		if( rp_GetBuildingData(ent, BD_HackedTime)+6*60 > GetTime() ) {
+		if( rp_GetBuildingData(ent, BD_HackedTime)+18*60 > GetTime() ) {
 			client = rp_GetBuildingData(ent, BD_HackedBy);
 		}
 		else {
