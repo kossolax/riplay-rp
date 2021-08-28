@@ -746,7 +746,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				
 			}
 			case 4: { // Imprimante
-				time /= 10.0;
+				time /= 5.0;
 				
 				int owner = rp_GetBuildingData(target, BD_owner);
 				if( IsValidClient(owner) ) {
@@ -758,7 +758,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				Entity_SetHealth(target, Entity_GetHealth(target) - Entity_GetMaxHealth(target) / 10);
 			}
 			case 5: { // Photocopieuse
-				time /= 18.0;
+				time /= 9.0;
 				
 				int owner = rp_GetBuildingData(target, BD_owner);
 				if( IsValidClient(owner) ) {
@@ -770,7 +770,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				Entity_SetHealth(target, Entity_GetHealth(target) - Entity_GetMaxHealth(target) / 10);
 			}
 			case 6: { // Téléphone
-				time *= 6.0;
+				time *= 3.0;
 				stealAmount = 250;
 				missionTelephone(client);
 			}
