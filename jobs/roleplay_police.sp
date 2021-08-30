@@ -446,7 +446,10 @@ public Action Cmd_Cop(int client) {
 	if (rp_GetClientVehiclePassager(client) > 0 || Client_GetVehicle(client) > 0 ) {  // En voiture, ou très malade
 		ACCESS_DENIED(client);
 	}
-	if ((job == 8 || job == 9) && rp_GetZoneInt(zone, zone_type_type) != 1) {  // Gardien, policier dans le PDP
+	if ((job == 8 || job == 9 ) && rp_GetZoneInt(zone, zone_type_type) != 1) {  // Gardien, policier dans le PDP
+		ACCESS_DENIED(client);
+	}
+	if ((job == 105 || job == 106 || job == 107 ) && rp_GetZoneInt(zone, zone_type_type) != 101) {  // Juge formation, proximité et majistra dans le tribu
 		ACCESS_DENIED(client);
 	}
 	if (!rp_GetClientBool(client, b_MaySteal) || rp_GetClientBool(client, b_Stealing)) {  // Pendant un vol
