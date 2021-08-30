@@ -417,8 +417,8 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	if( ent > 0 ) {
 		rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
 		switch(job){
-			case 221: cooldown = 1.0;
-			case 222: cooldown = 2.0;
+			case 221: cooldown = 6.0;
+			case 222: cooldown = 6.0;
 			case 223: cooldown = 3.0;
 			case 224: cooldown = 4.0;
 			case 225: cooldown = 5.0;
