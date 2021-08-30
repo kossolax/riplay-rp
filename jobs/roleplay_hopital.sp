@@ -129,8 +129,7 @@ public Action Cmd_ItemChirurgie(int args) {
 			rp_GetClientBool(client, ch_Jump) &&
 			rp_GetClientBool(client, ch_Regen) &&
 			rp_GetClientBool(client, ch_Heal) &&
-			rp_GetClientBool(client, ch_Heal) &&
-			rp_GetClientBool(client, ch_Breath) ) {
+			rp_GetClientBool(client, ch_Heal) ) {
 			rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
 			return Plugin_Handled;
 		}
