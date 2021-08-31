@@ -1198,15 +1198,15 @@ int getDistrib(int client, int& type) {
 	else if( StrEqual(classname, "rp_weaponbox") )
 		type = 3;
 	else if( (StrEqual(classname, "rp_cashmachine") ) && rp_GetClientJobID(owner) != 91 &&
-		(float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target)) > 0.75) && rp_GetBuildingData(target, BD_HackedTime)+6*60 < GetTime() )
+		!rp_IsClientSafe(owner) && (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target)) > 0.75) && rp_GetBuildingData(target, BD_HackedTime)+6*60 < GetTime() )
 		type = 4;
 	else if( (StrEqual(classname, "rp_bigcashmachine") ) && rp_GetClientJobID(owner) != 91 &&
-		(float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target)) > 0.75) && rp_GetBuildingData(target, BD_HackedTime)+6*60 < GetTime() )
+		!rp_IsClientSafe(owner) && (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target)) > 0.75) && rp_GetBuildingData(target, BD_HackedTime)+6*60 < GetTime() )
 		type = 5;
 	else if( StrEqual(classname, "rp_phone") )
 		type = 6;
 	else if( (StrEqual(classname, "rp_plant") ) && rp_GetClientJobID(owner) != 91 && (float(Entity_GetHealth(target))/float(Entity_GetMaxHealth(target)) > 0.75) && 
-		rp_GetBuildingData(target, BD_count) > 0 )
+		!rp_IsClientSafe(owner) && rp_GetBuildingData(target, BD_count) > 0 )
 		type = 7;
 	else if( StrEqual(classname, "rp_bank") && owner > 0 && IsValidClient(owner) && !rp_IsClientSafe(owner) )
 		type = 8;
