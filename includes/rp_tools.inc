@@ -50,7 +50,7 @@ stock bool Entity_CanBeBreak(int entity, int client) {
 	if( IsValidClient(client) ) {
 		if( rp_GetClientJobID(client) == 91 || rp_GetClientJobID(client) == 41 || rp_GetClientJobID(client) == 1 && !rp_IsClientSafe(client))
 			return true;
-		}
+			
 		if( rp_GetZoneBit(rp_GetPlayerZone(entity)) & BITZONE_PERQUIZ )
 			return false;
 	}
