@@ -51,7 +51,7 @@ public void OnPluginStart() {
 	RegServerCmd("rp_item_respawn",		Cmd_ItemRespawn,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_sick",		Cmd_ItemSick,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_curedesintox",	Cmd_ItemCureDesintox,		"RP-ITEM",		FCVAR_UNREGISTERED);
-	RegServerCmd("rp_item_protimmu",	Cmd_ItemProtImmu,		"RP-ITEM",		FCVAR_UNREGISTERED);
+/*	RegServerCmd("rp_item_protimmu",	Cmd_ItemProtImmu,		"RP-ITEM",		FCVAR_UNREGISTERED); */
 	
 	RegServerCmd("rp_item_healbox",		Cmd_ItemHealBox,		"RP-ITEM", 	FCVAR_UNREGISTERED);
 	
@@ -408,7 +408,7 @@ public Action Cmd_ItemFullHeal(int args) {
 	g_iSuccess_last_faster_dead[client] = GetTime();
 	
 }
-public Action Cmd_ItemProtImmu(int args) {
+/* public Action Cmd_ItemProtImmu(int args) {
 	int client = GetCmdArgInt(1);
 	int vendeur = GetCmdArgInt(2);
 	int item_id = GetCmdArgInt(args);
@@ -423,7 +423,7 @@ public Action Cmd_ItemProtImmu(int args) {
 	}
 	rp_SetClientBool(client, b_HasProtImmu, true);
 	return Plugin_Handled;
-}
+} */
 public Action Cmd_ItemRespawn(int args) {
 	
 	int client = GetCmdArgInt(1);
