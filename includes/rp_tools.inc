@@ -46,7 +46,7 @@ stock int rp_GetClientEntity(int client) {
 }
 stock bool Entity_CanBeBreak(int entity, int client) {
 	char tmp[128];
-	target = EntRefToEntIndex(target);
+	int target = EntRefToEntIndex(target);
 	int Owner = rp_GetBuildingData(target, BD_owner);
 	if( IsValidClient(client) ) {
 		if( rp_GetClientJobID(client) == 91 || rp_GetClientJobID(client) == 41 || rp_GetClientJobID(client) == 1 && !rp_IsClientSafe(Owner))
