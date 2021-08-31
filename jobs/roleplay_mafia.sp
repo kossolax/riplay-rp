@@ -773,6 +773,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				time *= 3.0;
 				stealAmount = 250;
 				missionTelephone(client);
+				rp_ClientMoney(client, i_Money, 100);
 			}
 			case 7: { // Plant de drogue
 				
