@@ -44,19 +44,27 @@ stock int rp_GetClientEntity(int client) {
 	
 	return source;
 }
-stock bool Entity_CanBeBreak(int entity, int client) {
-	char tmp[128];
-	if( IsValidClient(client) ) {
-		if( rp_GetZoneBit(rp_GetPlayerZone(Owner)) & BITZONE_EVENT )
-          		return false;
-		if( rp_GetClientJobID(client) == 91 || rp_GetClientJobID(client) == 1)
-			return true;
-		if( rp_GetZoneBit(rp_GetPlayerZone(entity)) & BITZONE_PERQUIZ )
-			return false;
-	}
 
-	return false;
+stock bool Entity_CanBeBreak(int entity, int client) {
+    char tmp[128];
+    
+    if( IsValidClient(client) ) {
+
+        int owner = rp_GetBuildingData(entity, BD_owner);
+
+        if( IsValidClient(owner) && rp_GetZoneBit(rp_GetPlayerZone(owner)) & BITZONE_EVENT )
+            return false;
+
+        if( rp_GetClientJobID(client) == 91 || rp_GetClientJobID(client) == 41 || rp_GetClientJobID(client) == 1)
+            return true;
+
+        if( rp_GetZoneBit(rp_GetPlayerZone(entity)) & BITZONE_PERQUIZ )
+            return false;
+    }
+
+    return false;
 }
+
 stock float Math_Lerp(float a, float b, float n) {
 	return (1 - n) * a + n * b;
 }
