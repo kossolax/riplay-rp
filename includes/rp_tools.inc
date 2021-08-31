@@ -46,9 +46,9 @@ stock int rp_GetClientEntity(int client) {
 }
 stock bool Entity_CanBeBreak(int entity, int client) {
 	char tmp[128];
-	
+	int targetOwner = rp_GetBuildingData(entity, BD_owner);
 	if( IsValidClient(client) ) {
-		if( rp_GetClientJobID(client) == 91 || rp_GetClientJobID(client) == 41 || rp_GetClientJobID(client) == 1 && !rp_IsClientSafe(owner))
+		if( rp_GetClientJobID(client) == 91 || rp_GetClientJobID(client) == 41 || rp_GetClientJobID(client) == 1 && !rp_IsClientSafe(targetOwner))
 			return true;
 			
 		if( rp_GetZoneBit(rp_GetPlayerZone(entity)) & BITZONE_PERQUIZ )
