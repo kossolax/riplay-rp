@@ -202,7 +202,7 @@ stock bool rp_IsClientSafe(int client, bool withAFK=true) {
 		return true;
 	if( withAFK && rp_GetClientBool(client, b_IsAFK) )
 		return true;
-	if( withAFK && rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_EVENT && !(rp_GetZoneBit(rp_GetPlayerZone(client)) )
+	if( withAFK && rp_GetZoneBit(rp_GetPlayerZone(client)) & BITZONE_EVENT)
 		return true;
 	if( GetConVarInt(FindConVar("rp_capture")) == 1 && rp_IsInBunkerArea(client) )
 		return true;
