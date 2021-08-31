@@ -480,6 +480,8 @@ public void Q5_Start(int objectiveID, int client) {
 		rp_HookEvent(i, RP_PlayerCanKill, fwdCanKill);
 		rp_HookEvent(i, RP_OnPlayerHear, fwdHear);
 	}
+	
+	ServerCommand("rp_sick 0"); // Pas de maladie pendant un braquage
 }
 public Action fwdHear(int client, int target, float& dist) {
 	
@@ -772,6 +774,7 @@ public void Q_Complete(int objectiveID, int client) {
 		}
 	}
 	Q_Clean();
+	ServerCommand("rp_sick 1"); // On remet la maladie à la fin du braquage
 }
 // ----------------------------------------------------------------------------
 public Action EV_PickupHostage(Handle ev, const char[] name, bool broadcast) {
