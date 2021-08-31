@@ -278,6 +278,8 @@ void START_PERQUIZ(int zone) {
 		rp_HookEvent(array[PQ_target], RP_PreClientSendToJail, fwdHookJail);
 	}
 	CreateTimer(1.0, TIMER_PERQUIZ, zone, TIMER_REPEAT);
+	
+	ServerCommand("rp_sick 0"); // Pas de maladie en perqui
 }
 public Action ChangeZoneSafe(Handle timer, any zone) {
 	changeZoneState(zone, false);
@@ -327,6 +329,8 @@ void END_PERQUIZ(int zone, bool abort) {
 		Format(query, sizeof(query), "INSERT INTO `rp_perquiz` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP()-%d, '%s', '%s', '%d');", tmp, getCooldown(array[PQ_client], zone)*60+6*60, date, array[PQ_target] > 0 ? "search" : "trafic", rp_GetClientJobID(array[PQ_client]));
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 	}
+	
+	ServerCommand("rp_sick 1"); // On remet la maladie à la fin
 }
 // ----------------------------------------------------------------------------
 public Action fwdHookJail(int attacker, int victim) {
