@@ -49,7 +49,7 @@ stock bool Entity_CanBeBreak(int entity, int client) {
 	target = EntRefToEntIndex(target);
 	int Owner = rp_GetBuildingData(target, BD_owner);
 	if( IsValidClient(client) ) {
-		if( rp_GetClientJobID(client) == 91 || rp_GetClientJobID(client) == 41 || rp_GetClientJobID(client) == 1 && rp_IsClientSafe(Owner))
+		if( rp_GetClientJobID(client) == 91 || rp_GetClientJobID(client) == 41 || rp_GetClientJobID(client) == 1 && !rp_IsClientSafe(Owner))
 			return true;
 			
 		if( rp_GetZoneBit(rp_GetPlayerZone(entity)) & BITZONE_PERQUIZ )
