@@ -55,7 +55,7 @@ public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
 	if( !g_bCanPerquiz[client] && (rp_GetClientJobID(client) == 1 || rp_GetClientJobID(client) == 101) ) {
 		if( GetClientTeam(client) == CS_TEAM_CT && rp_GetZoneInt(newZone, zone_type_type) == rp_GetClientJobID(client) ) {
 			g_bCanPerquiz[client] = true;
-			if( rp_GetClientInt(client, i_Job) != 9 && rp_GetClientInt(client, i_Job) != 8 )
+			if( rp_GetClientInt(client, i_Job) != 9 && rp_GetClientInt(client, i_Job) != 8 && rp_GetClientInt(client, i_Job) != 107)
 				CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez maintenant effectuer une perquisition");
 		}
 	}
@@ -71,7 +71,7 @@ public Action Cmd_Perquiz(int client) {
 	if( rp_GetClientJobID(client) != 1 && rp_GetClientJobID(client) != 101 ) {
 		ACCESS_DENIED(client);
 	}
-	if( rp_GetClientInt(client, i_Job) == 9 || rp_GetClientInt(client, i_Job) == 8 ) {
+	if( rp_GetClientInt(client, i_Job) == 9 || rp_GetClientInt(client, i_Job) == 8 || rp_GetClientInt(client, i_Job) != 107) {
 		ACCESS_DENIED(client);
 	}
 	if( GetClientTeam(client) != CS_TEAM_CT ) {
