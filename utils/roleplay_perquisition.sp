@@ -71,7 +71,7 @@ public Action Cmd_Perquiz(int client) {
 	if( rp_GetClientJobID(client) != 1 && rp_GetClientJobID(client) != 101 ) {
 		ACCESS_DENIED(client);
 	}
-	if( rp_GetClientInt(client, i_Job) == 9 || rp_GetClientInt(client, i_Job) == 8 || rp_GetClientInt(client, i_Job) != 107) {
+	if( rp_GetClientInt(client, i_Job) == 9 || rp_GetClientInt(client, i_Job) == 8 || rp_GetClientInt(client, i_Job) == 107) {
 		ACCESS_DENIED(client);
 	}
 	if( GetClientTeam(client) != CS_TEAM_CT ) {
