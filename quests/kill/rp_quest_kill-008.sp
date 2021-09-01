@@ -96,7 +96,7 @@ public Action fwdOnPlayerCanKill(int attacker, int victim) {
 	return Plugin_Continue;
 }
 public Action fwdOnPlayerKill(int attacker, int victim, char weapon[64], int& tdm, float& ctx) {
-	if( IsKillEligible(attacker, victim, weapon) ) {
+	if( IsKillEligible(attacker, victim, "weapon_knife") ) {
 		g_iCurrent[attacker]++;
 		g_iKilled[attacker][victim] = 1;
 		return Plugin_Handled;
