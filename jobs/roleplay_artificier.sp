@@ -218,16 +218,16 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 					rp_SetWeaponBallType(wep_id, ball_type_paintball);
 				}
 				else if(StrEqual(type, "flashbang")){
-					ServerCommand("give weapon_flashbang", client);
+					GivePlayerItem(client, "weapon_flashbang");
 				}
 				else if(StrEqual(type, "smokegrenade")){
-					ServerCommand("give weapon_smokegrenade", client);
+					GivePlayerItem(client, "weapon_smokegrenadeg");
 				}
 				else if(StrEqual(type, "tagrenade")){
-					ServerCommand("give weapon_tagrenade", client);
+					GivePlayerItem(client, "weapon_tagrenade");
 				}
 				else if(StrEqual(type, "molotov")){
-					ServerCommand("give weapon_molotov", client);
+					GivePlayerItem(client, "weapon_molotov");
 				}
 				
 				
