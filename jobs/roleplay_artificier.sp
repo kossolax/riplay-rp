@@ -202,7 +202,7 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 					GivePlayerItem(client, "weapon_flashbang");
 				}
 				else if(StrEqual(type, "smokegrenade")){
-					GivePlayerItem(client, "weapon_smokegrenadeg");
+					GivePlayerItem(client, "weapon_smokegrenade");
 				}
 				else if(StrEqual(type, "tagrenade")){
 					GivePlayerItem(client, "weapon_tagrenade");
