@@ -191,6 +191,7 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 					}
 					else {
 						rp_SetWeaponBallType(wep_id, ball_type_fire);
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
 					}
 				}
 				else if(StrEqual(type, "explode")){
@@ -200,6 +201,7 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 					}
 					else {
 						rp_SetWeaponBallType(wep_id, ball_type_explode);
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
 					}
 				}
 				else if(StrEqual(type, "paintball")){
@@ -209,6 +211,7 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 					}
 					else {
 						rp_SetWeaponBallType(wep_id, ball_type_paintball);
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
 					}
 				}
 				else if(StrEqual(type, "flashbang")){
@@ -226,7 +229,6 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 				
 				
 				rp_ClientMoney(client, i_Money, -price);
-				CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
 				rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
 				rp_SetJobCapital( 131, rp_GetJobCapital(131)+price );
 				FakeClientCommand(client, "say /build");
