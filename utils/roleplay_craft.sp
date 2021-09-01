@@ -1243,7 +1243,7 @@ public void OnThink(int ent) {
 	int owner = Entity_GetOwner(ent);
 
 	int damage = 10;
-	float push = 128.0;
+	float push = 64.0;
 	float fire = 0.0125;
 	float speed = (5.0/360.0);
 	float threshold = (45.0/360.0)/2.0;
