@@ -150,7 +150,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 		{"flashbang", 		"25",	"add_weapon_flashbang"},
 		{"smokegrenade", 		"125",	"add_weapon_smokegrenade"},
 		{"tagrenade", 		"150",	"add_weapon_tagrenad"},
-		{"molotov", 		"250",	"add_weapon_molotov"},
+		{"molotov", 		"250",	"add_weapon_molotov"}
 	};
 	
 	for (int i = 0; i < sizeof(szMenu); i++) {
@@ -218,16 +218,16 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 					rp_SetWeaponBallType(wep_id, ball_type_paintball);
 				}
 				else if(StrEqual(type, "flashbang")){
-					GivePlayerItem(client, weapon_flashbang);
+					GivePlayerItem(client, "weapon_flashbang");
 				}
 				else if(StrEqual(type, "smokegrenade")){
-					GivePlayerItem(client, weapon_smokegrenadeg);
+					GivePlayerItem(client, "weapon_smokegrenadeg");
 				}
 				else if(StrEqual(type, "tagrenade")){
-					GivePlayerItem(client, weapon_tagrenade);
+					GivePlayerItem(client, "weapon_tagrenade");
 				}
 				else if(StrEqual(type, "molotov")){
-					GivePlayerItem(client, weapon_molotov);
+					GivePlayerItem(client, "weapon_molotov");
 				}
 				
 				
