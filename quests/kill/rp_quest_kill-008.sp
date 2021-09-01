@@ -27,7 +27,7 @@
 #define QUEST_NAME      "Fine lame"
 #define QUEST_TYPE      quest_daily
 #define QUEST_ITEM      236
-#define QUEST_RATIO		128
+#define QUEST_RATIO		250
 
 public Plugin myinfo =  {
 	name = "Quête: "...QUEST_NAME, author = "KoSSoLaX", 
