@@ -147,10 +147,10 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 		{"fire",			"750",	"add_ball_type_fire"},
 		{"paintball",		"125",	"add_ball_type_paintball"},
 		{"explode", 		"1400",	"add_ball_type_explode"},
-		{"flashbang", 		"25",	""},
-		{"smokegrenade", 		"125",	""},
-		{"tagrenade", 		"150",	""},
-		{"molotov", 		"250",	""},
+		{"flashbang", 		"25",	"add_weapon_flashbang"},
+		{"smokegrenade", 		"125",	"add_weapon_smokegrenade"},
+		{"tagrenade", 		"150",	"add_weapon_tagrenad"},
+		{"molotov", 		"250",	"add_weapon_molotov"},
 	};
 	
 	for (int i = 0; i < sizeof(szMenu); i++) {
