@@ -27,7 +27,7 @@
 #define QUEST_NAME      "Terrorisme sur la ville"
 #define QUEST_TYPE      quest_daily
 #define QUEST_ITEM      236
-#define QUEST_RATIO		128
+#define QUEST_RATIO		250
 
 public Plugin myinfo =  {
 	name = "Quête: "...QUEST_NAME, author = "KoSSoLaX", 
