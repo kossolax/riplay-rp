@@ -62,6 +62,11 @@
 		"fr"	"Vous ressentez votre vitalité s'augmenter grâce à votre belle paire de baskets."
 		"en"	"You feel your vitality increase thanks to your hot pair of sneakers."
 	}
+	"Coach_BasketWear"
+	{
+		"fr"	"Vous avez trop couru, votre belle paire de baskets vient de partir en lambeaux."
+		"en"	"You ran too much, your nice pair of sneakers just fell apart."
+	}
 	"Coach_MaskDisapear"
 	{
 		"fr"	"Vous avez perdu votre masque."
