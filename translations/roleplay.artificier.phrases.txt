@@ -92,7 +92,7 @@
 		"fr"		"Acheter une grenade flash"
 		"en"		"buy flash grenade"
 	}
-	"add_weapon_smokegrenadeg"
+	"add_weapon_smokegrenade"
 	{
 		"fr"		"Acheter une grenade fumigene"
 		"en"		"buy smoke grenade"
