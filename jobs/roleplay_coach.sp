@@ -636,7 +636,7 @@ public Action fwdVitalite(int client) {
 		}
 		if( wear[client] > 65 ) {
 			wear[client] = 0;
-			rp_SetClientBool(client, b_HasShoes, false);
+			b_HasShoes = false;
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Coach_BasketWear", client);
 		}
 	}
