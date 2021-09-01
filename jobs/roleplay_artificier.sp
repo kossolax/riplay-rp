@@ -179,24 +179,37 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 			int price = StringToInt(data[1]);
 			int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 
-			if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
-				CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
-				return;
-			}
-
 			if((rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money)) < price){
 					CPrintToChat(client, ""...MOD_TAG..." %T", "Error_NotEnoughtMoney", client);
 					return;
 			}
 
 				if(StrEqual(type, "fire")){
-					rp_SetWeaponBallType(wep_id, ball_type_fire);
+					if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
+						return;
+					}
+					else {
+						rp_SetWeaponBallType(wep_id, ball_type_fire);
+					}
 				}
 				else if(StrEqual(type, "explode")){
-					rp_SetWeaponBallType(wep_id, ball_type_explode);
+					if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
+						return;
+					}
+					else {
+						rp_SetWeaponBallType(wep_id, ball_type_explode);
+					}
 				}
 				else if(StrEqual(type, "paintball")){
-					rp_SetWeaponBallType(wep_id, ball_type_paintball);
+					if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
+						return;
+					}
+					else {
+						rp_SetWeaponBallType(wep_id, ball_type_paintball);
+					}
 				}
 				else if(StrEqual(type, "flashbang")){
 					GivePlayerItem(client, "weapon_flashbang");
@@ -215,13 +228,7 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 				rp_ClientMoney(client, i_Money, -price);
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
 				rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
-				
-				if( StrEqual(type, "fire") || StrEqual(type, "explode") || StrEqual(type, "paintball") ){
-					rp_SetJobCapital( 131, rp_GetJobCapital(131)+price );
-				}
-				else {
-					rp_SetJobCapital( 111, rp_GetJobCapital(111)+price );
-				}
+				rp_SetJobCapital( 131, rp_GetJobCapital(131)+price );
 				FakeClientCommand(client, "say /build");
 
 			}
