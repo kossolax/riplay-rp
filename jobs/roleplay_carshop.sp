@@ -1509,7 +1509,6 @@ void displayBatteryMenu(int client){
 	
 	Format(tmp, sizeof(tmp), "%T", "Garage_Place", client);
 	AddMenuItem(menu2, "battery give", tmp);
-	CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicle_Battery_Give", client);
 
 	Format(tmp, sizeof(tmp), "%T", "Garage_Sell", client);
 	AddMenuItem(menu2, "battery sell", tmp);
@@ -1761,6 +1760,8 @@ public int eventGarageMenu(Handle menu, MenuAction action, int client, int param
 						return;
 					}
 					rp_ClientGiveItem(client, ITEM_BATTERIE, -1, true);
+					
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicle_Battery_Give", client);
 					
 					rp_SetVehicleInt(target, car_battery, 0);
 					
