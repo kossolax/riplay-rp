@@ -184,29 +184,10 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 				return;
 			}
 
-			if( StrEqual(type, "pvp") ){
-				Handle menupvp = CreateMenu(ModifyWeaponPVP);
-				char tmp[64], tmp2[64];
-				SetMenuTitle(menupvp, "%T\n ", "edit_weapon_gang", client);
-				for(int i=1; i<MAX_GROUPS; i+=10){
-					for(int j=1;j< MAXPLAYERS+1;j++){
-						if( !IsValidClient(j) )
-							continue;
-						if(rp_GetClientGroupID(j)==i){
-							rp_GetGroupData(i, group_type_name, tmp, 63);
-							Format(tmp2,63,"%i_%i",i,price);
-							AddMenuItem(menupvp, tmp2, tmp);
-							break;
-						}
-					}
-				}
-				DisplayMenu(menupvp, client, 60);
-			}
-			else{
-				if((rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money)) < price){
+			if((rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money)) < price){
 					CPrintToChat(client, ""...MOD_TAG..." %T", "Error_NotEnoughtMoney", client);
 					return;
-				}
+			}
 
 				if(StrEqual(type, "fire")){
 					rp_SetWeaponBallType(wep_id, ball_type_fire);
@@ -245,48 +226,10 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 
 			}
 		}
-	}
 	else if (p_oAction == MenuAction_End) {
 		CloseHandle(p_hItemMenu);
 	}
 }
-
-public int ModifyWeaponPVP(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_iParam2){
-
-	if (p_oAction == MenuAction_Select) {
-		char szMenuItem[32];
-		if (GetMenuItem(p_hItemMenu, p_iParam2, szMenuItem, sizeof(szMenuItem))){
-
-			char data[2][32];
-			ExplodeString(szMenuItem, "_", data, sizeof(data), sizeof(data[]));
-
-			int groupid = StringToInt(data[0]);
-			int price = StringToInt(data[1]);
-			int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-
-			if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
-				CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
-				return;
-			}
-
-			if((rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money)) >= price){
-				rp_ClientMoney(client, i_Money, -price);
-				rp_SetJobCapital( 111, rp_GetJobCapital(111)+price );
-				CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
-			}
-			else{
-				CPrintToChat(client, ""...MOD_TAG..." %T", "Error_NotEnoughtMoney", client);
-				return;
-			}
-
-			rp_SetWeaponGroupID(wep_id, groupid);
-		}
-	}
-	else if (p_oAction == MenuAction_End) {
-		CloseHandle(p_hItemMenu);
-	}
-}
-
 public Action fwdWeapon(int victim, int attacker, float &damage, int wepID, float pos[3]) {
 	bool changed = true;
 	enum_ball_type wepType = rp_GetWeaponBallType(wepID);
