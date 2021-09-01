@@ -87,4 +87,24 @@
 		"fr"		"Exploser les feux d'artifices"
 		"en"		"Explode the fireworks"
 	}
+	"add_weapon_flashbang"
+	{
+		"fr"		"Acheter une grenade flash"
+		"en"		"buy flash grenade"
+	}
+	"add_weapon_smokegrenadeg"
+	{
+		"fr"		"Acheter une grenade fumigene"
+		"en"		"buy smoke grenade"
+	}
+	"add_weapon_tagrenade"
+	{
+		"fr"		"Acheter une grenade traçante"
+		"en"		"buy tague grenade"
+	}
+	"add_weapon_molotov"
+	{
+		"fr"		"Acheter une molotov"
+		"en"		"buy molotov grenade"
+	}
 }
