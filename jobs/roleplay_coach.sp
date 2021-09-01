@@ -617,6 +617,7 @@ public Action fwdAssuranceShoes(int client, int& amount) {
 public Action fwdVitalite(int client) {
 	static float fLast[65][3];
 	static count[65];
+	static wear[4100];
 	
 	float fNow[3];
 	GetClientAbsOrigin(client, fNow);	
@@ -624,6 +625,7 @@ public Action fwdVitalite(int client) {
 	
 	if( GetVectorDistance(fNow, fLast[client]) > 50.0 && !rp_GetClientBool(client, b_IsAFK) ) { // Si le joueur marche
 		count[client]++;
+		wear[client]++;
 		if( count[client] > 60 ) {
 			count[client] = 0;
 		
@@ -631,6 +633,11 @@ public Action fwdVitalite(int client) {
 			rp_SetClientFloat(client, fl_Vitality, vita + 5.0);
 			
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Coach_BasketVitality", client);
+		}
+		if( wear[client] > 65 ) {
+			wear[client] = 0;
+			rp_SetClientBool(client, b_HasShoes, false);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Coach_BasketWear", client);
 		}
 	}
 	
