@@ -1510,6 +1510,7 @@ void displayBatteryMenu(int client){
 	
 	Format(tmp, sizeof(tmp), "%T", "Garage_Place", client);
 	AddMenuItem(menu2, "battery give", tmp);
+	CPrintToChat(driver, "" ...MOD_TAG... " %T", "Vehicle_Battery_Give", driver);
 
 	Format(tmp, sizeof(tmp), "%T", "Garage_Sell", client);
 	AddMenuItem(menu2, "battery sell", tmp);
