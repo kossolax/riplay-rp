@@ -27,7 +27,7 @@
 #define QUEST_NAME      "Criminels de haut rang"
 #define QUEST_TYPE      quest_daily
 #define QUEST_ITEM      236
-#define QUEST_RATIO		250
+#define QUEST_RATIO		500
 
 public Plugin myinfo =  {
 	name = "Quête: "...QUEST_NAME, author = "KoSSoLaX", 
