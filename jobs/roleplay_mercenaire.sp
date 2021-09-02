@@ -196,7 +196,7 @@ public Action Cmd_ItemContrat(int args) {
 	if( StrContains(arg1, "classic") == 0 ) {
 		g_iKillerPoint[vendeur][competance_type] = 1001;
 	}
-	else if( StrContains(arg1, "police") == 0 ) {
+	else if( StrContains(arg1, "sick") == 0 ) {
 		g_iKillerPoint[vendeur][competance_type] = 1002;
 	}
 	else if( StrContains(arg1, "pvp") == 0 ) {
@@ -330,6 +330,14 @@ public Action fwdTueurKill(int client, int attacker, float& respawn, int& tdm, f
 				changeZoneState(41, true);
 				
 				rp_ClientFloodIncrement(0, client, fd_kidnapping, 6.0*60.0);
+			}
+			else if( g_iKillerPoint[attacker][competance_type] == 1002 ) {
+				if( !rp_GetClientBool(client, b_HasProtImmu) ) {
+					if( !(rp_GetClientJobID(client) == 11 && rp_GetClientBool(client, b_GameModePassive) == false) && rp_GetClientInt(client, i_Sick) == 0 ) {
+						CPrintToChat(client, ""...MOD_TAG..." %T", "Drug_Fatal", client);
+						rp_SetClientInt(client, i_Sick, Math_GetRandomInt((view_as<int>(sick_type_none))+1, (view_as<int>(sick_type_max))-1));
+					}
+				}
 			}
 			else if( g_iKillerPoint[attacker][competance_type] == 1006 ) {
 				if( rp_GetClientBool(client, b_HaveCard) == true ){

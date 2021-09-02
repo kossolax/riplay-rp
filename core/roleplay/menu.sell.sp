@@ -404,7 +404,7 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 			if( StrContains(buffer, "classic") == 0 ) {
 				type = 1001;
 			}
-			else if( StrContains(buffer, "police") == 0 ) {
+			else if( StrContains(buffer, "sick") == 0 ) {
 				type = 1002;
 			}
 			else if( StrContains(buffer, "pvp") == 0 ) {
@@ -458,9 +458,9 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 				if( !IsTutorialOver(i) )
 					continue;
 					
-				if( type == 1001 && (IsPolice(i) || IsJuge(i))  )
-					continue;
-				if( type == 1002 && !IsPolice(i) && !IsJuge(i) )
+				//if( type == 1001 && (IsPolice(i) || IsJuge(i))  )
+				//	continue;
+				if( type == 1002 && g_bUserData[i][b_HasProtImmu] )
 					continue;
 				if( type == 1003 && GetGroupPrimaryID(i) == 0 )
 					continue;
