@@ -634,7 +634,7 @@ public Action fwdVitalite(int client) {
 			
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Coach_BasketVitality", client);
 		}
-		if( wear[client] > 65 ) {
+		if( wear[client] > 4000 ) {
 			wear[client] = 0;
 			rp_SetClientBool(client, b_HasShoes, false);
 				rp_UnhookEvent(client, RP_OnAssurance,	fwdAssuranceShoes);
