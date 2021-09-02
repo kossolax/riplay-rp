@@ -625,7 +625,7 @@ public Action fwdVitalite(int client) {
 	
 	if( GetVectorDistance(fNow, fLast[client]) > 50.0 && !rp_GetClientBool(client, b_IsAFK) ) { // Si le joueur marche
 		count[client]++;
-		/*wear[client]++;*/
+		wear[client]++;
 		if( count[client] > 60 ) {
 			count[client] = 0;
 		
@@ -634,12 +634,15 @@ public Action fwdVitalite(int client) {
 			
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Coach_BasketVitality", client);
 		}
-		/*if( wear[client] > 65 ) {
+		if( wear[client] > 65 ) {
 			wear[client] = 0;
 			rp_SetClientBool(client, b_HasShoes, false);
+				rp_UnhookEvent(client, RP_OnAssurance,	fwdAssuranceShoes);
+				rp_UnhookEvent(client, RP_OnFrameSeconde, fwdVitalite);
+				SDKUnhook(client, SDKHook_OnTakeDamage, fwdNoFallDamage);
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Coach_BasketWear", client);
 			return Plugin_Handled;
-		}*/
+		}
 	}
 	
 	for (int i = 0; i < 3; i++)
