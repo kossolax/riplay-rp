@@ -265,7 +265,7 @@ public Action Cmd_ItemDrugs(int args) {
 		if( g_hDrugTimer[client] ) {
 			delete g_hDrugTimer[client];
 			
-			if( Math_GetRandomInt(1, 100) >= 85 && !rp_GetClientBool(client, b_HasProtImmu)) {
+			if( Math_GetRandomInt(1, 100) >= 90 && !rp_GetClientBool(client, b_HasProtImmu)) {
 				if( !(rp_GetClientJobID(client) == 11 && rp_GetClientBool(client, b_GameModePassive) == false) && rp_GetClientInt(client, i_Sick) == 0 ) {
 					rp_IncrementSuccess(client, success_list_dealer);
 					rp_ClientOverlays(client, o_Action_Overdose, 10.0);
