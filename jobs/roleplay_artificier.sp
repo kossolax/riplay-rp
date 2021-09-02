@@ -134,11 +134,6 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 
 	int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
 	
-	if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
-		return Plugin_Stop;
-	}
-	
 	char tmp1[64], tmp2[64];
 	Handle menu = CreateMenu(ModifyWeapon);
 	SetMenuTitle(menu, "%T\n ", "edit_weapon", client);
