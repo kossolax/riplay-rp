@@ -1340,7 +1340,7 @@ public Action Command_Say(int client, int args) {
 		if( g_iUserData[client][i_PlayerLVL] < 12 ) {
 			char tmp[128];
 			rp_GetLevelData(level_simple_citizen, rank_type_name, tmp, sizeof(tmp));
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_Level", 12, tmp);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_Level", client, 12, tmp);
 			return Plugin_Handled;
 		}
 		
