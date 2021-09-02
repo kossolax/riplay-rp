@@ -67,6 +67,7 @@ public void OnPluginStart() {
 	LoadTranslations("roleplay.phrases");
 	LoadTranslations("roleplay.items.phrases");
 	LoadTranslations("roleplay.mercenaire.phrases");
+	LoadTranslations("roleplay.dealer.phrases");
 	
 	RegServerCmd("rp_quest_reload", Cmd_Reload);
 	RegServerCmd("rp_item_contrat",		Cmd_ItemContrat,		"RP-ITEM",	FCVAR_UNREGISTERED);
