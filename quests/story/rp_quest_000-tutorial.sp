@@ -449,19 +449,22 @@ public Action fwdUsePhone(int client) {
 		ServerCommand("sm_effect_copter2 0 -2364 %d", client);
 		rp_UnhookEvent(client, RP_OnPlayerUse, fwdUsePhone);
 		rp_QuestStepComplete(client, g_iQ92);
+		if( rp_ClientCanDrawPanel(client) ) {
+			Handle panel = CreatePanel();
+			char title[128], text[2048];
 		
-		char title[128], text[2048];
-		Handle panel = CreatePanel();
 		
-		Format(title, sizeof(title), "%T", "TUTO_10_Title", client);
-		Format(text, sizeof(text), "%T", "TUTO_10b_Text", client);
+			Format(title, sizeof(title), "%T", "TUTO_10_Title", client);
+			Format(text, sizeof(text), "%T", "TUTO_10b_Text", client);
 		
-		String_WordWrap(text, 40);
+			String_WordWrap(text, 40);
 		
-		SetPanelTitle(panel, title);
-		DrawPanelText(panel, text);
+			SetPanelTitle(panel, title);
+			DrawPanelText(panel, text);
 		
-		DisplayMenu(panel, client, 10);
+			rp_SendPanelToClient(panel, client, 1.1);
+			CreateTimer(1.1, PostKillHandle, panel);
+		}
 	}
 }
 public int MenuNothing(Handle menu, MenuAction action, int client, int param2) {
