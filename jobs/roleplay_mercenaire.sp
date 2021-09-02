@@ -38,6 +38,7 @@ enum competance {
 	competance_vitesse,
 	competance_cryo,
 	competance_berserk,
+	competance_bigmac,
 	competance_type,
 	competance_cut_given,
 	
@@ -470,11 +471,13 @@ void OpenSelectSkill(int client) {
 		Format(tmp, sizeof(tmp), "%T", "Tueur_Menu_Vie", client);					AddMenuItem(menu, "vie", tmp, g_iKillerPoint[client][competance_hp] ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 		Format(tmp, sizeof(tmp), "%T", "Tueur_Menu_Vitesse", client);				AddMenuItem(menu, "vit", tmp, g_iKillerPoint[client][competance_vitesse] ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 		
-				
-		if( rp_GetClientJobID(target) == 1 || rp_GetClientJobID(target) == 101 ) {
-			rp_GetItemData(ITEM_BERSERK, item_type_name, tmp, sizeof(tmp));
-			AddMenuItem(menu, "berserk", tmp, g_iKillerPoint[client][competance_berserk] ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
-		}
+		
+		rp_GetItemData(ITEM_BERSERK, item_type_name, tmp, sizeof(tmp));
+		AddMenuItem(menu, "berserk", tmp, g_iKillerPoint[client][competance_berserk] ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+		
+		rp_GetItemData(ITEM_BIGMAC, item_type_name, tmp, sizeof(tmp));
+		AddMenuItem(menu, "bigmac", tmp, g_iKillerPoint[client][competance_bigmac] ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
+		
 		if(g_iKillerPoint[client][competance_type] == 1005) {
 			rp_GetItemData(ITEM_NANO_CRYO, item_type_name, tmp, sizeof(tmp));
 			AddMenuItem(menu, "nano", tmp, g_iKillerPoint[client][competance_cryo] ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
@@ -574,6 +577,10 @@ public int AddCompetanceToAssassin(Handle menu, MenuAction action, int client, i
 		else if( StrEqual(options, "berserk", false) ) {
 			g_iKillerPoint[client][competance_berserk] = 1;
 			ServerCommand("rp_item_adrenaline %d 0", client);
+		}
+		else if( StrEqual(options, "bigmac", false) ) {
+			g_iKillerPoint[client][competance_bigmac] = 1;
+			ServerCommand("rp_item_hamburger mac %d 0", client);
 		}
 		
 		g_iKillerPoint[client][competance_left]--;

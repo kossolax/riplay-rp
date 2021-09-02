@@ -493,18 +493,14 @@ public Action Cmd_ItemAdrenaline(int args) {
 	char item_name[128];
 	rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
 	
-	if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
-		if( item_id > 0 ) {
-			ITEM_CANCEL(client, item_id);
-		}
+	if( item_id > 0 && !rp_GetClientBool(client, b_MayUseUltimate) ) {
+		ITEM_CANCEL(client, item_id);
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 		return Plugin_Handled;
 	}
 	
-	if( rp_GetClientBool(client, b_Drugged) ) {
-		if( item_id > 0 ) {
-			ITEM_CANCEL(client, item_id);
-		}
+	if( item_id > 0 && rp_GetClientBool(client, b_Drugged) ) {
+		ITEM_CANCEL(client, item_id);
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 		return Plugin_Handled;
 	}
@@ -517,16 +513,19 @@ public Action Cmd_ItemAdrenaline(int args) {
 	
 	ServerCommand("sm_effect_particles %d Trail8 11 weapon_hand_R", client);
 	
-	rp_SetClientBool(client, b_Drugged, true);	
-	CreateTimer(10.5, ItemDrugStop, client);
-	rp_SetClientBool(client, b_MayUseUltimate, false);
 	
-	
-	if( rp_IsInPVP(client) || GetClientTeam(client) == CS_TEAM_CT) {
-		CreateTimer(45.0, AllowUltimate, client);
-	}
-	else{
-		CreateTimer(30.0, AllowUltimate, client);
+	if( item_id > 0 ) {
+		rp_SetClientBool(client, b_Drugged, true);	
+		CreateTimer(10.5, ItemDrugStop, client);
+		rp_SetClientBool(client, b_MayUseUltimate, false);
+		
+		
+		if( rp_IsInPVP(client) || GetClientTeam(client) == CS_TEAM_CT) {
+			CreateTimer(45.0, AllowUltimate, client);
+		}
+		else{
+			CreateTimer(30.0, AllowUltimate, client);
+		}
 	}
 	
 	return Plugin_Handled;

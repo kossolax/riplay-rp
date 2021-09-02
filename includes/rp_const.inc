@@ -109,6 +109,7 @@
 #define ITEM_FEUARTIFICE	49
 #define ITEM_TICKETID		76
 #define ITEM_NANO_CRYO		78
+#define ITEM_BIGMAC			114
 #define ITEM_CADEAU			132
 #define	ITEM_GPS			144
 #define	ITEM_REPAIR			176

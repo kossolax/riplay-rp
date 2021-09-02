@@ -489,7 +489,8 @@ public Action Cmd_ItemHamburger(int args) {
 	}
 	else if( StrEqual(arg1, "mac") ) {
 		
-		if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
+		
+		if( item_id > 0 && !rp_GetClientBool(client, b_MayUseUltimate) ) {
 			ITEM_CANCEL(client, item_id);
 			char item_name[128];
 			rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
@@ -497,8 +498,7 @@ public Action Cmd_ItemHamburger(int args) {
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
 			return Plugin_Handled;
 		}
-		rp_SetClientBool(client, b_MayUseUltimate, false);
-		
+				
 		rp_SetClientFloat(client, fl_Reflect, GetGameTime() + 5.0);
 		
 		float vecTarget[3];
@@ -510,14 +510,17 @@ public Action Cmd_ItemHamburger(int args) {
 		ServerCommand("sm_effect_particles %d Trail5 5 footplant_L", client);
 		ServerCommand("sm_effect_particles %d Trail5 5 footplant_R", client);
 		
-		if( rp_IsInPVP(client) ) {			
-			if( rp_GetClientGroupID(client) == rp_GetCaptureInt(cap_bunker) )
-				CreateTimer(10.0, AllowUltimate, client);
-			else
-				CreateTimer(60.0, AllowUltimate, client);
-		}
-		else{
-			CreateTimer(20.0, AllowUltimate, client);
+		if( item_id > 0 ) {
+			rp_SetClientBool(client, b_MayUseUltimate, false);
+			if( rp_IsInPVP(client) ) {			
+				if( rp_GetClientGroupID(client) == rp_GetCaptureInt(cap_bunker) )
+					CreateTimer(10.0, AllowUltimate, client);
+				else
+					CreateTimer(60.0, AllowUltimate, client);
+			}
+			else{
+				CreateTimer(20.0, AllowUltimate, client);
+			}
 		}
 	}
 	else if( StrEqual(arg1, "chicken") ) {
