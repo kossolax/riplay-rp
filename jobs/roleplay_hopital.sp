@@ -312,26 +312,18 @@ public Action Cmd_ItemSick(int args) {
 	int client = GetCmdArgInt(2);
 	int vendeur = GetCmdArgInt(3);
 	
-	if( type == view_as<int>(sick_type_none), int client, int vendeur) {
+	if( type == view_as<int>(sick_type_none)) {
 		bDiag[client] = true;
 		
 		switch(rp_GetClientInt(client, i_Sick)) {
 			case sick_type_fievre:
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "sick_type_fievre", client);
-				rp_ClientXPIncrement(client, 250);
-				rp_ClientXPIncrement(vendeur, 250);
 			case sick_type_grippe:
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "sick_type_grippe", client);
-				rp_ClientXPIncrement(client, 250);
-				rp_ClientXPIncrement(vendeur, 250);
 			case sick_type_tourista:
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "sick_type_tourista", client);
-				rp_ClientXPIncrement(client, 250);
-				rp_ClientXPIncrement(vendeur, 250);
 			case sick_type_hemoragie:
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "sick_type_hemoragie", client);
-				rp_ClientXPIncrement(client, 250);
-				rp_ClientXPIncrement(vendeur, 250);
 			default: {
 				if( rp_GetClientInt(client, i_Sickness) )
 					CPrintToChat(client, "" ...MOD_TAG... " %T", "sick_type_poison", client);
@@ -346,6 +338,8 @@ public Action Cmd_ItemSick(int args) {
 		rp_SetClientInt(client, i_Sick, view_as<int>(sick_type_none));
 		bDiag[client] = false;
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "sick_heal", client);
+		rp_ClientXPIncrement(client, 250);
+		rp_ClientXPIncrement(vendeur, 250);
 		g_iSuccess_last_faster_dead[client] = GetTime();
 	}
 	else {
