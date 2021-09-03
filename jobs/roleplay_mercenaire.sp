@@ -45,10 +45,13 @@ enum competance {
 	competance_max
 };
 
-bool g_bBlockDrop[65];
+bool g_bBlockDrop[65], g_bCanTP[65];
 int g_iKillerPoint[65][view_as<int>(competance_max)];
 int g_iKillerPoint_stored[65][view_as<int>(competance_max)];
 int g_bShouldOpen[65];
+float g_vecOriginTP[65][3];
+int g_cBeam, g_cGlow;
+
 Handle g_vCapture = INVALID_HANDLE;
 Handle g_vConfigTueur = INVALID_HANDLE;
 Handle g_hTimer[65];
@@ -77,7 +80,6 @@ public void OnPluginStart() {
 	RegServerCmd("rp_item_map",			Cmd_ItemMaps,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	
 	g_vConfigTueur = CreateConVar("rp_config_kidnapping", "208,209,210,211,219,220-221");
-	
 	g_hActive 		= CreateConVar("rp_kidnapping", "0");
 	
 	for (int i = 1; i <= MaxClients; i++)
@@ -89,7 +91,6 @@ public void OnConfigsExecuted() {
 	HookConVarChange(g_vCapture, OnCvarChange);
 }
 public void OnCvarChange(Handle cvar, const char[] oldVal, const char[] newVal) {
-	
 	if( cvar == g_vCapture ) {
 		if( StrEqual(oldVal, "none") && StrEqual(newVal, "active") ) {
 			for (int i = 1; i <= MaxClients; i++) {
@@ -106,16 +107,40 @@ public void OnCvarChange(Handle cvar, const char[] oldVal, const char[] newVal) 
 public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerBuild, fwdOnPlayerBuild);
 	rp_HookEvent(client, RP_OnPlayerCommand, fwfCommand);
+	rp_HookEvent(client, RP_OnFrameSeconde, fwdOnFrame);
 	rp_HookEvent(client, RP_PostTakeDamageWeapon, fwdWeapon);
+	
 	g_bBlockDrop[client] = false;
+	g_bCanTP[client] = false;
 }
+public void OnMapStart() {
+	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt", true);
+	g_cGlow = PrecacheModel("materials/sprites/glow01.vmt", true);
+}
+
+public Action fwdOnFrame(int client) {
+	if( g_bCanTP[client] ) {
+		TE_SetupBeamRingPoint(g_vecOriginTP[client], 32.0, 33.0, g_cBeam, g_cGlow, 0, 0, 1.0, 8.0, 0.0, {200, 32, 32, 50}, 0, 0);
+		TE_SendToAll();
+	}
+}
+
 public Action fwdOnPlayerBuild(int client, float& cooldown) {
 	if( rp_GetClientJobID(client) != 41 )
 		return Plugin_Continue;
 	
-	ServerCommand("rp_item_lancercut %d -1", client);
-	cooldown = 10.0;
+	if( g_bCanTP[client] ) {
+		TeleportEntity(client, g_vecOriginTP[client], NULL_VECTOR, NULL_VECTOR);
+		g_bCanTP[client] = false;
+		
+		cooldown = 10.0;
+		return Plugin_Stop;
+	}
 	
+	GetClientAbsOrigin(client, g_vecOriginTP[client]);
+	g_bCanTP[client] = true;
+	
+	cooldown = 1.0;
 	return Plugin_Stop;
 }
 public void OnClientDisconnect(int client) {
