@@ -309,12 +309,11 @@ public Action Cmd_ItemSick(int args) {
 	static bool bDiag[65];
 	
 	int type = GetCmdArgInt(1);
-	int client = GetCmdArgInt(2);	
+	int client = GetCmdArgInt(2);
+	int vendeur = GetCmdArgInt(3);
 	
-	if( type == view_as<int>(sick_type_none) ) {
+	if( type == view_as<int>(sick_type_none), int client, int vendeur) {
 		bDiag[client] = true;
-		int client = GetCmdArgInt(2);
-		int vendeur = GetCmdArgInt(3);
 		
 		switch(rp_GetClientInt(client, i_Sick)) {
 			case sick_type_fievre:
