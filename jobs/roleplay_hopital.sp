@@ -317,12 +317,16 @@ public Action Cmd_ItemSick(int args) {
 		switch(rp_GetClientInt(client, i_Sick)) {
 			case sick_type_fievre:
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "sick_type_fievre", client);
+				rp_ClientXPIncrement(client, 250);
 			case sick_type_grippe:
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "sick_type_grippe", client);
+				rp_ClientXPIncrement(client, 250);
 			case sick_type_tourista:
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "sick_type_tourista", client);
+				rp_ClientXPIncrement(client, 250);
 			case sick_type_hemoragie:
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "sick_type_hemoragie", client);
+				rp_ClientXPIncrement(client, 250);
 			default: {
 				if( rp_GetClientInt(client, i_Sickness) )
 					CPrintToChat(client, "" ...MOD_TAG... " %T", "sick_type_poison", client);
