@@ -28,6 +28,11 @@
 		"fr"		"Quelqu'un a fouillé vos poches et a volé votre carte bancaire."
 		"en"		"Someone picked your pockets and stole your bank card."		
 	}
+	"Tueur_Alzheimer"
+	{
+		"fr"		"Le choc a été tellement violent que vous perdez temporairement la mémoire."
+		"en"		"The shock has been so bad that you temporarily lose your memory."		
+	}
 	"Tueur_ProtectOver"
 	{
 		"fr"		"Le contrat de protection est terminé."

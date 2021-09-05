@@ -838,6 +838,8 @@ enum int_user_data {
 	i_ELO,
 	i_PVPBannedUntil,
 	i_AllowedDismiss,
+	
+	i_AlzheimerTime,
 	i_udata_max
 };
 enum float_user_data {

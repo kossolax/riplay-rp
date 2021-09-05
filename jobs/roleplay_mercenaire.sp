@@ -122,7 +122,7 @@ public void OnMapStart() {
 public Action fwdOnFrame(int client) {
 	if( g_bCanTP[client] ) {
 		TE_SetupBeamRingPoint(g_vecOriginTP[client], 32.0, 33.0, g_cBeam, g_cGlow, 0, 0, 1.0, 8.0, 0.0, {200, 32, 32, 50}, 0, 0);
-		TE_SendToAll();
+		TE_SendToClient(client);
 	}
 }
 
@@ -241,6 +241,13 @@ public Action Cmd_ItemContrat(int args) {
 		g_iKillerPoint[vendeur][competance_type] = 1006;
 		rp_SetClientInt(target, i_ContratTotal, rp_GetClientInt(target, i_ContratTotal) + 10);
 	}
+	else if( StrContains(arg1, "freekill") == 0 ) {
+		g_iKillerPoint[vendeur][competance_type] = 1007;
+	}
+	else if( StrContains(arg1, "alzheimer") == 0 ) {
+		g_iKillerPoint[vendeur][competance_type] = 1008;
+		rp_SetClientInt(target, i_ContratTotal, rp_GetClientInt(target, i_ContratTotal) + 10);
+	}
 	
 	rp_SetClientInt(vendeur, i_ContratType, g_iKillerPoint[vendeur][competance_type]);
 	g_iKillerPoint[vendeur][competance_start] = GetTime();
@@ -352,6 +359,15 @@ public Action fwdTueurKill(int client, int attacker, float& respawn, int& tdm, f
 			CPrintToChat(from, "" ...MOD_TAG... " %T", "Tueur_ContratDone_Target", from, target_name, client_name);
 			rp_IncrementSuccess(from, success_list_tueur);
 			
+			
+			if( g_iKillerPoint[attacker][competance_type] == 1002 ) {
+				if( !rp_GetClientBool(client, b_HasProtImmu) ) {
+					if( !(rp_GetClientJobID(client) == 11 && rp_GetClientBool(client, b_GameModePassive) == false) && rp_GetClientInt(client, i_Sick) == 0 ) {
+						CPrintToChat(client, ""...MOD_TAG..." %T", "Drug_Fatal", client);
+						rp_SetClientInt(client, i_Sick, Math_GetRandomInt((view_as<int>(sick_type_none))+1, (view_as<int>(sick_type_max))-1));
+					}
+				}
+			}
 			if( g_iKillerPoint[attacker][competance_type] == 1003 ) {
 				int gFrom = rp_GetClientGroupID(from);
 				int gVictim = rp_GetClientGroupID(client);
@@ -389,14 +405,6 @@ public Action fwdTueurKill(int client, int attacker, float& respawn, int& tdm, f
 				
 				rp_ClientFloodIncrement(0, client, fd_kidnapping, 6.0*60.0);
 			}
-			else if( g_iKillerPoint[attacker][competance_type] == 1002 ) {
-				if( !rp_GetClientBool(client, b_HasProtImmu) ) {
-					if( !(rp_GetClientJobID(client) == 11 && rp_GetClientBool(client, b_GameModePassive) == false) && rp_GetClientInt(client, i_Sick) == 0 ) {
-						CPrintToChat(client, ""...MOD_TAG..." %T", "Drug_Fatal", client);
-						rp_SetClientInt(client, i_Sick, Math_GetRandomInt((view_as<int>(sick_type_none))+1, (view_as<int>(sick_type_max))-1));
-					}
-				}
-			}
 			else if( g_iKillerPoint[attacker][competance_type] == 1006 ) {
 				if( rp_GetClientBool(client, b_HaveCard) == true ){
 					rp_SetClientBool(client, b_HaveCard, false);
@@ -416,6 +424,11 @@ public Action fwdTueurKill(int client, int attacker, float& respawn, int& tdm, f
 					}
 				}
 				respawn *= 4.0;			
+			}
+			else if( g_iKillerPoint[attacker][competance_type] == 1008 ) {
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Tueur_Alzheimer", client);
+				rp_SetClientInt(client, i_AlzheimerTime, GetTime() + (4*60));
+				respawn *= 2.0;
 			}
 			else {
 				respawn *= 1.25;
