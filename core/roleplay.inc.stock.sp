@@ -17,21 +17,38 @@ int getNextReboot() {
 	static char szDate05[64], szDate16[64];
 	
 	int now = GetTime();
-	FormatTime(szDate05, sizeof(szDate05), "%e/%m/%Y/6/00/05", now);
-//	FormatTime(szDate16, sizeof(szDate16), "%e/%m/%Y/16/30/05", now);
+	FormatTime(szDate05, sizeof(szDate05), "%e/%m/%Y/4/00/05", now);
+	FormatTime(szDate16, sizeof(szDate16), "%e/%m/%Y/14/00/05", now);
 	
 	int iDate05 = DateToTimestamp(szDate05);
 	if( iDate05 < now )
 		iDate05 += (24 * 60 * 60);
 	
-//	int iDate16 = DateToTimestamp(szDate16);
-//	if( iDate16 < now )
-//		iDate16 += (24 * 60 * 60);
+	int iDate16 = DateToTimestamp(szDate16);
+	if( iDate16 < now )
+		iDate16 += (24 * 60 * 60);
 	
-//	int next = iDate05 > iDate16 ? iDate16 : iDate05;
+	int next = iDate05 > iDate16 ? iDate16 : iDate05;
 	int next = iDate05;
 	
 	return next;
+}
+int getNextCapture() {
+	static char szDate05[64];
+	
+	if( StringToInt(szDayOfWeek) == 3 || StringToInt(szDayOfWeek) == 0  ) { // mercredi && dimanche
+		int now = GetTime();
+		FormatTime(szDate05, sizeof(szDate05), "%e/%m/%Y/19/00/05", now);
+	
+		int iDate05 = DateToTimestamp(szDate05);
+		if( iDate05 < now )
+			iDate05 += (24 * 60 * 60);
+		
+		return iDate05;
+	}
+	else {
+		return GetTime() + (24 * 60 * 60);
+	}
 }
 float getKillAcceleration(int attack, int victim, int inflictor, const char[] weapon) {
 	int zoneID, attackID, victimID;
