@@ -39,8 +39,9 @@ enum competance {
 	competance_cryo,
 	competance_berserk,
 	competance_bigmac,
-	competance_type,
 	competance_cut_given,
+	competance_type,
+	competance_start,
 	
 	competance_max
 };
@@ -214,6 +215,7 @@ public Action Cmd_ItemContrat(int args) {
 	rp_HookEvent(target, RP_OnPlayerDead, fwdTueurKill);
 	rp_HookEvent(vendeur, RP_OnFrameSeconde, fwdFrame);
 	rp_HookEvent(vendeur, RP_PreGiveDamage, fwdDamage);
+	rp_HookEvent(vendeur, RP_OnPlayerCheckKey, fwdOnKey);
 	
 	rp_SetClientStat(vendeur, i_JobFails, rp_GetClientStat(client, i_JobFails) - 1);
 	g_bBlockDrop[vendeur] = true;
@@ -241,6 +243,7 @@ public Action Cmd_ItemContrat(int args) {
 	}
 	
 	rp_SetClientInt(vendeur, i_ContratType, g_iKillerPoint[vendeur][competance_type]);
+	g_iKillerPoint[vendeur][competance_start] = GetTime();
 	
 	OpenSelectSkill(vendeur);
 	
@@ -251,6 +254,35 @@ public Action Cmd_ItemContrat(int args) {
 	return Plugin_Handled;
 }
 // ----------------------------------------------------------------------------
+public Action fwdOnKey(int client, int doorID, int lockType) {
+	if( lockType == 2 && g_iKillerPoint[client][competance_type] == 1004 && g_iKillerPoint[vendeur][competance_start] > (6*60) ) {
+		int victim = rp_GetClientInt(client, i_ToKill);
+		
+		float pos[3];
+		Entity_GetAbsOrigin(doorID, pos);		
+		
+		char clientZone[64], targetZone[64];
+		rp_GetZoneInt(rp_GetZoneFromPoint(pos), zone_type_type, clientZone, sizeof(clientZone));
+		rp_GetZoneInt(rp_GetPlayerZone(victim), zone_type_type, targetZone, sizeof(targetZone));
+		
+		if( StrEqual(targetZone, "bunker") || StrEqual(targetZone, "villa") || StrEqual(targetZone, "mairie") ) {
+			if( StrEqual(clientZone, targetZone) ) 
+				return Plugin_Changed;
+		}
+		else if( StrContains(clientZone, "appart_") == 0 && StrContains(targetZone, "appart_") == 0 ) {
+			ReplaceString(clientZone, sizeof(clientZone), "appart_", "");
+			ReplaceString(targetZone, sizeof(targetZone), "appart_", "");
+			if( StringToInt(clientZone) == StringToInt(targetZone) )
+				return Plugin_Changed;
+		}
+		else if( StringToInt(clientZone) == StringToInt(targetZone) ) {
+			return Plugin_Changed;
+		}
+		
+	}
+	
+	return Plugin_Continue;
+}
 public Action fwdTueurCanKill(int attacker, int victim) {
 	if( victim == rp_GetClientInt(attacker, i_ToKill) || attacker == rp_GetClientInt(victim, i_ToKill) )
 		return Plugin_Handled;
@@ -689,6 +721,7 @@ void RestoreAssassinNormal(int client) {
 	
 	rp_UnhookEvent(client, RP_OnFrameSeconde, fwdFrame);
 	rp_UnhookEvent(client, RP_PreGiveDamage, fwdDamage);
+	rp_UnhookEvent(client, RP_OnPlayerCheckKey, fwdOnKey);
 	
 	rp_UnhookEvent( rp_GetClientInt(client, i_ToKill), RP_OnPlayerDead, fwdTueurKill);
 	
