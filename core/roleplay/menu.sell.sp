@@ -437,6 +437,9 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 			else if( StrContains(buffer, "freekill") == 0 ) {
 				type = 1007;
 			}
+			else if( StrContains(buffer, "alzheimer") == 0 ) {
+				type = 1008;
+			}
 			else {
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_FromServer", client);
 				return;
@@ -480,6 +483,8 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 					continue;
 				if( type == 1007 && g_iUserData[i][i_KillJailDuration] < 30 )
 					continue;
+				if( type == 1008 && g_iUserData[i][i_AlzheimerTime]+(24*60) > GetTime() )
+					continue;
 				
 				if( type == 1005 && rp_ClientFloodTriggered(0, i, fd_kidnapping) ) {
 					AddMenuItem(hGiveMenu, "_", name, ITEMDRAW_DISABLED);
@@ -503,7 +508,7 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 					continue;
 				}
 				
-				if( GetGroupPrimaryID(i) > 0 && g_bIsInCaptureMode ) {
+				if( GetGroupPrimaryID(i) > 0 && ( g_bIsInCaptureMode|| (getNextCapture() < GetTime()+(10*60)) ) {
 					AddMenuItem(hGiveMenu, "_", name, ITEMDRAW_DISABLED);
 					count++;
 					continue;

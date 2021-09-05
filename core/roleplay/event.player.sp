@@ -220,19 +220,19 @@ public Action OnClientCommandKeyValues(int client, KeyValues kv)  {
 public void CommandUse(int Client) {
 	
 	int target = IsAtBankPoint(Client);
-	if( target ) {
-		DisplayBankMenu(Client, target);
-	}
+	bool hasAlzheimer = (g_iUserData[client][i_AlzheimerTime] > GetTime());
+	
 	float f_ClientOrigin[3];
 	GetClientAbsOrigin(Client, f_ClientOrigin);
-		
-	if( rp_GetPlayerZone(Client) == 181 ) {
-		Cmd_QuestMenu(Client);
-	}
 	
-	if( IsAtPhonePoint(Client) ) {
+	if( target && !hasAlzheimer )
+		DisplayBankMenu(Client, target);
+	
+	if( rp_GetPlayerZone(Client) == 181 && !hasAlzheimer )
+		Cmd_QuestMenu(Client);
+	
+	if( IsAtPhonePoint(Client) && !hasAlzheimer )
 		Menu_DisplayPhone(Client);
-	}
 		
 	if( g_iGrabbing[Client] > 0  ) {
 		if( Client == rp_GetBuildingData(g_iGrabbing[Client], BD_owner) ) {
@@ -244,10 +244,12 @@ public void CommandUse(int Client) {
 			ScheduleEntityInput(g_iGrabbing[Client], 0.25, "Wake");
 		}
 	}
-
-	Call_StartForward( view_as<Handle>(g_hRPNative[Client][RP_OnPlayerUse]) );
-	Call_PushCell(Client);
-	Call_Finish();
+	
+	if( !hasAlzheimer ) {
+		Call_StartForward( view_as<Handle>(g_hRPNative[Client][RP_OnPlayerUse]) );
+		Call_PushCell(Client);
+		Call_Finish();
+	}
 	
 	int Ent = GetClientAimTarget(Client, false);
 
@@ -268,7 +270,7 @@ public void CommandUse(int Client) {
 
 	}
 	//Valid:
-	if(IsValidDoor(Ent)) {
+	if( IsValidDoor(Ent) ) {
 		ToggleDoor(Client, Ent);
 	}
 	else if( IsAmmunition(Ent) && IsEntitiesNear(Client, Ent, true) ) {

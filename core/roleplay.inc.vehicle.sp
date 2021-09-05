@@ -48,6 +48,8 @@ void rp__SetClientVehicle(int client, int vehicleID, bool force=false) {
 	
 	if( !rp_GetClientKeyVehicle(client, vehicleID) )
 		return;
+	if( g_iUserData[client][i_AlzheimerTime] > GetTime() )
+		return false;
 	
 	if( LookupAttachment(client, "legacy_weapon_bone") <= 0 ) {
 		SetEntityModel(client, "models/player/custom_player/legacy/tm_phoenix.mdl");

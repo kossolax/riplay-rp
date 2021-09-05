@@ -202,7 +202,13 @@ stock bool IsPlayerHaveKey( int client, int door, int lock=0) {
 		
 	if( (GetJobPrimaryID(client) == 1 || GetJobPrimaryID(client) == 101) && (GetZoneBit(GetPlayerZone(door)) & BITZONE_PERQUIZ) )
 		return true;
+	if( GetJobPrimaryID(client) == 1 && StringToInt(g_szZoneList[GetPlayerZone(door)][zone_type_type]) == 1 )
+		return true;
+	if( GetJobPrimaryID(client) == 101 && StringToInt(g_szZoneList[GetPlayerZone(door)][zone_type_type]) == 101 )
+		return true;
 	
+	if( g_iUserData[client][i_AlzheimerTime] > GetTime() )
+		return false;
 	
 	if( lock == 2 && (GetJobPrimaryID(client) == 51 || GetJobPrimaryID(client) == 61) ) {
 		int appart = getZoneAppart(door);
