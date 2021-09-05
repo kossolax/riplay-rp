@@ -255,15 +255,15 @@ public Action Cmd_ItemContrat(int args) {
 }
 // ----------------------------------------------------------------------------
 public Action fwdOnKey(int client, int doorID, int lockType) {
-	if( lockType == 2 && g_iKillerPoint[client][competance_type] == 1004 && g_iKillerPoint[vendeur][competance_start] > (6*60) ) {
+	if( lockType == 2 && g_iKillerPoint[client][competance_type] == 1004 && g_iKillerPoint[client][competance_start] > (6*60) ) {
 		int victim = rp_GetClientInt(client, i_ToKill);
 		
 		float pos[3];
 		Entity_GetAbsOrigin(doorID, pos);		
 		
 		char clientZone[64], targetZone[64];
-		rp_GetZoneInt(rp_GetZoneFromPoint(pos), zone_type_type, clientZone, sizeof(clientZone));
-		rp_GetZoneInt(rp_GetPlayerZone(victim), zone_type_type, targetZone, sizeof(targetZone));
+		rp_GetZoneData(rp_GetZoneFromPoint(pos), zone_type_type, clientZone, sizeof(clientZone));
+		rp_GetZoneData(rp_GetPlayerZone(victim), zone_type_type, targetZone, sizeof(targetZone));
 		
 		if( StrEqual(targetZone, "bunker") || StrEqual(targetZone, "villa") || StrEqual(targetZone, "mairie") ) {
 			if( StrEqual(clientZone, targetZone) ) 
