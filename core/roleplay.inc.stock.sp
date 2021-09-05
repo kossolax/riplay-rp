@@ -34,8 +34,9 @@ int getNextReboot() {
 	return next;
 }
 int getNextCapture() {
-	static char szDate05[64];
+	static char szDate05[64], szDayOfWeek[12];
 	
+	FormatTime(szDayOfWeek, 11, "%w");
 	if( StringToInt(szDayOfWeek) == 3 || StringToInt(szDayOfWeek) == 0  ) { // mercredi && dimanche
 		int now = GetTime();
 		FormatTime(szDate05, sizeof(szDate05), "%e/%m/%Y/19/00/05", now);

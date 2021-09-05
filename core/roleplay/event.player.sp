@@ -220,7 +220,7 @@ public Action OnClientCommandKeyValues(int client, KeyValues kv)  {
 public void CommandUse(int Client) {
 	
 	int target = IsAtBankPoint(Client);
-	bool hasAlzheimer = (g_iUserData[client][i_AlzheimerTime] > GetTime());
+	bool hasAlzheimer = (g_iUserData[Client][i_AlzheimerTime] > GetTime());
 	
 	float f_ClientOrigin[3];
 	GetClientAbsOrigin(Client, f_ClientOrigin);

@@ -508,7 +508,7 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 					continue;
 				}
 				
-				if( GetGroupPrimaryID(i) > 0 && ( g_bIsInCaptureMode|| (getNextCapture() < GetTime()+(10*60)) ) {
+				if( GetGroupPrimaryID(i) > 0 && ( g_bIsInCaptureMode || (getNextCapture() < GetTime()+(10*60)) ) ) {
 					AddMenuItem(hGiveMenu, "_", name, ITEMDRAW_DISABLED);
 					count++;
 					continue;
