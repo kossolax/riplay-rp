@@ -29,7 +29,7 @@ int getNextReboot() {
 		iDate16 += (24 * 60 * 60);
 	
 	int next = iDate05 > iDate16 ? iDate16 : iDate05;
-	int next = iDate05;
+	//int next = iDate05;
 	
 	return next;
 }
