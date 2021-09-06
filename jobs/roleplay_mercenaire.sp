@@ -262,7 +262,7 @@ public Action Cmd_ItemContrat(int args) {
 }
 // ----------------------------------------------------------------------------
 public Action fwdOnKey(int client, int doorID, int lockType) {
-	if( lockType == 2 && g_iKillerPoint[client][competance_type] == 1004 && g_iKillerPoint[client][competance_start] > (6*60) ) {
+	if( lockType == 2 && g_iKillerPoint[client][competance_type] == 1004 && g_iKillerPoint[client][competance_start]+(6*60) < GetTime() ) {
 		int victim = rp_GetClientInt(client, i_ToKill);
 		
 		float pos[3];
