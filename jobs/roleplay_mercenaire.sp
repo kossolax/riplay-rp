@@ -249,6 +249,9 @@ public Action Cmd_ItemContrat(int args) {
 		g_iKillerPoint[vendeur][competance_type] = 1008;
 		rp_SetClientInt(target, i_ContratTotal, rp_GetClientInt(target, i_ContratTotal) + 10);
 	}
+	else if( StrContains(arg1, "vengance") == 0 ) {
+		g_iKillerPoint[vendeur][competance_type] = 1009;
+	}
 	
 	rp_SetClientInt(vendeur, i_ContratType, g_iKillerPoint[vendeur][competance_type]);
 	g_iKillerPoint[vendeur][competance_start] = GetTime();

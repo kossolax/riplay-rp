@@ -440,6 +440,9 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 			else if( StrContains(buffer, "alzheimer") == 0 ) {
 				type = 1008;
 			}
+			else if( StrContains(buffer, "vengance") == 0 ) {
+				type = 1000;
+			}
 			else {
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_FromServer", client);
 				return;
@@ -485,6 +488,8 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 					continue;
 				if( type == 1008 && g_iUserData[i][i_AlzheimerTime]+(24*60) > GetTime() )
 					continue;
+				if( type == 1009 && g_iUserData[target][i_LastKilled] != i )
+					continue;
 				
 				if( type == 1005 && rp_ClientFloodTriggered(0, i, fd_kidnapping) ) {
 					AddMenuItem(hGiveMenu, "_", name, ITEMDRAW_DISABLED);
@@ -515,7 +520,11 @@ public int eventGiveMenu_2Ter(Handle p_hItemMenu, MenuAction p_oAction, int clie
 				}
 				
 				count++;
-				Format(name, sizeof(name), "%N", i);
+				GetClientName2(i, name, sizeof(name));
+				
+				if( type == 1009 ) // vengance = nom caché
+					String_GetRandom(name, sizeof(name), 16);
+				
 				Format(tmp, sizeof(tmp), "%s_%s_%s_%d_%d_%s", data[0], data[1], data[2], i, client+1000, data[5]);
 				AddMenuItem(hGiveMenu, tmp, name);
 			}
