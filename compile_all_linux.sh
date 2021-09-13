@@ -24,4 +24,3 @@ for file in $files; do
     fi
     _compile $file 
 done
- 
