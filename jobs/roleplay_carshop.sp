@@ -237,7 +237,10 @@ public Action Check_VehiclePolice(Handle timer, any none) {
 			rp_SetClientKeyVehicle(i, EntRefToEntIndex(g_iVehiclePolice), true);
 		}
 			
-		if( rp_GetClientJobID(i) == 101 && EntRefToEntIndex(g_iVehicleJustice) > 0 )
+		if( rp_GetClientJobID(i) == 101 && EntRefToEntIndex(g_iVehicleJustice) > 0 ){
+			if( rp_GetClientJobID(i) == 106 || rp_GetClientJobID(i) == 107 && CS_TEAM_T )
+			rp_SetClientKeyVehicle(i, EntRefToEntIndex(g_iVehicleJustice), false);
+			}
 			rp_SetClientKeyVehicle(i, EntRefToEntIndex(g_iVehicleJustice), true);
 		
 		if( rp_GetClientJobID(i) == 11 && EntRefToEntIndex(g_iVehicleHopital) > 0 )
