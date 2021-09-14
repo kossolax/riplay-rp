@@ -65,20 +65,20 @@ var filter = {
 
 	debug: new RegExp(/L.*: \[DEBUG\]/),
 
-	afk: new RegExp(/L.*: \[TSX-RP\] \[AFK\] .*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><> est maintenant AFK\./),
-	noafk: new RegExp(/L.*: \[TSX-RP\] \[AFK\] .*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><> n'est plus AFK\./),
+	afk: new RegExp(/L.*: \[RIPLAY-RP\] \[AFK\] .*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><> est maintenant AFK\./),
+	noafk: new RegExp(/L.*: \[RIPLAY-RP\] \[AFK\] .*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><> n'est plus AFK\./),
 	connect : new RegExp(/L.*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><>" entered the game/),
 	disconnect: new RegExp(/L.*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><.*>" disconnected \(reason ".*"\)/),
-	ip: new RegExp(/L.*: \[TSX-RP\] Loading userdata .*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><> ([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})/),
+	ip: new RegExp(/L.*: \[RIPLAY-RP\] Loading userdata .*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><> ([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})/),
 	kill: new RegExp(/L.*: ".*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><.*>.* killed.*<[0-9]{1,8}><(STEAM_1:[0-1]:[0-9]{1,14})><.*>\"/),
 
-	chat: new RegExp(/L.*: ".*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><.*>.* say ".*"|L.*: \[TSX-RP\] \[CHAT-LOCAL\] .*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><.*>: .*/),
-	item: new RegExp(/L.*: \[TSX-RP\] \[ITEM\] .*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><.*> a utilisé: .*/),
-	money: new RegExp(/L.*: \[TSX-RP\] \[GIVE-MONEY\] .*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><> a donné ([0-9]{1,8})\$ à .*<[0-9]{1,8}><(STEAM_1:[0-1]:[0-9]{1,14})><>./),
-	loto: new RegExp(/L.*: \[TSX-RP\] \[ITEM-VENDRE\] .*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><> a vendu ([0-9]{1,3}) (?:Ticket\ à\ gratter|Happy\ Meal|Ticket\ cagnotte) .*<[0-9]{1,8}><(STEAM_1:[0-1]:[0-9]{1,14})><>/),
-	buy: new RegExp(/L.*: \[TSX-RP\] \[ITEM-VENDRE\] .*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><> a vendu ([0-9]{1,3}) .*<[0-9]{1,8}><(STEAM_1:[0-1]:[0-9]{1,14})><>/),
-	steal: new RegExp(/L.*: \[TSX-RP\] \[(?:VOL-18TH|VOL)\] .*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><> a vol.*<[0-9]{1,8}><(STEAM_1:[0-1]:[0-9]{1,14})><>.*/),
-	jail: new RegExp(/L.*: \[(?:JAIL|TSX-RP)\] \[(?:JAIL|AMENDE|JUGE|CAUTION|JAIL-?.?)\].*(STEAM_1:[0-1]:[0-9]{1,14})/),
+	chat: new RegExp(/L.*: ".*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><.*>.* say ".*"|L.*: \[RIPLAY-RP\] \[CHAT-LOCAL\] .*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><.*>: .*/),
+	item: new RegExp(/L.*: \[RIPLAY-RP\] \[ITEM\] .*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><.*> a utilisé: .*/),
+	money: new RegExp(/L.*: \[RIPLAY-RP\] \[GIVE-MONEY\] .*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><> a donné ([0-9]{1,8})\$ à .*<[0-9]{1,8}><(STEAM_1:[0-1]:[0-9]{1,14})><>./),
+	loto: new RegExp(/L.*: \[RIPLAY-RP\] \[ITEM-VENDRE\] .*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><> a vendu ([0-9]{1,3}) (?:Ticket\ à\ gratter|Happy\ Meal|Ticket\ cagnotte) .*<[0-9]{1,8}><(STEAM_1:[0-1]:[0-9]{1,14})><>/),
+	buy: new RegExp(/L.*: \[RIPLAY-RP\] \[ITEM-VENDRE\] .*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><> a vendu ([0-9]{1,3}) .*<[0-9]{1,8}><(STEAM_1:[0-1]:[0-9]{1,14})><>/),
+	steal: new RegExp(/L.*: \[RIPLAY-RP\] \[(?:VOL-18TH|VOL)\] .*<[0-9]{1,8}><STEAM_1:[0-1]:[0-9]{1,14}><> a vol.*<[0-9]{1,8}><(STEAM_1:[0-1]:[0-9]{1,14})><>.*/),
+	jail: new RegExp(/L.*: \[(?:JAIL|RIPLAY-RP)\] \[(?:JAIL|AMENDE|JUGE|CAUTION|JAIL-?.?)\].*(STEAM_1:[0-1]:[0-9]{1,14})/),
 
 	other2: new RegExp(/(STEAM_1:[0-1]:[0-9]{1,14}).*(STEAM_1:[0-1]:[0-9]{1,14})/),
 	other: new RegExp(/(STEAM_1:[0-1]:[0-9]{1,14})/)
