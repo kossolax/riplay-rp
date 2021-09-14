@@ -65,7 +65,7 @@ char g_szArticles[][][512] = {
 	{"221-8",		"Act_BavuPol",		"24",	"3000",		"2000",	"Act_BavuPolDesc" },
 	{"221-9",		"Act_Seq",			"6",	"800",		"500",	"Act_SeqDesc" },
 	{"221-10",	"Act_AssocMalf",	"6",	"500",		"0",	"Act_AssocMalfDesc" },
-	{"221-11",		"Act_Pute",			"6",	"450",		"0",	"Act_PuteDesc" }
+	{"221-11",		"Act_Pute",			"6",	"450",		"0",	"Act_PuteDesc" },
 	{"221-12",		"Act_ProfitVulne",	"18",	"3000",		"1500",	"Act_ProfitVulneDesc" },
 	{"221-13-a",	"Act_Destruct",		"6",	"1500",		"1000",	"Act_DestructDesc" },
 	{"221-13-b",	"Act_ViePrv",		"6",	"950",		"500",	"Act_ViePrvDesc" },
