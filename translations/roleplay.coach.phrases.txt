@@ -64,8 +64,8 @@
 	}
 	"Coach_BasketWear"
 	{
-		"fr"	"Vous avez trop couru, votre belle paire de baskets vient de partir en lambeaux."
-		"en"	"You ran too much, your nice pair of sneakers just fell apart."
+		"fr"	"{red}Vous avez trop couru, votre belle paire de baskets vient de partir en lambeaux.{default}"
+		"en"	"{red}You ran too much, your nice pair of sneakers just fell apart.{default}"
 	}
 	"Coach_MaskDisapear"
 	{
