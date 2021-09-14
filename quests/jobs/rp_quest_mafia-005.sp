@@ -110,7 +110,7 @@ public void Q2_End(int objectiveID, int client) {
 	rp_SetJobCapital(cap, rp_GetJobCapital(cap) - 1250);
 	rp_ClientMoney(client, i_AddToPay, 1250);
 	
-	rp_ClientXPIncrement(client, 500);
+	rp_ClientXPIncrement(client, 1500);
 }
 public void Q1_Abort(int objectiveID, int client) {
 	g_iDoing[client] = 0;
