@@ -47,12 +47,12 @@ int g_cBeam;
 
 // Numéro, Résumé, Heures, Amende, Dédo, Détails
 char g_szArticles[][][512] = {
-	{"221-1-a-12",	"Act_KillAtt",		"12",	"500",		"1000",	"Act_KillAttDesc" },
-	{"221-1-a-24",	"Act_Kill",			"24",	"1250",		"2500",	"Act_KillDesc" },
-	{"221-1-a-48",	"Act_KillAggr",		"48",	"2500",		"5000",	"Act_KillAggrDesc" },
+	{"221-1-a-1",	"Act_KillAtt",		"12",	"500",		"1000",	"Act_KillAttDesc" },
+	{"221-1-a-2",	"Act_Kill",			"24",	"1250",		"2500",	"Act_KillDesc" },
+	{"221-1-a-3",	"Act_KillAggr",		"48",	"2500",		"5000",	"Act_KillAggrDesc" },
 
-	{"221-1-b",		"Act_KillCT",		"12",	"2000",		"1500",	"Act_KillCTDesc" },
-	{"221-1-d",		"Act_Aggr",			"6",	"250",		"100",	"Act_AggrDesc" },
+	{"221-1-b",		"Act_KillCT",		"18",	"2000",		"1500",	"Act_KillCTDesc" },
+	{"221-1-c",		"Act_Aggr",			"6",	"250",		"100",	"Act_AggrDesc" },
 
 	{"221-2",		"Act_Vol",			"6",	"450",		"-1",	"Act_VolDesc" },
 	{"221-3",		"Act_MqConvoc",		"18",	"4000",		"0",	"Act_MqConvocDesc" },
@@ -60,9 +60,12 @@ char g_szArticles[][][512] = {
 	{"221-5-a",		"Act_NuisaSono", 	"6",	"1500", 	"0",	"Act_NuisaSonoDesc" },
 	{"221-5-b",		"Act_Insult", 		"6",	"1000", 	"1250",	"Act_InsultDesc" },
 	{"221-5-c",		"Act_HarcMen", 		"6",	"800",		"300",	"Act_HarcMenDesc" },
+	{"221-6",		"Act_Recid", 		"6",	"500",		"300",	"Act_RecidDesc" },
 	{"221-7",		"Act_Obstru",		"6",	"650",		"0",	"Act_ObstruDesc" },
 	{"221-8",		"Act_BavuPol",		"24",	"3000",		"2000",	"Act_BavuPolDesc" },
-	{"221-10-b",	"Act_AssocMalf",	"6",	"500",		"0",	"Act_AssocMalfDesc" },
+	{"221-9",		"Act_Seq",			"6",	"800",		"500",	"Act_SeqDesc" },
+	{"221-10",	"Act_AssocMalf",	"6",	"500",		"0",	"Act_AssocMalfDesc" },
+	{"221-11",		"Act_Pute",			"6",	"450",		"0",	"Act_PuteDesc" }
 	{"221-12",		"Act_ProfitVulne",	"18",	"3000",		"1500",	"Act_ProfitVulneDesc" },
 	{"221-13-a",	"Act_Destruct",		"6",	"1500",		"1000",	"Act_DestructDesc" },
 	{"221-13-b",	"Act_ViePrv",		"6",	"950",		"500",	"Act_ViePrvDesc" },
@@ -72,8 +75,6 @@ char g_szArticles[][][512] = {
 	{"221-14-b",	"Act_IllegTrafc",	"6",	"1000",		"250",	"Act_IllegTrafcDesc" },
 	{"221-15-a",	"Act_TCorrup",		"24",	"10000",	"0",	"Act_TCorrupDesc" },
 	{"221-15-b",	"Act_Escroq",		"18",	"5000",		"-1",	"Act_EscroqDesc" },
-	{"221-16",		"Act_Seq",			"6",	"800",		"500",	"Act_SeqDesc" },
-	{"221-17",		"Act_Pute",			"6",	"450",		"0",	"Act_PuteDesc" }
 };
 char g_szAcquittement[6][64] = { "Justice_Acquittement_NonCoupable", "Justice_Acquittement_Conciliation", "Justice_Acquittement_Impossible", "Justice_Acquittement_DejaVu", "Justice_Acquittement_Cancel", "Justice_Acquittement_Newbie"};
 char g_szCondamnation[6][64] = { "Justice_Condamnation_VerySmall", "Justice_Condamnation_Small", "Justice_Condamnation_Average", "Justice_Condamnation_Hard", "Justice_Condamnation_VeryHard", "Justice_Condamnation_Disconnect"};
