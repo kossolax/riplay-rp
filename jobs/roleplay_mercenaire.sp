@@ -129,8 +129,6 @@ public Action fwdOnFrame(int client) {
 public Action fwdOnPlayerBuild(int client, float& cooldown) {
 	if( rp_GetClientJobID(client) != 41 )
 		return Plugin_Continue;
-	if(rp_IsInPVP(client))
-		ACCESS_DENIED(client);
 	if( g_bCanTP[client] ) {
 		TeleportEntity(client, g_vecOriginTP[client], NULL_VECTOR, NULL_VECTOR);
 		g_bCanTP[client] = false;
