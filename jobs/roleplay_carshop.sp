@@ -233,16 +233,16 @@ public Action Check_VehiclePolice(Handle timer, any none) {
 		if( !IsValidClient(i) )
 			continue;
 		
-		if( rp_GetClientJobID(i) == 1 && EntRefToEntIndex(g_iVehiclePolice) > 0 ) {
+		if( rp_GetClientJobID(i) == 1 && EntRefToEntIndex(g_iVehiclePolice) > 0 )
 			rp_SetClientKeyVehicle(i, EntRefToEntIndex(g_iVehiclePolice), true);
-		}
 			
-		if( rp_GetClientJobID(i) == 101 && EntRefToEntIndex(g_iVehicleJustice) > 0 ){
+		if( rp_GetClientJobID(i) == 101 && EntRefToEntIndex(g_iVehicleJustice) > 0 ) {
 			if( (rp_GetClientInt(i, i_Job) == 106 || rp_GetClientInt(i, i_Job) == 107) && GetClientTeam(i) == CS_TEAM_T )
 				rp_SetClientKeyVehicle(i, EntRefToEntIndex(g_iVehicleJustice), false);
-			}
+			
 			rp_SetClientKeyVehicle(i, EntRefToEntIndex(g_iVehicleJustice), true);
-		}		
+		}
+		
 		if( rp_GetClientJobID(i) == 11 && EntRefToEntIndex(g_iVehicleHopital) > 0 )
 			rp_SetClientKeyVehicle(i, EntRefToEntIndex(g_iVehicleHopital), true);
 		
