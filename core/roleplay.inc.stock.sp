@@ -17,8 +17,8 @@ int getNextReboot() {
 	static char szDate05[64], szDate16[64];
 	
 	int now = GetTime();
-	FormatTime(szDate05, sizeof(szDate05), "%e/%m/%Y/4/00/05", now);
-	FormatTime(szDate16, sizeof(szDate16), "%e/%m/%Y/14/00/05", now);
+	FormatTime(szDate05, sizeof(szDate05), "%e/%m/%Y/6/00/05", now);
+	FormatTime(szDate16, sizeof(szDate16), "%e/%m/%Y/16/00/05", now);
 	
 	int iDate05 = DateToTimestamp(szDate05);
 	if( iDate05 < now )
@@ -39,7 +39,7 @@ int getNextCapture() {
 	FormatTime(szDayOfWeek, 11, "%w");
 	if( StringToInt(szDayOfWeek) == 3 || StringToInt(szDayOfWeek) == 0  ) { // mercredi && dimanche
 		int now = GetTime();
-		FormatTime(szDate05, sizeof(szDate05), "%e/%m/%Y/19/00/05", now);
+		FormatTime(szDate05, sizeof(szDate05), "%e/%m/%Y/21/00/05", now);
 	
 		int iDate05 = DateToTimestamp(szDate05);
 		if( iDate05 < now )
