@@ -1054,7 +1054,7 @@ public Action Cmd_ItemGiveBonus(int args) {
 	int itemID = GetCmdArgInt(args);
 	
 	int appartID = rp_GetPlayerZoneAppart(client);
-	if( appartID == -1 || appartID >= 50) {
+	if( appartID == -1 || appartID >= 150) {
 		CPrintToChat(client, ""...MOD_TAG..." %T", "Error_OnlyInsideAppart", client);
 		ITEM_CANCEL(client, itemID);
 		return Plugin_Handled;
