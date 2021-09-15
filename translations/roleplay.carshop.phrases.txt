@@ -73,6 +73,11 @@
 		"fr"		"Il n'y a plus de place dans ce véhicule."
 		"en"		"There is no more room in this vehicle."
 	}
+	"Vehicle_YouAreNotCT"
+	{
+		"fr"		"Ceci est un véhicule de fonction, vous n'êtes pas en service actuellement."
+		"en"		"This is a company vehicle, you are not currently in service."
+	}
 	// ----------------------------------------------------------------------------------------------
 	"Vehicle_CarGiveKey"
 	{
