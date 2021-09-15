@@ -938,35 +938,35 @@ public void CRON_TIMER() {
 	FormatTime(szSecondes, 11, "%S");
 
 	if( StringToInt(szDayOfWeek) == 2 || StringToInt(szDayOfWeek) == 6 ) {	// Mardi & Samedi
-		if( StringToInt(szHours) == 19 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
+		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
 			ServerCommand("rp_force_loto");
 		}
 	}
 	if( StringToInt(szDayOfWeek) == 5  ) {	// Vendredi
-		if( StringToInt(szHours) == 19 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
+		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
 			ServerCommand("rp_force_appart");
 		}
-		if( StringToInt(szHours) == 19 && StringToInt(szMinutes) == 30 && StringToInt(szSecondes) == 0 ) {	// 21h30m00s
+		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 30 && StringToInt(szSecondes) == 0 ) {	// 21h30m00s
 			ServerCommand("rp_force_villa");
 		}
 	}
 	if( StringToInt(szDayOfWeek) == 1  ) {	// Lundi
-		if( StringToInt(szHours) == 19 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
+		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
 			ServerCommand("rp_force_maire");
 		}
 	}
 	
 	
-	if( (StringToInt(szHours) ==  3 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 30) ) {	
+	if( (StringToInt(szHours) ==  5 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 30) ) {	
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
 		 //ServerCommand("rp_give_assu");
 	}
-	if( (StringToInt(szHours) ==  3 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 59) ) {
+	if( (StringToInt(szHours) ==  5 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 59) ) {
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootNow", LANG_SERVER);
 	}
-	if( (StringToInt(szHours) ==  4 && StringToInt(szMinutes) ==  0 && StringToInt(szSecondes) == 0) ) {
+	if( (StringToInt(szHours) ==  6 && StringToInt(szMinutes) ==  0 && StringToInt(szSecondes) == 0) ) {
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootNow", LANG_SERVER);
 		
 		for(int i = 1; i <= MaxClients; i++)
@@ -976,16 +976,16 @@ public void CRON_TIMER() {
 		CreateTimer(0.1, RebootServer);
 	}
 	
-	if( (StringToInt(szHours) ==  13 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 30) ) {	
+	if( (StringToInt(szHours) ==  15 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 30) ) {	
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootIn", LANG_SERVER, 30);
 		ServerCommand("rp_give_assu");
 	}
-	if( (StringToInt(szHours) ==  13 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 59) ) {
+	if( (StringToInt(szHours) ==  15 && StringToInt(szMinutes) == 59 && StringToInt(szSecondes) == 59) ) {
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootNow", LANG_SERVER);
 	}
-	if( (StringToInt(szHours) ==  14 && StringToInt(szMinutes) ==  0 && StringToInt(szSecondes) == 0) ) {
+	if( (StringToInt(szHours) ==  16 && StringToInt(szMinutes) ==  0 && StringToInt(szSecondes) == 0) ) {
 		CPrintToChatAll("" ...MOD_TAG... " %T", "Cmd_RebootNow", LANG_SERVER);
 		
 		for(int i = 1; i <= MaxClients; i++)
@@ -997,12 +997,12 @@ public void CRON_TIMER() {
 	
 	
 	if( StringToInt(szDayOfWeek) == 3 ) { // mercredi
-		if( StringToInt(szHours) == 19 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
+		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 0 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
 			ServerCommand("rp_capture 1");
 		}
 	}
 	if( StringToInt(szDayOfWeek) == 0 ) { // Dimanche
-		if( StringToInt(szHours) == 19 && StringToInt(szMinutes) == 00 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
+		if( StringToInt(szHours) == 21 && StringToInt(szMinutes) == 00 && StringToInt(szSecondes) == 0 ) {	// 21h00m00s
 			ServerCommand("rp_capture 1");
 		}
 	}
