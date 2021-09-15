@@ -90,8 +90,7 @@
 	{
 		"#format"	"{1:d},{2:d}"
 		"fr"		"Vous avez été jugé au moins 3 fois pour le même acte illégal, nous rajoutons {red}{1}{default}h de prison et {red}{2}{default}$ d’amende à votre sentence."
-		"en"		"You have been tried at least 3 times for the same illegal act, we add {red}{1}{default} hours in prison and a {red}${2}{default} fine 
-at your sentence."		
+		"en"		"You have been tried at least 3 times for the same illegal act, we add {red}{1}{default} hours in prison and a {red}${2}{default} fine at your sentence."		
 	}
 	"Act_Fake"
 	{
