@@ -749,6 +749,8 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 					
 					if( StrContains(g_szItemList[id][item_type_extra_cmd], "rp_item_vehicle") == 0 )
 						continue;
+					if( StrContains(g_szItemList[id][item_type_extra_cmd], "rp_item_piedbiche") == 0 )
+						continue;
 				}
 				
 				if( StringToInt( g_szItemList[id][item_type_job_id] ) == 101 )
