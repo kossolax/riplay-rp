@@ -1318,7 +1318,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				int amount = 0, ItemRand[32];
 				
 				for(int i = 0; i < MAX_ITEMS; i++) {
-					if( rp_GetItemInt(i, item_type_job_id) != 81 )
+					if( rp_GetItemInt(i, item_type_job_id) != 81 || rp_GetItemInt(i, item_type_job_id) == 86 )
 						continue;
 					ItemRand[amount++] = i;
 				}
