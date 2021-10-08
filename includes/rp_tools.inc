@@ -266,7 +266,7 @@ stock bool rp_AcceptEntityInput(int dest, const char[] input, int activator=-1, 
 }
 // ----------------------------------------------------------------------------
 stock int Math_GetRandomPow(int min, int max) {
-	return RoundToFloor(float(max - min) * Pow(GetURandomFloat(), 2.0)) + min;
+	return RoundToFloor(float(max - min + 1) * Pow(GetURandomFloat(), 2.0)) + min;
 }
 stock void String_WordWrap(char[] s, int wrapline) {
 	int i, k, wraploc, lastwrap;
