@@ -7,7 +7,7 @@
 #include <sdktools.inc>
 #include <sdkhooks.inc>
 #include <smlib.inc>
-#include <csgo_items.inc>
+#include <eItems>
 #include <colors_csgo>
 #include <roleplay>
 
