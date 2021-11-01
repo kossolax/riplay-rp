@@ -57,7 +57,8 @@ char g_szSuperAdmin[][] = {
 	"76561198086680839", // CBKKK
 	"76561198007500554", // Messorem
 	"76561198188535251", // Exodus (Il m'a forcé :'( )
-	"76561198334900775" // Leethium
+	"76561198334900775", // Leethium
+	"76561198240487014" // Mamasita
 };
 
 int g_iPlayerCount;
