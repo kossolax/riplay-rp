@@ -13,8 +13,8 @@
 
 #pragma newdecls required
 
-#define ZOMBIE_XP 100
-#define ZOMBIE_HP 250
+#define ZOMBIE_XP 200
+#define ZOMBIE_HP 1000
 #define ZOMBIE_SCALE 1.0
 #define ZOMBIE_DAMAGE 80
 
