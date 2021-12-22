@@ -179,13 +179,13 @@ stock InsertBan(int client, int target, char targetSteamID[64], int time, const 
 	
 	char clientSteamID[64];
 	if( client == 0 ) {
-		Format(clientSteamID, 63, "SERVER");
+		Format(clientSteamID, 63, "SERVER2");
 	}
 	else if( IsClientInGame(client) ) {
 		GetClientAuthId(client, AuthId_SteamID64, clientSteamID, sizeof(clientSteamID));
 	}
 	else {
-		Format(clientSteamID, 63, "SERVER");
+		Format(clientSteamID, 63, "SERVER3");
 	}
 	
 	char game[32];
