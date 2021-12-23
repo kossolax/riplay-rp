@@ -822,11 +822,14 @@ int getCooldown(int client, int zone) {
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
 	if( rp_GetClientJobID(client) == 1 && (StrEqual(tmp, "bunker") || StrEqual(tmp, "villa") || StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) )
-		return 6 * 60 * 60;
+		//return 6 * 60 * 60;
+		return 1 * 60;
 	else if( rp_GetClientJobID(client) == 101 && (StrEqual(tmp, "bunker") || StrEqual(tmp, "villa") || StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) )
-		return 1 * 60 * 60;
+		//return 1 * 60 * 60;
+		return 1 * 60;
 	else
-		return 24 * 60;
+		//return 24 * 60;
+		return 1 * 60;
 }
 bool hasCopInZone(int zone) {
 	char tmp[64], tmp2[64];
