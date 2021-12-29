@@ -269,12 +269,12 @@ public Action BuildingMicrowave_post(Handle timer, any entity) {
 	int time;
 	int job = rp_GetClientInt(client, i_Job);
 	switch(job){
-		case 21: time = 60;
+		case 21: time = 55;
 		case 22: time = 60;
 		case 23: time = 65;
-		case 24: time = 65;
-		case 25: time = 70;
-		case 26: time = 70;
+		case 24: time = 70;
+		case 25: time = 75;
+		case 26: time = 80;
 		default: time = 90;
 	}
 
@@ -385,6 +385,7 @@ public Action Frame_Microwave(Handle timer, any ent) {
 	}
 	if(time == 0){
 		EmitSoundToAllAny("ambient/machines/lab_loop1.wav", ent, _, _, _, 0.33);
+		 SDKHooks_TakeDamage(ent, ent, ent, 7.0);
 	}
 	
 	if( rp_GetClientInt(owner, i_TimeAFK) <= 60 ) {
