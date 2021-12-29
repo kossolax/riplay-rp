@@ -194,7 +194,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	
 	int ent = BuildingMicrowave(client);
 	rp_SetBuildingData(ent, BD_FromBuild, 1);
-	SetEntProp(ent, Prop_Data, "m_iHealth", GetEntProp(ent, Prop_Data, "m_iHealth")/5);
+	SetEntProp(ent, Prop_Data, "m_iHealth", GetEntProp(ent, Prop_Data, "m_iHealth"));
 	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
 	
 	if( ent > 0 )
