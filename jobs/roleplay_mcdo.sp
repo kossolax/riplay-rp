@@ -240,7 +240,7 @@ int BuildingMicrowave(int client) {
 	SetEntityModel(ent,"models/props/cs_office/microwave.mdl");
 	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
 	SetEntProp( ent, Prop_Data, "m_takedamage", 2);
-	SetEntProp( ent, Prop_Data, "m_iHealth", 25000);
+	SetEntProp( ent, Prop_Data, "m_iHealth", 5000);
 	
 	
 	TeleportEntity(ent, vecOrigin, NULL_VECTOR, NULL_VECTOR);
@@ -385,7 +385,7 @@ public Action Frame_Microwave(Handle timer, any ent) {
 	}
 	if(time == 0){
 		EmitSoundToAllAny("ambient/machines/lab_loop1.wav", ent, _, _, _, 0.33);
-		 SDKHooks_TakeDamage(ent, ent, ent, 7.0);
+		 SDKHooks_TakeDamage(ent, ent, ent, 125.0);
 	}
 	
 	if( rp_GetClientInt(owner, i_TimeAFK) <= 60 ) {
