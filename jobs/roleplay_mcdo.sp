@@ -240,7 +240,7 @@ int BuildingMicrowave(int client) {
 	SetEntityModel(ent,"models/props/cs_office/microwave.mdl");
 	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
 	SetEntProp( ent, Prop_Data, "m_takedamage", 2);
-	SetEntProp( ent, Prop_Data, "m_iHealth", 5000);
+	SetEntProp( ent, Prop_Data, "m_iHealth", 5125);
 	
 	
 	TeleportEntity(ent, vecOrigin, NULL_VECTOR, NULL_VECTOR);
