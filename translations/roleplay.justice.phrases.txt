@@ -36,7 +36,7 @@
 		"en"		"Any willful and premeditated attack on the life of a citizen is condemned to a maximum penalty of {red}{1}{default} hours in prison and a {red}${2}{default} fine."		
 	}
 
-"Act_KillPrem"
+	"Act_KillPrem"
 	{
 		"fr"		"Meurtre avec préméditation"
 		"en"		"Murder with premeditation"		
