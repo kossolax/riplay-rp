@@ -867,8 +867,8 @@ void getPlayerSkin(int client, char model[PLATFORM_MAX_PATH], char hands[PLATFOR
 			case 6: 	Format(model, sizeof(model), "models/player/custom_player/riplay/bri/bri.mdl");
 			case 5: 	Format(model, sizeof(model), "models/player/custom_player/riplay/gign/gign.mdl");
 			case 4: 	Format(model, sizeof(model), "models/player/custom_player/riplay/capitaine/capitaine.mdl");
-			case 2: 	Format(model, sizeof(model), "models/player/custom_player/riplay/colonel/colonel.mdl");
-			case 1: 	Format(model, sizeof(model), "models/player/custom_player/riplay/colonel/colonel.mdl");
+			case 2: 	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_gendarmerie_variante.mdl");
+			case 1: 	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_gendarmerie_variantc.mdl");
 			
 			case 109:	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_sas_variantd.mdl");
 			case 108:	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_sas_variantd.mdl");
@@ -878,9 +878,9 @@ void getPlayerSkin(int client, char model[PLATFORM_MAX_PATH], char hands[PLATFOR
 			case 105:	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_sas_variantc.mdl");
 			case 104:	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_sas_variantc.mdl");
 			
-			case 103:	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_sas_variantf.mdl");
-			case 102:	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_sas_variantf.mdl");
-			case 101:	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_sas_variantf.mdl");
+			case 103:	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_sas_variantg.mdl");
+			case 102:	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_sas_variantg.mdl");
+			case 101:	Format(model, sizeof(model), "models/player/custom_player/legacy/ctm_sas_variantg.mdl");
 		}
 	}
 
