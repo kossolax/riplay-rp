@@ -25,10 +25,18 @@ jobs:
           name: compiled
           path: compiled/
 
-      - name: Upload to dev server
+      - name: Upload trad to dev server
         continue-on-error: true
         if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
         env: 
           ftp_password: ${{ secrets.FTPPassword }}
         run: |
-          ncftpput -u rp_test -p $ftp_password cpu-linux.riplay.fr plugins compiled/* ; ncftpput -u rp_test -p $ftp_password cpu-linux.riplay.fr translations translations/*.txt
+          ncftpput -u rp_test -p $ftp_password cpu-linux.riplay.fr translations translations/*.txt 
+
+      - name: Upload plugin to dev server
+        continue-on-error: true
+        if: ${{ github.ref == 'refs/heads/master' && github.event_name == 'push' }}
+        env: 
+          ftp_password: ${{ secrets.FTPPassword }}
+        run: |
+          ncftpput -u rp_test -p $ftp_password cpu-linux.riplay.fr plugins compiled/*
