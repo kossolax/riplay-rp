@@ -36,6 +36,19 @@
 		"en"		"Any willful and premeditated attack on the life of a citizen is condemned to a maximum penalty of {red}{1}{default} hours in prison and a {red}${2}{default} fine."		
 	}
 
+"Act_KillPrem"
+	{
+		"fr"		"Meurtre avec préméditation"
+		"en"		"Murder with premeditation"		
+	}
+	"Act_KillPremDesc"
+	{
+		"#format"	"{1:d},{2:d}"
+		"fr"		"Toute atteinte volontaire et préméditée à la vie d’un citoyen est condamnée à une peine maximale de {red}{1}{default}h de prison et {red}{2}{default}$ d’amende."
+		"en"		"Any willful and premeditated attack on the life of a citizen is condemned to a maximum penalty of {red}{1}{default} hours in prison and a {red}${2}{default} fine."		
+	}
+
+
 	"Act_KillCT"
 	{
 		"fr"		"Meurtre d'un policier"
