@@ -50,6 +50,8 @@ char g_szArticles[][][512] = {
 	{"221-1-a-1",	"Act_KillAtt",		"12",	"500",		"1000",	"Act_KillAttDesc" },
 	{"221-1-a-2",	"Act_Kill",			"24",	"1250",		"2500",	"Act_KillDesc" },
 	{"221-1-a-3",	"Act_KillAggr",		"48",	"2500",		"5000",	"Act_KillAggrDesc" },
+	{"221-1-a-4",	"Act_KillPrem", 	"6",	"600",		"500", "Act_KillPremDesc" },
+	
 
 	{"221-1-b",		"Act_KillCT",		"18",	"2000",		"1500",	"Act_KillCTDesc" },
 	{"221-1-c",		"Act_Aggr",			"6",	"250",		"100",	"Act_AggrDesc" },
