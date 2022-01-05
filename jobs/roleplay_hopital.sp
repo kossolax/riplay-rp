@@ -750,7 +750,7 @@ public Action Frame_HealBox(Handle timer, any ent) {
 		
 		toHeal = RoundFloat((maxDist - dist) * fallOff);
 		heal = GetClientHealth(client);
-		if( heal >= 500 )
+		if( heal >= 600 )
 			continue;
 		
 		Handle trace = TR_TraceRayFilterEx(vecOrigin, vecOrigin2, MASK_SHOT, RayType_EndPoint, FilterToOne, ent);
