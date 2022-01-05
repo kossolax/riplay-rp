@@ -441,6 +441,7 @@ void OnGameFrame_10(float time) {
 	float fNow[3];
 	PrintHours(szDates, sizeof(szDates));
 	int t, ct;
+	int client;
 	
 	for (int i = 1; i <= MaxClients; i++) {
 		if( !IsValidClient(i) )
