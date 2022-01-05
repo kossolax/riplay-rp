@@ -490,7 +490,7 @@ public void OnMapStart() {
 public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbose) {
 	int appart = rp_GetPlayerZoneAppart(client);
 	
-	if( appart > 0 && rp_GetClientKeyAppartement(client, appart) ) {
+	if( appart > 0 && rp_GetClientKeyAppartement(client, appart || appart > 0 &&  rp_GetClientJobID(client) = 61) ) {
 		float multi = float(rp_GetAppartementInt(appart, appart_bonus_paye)) / 100.0;
 		
 		if( multi <= 1.5 && rp_GetClientJobID(client) == 61 && !rp_GetClientBool(client, b_GameModePassive) )
