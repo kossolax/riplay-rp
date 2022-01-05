@@ -619,8 +619,8 @@ void OnGameFrame_10(float time) {
 				
 				if(jobID == 101 && !g_bUserData[i][b_GameModePassive] && !(GetZoneBit(GetPlayerZone(i)) & (BITZONE_PVP|BITZONE_EVENT)) ) {
 					int heal = GetClientHealth(i) + Math_GetRandomInt(1, 5);
-					if( heal > 500 )
-						heal = 500;
+					if( heal > 600 )
+						heal = 600;
 					SetEntityHealth(i, heal);
 				}
 				
