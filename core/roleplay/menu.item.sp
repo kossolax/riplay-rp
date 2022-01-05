@@ -96,8 +96,8 @@ public int eventItemMenu(Handle p_hItemMenu, MenuAction p_oAction, int p_iParam1
 			
 				
 			int heal = GetClientHealth(p_iParam1) + StringToInt( g_szItemList[ id ][item_type_give_hp] );
-			if( heal > 500 ) {
-				heal = 500;
+			if( heal > 600 ) {
+				heal = 600;
 			}
 			
 			bool used = false;
