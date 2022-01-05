@@ -550,8 +550,8 @@ public void DoBeacon(int client) {
 			
 			int heal = GetClientHealth(client);
 			heal += Math_GetRandomInt(1, 5);
-			if( heal > 600 )
-				heal = 600;
+			if( heal > 500 )
+				heal = 500;
 			SetEntityHealth(client, heal);
 			
 			heal = GetClientHealth(target);
