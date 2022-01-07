@@ -189,7 +189,6 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 	CreateNative("rp_ClientCanAttack", Native_rp_ClientCanAttack);
 	CreateNative("rp_ClientFloodIncrement", Native_rp_ClientFloodIncrement);
 	CreateNative("rp_ClientXPIncrement", Native_rp_ClientXPIncrement);
-	CreateNative("rp_ClientCoinsIncrement", Native_rp_ClientCoinsIncrement);
 	
 	
 	CreateNative("rp_ClientFloodTriggered", Native_rp_ClientFloodTriggered);
@@ -475,17 +474,6 @@ public int Native_rp_GetClientSSO(Handle plugin, int numParams) {
 	char tmp[256];
 	SSO_Forum(GetNativeCell(1), tmp, sizeof(tmp));
 	SetNativeString(2, tmp, GetNativeCell(3));
-}
-public int Native_rp_ClientCoinsIncrement(Handle plugin, int numParams) {
-	char tmp[128];
-	int client = view_as<int>(GetNativeCell(1));
-	int coins = view_as<int>(GetNativeCell(2));
-	bool verbose = view_as<bool>(GetNativeCell(3));
-
-	if( g_iUserData[client][i_Job] > 0 /*&& GetJobPrimaryID(client) == g_iUserData[client][i_Job]*/ && g_iUserData[client][i_TimePlayedJob] >= (60*60*100) ) {
-		float factor = (float(g_iUserData[client][i_TimePlayedJob]) / (60.0 * 60.0 * 1000.0));
-		coins += RoundFloat( float(coins) * factor);
-	}
 }
 public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
 	char tmp[128];

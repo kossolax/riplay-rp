@@ -200,7 +200,6 @@ public void Q2_Done(int objectiveID, int client) {
 	CPrintToChat(client, ""...MOD_TAG..." Vous venez de recevoir %d$.", g_iNbQuest[client] * toPay);
 	
 	rp_ClientXPIncrement(client, g_iNbQuest[client] * 35);
-	rp_ClientCoinsIncrement(client, 10);
 	
 	Menu menu = new Menu(MenuNothing);
 	menu.SetTitle("Quête: %s", QUEST_NAME);
