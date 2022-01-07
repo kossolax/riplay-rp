@@ -116,6 +116,7 @@ public void Q1_End(int objectiveID, int client) {
 	rp_ClientMoney(client, i_AddToPay, 1000);
 	
 	rp_ClientXPIncrement(client, 2500);
+	rp_ClientCoinsIncrement(client, 10);
 }
 // ----------------------------------------------------------------------------
 public int MenuNothing(Handle menu, MenuAction action, int client, int param2) {
