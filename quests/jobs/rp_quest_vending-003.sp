@@ -43,7 +43,7 @@ char g_poste[][][256] =  {
 	{ "Vous devez apporter les dernieres recettes des hamburgers au fast food. Pour cela, rendez-vous jusqu'au Mc'Donald.", "21" }, 
 	{ "Vous devez amener les derniers outils aux artisans. Pour cela, rendez-vous jusqu'au magasin d'artisanat.", "31" }, 
 	{ "Vous devez amener les derniers contrats signés aux mercenaires. Pour cela, rendez-vous jusqu'à leur planque.", "41" }, 
-	{ "Vous devez amener les nouveaux seuils de pollution des véhicules au concessionaire. Pour cela, rendez-vous jusqu'au magasin de véhicule.", "51" }, 
+	{ "Vous devez amener les nouveaux seuils de pollution des véhicules au concessionnaire. Pour cela, rendez-vous jusqu'au magasin de véhicule.", "51" }, 
 	{ "Vous devez amener le dernier bilan des ventes aux vendeurs immobiliers. Pour cela, rendez-vous jusqu'à l'agence immobilière.", "61" }, 
 	{ "Vous devez apporter les derniers magazines sportifs aux entraineurs sexy. Pour cela, rendez-vous à la salle d'entraînement.", "71" }, 
 	{ "Vous devez déposer aux dealers les dernières informations concernant la police. Pour cela, rendez-vous jusqu'à la planque des dealers.", "81" }, 
