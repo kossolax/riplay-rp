@@ -324,9 +324,9 @@ void Draw_Mairie_Candidate(int client, int target, int arg) {
 		}
 		if( arg == 1 ) {
 			
-			if( (rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 75000 || rp_GetClientInt(client, i_Abonne) > 0 && (rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 37500 ) {
+			if( (rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 75000 || rp_GetClientInt(client, i_Donateur) > 0 && (rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 37500 ) {
 			
-				if (rp_GetClientInt(client, i_Abonne) > 0){
+				if (rp_GetClientInt(client, i_Donateur) > 0){
 					rp_ClientMoney(client, i_Money, -37500);
 				}
 				
@@ -400,10 +400,10 @@ public void QUERY_MairieCandidate(Handle owner, Handle handle, const char[] erro
 		menu.AddItem("", "Il n'y a pas de candidat", ITEMDRAW_DISABLED);
 	}
 	
-	if( rp_GetClientInt(client, i_PlayerLVL) >= 90 && !myself && StringToInt(szDayOfWeek) != 100000 && rp_GetClientInt(client, i_Abonne) > 0)
+	if( rp_GetClientInt(client, i_PlayerLVL) >= 90 && !myself && StringToInt(szDayOfWeek) != 100000 && rp_GetClientInt(client, i_Donateur) > 0)
 		menu.AddItem("5 -1 0", "Poster ma candidature (37 500$)", ((rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 37500) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
 		
-	if( rp_GetClientInt(client, i_PlayerLVL) >= 90 && !myself && StringToInt(szDayOfWeek) != 100000 && rp_GetClientInt(client, i_Abonne) == 0)
+	if( rp_GetClientInt(client, i_PlayerLVL) >= 90 && !myself && StringToInt(szDayOfWeek) != 100000 && rp_GetClientInt(client, i_Donateur) == 0)
 		menu.AddItem("5 -1 0", "Poster ma candidature (75 000$)", ((rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 75000) ? ITEMDRAW_DEFAULT : ITEMDRAW_DISABLED );
 		
 	menu.Display(client, MENU_TIME_FOREVER);
