@@ -1529,6 +1529,9 @@ public Action Command_Say(int client, int args) {
 		else if( flags & ADMFLAG_KICK ) {
 			Format(tag, sizeof(tag), "Chat_TAG_VIP");
 		}
+		else if( flags && g_iUserData[i][i_Abonne] == 1 ) {
+			Format(tag, sizeof(tag), "Chat_TAG_SUB");
+		}
 	}
 	
 	CPrintToChatAllEx(client, "%T", "Chat_Talk", LANG_SERVER, name, tag, szSayText);
