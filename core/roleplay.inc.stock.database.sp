@@ -857,7 +857,7 @@ void LoadUserData(int Client) {
 		Format(query, sizeof(query),
 			"%s `group_id`, `vitality`, UNIX_TIMESTAMP(`last_connected`), `pay_to_bank`, `have_card`, `in_bank`, `in_item`, `jail_qhs`, `have_account`,", query);
 		Format(query, sizeof(query),
-			"%s `malus`, `tuto`, `donateur`, `donateur`, `freekill`, `TimePlayedJob`, `assurance`, `train_esquive`, `sick`, `avocat`, `hasVilla`,", query);
+			"%s `malus`, `tuto`, `donateur`, `abonne`, `freekill`, `TimePlayedJob`, `assurance`, `train_esquive`, `sick`, `avocat`, `hasVilla`,", query);
 		Format(query, sizeof(query),
 			"%s `artisan_xp`, `artisan_lvl`, `artisan_points`, `artisan_fatigue`, `kill`, `death`, `kill2`, `death2`, `jrouge`, `jbleu`, `xp`, ", query);
 		Format(query, sizeof(query),
