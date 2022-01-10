@@ -312,13 +312,13 @@ void Draw_Mairie_Candidate(int client, int target, int arg) {
 	else if( target == -1 ) {
 		if( arg == 0 ) {
 			Menu menu = new Menu(Handle_Mairie);
-			Format(tmp, sizeof(tmp), "Vous souhaitez poster votre candidature pour devenir Maire? Celà vous coûtera 75.000$, vous ne serrez pas remboursé si vous perdez les élections.");
+			Format(tmp, sizeof(tmp), "Vous souhaitez poster votre candidature pour devenir Maire? vous ne serrez pas remboursé si vous perdez les élections.");
 			String_WordWrap(tmp, 60);
 			
 			menu.SetTitle("Candidature pour la Mairie\n \n%s\n ", tmp);
 			
 			menu.AddItem("5 0 0", "Annuler, ne pas participer aux élections");
-			menu.AddItem("5 -1 1", "Je confirme ma candidature, je paye 75.000$");
+			menu.AddItem("5 -1 1", "Je confirme ma candidature");
 			
 			menu.Display(client, MENU_TIME_FOREVER);
 		}
