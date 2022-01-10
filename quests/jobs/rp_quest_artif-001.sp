@@ -329,9 +329,8 @@ public void Q6_Frame(int objectiveID, int client)
 public void Q6_Done(int objectiveID, int client)
 {
 	int cap = rp_GetRandomCapital(1);
-	int g_iUserData;
 	
-	if (rp_GetClientInt(i, i_Abonne) > 0){
+	if (rp_GetClientInt(client, i_Abonne) > 0){
 		rp_SetJobCapital(cap, rp_GetJobCapital(cap) - 5000);
 		CPrintToChat(client, ""...MOD_TAG..." Vous venez de recevoir %d$.", 2500);
 		CPrintToChat(client, ""...MOD_TAG..." Votre Abonnement vous rapporte un bonus de %d$.", 2500);
