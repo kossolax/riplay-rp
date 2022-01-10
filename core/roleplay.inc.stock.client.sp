@@ -18,7 +18,7 @@ int getClientBankLimit(int client) {
 	if( g_iUserData[client][i_PlayerPrestige] >= 1 )
 		val *= RoundFloat(Pow(2.0, float(g_iUserData[client][i_PlayerPrestige])));
 		
-	if( g_iUserData[client][i_Donateur] != 0
+	if( g_iUserData[client][i_Donateur] != 0 )
 		val *=1,3;
 	
 	return RoundFloat(val);
