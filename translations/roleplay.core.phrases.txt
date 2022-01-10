@@ -498,6 +498,11 @@
 		"fr"		"({green}VIP{default})"
 		"en"		"({green}VIP{default})"
 	}
+	"Chat_TAG_SUB"
+	{
+		"fr"		"({blue}Abonne{default})"
+		"en"		"({blue}SUB{default})"
+	}
 	"Chat_TAG_GROUP"
 	{
 		"fr"		"({red}GROUPE{default})"
