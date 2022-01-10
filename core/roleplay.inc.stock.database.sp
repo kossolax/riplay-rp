@@ -994,7 +994,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		g_bUserData[Client][b_HaveAccount] = SQL_FetchInt(hQuery, 19);
 		g_iUserData[Client][i_Malus] = SQL_FetchInt(hQuery, 20);
 		g_iUserData[Client][i_Tutorial] = SQL_FetchInt(hQuery, 21);
-		
+		g_iUserData[Client][i_Abonne] = SQL_FetchInt(hQuery, 22);
 		g_iUserData[Client][i_Donateur] = SQL_FetchInt(hQuery, 23);
 		g_iUserData[Client][i_KillJailDuration] = SQL_FetchInt(hQuery, 24);
 		g_iUserData[Client][i_TimePlayedJob] = SQL_FetchInt(hQuery, 25);
@@ -1036,7 +1036,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		g_iUserData[Client][i_ELO] = SQL_FetchInt(hQuery, 61);
 		g_iUserData[Client][i_PVPBannedUntil] = SQL_FetchInt(hQuery, 62);
 		g_iUserData[Client][i_AllowedDismiss] = SQL_FetchInt(hQuery, 63);
-		g_iUserData[Client][i_Abonne] = SQL_FetchInt(hQuery, 66);
+		
 		// 64 = artisan spe
 		// 65 = ??
 		int freeassu = SQL_FetchInt(hQuery, 60);
