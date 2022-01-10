@@ -588,14 +588,7 @@ void OnGameFrame_10(float time) {
 					IncrementSuccess(i, success_list_marathon);
 					GetClientAbsOrigin(i, g_fSuccess_last_move[i]);
 					
-					if( !g_bUserData[i][b_GameModePassive] && jobID == 31 && Math_GetRandomInt(1, 200) == 42 ) {
-						int MP[] =  { 128, 129, 234, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257 };
-						int rnd = Math_GetRandomInt(0, sizeof(MP) - 1);
-						int qt = (200/rp_GetItemInt(MP[rnd], item_type_prix));
-						CPrintToChat(i, "" ...MOD_TAG... " %T", "Item_Found", i, qt, g_szItemList[MP[rnd]][item_type_name]);
-						rp_ClientGiveItem(i, MP[rnd], qt);
-					}
-					if( g_iUserData[i][i_Donateur] != 0 && Math_GetRandomInt(1, 50) == 42 ) {
+					if( !g_bUserData[i][b_GameModePassive] && jobID == 31 && Math_GetRandomInt(1, 200) == 42 || g_iUserData[i][i_Donateur] > 0 && Math_GetRandomInt(1, 200) == 42 ) {
 						int MP[] =  { 128, 129, 234, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257 };
 						int rnd = Math_GetRandomInt(0, sizeof(MP) - 1);
 						int qt = (200/rp_GetItemInt(MP[rnd], item_type_prix));
