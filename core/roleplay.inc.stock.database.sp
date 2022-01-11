@@ -845,7 +845,7 @@ void ResetUserData(int client) {
 }
 void LoadUserData(int Client) {
 	
-	static char SteamID[64], query[4225];
+	static char SteamID[64], query[8192];
 	
 	if(!IsFakeClient(Client)) {
 		
