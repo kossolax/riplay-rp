@@ -857,7 +857,7 @@ void LoadUserData(int Client) {
 		Format(query, sizeof(query),
 			"%s `group_id`, `vitality`, UNIX_TIMESTAMP(`last_connected`), `pay_to_bank`, `have_card`, `in_bank`, `in_item`, `jail_qhs`, `have_account`,", query);
 		Format(query, sizeof(query),
-			"%s `malus`, `tuto`, `donateur`, `freekill`, `TimePlayedJob`, `assurance`, `train_esquive`, `sick`, `avocat`, `hasVilla`,", query);
+			"%s `malus`, `tuto`, `donateur`, `abonne`, `freekill`, `TimePlayedJob`, `assurance`, `train_esquive`, `sick`, `avocat`, `hasVilla`,", query);
 		Format(query, sizeof(query),
 			"%s `artisan_xp`, `artisan_lvl`, `artisan_points`, `artisan_fatigue`, `kill`, `death`, `kill2`, `death2`, `jrouge`, `jbleu`, `xp`, ", query);
 		Format(query, sizeof(query),
@@ -866,8 +866,6 @@ void LoadUserData(int Client) {
 			"%s `permi_lege_start`, `permi_lourd_start`, `freekiller`, `amende_permi_lege`, `amende_permi_lourd`, `skin_id`, `freeassu`, `points`, `pvp_banned`, ", query); 
 		Format(query, sizeof(query),
 			"%s `allowed_dismiss`, `artisan_spe` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
-		// Format(query, sizeof(query),
-			// "%s `abonne`, ", query, SteamID);
 
 
 		SQL_TQuery(g_hBDD, LoadUserData_2, query, Client, DBPrio_High);
