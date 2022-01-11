@@ -29,6 +29,8 @@ stock bool Weapon_IsMelee(int wep) {
 		return true;
 	if( StrContains(classname, "weapon_zeus") == 0 || StrContains(classname, "weapon_taser") == 0 )
 		return true;
+	if( StrContains(classname, "weapon_shield") == 0 )
+		return true;
 	
 	return false;
 }
