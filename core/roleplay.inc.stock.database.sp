@@ -865,7 +865,9 @@ void LoadUserData(int Client) {
 		Format(query, sizeof(query),
 			"%s `permi_lege_start`, `permi_lourd_start`, `freekiller`, `amende_permi_lege`, `amende_permi_lourd`, `skin_id`, `freeassu`, `points`, `pvp_banned`, ", query); 
 		Format(query, sizeof(query),
-			"%s `allowed_dismiss`, `artisan_spe`, /*`abonne`,*/ FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID);
+			"%s `allowed_dismiss`, `artisan_spe`, FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID);
+		//Format(query, sizeof(query),
+			//"%s `allowed_dismiss`, `artisan_spe`, `abonne`, FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID);
 
 
 		SQL_TQuery(g_hBDD, LoadUserData_2, query, Client, DBPrio_High);
