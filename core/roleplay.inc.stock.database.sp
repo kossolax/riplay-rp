@@ -865,7 +865,9 @@ void LoadUserData(int Client) {
 		Format(query, sizeof(query),
 			"%s `permi_lege_start`, `permi_lourd_start`, `freekiller`, `amende_permi_lege`, `amende_permi_lourd`, `skin_id`, `freeassu`, `points`, `pvp_banned`, ", query); 
 		Format(query, sizeof(query),
-			"%s `allowed_dismiss`, `artisan_spe` FROM `rp_users` WHERE `steamid` = '%s', `abonne`, ", query);
+			"%s `allowed_dismiss`, `artisan_spe` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
+		Format(query, sizeof(query),
+			"%s `abonne`, ", query);
 
 
 		SQL_TQuery(g_hBDD, LoadUserData_2, query, Client, DBPrio_High);
@@ -1040,7 +1042,11 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		g_iUserData[Client][i_Abonne] = SQL_FetchInt(hQuery, 65);
 		
 		// 64 = artisan spe
-		// 65 = ??
+		
+		g_iUserData[Client][i_Abonne] = SQL_FetchInt(hQuery, 65);
+		
+		
+	
 		int freeassu = SQL_FetchInt(hQuery, 60);
 
 		SQL_FetchString(hQuery, 47, g_szUserData[Client][sz_LastName], sizeof(g_szUserData[][]));
