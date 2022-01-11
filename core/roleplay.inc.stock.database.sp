@@ -845,7 +845,7 @@ void ResetUserData(int client) {
 }
 void LoadUserData(int Client) {
 	
-	static char SteamID[64], query[8192];
+	static char SteamID[64], query[4096];
 	
 	if(!IsFakeClient(Client)) {
 		
@@ -865,9 +865,7 @@ void LoadUserData(int Client) {
 		Format(query, sizeof(query),
 			"%s `permi_lege_start`, `permi_lourd_start`, `freekiller`, `amende_permi_lege`, `amende_permi_lourd`, `skin_id`, `freeassu`, `points`, `pvp_banned`, ", query); 
 		Format(query, sizeof(query),
-			"%s `abonne`,", query);
-		Format(query, sizeof(query),
-			"%s `allowed_dismiss`, `artisan_spe`, FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID);
+			"%s `allowed_dismiss`, `artisan_spe`, `abonne`, FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID);
 
 
 		SQL_TQuery(g_hBDD, LoadUserData_2, query, Client, DBPrio_High);
@@ -999,6 +997,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		g_iUserData[Client][i_Tutorial] = SQL_FetchInt(hQuery, 21);
 		
 		g_iUserData[Client][i_Donateur] = SQL_FetchInt(hQuery, 23);
+		//g_iUserData[Client][i_Abonne] = SQL_FetchInt(hQuery, 65);
 		g_iUserData[Client][i_KillJailDuration] = SQL_FetchInt(hQuery, 24);
 		g_iUserData[Client][i_TimePlayedJob] = SQL_FetchInt(hQuery, 25);
 		int assurance = SQL_FetchInt(hQuery, 26);
@@ -1010,7 +1009,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		g_iUserData[Client][i_ArtisanLevel] = SQL_FetchInt(hQuery, 32);
 		g_iUserData[Client][i_ArtisanPoints] = SQL_FetchInt(hQuery, 33);
 		g_flUserData[Client][fl_ArtisanFatigue] = SQL_FetchFloat(hQuery, 34);
-		g_iUserData[Client][i_ArtisanSpeciality] = SQL_FetchInt(hQuery, 65);
+		g_iUserData[Client][i_ArtisanSpeciality] = SQL_FetchInt(hQuery, 64);
 		g_iUserData[Client][i_KillMonth] = SQL_FetchInt(hQuery, 35);
 		g_iUserData[Client][i_DeathMonth] = SQL_FetchInt(hQuery, 36);
 		g_iUserData[Client][i_Kill31Days] = SQL_FetchInt(hQuery, 37);
@@ -1038,9 +1037,9 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		g_iUserData[Client][i_SkinDonateur] = SQL_FetchInt(hQuery, 59);
 		g_iUserData[Client][i_ELO] = SQL_FetchInt(hQuery, 61);
 		g_iUserData[Client][i_PVPBannedUntil] = SQL_FetchInt(hQuery, 62);
-		g_iUserData[Client][i_Abonne] = SQL_FetchInt(hQuery, 63);
 		g_iUserData[Client][i_AllowedDismiss] = SQL_FetchInt(hQuery, 64);
-		// 65 = artisan spe
+		// 64 = artisan spe
+		// 65 = Abonne
 		int freeassu = SQL_FetchInt(hQuery, 60);
 
 		SQL_FetchString(hQuery, 47, g_szUserData[Client][sz_LastName], sizeof(g_szUserData[][]));
