@@ -324,7 +324,7 @@ void Draw_Mairie_Candidate(int client, int target, int arg) {
 		}
 		if( arg == 1 ) {
 			
-			if( (rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 75000 || rp_GetClientInt(client, i_Abonne) >= 1 && (rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 37500 ) {
+			if(  rp_GetClientInt(client, i_Abonne) == 0 && (rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 75000 || rp_GetClientInt(client, i_Abonne) >= 1 && (rp_GetClientInt(client, i_Money)+rp_GetClientInt(client, i_Bank)) >= 37500 ) {
 			
 				if (rp_GetClientInt(client, i_Abonne) >= 1){
 					rp_ClientMoney(client, i_Money, -37500);
