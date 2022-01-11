@@ -857,7 +857,7 @@ void LoadUserData(int Client) {
 		Format(query, sizeof(query),
 			"%s `group_id`, `vitality`, UNIX_TIMESTAMP(`last_connected`), `pay_to_bank`, `have_card`, `in_bank`, `in_item`, `jail_qhs`, `have_account`,", query);
 		Format(query, sizeof(query),
-			"%s `malus`, `tuto`, `donateur`, `abonne`, `freekill`, `TimePlayedJob`, `assurance`, `train_esquive`, `sick`, `avocat`, `hasVilla`,", query);
+			"%s `malus`, `tuto`, `donateur`, `freekill`, `TimePlayedJob`, `assurance`, `train_esquive`, `sick`, `avocat`, `hasVilla`,", query);
 		Format(query, sizeof(query),
 			"%s `artisan_xp`, `artisan_lvl`, `artisan_points`, `artisan_fatigue`, `kill`, `death`, `kill2`, `death2`, `jrouge`, `jbleu`, `xp`, ", query);
 		Format(query, sizeof(query),
@@ -865,7 +865,7 @@ void LoadUserData(int Client) {
 		Format(query, sizeof(query),
 			"%s `permi_lege_start`, `permi_lourd_start`, `freekiller`, `amende_permi_lege`, `amende_permi_lourd`, `skin_id`, `freeassu`, `points`, `pvp_banned`, ", query); 
 		Format(query, sizeof(query),
-			"%s `allowed_dismiss`, `artisan_spe` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
+			"%s `allowed_dismiss`, `artisan_spe`, `abonne` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
 
 
 		SQL_TQuery(g_hBDD, LoadUserData_2, query, Client, DBPrio_High);
@@ -1037,7 +1037,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		g_iUserData[Client][i_ELO] = SQL_FetchInt(hQuery, 61);
 		g_iUserData[Client][i_PVPBannedUntil] = SQL_FetchInt(hQuery, 62);
 		g_iUserData[Client][i_AllowedDismiss] = SQL_FetchInt(hQuery, 63);
-		// g_iUserData[Client][i_Abonne] = SQL_FetchInt(hQuery, 65);
+		g_iUserData[Client][i_Abonne] = SQL_FetchInt(hQuery, 65);
 		// 64 = artisan spe
 		int freeassu = SQL_FetchInt(hQuery, 60);
 
