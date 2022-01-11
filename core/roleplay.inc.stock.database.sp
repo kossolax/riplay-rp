@@ -867,7 +867,7 @@ void LoadUserData(int Client) {
 		Format(query, sizeof(query),
 			"%s `allowed_dismiss`, `artisan_spe` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
 		// Format(query, sizeof(query),
-			"%s `abonne`, ", query, SteamID);
+			// "%s `abonne`, ", query, SteamID);
 
 
 		SQL_TQuery(g_hBDD, LoadUserData_2, query, Client, DBPrio_High);
