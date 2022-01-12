@@ -488,10 +488,10 @@ public Action fwdDamage(int client, int victim, float& damage, int damagetype) {
 		damage /= 3.0;
 		return Plugin_Continue;
 		
-		else if( g_iKillerPoint[attacker][competance_type] == 1005 ) 
+		else if( rp_GetClientJobID(client) == 41 && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 41 && rp_GetZoneInt(rp_GetPlayerZone(victim), zone_type_type) == 41) 
 			return Plugin_Continue;
 			
-		damage ==1.0;
+		damage == 1.0;
 		return Plugin_Changed;
 	}
 		
