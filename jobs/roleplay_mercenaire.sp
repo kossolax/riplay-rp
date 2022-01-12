@@ -481,20 +481,14 @@ public Action fwdDamage(int client, int victim, float& damage, int damagetype) {
 		
 		return Plugin_Changed;
 	}
-	else if( target > 0 && target != victim ) {
+	/*else if( target > 0 && target != victim ) {
 		if( rp_GetClientJobID(client) == 41 && rp_GetZoneInt(rp_GetPlayerZone(victim), zone_type_type) == 41 )
 			return Plugin_Continue;
-		
-		damage /= 3.0;
-		return Plugin_Continue;
-		}
-		
-		else if( rp_GetClientJobID(client) == 41 && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 41 && rp_GetZoneInt(rp_GetPlayerZone(victim), zone_type_type) == 41) {
-			return Plugin_Continue;
 			
-		damage == 1.0;
-		return Plugin_Changed;
-	}
+			damage /= 3.0;
+			return Plugin_Changed;
+		}
+	}*/
 		
 	return Plugin_Continue;
 }
