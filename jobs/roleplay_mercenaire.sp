@@ -489,7 +489,7 @@ public Action fwdDamage(int client, int victim, float& damage, int damagetype) {
 		return Plugin_Continue;
 		
 		else if( g_iKillerPoint[attacker][competance_type] == 1005 ) 
-			return Plungin_Continue;
+			return Plugin_Continue;
 			
 		damage ==1.0;
 		return Plugin_Changed;
