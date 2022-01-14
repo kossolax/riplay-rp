@@ -822,9 +822,9 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 		LogToGame("[TSX-RP] [SYN] [XP] %L %d xp par %s", client, to_id, szPseudo);
 	}
 	
-	else if( type == SynType_jeton ) {
+	else if( type == SynType_Jetonpass ) {
 		rp_ClientJetonpassIncrement(client, to_id);
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Jeton_Give", client, to_id, szPseudo);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Syn_Jetonpass_Give", client, to_id, szPseudo);
 		LogToGame("[TSX-RP] [SYN] [XP] %L %d jeton par %s", client, to_id, szPseudo);
 	}
 	
