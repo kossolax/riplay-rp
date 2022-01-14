@@ -474,6 +474,23 @@ public int Native_rp_GetClientSSO(Handle plugin, int numParams) {
 	SSO_Forum(GetNativeCell(1), tmp, sizeof(tmp));
 	SetNativeString(2, tmp, GetNativeCell(3));
 }
+
+public int Native_rp_ClientJetonIncrement(Handle plugin, int numParams) {
+	char tmp[128];
+	int client = view_as<int>(GetNativeCell(1));
+	int jeton = view_as<int>(GetNativeCell(2));
+	bool verbose = view_as<bool>(GetNativeCell(3));
+	
+	if( !IsTutorialOver(client) )
+		return 0;
+	
+	}
+	
+	if( g_iUserData[client][i_Job] > 0 /*&& GetJobPrimaryID(client) == g_iUserData[client][i_Job]*/ && g_iUserData[client][i_TimePlayedJob] >= (60*60*100) ) {
+		float factor = (float(g_iUserData[client][i_TimePlayedJob]) / (60.0 * 60.0 * 1000.0));
+		xp += RoundFloat( float(xp) * factor);
+	}
+
 public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
 	char tmp[128];
 	int client = view_as<int>(GetNativeCell(1));
