@@ -340,7 +340,7 @@ void AFK_Check(int client) {
 				g_iUserData[client][i_TimePlayedJob] -= 180;
 				incrementJobPlayTime(client, -180);
 				g_iUserData[client][i_TimePlays] -= 180;
-				if( g_iUserData[client][i_PlayerXP] >= 180 || g_iUserData[client][i_Jetonpass] >= 1
+				if( g_iUserData[client][i_PlayerXP] >= 180 || g_iUserData[client][i_Jetonpass] >= 1)
 					g_iUserData[client][i_PlayerXP] -= 180 || g_iUserData[client][i_Jetonpass] -= 1;
 				
 			}
