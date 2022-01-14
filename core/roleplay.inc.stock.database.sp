@@ -864,10 +864,10 @@ void LoadUserData(int Client) {
 			"%s `level`, `prestige`, `female`, `birthday`, `birthmonth`, `lastname`, `firstname`, `rules`, `jobplaytime`, `adminxp`, `dette`, `time_played`, ", query); 
 		Format(query, sizeof(query),
 			"%s `permi_lege_start`, `permi_lourd_start`, `freekiller`, `amende_permi_lege`, `amende_permi_lourd`, `skin_id`, `freeassu`, `points`, `pvp_banned`, ", query); 
-		Format(query, sizeof(query),
-			"%s `allowed_dismiss`, `artisan_spe`, `abonne` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
 		//Format(query, sizeof(query),
-			//"%s `allowed_dismiss`, `artisan_spe`, `abonne`, `jetonabo`, `jetonpass` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
+			//"%s `allowed_dismiss`, `artisan_spe`, `abonne` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
+		Format(query, sizeof(query),
+			"%s `allowed_dismiss`, `artisan_spe`, `abonne`, `jetonabo`, `jetonpass` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
 
 		SQL_TQuery(g_hBDD, LoadUserData_2, query, Client, DBPrio_High);
 		
@@ -1040,7 +1040,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		g_iUserData[Client][i_AllowedDismiss] = SQL_FetchInt(hQuery, 63);
 		// 64 = artisan spe
 		g_iUserData[Client][i_Abonne] = SQL_FetchInt(hQuery, 65);
-		g_iUserData[Client][i_Jatonabo] = SQL_FetchInt(hQuery, 66);
+		g_iUserData[Client][i_Jetonabo] = SQL_FetchInt(hQuery, 66);
 		g_iUserData[Client][i_Jetonpass] = SQL_FetchInt(hQuery, 67);
 		int freeassu = SQL_FetchInt(hQuery, 60);
 
