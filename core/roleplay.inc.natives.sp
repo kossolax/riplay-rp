@@ -28,7 +28,6 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 	CreateNative("rp_GetClientDouble",	Native_rp_GetClientDouble);
 	CreateNative("rp_ClientMoney",		Native_rp_ClientMoney);
 	
-	
 	CreateNative("rp_GetClientStat",		Native_rp_getClientStat);
 	CreateNative("rp_SetClientStat",		Native_rp_setClientStat);
 	CreateNative("rp_GetClientPlaytimeJob",		Native_rp_GetClientPlaytimeJob);
@@ -189,7 +188,7 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 	CreateNative("rp_ClientCanAttack", Native_rp_ClientCanAttack);
 	CreateNative("rp_ClientFloodIncrement", Native_rp_ClientFloodIncrement);
 	CreateNative("rp_ClientXPIncrement", Native_rp_ClientXPIncrement);
-	
+	CreateNative("rp_ClientJetonIncrement", Native_rp_ClientJetonIncrement);
 	
 	CreateNative("rp_ClientFloodTriggered", Native_rp_ClientFloodTriggered);
 	CreateNative("rp_ClientOverlays", Native_rp_ClientOverlays);
