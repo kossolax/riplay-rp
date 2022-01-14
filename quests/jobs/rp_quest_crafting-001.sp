@@ -99,4 +99,5 @@ public void Q1_Done(int objectiveID, int client) {
 	rp_ClientXPIncrement(client, 2500);
 		if (rp_GetClientInt(client, i_Abonne) > 0){
 			rp_ClientXPIncrement(client, 1250);
+		}
 }
