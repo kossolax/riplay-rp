@@ -481,10 +481,10 @@ public int Native_rp_ClientJetonpassIncrement(Handle plugin, int numParams) {
 	int jetonpass = view_as<int>(GetNativeCell(2));
 	bool verbose = view_as<bool>(GetNativeCell(3));
 	
-	if( g_iUserData[client][i_Job] > 0 && g_iUserData[client][i_TimePlays] >= (60*60*20) ) {
-		float factor = (float(g_iUserData[client][i_TimePlays]) / (60.0 * 60.0 * 1));
-		jetonpass += RoundFloat( float(jetonpass) * factor);
-	}
+	//if( g_iUserData[client][i_Job] > 0 && g_iUserData[client][i_TimePlays] >= (60*60*20) ) {
+		//float factor = (float(g_iUserData[client][i_TimePlays]) / (60.0 * 60.0 * 1));
+		//jetonpass += RoundFloat( float(jetonpass) * factor);
+	//}
 	
 	g_iUserData[client][i_Jetonpass] += jetonpass;
 	
