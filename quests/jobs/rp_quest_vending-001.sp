@@ -124,7 +124,7 @@ public void Q1_Frame(int objectiveID, int client) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez trouvé 10x%s", tmp);
 		rp_ClientGiveItem(client, MP[rnd], 10);
 			
-			if (g_iUserData[i][i_Donateur] != 0){
+			if (rp_GetClientInt(client, i_Abonne) > 0){
 			rp_ClientXPIncrement(client, 125);
 			CPrintToChat(newClient, ""...MOD_TAG..." Vous venez de recevoir {greenlight} 125 {default} xp supplémentaire avec votre abonnement", client);
 			
