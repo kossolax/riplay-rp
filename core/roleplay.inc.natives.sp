@@ -188,7 +188,7 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 	CreateNative("rp_ClientCanAttack", Native_rp_ClientCanAttack);
 	CreateNative("rp_ClientFloodIncrement", Native_rp_ClientFloodIncrement);
 	CreateNative("rp_ClientXPIncrement", Native_rp_ClientXPIncrement);
-	CreateNative("rp_ClientJetonIncrement", Native_rp_ClientJetonIncrement);
+	CreateNative("rp_ClientJetonpassIncrement", Native_rp_ClientJetonpassIncrement);
 	
 	CreateNative("rp_ClientFloodTriggered", Native_rp_ClientFloodTriggered);
 	CreateNative("rp_ClientOverlays", Native_rp_ClientOverlays);
@@ -475,10 +475,10 @@ public int Native_rp_GetClientSSO(Handle plugin, int numParams) {
 	SetNativeString(2, tmp, GetNativeCell(3));
 }
 
-public int Native_rp_ClientJetonIncrement(Handle plugin, int numParams) {
+public int Native_rp_ClientJetonpassIncrement(Handle plugin, int numParams) {
 	char tmp[128];
 	int client = view_as<int>(GetNativeCell(1));
-	int jeton = view_as<int>(GetNativeCell(2));
+	int jetonpass = view_as<int>(GetNativeCell(2));
 	bool verbose = view_as<bool>(GetNativeCell(3));
 	
 	if( !IsTutorialOver(client) )
@@ -487,10 +487,15 @@ public int Native_rp_ClientJetonIncrement(Handle plugin, int numParams) {
 	}
 	
 	if( g_iUserData[client][i_Job] > 0 ) {
-		float factor = (float(g_iUserData[client][i_TimePlayed]) / (60.0 * 60.0 * 1));
-		jeton += RoundFloat( float(jeton) * factor);
+		float factor = (float(g_iUserData[client][i_TimePlays]) / (60.0 * 60.0 * 1));
+		jetonpass += RoundFloat( float(jetonpass) * factor);
 	}
 	
+	g_iUserData[client][i_Jetonpass] += jetonpass;
+	
+	#if defined EVENT_BIRTHDAY
+	jetonpass = jetonpass * 2;
+	#endif
 
 public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
 	char tmp[128];
