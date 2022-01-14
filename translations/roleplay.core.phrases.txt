@@ -898,7 +898,7 @@
 		"fr"		"Vous avez {red}perdu{default} {1}$ par {2}."
 		"en"		"You have {red}lost{default} ${1} by {2}."
 	}
-	"Syn_Jeton_Give"
+	"Syn_Jetonpass_Give"
 	{
 		"#format"	"{1:d},{2:s}"
 		"fr"		"Vous avez {green}reçu{default} {1} jeton d'activitée par {2}."
