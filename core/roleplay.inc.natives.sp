@@ -486,6 +486,11 @@ public int Native_rp_ClientJetonIncrement(Handle plugin, int numParams) {
 	
 	}
 	
+	if( g_iUserData[client][i_Job] > 0 ) {
+		float factor = (float(g_iUserData[client][i_TimePlayed]) / (60.0 * 60.0 * 1));
+		jeton += RoundFloat( float(jeton) * factor);
+	}
+	
 
 public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
 	char tmp[128];
