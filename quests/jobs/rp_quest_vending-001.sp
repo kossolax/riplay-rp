@@ -119,7 +119,7 @@ public void Q1_Frame(int objectiveID, int client) {
 		
 		if (rp_GetClientInt(client, i_Abonne) > 0){
 			rp_ClientXPIncrement(client, 125);
-			CPrintToChat(newClient, ""...MOD_TAG..." Vous venez de recevoir {greenlight} 125 {default} xp supplémentaire avec votre abonnement", client);
+			CPrintToChat(client, ""...MOD_TAG..." Vous venez de recevoir {greenlight} 125 {default} xp supplémentaire avec votre abonnement", client);
 			
 			}
 			
