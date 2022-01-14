@@ -1529,7 +1529,7 @@ public Action Command_Say(int client, int args) {
 		else if( flags & ADMFLAG_KICK ) {
 			Format(tag, sizeof(tag), "Chat_TAG_VIP");
 		}
-		else if( flags & g_iUserData[client][i_Abonne] > 0 ) {
+		else if( g_iUserData[client][i_Abonne] > 0 ) {
 			Format(tag, sizeof(tag), "Chat_TAG_SUB");
 		}
 	}
