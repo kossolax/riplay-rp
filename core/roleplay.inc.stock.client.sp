@@ -822,6 +822,12 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 		LogToGame("[TSX-RP] [SYN] [XP] %L %d xp par %s", client, to_id, szPseudo);
 	}
 	
+	}
+	else if( type == SynType_jeton ) {
+		rp_ClientJetonIncrement(client, to_id);
+		
+		LogToGame("[TSX-RP] [SYN] [XP] %L %d jeton par %s", client, to_id, szPseudo);
+	}
 	
 	if( IsValidClient(invoker) && type != SynType_item ) {		
 		char szSteamID2[64];
