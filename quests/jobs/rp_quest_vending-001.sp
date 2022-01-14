@@ -117,6 +117,12 @@ public void Q1_Frame(int objectiveID, int client) {
 		
 		rp_ClientXPIncrement(client, 250);
 		
+		if (rp_GetClientInt(client, i_Abonne) > 0){
+			rp_ClientXPIncrement(client, 125);
+			CPrintToChat(newClient, ""...MOD_TAG..." Vous venez de recevoir {greenlight} 125 {default} xp supplémentaire avec votre abonnement", client);
+			
+			}
+			
 		int MP[] =  { 128, 129, 234, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257 };
 		int rnd = Math_GetRandomInt(0, sizeof(MP) - 1);
 		char tmp[128];
@@ -124,11 +130,6 @@ public void Q1_Frame(int objectiveID, int client) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous avez trouvé 10x%s", tmp);
 		rp_ClientGiveItem(client, MP[rnd], 10);
 			
-			if (rp_ClientInt(client, i_Abonne) > 0){
-			rp_ClientXPIncrement(client, 125);
-			CPrintToChat(newClient, ""...MOD_TAG..." Vous venez de recevoir {greenlight} 125 {default} xp supplémentaire avec votre abonnement", client);
-			
-			}
 		
 	}
 	else if (g_iDuration[client] <= 0) {
