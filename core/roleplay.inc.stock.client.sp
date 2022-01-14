@@ -838,7 +838,7 @@ int ChangePersonnal(int client, SynType type, int to_id, int invoker=0, char szP
 	
 	Format(szLog, sizeof(szLog), "%s par %s (%s).", szLog, szPseudo, szSource);
 	
-	if( type != SynType_item && type != SynType_itemBank && type != SynType_xp && type != SynType_jeton ) {
+	if( type != SynType_item && type != SynType_itemBank && type != SynType_xp && type != SynType_jetonpass ) {
 		LogToGame(szLog);
 	}
 	
