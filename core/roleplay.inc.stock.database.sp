@@ -709,7 +709,7 @@ public void SynFromWeb_call(Handle owner, Handle hQuery, const char[] error, any
 					ChangePersonnal(Client, SynType_xp, xp, 0, szPseudo, szSteamID2, szRaison);
 					
 				if( jetonpass != 0 )
-					ChangePersonnal(Client, SynType_jeton, jetonpass, 0, szPseudo, szSteamID2, szRaison);
+					ChangePersonnal(Client, SynType_jetonpass, jetonpass, 0, szPseudo, szSteamID2, szRaison);
 					
 
 				if( StrEqual(szSteamID2, "SERVER") && StrEqual(szPseudo, "Parrainage") ){
