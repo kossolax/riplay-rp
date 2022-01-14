@@ -583,8 +583,8 @@ void StoreUserData(int client) {
 		MysqlQuery, g_iUserData[client][i_JetonRouge], g_iUserData[client][i_JetonBleu], g_bUserData[client][b_isFemale], g_iUserData[client][i_BirthDay], g_iUserData[client][i_BirthMonth]);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
-		"%s `firstname`='%s', `lastname`='%s', `rules`='%i', `jobplaytime`='%s', `adminxp`='%d', `dette`='%d', `last_connected`=CURRENT_TIMESTAMP, ",
-		MysqlQuery, fname, lname, g_bUserData[client][b_PassedRulesTest], jobplaytime, g_iUserData[client][i_GiveXP], g_iUserData[client][i_Dette]);
+		"%s `firstname`='%s', `lastname`='%s', `rules`='%i', `jobplaytime`='%s', `adminxp`='%d', `dette`='%d', `jetonpass`='%d', `last_connected`=CURRENT_TIMESTAMP, ",
+		MysqlQuery, fname, lname, g_bUserData[client][b_PassedRulesTest], jobplaytime, g_iUserData[client][i_GiveXP], g_iUserData[client][i_Dette], g_iUserData[client][i_Jetonpass]);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
 		"%s `jail_qhs`='%i', `amende_permi_lege`='%i',`amende_permi_lourd`='%i', `points`='%i', `pvp_banned`='%i', `allowed_dismiss`='%i' WHERE `steamid`='%s';",
@@ -608,7 +608,7 @@ void StoreUserData(int client) {
 }
 
 void SynFromWeb() {
-	static char base[] = "SELECT `money`, `bank`, `job_id`, `group_id`, `steamid`, `pseudo`, `steamid2`, `jail`, `raison`, `id`, UNIX_TIMESTAMP(`timestamp`) as `date`, `itemid`, `itemAmount`, `itemToBank`, `xp` FROM `rp_users2` ";
+	static char base[] = "SELECT `money`, `bank`, `job_id`, `group_id`, `steamid`, `pseudo`, `steamid2`, `jail`, `raison`, `id`, UNIX_TIMESTAMP(`timestamp`) as `date`, `itemid`, `itemAmount`, `itemToBank`,`jetonpass`, `xp` FROM `rp_users2` ";
 	static char steamid[128*32];
 	static char query[128 * 32 + 1024];
 	static char tmp[64];
@@ -706,6 +706,9 @@ public void SynFromWeb_call(Handle owner, Handle hQuery, const char[] error, any
 				}
 				if( xp != 0 )
 					ChangePersonnal(Client, SynType_xp, xp, 0, szPseudo, szSteamID2, szRaison);
+					
+				if( jetonpass != 0 )
+					ChangePersonnal(Client, SynType_jeton, jetonpass, 0, szPseudo, szSteamID2, szRaison);
 					
 
 				if( StrEqual(szSteamID2, "SERVER") && StrEqual(szPseudo, "Parrainage") ){
