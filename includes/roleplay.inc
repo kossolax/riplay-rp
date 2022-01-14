@@ -762,6 +762,8 @@ enum int_user_data {
 	i_Plant,
 	i_Donateur,
 	i_Abonne,
+	i_Jetonabo,
+	i_Jetonpass,
 	i_ThirdPerson,
 	i_Protect_Him,
 	i_Protect_From,
