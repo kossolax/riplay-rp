@@ -101,7 +101,7 @@ void SelectingAmmunition(int client, int ent, bool crochettage = false) {
 				
 				if( StrContains(g_szBuyWeapons[lp][0], "weapon_usp") == 0 ||
 					StrEqual(g_szBuyWeapons[lp][0], "weapon_m3") ||
-					StrEqual(g_szBuyWeapons[lp][0], "weapon_shield") ||
+					//StrEqual(g_szBuyWeapons[lp][0], "weapon_shield") ||
 					StrEqual(g_szBuyWeapons[lp][0], "weapon_nova")
 				) {
 					AddMenuItem(hBuyMenu, g_szBuyWeapons[lp][0], g_szBuyWeapons[lp][1]);
