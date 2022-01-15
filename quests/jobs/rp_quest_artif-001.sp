@@ -335,12 +335,14 @@ public void Q6_Done(int objectiveID, int client)
 		CPrintToChat(client, ""...MOD_TAG..." Vous venez de recevoir %d$.", 2500);
 		CPrintToChat(client, ""...MOD_TAG..." Votre Abonnement vous rapporte un bonus de %d$.", 2500);
 		rp_ClientXPIncrement(client, 750);
+		rp_ClientJetonpassIncrement(client, 10);
 	}
 	
 	else {
 		rp_SetJobCapital(cap, rp_GetJobCapital(cap) - 2500);
 		rp_ClientMoney(client, i_AddToPay, 2500);
 		rp_ClientXPIncrement(client, 500);
+		rp_ClientJetonpassIncrement(client, 10);
 	}
 	
 	Menu menu = new Menu(MenuNothing);
