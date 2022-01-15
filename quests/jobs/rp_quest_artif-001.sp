@@ -332,17 +332,22 @@ public void Q6_Done(int objectiveID, int client)
 	
 	if (rp_GetClientInt(client, i_Abonne) > 0){
 		rp_SetJobCapital(cap, rp_GetJobCapital(cap) - 5000);
+		rp_ClientMoney(client, i_AddToPay, 5000);
 		CPrintToChat(client, ""...MOD_TAG..." Vous venez de recevoir %d$.", 2500);
 		CPrintToChat(client, ""...MOD_TAG..." Votre Abonnement vous rapporte un bonus de %d$.", 2500);
 		rp_ClientXPIncrement(client, 750);
+		CPrintToChat(client, ""...MOD_TAG..." Vous venez de recevoir 750xp.");
 		rp_ClientJetonpassIncrement(client, 10);
+		CPrintToChat(client, ""...MOD_TAG..." Vous venez de recevoir 10 jetons d'activitée.");
 	}
 	
 	else {
 		rp_SetJobCapital(cap, rp_GetJobCapital(cap) - 2500);
 		rp_ClientMoney(client, i_AddToPay, 2500);
 		rp_ClientXPIncrement(client, 500);
+		CPrintToChat(client, ""...MOD_TAG..." Vous venez de recevoir 500xp.");
 		rp_ClientJetonpassIncrement(client, 10);
+		CPrintToChat(client, ""...MOD_TAG..." Vous venez de recevoir 10 jetons d'activitée.");
 	}
 	
 	Menu menu = new Menu(MenuNothing);
