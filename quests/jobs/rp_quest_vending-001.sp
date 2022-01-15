@@ -199,6 +199,8 @@ public void Q3_End(int objectiveID, int client) {
 	
 	char item[64]; rp_GetItemData(QUEST_ITEM, item_type_name, item, sizeof(item)); rp_ClientGiveItem(client, QUEST_ITEM); // [PvP] AK-47
 	CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu: %s", item);
+	rp_ClientJetonpassIncrement(client, 10);
+	CPrintToChat(client, ""...MOD_TAG..." Vous venez de recevoir 10 jetons d'activitée.");
 }
 // ----------------------------------------------------------------------------
 public int MenuNothing(Handle menu, MenuAction action, int client, int param2) {
