@@ -64,7 +64,7 @@ public void OnAllPluginsLoaded() {
 }
 // ----------------------------------------------------------------------------
 public bool fwdCanStart(int client) {
-	int jobList[] =  { 11, 21, 31, 41, 51, 61, 71, 81, 111, 121, 131, 171, 181, 191, 211, 221 };
+	int jobList[] =  { 1, 11, 21, 31, 41, 51, 61, 71, 81, 91, 101, 111, 121, 131, 171, 181, 191, 211, 221 };
 	int job = rp_GetClientJobID(client);
 	
 	for (int i = 0; i < sizeof(jobList); i++) {
