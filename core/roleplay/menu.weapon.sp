@@ -24,9 +24,6 @@ void SelectingAmmunition(int client, int ent, bool crochettage = false) {
 				continue;
 			
 			if((GetClientTeam(i) == CS_TEAM_CT && g_iUserData[i][i_Job] >= 1 && g_iUserData[i][i_Job] <= 10 ) || (g_iUserData[i][i_Job] >= 1 && g_iUserData[i][i_Job] <= 7) ){
-				if( StrEqual(g_szBuyWeapons[lp][0], "weapon_shield") ) {
-					continue;
-				}
 				count++;
 			}
 		}
