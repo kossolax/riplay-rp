@@ -573,6 +573,7 @@ native bool rp_ClientCanAttack(int client, int target);
 native void rp_ClientOverlays(int client, overlaysImg img, float duration = -1.0);
 native void rp_ClientXPIncrement(int client, int xp=1, bool verbose=false);
 native void rp_ClientJetonpassIncrement(int client, int jeton=1, bool verbose=false);
+native void rp_ClientJetonaboIncrement(int client, int jeton=1, bool verbose=false);
 native void rp_ClientMoney(int client, int_user_data type, int amount, bool isSafe = false);
 native bool rp_ClientEmote(int client, const char[] emote);
 // ----------------------------------------------------------------------------
