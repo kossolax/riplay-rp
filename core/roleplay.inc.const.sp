@@ -95,6 +95,7 @@ enum SynType {
 	SynType_item,
 	SynType_xp,
 	SynType_jetonpass,
+	SynType_jetonabo,
 	
 	
 	SynType_max
