@@ -608,7 +608,7 @@ void StoreUserData(int client) {
 }
 
 void SynFromWeb() {
-	static char base[] = "SELECT `money`, `bank`, `job_id`, `group_id`, `steamid`, `pseudo`, `steamid2`, `jail`, `raison`, `id`, UNIX_TIMESTAMP(`timestamp`) as `date`, `itemid`, `itemAmount`, `itemToBank`, `xp`, `jetonpass` FROM `rp_users2` ";
+	static char base[] = "SELECT `money`, `bank`, `job_id`, `group_id`, `steamid`, `pseudo`, `steamid2`, `jail`, `raison`, `id`, UNIX_TIMESTAMP(`timestamp`) as `date`, `itemid`, `itemAmount`, `itemToBank`, `xp`, `jetonpass`, `jetonabo` FROM `rp_users2` ";
 	static char steamid[128*32];
 	static char query[128 * 32 + 1024];
 	static char tmp[64];
