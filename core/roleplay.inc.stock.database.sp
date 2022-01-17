@@ -583,8 +583,8 @@ void StoreUserData(int client) {
 		MysqlQuery, g_iUserData[client][i_JetonRouge], g_iUserData[client][i_JetonBleu], g_bUserData[client][b_isFemale], g_iUserData[client][i_BirthDay], g_iUserData[client][i_BirthMonth]);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
-		"%s `firstname`='%s', `lastname`='%s', `rules`='%i', `jobplaytime`='%s', `adminxp`='%d', `dette`='%d', `jetonpass`='%d', `last_connected`=CURRENT_TIMESTAMP, ",
-		MysqlQuery, fname, lname, g_bUserData[client][b_PassedRulesTest], jobplaytime, g_iUserData[client][i_GiveXP], g_iUserData[client][i_Dette], g_iUserData[client][i_Jetonpass]);
+		"%s `firstname`='%s', `lastname`='%s', `rules`='%i', `jobplaytime`='%s', `adminxp`='%d', `dette`='%d', `jetonpass`='%d',`jetonabo`='%d', `last_connected`=CURRENT_TIMESTAMP, ",
+		MysqlQuery, fname, lname, g_bUserData[client][b_PassedRulesTest], jobplaytime, g_iUserData[client][i_GiveXP], g_iUserData[client][i_Dette], g_iUserData[client][i_Jetonpass],g_iUserData[client][i_Jetonabo]);
 	
 	Format(MysqlQuery, sizeof(MysqlQuery), 
 		"%s `jail_qhs`='%i', `amende_permi_lege`='%i',`amende_permi_lourd`='%i', `points`='%i', `pvp_banned`='%i', `allowed_dismiss`='%i' WHERE `steamid`='%s';",
@@ -660,6 +660,7 @@ public void SynFromWeb_call(Handle owner, Handle hQuery, const char[] error, any
 		int itemToBank = SQL_FetchInt(hQuery, 13);
 		int xp = SQL_FetchInt(hQuery, 14);
 		int jetonpass = SQL_FetchInt(hQuery, 15);
+		int jetonabo = SQL_FetchInt(hQuery, 16);
 		
 		char szId[8];
 		Format(szId, sizeof(szId), "%d", id);
@@ -711,7 +712,7 @@ public void SynFromWeb_call(Handle owner, Handle hQuery, const char[] error, any
 				if( jetonpass != 0 )
 					ChangePersonnal(Client, SynType_jetonpass, jetonpass, 0, szPseudo, szSteamID2, szRaison);
 				if( jetonabo != 0 )
-					ChangePersonnal(Client, SynType_jetonpass, jetonpass, 0, szPseudo, szSteamID2, szRaison);
+					ChangePersonnal(Client, SynType_jetonabo, jetonabo, 0, szPseudo, szSteamID2, szRaison);
 					
 
 				if( StrEqual(szSteamID2, "SERVER") && StrEqual(szPseudo, "Parrainage") ){
