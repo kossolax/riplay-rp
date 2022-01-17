@@ -904,6 +904,12 @@
 		"fr"		"Vous avez {green}reçu{default} {1} jeton d'activitée par {2}."
 		"en"		"You have {green}received{default} {1} Jeton of activity by {2}."
 	}
+		"Syn_Jetonabo_Give"
+	{
+		"#format"	"{1:d},{2:s}"
+		"fr"		"Votre {green}donnation{default} vous a rapporté {1} jeton donateur."
+		"en"		"You have {green}received{default} {1} Jeton of donation by {2}."
+	}
 	"Syn_Jail"
 	{
 		"#format"	"{1:d},{2:s},{3:s}"
