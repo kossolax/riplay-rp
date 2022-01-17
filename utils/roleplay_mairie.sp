@@ -50,7 +50,7 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 	int abonne = rp_GetClientInt(client, i_Abonne);
 	
 	
-	if( abonne > 0 && IsJuge(client) || abonne > 0 && IsPolice(client) ) {
+	if( abonne > 0 && rp_GetClientJobID(client) == 1 || abonne > 0 && rp_GetClientJobID(client) == 101) {
 		int sum = RoundFloat(float(salary) * 0.3 );
 		if( verbose )
 			CPrintToChat(client, "" ...MOD_TAG... " Votre abonnement a fait remporté %d$ supplémentaire.", sum);
