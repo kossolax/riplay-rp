@@ -995,10 +995,10 @@ int GetAssurence(int client, bool forced = false) {
 				amount += RoundFloat(1500.0 * ratio);
 			}
 			else if( StrEqual(tmp, "rp_healbox") ) {
-				amount += RoundFloat(100.0 * ratio);
+				amount += RoundFloat(1500.0 * ratio);
 			}
 			else if( StrEqual(tmp, "rp_microwave") ) {
-				amount += RoundFloat(8000.0 * ratio);
+				amount += RoundFloat(5555.0 * ratio);
 			}
 			else if( StrEqual(tmp, "rp_table") ) {
 				amount += RoundFloat(2500.0 * ratio);
