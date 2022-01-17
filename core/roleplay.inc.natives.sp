@@ -189,6 +189,7 @@ public APLRes AskPluginLoad2(Handle hPlugin, bool isAfterMapLoaded, char[] error
 	CreateNative("rp_ClientFloodIncrement", Native_rp_ClientFloodIncrement);
 	CreateNative("rp_ClientXPIncrement", Native_rp_ClientXPIncrement);
 	CreateNative("rp_ClientJetonpassIncrement", Native_rp_ClientJetonpassIncrement);
+	CreateNative("rp_ClientJetonaboIncrement", Native_rp_ClientJetonaboIncrement);
 	
 	CreateNative("rp_ClientFloodTriggered", Native_rp_ClientFloodTriggered);
 	CreateNative("rp_ClientOverlays", Native_rp_ClientOverlays);
