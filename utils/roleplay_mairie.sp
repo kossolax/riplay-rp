@@ -47,6 +47,17 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 	
 	bool changed = false;
 	int prestige = rp_GetClientInt(client, i_PlayerPrestige);
+	int abonne = rp_GetClientInt(client, i_Abonne);
+	
+	
+	if( abonne > 0 && rp_GetClientJobID(client) == 1, 101) {
+		int sum = RoundFloat(float(salary) * 0.3 );
+		if( verbose )
+			CPrintToChat(client, "" ...MOD_TAG... " Votre abonnement a fait remporté %d$ supplémentaire.", sum);
+		
+		changed = true;
+		topay += sum;
+	}
 	
 	if( prestige >= 1 ) {
 		int sum = RoundFloat(float(salary) * (float(prestige) / 10.0) );
