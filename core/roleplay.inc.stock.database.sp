@@ -875,7 +875,7 @@ void LoadUserData(int Client) {
 		//Format(query, sizeof(query),
 			//"%s `allowed_dismiss`, `artisan_spe`, `abonne` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
 		Format(query, sizeof(query),
-			"%s `allowed_dismiss`, `artisan_spe`, `abonne`, `jetonabo`, `jetonpass`, `mp` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
+			"%s `allowed_dismiss`, `artisan_spe`, `abonne`, `jetonabo`, `jetonpass`, `bonusmp` FROM `rp_users` WHERE `steamid` = '%s';", query, SteamID); 
 
 		SQL_TQuery(g_hBDD, LoadUserData_2, query, Client, DBPrio_High);
 		
@@ -1050,7 +1050,7 @@ public void LoadUserData_2(Handle owner, Handle hQuery, const char[] error, any 
 		g_iUserData[Client][i_Abonne] = SQL_FetchInt(hQuery, 65);
 		g_iUserData[Client][i_Jetonabo] = SQL_FetchInt(hQuery, 66);
 		g_iUserData[Client][i_Jetonpass] = SQL_FetchInt(hQuery, 67);
-		g_iUserData[Client][i_Mp] = SQL_FetchInt(hQuery, 68);
+		g_iUserData[Client][i_Bonusmp] = SQL_FetchInt(hQuery, 68);
 		int freeassu = SQL_FetchInt(hQuery, 60);
 
 		SQL_FetchString(hQuery, 47, g_szUserData[Client][sz_LastName], sizeof(g_szUserData[][]));
