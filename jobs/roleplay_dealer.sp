@@ -998,7 +998,7 @@ int BuildingPlant(int client, int type) {
 		max += 3;
 	if( rp_GetClientJobID(client) == 1 || rp_GetClientJobID(client) == 101 )
 		max = 2;
-	if( rp_GetClientJobID(client, i_Abonne) > 0 )
+	if( rp_GetClientInt(client, i_Abonne) > 0 )
 		max += 1;
 	
 	if( count >= max ) {
