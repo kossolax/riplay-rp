@@ -59,7 +59,7 @@ int g_cModel, g_cBeam;
 int SkyBoxID = -1;
 //
 int g_cSnow;
-ArrayList g_iParentedParticle[69];
+ArrayList g_iParentedParticle[71];
 
 
 int g_iEntitycount;
