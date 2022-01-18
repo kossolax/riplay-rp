@@ -901,13 +901,13 @@
 	"Syn_Jetonpass_Give"
 	{
 		"#format"	"{1:d},{2:s}"
-		"fr"		"Vous avez {green}reçu{default} {1} jeton d'activitée par {2}."
+		"fr"		"Vous avez {green}reçu{default} {1} jeton(s) d'activitée par {2}."
 		"en"		"You have {green}received{default} {1} Jeton of activity by {2}."
 	}
 		"Syn_Jetonabo_Give"
 	{
 		"#format"	"{1:d},{2:s}"
-		"fr"		"Votre {green}donnation{default} vous a rapporté {1} jeton donateur."
+		"fr"		"Votre {green}donnation{default} vous a rapporté {1} jetons donateur."
 		"en"		"You have {green}received{default} {1} Jeton of donation by {2}."
 	}
 	"Syn_Jail"
