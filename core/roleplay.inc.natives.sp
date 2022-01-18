@@ -494,6 +494,12 @@ public int Native_rp_ClientJetonpassIncrement(Handle plugin, int numParams) {
 	#endif
 }
 public int Native_rp_ClientJetonaboIncrement(Handle plugin, int numParams) {
+	char tmp[128];
+	int client = view_as<int>(GetNativeCell(1));
+	int jetonabo = view_as<int>(GetNativeCell(2));
+	bool verbose = view_as<bool>(GetNativeCell(3));
+	
+	g_iUserData[client][i_Jetonabo] += jetonabo;
 
 }
 public int Native_rp_ClientXPIncrement(Handle plugin, int numParams) {
