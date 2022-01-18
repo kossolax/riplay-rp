@@ -765,6 +765,8 @@ enum int_user_data {
 	i_Donateur,
 	i_Abonne,
 	i_Bonusmp,
+	i_Bonuscoffre,
+	i_Bonusmairie,
 	i_Jetonabo,
 	i_Jetonpass,
 	i_ThirdPerson,
