@@ -473,6 +473,8 @@ int BuildingCashMachine(int client, bool force=false) {
 		max += 2;
 	if( rp_GetClientInt(client, i_PlayerLVL) >= 506 )
 		max += 3;
+	if ( rp_GetClientInt(client, i_Abonne) > 0 )
+		max +=3;
 	
 	if( count > (max-1) && !force) {
 		CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
@@ -735,6 +737,8 @@ int BuildingBigCashMachine(int client) {
 		max += 2;
 	if( rp_GetClientInt(client, i_PlayerLVL) >= 506 )
 		max += 3;
+	if ( rp_GetClientInt(client, i_Abonne) > 0 )
+		max +=3;
 	
 	if( count > (max-15) ) {
 		CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
