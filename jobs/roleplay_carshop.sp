@@ -1824,7 +1824,7 @@ public int eventGarageMenu(Handle menu, MenuAction action, int client, int param
 					if(rp_GetVehicleInt(target, car_battery) >= 420){
 						int toPay = 1500;
 						
-						rp_ClientMoney(client, i_AddToPay, toPay);
+						rp_ClientMoney(client, i_AddToPay, 1500);
 						
 						int capital_id = rp_GetRandomCapital( rp_GetClientJobID(client)  );
 						rp_SetJobCapital( capital_id, rp_GetJobCapital(capital_id)-toPay );
