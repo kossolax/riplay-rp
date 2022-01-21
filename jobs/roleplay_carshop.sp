@@ -1827,7 +1827,7 @@ public int eventGarageMenu(Handle menu, MenuAction action, int client, int param
 						rp_ClientMoney(client, i_AddToPay, 1500);
 						
 						int capital_id = rp_GetRandomCapital( rp_GetClientJobID(client)  );
-						rp_SetJobCapital( capital_id, rp_GetJobCapital(capital_id)-toPay );
+						rp_SetJobCapital( capital_id, rp_GetJobCapital(capital_id)-1500 );
 						CPrintToChat(client, "" ...MOD_TAG... " %T", "Vehicle_Battery_Sell", client, toPay);
 						rp_SetVehicleInt(target, car_battery, -1);
 					}
