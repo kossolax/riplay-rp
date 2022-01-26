@@ -27,7 +27,7 @@
 #define	QUEST_NAME		"La justice sournoise"
 #define	QUEST_TYPE		quest_daily
 #define	QUEST_JOBID		101
-#define	QUEST_RESUME	"Condamner un citoyen pour un double homicide"
+#define	QUEST_RESUME	"Condamner un citoyen avec 4 articles minimum"
 
 public Plugin myinfo = {
 	name = "Quête: "...QUEST_NAME, author = "KoSSoLaX",
@@ -51,7 +51,7 @@ public void OnAllPluginsLoaded() {
 // ----------------------------------------------------------------------------
 public bool fwdCanStart(int client) {
 	int job = rp_GetClientInt(client, i_Job);
-	if( job >= 101 && job <= 106 && getSerialKillerCount(client)>=1)
+	if( job >= 101 && job <= 106)
 		return true;
 	
 	return false;
@@ -61,10 +61,10 @@ public void Q_Start(int objectiveID, int client) {
 	
 	menu.SetTitle("Quète: %s", QUEST_NAME);
 	menu.AddItem("", "Interlocuteur anonyme :", ITEMDRAW_DISABLED);
-	menu.AddItem("", "Maître, nos informations indiquent qu'un meurtrier", ITEMDRAW_DISABLED);
-	menu.AddItem("", "en série fait rage en ville.", ITEMDRAW_DISABLED);
+	menu.AddItem("", "Votre horreur, nos informations indiquent qu'un truan", ITEMDRAW_DISABLED);
+	menu.AddItem("", "est en ville.", ITEMDRAW_DISABLED);
 	menu.AddItem("", "-----------------", ITEMDRAW_DISABLED);
-	menu.AddItem("", "Veuillez condamner à citoyen pour double homicide.", ITEMDRAW_DISABLED);
+	menu.AddItem("", "Veuillez condamner le truan avec 4 articles différents.", ITEMDRAW_DISABLED);
 	
 	menu.ExitButton = false;
 	menu.Display(client, 60);
@@ -73,8 +73,8 @@ public void Q_Start(int objectiveID, int client) {
 	rp_HookEvent(client, RP_OnJugementOver, fwdJugementOver);
 }
 public Action fwdJugementOver(int client, int data[6], int charges[28]) {
-	int nbCharges = charges[0] + charges[1] + charges[2];
-	if( data[2] >= 1 && data[3] >= 1 && nbCharges >= 2 ) {
+	int nbCharges = charges[0] + charges[1] + charges[2] + charges[3] + charges[4];
+	if( data[2] >= 1 && data[3] >= 1 && nbCharges >= 4 ) {
 		rp_QuestStepComplete(client, g_iDoing[client]);
 	}
 }
@@ -104,24 +104,4 @@ public int MenuNothing(Handle menu, MenuAction action, int client, int param2) {
 		if( menu != INVALID_HANDLE )
 			CloseHandle(menu);
 	}
-}
-int getSerialKillerCount(int client) {
-	int cpt = 0;
-	
-	for (int i = 1; i <= MaxClients; i++) {
-		if( !IsValidClient(i) )
-			continue;
-		if( i == client )
-			continue;
-		if( rp_GetClientBool(i, b_IsAFK) )
-			continue;
-		if( rp_GetZoneBit( rp_GetPlayerZone(i) ) & (BITZONE_JAIL|BITZONE_HAUTESECU|BITZONE_LACOURS|BITZONE_EVENT) )
-			continue;
-		
-		if( rp_GetClientInt(i, i_KillingSpread) >= 1 )
-			cpt++;
-		
-	}
-	
-	return cpt;
 }
