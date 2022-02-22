@@ -559,7 +559,7 @@ public Action Cmd_ItemHamburger(int args) {
 			
 			jobID = rp_GetItemInt(i, item_type_job_id);
 			
-			if( jobID <= 0 || jobID == 61 || jobID == 91 ) // Aucun, Appart, Mafia
+			if( jobID <= 0 || jobID == 61 || jobID == 91 || jobID == 31 ) // Aucun, Appart, Mafia, Artisan
 				continue;
 			
 			rp_GetItemData(i, item_type_extra_cmd, cmd, sizeof(cmd));
