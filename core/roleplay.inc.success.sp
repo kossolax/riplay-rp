@@ -33,7 +33,7 @@ char g_szSuccessData[view_as<int>(success_list_all)][view_as<int>(success_type_a
 	{ "dealer", "Rasta drogué", "Tomber en overdose.", "1" , "0" },
 	{ "mafia", "Cosa Nostra", "Crocheter, voler, et tuer un policier en moins de 60 secondes.", "1" , "0" },
 	{ "armurerie", "La gachette facile", "Acheter une arme, tuer l'armurier, ainsi qu'un policier à proximité en moins d'une minute.", "1" , "0" },
-	{ "vetement", "Concours de costumes", "Changer plus de 100x son propre skin.", "100" , "0" },
+	{ "vetement", "Concours de costumes", "Changer plus de 100x son propre skin.", "10" , "0" },
 	{ "detective", "L'indiscret", "Se procurer plus de 250 informations sur des joueurs à un détective privé.", "250" , "0" },
 	{ "moniteur", "Fan de paintball", "Tirer l'équivalent de 5 000 billes de paintball.", "5000" , "0" },
 	{ "loterie", "Ce n'est que le début", "Remporter pour un total de plus de 250 000$ grace à la loterie.", "250000" , "0" },
