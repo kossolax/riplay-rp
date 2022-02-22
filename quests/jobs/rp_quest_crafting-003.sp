@@ -83,4 +83,7 @@ public void Q1_Abort(int objectiveID, int client) {
 public void Q1_Done(int objectiveID, int client) {
 	Q1_Abort(objectiveID, client);
 	rp_ClientXPIncrement(client, 2500);
+		if (rp_GetClientInt(client, i_Abonne) > 0){
+			rp_ClientXPIncrement(client, 1250);
+		}
 }
