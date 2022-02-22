@@ -116,6 +116,9 @@ public void Q1_End(int objectiveID, int client) {
 	rp_ClientMoney(client, i_AddToPay, 1000);
 	
 	rp_ClientXPIncrement(client, 2500);
+		if (rp_GetClientInt(client, i_Abonne) > 0){
+			rp_ClientXPIncrement(client, 1250);
+		}
 }
 // ----------------------------------------------------------------------------
 public int MenuNothing(Handle menu, MenuAction action, int client, int param2) {
