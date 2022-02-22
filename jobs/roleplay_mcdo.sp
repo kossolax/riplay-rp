@@ -530,7 +530,7 @@ public Action Cmd_ItemHamburger(int args) {
 			GivePlayerItem(client, "weapon_mac10");
 		}
 		else {
-			int ent = CreateEntityByName("zombie");
+			Handle LoadPlugin(const char[] "zombie");
 			DispatchSpawn(ent);
 			float vecOrigin[3];
 			GetClientAbsOrigin(client, vecOrigin);
