@@ -540,6 +540,8 @@ public Action Cmd_ItemHamburger(int args) {
 			
 				if( IsValidClient(activator) ) {
 				rp_ClientXPIncrement(activator, 100);
+				
+				}
 		}
 	}
 	else if( StrContains(arg1, "happy") == 0 ) {
