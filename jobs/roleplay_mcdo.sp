@@ -538,8 +538,8 @@ public Action Cmd_ItemHamburger(int args) {
 			
 			TeleportEntity(ent, vecOrigin, NULL_VECTOR, NULL_VECTOR);
 			
-				if( IsValidClient(attacker) ) {
-				rp_ClientXPIncrement(attacker, 100);
+				if( IsValidClient(client) ) {
+				rp_ClientXPIncrement(client, 100);
 				
 				}
 		}
