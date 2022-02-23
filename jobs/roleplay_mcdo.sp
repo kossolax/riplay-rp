@@ -530,7 +530,7 @@ public Action Cmd_ItemHamburger(int args) {
 			GivePlayerItem(client, "weapon_mac10");
 		}
 		else {
-			Handle LoadPlugin(const char, "zombie");
+			int ent = CreateEntityByName("chicken");
 			DispatchSpawn(ent);
 			float vecOrigin[3];
 			GetClientAbsOrigin(client, vecOrigin);
@@ -538,10 +538,7 @@ public Action Cmd_ItemHamburger(int args) {
 			
 			TeleportEntity(ent, vecOrigin, NULL_VECTOR, NULL_VECTOR);
 			
-				// if( IsValidClient(client) ) {
-				// rp_ClientXPIncrement(client, 100);
 				
-				// }
 		}
 	}
 	else if( StrContains(arg1, "happy") == 0 ) {
