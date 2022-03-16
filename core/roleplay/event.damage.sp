@@ -215,8 +215,8 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 				
 				
 				if( g_iUserData[victim][i_PlayerLVL] <= 20 && g_iKillLegitime[attacker][victim] < GetTime() ) {
-					damage = damage / SquareRoot(21.0 - float(g_iUserData[victim][i_PlayerLVL]));
-					changed = true;
+				//	damage = damage / SquareRoot(21.0 - float(g_iUserData[victim][i_PlayerLVL]));
+				//	changed = true;
 				}
 			}
 		}
