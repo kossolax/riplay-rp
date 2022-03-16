@@ -186,7 +186,7 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 				changed = true;
 			}
 			
-			if( !(GetZoneBit(victim_zone) & BITZONE_EVENT) ||  !(GetZoneBit(victim_zone)  & BITZONE_PVP) ) {
+			if( !(GetZoneBit(victim_zone) & BITZONE_EVENT) ) {
 				
 				Action a;
 				Call_StartForward( view_as<Handle>(g_hRPNative[victim][RP_PreTakeDamage]));
@@ -214,9 +214,9 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 					changed = true;
 				
 				
-				if( g_iUserData[victim][i_PlayerLVL] <= 20 && g_iKillLegitime[attacker][victim] < GetTime() ) {
-				//	damage = damage / SquareRoot(21.0 - float(g_iUserData[victim][i_PlayerLVL]));
-				//	changed = true;
+				if( g_iUserData[victim][i_PlayerLVL] <= 19 && g_iKillLegitime[attacker][victim] < GetTime() ) {
+					damage = damage / SquareRoot(21.0 - float(g_iUserData[victim][i_PlayerLVL]));
+					changed = true;
 				}
 			}
 		}
