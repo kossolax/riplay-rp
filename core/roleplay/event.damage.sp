@@ -186,7 +186,7 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 				changed = true;
 			}
 			
-			if( !(GetZoneBit(victim_zone) & BITZONE_EVENT) ) {
+			if( !(GetZoneBit(victim_zone) & BITZONE_EVENT) ||  !(GetZoneBit(victim_zone)  & BITZONE_PVP) {
 				
 				Action a;
 				Call_StartForward( view_as<Handle>(g_hRPNative[victim][RP_PreTakeDamage]));
