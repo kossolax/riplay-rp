@@ -309,7 +309,7 @@ public void DisplayLevelStats(int client){
 	int level = rp_GetClientInt(client, i_PlayerLVL);
 
 	Format(tmp, sizeof(tmp), "Vous êtes niveau %d, prochain niveau: %d/3600 \nListe des bonus:\n ", rp_GetClientInt(client, i_PlayerLVL), rp_GetClientInt(client, i_PlayerXP)%3600);
-	SetMenuTitle(menu, "Mon Niveau\n ");
+	SetMenuTitle(menu, "Mon niveau\n ");
 	for(int i=0; i<sizeof(g_szLevelData); i++){
 		if(strlen(g_szLevelData[i][0]) == 0)
 			break;
