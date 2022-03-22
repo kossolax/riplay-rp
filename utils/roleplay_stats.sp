@@ -98,7 +98,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 		//AddMenuItem(menu, "full", "Le total");
 		AddMenuItem(menu, "real", "En temps réel");
 		AddMenuItem(menu, "coloc", "Infos appartement");
-		//AddMenuItem(menu, "level", "Mon niveau");
+		AddMenuItem(menu, "level", "Mon niveau");
 		AddMenuItem(menu, "succes", "Mes succès");
 		DisplayMenu(menu, client, 60);
 		return Plugin_Handled;
