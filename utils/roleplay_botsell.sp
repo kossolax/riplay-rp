@@ -107,7 +107,7 @@ void openSellMenu(int client) {
 			IntToString(i, key, sizeof(key));
 			rp_GetItemData(i, item_type_name, name, sizeof(name));
 			if ( rp_GetPlayerZone(client) == 121) {
-				if ( rp_GetItemData(cmd, "rp_chirurgie") )
+				if ( rp_GetItemData(item_type_extra_cmd, "rp_chirurgie") )
 				continue;
 			}
 			menu.AddItem(key, name);
