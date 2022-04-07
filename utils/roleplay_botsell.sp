@@ -109,7 +109,6 @@ void openSellMenu(int client) {
 				IntToString(i, key, sizeof(key));
 				rp_GetItemData(307, item_type_name, name, sizeof(name));
 				rp_GetItemData(359, item_type_name, name, sizeof(name));
-				menu.AddItem(key, name);
 			}
 			
 			if (rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 13) {
@@ -134,15 +133,13 @@ void openSellMenu(int client) {
 				rp_GetItemData(200, item_type_name, name, sizeof(name));
 				rp_GetItemData(258, item_type_name, name, sizeof(name));
 				rp_GetItemData(265, item_type_name, name, sizeof(name));
-				
-				menu.AddItem(key, name);
 			}
 			
-			else {
+			if (rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 31) || (rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 51) || (rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 211){
 				IntToString(i, key, sizeof(key));
 				rp_GetItemData(i, item_type_name, name, sizeof(name));
-				menu.AddItem(key, name);
 			}
+			menu.AddItem(key, name);
 		}
 	}
 	
