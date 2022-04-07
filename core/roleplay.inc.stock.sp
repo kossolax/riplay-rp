@@ -922,6 +922,9 @@ void RP_SpawnBank() {
 				else if( rp_GetZoneInt(GetPointZone(vecOrigin), zone_type_type) == 211 ) {
 					DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_professional_var2.mdl");
 				}
+				else if( rp_GetZoneInt(GetPointZone(vecOrigin), zone_type_type) == 11 ) {
+					DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/lara/lara.mdl");
+				}
 				else {
 					DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_professional_var2.mdl");
 				}
