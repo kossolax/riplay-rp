@@ -135,7 +135,7 @@ void openSellMenu(int client) {
 				rp_GetItemData(265, item_type_name, name, sizeof(name));
 			}
 			
-			if (rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 13) || (rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 11){
+			else if (rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 11){
 				IntToString(i, key, sizeof(key));
 				rp_GetItemData(i, item_type_name, name, sizeof(name));
 			}
