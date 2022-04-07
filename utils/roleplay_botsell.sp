@@ -79,7 +79,7 @@ bool IsNearBot(int client) {
 }
 
 bool IsInValidZone(int client) {
-	int validZone[] = { 31, 51, 211, 11, 13 };
+	int validZone[] = { 31, 51, 211, 11, 14 };
 	int jobZone = rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type);
 	
 	for(int i=0; i<sizeof(validZone); i++) {
@@ -105,13 +105,13 @@ void openSellMenu(int client) {
 		//if( jobZone == rp_GetItemInt(i, item_type_job_id) && rp_GetItemInt(i, item_type_auto) == 0 ) {
 		if( jobZone == rp_GetItemInt(i, item_type_job_id) ) {
 
-			//if (rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 11) {
+			//if (rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 14) {
 				//IntToString(i, key, sizeof(key));
 				//rp_GetItemData(307, item_type_name, name, sizeof(name));
 				//rp_GetItemData(359, item_type_name, name, sizeof(name));
 			//}
 			
-			if (rp_GetPlayerZone(client) == 121) {
+			if (rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 11) {
 				IntToString(i, key, sizeof(key));
 				rp_GetItemData(6, item_type_name, name, sizeof(name));
 				rp_GetItemData(8, item_type_name, name, sizeof(name));
