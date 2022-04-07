@@ -105,11 +105,12 @@ void openSellMenu(int client) {
 		//if( jobZone == rp_GetItemInt(i, item_type_job_id) && rp_GetItemInt(i, item_type_auto) == 0 ) {
 		if( jobZone == rp_GetItemInt(i, item_type_job_id) ) {
 
-			//if (rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 14) {
-				//IntToString(i, key, sizeof(key));
-				//rp_GetItemData(307, item_type_name, name, sizeof(name));
-				//rp_GetItemData(359, item_type_name, name, sizeof(name));
-			//}
+			if (rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 14) {
+				IntToString(i, key, sizeof(key));
+				rp_GetItemData(307, item_type_name, name, sizeof(name));
+				rp_GetItemData(359, item_type_name, name, sizeof(name));
+				menu.AddItem(key, name);
+			}
 			
 			if (rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 11) {
 				IntToString(i, key, sizeof(key));
