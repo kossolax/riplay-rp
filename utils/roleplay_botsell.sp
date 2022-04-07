@@ -106,7 +106,10 @@ void openSellMenu(int client) {
 		if( jobZone == rp_GetItemInt(i, item_type_job_id) ) {
 			IntToString(i, key, sizeof(key));
 			rp_GetItemData(i, item_type_name, name, sizeof(name));
-			
+			if ( rp_GetPlayerZone(client) == 121) {
+				if ( rp_GetItemData(cmd, "rp_chirurgie") )
+				continue;
+			}
 			menu.AddItem(key, name);
 		}
 	}
