@@ -107,7 +107,6 @@ void openSellMenu(int client) {
 
 			if (rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 14) {
 				IntToString(i, key, sizeof(key));
-				menu.AddItem(key, name);
 				rp_GetItemData(9, item_type_name, name, sizeof(name));
 				menu.AddItem(key, name);
 				rp_GetItemData(10, item_type_name, name, sizeof(name));
@@ -121,6 +120,7 @@ void openSellMenu(int client) {
 				rp_GetItemData(307, item_type_name, name, sizeof(name));
 				menu.AddItem(key, name);
 				rp_GetItemData(359, item_type_name, name, sizeof(name));
+				menu.AddItem(key, name);
 			}
 			
 			if (rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 11) {
