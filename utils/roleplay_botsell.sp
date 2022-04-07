@@ -79,7 +79,7 @@ bool IsNearBot(int client) {
 }
 
 bool IsInValidZone(int client) {
-	int validZone[] = { 31, 51, 211, 11 };
+	int validZone[] = { 31, 51, 211, 11, 13 };
 	int jobZone = rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type);
 	
 	for(int i=0; i<sizeof(validZone); i++) {
