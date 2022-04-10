@@ -234,8 +234,8 @@ public Action ChiruEffect(Handle timer, Handle dp) {
 	int vendeur = ReadPackCell(dp);
 	
 	float vecOrigin[3], vecOrigin2[3];
-	GetClientEyePosition(client, vecOrigin);
-	GetClientEyePosition(vendeur, vecOrigin2);
+	//GetClientEyePosition(client, vecOrigin);
+	//GetClientEyePosition(vendeur, vecOrigin2);
 	
 	vecOrigin[2] -= 20.0; vecOrigin2[2] -= 20.0;
 	
