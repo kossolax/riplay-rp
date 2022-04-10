@@ -149,19 +149,17 @@ void openSellMenu(int client) {
 				menu.AddItem(key, name);
 				rp_GetItemData(141, item_type_name, name, sizeof(name));
 				menu.AddItem(key, name);
-				rp_GetItemData(200, item_type_name, name, sizeof(name));
-				menu.AddItem(key, name);
 				rp_GetItemData(258, item_type_name, name, sizeof(name));
 				menu.AddItem(key, name);
 				rp_GetItemData(265, item_type_name, name, sizeof(name));
 				menu.AddItem(key, name);
 			}
 			
-			else if (rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 11){
+			else if (rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 11 || rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 14){
 				IntToString(i, key, sizeof(key));
 				rp_GetItemData(i, item_type_name, name, sizeof(name));
+				menu.AddItem(key, name);
 			}
-			menu.AddItem(key, name);
 		}
 	}
 	
