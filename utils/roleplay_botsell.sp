@@ -105,63 +105,9 @@ void openSellMenu(int client) {
 		//if( jobZone == rp_GetItemInt(i, item_type_job_id) && rp_GetItemInt(i, item_type_auto) == 0 ) {
 		if( jobZone == rp_GetItemInt(i, item_type_job_id) ) {
 
-			if (rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 14) {
-				IntToString(i, key, sizeof(key));
-				char item[128];
-				rp_GetItemData(9, item_type_name, item, sizeof(item));
-				menu.AddItem(key, item);
-				rp_GetItemData(10, item_type_name, item, sizeof(item));
-				menu.AddItem(key, item);
-				rp_GetItemData(11, item_type_name, item, sizeof(item));
-				menu.AddItem(key, item);
-				rp_GetItemData(12, item_type_name, item, sizeof(item));
-				menu.AddItem(key, item);
-				rp_GetItemData(13, item_type_name, item, sizeof(item));
-				menu.AddItem(key, item);
-				rp_GetItemData(307, item_type_name, item, sizeof(item));
-				menu.AddItem(key, item);
-				rp_GetItemData(359, item_type_name, item, sizeof(item));
-				menu.AddItem(key, item);
-			}
-			
-			if (rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 11) {
-				IntToString(i, key, sizeof(key));
-				char name[128];
-				rp_GetItemData(6, item_type_name, item1, sizeof(item1));
-				menu.AddItem(key, item1);
-				rp_GetItemData(8, item_type_name, item2, sizeof(item2));
-				menu.AddItem(key, item2);
-				rp_GetItemData(14, item_type_name, item3, sizeof(item3));
-				menu.AddItem(key, item3);
-				rp_GetItemData(15, item_type_name, item4, sizeof(item4));
-				menu.AddItem(key, item4);
-				rp_GetItemData(61, item_type_name, item5, sizeof(item5));
-				menu.AddItem(key, item5);
-				rp_GetItemData(100, item_type_name, item6, sizeof(item6));
-				menu.AddItem(key, item6);
-				rp_GetItemData(124, item_type_name, item7, sizeof(item7));
-				menu.AddItem(key, item7);
-				rp_GetItemData(137, item_type_name, item8, sizeof(item8));
-				menu.AddItem(key, item8);
-				rp_GetItemData(138, item_type_name, item9, sizeof(item9));
-				menu.AddItem(key, item9);
-				rp_GetItemData(139, item_type_name, item10, sizeof(item10));
-				menu.AddItem(key, item10);
-				rp_GetItemData(140, item_type_name, item11, sizeof(item11));
-				menu.AddItem(key, item11);
-				rp_GetItemData(141, item_type_name, item12, sizeof(item12));
-				menu.AddItem(key, item12);
-				rp_GetItemData(258, item_type_name, item13, sizeof(item13));
-				menu.AddItem(key, item13);
-				rp_GetItemData(265, item_type_name, item14, sizeof(item14));
-				menu.AddItem(key, item14);
-			}
-			
-			else if (rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 11 || rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) != 14){
-				IntToString(i, key, sizeof(key));
-				rp_GetItemData(i, item_type_name, name, sizeof(name));
-				menu.AddItem(key, name);
-			}
+			IntToString(i, key, sizeof(key));
+			rp_GetItemData(i, item_type_name, name, sizeof(name));
+			menu.AddItem(key, name);
 		}
 	}
 	
