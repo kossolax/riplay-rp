@@ -171,7 +171,7 @@ public Action Cmd_ItemChirurgie(int args) {
 	
 	char target_name[128], client_name[128];
 	GetClientName2(client, client_name, sizeof(client_name), false);
-	GetClientName2(vendeur, target_name, sizeof(target_name), false);
+	//GetClientName2(vendeur, target_name, sizeof(target_name), false);
 	
 	//CPrintToChat(client, "" ...MOD_TAG... " %T", "Chiru_By", client, target_name);
 	//CPrintToChat(vendeur, "" ...MOD_TAG... " %T", "Chiru_Target", vendeur, client_name);
@@ -231,7 +231,7 @@ public Action fwdChiruBreath(int client) {
 public Action ChiruEffect(Handle timer, Handle dp) {
 	ResetPack(dp);
 	int client = ReadPackCell(dp);
-	int vendeur = ReadPackCell(dp);
+	//int vendeur = ReadPackCell(dp);
 	
 	float vecOrigin[3], vecOrigin2[3];
 	//GetClientEyePosition(client, vecOrigin);
