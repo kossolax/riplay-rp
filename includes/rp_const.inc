@@ -13,7 +13,7 @@
 #endif
 #define _rp_const_included_
 
-#define __LAST_REV__			"8.2 - REBORN"
+#define __LAST_REV__			"8.3 - REBORN"
 
 #if defined RP_LANG_TYPE 
 	#if RP_LANG_TYPE==2
