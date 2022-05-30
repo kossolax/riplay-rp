@@ -54,6 +54,7 @@ public void OnPluginStart() {
 	RegServerCmd("rp_item_primal",		Cmd_ItemForward,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_cheque",		Cmd_ItemCheque,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_packdebutant",Cmd_ItemPackDebutant, 	"RP-ITEM", 	FCVAR_UNREGISTERED);
+	RegServerCmd("rp_item_packdebutantpvp",Cmd_ItemPackDebutantPvP, 	"RP-ITEM", 	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_permi",		Cmd_ItemPermi,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_distrib",		Cmd_ItemDistrib,		"RP-ITEM", 	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_banksort",	Cmd_ItemBankSort,		"RP-ITEM", 	FCVAR_UNREGISTERED);
@@ -481,6 +482,22 @@ public Action Cmd_ItemPackDebutant(int args) { //Permet d'avoir la CB, le compte
 	rp_SetClientInt(client, i_StartLicense2, GetTime());
  	
 	CPrintToChat(client, ""...MOD_TAG..." %T", "Item_PackForNew", client);
+
+	rp_ClientSave(client);
+}
+
+public Action Cmd_ItemPackDebutantPvP(int args) { //Pack *News* PvP
+	
+	int client = GetCmdArgInt(1);
+	rp_ClientGiveItem(client, 35, 50);//Cock
+	rp_ClientGiveItem(client, 270, 50);//Crack
+	rp_ClientGiveItem(client, 34, 50);//Héroine
+	rp_ClientGiveItem(client, 8, 50);//Couverture
+	rp_ClientGiveItem(client, 22, 25);//Sain Andreas
+	rp_ClientGiveItem(client, 46, 25);//Cartouche incendiaire
+	rp_ClientGiveItem(client, 64, 20);//M4A1-s PVP
+ 	
+	CPrintToChat(client, ""...MOD_TAG..." %T", "Item_PackForNewPvP", client);
 
 	rp_ClientSave(client);
 }

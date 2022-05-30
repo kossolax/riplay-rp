@@ -44,6 +44,12 @@
 		"fr"		"Votre carte bancaire, votre coffre, votre RIB et vos permis sont maintenant actifs."
 		"en"		"Your credit card, safe deposit box, bank account number and permits are now active."
 	}
+	
+	"Item_PackForNewPvP"
+	{
+		"fr"		"Votre débutant PvP est maintenant actifs ! Bon courage !"
+		"en"		"Your PvP beginner is now active ! Good luck !"
+	}
 	// ----------------------------------------------------------------------------------------------
 	"Metro_Menu"
 	{
