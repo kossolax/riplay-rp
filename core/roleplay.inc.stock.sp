@@ -928,6 +928,15 @@ void RP_SpawnBank() {
 				else if( rp_GetZoneInt(GetPointZone(vecOrigin), zone_type_type) == 14 ) {
 					DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/nick/nick.mdl");
 				}
+				else if( rp_GetZoneInt(GetPointZone(vecOrigin), zone_type_type) == 111 ) {
+					DispatchKeyValue(ent, "model", "models/player/custom_player/riplay/nathandrake/nathandrake.mdl");
+				}
+				else if( rp_GetZoneInt(GetPointZone(vecOrigin), zone_type_type) == 114 ) {
+					DispatchKeyValue(ent, "model", "models/player/custom_player/riplay/wick/wick.mdl");
+				}
+				else if( rp_GetZoneInt(GetPointZone(vecOrigin), zone_type_type) == 115 ) {
+					DispatchKeyValue(ent, "model", "models/player/custom_player/riplay/momiji/momiji.mdl");
+				}
 				else {
 					DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_professional_var2.mdl");
 				}
