@@ -97,6 +97,7 @@ void openSellMenu(int client) {
 	
 	int jobZone = rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type);
 	char name[128], key[8];
+	char price[128], key[8];
 	
 	Menu menu = CreateMenu(onMenuOpen);
 	menu.SetTitle("Bienvenue!\n ");
