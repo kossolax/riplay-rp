@@ -142,7 +142,16 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 		{"fire",			"750",	"add_ball_type_fire"},
 		{"paintball",		"125",	"add_ball_type_paintball"},
 		{"explode", 		"1400",	"add_ball_type_explode"},
-		// {"flashbang", 		"25",	"add_weapon_flashbang"},
+		{"sanandreas",		"250",	"add_bullet_sanAndreas"},
+		{"pvp",				"400",	"add_bullet_pvp"},
+		{"caoutchouc",		"750",	"add_ball_type_caoutchouc"},
+		{"poison",			"750",	"add_ball_type_poison"},
+		{"vampire",			"750",	"add_ball_type_vampire"},
+		{"reflexive",		"500",	"add_ball_type_reflexive"},
+		{"revitalisante",	"250",	"add_ball_type_revitalisante"},
+		{"nosteal", 		"100",	"add_ball_type_nosteal"},
+		{"notk", 			"50",	"add_ball_type_notk"}
+		{"flashbang", 		"25",	"add_weapon_flashbang"},
 		{"smokegrenade", 		"125",	"add_weapon_smokegrenade"},
 		{"tagrenade", 		"150",	"add_weapon_tagrenade"},
 		{"molotov", 		"250",	"add_weapon_molotov"}
@@ -179,33 +188,13 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 					return;
 			}
 
-				if(StrEqual(type, "fire")){
+				if(StrEqual(type, "fire") || StrEqual(type, "explode") || StrEqual(type, "paintball") || StrEqual(type, "sanandreas") || StrEqual(type, "pvp") || StrEqual(type, "coutchouc") || StrEqual(type, "poison") || StrEqual(type, "vampire") || StrEqual(type, "reflexive") || StrEqual(type, "revitalisante") || StrEqual(type, "nosteal) || StrEqual(type, "notk")){
 					if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
 						CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
 						return;
 					}
 					else {
 						rp_SetWeaponBallType(wep_id, ball_type_fire);
-						CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
-					}
-				}
-				else if(StrEqual(type, "explode")){
-					if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
-						CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
-						return;
-					}
-					else {
-						rp_SetWeaponBallType(wep_id, ball_type_explode);
-						CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
-					}
-				}
-				else if(StrEqual(type, "paintball")){
-					if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
-						CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
-						return;
-					}
-					else {
-						rp_SetWeaponBallType(wep_id, ball_type_paintball);
 						CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
 					}
 				}
