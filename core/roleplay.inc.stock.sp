@@ -935,7 +935,7 @@ void RP_SpawnBank() {
 					DispatchKeyValue(ent, "model", "models/player/custom_player/riplay/wick/wick.mdl");
 				}
 				else if( rp_GetZoneInt(GetPointZone(vecOrigin), zone_type_type) == 115 ) {
-					DispatchKeyValue(ent, "model", "models/player/custom_player/riplay/momiji/momiji.mdl");
+					DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/aiden_pearce/aiden_pearce.mdl");
 				}
 				else {
 					DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_professional_var2.mdl");
