@@ -188,7 +188,7 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 					return;
 			}
 
-				if(StrEqual(type, "fire") || StrEqual(type, "explode") || StrEqual(type, "paintball") || StrEqual(type, "sanandreas") || StrEqual(type, "pvp") || StrEqual(type, "coutchouc") || StrEqual(type, "poison") || StrEqual(type, "vampire") || StrEqual(type, "reflexive") || StrEqual(type, "revitalisante") || StrEqual(type, "nosteal) || StrEqual(type, "notk")){
+				if(StrEqual(type, "fire") || StrEqual(type, "explode") || StrEqual(type, "paintball") || StrEqual(type, "sanandreas") || StrEqual(type, "pvp") || StrEqual(type, "coutchouc") || StrEqual(type, "poison") || StrEqual(type, "vampire") || StrEqual(type, "reflexive") || StrEqual(type, "revitalisante") || StrEqual(type, "nosteal") || StrEqual(type, "notk")){
 					if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
 						CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
 						return;
