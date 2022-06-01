@@ -766,6 +766,8 @@ public int Handle_Mairie(Handle menu, MenuAction action, int client, int param2)
 				rp_SetClientBool(client, b_PassedRulesTest, true);
 				CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 10 cadeaux dans votre banque.");
 				rp_ClientGiveItem(client, ITEM_CADEAU, 10, true);
+				CPrintToChat(client, "" ...MOD_TAG... " Vous avez reçu 1 Pack Débutant PvP.");
+				rp_ClientGiveItem(client, 369);
 				
 				char query[1024], steamid[64];
 				GetClientAuthId(client, AUTH_TYPE, steamid, sizeof(steamid));
