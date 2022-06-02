@@ -106,9 +106,14 @@ void openSellMenu(int client) {
 		if( jobZone == rp_GetItemInt(i, item_type_job_id) && rp_GetItemInt(i, item_type_prix) ) {
 
 			IntToString(i, key, sizeof(key));
-			rp_GetItemData(i, item_type_name, name, sizeof(name));
-			rp_GetItemData(i, item_type_prix, price, sizeof(price));
-			menu.AddItem(key, price);
+			//rp_GetItemData(i, item_type_name, name, sizeof(name));
+			//rp_GetItemData(i, item_type_prix, price, sizeof(price));
+			//menu.AddItem(key, price);
+			
+			Format( tmp, 254, "%s_%i", g_szItemListOrdered[i][item_type_ordered_id], 0);
+			Format(tmp2, 254, "%s [%s$]", g_szItemListOrdered[i][item_type_name], g_szItemListOrdered[i][item_type_prix]);
+			
+			AddMenuItem(tmp, tmp2);
 		}
 	}
 	
