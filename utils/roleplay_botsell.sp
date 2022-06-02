@@ -108,7 +108,7 @@ void openSellMenu(int client) {
 			IntToString(i, key, sizeof(key));
 			rp_GetItemData(i, item_type_name, name, sizeof(name));
 			rp_GetItemData(i, item_type_prix, price, sizeof(price));
-			menu.AddItem(name, price);
+			menu.AddItem(key, price);
 		}
 	}
 	
