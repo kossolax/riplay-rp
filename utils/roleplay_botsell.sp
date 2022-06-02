@@ -105,15 +105,22 @@ void openSellMenu(int client) {
 		//if( jobZone == rp_GetItemInt(i, item_type_job_id) && rp_GetItemInt(i, item_type_auto) == 0 ) {
 		if( jobZone == rp_GetItemInt(i, item_type_job_id) && rp_GetItemInt(i, item_type_prix) ) {
 
-			IntToString(i, key, sizeof(key));
+			//IntToString(i, key, sizeof(key));
 			//rp_GetItemData(i, item_type_name, name, sizeof(name));
 			//rp_GetItemData(i, item_type_prix, price, sizeof(price));
-			//menu.AddItem(key, price);
-			char tmp[256], tmp2[256];
-			Format( tmp, 254, "%s_%i", g_szItemListOrdered[i][item_type_ordered_id], 0);
-			Format(tmp2, 254, "%s [%s$]", g_szItemListOrdered[i][item_type_name], g_szItemListOrdered[i][item_type_prix]);
+			//menu.AddItem(key, name);
 			
-			AddMenuItem(tmp, tmp2);
+			char szMenu[][][] = {
+				{"", name, price}
+			};
+			
+			for (int i = 0; i < sizeof(szMenu); i++) {
+				Format(tmp1, sizeof(tmp1), "%s_%s", szMenu[i][0], szMenu[i][1]);
+				Format(tmp2, sizeof(tmp2), "%T - %s$", szMenu[i][2], client, szMenu[i][1]);
+				AddMenuItem(menu, tmp1, tmp2);
+			}
+			
+			
 		}
 	}
 	
