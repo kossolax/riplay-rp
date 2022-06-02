@@ -103,7 +103,7 @@ void openSellMenu(int client) {
 	
 	for(int i=0; i<MAX_ITEMS; i++) {
 		//if( jobZone == rp_GetItemInt(i, item_type_job_id) && rp_GetItemInt(i, item_type_auto) == 0 ) {
-		if( jobZone == rp_GetItemInt(i, item_type_job_id) && rp_GetItemInt(i, item_type_prix) rp_GetItemInt(i, item_type_name) ) {
+		if( jobZone == rp_GetItemInt(i, item_type_job_id) && rp_GetItemInt(i, item_type_prix) && rp_GetItemInt(i, item_type_name) ) {
 
 			IntToString(i, key, sizeof(key));
 			rp_GetItemData(i, item_type_name, name, sizeof(name));
