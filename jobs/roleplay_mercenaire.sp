@@ -133,7 +133,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown) {
 		TeleportEntity(client, g_vecOriginTP[client], NULL_VECTOR, NULL_VECTOR);
 		g_bCanTP[client] = false;
 		
-		cooldown = 35.0;
+		cooldown = 30.0;
 		return Plugin_Stop;
 	}
 	
