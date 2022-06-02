@@ -18,7 +18,7 @@
 
 #pragma newdecls required
 #include <roleplay.inc>	// https://www.ts-x.eu
-#include <roleplay_armurerie.sp>
+#include <jobs/roleplay_armurerie.sp>
 
 public Plugin myinfo = {
 	name = "Jobs: Artificier", author = "KoSSoLaX",
