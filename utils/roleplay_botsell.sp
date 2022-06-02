@@ -109,7 +109,7 @@ void openSellMenu(int client) {
 			//rp_GetItemData(i, item_type_name, name, sizeof(name));
 			//rp_GetItemData(i, item_type_prix, price, sizeof(price));
 			//menu.AddItem(key, price);
-			
+			char tmp[256], tmp2[256];
 			Format( tmp, 254, "%s_%i", g_szItemListOrdered[i][item_type_ordered_id], 0);
 			Format(tmp2, 254, "%s [%s$]", g_szItemListOrdered[i][item_type_name], g_szItemListOrdered[i][item_type_prix]);
 			
