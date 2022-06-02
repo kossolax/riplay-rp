@@ -103,7 +103,7 @@ void openSellMenu(int client) {
 	
 	for(int i=0; i<MAX_ITEMS; i++) {
 		//if( jobZone == rp_GetItemInt(i, item_type_job_id) && rp_GetItemInt(i, item_type_auto) == 0 ) {
-		if( jobZone == rp_GetItemInt(i, item_type_job_id) && rp_GetItemInt(i, item_type_prix) && rp_GetItemInt(i, item_type_name) ) {
+		if( jobZone == rp_GetItemInt(i, item_type_job_id) && rp_GetItemInt(i, item_type_prix) && rp_GetItemInt(i, item_type_auto) ) {
 
 			IntToString(i, key, sizeof(key));
 			rp_GetItemData(i, item_type_name, name, sizeof(name));
@@ -120,7 +120,7 @@ public int onMenuOpen(Handle hItem, MenuAction oAction, int client, int param) {
 		GetMenuItem(hItem, param, options, sizeof(options));
 		int item_id = StringToInt(options);
 		int price = rp_GetItemInt(item_id, item_type_prix);
-		int name = rp_GetItemInt(item_id, item_type_name);
+		
 		
 		if( !IsInValidZone(client) || !IsNearBot(client) ) {
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Cmd_TargetIsToFar", client);
