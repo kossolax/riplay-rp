@@ -139,18 +139,17 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	SetMenuTitle(menu, "%T\n ", "edit_weapon", client);
 	
 	char szMenu[][][] = {
-		{"fire",			"750",	"add_ball_type_fire"},
+		/*{"fire",			"750",	"add_ball_type_fire"},
 		{"paintball",		"125",	"add_ball_type_paintball"},
 		{"explode", 		"1400",	"add_ball_type_explode"},
 		{"sanandreas",		"250",	"add_bullet_sanAndreas"},
-		{"pvp",				"400",	"add_bullet_pvp"},
 		{"caoutchouc",		"750",	"add_ball_type_caoutchouc"},
 		{"poison",			"750",	"add_ball_type_poison"},
 		{"vampire",			"750",	"add_ball_type_vampire"},
 		{"reflexive",		"500",	"add_ball_type_reflexive"},
 		{"revitalisante",	"250",	"add_ball_type_revitalisante"},
 		{"nosteal", 		"100",	"add_ball_type_nosteal"},
-		{"notk", 			"50",	"add_ball_type_notk"},
+		{"notk", 			"50",	"add_ball_type_notk"},*/
 		{"flashbang", 		"25",	"add_weapon_flashbang"},
 		{"smokegrenade", 		"125",	"add_weapon_smokegrenade"},
 		{"tagrenade", 		"150",	"add_weapon_tagrenade"},
