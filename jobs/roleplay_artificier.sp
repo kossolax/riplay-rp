@@ -18,7 +18,6 @@
 
 #pragma newdecls required
 #include <roleplay.inc>	// https://www.ts-x.eu
-#include <../jobs/roleplay_armurerie.sp>
 
 public Plugin myinfo = {
 	name = "Jobs: Artificier", author = "KoSSoLaX",
@@ -189,37 +188,106 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 					return;
 			}
 
-				if(StrEqual(type, "fire") || StrEqual(type, "explode") || StrEqual(type, "paintball") || StrEqual(type, "sanandreas") || StrEqual(type, "pvp") || StrEqual(type, "coutchouc") || StrEqual(type, "poison") || StrEqual(type, "vampire") || StrEqual(type, "reflexive") || StrEqual(type, "revitalisante") || StrEqual(type, "nosteal") || StrEqual(type, "notk")){
-					if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
-						CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
+			if(StrEqual(type, "fire") || StrEqual(type, "explode") || StrEqual(type, "paintball") || StrEqual(type, "sanandreas") || StrEqual(type, "pvp") || StrEqual(type, "coutchouc") || StrEqual(type, "poison") || StrEqual(type, "vampire") || StrEqual(type, "reflexive") || StrEqual(type, "revitalisante") || StrEqual(type, "nosteal") || StrEqual(type, "notk")){
+				if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
+					return;
+				}
+			}
+			
+			else if(StrEqual(type, "flashbang")){
+				GivePlayerItem(client, "weapon_flashbang");
+			}
+			else if(StrEqual(type, "smokegrenade")){
+				GivePlayerItem(client, "weapon_smokegrenade");
+			}
+			else if(StrEqual(type, "tagrenade")){
+				GivePlayerItem(client, "weapon_tagrenade");
+			}
+			else if(StrEqual(type, "molotov")){
+				GivePlayerItem(client, "weapon_molotov");
+			}	
+			else{
+				if((rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money)) < price){
+					CPrintToChat(client, ""...MOD_TAG..." %T", "Error_NotEnoughtMoney", client);
+					return;
+				}
+
+				if(StrEqual(type, "fire")){
+					rp_SetWeaponBallType(wep_id, ball_type_fire);
+				}
+				else if(StrEqual(type, "caoutchouc")){
+					rp_SetWeaponBallType(wep_id, ball_type_caoutchouc);
+				}
+				else if(StrEqual(type, "poison")){
+					rp_SetWeaponBallType(wep_id, ball_type_poison);
+				}
+				else if(StrEqual(type, "vampire")){
+					rp_SetWeaponBallType(wep_id, ball_type_vampire);
+				}
+				else if(StrEqual(type, "reflexive")){
+					rp_SetWeaponBallType(wep_id, ball_type_reflexive);
+				}
+				else if(StrEqual(type, "explode")){
+					rp_SetWeaponBallType(wep_id, ball_type_explode);
+				}
+				else if(StrEqual(type, "revitalisante")){
+					rp_SetWeaponBallType(wep_id, ball_type_revitalisante);
+				}
+				else if(StrEqual(type, "paintball")){
+					rp_SetWeaponBallType(wep_id, ball_type_paintball);
+				}
+				else if(StrEqual(type, "nosteal")){
+					rp_SetWeaponBallType(wep_id, ball_type_nosteal);
+				}
+				else if(StrEqual(type, "notk")){
+					rp_SetWeaponBallType(wep_id, ball_type_notk);
+				}
+				else if(StrEqual(type, "reload")){
+					ServerCommand("rp_item_redraw %i 74", client);
+				}
+				else if(StrEqual(type, "sanandreas")){
+
+					int itemId = 22;
+					if( GetConVarInt(FindConVar("rp_capture")) == 1 && rp_GetServerRules(rules_ItemsDisabled, rules_Enabled) == 1 && rp_GetServerRules(rules_ItemsDisabled,rules_Target) == itemId ) {
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_CannotUseItemInPvP", client);
 						return;
 					}
-					else {
-						rp_SetWeaponBallType(wep_id, ball_type_fire);
-						CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
+
+					char classname[64];
+
+					GetEdictClassname(wep_id, classname, sizeof(classname));
+					if(StrContains(classname, "weapon_breachcharge") == 0)
+					return;
+
+					int ammo = Weapon_GetPrimaryClip(wep_id);
+					if( ammo >= 150 ) {
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_sanAndreas", client, ammo);
+						return;
 					}
-				}
-				else if(StrEqual(type, "flashbang")){
-					GivePlayerItem(client, "weapon_flashbang");
-				}
-				else if(StrEqual(type, "smokegrenade")){
-					GivePlayerItem(client, "weapon_smokegrenade");
-				}
-				else if(StrEqual(type, "tagrenade")){
-					GivePlayerItem(client, "weapon_tagrenade");
-				}
-				else if(StrEqual(type, "molotov")){
-					GivePlayerItem(client, "weapon_molotov");
+					ammo += 1000; if( ammo > 5000 ) ammo = 5000;
+					Weapon_SetPrimaryClip(wep_id, ammo);
+					SDKHook(wep_id, SDKHook_Reload, OnWeaponReload);
 				}
 				
 				
 				rp_ClientMoney(client, i_Money, -price);
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
 				rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
 				rp_SetJobCapital( 131, rp_GetJobCapital(131)+price );
+				
 				FakeClientCommand(client, "say /build");
 
 			}
+				
+				
+			rp_ClientMoney(client, i_Money, -price);
+			rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
+			rp_SetJobCapital( 131, rp_GetJobCapital(131)+price );
+			FakeClientCommand(client, "say /build");
+
 		}
+	}
 	else if (p_oAction == MenuAction_End) {
 		CloseHandle(p_hItemMenu);
 	}
