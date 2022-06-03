@@ -310,46 +310,6 @@ public Action OnWeaponReload(int wepid) {
 	return Plugin_Continue;
 }
 
-public Action Cmd_ItemRedraw(int args) {
-	int client = GetCmdArgInt(1);
-	
-	int wep_id = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-	int item_id = GetCmdArgInt(args);
-	char classname[64];
-	
-	if( IsValidEntity(wep_id) ) {
-		GetEdictClassname(wep_id, classname, sizeof(classname));
-		if( StrContains(classname, "weapon_bayonet") == 0 || StrContains(classname, "weapon_knife") == 0 ) {
-			ITEM_CANCEL(client, item_id);
-			return Plugin_Handled;
-		}
-	}
-	
-	int index = GetEntProp(wep_id, Prop_Send, "m_iItemDefinitionIndex");
-	eItems_GetWeaponClassNameByDefIndex(index, classname, sizeof(classname));
-	
-	enum_ball_type wep_type = rp_GetWeaponBallType(wep_id);
-	int g = rp_GetWeaponGroupID(wep_id);
-	bool s = rp_GetWeaponStorage(wep_id);
-	
-	RemovePlayerItem(client, wep_id );
-	RemoveEdict( wep_id );
-	
-	wep_id = GivePlayerItem(client, classname);
-	
-	GetEdictClassname(wep_id, classname, sizeof(classname));
-	if( StrContains(classname, "weapon_taser") == 0 ) {
-		Weapon_SetPrimaryClip(wep_id, 10);
-		SDKHook(wep_id, SDKHook_Reload, OnWeaponReload);
-		}
-	
-	rp_SetWeaponBallType(wep_id, wep_type);
-	rp_SetWeaponGroupID(wep_id, g);
-	rp_SetWeaponStorage(wep_id, s);
-	
-	return Plugin_Handled;
-}
-
 public Action fwdWeapon(int victim, int attacker, float &damage, int wepID, float pos[3]) {
 	bool changed = true;
 	enum_ball_type wepType = rp_GetWeaponBallType(wepID);
