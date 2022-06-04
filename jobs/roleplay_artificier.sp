@@ -234,6 +234,7 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 				}
 				else if(StrEqual(type, "paintball")){
 					ServerCommand("rp_item_balltype paintball %d 0", client);
+					CPrintToChat(client, ""...MOD_TAG..." %T", %d, client, client);
 				}
 				else if(StrEqual(type, "nosteal")){
 					ServerCommand("rp_item_balltype nosteal %d 0", client);
