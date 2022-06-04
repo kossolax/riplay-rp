@@ -530,8 +530,8 @@ public Action Cmd_ItemHamburger(int args) {
 			GivePlayerItem(client, "weapon_mac10");
 		}
 		else {
-			int ent = CreateEntityByName("chicken");
-			/*int ent = ServerCommand("sm_zombie");*/
+			/*int ent = CreateEntityByName("chicken");*/
+			int ent = ServerCommand("sm_zombie");
 			DispatchSpawn(ent);
 			float vecOrigin[3];
 			GetClientAbsOrigin(client, vecOrigin);
