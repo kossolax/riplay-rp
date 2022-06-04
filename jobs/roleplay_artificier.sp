@@ -204,6 +204,7 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 			}
 			else if(StrEqual(type, "molotov")){
 				GivePlayerItem(client, "weapon_molotov");
+				CPrintToChat(client, "" ...MOD_TAG... " Il existe déjà un objet de ce type à proximité.");
 			}	
 			else{
 				if((rp_GetClientInt(client, i_Bank)+rp_GetClientInt(client, i_Money)) < price){
@@ -235,7 +236,7 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 				}
 				else if(StrEqual(type, "paintball")){
 					ServerCommand("rp_item_balltype paintball %d 0", client);
-					CPrintToChat(client, ""...MOD_TAG..." %T", "vous êtes le %d", client);
+					CPrintToChat(client, ""...MOD_TAG... "vous êtes le %d", client);
 				}
 				else if(StrEqual(type, "nosteal")){
 					ServerCommand("rp_item_balltype nosteal %d 0", client);
