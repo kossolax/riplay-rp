@@ -213,36 +213,34 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 				}
 
 				if(StrEqual(type, "fire")){
-					ServerCommand("rp_item_balltype fire %d 0", client);
+					ServerCommand("rp_item_balltype fire %T 0", client);
 				}
 				else if(StrEqual(type, "caoutchouc")){
-					ServerCommand("rp_item_balltype caoutchouc %d 0", client);
+					ServerCommand("rp_item_balltype caoutchouc %T 0", client);
 				}
 				else if(StrEqual(type, "poison")){
-					ServerCommand("rp_item_balltype poison %d 0", client);
+					ServerCommand("rp_item_balltype poison %T 0", client);
 				}
 				else if(StrEqual(type, "vampire")){
-					ServerCommand("rp_item_balltype vampire %d 0", client);
+					ServerCommand("rp_item_balltype vampire %T 0", client);
 				}
 				else if(StrEqual(type, "reflexive")){
-					ServerCommand("rp_item_balltype reflex %d 0", client);
+					ServerCommand("rp_item_balltype reflex %T 0", client);
 				}
 				else if(StrEqual(type, "explode")){
-					ServerCommand("rp_item_balltype explode %d 0", client);
+					ServerCommand("rp_item_balltype explode %T 0", client);
 				}
 				else if(StrEqual(type, "revitalisante")){
-					ServerCommand("rp_item_balltype revitalisante %d 0", client);
-					CPrintToChat(client, ""...MOD_TAG..." %T", "coucou", client);
+					ServerCommand("rp_item_balltype revitalisante %T 0", client);
 				}
 				else if(StrEqual(type, "paintball")){
-					ServerCommand("rp_item_balltype paintball %d 0", client);
-					CPrintToChat(client, ""...MOD_TAG... "vous êtes le %d", client);
+					ServerCommand("rp_item_balltype paintball %T 0", client);
 				}
 				else if(StrEqual(type, "nosteal")){
-					ServerCommand("rp_item_balltype nosteal %d 0", client);
+					ServerCommand("rp_item_balltype nosteal %T 0", client);
 				}
 				else if(StrEqual(type, "sanandreas")){
-					ServerCommand("rp_item_sanandreas %d 0", client);
+					ServerCommand("rp_item_sanandreas %T 0", client);
 				}
 				
 				
