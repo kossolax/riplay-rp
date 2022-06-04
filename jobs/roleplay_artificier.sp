@@ -213,34 +213,34 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 				}
 
 				if(StrEqual(type, "fire")){
-					ServerCommand("rp_item_balltype fire %T 0", client);
+					ServerCommand("rp_item_balltype fire %T", client);
 				}
 				else if(StrEqual(type, "caoutchouc")){
-					ServerCommand("rp_item_balltype caoutchouc %T 0", client);
+					ServerCommand("rp_item_balltype caoutchouc %T", client);
 				}
 				else if(StrEqual(type, "poison")){
-					ServerCommand("rp_item_balltype poison %T 0", client);
+					ServerCommand("rp_item_balltype poison %T", client);
 				}
 				else if(StrEqual(type, "vampire")){
-					ServerCommand("rp_item_balltype vampire %T 0", client);
+					ServerCommand("rp_item_balltype vampire %T", client);
 				}
 				else if(StrEqual(type, "reflexive")){
-					ServerCommand("rp_item_balltype reflex %T 0", client);
+					ServerCommand("rp_item_balltype reflex %T", client);
 				}
 				else if(StrEqual(type, "explode")){
-					ServerCommand("rp_item_balltype explode %T 0", client);
+					ServerCommand("rp_item_balltype explode %T", client);
 				}
 				else if(StrEqual(type, "revitalisante")){
-					ServerCommand("rp_item_balltype revitalisante %T 0", client);
+					ServerCommand("rp_item_balltype revitalisante %T", client);
 				}
 				else if(StrEqual(type, "paintball")){
-					ServerCommand("rp_item_balltype paintball %T 0", client);
+					ServerCommand("rp_item_balltype paintball %T", client);
 				}
 				else if(StrEqual(type, "nosteal")){
-					ServerCommand("rp_item_balltype nosteal %T 0", client);
+					ServerCommand("rp_item_balltype nosteal %T", client);
 				}
 				else if(StrEqual(type, "sanandreas")){
-					ServerCommand("rp_item_sanandreas %T 0", client);
+					ServerCommand("rp_item_sanandreas %T", client);
 				}
 				
 				
