@@ -139,7 +139,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	SetMenuTitle(menu, "%T\n ", "edit_weapon", client);
 	
 	char szMenu[][][] = {
-		/*{"fire",			"750",	"add_ball_type_fire"},
+		{"fire",			"750",	"add_ball_type_fire"},
 		{"paintball",		"125",	"add_ball_type_paintball"},
 		{"explode", 		"1400",	"add_ball_type_explode"},
 		{"sanandreas",		"250",	"add_bullet_sanAndreas"},
@@ -149,7 +149,6 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 		{"reflexive",		"500",	"add_ball_type_reflexive"},
 		{"revitalisante",	"250",	"add_ball_type_revitalisante"},
 		{"nosteal", 		"100",	"add_ball_type_nosteal"},
-		{"notk", 			"50",	"add_ball_type_notk"},*/
 		{"flashbang", 		"25",	"add_weapon_flashbang"},
 		{"smokegrenade", 		"125",	"add_weapon_smokegrenade"},
 		{"tagrenade", 		"150",	"add_weapon_tagrenade"},
@@ -187,7 +186,7 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 					return;
 			}
 
-			if(StrEqual(type, "fire") || StrEqual(type, "explode") || StrEqual(type, "paintball") || StrEqual(type, "sanandreas") || StrEqual(type, "pvp") || StrEqual(type, "coutchouc") || StrEqual(type, "poison") || StrEqual(type, "vampire") || StrEqual(type, "reflexive") || StrEqual(type, "revitalisante") || StrEqual(type, "nosteal") || StrEqual(type, "notk")){
+			if(StrEqual(type, "fire") || StrEqual(type, "explode") || StrEqual(type, "paintball") || StrEqual(type, "sanandreas") || StrEqual(type, "caoutchouc") || StrEqual(type, "poison") || StrEqual(type, "vampire") || StrEqual(type, "reflexive") || StrEqual(type, "revitalisante") || StrEqual(type, "nosteal")){
 				if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
 					CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
 					return;
@@ -213,60 +212,34 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 				}
 
 				if(StrEqual(type, "fire")){
-					rp_SetWeaponBallType(wep_id, ball_type_fire);
+					ServerCommand("rp_item_balltype fire %d 0", client);
 				}
 				else if(StrEqual(type, "caoutchouc")){
-					rp_SetWeaponBallType(wep_id, ball_type_caoutchouc);
+					ServerCommand("rp_item_balltype caoutchouc %d 0", client);
 				}
 				else if(StrEqual(type, "poison")){
-					rp_SetWeaponBallType(wep_id, ball_type_poison);
+					ServerCommand("rp_item_balltype poison %d 0", client);
 				}
 				else if(StrEqual(type, "vampire")){
-					rp_SetWeaponBallType(wep_id, ball_type_vampire);
+					ServerCommand("rp_item_balltype vampire %d 0", client);
 				}
 				else if(StrEqual(type, "reflexive")){
-					rp_SetWeaponBallType(wep_id, ball_type_reflexive);
+					ServerCommand("rp_item_balltype reflex %d 0", client);
 				}
 				else if(StrEqual(type, "explode")){
-					rp_SetWeaponBallType(wep_id, ball_type_explode);
+					ServerCommand("rp_item_balltype explode %d 0", client);
 				}
 				else if(StrEqual(type, "revitalisante")){
-					rp_SetWeaponBallType(wep_id, ball_type_revitalisante);
+					ServerCommand("rp_item_balltype revitalisante %d 0", client);
 				}
 				else if(StrEqual(type, "paintball")){
-					rp_SetWeaponBallType(wep_id, ball_type_paintball);
+					ServerCommand("rp_item_balltype paintball %d 0", client);
 				}
 				else if(StrEqual(type, "nosteal")){
-					rp_SetWeaponBallType(wep_id, ball_type_nosteal);
-				}
-				else if(StrEqual(type, "notk")){
-					rp_SetWeaponBallType(wep_id, ball_type_notk);
-				}
-				else if(StrEqual(type, "reload")){
-					ServerCommand("rp_item_redraw %i 74", client);
+					ServerCommand("rp_item_balltype nosteal %d 0", client);
 				}
 				else if(StrEqual(type, "sanandreas")){
-
-					int itemId = 22;
-					if( GetConVarInt(FindConVar("rp_capture")) == 1 && rp_GetServerRules(rules_ItemsDisabled, rules_Enabled) == 1 && rp_GetServerRules(rules_ItemsDisabled,rules_Target) == itemId ) {
-						CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_CannotUseItemInPvP", client);
-						return;
-					}
-
-					char classname[64];
-
-					GetEdictClassname(wep_id, classname, sizeof(classname));
-					if(StrContains(classname, "weapon_breachcharge") == 0)
-					return;
-
-					int ammo = Weapon_GetPrimaryClip(wep_id);
-					if( ammo >= 150 ) {
-						CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_sanAndreas", client, ammo);
-						return;
-					}
-					ammo += 1000; if( ammo > 5000 ) ammo = 5000;
-					Weapon_SetPrimaryClip(wep_id, ammo);
-					SDKHook(wep_id, SDKHook_Reload, OnWeaponReload);
+					ServerCommand("rp_item_sanandreas %d 0", client);
 				}
 				
 				
