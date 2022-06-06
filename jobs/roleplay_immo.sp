@@ -736,7 +736,7 @@ public Action fwdOnPlayerUse(int client) {
 				GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 				Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_villa` WHERE `steamid`='%s';", szSteamID);
 				SQL_TQuery(rp_GetDatabase(), SQL_GetVillaCount, query, client, DBPrio_Low);
-				/*rp_ClientMoney(client, i_Bank, -VILLA_PRICE);*/
+				rp_ClientMoney(client, i_Bank, -VILLA_PRICE);
 			}
 			else {
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_NotEnoughtMoney", client);
@@ -754,7 +754,7 @@ public Action Cmd_eventBedConfirm(int client) {
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 	Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_villa` WHERE `steamid`='%s';", szSteamID);
 	SQL_TQuery(rp_GetDatabase(), SQL_GetVillaCount, query, client, DBPrio_Low);
-	rp_ClientMoney(client, i_Bank, -VILLA_PRICE);
+	/*rp_ClientMoney(client, i_Bank, -VILLA_PRICE);*/
 
 }
 
