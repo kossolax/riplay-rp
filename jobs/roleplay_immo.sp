@@ -754,6 +754,7 @@ public Action Cmd_eventBedConfirm(int client) {
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 	Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_villa` WHERE `steamid`='%s';", szSteamID);
 	SQL_TQuery(rp_GetDatabase(), SQL_GetVillaCount, query, client, DBPrio_Low);
+	rp_ClientMoney(client, i_Bank, -VILLA_PRICE);
 
 }
 
@@ -767,14 +768,12 @@ public void SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, a
 			GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 			
 			Format(query, sizeof(query), "INSERT INTO `rp_villa` (`id`, `steamid`) VALUES (NULL, '%s');", szSteamID);
-			rp_ClientMoney(client, i_Bank, -VILLA_PRICE);
 			SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query, 0, DBPrio_High);
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Lotery_OnlyOne_Validated", client);
 		}
 		else {
-			/*rp_ClientMoney(client, i_Bank, VILLA_PRICE);*/
-			/*CPrintToChat(client, "" ...MOD_TAG... " %T", "Lotery_OnlyOne_Refund", client);*/
-			CPrintToChat(client, "" ...MOD_TAG... " Votre ticket a déjà été validé, il vous a été remboursé.");
+			rp_ClientMoney(client, i_Bank, VILLA_PRICE);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Lotery_OnlyOne_Refund", client);
 		}
 	}		
 }
