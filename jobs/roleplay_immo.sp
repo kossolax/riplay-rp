@@ -751,11 +751,11 @@ public Action fwdOnPlayerUse(int client) {
 public Action Cmd_eventBedConfirm(int client) {
 
 	char szSteamID[32], query[1024];
+	int vendeur = GetCmdArgInt(2);
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 	Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_villa` WHERE `steamid`='%s';", szSteamID);
-	SQL_TQuery(rp_GetDatabase(), SQL_GetVillaCount, query, client, DBPrio_Low);
+	SQL_TQuery(rp_GetDatabase(), SQL_GetVillaCount, query, vendeur, client, DBPrio_Low);
 	/*rp_ClientMoney(client, i_Bank, -VILLA_PRICE);*/
-	int vendeur = GetCmdArgInt(2);
 
 }
 
