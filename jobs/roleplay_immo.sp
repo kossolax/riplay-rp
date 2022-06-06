@@ -755,12 +755,11 @@ public Action Cmd_eventBedConfirm(int client) {
 	Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_villa` WHERE `steamid`='%s';", szSteamID);
 	SQL_TQuery(rp_GetDatabase(), SQL_GetVillaCount, query, client, DBPrio_Low);
 	/*rp_ClientMoney(client, i_Bank, -VILLA_PRICE);*/
+	int vendeur = GetCmdArgInt(2);
 
 }
 
 public void SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, any client) {
-	
-	int vendeur = GetCmdArgInt(2);
 	
 	if( SQL_FetchRow(hQuery) ) {
 		int cpt = SQL_FetchInt(hQuery, 0);
