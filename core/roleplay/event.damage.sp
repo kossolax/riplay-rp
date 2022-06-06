@@ -330,7 +330,7 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 				if( g_iUserData[victim][i_Esquive] > 0 && Math_GetRandomInt(1, 1) <= g_iUserData[victim][i_Esquive] ) {
 					damage = 0.0;
 					g_iUserData[victim][i_Esquive]--;
-					CPrintToChat(client, "" ...MOD_TAG... " Une balle viens de vous froller.");
+					CPrintToChat(victim, "" ...MOD_TAG... " Une balle viens de vous froller.");
 					return Plugin_Handled;
 				}
 			}
