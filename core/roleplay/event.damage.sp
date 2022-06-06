@@ -334,11 +334,10 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 					return Plugin_Handled;
 				}
 			}
-			
 			if( IsClientInJail(victim) || IsClientInJail(attacker) ) {
 				return Plugin_Handled;
 			}
-			
+
 			if( !(GetZoneBit( victim_zone ) & BITZONE_EVENT) ) {
 				
 				Action a;
@@ -376,28 +375,28 @@ public Action OnTakeDamage(int victim, int& attacker, int& inflictor, float& dam
 					damage = damage / SquareRoot(21.0 - float(g_iUserData[victim][i_PlayerLVL]));
 					changed = true;
 				}
-				
-				if( !g_iClient_OLD[victim] && g_iClient_OLD[attacker] && !(GetZoneBit( victim_zone ) & BITZONE_EVENT) && !IsInPVP(victim) ) {
+			}			
+
+			if( !g_iClient_OLD[victim] && g_iClient_OLD[attacker] && !(GetZoneBit( victim_zone ) & BITZONE_EVENT) && !IsInPVP(victim) ) {
 				damage /= 6.0;
 				changed = true;
-				}
+			}
+			
+			if( damage > 0.00 ) {
+				int heal = GetClientHealth(victim);
+				heal -= RoundFloat(damage);
+				SetEntityHealth(victim, heal);
 
-				if( damage > 0.00 ) {
-					int heal = GetClientHealth(victim);
-					heal -= RoundFloat(damage);
+				if( heal <= 0 ) {
+					SetEntityHealth(victim, 1);
+					SDKHooks_TakeDamage(victim, attacker, attacker, damage*10.0);
+				}
+				else {
 					SetEntityHealth(victim, heal);
-
-					if( heal <= 0 ) {
-						SetEntityHealth(victim, 1);
-						SDKHooks_TakeDamage(victim, attacker, attacker, damage*10.0);
-					}
-					else {
-						SetEntityHealth(victim, heal);
-					}
 				}
-			}	
+			}
 		}
-
+		
 		if( StrEqual(sInflictor, "inferno") && IsValidClient(attacker) ) {
 			if( !(GetZoneBit( victim_zone ) & BITZONE_PEACEFULL))
 				IgnitePlayer(victim, 10.0, attacker);
