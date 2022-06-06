@@ -760,7 +760,7 @@ public Action Cmd_eventBedConfirm(int client) {
 
 public void SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, any client) {
 	
-	int vendeur = GetCmdArgInt(3);
+	int vendeur = GetCmdArgInt(2);
 	
 	if( SQL_FetchRow(hQuery) ) {
 		int cpt = SQL_FetchInt(hQuery, 0);
