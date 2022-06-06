@@ -748,7 +748,7 @@ public int eventBedConfirm(Handle menu, MenuAction action, int client, int param
 	}
 }
 
-/*public Action Cmd_eventBedConfirm(int client) {
+public Action Cmd_eventBedConfirm(int client) {
 
 	char szSteamID[32], query[1024];
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
@@ -756,7 +756,7 @@ public int eventBedConfirm(Handle menu, MenuAction action, int client, int param
 	SQL_TQuery(rp_GetDatabase(), SQL_GetVillaCount, query, client, DBPrio_Low);
 	/*rp_ClientMoney(client, i_Bank, -VILLA_PRICE);*/
 
-}*/
+}
 
 public void SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, any client) {
 	
