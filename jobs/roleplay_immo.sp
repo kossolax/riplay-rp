@@ -100,6 +100,7 @@ public void OnPluginStart() {
 	RegServerCmd("rp_item_prop_outdoor",	Cmd_ItemPropOutdoor,		"RP-ITEM",  FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_proptraps",	Cmd_ItemPropTrap,		"RP-ITEM",  FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_graves",		Cmd_ItemGrave,			"RP-ITEM", 	FCVAR_UNREGISTERED);
+	RegServerCmd("rp_item_ticketvilla",		Cmd_eventBedConfirm,			"RP-ITEM", 	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_lampe", 		Cmd_ItemLampe,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_jumelle", 	Cmd_ItemLampe,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	
@@ -723,7 +724,7 @@ public Action fwdOnPlayerUse(int client) {
 	
 	return Plugin_Continue;
 }
-public int eventBedConfirm(Handle menu, MenuAction action, int client, int param2) {
+/*public int eventBedConfirm(Handle menu, MenuAction action, int client, int param2) {
 	
 	if( action == MenuAction_Select ) {
 		char options[64];
@@ -745,7 +746,18 @@ public int eventBedConfirm(Handle menu, MenuAction action, int client, int param
 	else if( action == MenuAction_End ) {
 		CloseHandle(menu);
 	}
+}*/
+
+public Action Cmd_eventBedConfirm(int client) {
+
+	char szSteamID[32], query[1024];
+	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
+	Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_villa` WHERE `steamid`='%s';", szSteamID);
+	SQL_TQuery(rp_GetDatabase(), SQL_GetVillaCount, query, client, DBPrio_Low);
+	rp_ClientMoney(client, i_Bank, -VILLA_PRICE);
+
 }
+
 public void SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, any client) {
 	
 	if( SQL_FetchRow(hQuery) ) {
