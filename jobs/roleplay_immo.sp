@@ -753,8 +753,8 @@ public Action Cmd_eventBedConfirm(int client) {
 	char szSteamID[32], query[1024];
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 	Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_villa` WHERE `steamid`='%s';", szSteamID);
-	SQL_TQuery(rp_GetDatabase(), SQL_GetVillaCount, query, client, DBPrio_Low);
 	int ticket = query;
+	SQL_TQuery(rp_GetDatabase(), SQL_GetVillaCount, ticket, client, DBPrio_Low);
 
 }
 
