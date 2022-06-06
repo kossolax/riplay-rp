@@ -700,7 +700,7 @@ public Action fwdOnPlayerUse(int client) {
 		}
 	}
 	
-	/*if( rp_GetPlayerZone(client) == 316 ) { // mairie
+	if( rp_GetPlayerZone(client) == 316 ) { // mairie
 		float pos[3];
 		char tmp[512];
 		GetClientAbsOrigin(client, pos);
@@ -720,11 +720,11 @@ public Action fwdOnPlayerUse(int client) {
 			
 			DisplayMenu(menu, client, MENU_TIME_DURATION);
 		}
-	}*/
+	}
 	
 	return Plugin_Continue;
 }
-/*public int eventBedConfirm(Handle menu, MenuAction action, int client, int param2) {
+public int eventBedConfirm(Handle menu, MenuAction action, int client, int param2) {
 	
 	if( action == MenuAction_Select ) {
 		char options[64];
@@ -746,26 +746,17 @@ public Action fwdOnPlayerUse(int client) {
 	else if( action == MenuAction_End ) {
 		CloseHandle(menu);
 	}
-}*/
+}
 
-public Action Cmd_eventBedConfirm(int client) {
+/*public Action Cmd_eventBedConfirm(int client) {
 
 	char szSteamID[32], query[1024];
-	int item_id = GetCmdArgInt(3);
-	int vendeur = GetCmdArgInt(2);
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 	Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_villa` WHERE `steamid`='%s';", szSteamID);
 	SQL_TQuery(rp_GetDatabase(), SQL_GetVillaCount, query, client, DBPrio_Low);
 	/*rp_ClientMoney(client, i_Bank, -VILLA_PRICE);*/
-	
-	if (query>=1){
-	
-		rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
-		CPrintToChat(vendeur, "" ...MOD_TAG... " Votre client a déjà un tycket validé, la vente est donc annulé.");
-	
-	}
 
-}
+}*/
 
 public void SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, any client) {
 	
@@ -781,8 +772,8 @@ public void SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, a
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Lotery_OnlyOne_Validated", client);
 		}
 		else {
-			/*rp_ClientMoney(client, i_Bank, VILLA_PRICE);
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Lotery_OnlyOne_Refund", client);*/
+			rp_ClientMoney(client, i_Bank, VILLA_PRICE);
+			/*CPrintToChat(client, "" ...MOD_TAG... " %T", "Lotery_OnlyOne_Refund", client);*/
 			CPrintToChat(client, "" ...MOD_TAG... " Votre ticket a déjà été validé, il vous a été remboursé.");
 		}
 	}		
