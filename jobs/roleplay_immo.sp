@@ -773,7 +773,7 @@ public void SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, a
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Lotery_OnlyOne_Validated", client);
 		}
 		else {
-			rp_ClientMoney(client, i_Bank, VILLA_PRICE);
+			rp_ClientMoney(client, i_Bank, 50000);
 			/*CPrintToChat(client, "" ...MOD_TAG... " %T", "Lotery_OnlyOne_Refund", client);*/
 			CPrintToChat(client, "" ...MOD_TAG... " Votre ticket a déjà été validé, il vous a été remboursé.");
 		}
