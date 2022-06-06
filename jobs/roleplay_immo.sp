@@ -700,7 +700,7 @@ public Action fwdOnPlayerUse(int client) {
 		}
 	}
 	
-	if( rp_GetPlayerZone(client) == 316 ) { // mairie
+	/*if( rp_GetPlayerZone(client) == 316 ) { // mairie
 		float pos[3];
 		char tmp[512];
 		GetClientAbsOrigin(client, pos);
@@ -720,7 +720,7 @@ public Action fwdOnPlayerUse(int client) {
 			
 			DisplayMenu(menu, client, MENU_TIME_DURATION);
 		}
-	}
+	}*/
 	
 	return Plugin_Continue;
 }
