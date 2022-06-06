@@ -748,17 +748,17 @@ public Action fwdOnPlayerUse(int client) {
 	}
 }*/
 
-public Action Cmd_eventBedConfirm(int client, int vendeur) {
+public Action Cmd_eventBedConfirm(int client) {
 
 	char szSteamID[32], query[1024];
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 	Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_villa` WHERE `steamid`='%s';", szSteamID);
-	SQL_TQuery(rp_GetDatabase(), SQL_GetVillaCount, query, client, vendeur, DBPrio_Low);
+	SQL_TQuery(rp_GetDatabase(), SQL_GetVillaCount, query, client, DBPrio_Low);
 	/*rp_ClientMoney(client, i_Bank, -VILLA_PRICE);*/
 
 }
 
-public void SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, vendeur, any client) {
+public void SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, any client) {
 	
 	int vendeur = GetCmdArgInt(3);
 	
