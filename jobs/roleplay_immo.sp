@@ -539,7 +539,7 @@ public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 	rp_HookEvent(client, RP_OnPlayerDataLoaded, fwdLoaded);
 	rp_HookEvent(client, RP_OnPlayerBuild,	fwdOnPlayerBuild);
-	rp_HookEvent(client, RP_OnPlayerUse, fwdOnPlayerUse);
+	/*rp_HookEvent(client, RP_OnPlayerUse, fwdOnPlayerUse);*/
 	rp_HookEvent(client, RP_OnFrameSeconde, fwdOnFrame);
 	
 	
@@ -755,13 +755,10 @@ public Action Cmd_eventBedConfirm(int client) {
 	Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_villa` WHERE `steamid`='%s';", szSteamID);
 	SQL_TQuery(rp_GetDatabase(), SQL_GetVillaCount, query, client, DBPrio_Low);
 	/*rp_ClientMoney(client, i_Bank, -VILLA_PRICE);*/
+	int count = mysql_query("SELECT COUNT(*) FROM `rp_villa` WHERE `steamid`='%s';", szSteamID");
 	int vendeur = GetCmdArgInt(2);
 	
-	if (SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, any client)){
-	
-		int cpt = SQL_FetchInt(hQuery, 0);
-		
-		if( cpt == 0 ) {
+		if( count == 0 ) {
 			char query[1024], szSteamID[32];
 			GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 			
@@ -769,7 +766,7 @@ public Action Cmd_eventBedConfirm(int client) {
 			SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query, 0, DBPrio_High);
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Lotery_OnlyOne_Validated", client);
 		}
-		else {
+		else if (count >= 1){
 			rp_CANCEL_AUTO_ITEM(int client, int vendeur)
 			/*CPrintToChat(client, "" ...MOD_TAG... " %T", "Lotery_OnlyOne_Refund", client);*/
 			CPrintToChat(client, "" ...MOD_TAG... " Votre ticket a déjà été validé, il vous a été remboursé.");
