@@ -755,7 +755,7 @@ public Action Cmd_eventBedConfirm(int client) {
 	/*Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_villa` WHERE `steamid`='%s';", szSteamID);
 	SQL_TQuery(rp_GetDatabase(), SQL_GetVillaCount, query, client, DBPrio_Low);*/
 	/*rp_ClientMoney(client, i_Bank, -VILLA_PRICE);*/
-	int count = mysql_query("SELECT COUNT(*) FROM `rp_villa` WHERE `steamid`='%s';", szSteamID");
+	int count = mysql_query("SELECT COUNT(*) FROM `rp_villa` WHERE `steamid`='%s';", szSteamID);
 	int vendeur = GetCmdArgInt(2);
 	
 		if( count == 0 ) {
