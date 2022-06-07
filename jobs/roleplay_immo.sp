@@ -680,7 +680,7 @@ public Action fwdLoaded(int client) {
 	}
 	
 }
-public Action fwdOnPlayerUse(int client) {
+/*public Action fwdOnPlayerUse(int client) {
 	if( rp_GetClientJobID(client) == 61 ) {
 		int appart = rp_GetPlayerZoneAppart(client);
 		if( appart > 0 ) {
@@ -746,7 +746,7 @@ public int eventBedConfirm(Handle menu, MenuAction action, int client, int param
 	else if( action == MenuAction_End ) {
 		CloseHandle(menu);
 	}
-}
+}*/
 
 public Action Cmd_eventBedConfirm(int client) {
 
@@ -755,10 +755,30 @@ public Action Cmd_eventBedConfirm(int client) {
 	Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_villa` WHERE `steamid`='%s';", szSteamID);
 	SQL_TQuery(rp_GetDatabase(), SQL_GetVillaCount, query, client, DBPrio_Low);
 	/*rp_ClientMoney(client, i_Bank, -VILLA_PRICE);*/
+	int vendeur = GetCmdArgInt(2);
+	
+	if (SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, any client)){
+	
+		int cpt = SQL_FetchInt(hQuery, 0);
+		
+		if( cpt == 0 ) {
+			char query[1024], szSteamID[32];
+			GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
+			
+			Format(query, sizeof(query), "INSERT INTO `rp_villa` (`id`, `steamid`) VALUES (NULL, '%s');", szSteamID);
+			SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query, 0, DBPrio_High);
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Lotery_OnlyOne_Validated", client);
+		}
+		else {
+			rp_CANCEL_AUTO_ITEM(int client, int vendeur)
+			/*CPrintToChat(client, "" ...MOD_TAG... " %T", "Lotery_OnlyOne_Refund", client);*/
+			CPrintToChat(client, "" ...MOD_TAG... " Votre ticket a déjà été validé, il vous a été remboursé.");
+		}
+	}
 
 }
 
-public void SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, any client) {
+/*public void SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, any client) {
 	
 	if( SQL_FetchRow(hQuery) ) {
 		int cpt = SQL_FetchInt(hQuery, 0);
@@ -777,7 +797,7 @@ public void SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, a
 			CPrintToChat(client, "" ...MOD_TAG... " Votre ticket a déjà été validé, il vous a été remboursé.");
 		}
 	}		
-}
+}*/
 
 public Action OnEmote(int client, const char[] emote, float time) {
 	if( StrEqual(emote, "Emote_Snap") && time >= 0.0 ) {
