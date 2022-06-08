@@ -1,5 +1,10 @@
 "Phrases"
 {
+	"Error_cheat"
+	{
+		"fr"	"La roue semble bloqué par quelque chose d'étrange..."
+		"en"	"Don't touch the wheel!"
+	}
 	"Error_DontTouchWheel"
 	{
 		"fr"	"Ne touchez pas à la roue!"
