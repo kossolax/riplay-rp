@@ -153,7 +153,7 @@ public Action wheelButtonPressed(const char[] output, int caller, int activator,
 	CreateTimer(0.25, wheelThink, activator);
 	return Plugin_Continue;
 }
-public Action wheelThink(Handle timer, any client) {
+/* public Action wheelThink(Handle timer, any client) {
 	static float moveTime[2], lastRotation[3];
 	
 	moveTime[0] = GetEntPropFloat(wheelButton+1, Prop_Data, "m_flMoveDoneTime");
@@ -220,6 +220,7 @@ public void SQL_GetJackpot(Handle owner, Handle hQuery, const char[] error, any 
 		g_iJackpot = SQL_FetchInt(hQuery, 0);
 	}
 }
+*/
 // ------------------------------------------------------------------------------
 public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnPlayerBuild, fwdOnPlayerBuild);
