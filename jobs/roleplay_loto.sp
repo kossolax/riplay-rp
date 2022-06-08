@@ -130,7 +130,7 @@ public Action touch(int entity, int target) {
 public Action wheelButtonPressed(const char[] output, int caller, int activator, float delay) {
 	
 	/*int jeton = getPlayerJeton(activator);*/
-	int jeton = 0:
+	int jeton = 0;
 	SetEntPropFloat(caller, Prop_Data, "m_flWait", 1.0);
 	
 	if( !canPlay || GetEntProp(caller, Prop_Data, "m_bLocked") == 1 ) {
