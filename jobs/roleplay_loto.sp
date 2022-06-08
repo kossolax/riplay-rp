@@ -134,7 +134,8 @@ public Action wheelButtonPressed(const char[] output, int caller, int activator,
 	SetEntPropFloat(caller, Prop_Data, "m_flWait", 1.0);
 	
 	if( !canPlay || GetEntProp(caller, Prop_Data, "m_bLocked") == 1 ) {
-		CPrintToChat(activator, "" ...MOD_TAG... " %T", "SlotMachine_CantForNow", activator);
+		/*CPrintToChat(activator, "" ...MOD_TAG... " %T", "SlotMachine_CantForNow", activator);*/
+		CPrintToChat(activator, "" ...MOD_TAG... " %T", "Error_cheat", activator);
 		return Plugin_Handled;
 	}
 	
