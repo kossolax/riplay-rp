@@ -1678,6 +1678,7 @@ public int MenuNothing(Handle menu, MenuAction action, int client, int param2) {
 	}
 }
 // ----------------------------------------------------------------------------
+/*
 public Action Cmd_BedVilla(int client){
 	char tmp[128];
 	
@@ -2004,6 +2005,7 @@ void dispatchToJob(int gain) {
 			rp_SetJobCapital(i, rp_GetJobCapital(i) + (gain / jobCount));
 	}
 }
+*/
 // ----------------------------------------------------------------------------
 stock void TE_SetupWorldDecal(float origin[3], int index) {
 	TE_Start("World Decal");
