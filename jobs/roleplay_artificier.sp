@@ -139,16 +139,15 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	SetMenuTitle(menu, "%T\n ", "edit_weapon", client);
 	
 	char szMenu[][][] = {
-		//{"fire",			"750",	"add_ball_type_fire"},
-		//{"paintball",		"125",	"add_ball_type_paintball"},
-		//{"explode", 		"1400",	"add_ball_type_explode"},
-		//{"sanandreas",		"250",	"add_bullet_sanAndreas"},
-		//{"caoutchouc",		"750",	"add_ball_type_caoutchouc"},
-		//{"poison",			"750",	"add_ball_type_poison"},
-		//{"vampire",			"750",	"add_ball_type_vampire"},
-		//{"reflexive",		"500",	"add_ball_type_reflexive"},
-		//{"revitalisante",	"250",	"add_ball_type_revitalisante"},
-		//{"nosteal", 		"100",	"add_ball_type_nosteal"},
+		{"fire",			"750",	"add_ball_type_fire"},
+		{"paintball",		"125",	"add_ball_type_paintball"},
+		{"explode", 		"1400",	"add_ball_type_explode"},
+		{"caoutchouc",		"750",	"add_ball_type_caoutchouc"},
+		{"poison",			"750",	"add_ball_type_poison"},
+		{"vampire",			"750",	"add_ball_type_vampire"},
+		{"reflexive",		"500",	"add_ball_type_reflexive"},
+		{"revitalisante",	"250",	"add_ball_type_revitalisante"},
+		{"nosteal", 		"100",	"add_ball_type_nosteal"},
 		{"flashbang", 		"25",	"add_weapon_flashbang"},
 		{"smokegrenade", 		"125",	"add_weapon_smokegrenade"},
 		{"tagrenade", 		"150",	"add_weapon_tagrenade"},
@@ -213,36 +212,95 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 				}
 
 				if(StrEqual(type, "fire")){
-					ServerCommand("rp_item_balltype fire %d", client);
-				}
-				else if(StrEqual(type, "caoutchouc")){
-					ServerCommand("rp_item_balltype caoutchouc %d", client);
-				}
-				else if(StrEqual(type, "poison")){
-					ServerCommand("rp_item_balltype poison %d", client);
-				}
-				else if(StrEqual(type, "vampire")){
-					ServerCommand("rp_item_balltype vampire %d", client);
-				}
-				else if(StrEqual(type, "reflexive")){
-					ServerCommand("rp_item_balltype reflex %d", client);
+					if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
+						return;
+					}
+					else {
+						rp_SetWeaponBallType(wep_id, ball_type_fire);
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
+					}
 				}
 				else if(StrEqual(type, "explode")){
-					ServerCommand("rp_item_balltype explode %d", client);
+					if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
+						return;
+					}
+					else {
+						rp_SetWeaponBallType(wep_id, ball_type_explode);
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
+					}
+				}
+				else if(StrEqual(type, "caoutchouc")){
+					if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
+						return;
+					}
+					else {
+						rp_SetWeaponBallType(wep_id, ball_type_caoutchouc);
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
+					}
+				}
+				else if(StrEqual(type, "poison")){
+					if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
+						return;
+					}
+					else {
+						rp_SetWeaponBallType(wep_id, ball_type_poison);
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
+					}
+				}
+				else if(StrEqual(type, "vampire")){
+					if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
+						return;
+					}
+					else {
+						rp_SetWeaponBallType(wep_id, ball_type_vampire);
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
+					}
+				}
+				else if(StrEqual(type, "reflexive")){
+					if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
+						return;
+					}
+					else {
+						rp_SetWeaponBallType(wep_id, ball_type_reflexive);
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
+					}
 				}
 				else if(StrEqual(type, "revitalisante")){
-					ServerCommand("rp_item_balltype revitalisante %d", client);
+					if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
+						return;
+					}
+					else {
+						rp_SetWeaponBallType(wep_id, ball_type_revitalisante);
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
+					}
 				}
 				else if(StrEqual(type, "paintball")){
-					ServerCommand("rp_item_balltype paintball %d", client);
+					if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
+						return;
+					}
+					else {
+						rp_SetWeaponBallType(wep_id, ball_type_paintball);
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
+					}
 				}
 				else if(StrEqual(type, "nosteal")){
-					ServerCommand("rp_item_balltype nosteal %d", client);
+					if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
+						return;
+					}
+					else {
+						rp_SetWeaponBallType(wep_id, ball_type_nosteal);
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
+					}
 				}
-				else if(StrEqual(type, "sanandreas")){
-					ServerCommand("rp_item_sanandreas %d", client);
-				}
-				
 				
 				rp_ClientMoney(client, i_Money, -price);
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
