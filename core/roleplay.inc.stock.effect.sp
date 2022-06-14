@@ -477,7 +477,7 @@ void PoisonPlayer(int target, float time, int client) {
 	if( Client_CanAttack(client, target) == false )
 		return;
 	
-	if( !(!g_bUserData[target][b_GameModePassive]) && g_flUserData[target][fl_LastPoison] < GetGameTime() ) {
+	if( (!g_bUserData[target][b_GameModePassive]) && g_flUserData[target][fl_LastPoison] < GetGameTime() ) {
 		g_iUserData[target][i_Sickness] = 1;
 		g_flUserData[target][fl_LastPoison] = GetGameTime();
 		
