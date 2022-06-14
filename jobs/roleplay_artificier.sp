@@ -184,6 +184,20 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 					CPrintToChat(client, ""...MOD_TAG..." %T", "Error_NotEnoughtMoney", client);
 					return;
 			}
+			
+			else if(StrEqual(type, "flashbang")){
+				GivePlayerItem(client, "weapon_flashbang");
+			}
+			else if(StrEqual(type, "smokegrenade")){
+				GivePlayerItem(client, "weapon_smokegrenade");
+			}
+			else if(StrEqual(type, "tagrenade")){
+				GivePlayerItem(client, "weapon_tagrenade");
+			}
+			else if(StrEqual(type, "molotov")){
+				GivePlayerItem(client, "weapon_molotov");
+				CPrintToChat(client, "" ...MOD_TAG... " Il existe déjà un objet de ce type à proximité.");
+			}
 
 			if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
@@ -226,20 +240,6 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 			else if(StrEqual(type, "nosteal")){
 				rp_SetWeaponBallType(wep_id, ball_type_nosteal);
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
-			}
-			
-			else if(StrEqual(type, "flashbang")){
-				GivePlayerItem(client, "weapon_flashbang");
-			}
-			else if(StrEqual(type, "smokegrenade")){
-				GivePlayerItem(client, "weapon_smokegrenade");
-			}
-			else if(StrEqual(type, "tagrenade")){
-				GivePlayerItem(client, "weapon_tagrenade");
-			}
-			else if(StrEqual(type, "molotov")){
-				GivePlayerItem(client, "weapon_molotov");
-				CPrintToChat(client, "" ...MOD_TAG... " Il existe déjà un objet de ce type à proximité.");
 			}
 	
 			rp_ClientMoney(client, i_Money, -price);
