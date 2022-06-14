@@ -175,7 +175,7 @@ void OnGameFrame_01(float time) {
 			if( !g_bUserData[Client][b_GameModePassive] && rp_GetClientJobID(Client) == 41 && g_iUserData[Client][i_ToKill] > 0 )
 				speed += 0.25;
 
-			if( g_iUserData[Client][i_Sick] > 0 && !HasDoctor(Client) {
+			if( g_iUserData[Client][i_Sick] > 0 && !HasDoctor(Client)) {
 				if( g_iUserData[Client][i_Sick] == view_as<int>(sick_type_grippe) )
 					speed = 0.66;
 				else if( g_iUserData[Client][i_Sick] == view_as<int>(sick_type_tourista) )
