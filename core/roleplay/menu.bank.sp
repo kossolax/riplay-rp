@@ -551,7 +551,7 @@ public int DrawBankTransfer_2(Handle p_hItemMenu, MenuAction p_oAction, int p_iP
 					SetMenuTitle(menu, "%T\n ", "DrawBankTransfer_save", client);
 
 
-					for( int i=0; i<sizeof(g_szItems_SAVE[]); i++ ){
+					for( int i=1; i<sizeof(g_szItems_SAVE[]); i++ ){
 						if(StrEqual(g_szItems_SAVE[client][i], "")){
 							break;
 						}
