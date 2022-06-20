@@ -198,7 +198,12 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 				GivePlayerItem(client, "weapon_molotov");
 				CPrintToChat(client, "" ...MOD_TAG... " Il existe déjà un objet de ce type à proximité.");
 			}
-
+			
+			rp_ClientMoney(client, i_Money, -price);
+			rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
+			rp_SetJobCapital( 131, rp_GetJobCapital(131)+price );
+			FakeClientCommand(client, "say /build");
+			
 			if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
 				return;
