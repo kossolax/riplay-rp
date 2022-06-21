@@ -29,7 +29,7 @@
 #define		TEAM_NAME1			"Braqueur"
 #define 	REQUIRED_T			4
 #define 	REQUIRED_CT			5
-#define		SUPPLEMENT_T		3
+#define		SUPPLEMENT_T		10
 
 #define		BRAQUAGE_WEAPON		"weapon_p90"
 
