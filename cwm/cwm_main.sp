@@ -1038,7 +1038,7 @@ public void OnClientPostAdminCheck(int client) {
 	
 	SDKHook(client, SDKHook_WeaponSwitchPost, OnClientWeaponSwitch);
 	SDKHook(client, SDKHook_WeaponDropPost, OnClientWeaponDrop);
-	SDKHook(client, SDKHook_ShouldCollide, OnClientCollide);
+	//SDKHook(client, SDKHook_ShouldCollide, OnClientCollide);
 	SDKHook(client, SDKHook_PreThinkPost, OnClientThink);
 
 #if DEBUG_MAXSPEED == 1
