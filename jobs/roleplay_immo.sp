@@ -724,7 +724,7 @@ public Action fwdOnPlayerUse(int client) {
 	
 	return Plugin_Continue;
 }
-public int eventBedConfirm(Handle menu, MenuAction action, int client, int param2) {
+/*public int eventBedConfirm(Handle menu, MenuAction action, int client, int param2) {
 	
 	if( action == MenuAction_Select ) {
 		char options[64];
@@ -746,7 +746,7 @@ public int eventBedConfirm(Handle menu, MenuAction action, int client, int param
 	else if( action == MenuAction_End ) {
 		CloseHandle(menu);
 	}
-}
+}*/
 
 public Action Cmd_eventBedConfirm(int client) {
 
@@ -754,7 +754,7 @@ public Action Cmd_eventBedConfirm(int client) {
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 	Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_villa` WHERE `steamid`='%s';", szSteamID);
 	SQL_TQuery(rp_GetDatabase(), SQL_GetVillaCount, query, client, DBPrio_Low);
-	rp_ClientMoney(client, i_Bank, -VILLA_PRICE);
+	//rp_ClientMoney(client, i_Bank, -VILLA_PRICE);
 
 }
 
@@ -812,7 +812,7 @@ public Action OnEmote(int client, const char[] emote, float time) {
 							g_flDirtPos[appart][j] = g_flDirtPos[appart][j + 1];
 						}
 						
-						xp += 100;
+						xp += 250;
 						
 						g_iDirtyCount[appart]--;
 						j--;
