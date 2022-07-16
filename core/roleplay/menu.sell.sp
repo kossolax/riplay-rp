@@ -187,6 +187,11 @@ void DrawVendreMenu(int client) {
 					continue;
 			}
 			
+			if( g_iUserData[client][i_Job] == 61 || g_iUserData[client][i_Job] == 62 || g_iUserData[client][i_Job] == 63 ) {
+				if( StrContains(g_szItemListOrdered[i][item_type_extra_cmd], "rp_item_ticketvilla", false) == 0 )
+					continue;
+			}
+			
 			Format( tmp, 254, "%s_%i", g_szItemListOrdered[i][item_type_ordered_id], 0);
 			Format(tmp2, 254, "%s [%s$]", g_szItemListOrdered[i][item_type_name], g_szItemListOrdered[i][item_type_prix]);
 			
