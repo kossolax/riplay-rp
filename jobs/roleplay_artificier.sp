@@ -85,6 +85,7 @@ public void OnPluginStart() {
 	RegServerCmd("rp_item_highjump",	Cmd_ItemHighJump,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_bomb",		Cmd_ItemBomb,			"RP-ITEM",  FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_nade",		Cmd_ItemNade,			"RP-ITEM",  FCVAR_UNREGISTERED);
+	RegServerCmd("rp_item_sanandreas",	Cmd_ItemSanAndreas,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	
 	RegAdminCmd("sm_effect_fireworks", Cmd_Fireworks, 			ADMFLAG_RCON);
 	
@@ -139,6 +140,7 @@ public Action fwdOnPlayerBuild(int client, float& cooldown){
 	SetMenuTitle(menu, "%T\n ", "edit_weapon", client);
 	
 	char szMenu[][][] = {
+		{"sanandreas",		"250",	"add_bullet_sanAndreas"},
 		{"fire",			"750",	"add_ball_type_fire"},
 		{"paintball",		"125",	"add_ball_type_paintball"},
 		{"explode", 		"1400",	"add_ball_type_explode"},
@@ -213,6 +215,30 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 				rp_SetWeaponBallType(wep_id, ball_type_fire);
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_done", client);
 			}
+			
+			else if(StrEqual(type, "sanandreas")){
+					
+				int itemId = 22;
+				if( GetConVarInt(FindConVar("rp_capture")) == 1 && rp_GetServerRules(rules_ItemsDisabled, rules_Enabled) == 1 && rp_GetServerRules(rules_ItemsDisabled,rules_Target) == itemId ) {
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_CannotUseItemInPvP", client);
+					return;
+				}
+
+				char classname[64];
+					
+				GetEdictClassname(wep_id, classname, sizeof(classname));
+				if(StrContains(classname, "weapon_breachcharge") == 0)
+					return;
+					
+				int ammo = Weapon_GetPrimaryClip(wep_id);
+				if( ammo >= 150 ) {
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "edit_weapon_sanAndreas", client, ammo);
+					return;
+				}
+				ammo += 1000; if( ammo > 5000 ) ammo = 5000;
+				Weapon_SetPrimaryClip(wep_id, ammo);
+				SDKHook(wep_id, SDKHook_Reload, OnWeaponReload);
+			}
 
 			else if(StrEqual(type, "explode")){
 				rp_SetWeaponBallType(wep_id, ball_type_explode);
@@ -257,6 +283,23 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 	else if (p_oAction == MenuAction_End) {
 		CloseHandle(p_hItemMenu);
 	}
+}
+
+public Action OnWeaponReload(int wepid) {
+	static float cache[65];
+	
+	int ammo = Weapon_GetPrimaryClip(wepid);
+	if( ammo >= 150 ) {
+		int client = Weapon_GetOwner(wepid);
+		
+		if( cache[client] < GetGameTime() ) {
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "weapon_sanAndreas", client, ammo);
+			cache[client] = GetGameTime() + 1.0;
+		}
+		
+		return Plugin_Handled;
+	}
+	return Plugin_Continue;
 }
 
 public Action fwdWeapon(int victim, int attacker, float &damage, int wepID, float pos[3]) {
@@ -1221,4 +1264,41 @@ void PrecacheEffect(const char[] sEffectName) {
 	bool save = LockStringTables(false);
 	AddToStringTable(table, sEffectName);
 	LockStringTables(save);
+}
+
+
+// ----------------------------------------------------------------------------
+public Action Cmd_ItemSanAndreas(int args) {
+	
+	int client = GetCmdArgInt(1);
+	int item_id = GetCmdArgInt(args);
+	int wepid = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+	char classname[64];
+	
+	if( !IsValidEntity(wepid) ) {
+		ITEM_CANCEL(client, item_id);
+		return Plugin_Handled;
+	}
+	
+	GetEdictClassname(wepid, classname, sizeof(classname));
+		
+	if( StrContains(classname, "weapon_bayonet") == 0 || StrContains(classname, "weapon_knife") == 0 || StrContains(classname, "weapon_bumpmine") == 0 || StrContains(classname, "weapon_breachcharge") == 0  || StrContains(classname, "weapon_taser") == 0 || StrContains(classname, "weapon_fists") == 0 ) {
+		ITEM_CANCEL(client, item_id);
+		return Plugin_Handled;
+	}
+		
+	int ammo = Weapon_GetPrimaryClip(wepid);
+	if( ammo >= 5000 ) {
+		ITEM_CANCEL(client, item_id);
+		CPrintToChat(client, ""...MOD_TAG..." %T", "edit_weapon_sanAndreas", client, ammo);
+		return Plugin_Handled;
+	}
+	ammo += 1000;
+	if( ammo > 5000 )
+		ammo = 5000;
+	Weapon_SetPrimaryClip(wepid, ammo);
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "weapon_sanAndreas", client, ammo);
+	
+	SDKHook(wepid, SDKHook_Reload, OnWeaponReload);
+	return Plugin_Handled;
 }
