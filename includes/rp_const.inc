@@ -79,11 +79,12 @@
 #define MODEL_CASH			"models/props_mall/cash_register.mdl"
 #define MODEL_CASHBIG		"models/props_interiors/copymachine01.mdl"
 #define MODEL_KNIFE			"models/weapons/w_knife_flip.mdl"
-#define MODEL_GRAVE 		"models/props/de_inferno/church_ornament_01.mdl"
+#define MODEL_GRAVE 		"models/props_cemetery\grave_01.mdl"
 #define MODEL_PRISONNIER	"models/player/custom_player/legacy/sprisioner/sprisioner.mdl"
 #define MODEL_BARRIERE		"models/props_fortifications/police_barrier001_128_reference.mdl"
 #define MODEL_TABLE1 		"models/props/de_boathouse/table_drafting01.mdl"
 #define MODEL_TABLE2		"models/props/de_boathouse/table_drafting02.mdl"
+#define MODEL_TABLE3		"models/brickscrafting/workbench_2.mdl"
 
 #define MODEL_TABLE_METAL	"models/mosi/fallout4/furniture/workstations/armorworkbench.mdl"
 #define MODEL_TABLE_INGE	"models/brickscrafting/workbench_1.mdl"
@@ -96,7 +97,7 @@
 #define MODEL_PLANT_3		"models/custom_prop/marijuana/marijuana_3.mdl"
 #define MODEL_HEALBOX		"models/pg_props/pg_hospital/pg_ekg.mdl"
 #define MODEL_KEVLARBOX 	"models/props/cs_office/box_office_indoor_32.mdl"
-#define MODEL_GRAVE 		"models/props/de_inferno/church_ornament_01.mdl"
+#define MODEL_GRAVE 		"models/props_cemetery\grave_01.mdl"
 
 // Items:
 #define ITEM_PIEDBICHE		1
