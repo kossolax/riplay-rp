@@ -144,58 +144,6 @@ public int onMenuOpen(Handle hItem, MenuAction oAction, int client, int param) {
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_NotEnoughtMoney", client);
 		}
 	}
-	else if( StrEqual(szMenuItem, "to_resell", false) ) {
-				
-				char szWeapon[64];
-				int id = WeaponsGetDeployedWeaponIndex(client);
-				if( id > 0 ) {
-					int price = rp_GetWeaponPrice(id);
-					price /= 4;
-					GetEdictClassname(id, szWeapon, sizeof(szWeapon));
-					
-					if( g_iUserData[client][i_Disposed] > 0 &&
-						StrContains(szWeapon, "weapon_knife") == -1 && StrContains(szWeapon, "weapon_bayonet") == -1 && StrContains(szWeapon, "weapon_fists") == -1 &&
-						StrContains(szWeapon, "weapon_bumpmine") == -1 && StrContains(szWeapon, "weapon_snowball") == -1 ) {
-						
-						Call_StartForward( view_as<Handle>(g_hRPNative[client][RP_OnResellWeapon]) );
-						Call_PushCell(client);
-						Call_PushCell(id);
-						Call_PushCell(price);
-						Call_Finish();
-						
-						RemovePlayerItem(client, id );
-						RemoveEdict( id );
-						
-						g_bUserData[client][b_WeaponIsKnife] = false;
-						g_bUserData[client][b_WeaponIsHands] = true;
-						g_bUserData[client][b_WeaponIsMelee] = false;
-						FakeClientCommand(client, "use weapon_fists");
-						
-						g_iUserData[client][i_Disposed]--;
-						
-						SetJobCapital(81, (GetJobCapital(81) + (price)));
-						rp_ClientMoney(client, i_AddToPay, (price));
-						rp_SetClientStat(client, i_MoneyEarned_Sales, rp_GetClientStat(client, i_MoneyEarned_Sales) + price);
-						
-						char SteamID[64], szQuery[1024];
-	
-						GetClientAuthId(client, AUTH_TYPE, SteamID, sizeof(SteamID), false);
-						Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`) VALUES (NULL, '%s', '%i', '%i', '4', '%i', '%s', '%i');",
-						SteamID, rp_GetClientJobID(client), GetTime(), 0, "Revente: Arme", price/4);
-				
-						
-						LogToGame("[TSX-RP] [RESELL-ARMES] %L a déposé: %s", client, szWeapon);
-						ReplaceString(szWeapon, sizeof(szWeapon), "weapon_", "");
-						
-						DrawBankTransfer(client);
-						return;
-					}
-					else {
-						DrawBankTransfer(client);
-						return;
-					}
-				}
-			}
 	else if (oAction == MenuAction_End ) {
 		CloseHandle(hItem);
 	}
