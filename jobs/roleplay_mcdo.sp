@@ -379,7 +379,10 @@ public Action Frame_Microwave(Handle timer, any ent) {
 	if(time >= maxtime){
 		EmitSoundToAllAny("ambient/tones/equip2.wav", ent);
 		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Microwave_Ready", owner);
-		giveHamburger(owner, 2);
+		if( rp_GetBuildingData(ent, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(owner), zone_type_type) == 21)
+			giveHamburger(owner, 2);
+		else
+			giveHamburger(owner, 1);
 		g_eMwAct[ent] = false;
 		return Plugin_Handled;
 	}
