@@ -79,7 +79,7 @@ bool IsNearBot(int client) {
 }
 
 bool IsInValidZone(int client) {
-	int validZone[] = { 31, 51, 211, 11, 14, 111, 114, 115 };
+	int validZone[] = { 31, 51, 81, 211, 11, 14, 111, 114, 115 };
 	int jobZone = rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type);
 	
 	for(int i=0; i<sizeof(validZone); i++) {
@@ -101,15 +101,25 @@ void openSellMenu(int client) {
 	Menu menu = CreateMenu(onMenuOpen);
 	menu.SetTitle("Bienvenue!\n ");
 	
-	for(int i=0; i<MAX_ITEMS; i++) {
-		//if( jobZone == rp_GetItemInt(i, item_type_job_id) && rp_GetItemInt(i, item_type_auto) == 0 ) {
-		if( jobZone == rp_GetItemInt(i, item_type_job_id) && rp_GetItemInt(i, item_type_prix) ) {
+	if (validZone != 81){
+		for(int i=0; i<MAX_ITEMS; i++) {
+			//if( jobZone == rp_GetItemInt(i, item_type_job_id) && rp_GetItemInt(i, item_type_auto) == 0 ) {
+			if( jobZone == rp_GetItemInt(i, item_type_job_id) && rp_GetItemInt(i, item_type_prix) ) {
 
-			IntToString(i, key, sizeof(key));
-			rp_GetItemData(i, item_type_name, name, sizeof(name));
-			rp_GetItemData(i, item_type_prix, price, sizeof(price));
-			menu.AddItem(key, name);
+				IntToString(i, key, sizeof(key));
+				rp_GetItemData(i, item_type_name, name, sizeof(name));
+				rp_GetItemData(i, item_type_prix, price, sizeof(price));
+				menu.AddItem(key, name);
+			}
 		}
+	}
+	else if (validZone == 81){
+	
+		if( rp_GetClientJobID(client) == 81 && g_iUserData[client][i_Disposed] > 0 ) {
+		Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_to_resell", client);
+		AddMenuItem(menu, "to_resell", tmp);
+	}
+	
 	}
 	
 	menu.Display(client, MENU_TIME_FOREVER);
@@ -144,6 +154,58 @@ public int onMenuOpen(Handle hItem, MenuAction oAction, int client, int param) {
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_NotEnoughtMoney", client);
 		}
 	}
+	else if( StrEqual(szMenuItem, "to_resell", false) ) {
+				
+				char szWeapon[64];
+				int id = WeaponsGetDeployedWeaponIndex(client);
+				if( id > 0 ) {
+					int price = rp_GetWeaponPrice(id);
+					price /= 4;
+					GetEdictClassname(id, szWeapon, sizeof(szWeapon));
+					
+					if( g_iUserData[client][i_Disposed] > 0 &&
+						StrContains(szWeapon, "weapon_knife") == -1 && StrContains(szWeapon, "weapon_bayonet") == -1 && StrContains(szWeapon, "weapon_fists") == -1 &&
+						StrContains(szWeapon, "weapon_bumpmine") == -1 && StrContains(szWeapon, "weapon_snowball") == -1 ) {
+						
+						Call_StartForward( view_as<Handle>(g_hRPNative[client][RP_OnResellWeapon]) );
+						Call_PushCell(client);
+						Call_PushCell(id);
+						Call_PushCell(price);
+						Call_Finish();
+						
+						RemovePlayerItem(client, id );
+						RemoveEdict( id );
+						
+						g_bUserData[client][b_WeaponIsKnife] = false;
+						g_bUserData[client][b_WeaponIsHands] = true;
+						g_bUserData[client][b_WeaponIsMelee] = false;
+						FakeClientCommand(client, "use weapon_fists");
+						
+						g_iUserData[client][i_Disposed]--;
+						
+						SetJobCapital(81, (GetJobCapital(81) + (price)));
+						rp_ClientMoney(client, i_AddToPay, (price));
+						rp_SetClientStat(client, i_MoneyEarned_Sales, rp_GetClientStat(client, i_MoneyEarned_Sales) + price);
+						
+						char SteamID[64], szQuery[1024];
+	
+						GetClientAuthId(client, AUTH_TYPE, SteamID, sizeof(SteamID), false);
+						Format(szQuery, sizeof(szQuery), "INSERT INTO `rp_sell` (`id`, `steamid`, `job_id`, `timestamp`, `item_type`, `item_id`, `item_name`, `amount`) VALUES (NULL, '%s', '%i', '%i', '4', '%i', '%s', '%i');",
+						SteamID, rp_GetClientJobID(client), GetTime(), 0, "Revente: Arme", price/4);
+				
+						
+						LogToGame("[TSX-RP] [RESELL-ARMES] %L a déposé: %s", client, szWeapon);
+						ReplaceString(szWeapon, sizeof(szWeapon), "weapon_", "");
+						
+						DrawBankTransfer(client);
+						return;
+					}
+					else {
+						DrawBankTransfer(client);
+						return;
+					}
+				}
+			}
 	else if (oAction == MenuAction_End ) {
 		CloseHandle(hItem);
 	}
