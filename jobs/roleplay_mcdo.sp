@@ -233,11 +233,11 @@ int BuildingMicrowave(int client) {
 	int ent = CreateEntityByName("prop_physics");
 	
 	DispatchKeyValue(ent, "classname", classname);
-	DispatchKeyValue(ent, "model", "models/props/cs_office/microwave.mdl");
+	DispatchKeyValue(ent, "model", "models/props_interiors/stove02.mdl");
 	DispatchSpawn(ent);
 	ActivateEntity(ent);
 	
-	SetEntityModel(ent,"models/props/cs_office/microwave.mdl");
+	SetEntityModel(ent,"models/props_interiors/stove02.mdl");
 	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
 	SetEntProp( ent, Prop_Data, "m_takedamage", 2);
 	SetEntProp( ent, Prop_Data, "m_iHealth", 5125);
