@@ -353,12 +353,12 @@ public Action fwdOnPlayerUse(int client) {
 				int maxtime = rp_GetBuildingData(i, BD_max);
 				if( time >= maxtime &&  rp_GetBuildingData( i, BD_owner )) {
 					rp_SetBuildingData(i, BD_count, 0);
-					if( rp_GetBuildingData(i, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type) == 21)
+					/*if( rp_GetBuildingData(i, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type) == 21)
 						giveHamburger(client, 2);
 					else if( rp_GetPlayerZoneAppart(i) > 0 )
 						giveHamburger(client, 1);
 					else
-						giveHamburger(client, 1);
+						giveHamburger(client, 1);*/
 				}
 				g_eMwAct[i] = true;
 				CreateTimer(1.0, Frame_Microwave, i);
@@ -379,7 +379,7 @@ public Action Frame_Microwave(Handle timer, any ent) {
 	if(time >= maxtime){
 		EmitSoundToAllAny("ambient/tones/equip2.wav", ent);
 		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Microwave_Ready", owner);
-		if( rp_GetBuildingData(ent, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(owner), zone_type_type) == 21)
+		if( rp_GetBuildingData(ent, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(ent), zone_type_type) == 21)
 			giveHamburger(owner, 2);
 		else
 			giveHamburger(owner, 1);
