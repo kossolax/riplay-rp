@@ -361,7 +361,7 @@ public Action fwdOnPlayerUse(int client) {
 	}
 	return Plugin_Continue;
 }
-public Action Frame_Microwave(Handle timer, any ent) {
+public Action Frame_Microwave(Handle timer, any ent, int client) {
 	if(!IsValidEdict(ent) || !IsValidEntity(ent)){
 		StopSoundAny(ent, SNDCHAN_AUTO, "ambient/machines/lab_loop1.wav");
 		return Plugin_Handled;
@@ -370,8 +370,6 @@ public Action Frame_Microwave(Handle timer, any ent) {
 	int owner = rp_GetBuildingData(ent, BD_owner);
 	int time = rp_GetBuildingData(ent, BD_count);
 	int maxtime = rp_GetBuildingData(ent, BD_max);
-	int time = rp_GetBuildingData(i, BD_count);
-	int maxtime = rp_GetBuildingData(i, BD_max);
 	if(time >= maxtime){
 		EmitSoundToAllAny("ambient/tones/equip2.wav", ent);
 		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Microwave_Ready", owner);
