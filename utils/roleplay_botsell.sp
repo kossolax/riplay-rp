@@ -79,7 +79,7 @@ bool IsNearBot(int client) {
 }
 
 bool IsInValidZone(int client) {
-	int validZone[] = { 31, 51, 81, 211, 11, 14, 111, 114, 115 };
+	int validZone[] = { 31, 51, 211, 11, 14, 111, 114, 115 };
 	int jobZone = rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type);
 	
 	for(int i=0; i<sizeof(validZone); i++) {
@@ -101,25 +101,15 @@ void openSellMenu(int client) {
 	Menu menu = CreateMenu(onMenuOpen);
 	menu.SetTitle("Bienvenue!\n ");
 	
-	if (validZone != 81){
-		for(int i=0; i<MAX_ITEMS; i++) {
-			//if( jobZone == rp_GetItemInt(i, item_type_job_id) && rp_GetItemInt(i, item_type_auto) == 0 ) {
-			if( jobZone == rp_GetItemInt(i, item_type_job_id) && rp_GetItemInt(i, item_type_prix) ) {
+	for(int i=0; i<MAX_ITEMS; i++) {
+		//if( jobZone == rp_GetItemInt(i, item_type_job_id) && rp_GetItemInt(i, item_type_auto) == 0 ) {
+		if( jobZone == rp_GetItemInt(i, item_type_job_id) && rp_GetItemInt(i, item_type_prix) ) {
 
-				IntToString(i, key, sizeof(key));
-				rp_GetItemData(i, item_type_name, name, sizeof(name));
-				rp_GetItemData(i, item_type_prix, price, sizeof(price));
-				menu.AddItem(key, name);
-			}
+			IntToString(i, key, sizeof(key));
+			rp_GetItemData(i, item_type_name, name, sizeof(name));
+			rp_GetItemData(i, item_type_prix, price, sizeof(price));
+			menu.AddItem(key, name);
 		}
-	}
-	else if (validZone == 81){
-	
-		if( rp_GetClientJobID(client) == 81 && g_iUserData[client][i_Disposed] > 0 ) {
-		Format(tmp, sizeof(tmp), "%T", "DrawBankTransfer_to_resell", client);
-		AddMenuItem(menu, "to_resell", tmp);
-	}
-	
 	}
 	
 	menu.Display(client, MENU_TIME_FOREVER);
