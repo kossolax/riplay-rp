@@ -376,11 +376,10 @@ public Action Frame_Microwave(Handle timer, any ent) {
 	int owner = rp_GetBuildingData(ent, BD_owner);
 	int time = rp_GetBuildingData(ent, BD_count);
 	int maxtime = rp_GetBuildingData(ent, BD_max);
-	int client = GetCmdArgInt(1);
 	if(time >= maxtime){
 		EmitSoundToAllAny("ambient/tones/equip2.wav", ent);
 		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Microwave_Ready", owner);
-		giveHamburger(client, 2);
+		giveHamburger(owner, 2);
 		g_eMwAct[ent] = false;
 		return Plugin_Handled;
 	}
