@@ -353,6 +353,12 @@ public Action fwdOnPlayerUse(int client) {
 				int maxtime = rp_GetBuildingData(i, BD_max);
 				if( time >= maxtime &&  rp_GetBuildingData( i, BD_owner )) {
 					rp_SetBuildingData(i, BD_count, 0);
+					if( rp_GetBuildingData(i, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type) == 21)
+						giveHamburger(client, 2);
+					else if( rp_GetPlayerZoneAppart(i) > 0 )
+						giveHamburger(client, 1);
+					else
+						giveHamburger(client, 1);
 				}
 				g_eMwAct[i] = true;
 				CreateTimer(1.0, Frame_Microwave, i);
@@ -361,7 +367,7 @@ public Action fwdOnPlayerUse(int client) {
 	}
 	return Plugin_Continue;
 }
-public Action Frame_Microwave(Handle timer, any ent, int client) {
+public Action Frame_Microwave(Handle timer, any ent) {
 	if(!IsValidEdict(ent) || !IsValidEntity(ent)){
 		StopSoundAny(ent, SNDCHAN_AUTO, "ambient/machines/lab_loop1.wav");
 		return Plugin_Handled;
@@ -370,23 +376,17 @@ public Action Frame_Microwave(Handle timer, any ent, int client) {
 	int owner = rp_GetBuildingData(ent, BD_owner);
 	int time = rp_GetBuildingData(ent, BD_count);
 	int maxtime = rp_GetBuildingData(ent, BD_max);
+	int client = GetCmdArgInt(1);
 	if(time >= maxtime){
 		EmitSoundToAllAny("ambient/tones/equip2.wav", ent);
 		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Microwave_Ready", owner);
-		
-		if( rp_GetBuildingData(i, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type) == 21)
-			giveHamburger(client, 2);
-		else if( rp_GetPlayerZoneAppart(i) > 0 )
-			giveHamburger(client, 1);
-		else
-			giveHamburger(client, 1);
-			
+		giveHamburger(client, 2);
 		g_eMwAct[ent] = false;
 		return Plugin_Handled;
 	}
 	if(time == 0){
 		EmitSoundToAllAny("ambient/machines/lab_loop1.wav", ent, _, _, _, 0.33);
-		 SDKHooks_TakeDamage(ent, ent, ent, 125.0);
+		SDKHooks_TakeDamage(ent, ent, ent, 125.0);
 	}
 	
 	if( rp_GetClientInt(owner, i_TimeAFK) <= 60 ) {
