@@ -115,6 +115,7 @@ public Action CmdSetFatigue(int client, int args) {
 public void OnMapStart() {
 	PrecacheModel(MODEL_TABLE1);
 	PrecacheModel(MODEL_TABLE2);
+	PrecacheModel(MODEL_TABLE3);
 	
 	PrecacheModel(MODEL_TABLE_METAL);
 	PrecacheModel(MODEL_TABLE_INGE);
@@ -1272,11 +1273,14 @@ int BuidlingTABLE(int client, int type) {
 	DispatchKeyValue(ent, "classname", classname);
 	
 	switch(type) {
-		case 0: {
+		/*case 0: {
 			if( Math_GetRandomInt(0, 1) )
 				DispatchKeyValue(ent, "model", MODEL_TABLE1);
 			else
 				DispatchKeyValue(ent, "model", MODEL_TABLE2);
+		}*/
+		case 0: {
+			DispatchKeyValue(ent, "model", MODEL_TABLE3);
 		}
 		case 1: {
 			DispatchKeyValue(ent, "model", MODEL_TABLE_METAL);
