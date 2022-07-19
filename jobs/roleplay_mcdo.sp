@@ -367,6 +367,7 @@ int BuildingCafetiere(int client) {
 	
 	float vecOrigin[3];
 	GetClientAbsOrigin(client, vecOrigin);
+	vecOrigin[2] += 64.0f;
 	
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client, _, _, _, 0.66);
 	
@@ -383,7 +384,7 @@ int BuildingCafetiere(int client) {
 	SetEntProp( ent, Prop_Data, "m_iHealth", 5125);
 	
 	
-	TeleportEntity(ent, vecOrigin, NULL_VECTOR, "8");
+	TeleportEntity(ent, vecOrigin, NULL_VECTOR, TeleportEntity);
 	
 	SetEntityRenderMode(ent, RENDER_NONE);
 	ServerCommand("sm_effect_fading \"%i\" \"2.5\" \"0\"", ent);
