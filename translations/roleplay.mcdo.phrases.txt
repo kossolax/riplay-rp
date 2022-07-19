@@ -35,4 +35,10 @@
 		"fr"		"{blue}Votre micro-ondes vient de sonner!{default}"
 		"en"		"{blue}Your microwave is ready!{default}"		
 	}
+	
+	"Cafetiere_Ready"
+	{
+		"fr"		"{blue}Votre café à fini est pret ! bonne dégustation =){default}"
+		"en"		"{blue}Your microwave is ready!{default}"		
+	}
 }
