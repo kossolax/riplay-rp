@@ -384,7 +384,7 @@ int BuildingCafetiere(int client) {
 	SetEntProp( ent, Prop_Data, "m_iHealth", 5125);
 	
 	
-	TeleportEntity(ent, vecOrigin, NULL_VECTOR, TeleportEntity);
+	TeleportEntity(ent, vecOrigin, NULL_VECTOR, NULL_VECTOR);
 	
 	SetEntityRenderMode(ent, RENDER_NONE);
 	ServerCommand("sm_effect_fading \"%i\" \"2.5\" \"0\"", ent);
