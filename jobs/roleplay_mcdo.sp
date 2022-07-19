@@ -240,7 +240,7 @@ int BuildingMicrowave(int client) {
 		}
 	}
 	
-	float vecOrigin[3];
+	float vecOrigin[3], vecOrigin2[3];
 	GetClientAbsOrigin(client, vecOrigin);
 	
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client, _, _, _, 0.66);
@@ -623,6 +623,23 @@ void giveHamburger(int client, int amount){
 }
 void giveCafe(int client, int amount){
 	char tmp[128];
+	if( g_nbMdItems == -1 ) {
+		int jobID;
+		for(int i = 0; i < MAX_ITEMS; i++){
+			if( rp_GetItemInt(i, item_type_prix) <= 0 )
+				continue;
+			if( rp_GetItemInt(i, item_type_auto) == 1 )
+				continue;
+			jobID = rp_GetItemInt(i, item_type_job_id);
+			if(jobID != 21)
+				continue;
+
+			rp_GetItemData(i, item_type_extra_cmd, tmp, sizeof(tmp));
+			if( StrEqual(tmp, "rp_item_cafetiere") )
+				continue;
+			g_nbMdItems++;
+		}
+	}
 	rp_GetItemData(ITEM_CAFE, item_type_name, tmp, sizeof(tmp));
 	rp_ClientGiveItem(client, ITEM_CAFE, amount);
 	CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Take", client, amount, tmp);
