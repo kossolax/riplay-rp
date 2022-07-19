@@ -639,7 +639,7 @@ void giveCafe(int client, int amount){
 			g_nbMdItems++;
 		}
 	}
-	rp_GetItemData(ITEM_CAFE, item_type_name, item, sizeof(item));
+	rp_GetItemData(ITEM_CAFE, item_type_name, tmp, sizeof(tmp));
 	rp_ClientGiveItem(client, ITEM_CAFE, amount);
 	CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Take", client, amount, tmp);
 }
