@@ -240,8 +240,8 @@ int BuildingMicrowave(int client) {
 		}
 	}
 	
-	float vecOrigin[3];
-	GetClientAbsOrigin(client, vecOrigin);
+	float vec[3];
+	GetClientAbsOrigin(client, vec);
 	
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client, _, _, _, 0.66);
 	
