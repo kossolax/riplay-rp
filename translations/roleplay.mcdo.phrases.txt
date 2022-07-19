@@ -38,7 +38,7 @@
 	
 	"Cafetiere_Ready"
 	{
-		"fr"		"{blue}Votre café à fini est pret ! bonne dégustation =){default}"
+		"fr"		"{blue}Votre café est pret ! bonne dégustation =){default}"
 		"en"		"{blue}Your microwave is ready!{default}"		
 	}
 }
