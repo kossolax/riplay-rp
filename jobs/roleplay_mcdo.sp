@@ -71,6 +71,8 @@ public void OnPluginStart() {
 	RegServerCmd("rp_item_banane",		Cmd_ItemBanane,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_knife",		Cmd_ItemKnife,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_microwaves",	Cmd_ItemMicroWave,		"RP-ITEM",	FCVAR_UNREGISTERED);
+	RegServerCmd("rp_item_cafe",		Cmd_ItemCafe,			"RP-ITEM",	FCVAR_UNREGISTERED);
+	RegServerCmd("rp_item_cafetiere",		Cmd_ItemCafetiere,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	
 	g_nbMdItems = -1;
 	for (int j = 1; j <= MaxClients; j++)
@@ -104,6 +106,17 @@ public Action Cmd_ItemMicroWave(int args) {
 		ITEM_CANCEL(client, item_id);
 	}
 }
+
+public Action Cmd_ItemCafetiere(int args) {
+	int client = GetCmdArgInt(1);
+	
+	if( BuildingCafetiere(client) == 0 ) {
+		int item_id = GetCmdArgInt(args);
+		
+		ITEM_CANCEL(client, item_id);
+	}
+}
+
 public Action Cmd_ItemKnife(int args) {
 	int client = GetCmdArgInt(1);
 	rp_ClientGiveItem(client, ITEM_KNIFE);
@@ -328,13 +341,138 @@ public void BuildingMicrowave_break(const char[] output, int caller, int activat
 	TE_SendToAll();
 	//rp_Effect_Explode(vecOrigin, 200.0, 600.0, activator, "micro_onde");
 }
+int BuildingCafetiere(int client) {
+	
+	if( !rp_IsBuildingAllowed(client) )
+		return 0;
+	
+	char classname[64], tmp[64];
+	Format(classname, sizeof(classname), "rp_cafetiere");
+	
+	for(int i=1; i<=2048; i++) {
+		if( !IsValidEdict(i) )
+			continue;
+		if( !IsValidEntity(i) )
+			continue;
+			
+		GetEdictClassname(i, tmp, 63);
+		
+		if( StrEqual(classname, tmp) && rp_GetBuildingData(i, BD_owner) == client ) {
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
+			return 0;
+		}
+	}
+	
+	float vecOrigin[3];
+	GetClientAbsOrigin(client, vecOrigin);
+	
+	EmitSoundToAllAny("player/ammo_pack_use.wav", client, _, _, _, 0.66);
+	
+	int ent = CreateEntityByName("prop_physics");
+	
+	DispatchKeyValue(ent, "classname", classname);
+	DispatchKeyValue(ent, "model", "models/props_interiors/coffee_maker.mdl");
+	DispatchSpawn(ent);
+	ActivateEntity(ent);
+	
+	SetEntityModel(ent,"models/props_interiors/coffee_maker.mdl");
+	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
+	SetEntProp( ent, Prop_Data, "m_takedamage", 2);
+	SetEntProp( ent, Prop_Data, "m_iHealth", 5125);
+	
+	
+	TeleportEntity(ent, vecOrigin, NULL_VECTOR, NULL_VECTOR);
+	
+	SetEntityRenderMode(ent, RENDER_NONE);
+	ServerCommand("sm_effect_fading \"%i\" \"2.5\" \"0\"", ent);
+	
+	SetEntityMoveType(client, MOVETYPE_NONE);
+	SetEntityMoveType(ent, MOVETYPE_NONE);
+	
+	
+	rp_SetBuildingData(ent, BD_started, GetTime());
+	rp_SetBuildingData(ent, BD_owner, client );
+	rp_SetBuildingData(ent, BD_FromBuild, 0);
+	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
+	
+	g_eMwAct[ent] = true;
+	CreateTimer(3.0, BuildingCafetiere_post, ent);
+	return ent;
+	
+}
+public Action BuildingCafetiere_post(Handle timer, any entity) {
+	if( !IsValidEdict(entity) && !IsValidEntity(entity) )
+		return Plugin_Handled;
+	int client = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
+	int time;
+	int job = rp_GetClientInt(client, i_Job);
+	switch(job){
+		case 21: time = 55;
+		case 22: time = 60;
+		case 23: time = 65;
+		case 24: time = 70;
+		case 25: time = 75;
+		case 26: time = 80;
+		default: time = 90;
+	}
+
+	if( rp_GetBuildingData(entity, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(entity), zone_type_type) != 21 ) {
+		time *= 2;
+	}
+	
+	rp_SetBuildingData(entity, BD_max, time);
+	rp_SetBuildingData(entity, BD_count, 0);
+
+	SetEntityMoveType(client, MOVETYPE_WALK);
+	
+	if( rp_IsInPVP(entity) ) {
+		rp_ClientColorize(entity);
+	}
+	
+	SetEntProp( entity, Prop_Data, "m_takedamage", 2);
+	HookSingleEntityOutput(entity, "OnBreak", BuildingCafetiere_break);
+	SDKHook(entity, SDKHook_OnTakeDamage, DamageMachine);
+	
+	CreateTimer(1.0, Frame_Microwave, entity);
+	rp_HookEvent(client, RP_OnPlayerUse, fwdOnPlayerUse);
+	
+	return Plugin_Handled;
+}
+public Action DamageMachine(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
+	if( !Entity_CanBeBreak(victim, attacker) ) {
+		damage = 0.0;
+		return Plugin_Changed;
+	}
+	return Plugin_Continue;
+}
+public void BuildingCafetiere_break(const char[] output, int caller, int activator, float delay) {
+	
+	int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
+	
+	if( IsValidClient(activator) && IsValidClient(owner) ) {
+		rp_ClientAggroIncrement(activator, owner, 1000);
+	}
+	
+	if( IsValidClient(owner) ) {
+		char tmp[128];
+		GetEdictClassname(caller, tmp, sizeof(tmp));
+		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Build_Destroyed", owner, tmp);
+		rp_UnhookEvent(owner, RP_OnPlayerUse, fwdOnPlayerUse);
+	}
+	
+	float vecOrigin[3];
+	Entity_GetAbsOrigin(caller,vecOrigin);
+	TE_SetupSparks(vecOrigin, view_as<float>({0.0,0.0,1.0}),120,40);
+	TE_SendToAll();
+}
 public Action fwdOnPlayerUse(int client) {
-	static char tmp[64], tmp2[64];
+	static char tmp[64], tmp2[64], tmp3[64];
 	static float vecOrigin[3],vecOrigin2[3];
 	GetClientAbsOrigin(client, vecOrigin);
 
 
 	Format(tmp2, sizeof(tmp2), "rp_microwave");
+	Format(tmp3, sizeof(tmp2), "rp_cafetiere");
 
 	for(int i=1; i<=2048; i++) {
 		if( !IsValidEdict(i) )
@@ -362,6 +500,18 @@ public Action fwdOnPlayerUse(int client) {
 				}
 				g_eMwAct[i] = true;
 				CreateTimer(1.0, Frame_Microwave, i);
+			}
+		}
+		if( StrEqual(tmp, tmp3) && rp_GetBuildingData(i, BD_owner) == client ) {
+			Entity_GetAbsOrigin(i, vecOrigin2);
+			if( GetVectorDistance(vecOrigin, vecOrigin2) <= 50 ) {
+				int time = rp_GetBuildingData(i, BD_count);
+				int maxtime = rp_GetBuildingData(i, BD_max);
+				if( time >= maxtime &&  rp_GetBuildingData( i, BD_owner )) {
+						giveCafe(client, 1);
+				}
+				g_eMwAct[i] = true;
+				CreateTimer(1.0, Frame_Cafetiere, i);
 			}
 		}
 	}
@@ -395,6 +545,32 @@ public Action Frame_Microwave(Handle timer, any ent) {
 		rp_SetBuildingData(ent, BD_count, ++time);
 	}
 	CreateTimer(1.0, Frame_Microwave, ent);
+	return Plugin_Handled;
+}
+public Action Frame_Cafetiere(Handle timer, any ent) {
+	if(!IsValidEdict(ent) || !IsValidEntity(ent)){
+		StopSoundAny(ent, SNDCHAN_AUTO, "ambient/machines/lab_loop1.wav");
+		return Plugin_Handled;
+	}
+	
+	int owner = rp_GetBuildingData(ent, BD_owner);
+	int time = rp_GetBuildingData(ent, BD_count);
+	int maxtime = rp_GetBuildingData(ent, BD_max);
+	if(time >= maxtime){
+		EmitSoundToAllAny("ambient/tones/equip2.wav", ent);
+		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Microwave_Ready", owner);
+		g_eMwAct[ent] = false;
+		return Plugin_Handled;
+	}
+	if(time == 0){
+		EmitSoundToAllAny("ambient/machines/lab_loop1.wav", ent, _, _, _, 0.33);
+		SDKHooks_TakeDamage(ent, ent, ent, 125.0);
+	}
+	
+	if( rp_GetClientInt(owner, i_TimeAFK) <= 60 ) {
+		rp_SetBuildingData(ent, BD_count, ++time);
+	}
+	CreateTimer(1.0, Frame_Cafetiere, ent);
 	return Plugin_Handled;
 }
 void giveHamburger(int client, int amount){
@@ -441,6 +617,31 @@ void giveHamburger(int client, int amount){
 		}
 		j++;
 	}
+}
+void giveCafe(int client, int amount){
+	char tmp[128];
+	
+	if( g_nbMdItems == -1 ) {
+		int jobID;
+		for(int i = 0; i < MAX_ITEMS; i++){
+			if( rp_GetItemInt(i, item_type_prix) <= 0 )
+				continue;
+			if( rp_GetItemInt(i, item_type_auto) == 1 )
+				continue;
+			jobID = rp_GetItemInt(i, item_type_job_id);
+			if(jobID != 21)
+				continue;
+			
+			rp_GetItemData(i, item_type_extra_cmd, tmp, sizeof(tmp));
+			if( StrEqual(tmp, "rp_item_cafetiere") )
+				continue;
+			g_nbMdItems++;
+		}
+	}
+		
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Take", client, amount, tmp);
+	rp_ClientGiveItem(client, rp_item_cafe, amount);
+	break;
 }
 public Action Cmd_ItemHamburger(int args) {
 	char arg1[12], classname[64];
@@ -753,6 +954,17 @@ public Action AllowUltimate(Handle timer, any client) {
 
 	rp_SetClientBool(client, b_MayUseUltimate, true);
 }
+
+public Action Cmd_ItemCafe(int args) {
+	
+	int client = GetCmdArgInt(1);
+	
+	rp_HookEvent(client, RP_PrePlayerPhysic, fwdCigSpeed, 10.0);
+	rp_HookEvent(client, RP_PrePlayerPhysic, fwdCigSpeed, 10.0);
+	
+	rp_IncrementSuccess(client, success_list_cafeine);
+}
+
 public Action Cmd_ItemBanane(int args) {
 	
 	int client = GetCmdArgInt(1);
