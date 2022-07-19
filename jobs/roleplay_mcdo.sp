@@ -636,7 +636,6 @@ void giveCafe(int client, int amount){
 		
 	CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Take", client, amount, tmp);
 	rp_ClientGiveItem(client, ITEM_CAFE, amount);
-	break;
 }
 public Action Cmd_ItemHamburger(int args) {
 	char arg1[12], classname[64];
@@ -958,6 +957,12 @@ public Action Cmd_ItemCafe(int args) {
 	rp_HookEvent(client, RP_PrePlayerPhysic, fwdCigSpeed, 10.0);
 	
 	rp_IncrementSuccess(client, success_list_cafeine);
+}
+
+public Action fwdCigSpeed(int client, float& speed) {
+	speed += 0.75;
+	
+	return Plugin_Changed;
 }
 
 public Action Cmd_ItemBanane(int args) {
