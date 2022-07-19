@@ -240,8 +240,8 @@ int BuildingMicrowave(int client) {
 		}
 	}
 	
-	float vec[3];
-	GetClientAbsOrigin(client, vec);
+	float vecOrigin[3];
+	GetClientAbsOrigin(client, vecOrigin);
 	
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client, _, _, _, 0.66);
 	
@@ -383,7 +383,7 @@ int BuildingCafetiere(int client) {
 	SetEntProp( ent, Prop_Data, "m_iHealth", 5125);
 	
 	
-	TeleportEntity(ent, vecOrigin, NULL_VECTOR, NULL_VECTOR);
+	TeleportEntity(ent, vecOrigin, NULL_VECTOR, "8");
 	
 	SetEntityRenderMode(ent, RENDER_NONE);
 	ServerCommand("sm_effect_fading \"%i\" \"2.5\" \"0\"", ent);
