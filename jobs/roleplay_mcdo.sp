@@ -961,8 +961,7 @@ public Action Cmd_ItemCafe(int args) {
 	
 	int client = GetCmdArgInt(1);
 	
-	rp_HookEvent(client, RP_PrePlayerPhysic, fwdCigSpeed, 10.0);
-	rp_HookEvent(client, RP_PrePlayerPhysic, fwdCigSpeed, 10.0);
+	rp_HookEvent(client, RP_PrePlayerPhysic, fwdCigSpeed, 90.0);
 	
 	rp_IncrementSuccess(client, success_list_cafeine);
 }
