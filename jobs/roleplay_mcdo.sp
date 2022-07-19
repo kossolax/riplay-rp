@@ -373,11 +373,11 @@ int BuildingCafetiere(int client) {
 	int ent = CreateEntityByName("prop_physics");
 	
 	DispatchKeyValue(ent, "classname", classname);
-	DispatchKeyValue(ent, "model", "models/props_interiors/coffee_maker.mdl");
+	DispatchKeyValue(ent, "model", "models/kokoro/espresso_machine.mdl");
 	DispatchSpawn(ent);
 	ActivateEntity(ent);
 	
-	SetEntityModel(ent,"models/props_interiors/coffee_maker.mdl");
+	SetEntityModel(ent,"models/kokoro/espresso_machine.mdl");
 	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
 	SetEntProp( ent, Prop_Data, "m_takedamage", 2);
 	SetEntProp( ent, Prop_Data, "m_iHealth", 5125);
