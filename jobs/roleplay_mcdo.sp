@@ -20,6 +20,8 @@
 #pragma newdecls required
 #include <roleplay.inc>	// https://www.ts-x.eu
 
+#define ITEM_CAFE     19
+
 public Plugin myinfo = {
 	name = "Jobs: Mc'Do", author = "KoSSoLaX",
 	description = "RolePlay - Jobs: Mc'Donalds",
@@ -438,13 +440,6 @@ public Action BuildingCafetiere_post(Handle timer, any entity) {
 	
 	return Plugin_Handled;
 }
-public Action DamageMachine(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
-	if( !Entity_CanBeBreak(victim, attacker) ) {
-		damage = 0.0;
-		return Plugin_Changed;
-	}
-	return Plugin_Continue;
-}
 public void BuildingCafetiere_break(const char[] output, int caller, int activator, float delay) {
 	
 	int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
@@ -640,7 +635,7 @@ void giveCafe(int client, int amount){
 	}
 		
 	CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Take", client, amount, tmp);
-	rp_ClientGiveItem(client, rp_item_cafe, amount);
+	rp_ClientGiveItem(client, ITEM_CAFE, amount);
 	break;
 }
 public Action Cmd_ItemHamburger(int args) {
