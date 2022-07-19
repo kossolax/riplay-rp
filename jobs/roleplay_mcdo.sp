@@ -505,11 +505,11 @@ public Action fwdOnPlayerUse(int client) {
 				if( time >= maxtime &&  rp_GetBuildingData( i, BD_owner )) {
 						rp_SetBuildingData(i, BD_count, 0);
 					if( rp_GetBuildingData(i, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type) == 21)
-						giveHamburger(client, 2);
+						giveCafe(client, 2);
 					else if( rp_GetPlayerZoneAppart(i) > 0 )
-						giveHamburger(client, 1);
+						giveCafe(client, 1);
 					else
-						giveHamburger(client, 1);
+						giveCafe(client, 1);
 				}
 				g_eMwAct[i] = true;
 				CreateTimer(1.0, Frame_Cafetiere, i);
