@@ -367,7 +367,7 @@ int BuildingCafetiere(int client) {
 	
 	float vecOrigin[3];
 	GetClientAbsOrigin(client, vecOrigin);
-	vecOrigin[2] += 64.0f;
+	vecOrigin[2] += 64.0;
 	
 	EmitSoundToAllAny("player/ammo_pack_use.wav", client, _, _, _, 0.66);
 	
