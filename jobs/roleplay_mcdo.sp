@@ -503,7 +503,13 @@ public Action fwdOnPlayerUse(int client) {
 				int time = rp_GetBuildingData(i, BD_count);
 				int maxtime = rp_GetBuildingData(i, BD_max);
 				if( time >= maxtime &&  rp_GetBuildingData( i, BD_owner )) {
-						giveCafe(client, 1);
+						rp_SetBuildingData(i, BD_count, 0);
+					if( rp_GetBuildingData(i, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type) == 21)
+						giveHamburger(client, 2);
+					else if( rp_GetPlayerZoneAppart(i) > 0 )
+						giveHamburger(client, 1);
+					else
+						giveHamburger(client, 1);
 				}
 				g_eMwAct[i] = true;
 				CreateTimer(1.0, Frame_Cafetiere, i);
@@ -633,9 +639,9 @@ void giveCafe(int client, int amount){
 			g_nbMdItems++;
 		}
 	}
-		
-	CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Take", client, amount, tmp);
+	rp_GetItemData(ITEM_CAFE, item_type_name, item, sizeof(item));
 	rp_ClientGiveItem(client, ITEM_CAFE, amount);
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Take", client, amount, tmp);
 }
 public Action Cmd_ItemHamburger(int args) {
 	char arg1[12], classname[64];
