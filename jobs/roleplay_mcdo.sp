@@ -559,7 +559,7 @@ public Action Frame_Cafetiere(Handle timer, any ent) {
 	int maxtime = rp_GetBuildingData(ent, BD_max);
 	if(time >= maxtime){
 		EmitSoundToAllAny("ambient/tones/equip2.wav", ent);
-		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Microwave_Ready", owner);
+		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Cafetiere_Ready", owner);
 		g_eMwAct[ent] = false;
 		return Plugin_Handled;
 	}
