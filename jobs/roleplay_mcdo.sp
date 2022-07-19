@@ -436,7 +436,7 @@ public Action BuildingCafetiere_post(Handle timer, any entity) {
 	HookSingleEntityOutput(entity, "OnBreak", BuildingCafetiere_break);
 	SDKHook(entity, SDKHook_OnTakeDamage, DamageMachine);
 	
-	CreateTimer(1.0, Frame_Microwave, entity);
+	CreateTimer(1.0, Frame_Cafetiere, entity);
 	rp_HookEvent(client, RP_OnPlayerUse, fwdOnPlayerUse);
 	
 	return Plugin_Handled;
