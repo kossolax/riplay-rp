@@ -585,7 +585,7 @@ void giveHamburger(int client, int amount){
 				continue;
 			if( rp_GetItemInt(i, item_type_auto) == 1 )
 				continue;
-			if( rp_GetItemInt(i, item_type_prix) <= 3000 )
+			if( rp_GetItemInt(i, item_type_prix) >= 3000 )
 				continue;
 			jobID = rp_GetItemInt(i, item_type_job_id);
 			if(jobID != 21)
