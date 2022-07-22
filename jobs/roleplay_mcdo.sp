@@ -1170,7 +1170,7 @@ public Action Task_UningiteEntity(Handle timer, any client) {
 
 public Action Cmd_ItemJuce(int client) {
 	float dur = DRUG_DURATION;
-
+	char arg1[12];
 	GetCmdArg(1, arg1, sizeof(arg1)); int client = StringToInt(arg1);
 	int item_id = GetCmdArgInt(args);
 	char item_name[64];
@@ -1307,4 +1307,10 @@ float GetVitaFactor(int level) {
 	}
 	
 	return vit_factor;
+}
+void UningiteEntity(int entity) {
+	
+	int ent = GetEntPropEnt(entity, Prop_Data, "m_hEffectEntity");
+	if( IsValidEdict(ent) )
+		SetEntPropFloat(ent, Prop_Data, "m_flLifetime", 0.0); 
 }
