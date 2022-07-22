@@ -1444,6 +1444,7 @@ public Action Cmd_ItemAlcool(int args) {
 	client = GetCmdArgInt(3);
 	item_id = GetCmdArgInt(args);
 	GetCmdArg(1, arg, sizeof(arg));
+	float dur = DRUG_DURATION;
 	
 	if(StrEqual(arg,"me")){
 		dur = 60.0;
