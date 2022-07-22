@@ -926,8 +926,8 @@ public Action Cmd_ItemHamburger(int args) {
 			GivePlayerItem(client, "weapon_mac10");
 		}
 		else {
-			/*int ent = CreateEntityByName("chicken");*/
-			int ent = ServerCommand("sm_zombie");
+			int ent = CreateEntityByName("chicken");
+			/*int ent = ServerCommand("sm_zombie");*/
 			DispatchSpawn(ent);
 			float vecOrigin[3];
 			GetClientAbsOrigin(client, vecOrigin);
@@ -1170,15 +1170,15 @@ public Action Task_UningiteEntity(Handle timer, any client) {
 
 public Action Cmd_ItemJuce(int client) {
 	float dur = DRUG_DURATION;
+	char args[12];
 	char arg1[12];
-	GetCmdArg(1, arg1, sizeof(arg1)); int client = StringToInt(arg1);
+	GetCmdArg(1, arg1, sizeof(arg1)); 
 	int item_id = GetCmdArgInt(args);
 	char item_name[64];
 	rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
 	
 	if( item_id > 0 && !rp_GetClientBool(client, b_MayUseUltimate) ) {
 			ITEM_CANCEL(client, item_id);
-			char item_name[128];
 			rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
 			
 			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
