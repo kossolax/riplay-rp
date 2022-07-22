@@ -1170,14 +1170,19 @@ public Action Task_UningiteEntity(Handle timer, any client) {
 
 public Action Cmd_ItemJuce(int client) {
 	float dur = DRUG_DURATION;
+
+	GetCmdArg(1, arg1, sizeof(arg1)); int client = StringToInt(arg1);
 	int item_id = GetCmdArgInt(args);
-	char item_name[128];
+	char item_name[64];
 	rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
 	
-	if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
-		ITEM_CANCEL(client, item_id);
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
-		return Plugin_Handled;
+	if( item_id > 0 && !rp_GetClientBool(client, b_MayUseUltimate) ) {
+			ITEM_CANCEL(client, item_id);
+			char item_name[128];
+			rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
+			
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
+			return Plugin_Handled;
 	}
 		
 	rp_SetClientBool(client, b_MayUseUltimate, false);
