@@ -1168,11 +1168,10 @@ public Action Task_UningiteEntity(Handle timer, any client) {
 	UningiteEntity(client);
 }
 
-public Action Cmd_ItemJuce(int client) {
+public Action Cmd_ItemJuce(int client, int args) {
 	float dur = DRUG_DURATION;
 	char arg1[12];
-	GetCmdArg(1, arg1, sizeof(arg1)); 
-	int item_id = GetCmdArgInt(arg1);
+	int item_id = GetCmdArgInt(args);
 	char item_name[64];
 	rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
 	
@@ -1188,6 +1187,7 @@ public Action Cmd_ItemJuce(int client) {
 	CreateTimer(dur+5.0, AllowUltimate, client);
 		
 	rp_SetClientFloat(client, fl_invisibleTime, GetGameTime() + dur);
+	return Plugin_Handled;
 }
 
 public Action fwdCigSpeed(int client, float& speed) {
