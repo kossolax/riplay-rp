@@ -1187,7 +1187,6 @@ public Action Cmd_ItemJuce(int client, int args) {
 	CreateTimer(dur+5.0, AllowUltimate, client);
 		
 	rp_SetClientFloat(client, fl_invisibleTime, GetGameTime() + dur);
-	return Plugin_Handled;
 }
 
 public Action fwdCigSpeed(int client, float& speed) {
