@@ -76,7 +76,6 @@ public void OnPluginStart() {
 	RegServerCmd("rp_item_cafe",		Cmd_ItemCafe,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_cafetiere",		Cmd_ItemCafetiere,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_fountain",		Cmd_ItemFountain,			"RP-ITEM",	FCVAR_UNREGISTERED);
-	RegServerCmd("rp_item_water",		Cmd_ItemWater,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_juce",		Cmd_ItemJuce,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	
 	g_nbMdItems = -1;
@@ -173,7 +172,7 @@ public int MenuKnife(Handle p_hItemMenu, MenuAction p_oAction, int client, int p
 		}
 		
 		g_iSkinID[client] = GiveNamedItem_GetItemDefinitionByClassname(option);
-		/*int wpn = GivePlayerItem(client, option);*/
+		int wpn = GivePlayerItem(client, option);
 		
 		FakeClientCommand(client, "use weapon_knife; use weapon_bayonet"); 
 		rp_ClientGiveItem(client, ITEM_KNIFE, -1);
@@ -214,6 +213,7 @@ public void OnMapStart() {
 }
 public void OnClientPostAdminCheck(int client){
 	rp_HookEvent(client, RP_OnPlayerBuild,	fwdOnPlayerBuild);
+	rp_SetClientBool(client, b_MaySteal, true);
 }
 // ------------------------------------------------------------------------------
 public Action fwdOnPlayerBuild(int client, float& cooldown){
@@ -1154,18 +1154,6 @@ public Action Cmd_ItemCafe(int args) {
 	rp_HookEvent(client, RP_PrePlayerPhysic, fwdCigSpeed, 90.0);
 	
 	rp_IncrementSuccess(client, success_list_cafeine);
-}
-
-public Action Cmd_ItemWater(int client) {
-	
-	UningiteEntity(client);
-	for(float i=0.1; i<=30.0; i+= 0.50) {
-		CreateTimer(i, Task_UningiteEntity, client);
-	}
-}
-
-public Action Task_UningiteEntity(Handle timer, any client) {
-	UningiteEntity(client);
 }
 
 public Action Cmd_ItemJuce(int client) {
