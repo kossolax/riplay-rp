@@ -76,6 +76,8 @@ public void OnPluginStart() {
 	RegServerCmd("rp_item_cafe",		Cmd_ItemCafe,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_cafetiere",		Cmd_ItemCafetiere,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_fountain",		Cmd_ItemFountain,			"RP-ITEM",	FCVAR_UNREGISTERED);
+	RegServerCmd("rp_item_water",		Cmd_ItemWater,			"RP-ITEM",	FCVAR_UNREGISTERED);
+	RegServerCmd("rp_item_juce",		Cmd_ItemJuce,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	
 	g_nbMdItems = -1;
 	for (int j = 1; j <= MaxClients; j++)
@@ -651,7 +653,7 @@ public Action fwdOnPlayerUse(int client) {
 			if( GetVectorDistance(vecOrigin, vecOrigin2) <= 50 ) {
 				int time = rp_GetBuildingData(i, BD_count);
 				int maxtime = rp_GetBuildingData(i, BD_max);
-				int Drink[] =  { 18, 23, 119, 274 };
+				int Drink[] =  { 18, 119, 274, 373, 374 };
 				int rnd = Math_GetRandomInt(0, sizeof(Drink) - 1);
 				char item[128];
 				if( time >= maxtime &&  rp_GetBuildingData( i, BD_owner )) {
@@ -1152,6 +1154,28 @@ public Action Cmd_ItemCafe(int args) {
 	rp_HookEvent(client, RP_PrePlayerPhysic, fwdCigSpeed, 90.0);
 	
 	rp_IncrementSuccess(client, success_list_cafeine);
+}
+
+public Action Cmd_ItemWater(int client) {
+	
+	UningiteEntity(client);
+	for(float i=0.1; i<=30.0; i+= 0.50) {
+		CreateTimer(i, Task_UningiteEntity, client);
+	}
+}
+
+public Action Cmd_ItemJuce(int client) {
+	
+	if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
+		ITEM_CANCEL(client, item_id);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
+		return Plugin_Handled;
+	}
+		
+	rp_SetClientBool(client, b_MayUseUltimate, false);
+	CreateTimer(dur+5.0, AllowUltimate, client);
+		
+	rp_SetClientFloat(client, fl_invisibleTime, GetGameTime() + dur);
 }
 
 public Action fwdCigSpeed(int client, float& speed) {
