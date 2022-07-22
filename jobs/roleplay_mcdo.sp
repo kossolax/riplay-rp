@@ -1170,10 +1170,9 @@ public Action Task_UningiteEntity(Handle timer, any client) {
 
 public Action Cmd_ItemJuce(int client) {
 	float dur = DRUG_DURATION;
-	char args[12];
 	char arg1[12];
 	GetCmdArg(1, arg1, sizeof(arg1)); 
-	int item_id = GetCmdArgInt(args);
+	int item_id = GetCmdArgInt(arg1);
 	char item_name[64];
 	rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
 	
