@@ -592,7 +592,7 @@ public void BuildingFountain_break(const char[] output, int caller, int activato
 	TE_SendToAll();
 }
 public Action fwdOnPlayerUse(int client) {
-	static char tmp[64], tmp2[64], tmp3[64];
+	static char tmp[64], tmp2[64], tmp3[64],tmp4[64];
 	static float vecOrigin[3],vecOrigin2[3];
 	GetClientAbsOrigin(client, vecOrigin);
 
@@ -635,7 +635,7 @@ public Action fwdOnPlayerUse(int client) {
 				int time = rp_GetBuildingData(i, BD_count);
 				int maxtime = rp_GetBuildingData(i, BD_max);
 				int Drink[] =  { 18, 23, 119, 274 };
-				int rnd = Math_GetRandomInt(0, sizeof(MP) - 1);
+				int rnd = Math_GetRandomInt(0, sizeof(Drink) - 1);
 				if( time >= maxtime &&  rp_GetBuildingData( i, BD_owner )) {
 					rp_SetBuildingData(i, BD_count, 0);
 					if( rp_GetBuildingData(i, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type) == 21)
