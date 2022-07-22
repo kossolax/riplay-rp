@@ -39,6 +39,11 @@
 	"Cafetiere_Ready"
 	{
 		"fr"		"{blue}Votre café est pret ! bonne dégustation =){default}"
-		"en"		"{blue}Your microwave is ready!{default}"		
+		"en"		"{blue}Your coffee is ready! good tasting =){default}"		
 	}
-}
+	
+	"Fountain_Ready"
+	{
+		"fr"		"{blue}Votre boisson est servie !{default}"
+		"en"		"{blue}Your drink is served !{default}"		
+	}
