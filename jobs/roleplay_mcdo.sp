@@ -173,7 +173,7 @@ public int MenuKnife(Handle p_hItemMenu, MenuAction p_oAction, int client, int p
 		}
 		
 		g_iSkinID[client] = GiveNamedItem_GetItemDefinitionByClassname(option);
-		int wpn = GivePlayerItem(client, option);
+		/*int wpn = GivePlayerItem(client, option);*/
 		
 		FakeClientCommand(client, "use weapon_knife; use weapon_bayonet"); 
 		rp_ClientGiveItem(client, ITEM_KNIFE, -1);
@@ -1168,10 +1168,9 @@ public Action Task_UningiteEntity(Handle timer, any client) {
 	UningiteEntity(client);
 }
 
-public Action Cmd_ItemJuce(int client, int args) {
+public Action Cmd_ItemJuce(int client) {
 	float dur = DRUG_DURATION;
-	char arg1[12];
-	int item_id = GetCmdArgInt(args);
+	int item_id = 374;
 	char item_name[64];
 	rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
 	
@@ -1187,6 +1186,7 @@ public Action Cmd_ItemJuce(int client, int args) {
 	CreateTimer(dur+5.0, AllowUltimate, client);
 		
 	rp_SetClientFloat(client, fl_invisibleTime, GetGameTime() + dur);
+	return Plugin_Handled;
 }
 
 public Action fwdCigSpeed(int client, float& speed) {
