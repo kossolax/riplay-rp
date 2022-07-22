@@ -1445,23 +1445,14 @@ public Action Cmd_ItemAlcool(int args) {
 	item_id = GetCmdArgInt(args);
 	GetCmdArg(1, arg, sizeof(arg));
 	
-	/*CPrintToChat(client, ""...MOD_TAG..." Cette item est temporairement désactivé, vous avez été remboursé par la banque de Princeton.");
-	
-	if (StrEqual(arg,"me")){
-	rp_ClientMoney(client, i_Bank, 100);
-	rp_SetJobCapital(1, rp_GetJobCapital(211) - 100);
-	LogToGame("[TSX-RP] [DROGUE] %L à été rembousé de 100$ par la banque de Princeton pour ITEM DESACTIVE.", client);
-	}
-	
-	else if (StrEqual(arg,"aim")){
-	rp_ClientMoney(client, i_Bank, 200);
-	rp_SetJobCapital(1, rp_GetJobCapital(211) - 200);
-	LogToGame("[TSX-RP] [DROGUE] %L à été rembousé de 200$ par la banque de Princeton pour ITEM DESACTIVE.", client);
-	}*/
-	
-	
 	if(StrEqual(arg,"me")){
-		target = client;
+		dur = 60.0;
+		
+		rp_SetClientBool(client, b_MayUseUltimate, false);
+		CreateTimer(dur + 5.0, AllowUltimate, client);
+		rp_HookEvent(client, RP_PreTakeDamage, fwdAlcool, dur);
+		rp_Effect_ShakingVision(client);
+		rp_IncrementSuccess(client, success_list_alcool_abuse);	
 	}
 	else if (StrEqual(arg,"aim")){
 		target = rp_GetClientTarget(client);
@@ -1479,23 +1470,26 @@ public Action Cmd_ItemAlcool(int args) {
 			ITEM_CANCEL(client, item_id);
 			return Plugin_Handled;
 		}
-		float vecTarget[3];
-		GetClientAbsOrigin(client, vecTarget);
-		TE_SetupBeamRingPoint(vecTarget, 10.0, 500.0, g_cBeam, g_cGlow, 0, 15, 0.5, 50.0, 0.0, { 255, 0, 191, 200}, 10, 0);
+		
+		dur = 60.0;
+		
+		rp_SetClientBool(client, b_MayUseUltimate, false);
+		CreateTimer(dur + 5.0, AllowUltimate, target);
+		rp_Effect_ShakingVision(target);
 		rp_SetClientInt(client, i_LastAgression, GetTime());
 		LogToGame("[TSX-RP] [DROGUE] %L a alcoolisé %L.", client, target);
 		rp_ClientAggroIncrement(client, target, 1000);
 	}
-
-	float level = rp_GetClientFloat(target, fl_Alcool) + GetCmdArgFloat(2);
-	rp_SetClientFloat(target, fl_Alcool, level);
-	rp_IncrementSuccess(target, success_list_alcool_abuse);	
-	if( level > 4.0 ) {
-		SDKHooks_TakeDamage(target, target, target, (25 + GetClientHealth(target))/2.0);
-	}
+	
 	return Plugin_Handled;
 }
 // ----------------------------------------------------------------------------
+public Action fwdAlcool(int victim, int attacker, float& damage) {
+	damage /= 2.0;
+	
+	return Plugin_Changed;
+}
+
 public Action Cmd_ItemKevlarBox(int args) {
 	int client = GetCmdArgInt(1);
 	
