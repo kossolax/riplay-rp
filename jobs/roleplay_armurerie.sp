@@ -47,7 +47,7 @@ public void OnPluginStart() {
 	RegServerCmd("rp_giveitem_pvp",		Cmd_GiveItemPvP,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_balltype",	Cmd_ItemBallType,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_redraw",		Cmd_ItemRedraw,			"RP-ITEM",	FCVAR_UNREGISTERED);
-	RegServerCmd("rp_item_sanandreas",	Cmd_ItemSanAndreas,		"RP-ITEM",	FCVAR_UNREGISTERED);
+	//RegServerCmd("rp_item_sanandreas",	Cmd_ItemSanAndreas,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	
 	for (int i = 1; i <= MaxClients; i++)
 		if( IsValidClient(i) )
@@ -538,7 +538,7 @@ public Action Cmd_ItemRedraw(int args) {
 }
 
 // ----------------------------------------------------------------------------
-public Action Cmd_ItemSanAndreas(int args) {
+/*public Action Cmd_ItemSanAndreas(int args) {
 	
 	int client = GetCmdArgInt(1);
 	int item_id = GetCmdArgInt(args);
@@ -571,4 +571,4 @@ public Action Cmd_ItemSanAndreas(int args) {
 	
 	SDKHook(wepid, SDKHook_Reload, OnWeaponReload);
 	return Plugin_Handled;
-}
+}*/
