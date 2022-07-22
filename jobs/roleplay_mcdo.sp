@@ -658,8 +658,9 @@ public Action fwdOnPlayerUse(int client) {
 						rp_SetBuildingData(i, BD_count, 0);
 					if( rp_GetBuildingData(i, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type) == 21)
 						rp_ClientGiveItem(client, Drink[rnd], 2);
-						/*rp_GetItemData(Drink[rnd], item_type_name, tmp, sizeof(tmp));
-						CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Give", client, 2, tmp);*/
+						char item[64]
+						rp_GetItemData(Drink[rnd], item_type_name, item, sizeof(item));
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Give", client, 2, item);
 					else if( rp_GetPlayerZoneAppart(i) > 0 )
 						rp_ClientGiveItem(client, Drink[rnd], 1);
 						/*rp_GetItemData(Drink[rnd], item_type_name, tmp, sizeof(tmp));
