@@ -1170,6 +1170,9 @@ public Action Task_UningiteEntity(Handle timer, any client) {
 
 public Action Cmd_ItemJuce(int client) {
 	float dur = DRUG_DURATION;
+	int item_id = GetCmdArgInt(args);
+	char item_name[128];
+	rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
 	
 	if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
 		ITEM_CANCEL(client, item_id);
