@@ -75,6 +75,7 @@ public void OnPluginStart() {
 	RegServerCmd("rp_item_microwaves",	Cmd_ItemMicroWave,		"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_cafe",		Cmd_ItemCafe,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_cafetiere",		Cmd_ItemCafetiere,			"RP-ITEM",	FCVAR_UNREGISTERED);
+	RegServerCmd("rp_item_fountain",		Cmd_ItemFountain,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	
 	g_nbMdItems = -1;
 	for (int j = 1; j <= MaxClients; j++)
@@ -113,6 +114,16 @@ public Action Cmd_ItemCafetiere(int args) {
 	int client = GetCmdArgInt(1);
 	
 	if( BuildingCafetiere(client) == 0 ) {
+		int item_id = GetCmdArgInt(args);
+		
+		ITEM_CANCEL(client, item_id);
+	}
+}
+
+public Action Cmd_ItemFountain(int args) {
+	int client = GetCmdArgInt(1);
+	
+	if( BuildingFountain(client) == 0 ) {
 		int item_id = GetCmdArgInt(args);
 		
 		ITEM_CANCEL(client, item_id);
@@ -461,6 +472,125 @@ public void BuildingCafetiere_break(const char[] output, int caller, int activat
 	TE_SetupSparks(vecOrigin, view_as<float>({0.0,0.0,1.0}),120,40);
 	TE_SendToAll();
 }
+//////
+int BuildingFountain(int client) {
+	
+	if( !rp_IsBuildingAllowed(client) )
+		return 0;
+	
+	char classname[64], tmp[64];
+	Format(classname, sizeof(classname), "rp_fountain");
+	
+	for(int i=1; i<=2048; i++) {
+		if( !IsValidEdict(i) )
+			continue;
+		if( !IsValidEntity(i) )
+			continue;
+			
+		GetEdictClassname(i, tmp, 63);
+		
+		if( StrEqual(classname, tmp) && rp_GetBuildingData(i, BD_owner) == client ) {
+			CPrintToChat(client, ""...MOD_TAG..." %T", "Build_TooMany", client);
+			return 0;
+		}
+	}
+	
+	float vecOrigin[3];
+	GetClientAbsOrigin(client, vecOrigin);
+	vecOrigin[2] += 16.0;
+	
+	EmitSoundToAllAny("player/ammo_pack_use.wav", client, _, _, _, 0.66);
+	
+	int ent = CreateEntityByName("prop_physics");
+	
+	DispatchKeyValue(ent, "classname", classname);
+	DispatchKeyValue(ent, "model", "models/mds/mcdonalds/mcdonaldsfountain.mdl");
+	DispatchSpawn(ent);
+	ActivateEntity(ent);
+	
+	SetEntityModel(ent,"models/mds/mcdonalds/mcdonaldsfountain.mdl");
+	SetEntPropEnt(ent, Prop_Send, "m_hOwnerEntity", client);
+	SetEntProp( ent, Prop_Data, "m_takedamage", 2);
+	SetEntProp( ent, Prop_Data, "m_iHealth", 5125);
+	
+	
+	TeleportEntity(ent, vecOrigin, NULL_VECTOR, NULL_VECTOR);
+	
+	SetEntityRenderMode(ent, RENDER_NONE);
+	ServerCommand("sm_effect_fading \"%i\" \"2.5\" \"0\"", ent);
+	
+	SetEntityMoveType(client, MOVETYPE_NONE);
+	SetEntityMoveType(ent, MOVETYPE_NONE);
+	
+	
+	rp_SetBuildingData(ent, BD_started, GetTime());
+	rp_SetBuildingData(ent, BD_owner, client );
+	rp_SetBuildingData(ent, BD_FromBuild, 0);
+	Entity_SetMaxHealth(ent, Entity_GetHealth(ent));
+	
+	g_eMwAct[ent] = true;
+	CreateTimer(3.0, BuildingFountain_post, ent);
+	return ent;
+	
+}
+public Action BuildingFountain_post(Handle timer, any entity) {
+	if( !IsValidEdict(entity) && !IsValidEntity(entity) )
+		return Plugin_Handled;
+	int client = GetEntPropEnt(entity, Prop_Send, "m_hOwnerEntity");
+	int time;
+	int job = rp_GetClientInt(client, i_Job);
+	switch(job){
+		case 21: time = 55;
+		case 22: time = 60;
+		case 23: time = 65;
+		case 24: time = 70;
+		case 25: time = 75;
+		case 26: time = 80;
+		default: time = 90;
+	}
+
+	if( rp_GetBuildingData(entity, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(entity), zone_type_type) != 21 ) {
+		time *= 2;
+	}
+	
+	rp_SetBuildingData(entity, BD_max, time);
+	rp_SetBuildingData(entity, BD_count, 0);
+
+	SetEntityMoveType(client, MOVETYPE_WALK);
+	
+	if( rp_IsInPVP(entity) ) {
+		rp_ClientColorize(entity);
+	}
+	
+	SetEntProp( entity, Prop_Data, "m_takedamage", 2);
+	HookSingleEntityOutput(entity, "OnBreak", BuildingFountain_break);
+	SDKHook(entity, SDKHook_OnTakeDamage, DamageMachine);
+	
+	CreateTimer(1.0, Frame_Fountain, entity);
+	rp_HookEvent(client, RP_OnPlayerUse, fwdOnPlayerUse);
+	
+	return Plugin_Handled;
+}
+public void BuildingFountain_break(const char[] output, int caller, int activator, float delay) {
+	
+	int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
+	
+	if( IsValidClient(activator) && IsValidClient(owner) ) {
+		rp_ClientAggroIncrement(activator, owner, 1000);
+	}
+	
+	if( IsValidClient(owner) ) {
+		char tmp[128];
+		GetEdictClassname(caller, tmp, sizeof(tmp));
+		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Build_Destroyed", owner, tmp);
+		rp_UnhookEvent(owner, RP_OnPlayerUse, fwdOnPlayerUse);
+	}
+	
+	float vecOrigin[3];
+	Entity_GetAbsOrigin(caller,vecOrigin);
+	TE_SetupSparks(vecOrigin, view_as<float>({0.0,0.0,1.0}),120,40);
+	TE_SendToAll();
+}
 public Action fwdOnPlayerUse(int client) {
 	static char tmp[64], tmp2[64], tmp3[64];
 	static float vecOrigin[3],vecOrigin2[3];
@@ -468,7 +598,8 @@ public Action fwdOnPlayerUse(int client) {
 
 
 	Format(tmp2, sizeof(tmp2), "rp_microwave");
-	Format(tmp3, sizeof(tmp2), "rp_cafetiere");
+	Format(tmp3, sizeof(tmp3), "rp_cafetiere");
+	Format(tmp4, sizeof(tmp4), "rp_fountain");
 
 	for(int i=1; i<=2048; i++) {
 		if( !IsValidEdict(i) )
@@ -503,6 +634,26 @@ public Action fwdOnPlayerUse(int client) {
 			if( GetVectorDistance(vecOrigin, vecOrigin2) <= 50 ) {
 				int time = rp_GetBuildingData(i, BD_count);
 				int maxtime = rp_GetBuildingData(i, BD_max);
+				int Drink[] =  { 18, 23, 119, 274 };
+				int rnd = Math_GetRandomInt(0, sizeof(MP) - 1);
+				if( time >= maxtime &&  rp_GetBuildingData( i, BD_owner )) {
+					rp_SetBuildingData(i, BD_count, 0);
+					if( rp_GetBuildingData(i, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type) == 21)
+						rp_ClientGiveItem(client, Drink[rnd], 2);
+					else if( rp_GetPlayerZoneAppart(i) > 0 )
+						rp_ClientGiveItem(client, Drink[rnd], 1);
+					else
+						rp_ClientGiveItem(client, Drink[rnd], 1);
+				}
+				g_eMwAct[i] = true;
+				CreateTimer(1.0, Frame_Cafetiere, i);
+			}
+		}
+		if( StrEqual(tmp, tmp4) && rp_GetBuildingData(i, BD_owner) == client ) {
+			Entity_GetAbsOrigin(i, vecOrigin2);
+			if( GetVectorDistance(vecOrigin, vecOrigin2) <= 50 ) {
+				int time = rp_GetBuildingData(i, BD_count);
+				int maxtime = rp_GetBuildingData(i, BD_max);
 				if( time >= maxtime &&  rp_GetBuildingData( i, BD_owner )) {
 						rp_SetBuildingData(i, BD_count, 0);
 					if( rp_GetBuildingData(i, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type) == 21)
@@ -513,9 +664,11 @@ public Action fwdOnPlayerUse(int client) {
 						giveCafe(client, 1);
 				}
 				g_eMwAct[i] = true;
-				CreateTimer(1.0, Frame_Cafetiere, i);
+				CreateTimer(1.0, Frame_Fountain, i);
 			}
 		}
+		
+		
 	}
 	return Plugin_Continue;
 }
@@ -573,6 +726,32 @@ public Action Frame_Cafetiere(Handle timer, any ent) {
 		rp_SetBuildingData(ent, BD_count, ++time);
 	}
 	CreateTimer(1.0, Frame_Cafetiere, ent);
+	return Plugin_Handled;
+}
+public Action Frame_Fountain(Handle timer, any ent) {
+	if(!IsValidEdict(ent) || !IsValidEntity(ent)){
+		StopSoundAny(ent, SNDCHAN_AUTO, "ambient/machines/lab_loop1.wav");
+		return Plugin_Handled;
+	}
+	
+	int owner = rp_GetBuildingData(ent, BD_owner);
+	int time = rp_GetBuildingData(ent, BD_count);
+	int maxtime = rp_GetBuildingData(ent, BD_max);
+	if(time >= maxtime){
+		EmitSoundToAllAny("ambient/tones/equip2.wav", ent);
+		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Fountain_Ready", owner);
+		g_eMwAct[ent] = false;
+		return Plugin_Handled;
+	}
+	if(time == 0){
+		EmitSoundToAllAny("ambient/machines/lab_loop1.wav", ent, _, _, _, 0.33);
+		SDKHooks_TakeDamage(ent, ent, ent, 125.0);
+	}
+	
+	if( rp_GetClientInt(owner, i_TimeAFK) <= 60 ) {
+		rp_SetBuildingData(ent, BD_count, ++time);
+	}
+	CreateTimer(1.0, Frame_Fountain, ent);
 	return Plugin_Handled;
 }
 void giveHamburger(int client, int amount){
