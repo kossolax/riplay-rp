@@ -1445,7 +1445,7 @@ public Action Cmd_ItemAlcool(int args) {
 	item_id = GetCmdArgInt(args);
 	GetCmdArg(1, arg, sizeof(arg));
 	
-	CPrintToChat(client, ""...MOD_TAG..." Cette item est temporairement désactivé, vous avez été remboursé par la banque de Princeton.");
+	/*CPrintToChat(client, ""...MOD_TAG..." Cette item est temporairement désactivé, vous avez été remboursé par la banque de Princeton.");
 	
 	if (StrEqual(arg,"me")){
 	rp_ClientMoney(client, i_Bank, 100);
@@ -1457,9 +1457,9 @@ public Action Cmd_ItemAlcool(int args) {
 	rp_ClientMoney(client, i_Bank, 200);
 	rp_SetJobCapital(1, rp_GetJobCapital(211) - 200);
 	LogToGame("[TSX-RP] [DROGUE] %L à été rembousé de 200$ par la banque de Princeton pour ITEM DESACTIVE.", client);
-	}
+	}*/
 	
-	/*
+	
 	if(StrEqual(arg,"me")){
 		target = client;
 	}
@@ -1492,7 +1492,7 @@ public Action Cmd_ItemAlcool(int args) {
 	rp_IncrementSuccess(target, success_list_alcool_abuse);	
 	if( level > 4.0 ) {
 		SDKHooks_TakeDamage(target, target, target, (25 + GetClientHealth(target))/2.0);
-	}*/
+	}
 	return Plugin_Handled;
 }
 // ----------------------------------------------------------------------------
