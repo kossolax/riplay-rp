@@ -634,16 +634,14 @@ public Action fwdOnPlayerUse(int client) {
 			if( GetVectorDistance(vecOrigin, vecOrigin2) <= 50 ) {
 				int time = rp_GetBuildingData(i, BD_count);
 				int maxtime = rp_GetBuildingData(i, BD_max);
-				int Drink[] =  { 18, 23, 119, 274 };
-				int rnd = Math_GetRandomInt(0, sizeof(Drink) - 1);
 				if( time >= maxtime &&  rp_GetBuildingData( i, BD_owner )) {
 					rp_SetBuildingData(i, BD_count, 0);
 					if( rp_GetBuildingData(i, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type) == 21)
-						rp_ClientGiveItem(client, Drink[rnd], 2);
+						giveCafe(client, 2);
 					else if( rp_GetPlayerZoneAppart(i) > 0 )
-						rp_ClientGiveItem(client, Drink[rnd], 1);
+						giveCafe(client, 1);
 					else
-						rp_ClientGiveItem(client, Drink[rnd], 1);
+						giveCafe(client, 1);
 				}
 				g_eMwAct[i] = true;
 				CreateTimer(1.0, Frame_Cafetiere, i);
@@ -654,14 +652,16 @@ public Action fwdOnPlayerUse(int client) {
 			if( GetVectorDistance(vecOrigin, vecOrigin2) <= 50 ) {
 				int time = rp_GetBuildingData(i, BD_count);
 				int maxtime = rp_GetBuildingData(i, BD_max);
+				int Drink[] =  { 18, 23, 119, 274 };
+				int rnd = Math_GetRandomInt(0, sizeof(Drink) - 1);
 				if( time >= maxtime &&  rp_GetBuildingData( i, BD_owner )) {
 						rp_SetBuildingData(i, BD_count, 0);
 					if( rp_GetBuildingData(i, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type) == 21)
-						giveCafe(client, 2);
+						rp_ClientGiveItem(client, Drink[rnd], 2);
 					else if( rp_GetPlayerZoneAppart(i) > 0 )
-						giveCafe(client, 1);
+						rp_ClientGiveItem(client, Drink[rnd], 1);
 					else
-						giveCafe(client, 1);
+						rp_ClientGiveItem(client, Drink[rnd], 1);
 				}
 				g_eMwAct[i] = true;
 				CreateTimer(1.0, Frame_Fountain, i);
