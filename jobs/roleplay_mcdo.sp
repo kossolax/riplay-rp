@@ -636,7 +636,7 @@ public Action fwdOnPlayerUse(int client) {
 				if( time >= maxtime &&  rp_GetBuildingData( i, BD_owner )) {
 					rp_SetBuildingData(i, BD_count, 0);
 						
-					if( Math_GetRandomInt(1, 4) == 4 ) {
+					if( Math_GetRandomInt(1, 10) == 4 ) {
 						float vita = rp_GetClientFloat(client, fl_Vitality);
 						rp_SetClientFloat(client, fl_Vitality, vita + 256.0);
 						CPrintToChat(client, ""...MOD_TAG..." Votre machine à café viens d'augmenter votre vitalitée.");
