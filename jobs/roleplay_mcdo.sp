@@ -76,7 +76,6 @@ public void OnPluginStart() {
 	RegServerCmd("rp_item_cafe",		Cmd_ItemCafe,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_cafetiere",		Cmd_ItemCafetiere,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	RegServerCmd("rp_item_fountain",		Cmd_ItemFountain,			"RP-ITEM",	FCVAR_UNREGISTERED);
-	RegServerCmd("rp_item_juce",		Cmd_ItemJuce,			"RP-ITEM",	FCVAR_UNREGISTERED);
 	
 	g_nbMdItems = -1;
 	for (int j = 1; j <= MaxClients; j++)
@@ -213,7 +212,6 @@ public void OnMapStart() {
 }
 public void OnClientPostAdminCheck(int client){
 	rp_HookEvent(client, RP_OnPlayerBuild,	fwdOnPlayerBuild);
-	rp_SetClientBool(client, b_MaySteal, true);
 }
 // ------------------------------------------------------------------------------
 public Action fwdOnPlayerBuild(int client, float& cooldown){
@@ -1156,26 +1154,6 @@ public Action Cmd_ItemCafe(int args) {
 	rp_IncrementSuccess(client, success_list_cafeine);
 }
 
-public Action Cmd_ItemJuce(int client) {
-	float dur = DRUG_DURATION;
-	int item_id = 374;
-	char item_name[64];
-	rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
-	
-	if(!rp_GetClientBool(client, b_MayUseUltimate) ) {
-			ITEM_CANCEL(client, item_id);
-			rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
-			
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
-			return Plugin_Handled;
-	}
-		
-	rp_SetClientBool(client, b_MayUseUltimate, false);
-	CreateTimer(dur+5.0, AllowUltimate, client);
-		
-	rp_SetClientFloat(client, fl_invisibleTime, GetGameTime() + dur);
-}
-
 public Action fwdCigSpeed(int client, float& speed) {
 	speed += 0.75;
 	
@@ -1292,10 +1270,4 @@ float GetVitaFactor(int level) {
 	}
 	
 	return vit_factor;
-}
-void UningiteEntity(int entity) {
-	
-	int ent = GetEntPropEnt(entity, Prop_Data, "m_hEffectEntity");
-	if( IsValidEdict(ent) )
-		SetEntPropFloat(ent, Prop_Data, "m_flLifetime", 0.0); 
 }
