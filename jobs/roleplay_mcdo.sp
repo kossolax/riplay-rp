@@ -703,16 +703,48 @@ public Action Frame_Microwave(Handle timer, any ent) {
 	int owner = rp_GetBuildingData(ent, BD_owner);
 	int time = rp_GetBuildingData(ent, BD_count);
 	int maxtime = rp_GetBuildingData(ent, BD_max);
+	int Burger[] =  { 18, 119, 274, 373, 374 };
+	int rnd = Math_GetRandomInt(0, sizeof(Burger) - 1);
+	char item[128];
 	if(time >= maxtime){
 		EmitSoundToAllAny("ambient/tones/equip2.wav", ent);
 		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Microwave_Ready", owner);
 		if( rp_GetBuildingData(ent, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(ent), zone_type_type) == 21)
-			giveHamburger(owner, 2);
-		else
-			giveHamburger(owner, 1);
+			rp_GetItemData(Burger[rnd], item_type_name, item, sizeof(item));
+			CPrintToChat(owner, "" ...MOD_TAG... " %T", "Item_Give", owner, 2, item);
+			rp_ClientGiveItem(owner, Burger[rnd], 2);
+		}
+		else{
+			rp_GetItemData(Burger[rnd], item_type_name, item, sizeof(item));
+			CPrintToChat(owner, "" ...MOD_TAG... " %T", "Item_Give", owner, 1, item);
+			rp_ClientGiveItem(owner, Burger[rnd], 1);
+		}
 		g_eMwAct[ent] = false;
 		return Plugin_Handled;
 	}
+	
+	int Drink[] =  { 18, 119, 274, 373, 374 };
+				int rnd = Math_GetRandomInt(0, sizeof(Drink) - 1);
+				char item[128];
+				if( time >= maxtime &&  rp_GetBuildingData( i, BD_owner )) {
+						rp_SetBuildingData(i, BD_count, 0);
+					if( rp_GetBuildingData(i, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type) == 21){
+						rp_GetItemData(Drink[rnd], item_type_name, item, sizeof(item));
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Give", client, 2, item);
+						rp_ClientGiveItem(client, Drink[rnd], 2);
+					}
+					else if( rp_GetPlayerZoneAppart(i) > 0 ){
+						rp_GetItemData(Drink[rnd], item_type_name, item, sizeof(item));
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Give", client, 1, item);
+						rp_ClientGiveItem(client, Drink[rnd], 1);
+					}
+					else{
+						rp_GetItemData(Drink[rnd], item_type_name, item, sizeof(item));
+						CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Give", client, 1, item);
+						rp_ClientGiveItem(client, Drink[rnd], 1);
+					}
+				}
+	
 	if(time == 0){
 		EmitSoundToAllAny("ambient/machines/lab_loop1.wav", ent, _, _, _, 0.33);
 		SDKHooks_TakeDamage(ent, ent, ent, 125.0);
@@ -781,6 +813,7 @@ void giveHamburger(int client, int amount){
 	
 	if( g_nbMdItems == -1 ) {
 		int jobID;
+		rp_GetItemData(i, item_type_extra_cmd, tmp2, sizeof(tmp2));
 		for(int i = 0; i < MAX_ITEMS; i++){
 			if( rp_GetItemInt(i, item_type_prix) <= 0 )
 				continue;
@@ -791,6 +824,8 @@ void giveHamburger(int client, int amount){
 			jobID = rp_GetItemInt(i, item_type_job_id);
 			if(jobID != 21)
 				continue;
+			if( StrContains(tmp2, "rp_item_hamburger") != 0 )
+			continue;
 			
 			rp_GetItemData(i, item_type_extra_cmd, tmp, sizeof(tmp));
 			if( StrEqual(tmp, "rp_item_microwaves") )
