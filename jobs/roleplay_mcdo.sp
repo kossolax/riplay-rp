@@ -708,10 +708,10 @@ public Action Frame_Microwave(Handle timer, any ent) {
 		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Microwave_Ready", owner);
 		if( rp_GetBuildingData(ent, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(ent), zone_type_type) == 21)
 			giveHamburger(owner, 2);
-		}
-		else{
+			
+		else
 			giveHamburger(owner, 1);
-		}
+			
 		g_eMwAct[ent] = false;
 		return Plugin_Handled;
 	}
