@@ -827,7 +827,7 @@ void giveHamburger(int client, int amount){
 		}
 		j++;
 	}*/
-	int Burger[] =  { 18, 119, 274, 373, 374 };
+	int Burger[] =  { 116, 115, 114, 113, 112, 21, 16 };
 	int rnd = Math_GetRandomInt(0, sizeof(Burger) - 1);
 	char item2[128];
 	rp_GetItemData(Burger[rnd], item_type_name, item2, sizeof(item2));
