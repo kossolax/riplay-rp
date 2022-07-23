@@ -784,8 +784,8 @@ void giveHamburger(int client, int amount){
 	
 	if( g_nbMdItems == -1 ) {
 		int jobID;
-		rp_GetItemData(i, item_type_extra_cmd, tmp2, sizeof(tmp2));
 		for(int i = 0; i < MAX_ITEMS; i++){
+			rp_GetItemData(i, item_type_extra_cmd, tmp2, sizeof(tmp2));
 			if( rp_GetItemInt(i, item_type_prix) <= 0 )
 				continue;
 			if( rp_GetItemInt(i, item_type_auto) == 1 )
