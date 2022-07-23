@@ -57,7 +57,7 @@ stock bool Entity_CanBeBreak(int entity, int client) {
         if( IsValidClient(owner) && rp_GetZoneBit(rp_GetPlayerZone(owner)) & BITZONE_EVENT )
             return false;
 
-        if( rp_GetClientJobID(client) == 41 || rp_GetClientJobID(client) == 1)
+        if( rp_GetClientJobID(client) == 91 || rp_GetClientJobID(client) == 41 || rp_GetClientJobID(client) == 1)
             return true;
 
         if( rp_GetZoneBit(rp_GetPlayerZone(entity)) & BITZONE_PERQUIZ )
