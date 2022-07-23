@@ -781,7 +781,6 @@ public Action Frame_Fountain(Handle timer, any ent) {
 }
 void giveHamburger(int client, int amount){
 	char tmp[128];
-	char tmp2[128];
 	
 	if( g_nbMdItems == -1 ) {
 		int jobID;
@@ -796,11 +795,27 @@ void giveHamburger(int client, int amount){
 			jobID = rp_GetItemInt(i, item_type_job_id);
 			if(jobID != 21)
 				continue;
-			if( rp_GetItemInt(i, item_type_extra_cmd) != 'rp_item_hamburger' )
-			continue;
 			
 			rp_GetItemData(i, item_type_extra_cmd, tmp, sizeof(tmp));
 			if( StrEqual(tmp, "rp_item_microwaves") )
+				continue;
+			if( StrEqual(tmp, "rp_item_cafe") )
+				continue;
+			if( StrEqual(tmp, "rp_item_alcool") )
+				continue;
+			if( StrEqual(tmp, "rp_item_cafetiere") )
+				continue;
+			if( StrEqual(tmp, "none") )
+				continue;
+			if( StrEqual(tmp, "rp_item_knife") )
+				continue;
+			if( StrEqual(tmp, "rp_item_banane") )
+				continue;
+			if( StrEqual(tmp, "rp_item_drug") )
+				continue;
+			if( StrEqual(tmp, "rp_item_cig") )
+				continue;
+			if( StrEqual(tmp, "rp_item_fountain") )
 				continue;
 			g_nbMdItems++;
 		}
