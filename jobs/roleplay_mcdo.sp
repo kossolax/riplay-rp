@@ -796,7 +796,7 @@ void giveHamburger(int client, int amount){
 			jobID = rp_GetItemInt(i, item_type_job_id);
 			if(jobID != 21)
 				continue;
-			if( rp_GetItemInt(i, item_type_extra_cmd) != "rp_item_hamburger" )
+			if( rp_GetItemInt(i, item_type_extra_cmd) != 'rp_item_hamburger' )
 			continue;
 			
 			rp_GetItemData(i, item_type_extra_cmd, tmp, sizeof(tmp));
