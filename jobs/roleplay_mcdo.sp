@@ -635,12 +635,25 @@ public Action fwdOnPlayerUse(int client) {
 				int maxtime = rp_GetBuildingData(i, BD_max);
 				if( time >= maxtime &&  rp_GetBuildingData( i, BD_owner )) {
 					rp_SetBuildingData(i, BD_count, 0);
-					if( rp_GetBuildingData(i, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type) == 21)
+						
+					if( Math_GetRandomInt(1, 4) == 4 ) {
+						float vita = rp_GetClientFloat(client, fl_Vitality);
+						rp_SetClientFloat(client, fl_Vitality, vita + 256.0);
+						CPrintToChat(client, ""...MOD_TAG..." Votre machine à café viens d'augmenter votre vitalitée.");
+						rp_ClientXPIncrement(client, 500);
+						CPrintToChat(client, ""...MOD_TAG..." Vous venez de gagner 500xp grâce à la compétence Barista.");
+						
+					}
+					else {	
+						if( rp_GetBuildingData(i, BD_FromBuild) == 1 && rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type) == 21)
 						giveCafe(client, 2);
-					else if( rp_GetPlayerZoneAppart(i) > 0 )
+						
+						else if( rp_GetPlayerZoneAppart(i) > 0 )
 						giveCafe(client, 1);
-					else
+						
+						else
 						giveCafe(client, 1);
+					}
 				}
 				g_eMwAct[i] = true;
 				CreateTimer(1.0, Frame_Cafetiere, i);
