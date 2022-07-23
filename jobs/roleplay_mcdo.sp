@@ -1162,7 +1162,7 @@ public Action Cmd_ItemJuce(int client) {
 	char item_name[64];
 	rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
 	
-	if( item_id > 0 && !rp_GetClientBool(client, b_MayUseUltimate) ) {
+	if(!rp_GetClientBool(client, b_MayUseUltimate) ) {
 			ITEM_CANCEL(client, item_id);
 			rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
 			
@@ -1174,7 +1174,6 @@ public Action Cmd_ItemJuce(int client) {
 	CreateTimer(dur+5.0, AllowUltimate, client);
 		
 	rp_SetClientFloat(client, fl_invisibleTime, GetGameTime() + dur);
-	return Plugin_Handled;
 }
 
 public Action fwdCigSpeed(int client, float& speed) {
