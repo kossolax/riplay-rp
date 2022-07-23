@@ -780,7 +780,7 @@ public Action Frame_Fountain(Handle timer, any ent) {
 	return Plugin_Handled;
 }
 void giveHamburger(int client, int amount){
-	char tmp[128];
+	/*char tmp[128];
 	char tmp2[128];
 	
 	if( g_nbMdItems == -1 ) {
@@ -826,7 +826,14 @@ void giveHamburger(int client, int amount){
 			break;
 		}
 		j++;
-	}
+	}*/
+	int Burger[] =  { 18, 119, 274, 373, 374 };
+	int rnd = Math_GetRandomInt(0, sizeof(Burger) - 1);
+	char item2[128];
+	rp_GetItemData(Burger[rnd], item_type_name, item2, sizeof(item2));
+	CPrintToChat(client, "" ...MOD_TAG... " %T", "Item_Give", client, amount, item2);
+	rp_ClientGiveItem(client, Burger[rnd], amount);
+	
 }
 void giveCafe(int client, int amount){
 	char tmp[128];
