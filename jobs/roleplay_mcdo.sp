@@ -781,6 +781,7 @@ public Action Frame_Fountain(Handle timer, any ent) {
 }
 void giveHamburger(int client, int amount){
 	char tmp[128];
+	char tmp2[128];
 	
 	if( g_nbMdItems == -1 ) {
 		int jobID;
