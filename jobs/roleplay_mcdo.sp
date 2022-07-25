@@ -664,7 +664,7 @@ public Action fwdOnPlayerUse(int client) {
 			if( GetVectorDistance(vecOrigin, vecOrigin2) <= 50 ) {
 				int time = rp_GetBuildingData(i, BD_count);
 				int maxtime = rp_GetBuildingData(i, BD_max);
-				int Drink[] =  { 18, 119, 274, 373 };
+				int Drink[] =  { 18, 20, 119, 274, 373 };
 				int rnd = Math_GetRandomInt(0, sizeof(Drink) - 1);
 				char item[128];
 				if( time >= maxtime &&  rp_GetBuildingData( i, BD_owner )) {
