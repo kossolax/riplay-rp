@@ -773,7 +773,7 @@ Menu AUDIENCE_Forum(int client, int a, int b) {
 	if( a == 0 ) {
 		GetClientAuthId(client, AUTH_TYPE, tmp, sizeof(tmp));
 		
-		Format(query, sizeof(query), "SELECT R.`id`, `report_steamid`, COUNT(`vote`) cpt, `name`, SUM(IF(`vote`=1,1,0)) as cpt2 FROM `rp_report`.`site_report` R INNER JOIN `rp_report`.`site_report_votes` V ON V.`reportid`=R.`id` INNER JOIN `rp_csgo`.`rp_users` U ON U.`steamid`=R.`report_steamid` WHERE V.`vote`<>'2' AND R.`jail`=-1 AND R.`own_steamid`<>'%s' AND R.`report_steamid`<>'%s' GROUP BY R.`id` HAVING cpt>=5 ORDER BY cpt DESC;", tmp, tmp);
+		Format(query, sizeof(query), "SELECT R.`id`, `report_steamid`, COUNT(`vote`) cpt, `name`, SUM(IF(`vote`=1,1,0)) as cpt2 FROM `rp_report`.`site_report` R INNER JOIN `rp_report`.`site_report_votes` V ON V.`reportid`=R.`id` INNER JOIN `rp_csgo`.`rp_users` U ON U.`steamid`=R.`report_steamid` WHERE V.`vote`<>'2' AND R.`jail`=-1 AND R.`own_steamid`<>'%s' AND R.`report_steamid`<>'%s' GROUP BY R.`id` HAVING cpt>=0 ORDER BY cpt DESC;", tmp, tmp);
 		SQL_TQuery(rp_GetDatabase(), SQL_AUDIENCE_Forum, query, client);
 	}
 	else if( b == 0 ) {
