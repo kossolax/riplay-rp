@@ -270,7 +270,7 @@ public Action fwdOnPlayerSteal(int client, int target, float& cooldown) {
 	money = rp_GetClientInt(target, i_Money);
 	VOL_MAX = (money+rp_GetClientInt(target, i_Bank)) / 200;
 		
-	if( VOL_MAX > 0 && money <= 25 && rp_GetClientInt(client, i_Job) <= 93 && !rp_IsClientNew(target) && CanClientStealItem(client, target) ) {
+	if( VOL_MAX > 0 && money <= 25 && rp_GetClientInt(client, i_Job) <= 94 && !rp_IsClientNew(target) && CanClientStealItem(client, target) ) {
 		amount = 0;
 		
 		for(int i = 0; i < MAX_ITEMS; i++) {
@@ -737,7 +737,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 				for (i = 0; i < rand; i++)
 					CreateTimer(i / 5.0, SpawnMoney, EntIndexToEntRef(target));
 				
-				stealAmount = 25*rand;
+				stealAmount = 35*rand;
 			}
 			case 3: { // Armu
 				time /= 2.0;
@@ -917,7 +917,7 @@ public Action SpawnMoney(Handle timer, any target) {
 		
 		int rnd = Math_GetRandomInt(2, 5) * 10;
 		int job = rp_GetRandomCapital(91);
-		rp_SetJobCapital(job, rp_GetJobCapital(job) - rnd);
+		rp_SetJobCapital(job, rp_GetJobCapital(job) + rnd);
 	}
 	else {
 		Entity_GetMinSize(target, min);
