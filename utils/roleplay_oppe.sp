@@ -52,7 +52,7 @@ public void OnClientPostAdminCheck(int client) {
 // ----------------------------------------------------------------------------
 public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
 	
-	if( !g_bCanOppe[client] && (rp_GetClientJobID(client) == 91) {
+	if( !g_bCanOppe[client] && (rp_GetClientJobID(client) == 91) ) {
 		if( GetClientTeam(client) == CS_TEAM_T && rp_GetZoneInt(newZone, zone_type_type) == rp_GetClientJobID(client) ) {
 			g_bCanOppe[client] = true;
 			if( rp_GetClientInt(client, i_Job) >= 93)
