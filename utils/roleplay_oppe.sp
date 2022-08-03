@@ -143,9 +143,8 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 					subMenu.AddItem(options, tmp);
 					nbRecherche++;
 				}
-				else {
-					subMenu.Display(client, MENU_TIME_FOREVER);
-				}
+					
+				subMenu.Display(client, MENU_TIME_FOREVER);// a tester
 				g_bCanOppe[client] = false;
 			}
 		}
