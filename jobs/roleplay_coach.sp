@@ -1447,13 +1447,24 @@ public Action Cmd_ItemAlcool(int args) {
 	float dur = DRUG_DURATION;
 	
 	if(StrEqual(arg,"me")){
-		dur = 60.0;
-		
-		rp_SetClientBool(client, b_MayUseUltimate, false);
-		CreateTimer(dur + 5.0, AllowUltimate, client);
-		rp_HookEvent(client, RP_PreTakeDamage, fwdAlcool, dur);
-		rp_Effect_ShakingVision(client);
-		rp_IncrementSuccess(client, success_list_alcool_abuse);	
+		if( !rp_GetClientBool(client, b_MayUseUltimate) ) {
+			ITEM_CANCEL(client, item_id);
+			char item_name[128];
+			rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
+			
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Error_ItemCannotBeUsedForNow", client, item_name);
+			return Plugin_Handled;
+		}
+		else{
+			dur = 60.0;
+
+			rp_SetClientBool(client, b_MayUseUltimate, false);
+			CreateTimer(dur + 5.0, AllowUltimate, client);
+			rp_HookEvent(client, RP_PreTakeDamage, fwdAlcool, dur);
+			rp_Effect_ShakingVision(client);
+			rp_IncrementSuccess(client, success_list_alcool_abuse);
+			CreateTimer(60.0, AllowUltimate, client);
+		}
 	}
 	else if (StrEqual(arg,"aim")){
 		target = rp_GetClientTarget(client);
