@@ -773,7 +773,7 @@ void TeleportT(int zone) {
 	for (int i = 1; i <= MaxClients; i++) {
 		if( !IsValidClient(i) || !IsPlayerAlive(i) )
 			continue;
-		if( rp_GetClientJobID(client) == 91 )
+		if( rp_GetClientJobID(i) == 91 )
 			continue;
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
 		
