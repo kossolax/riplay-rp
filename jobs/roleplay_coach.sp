@@ -1456,14 +1456,11 @@ public Action Cmd_ItemAlcool(int args) {
 			return Plugin_Handled;
 		}
 		else{
-			dur = 60.0;
-
 			rp_SetClientBool(client, b_MayUseUltimate, false);
-			CreateTimer(dur + 5.0, AllowUltimate, client);
-			rp_HookEvent(client, RP_PreTakeDamage, fwdAlcool, dur);
+			CreateTimer(65.0, AllowUltimate, client);//durée timer
+			rp_HookEvent(client, RP_PreTakeDamage, fwdAlcool, 60);// durée de l'effet
 			rp_Effect_ShakingVision(client);
 			rp_IncrementSuccess(client, success_list_alcool_abuse);
-			CreateTimer(60.0, AllowUltimate, client);
 		}
 	}
 	else if (StrEqual(arg,"aim")){
