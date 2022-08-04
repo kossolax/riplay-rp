@@ -330,7 +330,7 @@ public Action Cmd_Sentry(int args) {
 		GetEdictClassname(i, tmp, sizeof(tmp));
 		
 		if( StrEqual(classname, tmp) ) {
-			if( rp_GetZoneBit( rp_GetPlayerZone(target) ) & BITZONE_PEACEFULL ) {
+			if( rp_GetZoneBit( rp_GetPlayerZone(client) ) & BITZONE_PEACEFULL ) {
 				CPrintToChat(client, "" ...MOD_TAG... " Cet objet est interdit où vous êtes.");
 				ITEM_CANCEL(client, item_id);
 				return Plugin_Handled;
