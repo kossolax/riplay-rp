@@ -61,7 +61,7 @@ public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
 	}
 }
 public Action fwdCommand(int client, char[] command, char[] arg) {
-	if( StrContains(command, "oppe") == 0 || StrContains(command, "op" || StrContains(command, "ope") == 0 ) {
+	if( StrContains(command, "oppe") == 0 || StrContains(command, "op") == 0 ) {
 		return Cmd_Opperation(client);
 	}
 	return Plugin_Continue;
