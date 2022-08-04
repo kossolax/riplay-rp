@@ -6,7 +6,7 @@
  * http://creativecommons.org/licenses/by-nc-sa/4.0/ .
  *
  * Merci de respecter le travail fourni par le ou les auteurs 
- * https://www.ts-x.eu/ - kossolax@ts-x.eu
+ * https://www.ts-x.eu/ - kossolax@ts-x.eu - messoremtsx@gmail.com
  */
 #pragma semicolon 1
 
@@ -26,8 +26,8 @@ bool g_bCanOppe[65];
 Handle g_hActive;
 
 public Plugin myinfo = {
-	name = "Utils: Perquisition", author = "KoSSoLaX",
-	description = "RolePlay - Utils: Perquisition",
+	name = "Utils: Perquisition", author = "KoSSoLaX - Messorem",
+	description = "RolePlay - Utils: Oppération",
 	version = __LAST_REV__, url = "https://www.ts-x.eu"
 };
 public void OnPluginStart() {
@@ -61,12 +61,12 @@ public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
 	}
 }
 public Action fwdCommand(int client, char[] command, char[] arg) {
-	if( StrContains(command, "oppe") == 0 || StrContains(command, "op") == 0 ) {
-		return Cmd_Perquiz(client);
+	if( StrContains(command, "oppe") == 0 || StrContains(command, "op" || StrContains(command, "ope") == 0 ) {
+		return Cmd_Opperation(client);
 	}
 	return Plugin_Continue;
 }
-public Action Cmd_Perquiz(int client) {
+public Action Cmd_Opperation(int client) {
 	
 	if( rp_GetClientJobID(client) != 91) {
 		ACCESS_DENIED(client);
@@ -87,7 +87,7 @@ public Action Cmd_Perquiz(int client) {
 		return Plugin_Handled;
 	
 	if( !g_bCanOppe[client] && !g_hOpperation.GetArray(tmp, array, PQ_Max)) {
-		CPrintToChat(client, "" ...MOD_TAG... " Vous devez retourner aux QG, avant de pouvoir planifier une autre oppétion.");
+		CPrintToChat(client, "" ...MOD_TAG... " Vous devez retourner aux QG, avant de pouvoir planifier une autre oppération.");
 		return Plugin_Handled;
 	}
 	
@@ -96,7 +96,7 @@ public Action Cmd_Perquiz(int client) {
 	
 	
 	if( g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
-		Format(tmp2, sizeof(tmp2), "cancel %s", tmp);	menu.AddItem(tmp2, "Annuler la perquisition");
+		Format(tmp2, sizeof(tmp2), "cancel %s", tmp);	menu.AddItem(tmp2, "Annuler l'oppération");
 	}
 	else {
 		Format(tmp2, sizeof(tmp2), "trafic %s", tmp);	menu.AddItem(tmp2, "Taxe de protection impayé");
@@ -273,7 +273,7 @@ void END_OPPE(int zone, bool abort) {
 	}
 	g_hOpperation.Remove(tmp);
 	CreateTimer(10.0, ChangeZoneSafe, zone);
-	TeleportCT(zone);
+	TeleportT(zone);
 	DoorLock(zone);
 	SetConVarInt(g_hActive, GetConVarInt(g_hActive) - 1);
 	
@@ -766,14 +766,14 @@ void countBadThing(char[] zone, int& weapon, int& plant, int& machine) {
 	}
 	
 }
-void TeleportCT(int zone) {
+void TeleportT(int zone) {
 	char tmp[64], tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
 	for (int i = 1; i <= MaxClients; i++) {
 		if( !IsValidClient(i) || !IsPlayerAlive(i) )
 			continue;
-		if( GetClientTeam(i) == CS_TEAM_T )
+		if( rp_GetClientJobID(client) == 91 )
 			continue;
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
 		
@@ -786,16 +786,7 @@ void TeleportCT(int zone) {
 int getCooldown(int client, int zone) {
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
-	
-	if( rp_GetClientJobID(client) == 1 && (StrEqual(tmp, "bunker") || StrEqual(tmp, "villa") || StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) )
-		//return 6 * 60 * 60;
-		return 1 * 60;
-	else if( rp_GetClientJobID(client) == 101 && (StrEqual(tmp, "bunker") || StrEqual(tmp, "villa") || StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) )
-		//return 1 * 60 * 60;
-		return 1 * 60;
-	else
-		//return 24 * 60;
-		return 1 * 60;
+	return 1 * 60;
 }
 bool hasCopInZone(int zone) {
 	char tmp[64], tmp2[64];
