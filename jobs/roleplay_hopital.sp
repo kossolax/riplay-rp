@@ -76,6 +76,14 @@ public void OnPluginStart() {
 			CreateTimer(Math_GetRandomFloat(0.0, 1.0), BuildingHealBox_post, i);
 		}
 	}
+	if( g_iUserData[client][i_Job] == 11) {
+		rp_SetClientBool(client, ch_Breath, true);
+		rp_SetClientBool(client, ch_Heal, true);
+		rp_SetClientBool(client, ch_Regen, true);
+		rp_SetClientBool(client, ch_Jump, true);
+		rp_SetClientBool(client, ch_Speed, true);
+		rp_SetClientBool(client, ch_Force, true);
+	}
 }
 public void OnMapStart() {
 	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt", true);
@@ -231,7 +239,7 @@ public Action fwdChiruBreath(int client) {
 public Action ChiruEffect(Handle timer, Handle dp) {
 	ResetPack(dp);
 	int client = ReadPackCell(dp);
-	//int vendeur = ReadPackCell(dp);
+	int vendeur = ReadPackCell(dp);
 	
 	float vecOrigin[3], vecOrigin2[3];
 	GetClientEyePosition(client, vecOrigin);
