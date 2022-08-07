@@ -176,7 +176,6 @@ void OnGameFrame_01(float time) {
 				speed += 0.25;
 
 			if( g_iUserData[Client][i_Sick] > 0 && HasDoctor(Client)) {
-				rp_SetClientBool(client, ch_Yeux, false);
 				
 				if( g_iUserData[Client][i_Sick] == view_as<int>(sick_type_grippe) )
 					speed = 0.66;
