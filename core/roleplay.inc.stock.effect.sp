@@ -307,6 +307,7 @@ void RP_PerformFade(int client) {
 		color[2] -= 50;
 		
 		color[0] += 100;
+		rp_SetClientBool(client, ch_Yeux, false);
 		rp_Effect_ShakingVision(client);
 		
 		if( g_iUserData[client][i_Sick] == view_as<int>(sick_type_fievre) )
