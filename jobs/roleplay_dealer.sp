@@ -118,12 +118,6 @@ public Action Cmd_ItemDrugs(int args) {
 	
 	if( !IsValidClient(client) )
 		return Plugin_Handled;
-		
-	if( rp_GetClientInt(client, i_Sick) > 0 && HasDoctor(Client)) {
-		CPrintToChat(client, "" ...MOD_TAG... " Votre état de santé vous inquietes, vous décidez de ranger votre drogue pour aller voir un medecin.");
-		ITEM_CANCEL(client, item_id);
-		return Plugin_Handled;
-	}
 
 	char item_name[128];
 	rp_GetItemData(item_id, item_type_name, item_name, sizeof(item_name));
