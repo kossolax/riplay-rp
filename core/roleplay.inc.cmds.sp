@@ -352,6 +352,49 @@ public Action cmd_GiveWeaponEvent(int client, int args) {
 	return Plugin_Handled;
 }
 
+public Action cmd_NoDegatChuteEvent(int client, int args) { 
+
+	
+	char Arg2[64];
+	GetCmdArg(2, Arg2, sizeof(Arg2));
+	
+	if( StrEqual(Arg2, "weapon_usp") || StrEqual(Arg2, "weapon_p228") || StrEqual(Arg2, "weapon_m3") || StrEqual(Arg2, "weapon_galil") || StrEqual(Arg2, "weapon_scout") )
+		return Plugin_Handled;
+	if( StrEqual(Arg2, "weapon_sg552") || StrEqual(Arg2, "weapon_sg550") || StrEqual(Arg2, "weapon_tmp") || StrEqual(Arg2, "weapon_mp5navy") )
+		return Plugin_Handled;
+	
+	char arg1[64];
+	GetCmdArg(1, arg1, sizeof( arg1 ) );
+	char analysestr[64];
+	
+	char target_name[MAX_TARGET_LENGTH];
+	int target_list[MAXPLAYERS], target_count;
+	bool tn_is_ml;
+	
+	if ((target_count = ProcessTargetString(
+		arg1,
+		client,
+		target_list,
+		MAXPLAYERS,
+		COMMAND_FILTER_CONNECTED|COMMAND_FILTER_NO_BOTS|COMMAND_FILTER_NO_MULTI|COMMAND_FILTER_ALIVE,
+		target_name,
+		sizeof(target_name),
+		tn_is_ml)) <= 0)
+	{
+		ReplyToTargetError(client, target_count);
+		return Plugin_Handled;
+	}
+	
+	for (int i = 0; i < target_count; i++) {
+		int target = target_list[i];
+	
+		if( GetZoneBit( GetPlayerZone(target) ) & BITZONE_EVENT) {
+			SDKUnhook(target, SDKHook_OnTakeDamage, fwdNoFallDamage);
+		}
+	}
+	return Plugin_Handled;
+}
+
 public Action Timer_CheckWeapon(Handle timer, any wepId) {
 	if( !IsValidEdict(wepId) || !IsValidEntity(wepId) )
 		return Plugin_Stop;
