@@ -389,7 +389,10 @@ public Action cmd_NoDegatChuteEvent(int client, int args) {
 		int target = target_list[i];
 	
 		if( GetZoneBit( GetPlayerZone(target) ) & BITZONE_EVENT) {
-			SDKUnhook(target, SDKHook_OnTakeDamage, fwdNoFallDamage);
+			if( damagetype & DMG_FALL) {
+				damage = 0.0;
+				return Plugin_Changed;
+			}
 		}
 	}
 	return Plugin_Handled;
