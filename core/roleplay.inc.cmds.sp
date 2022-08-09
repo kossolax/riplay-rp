@@ -353,12 +353,15 @@ public Action cmd_GiveWeaponEvent(int client, int args) {
 }
 
 public Action cmd_NoDegatChuteEvent(int client, int args,float& damage, int& damagetype) { 
-	
+	char arg1[64];
+	GetCmdArg(1, arg1, sizeof( arg1 ) );
+	char analysestr[64];
 	char target_name[MAX_TARGET_LENGTH];
 	int target_list[MAXPLAYERS], target_count;
 	bool tn_is_ml;
 	
 	if ((target_count = ProcessTargetString(
+		arg1,
 		client,
 		target_list,
 		MAXPLAYERS,
