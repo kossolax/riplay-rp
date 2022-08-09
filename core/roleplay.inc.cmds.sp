@@ -352,27 +352,13 @@ public Action cmd_GiveWeaponEvent(int client, int args) {
 	return Plugin_Handled;
 }
 
-public Action cmd_NoDegatChuteEvent(int client, int args) { 
-
-	
-	char Arg2[64];
-	GetCmdArg(2, Arg2, sizeof(Arg2));
-	
-	if( StrEqual(Arg2, "weapon_usp") || StrEqual(Arg2, "weapon_p228") || StrEqual(Arg2, "weapon_m3") || StrEqual(Arg2, "weapon_galil") || StrEqual(Arg2, "weapon_scout") )
-		return Plugin_Handled;
-	if( StrEqual(Arg2, "weapon_sg552") || StrEqual(Arg2, "weapon_sg550") || StrEqual(Arg2, "weapon_tmp") || StrEqual(Arg2, "weapon_mp5navy") )
-		return Plugin_Handled;
-	
-	char arg1[64];
-	GetCmdArg(1, arg1, sizeof( arg1 ) );
-	char analysestr[64];
+public Action cmd_NoDegatChuteEvent(int client, int args,float& damage, int& damagetype) { 
 	
 	char target_name[MAX_TARGET_LENGTH];
 	int target_list[MAXPLAYERS], target_count;
 	bool tn_is_ml;
 	
 	if ((target_count = ProcessTargetString(
-		arg1,
 		client,
 		target_list,
 		MAXPLAYERS,
