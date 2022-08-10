@@ -200,10 +200,11 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 				GivePlayerItem(client, "weapon_molotov");
 			}
 			
-			rp_ClientMoney(client, i_Money, -price);
-			rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
-			rp_SetJobCapital( 131, rp_GetJobCapital(131)+price );
-			FakeClientCommand(client, "say /build");
+			//rp_ClientMoney(client, i_Money, -price);
+			//CPrintToChat(client, "" ...MOD_TAG... " Vous avez payé %d$.", price);
+			//rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
+			//rp_SetJobCapital( 131, rp_GetJobCapital(131)+price );
+			//FakeClientCommand(client, "say /build");
 			
 			if( wep_id <= 0 || Weapon_IsMelee(wep_id) ) {
 				CPrintToChat(client, "" ...MOD_TAG... " %T", "Armu_WeaponInHands", client);
@@ -273,6 +274,7 @@ public int ModifyWeapon(Handle p_hItemMenu, MenuAction p_oAction, int client, in
 			}
 	
 			rp_ClientMoney(client, i_Money, -price);
+			CPrintToChat(client, "" ...MOD_TAG... " Vous avez payé %d$.", price);
 			rp_SetClientStat(client, i_TotalBuild, rp_GetClientStat(client, i_TotalBuild)+1);
 			rp_SetJobCapital( 131, rp_GetJobCapital(131)+price );
 			FakeClientCommand(client, "say /build");
