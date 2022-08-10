@@ -148,7 +148,7 @@ public void OnPluginStart() {
 	RegAdminCmd("rp_unmute", 			cmd_SetMute,		ADMFLAG_BAN);
 	RegAdminCmd("rp_spawner_reload",	CmdBank_reload,		ADMFLAG_BAN);
 	RegAdminCmd("rp_noclip", 			cmd_NoclipVip,		ADMFLAG_BAN);
-	RegAdminCmd("rp_giveweapons", 			cmd_GiveWeaponEvent,		ADMFLAG_BAN);
+	//RegAdminCmd("rp_giveweapons", 			cmd_GiveWeaponEvent,		ADMFLAG_BAN);
 	RegAdminCmd("rp_messojtm", 			cmd_NoDegatChuteEvent,		ADMFLAG_BAN);
 	//
 	RegAdminCmd("rp_lock",   			cmd_ForceLock, 		ADMFLAG_ROOT);
