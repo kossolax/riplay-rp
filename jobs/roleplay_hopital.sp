@@ -103,15 +103,6 @@ public void OnClientPostAdminCheck(int client) {
 		rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruHealing);
 	if( rp_GetClientBool(client, ch_Heal))
 		rp_HookEvent(client, RP_OnPlayerSpawn, fwdSpawn);
-		
-	if( rp_GetClientInt(client, i_Job) == 11) {
-		rp_SetClientBool(client, ch_Breath, true);
-		rp_SetClientBool(client, ch_Heal, true);
-		rp_SetClientBool(client, ch_Regen, true);
-		rp_SetClientBool(client, ch_Jump, true);
-		rp_SetClientBool(client, ch_Speed, true);
-		rp_SetClientBool(client, ch_Force, true);
-	}
 }
 public Action fwdDeath(int victim, int attacker, float& respawn, int& tdm, float& ctx) {
 	if ( rp_CanMakeSuccess(attacker, success_list_faster_dead) ){
