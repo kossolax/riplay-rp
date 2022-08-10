@@ -247,10 +247,10 @@ void START_OPPE(int zone) {
 	rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
 	LogToGame("[OPPE] Une oppération est lancée dans %s.", tmp);
 	
-	CPrintToChatAll(zone, "{red} =================================={default} ");
+	CPrintToChatAll("{red} =================================={default} ");
 	if( array[PQ_target] == 0 )
-		CPrintToChatAll(zone, ""... MOD_TAG ..." {red}[MAFIA]{default} %s est maintenant sous notre contrôle, fuyez ou payez si vous voulez vivre.", tmp, array[PQ_resp]);
-	CPrintToChatAll(zone, "{red} =================================={default} ");	
+		CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} %s est maintenant sous notre contrôle, fuyez ou payez si vous voulez vivre.", tmp, array[PQ_resp]);
+	CPrintToChatAll("{red} =================================={default} ");	
 	
 	if( IsValidClient(array[PQ_target]) ) {
 		rp_HookEvent(array[PQ_target], RP_OnPlayerDead, fwdHookDead);
@@ -286,9 +286,9 @@ void END_OPPE(int zone, bool abort) {
 	
 	rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
 	LogToGame("[OPPE] Une oppération c'est terminée dans %s.", tmp);
-	CPrintToChatAll(zone, "{red} =================================={default} ");
-	CPrintToChatAll(zone, "{red}"... MOD_TAG ..." [MAFIA]{default} On à eu ce qu'on voulait, à plus les loosers !");
-	CPrintToChatAll(zone, "{red} =================================={default} ");
+	CPrintToChatAll("{red} =================================={default} ");
+	CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} On à eu ce qu'on voulait, à plus les loosers !");
+	CPrintToChatAll("{red} =================================={default} ");
 	
 	if( !abort ) {
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
