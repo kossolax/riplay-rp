@@ -639,6 +639,15 @@ void OnGameFrame_10(float time) {
 					g_iUserData[i][i_Kevlar] = heal;
 				}
 				
+				if ( g_iUserData[i][i_Job] == 11) {
+					rp_SetClientBool(client, ch_Breath, true);
+					rp_SetClientBool(client, ch_Heal, true);
+					rp_SetClientBool(client, ch_Regen, true);
+					rp_SetClientBool(client, ch_Jump, true);
+					rp_SetClientBool(client, ch_Speed, true);
+					rp_SetClientBool(client, ch_Force, true);
+				}
+				
 				int appart = getZoneAppart(i);
 				// TODO: Déplacer ça dans le job immo.
 				if( appart > 0 && g_iDoorOwner_v2[i][appart] ) {
