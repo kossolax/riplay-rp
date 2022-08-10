@@ -53,9 +53,9 @@ public void OnClientPostAdminCheck(int client) {
 public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
 	
 	if( !g_bCanOppe[client] && (rp_GetClientJobID(client) == 91) ) {
-		if( GetClientTeam(client) == CS_TEAM_T && rp_GetZoneInt(newZone, zone_type_type) == rp_GetClientJobID(client) ) {
-			g_bCanOppe[client] = true;
+		if( rp_GetZoneInt(newZone, zone_type_type) == rp_GetClientJobID(client) ) {
 			if( rp_GetClientInt(client, i_Job) >= 93)
+				g_bCanOppe[client] = true;
 				CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez maintenant effectuer une oppération");
 		}
 	}
@@ -92,7 +92,7 @@ public Action Cmd_Opperation(int client) {
 	}
 	
 	Menu menu = new Menu(MenuPerquiz);
-	menu.SetTitle("Quel est le motif de perquisition?\n ");
+	menu.SetTitle("Quel est le but de l'oppération ?\n ");
 	
 	
 	if( g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
@@ -247,10 +247,10 @@ void START_OPPE(int zone) {
 	rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
 	LogToGame("[OPPE] Une oppération est lancée dans %s.", tmp);
 	
-	PrintToChatPoliceZone(zone, "{red} =================================={default} ");
+	CPrintToChatAll(zone, "{red} =================================={default} ");
 	if( array[PQ_target] == 0 )
-		PrintToChatPoliceZone(zone, ""... MOD_TAG ..." {red}[MAFIA]{default} %s est maintenant sous notre contrôle, fuyez ou payez si vous voulez vivre.", tmp, array[PQ_resp]);
-	PrintToChatPoliceZone(zone, "{red} =================================={default} ");	
+		CPrintToChatAll(zone, ""... MOD_TAG ..." {red}[MAFIA]{default} %s est maintenant sous notre contrôle, fuyez ou payez si vous voulez vivre.", tmp, array[PQ_resp]);
+	CPrintToChatAll(zone, "{red} =================================={default} ");	
 	
 	if( IsValidClient(array[PQ_target]) ) {
 		rp_HookEvent(array[PQ_target], RP_OnPlayerDead, fwdHookDead);
@@ -286,9 +286,9 @@ void END_OPPE(int zone, bool abort) {
 	
 	rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
 	LogToGame("[OPPE] Une oppération c'est terminée dans %s.", tmp);
-	PrintToChatPoliceZone(zone, "{red} =================================={default} ");
-	PrintToChatPoliceZone(zone, "{red}"... MOD_TAG ..." [MAFIA]{default} On à eu ce qu'on voulait, à plus les loosers !");
-	PrintToChatPoliceZone(zone, "{red} =================================={default} ");
+	CPrintToChatAll(zone, "{red} =================================={default} ");
+	CPrintToChatAll(zone, "{red}"... MOD_TAG ..." [MAFIA]{default} On à eu ce qu'on voulait, à plus les loosers !");
+	CPrintToChatAll(zone, "{red} =================================={default} ");
 	
 	if( !abort ) {
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
@@ -398,9 +398,9 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		
 		if( array[PQ_timeout] == 30 ) {
 			rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
-			PrintToChatPoliceZone(zone, "{red} =================================={default} ");
-			PrintToChatPoliceZone(zone, "{red}"... MOD_TAG ..." [MAFIA]{default} Les poulets prennent du terrain, BOUGEZ-VOUS !", tmp);
-			PrintToChatPoliceZone(zone, "{red} =================================={default} ");
+			CPrintToChat(zone, "{red} =================================={default} ");
+			CPrintToChat(zone, "{red}"... MOD_TAG ..." [MAFIA]{default} Les poulets prennent du terrain, BOUGEZ-VOUS !", tmp);
+			CPrintToChat(zone, "{red} =================================={default} ");
 		}
 		else if( array[PQ_timeout] >= 40 ) {
 			END_OPPE(zone, true);
