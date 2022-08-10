@@ -378,13 +378,21 @@ public Action cmd_NoDegatChuteEvent(int client, int args,float& damage, int& dam
 		int target = target_list[i];
 	
 		if( GetZoneBit( GetPlayerZone(target) ) & BITZONE_EVENT) {
-			if( damagetype & DMG_FALL) {
-				damage = 0.0;
-				return Plugin_Changed;
-			}
+			SDKUnhook(target, SDKHook_OnTakeDamage, fwdNoFallDamage);
+			CPrintToChat(target, "" ...MOD_TAG... " Vous êtes immunisé contre les dégâts de chute.");
 		}
 	}
 	return Plugin_Handled;
+}
+
+public Action fwdNoFallDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype) {
+	
+	if( damagetype & DMG_FALL && !(rp_GetZoneBit(rp_GetPlayerZone(victim)) & BITZONE_EVENT)) {
+		damage = 0.0;
+		return Plugin_Changed;
+	}
+	
+	return Plugin_Continue;
 }
 
 public Action Timer_CheckWeapon(Handle timer, any wepId) {
