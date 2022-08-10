@@ -640,12 +640,12 @@ void OnGameFrame_10(float time) {
 				}
 				
 				if ( g_iUserData[i][i_Job] == 11) {
-					rp_SetClientBool(client, ch_Breath, true);
-					rp_SetClientBool(client, ch_Heal, true);
-					rp_SetClientBool(client, ch_Regen, true);
-					rp_SetClientBool(client, ch_Jump, true);
-					rp_SetClientBool(client, ch_Speed, true);
-					rp_SetClientBool(client, ch_Force, true);
+					rp_SetClientBool(i, ch_Breath, true);
+					rp_SetClientBool(i, ch_Heal, true);
+					rp_SetClientBool(i, ch_Regen, true);
+					rp_SetClientBool(i, ch_Jump, true);
+					rp_SetClientBool(i, ch_Speed, true);
+					rp_SetClientBool(i, ch_Force, true);
 				}
 				
 				int appart = getZoneAppart(i);
