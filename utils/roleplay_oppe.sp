@@ -26,7 +26,7 @@ bool g_bCanOppe[65];
 Handle g_hActive;
 
 public Plugin myinfo = {
-	name = "Utils: Perquisition", author = "KoSSoLaX - Messorem",
+	name = "Utils: Opperation", author = "KoSSoLaX - Messorem",
 	description = "RolePlay - Utils: Oppération",
 	version = __LAST_REV__, url = "https://www.ts-x.eu"
 };
@@ -42,7 +42,7 @@ public void OnPluginStart() {
 			OnClientPostAdminCheck(i);
 }
 public void OnMapStart() {
-	g_cBeam = PrecacheModel("materials/effects/policeline.vmt"); // bandeau à changer 
+	g_cBeam = PrecacheModel("materials/effects/mafialine.vmt");
 }
 public void OnClientPostAdminCheck(int client) {
 	g_bCanOppe[client] = true;
@@ -54,7 +54,7 @@ public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
 	
 	if( !g_bCanOppe[client] && (rp_GetClientJobID(client) == 91) ) {
 		if( rp_GetZoneInt(newZone, zone_type_type) == rp_GetClientJobID(client) ) {
-			if( rp_GetClientInt(client, i_Job) >= 93)
+			if( rp_GetClientInt(client, i_Job) == 91 || rp_GetClientInt(client, i_Job) == 92 || rp_GetClientInt(client, i_Job) == 93)
 				g_bCanOppe[client] = true;
 				CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez maintenant effectuer une oppération");
 		}
