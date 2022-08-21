@@ -786,7 +786,11 @@ void TeleportT(int zone) {
 int getCooldown(int client, int zone) {
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
-	return 1 * 60;
+	
+	if( rp_GetClientJobID(client) == 91 && (StrEqual(tmp, "bunker") || StrEqual(tmp, "villa") || StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) )
+		return 4 * 60 * 60; // toute les 4h
+	else
+		return 60 * 60; // toute les heures
 }
 bool hasCopInZone(int zone) {
 	char tmp[64], tmp2[64];
