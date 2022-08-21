@@ -213,7 +213,7 @@ void openMenuInteractif(int client) {
 		if( jobID == 101 ) {
 			Format(tmp, sizeof(tmp), "%T", "Menu_Door_Perquiz", client);
 			menu.AddItem("perquiz", tmp);
-		}Menu_Door_Oppe
+		}
 		if( jobID == 91 ) {
 			Format(tmp, sizeof(tmp), "%T", "Menu_Door_Oppe", client);
 			menu.AddItem("oppe", tmp);
