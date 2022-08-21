@@ -143,6 +143,11 @@
 		"fr"	"Perquisitionner"
 		"en"	"Search"
 	}
+	"Menu_Door_Oppe"
+	{
+		"fr"	"Lancer une oppération"
+		"en"	"launch an operation"
+	}
 	"Menu_Item"
 	{
 		"fr"	"Ouvrir l'inventaire"
