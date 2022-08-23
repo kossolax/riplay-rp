@@ -801,8 +801,11 @@ bool hasCopInZone(int zone) {
 bool IsInValidZone(int client) {
 	char tmp[64], tmp2[64];
 	int validZone[] = { 131, 171, 81, 11, 21, 41, 221};
+	float dst[3];
+	rp_GetClientTarget(client, dst);
+	int zone = rp_GetZoneFromPoint(dst);
 	int jobZone =rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
-	char tmp[64], tmp2[64];
+
 	
 	for(int i=0; i<sizeof(validZone); i++) {
 		if( validZone[i] == jobZone ) {
