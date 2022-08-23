@@ -245,7 +245,7 @@ void START_OPPE(int zone) {
 	
 	
 	rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
-	LogToGame("[OPPE] Une oppération est lancée dans %s.", tmp);
+	LogToGame("[OPPE-test] Une oppération est lancée dans %s.", tmp);
 	
 	CPrintToChatAll("{red} =================================={default} ");
 	if( array[PQ_target] == 0 )
