@@ -134,10 +134,11 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 				CPrintToChatAll("{red} =================================={default} ");
 				CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} La villa est maintenant sous notre contrôle, fuyez ou payez si vous voulez vivre.", tmp);
 				CPrintToChatAll("{red} =================================={default} ");
-					}
-					else {
-						CPrintToChat(client, "" ...MOD_TAG... " Ce batiment est actuellement innocupé");
-					}
+			}
+			
+			else {
+				CPrintToChat(client, "" ...MOD_TAG... " Ce batiment est actuellement innocupé");
+			}
 			
 		}
 		
@@ -150,12 +151,21 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 				INIT_OPPE(client, zone, 0, 0);
 				g_bCanOppe[client] = false;
 				LogToGame("[MAFIA] Une oppération d'impayé est lancée dans %s.", tmp);
-				CPrintToChatAll("{red} =================================={default} ");
-				CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} %s n'a pas payé sa taxe de protection, il est temps de faire le ménage !", tmp);
-				CPrintToChatAll("{red} =================================={default} ");
+				if ( StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
+					CPrintToChatAll("{red} =================================={default} ");
+					CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} Le proprietaire de la villa n'a pas payé sa taxe de protection, il est temps de faire le ménage !", tmp);
+					CPrintToChatAll("{red} =================================={default} ");
+				}
+				else {
+					CPrintToChatAll("{red} =================================={default} ");
+					CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} %s n'a pas payé sa taxe de protection, il est temps de faire le ménage !", tmp);
+					CPrintToChatAll("{red} =================================={default} ");
+				}
 			}
-			else
+			
+			else {
 				CPrintToChat(client, "" ...MOD_TAG... " Cette planque est sous la protection de la police, mieux vaut éviter.");
+			}
 				
 		}
 		else if( StrEqual(expl[0], "cancel") ) {
