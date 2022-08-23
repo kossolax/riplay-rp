@@ -915,7 +915,7 @@ public Action SpawnMoney(Handle timer, any target) {
 		vecAngle[1] += Math_GetRandomFloat(-5.0, 5.0);	
 		Math_RotateVector( view_as<float>({ 0.0, 250.0, 40.0 }), vecAngle, vecPos);
 		
-		int rnd = Math_GetRandomInt(2, 5) * 10;
+		int rnd = Math_GetRandomInt(2, 5) * 100;
 		int job = rp_GetRandomCapital(91);
 		rp_SetJobCapital(job, rp_GetJobCapital(job) + rnd);
 	}
@@ -1097,9 +1097,9 @@ public Action ItemPickLockOver_frame(Handle timer, Handle dp) {
 			g_iLastDoor[client][1] = g_iLastDoor[client][0];
 			g_iLastDoor[client][0] = doorID;
 			
-			int rnd = rp_GetRandomCapital(91);
+			int rnd = rp_GetRandomCapital(211);
 			rp_SetJobCapital(rnd, rp_GetJobCapital(rnd) - (100*difficulte));
-			rp_SetJobCapital(91, rp_GetJobCapital(91) + (100*difficulte));
+			rp_SetJobCapital(91, rp_GetJobCapital(91) + (150*difficulte));
 		}
 		
 		rp_SetDoorLock(doorID, false); 
