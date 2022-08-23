@@ -100,7 +100,7 @@ public Action Cmd_Opperation(int client) {
 	}
 	else {
 		Format(tmp2, sizeof(tmp2), "trafic %s", tmp);	menu.AddItem(tmp2, "Taxe de protection impayé");
-		Format(tmp2, sizeof(tmp2), "kidnap %s", tmp);	menu.AddItem(tmp2, "Un kidnappé");
+		Format(tmp2, sizeof(tmp2), "control %s", tmp);	menu.AddItem(tmp2, "Prendre les lieux");
 	}
 	menu.Display(client, MENU_TIME_FOREVER);
 	
@@ -121,42 +121,39 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 		if( !StrEqual(tmp, expl[1]) )
 			return 0;
 		
-		if(StrEqual(expl[0], "kidnap") ) {
+		if(StrEqual(expl[0], "control") ) {
+			char tmp[64];
+			rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 			
-			if( StringToInt(expl[2]) == 0 ) {
-				Menu subMenu = new Menu(MenuPerquiz);
-				
-				for (int i = 1; i <= MaxClients; i++) {
-					if( StrEqual(expl[0], "kidnap") && rp_GetClientInt(i, i_KidnappedBy) == 0 )
-						continue;
-					
-					rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, options, sizeof(options));
-					if( !StrEqual(options, expl[1]) )
-						continue;
-					
-					Format(options, sizeof(options), "%s %s %d", expl[0], expl[1], i);
-					Format(tmp, sizeof(tmp), "%N", i);
-					
-					int vehicle = Client_GetVehicle(i);
-					Entity_GetAbsOrigin(vehicle > 0 ? vehicle : i, g_flLastPos[i]);
-					
-					subMenu.AddItem(options, tmp);
-					nbRecherche++;
-				}
-					
-				subMenu.Display(client, MENU_TIME_FOREVER);// a tester
-				g_bCanOppe[client] = false;
+			if ( rp_GetClientJobID(client) == 91 && (StrEqual(tmp, "bunker") || StrEqual(tmp, "villa") ) ) {
+				CPrintToChat(client, "" ...MOD_TAG... " C'est du lourd ici, mieux vaut éviter de les provoquer");
 			}
+			
+			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) || IsInValidZone(zone) ) {
+				INIT_OPPE(client, zone, 0, 0);
+				g_bCanOppe[client] = false;
+				char tmp[64];
+				rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
+				LogToGame("[OPPE-test] Une oppération est lancée dans %s.", tmp);
+				CPrintToChatAll("{red} =================================={default} ");
+				if( array[PQ_target] == 0 )
+					CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} La villa est maintenant sous notre contrôle, fuyez ou payez si vous voulez vivre.", tmp, array[PQ_resp]);
+				CPrintToChatAll("{red} =================================={default} ");	
+			}
+			else {
+				CPrintToChat(client, "" ...MOD_TAG... " Ce batiment est actuellement innocupé");
+			}
+			
 		}
+		
 		else if( StrEqual(expl[0], "trafic") ) {
 			int weapon, machine, plant;
 			
 			countBadThing(expl[1], weapon, plant, machine);
 			
-			g_bCanOppe[client] = false;
-			
 			if( weapon > 3 || machine > 1 || plant > 1)
 				INIT_OPPE(client, zone, 0, 0);
+				g_bCanOppe[client] = false;
 			else
 				CPrintToChat(client, "" ...MOD_TAG... " Cette planque est sous la protection de la police, mieux vaut éviter.");
 				
@@ -191,7 +188,7 @@ void INIT_OPPE(int client, int zone, int target, int type) {
 
 	setPerquizData(client, zone, target, resp, type, 0);
 	
-	Format(query, sizeof(query), "SELECT `time` FROM `rp_oppe` WHERE `type`='%s' AND `job_id`='%d' AND `zone`='%s' ORDER BY `time` DESC;", target > 0 ? "search" : "trafic", rp_GetClientJobID(client), tmp);
+	Format(query, sizeof(query), "SELECT `time` FROM `rp_oppe` WHERE `type`='%s' AND `job_id`='%d' AND `zone`='%s' ORDER BY `time` DESC;", target > 0 ? "control" : "trafic", rp_GetClientJobID(client), tmp);
 	
 	SQL_TQuery(rp_GetDatabase(), VERIF_OPPE, query, zone);
 }
@@ -249,7 +246,7 @@ void START_OPPE(int zone) {
 	
 	CPrintToChatAll("{red} =================================={default} ");
 	if( array[PQ_target] == 0 )
-		CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} %s est maintenant sous notre contrôle, fuyez ou payez si vous voulez vivre.", tmp, array[PQ_resp]);
+		CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} %s n'a pas payé sa taxe de protection, il est temps de faire le ménage !", tmp, array[PQ_resp]);
 	CPrintToChatAll("{red} =================================={default} ");	
 	
 	if( IsValidClient(array[PQ_target]) ) {
@@ -293,7 +290,7 @@ void END_OPPE(int zone, bool abort) {
 	if( !abort ) {
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 		GetClientAuthId(array[PQ_client], AUTH_TYPE, date, sizeof(date));
-		Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP(), '%s', '%s', '%d');", tmp, date, array[PQ_target] > 0 ? "search" : "trafic", rp_GetClientJobID(array[PQ_client]));
+		Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP(), '%s', '%s', '%d');", tmp, date, array[PQ_target] > 0 ? "control" : "trafic", rp_GetClientJobID(array[PQ_client]));
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 		
 		rp_ClientMoney(array[PQ_client], i_AddToPay, 500);
@@ -301,7 +298,7 @@ void END_OPPE(int zone, bool abort) {
 	else if( abort ) {
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 		GetClientAuthId(array[PQ_client], AUTH_TYPE, date, sizeof(date));
-		Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP()-%d, '%s', '%s', '%d');", tmp, getCooldown(array[PQ_client], zone)*60+6*60, date, array[PQ_target] > 0 ? "search" : "trafic", rp_GetClientJobID(array[PQ_client]));
+		Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP()-%d, '%s', '%s', '%d');", tmp, getCooldown(array[PQ_client], zone)*60+6*60, date, array[PQ_target] > 0 ? "control" : "trafic", rp_GetClientJobID(array[PQ_client]));
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 	}
 	
@@ -363,11 +360,6 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	if( array[PQ_target] > 0 ) {
 		if( !IsValidClient(array[PQ_target]) ) {
 			END_OPPE(zone, true);
-			return Plugin_Stop;
-		}
-		
-		if( array[PQ_type] == 2 && rp_GetClientInt(array[PQ_target], i_KidnappedBy) == 0 ) {
-			END_OPPE(zone, false);
 			return Plugin_Stop;
 		}
 		
@@ -810,5 +802,18 @@ bool hasCopInZone(int zone) {
 		if( StrEqual(tmp, tmp2) )
 			return true;
 	}
+	return false;
+}
+bool IsInValidZone(int client) {
+	int validZone[] = { 131, 171, 81, 11, 21, 41, 221};
+	char tmp[64], tmp2[64];
+	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	
+	for(int i=0; i<sizeof(validZone); i++) {
+		if( validZone[i] == jobZone ) {
+			return true;
+		}
+	}
+	
 	return false;
 }
