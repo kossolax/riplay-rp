@@ -121,14 +121,17 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 			return 0;
 		
 		if(StrEqual(expl[0], "control") ) {
-		
-			int validZone[] = { 131, 171, 81, 11, 21, 41, 221};
 			
 			if ( rp_GetClientJobID(client) == 91 && (StrEqual(tmp, "bunker") || StrEqual(tmp, "villa") || StrEqual(tmp, "1") || StrEqual(tmp, "101") ) ) {
 				CPrintToChat(client, "" ...MOD_TAG... " C'est du lourd ici, mieux vaut éviter de les provoquer");
 			}
 			
-			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") || validZone[i] == zone ) {
+			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "111") || StrEqual(tmp, "51") || StrEqual(tmp, "31") || StrEqual(tmp, "211") || StrEqual(tmp, "71") || StrEqual(tmp, "91")) {
+				CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
+			}
+			
+			
+			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
 				INIT_OPPE(client, zone, 0, 0);
 				g_bCanOppe[client] = false;
 				LogToGame("[MAFIA] Une prise de controle est lancée dans %s.", tmp);
@@ -137,9 +140,15 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 				CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} La villa est maintenant sous notre contrôle, fuyez ou payez si vous voulez vivre.", tmp);
 				CPrintToChatAll("{red} =================================={default} ");
 			}
-			
+	
 			else {
-				CPrintToChat(client, "" ...MOD_TAG... " Ce batiment est actuellement innocupé");
+				INIT_OPPE(client, zone, 0, 0);
+				g_bCanOppe[client] = false;
+				LogToGame("[MAFIA] Une prise de controle est lancée dans %s.", tmp);
+		
+				CPrintToChatAll("{red} =================================={default} ");
+				CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} %s est maintenant sous notre contrôle, fuyez ou payez si vous voulez vivre.", tmp);
+				CPrintToChatAll("{red} =================================={default} ");
 			}
 			
 		}
