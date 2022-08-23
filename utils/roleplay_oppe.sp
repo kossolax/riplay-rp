@@ -148,14 +148,14 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 			
 			countBadThing(expl[1], weapon, plant, machine);
 			
-			if( weapon > 3 || machine > 1 || plant > 1)
+			if( weapon > 3 || machine > 1 || plant > 1){
 				INIT_OPPE(client, zone, 0, 0);
 				g_bCanOppe[client] = false;
 				LogToGame("[MAFIA] Une oppération d'impayé est lancée dans %s.", tmp);
 				CPrintToChatAll("{red} =================================={default} ");
 				CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} %s n'a pas payé sa taxe de protection, il est temps de faire le ménage !", tmp);
 				CPrintToChatAll("{red} =================================={default} ");
-				
+			}
 			else
 				CPrintToChat(client, "" ...MOD_TAG... " Cette planque est sous la protection de la police, mieux vaut éviter.");
 				
