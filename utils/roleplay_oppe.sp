@@ -134,8 +134,7 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 				LogToGame("[MAFIA] Une prise de controle est lancée dans %s.", tmp);
 		
 				CPrintToChatAll("{red} =================================={default} ");
-				if( array[PQ_target] == 0 )
-					CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} La villa est maintenant sous notre contrôle, fuyez ou payez si vous voulez vivre.", tmp, array[PQ_resp]);
+				CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} La villa est maintenant sous notre contrôle, fuyez ou payez si vous voulez vivre.", tmp);
 				CPrintToChatAll("{red} =================================={default} ");
 					}
 					else {
