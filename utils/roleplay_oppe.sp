@@ -99,7 +99,7 @@ public Action Cmd_Opperation(int client) {
 	}
 	else {
 		Format(tmp2, sizeof(tmp2), "trafic %s", tmp);	menu.AddItem(tmp2, "Taxe de protection impayé");
-		Format(tmp2, sizeof(tmp2), "control %s", tmp);	menu.AddItem(tmp2, "Prendre les lieux");
+		Format(tmp2, sizeof(tmp2), "control %s", tmp);	menu.AddItem(tmp2, "Prendre possesion des lieux");
 	}
 	menu.Display(client, MENU_TIME_FOREVER);
 	
@@ -399,7 +399,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		}
 	}
 	
-	if( !hasCopInZone(zone) ) {
+	if( !MafiaInZone(zone) ) {
 		array[PQ_timeout] = 0;
 	}
 	else {
@@ -782,11 +782,11 @@ void TeleportT(int zone) {
 	for (int i = 1; i <= MaxClients; i++) {
 		if( !IsValidClient(i) || !IsPlayerAlive(i) )
 			continue;
-		if( rp_GetClientJobID(i) == 91 )
+		if( GetClientTeam(i) == CS_TEAM_CT )
 			continue;
-		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
-		
-		if( StrEqual(tmp, tmp2) ) {
+		if( rp_GetClientJobID(i) != 91 )
+			continue;
+		if( rp_GetClientJobID(i) == 91 ) {
 			rp_ClientSendToSpawn(i, true);
 			rp_ClientColorize(i);
 		}
@@ -801,20 +801,35 @@ int getCooldown(int client, int zone) {
 	else
 		return 60 * 60; // toute les heures
 }
-bool hasCopInZone(int zone) {
+bool MafiaInZone(int zone) {
 	char tmp[64], tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
 	for (int i = 1; i <= MaxClients; i++) {
 		if( !IsValidClient(i) || !IsPlayerAlive(i) )
 			continue;
-		if( GetClientTeam(i) == CS_TEAM_T )
-			continue;
-		if( GetPlayerWeaponSlot(i, CS_SLOT_PRIMARY) <= 0 &&  GetPlayerWeaponSlot(i, CS_SLOT_SECONDARY) <= 0 )
+		if( rp_GetClientJobID(i) != 91 )
 			continue;
 		
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
 		if( StrEqual(tmp, tmp2) )
+			return true;
+	}
+	return false;
+}
+bool PlayerInJob(int client, int zone) {
+	char tmp[64], tmp2[64];
+	float dst[3];
+	rp_GetClientTarget(client, dst);
+	int zone = rp_GetZoneFromPoint(dst);
+	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	
+	for (int i = 1; i <= MaxClients; i++) {
+		if( !IsValidClient(i) || !IsPlayerAlive(i) )
+			continue;
+		if( GetClientTeam(i) == CS_TEAM_CT )
+			continue;
+		if( StrEqual(rp_GetClientJobID(i), tmp) == true)
 			return true;
 	}
 	return false;
