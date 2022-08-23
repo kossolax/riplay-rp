@@ -118,12 +118,11 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 		int zone = rp_GetZoneFromPoint(dst);
 		int nbRecherche = 0;
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+		
 		if( !StrEqual(tmp, expl[1]) )
 			return 0;
 		
 		if(StrEqual(expl[0], "control") ) {
-			char tmp[64];
-			rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 			
 			if ( rp_GetClientJobID(client) == 91 && (StrEqual(tmp, "bunker") || StrEqual(tmp, "villa") ) ) {
 				CPrintToChat(client, "" ...MOD_TAG... " C'est du lourd ici, mieux vaut éviter de les provoquer");
@@ -132,17 +131,16 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") || IsInValidZone(zone) ) {
 				INIT_OPPE(client, zone, 0, 0);
 				g_bCanOppe[client] = false;
-				char tmp[64];
-				rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
-				LogToGame("[OPPE-test] Une oppération est lancée dans %s.", tmp);
+				LogToGame("[MAFIA] Une prise de controle est lancée dans %s.", tmp);
+		
 				CPrintToChatAll("{red} =================================={default} ");
 				if( array[PQ_target] == 0 )
 					CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} La villa est maintenant sous notre contrôle, fuyez ou payez si vous voulez vivre.", tmp, array[PQ_resp]);
-				CPrintToChatAll("{red} =================================={default} ");	
-			}
-			else {
-				CPrintToChat(client, "" ...MOD_TAG... " Ce batiment est actuellement innocupé");
-			}
+				CPrintToChatAll("{red} =================================={default} ");
+					}
+					else {
+						CPrintToChat(client, "" ...MOD_TAG... " Ce batiment est actuellement innocupé");
+					}
 			
 		}
 		
@@ -154,6 +152,11 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 			if( weapon > 3 || machine > 1 || plant > 1)
 				INIT_OPPE(client, zone, 0, 0);
 				g_bCanOppe[client] = false;
+				LogToGame("[MAFIA] Une oppération d'impayé est lancée dans %s.", tmp);
+				CPrintToChatAll("{red} =================================={default} ");
+				CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} %s n'a pas payé sa taxe de protection, il est temps de faire le ménage !", tmp);
+				CPrintToChatAll("{red} =================================={default} ");
+				
 			else
 				CPrintToChat(client, "" ...MOD_TAG... " Cette planque est sous la protection de la police, mieux vaut éviter.");
 				
@@ -229,6 +232,7 @@ void START_OPPE(int zone) {
 	int[] array = new int[PQ_Max];
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	setPerquizData(client, zone, target, resp, type, 0);
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return;
@@ -242,18 +246,14 @@ void START_OPPE(int zone) {
 	
 	
 	rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
-	LogToGame("[OPPE-test] Une oppération est lancée dans %s.", tmp);
-	
-	CPrintToChatAll("{red} =================================={default} ");
-	if( array[PQ_target] == 0 )
-		CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} %s n'a pas payé sa taxe de protection, il est temps de faire le ménage !", tmp, array[PQ_resp]);
-	CPrintToChatAll("{red} =================================={default} ");	
-	
+
+	CreateTimer(1.0, TIMER_OPPE, zone, TIMER_REPEAT);
+
 	if( IsValidClient(array[PQ_target]) ) {
 		rp_HookEvent(array[PQ_target], RP_OnPlayerDead, fwdHookDead);
 		rp_HookEvent(array[PQ_target], RP_PreClientSendToJail, fwdHookJail);
 	}
-	CreateTimer(1.0, TIMER_OPPE, zone, TIMER_REPEAT);
+	
 	
 	ServerCommand("rp_sick 0"); // Pas de maladie en oppe
 }
@@ -792,8 +792,6 @@ bool hasCopInZone(int zone) {
 		if( !IsValidClient(i) || !IsPlayerAlive(i) )
 			continue;
 		if( GetClientTeam(i) == CS_TEAM_T )
-			continue;
-		if( rp_GetClientInt(i, i_KidnappedBy) > 0 )
 			continue;
 		if( GetPlayerWeaponSlot(i, CS_SLOT_PRIMARY) <= 0 &&  GetPlayerWeaponSlot(i, CS_SLOT_SECONDARY) <= 0 )
 			continue;
