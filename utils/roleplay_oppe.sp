@@ -126,7 +126,7 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 				CPrintToChat(client, "" ...MOD_TAG... " C'est du lourd ici, mieux vaut éviter de les provoquer");
 			}
 			
-			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") || IsInValidZone(zone) ) {
+			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") || IsInValidZone(client) ) {
 				INIT_OPPE(client, zone, 0, 0);
 				g_bCanOppe[client] = false;
 				LogToGame("[MAFIA] Une prise de controle est lancée dans %s.", tmp);
