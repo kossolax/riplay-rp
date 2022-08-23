@@ -814,11 +814,9 @@ bool IsInValidZone(int client) {
 	float dst[3];
 	rp_GetClientTarget(client, dst);
 	int zone = rp_GetZoneFromPoint(dst);
-	int jobZone =rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
-
 	
 	for(int i=0; i<sizeof(validZone); i++) {
-		if( validZone[i] == jobZone ) {
+		if( validZone[i] == zone ) {
 			return true;
 		}
 	}
