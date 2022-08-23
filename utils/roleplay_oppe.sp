@@ -126,7 +126,7 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 				CPrintToChat(client, "" ...MOD_TAG... " C'est du lourd ici, mieux vaut éviter de les provoquer");
 			}
 			
-			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "91") ) ) {
+			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "91") ) {
 				CPrintToChat(client, "" ...MOD_TAG... " Tu n'es pas le couteau le plus aiguisé du triroir toi ... c'est chez nous ici !");
 			}
 			
@@ -166,7 +166,7 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 				CPrintToChat(client, "" ...MOD_TAG... " C'est du lourd ici, mieux vaut éviter de les provoquer");
 			}
 			
-			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "91") ) ) {
+			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "91") ) {
 				CPrintToChat(client, "" ...MOD_TAG... " Tu n'es pas le couteau le plus aiguisé du triroir toi ... c'est chez nous ici !");
 			}
 			
