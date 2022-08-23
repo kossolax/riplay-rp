@@ -53,10 +53,9 @@ public void OnClientPostAdminCheck(int client) {
 public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
 	
 	if( !g_bCanOppe[client] && (rp_GetClientJobID(client) == 91) ) {
-		if( rp_GetZoneInt(newZone, zone_type_type) == rp_GetClientJobID(client) ) {
-			if( rp_GetClientInt(client, i_Job) == 91 || rp_GetClientInt(client, i_Job) == 92 || rp_GetClientInt(client, i_Job) == 93)
-				g_bCanOppe[client] = true;
-				CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez maintenant effectuer une oppération");
+		if( rp_GetZoneInt(newZone, zone_type_type) == rp_GetClientJobID(client) && rp_GetClientInt(client, i_Job) == 91 || rp_GetClientInt(client, i_Job) == 92 || rp_GetClientInt(client, i_Job) == 93) {
+			g_bCanOppe[client] = true;
+			CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez maintenant effectuer une oppération");
 		}
 	}
 }
@@ -116,7 +115,6 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 		float dst[3];
 		rp_GetClientTarget(client, dst);
 		int zone = rp_GetZoneFromPoint(dst);
-		int nbRecherche = 0;
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 		
 		if( !StrEqual(tmp, expl[1]) )
@@ -231,7 +229,6 @@ void START_OPPE(int zone) {
 	int[] array = new int[PQ_Max];
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
-	setPerquizData(client, zone, target, resp, type, 0);
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return;
@@ -802,9 +799,10 @@ bool hasCopInZone(int zone) {
 	return false;
 }
 bool IsInValidZone(int client) {
-	int validZone[] = { 131, 171, 81, 11, 21, 41, 221};
 	char tmp[64], tmp2[64];
-	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	int validZone[] = { 131, 171, 81, 11, 21, 41, 221};
+	int jobZone =rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	char tmp[64], tmp2[64];
 	
 	for(int i=0; i<sizeof(validZone); i++) {
 		if( validZone[i] == jobZone ) {
