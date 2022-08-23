@@ -121,12 +121,14 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 			return 0;
 		
 		if(StrEqual(expl[0], "control") ) {
+		
+			int validZone[] = { 131, 171, 81, 11, 21, 41, 221};
 			
-			if ( rp_GetClientJobID(client) == 91 && (StrEqual(tmp, "bunker") || StrEqual(tmp, "villa") ) ) {
+			if ( rp_GetClientJobID(client) == 91 && (StrEqual(tmp, "bunker") || StrEqual(tmp, "villa") || StrEqual(tmp, "1") || StrEqual(tmp, "101") ) ) {
 				CPrintToChat(client, "" ...MOD_TAG... " C'est du lourd ici, mieux vaut éviter de les provoquer");
 			}
 			
-			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") || IsInValidZone(client) ) {
+			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") || validZone[i] == zone ) {
 				INIT_OPPE(client, zone, 0, 0);
 				g_bCanOppe[client] = false;
 				LogToGame("[MAFIA] Une prise de controle est lancée dans %s.", tmp);
@@ -806,20 +808,5 @@ bool hasCopInZone(int zone) {
 		if( StrEqual(tmp, tmp2) )
 			return true;
 	}
-	return false;
-}
-bool IsInValidZone(int client) {
-	char tmp[64], tmp2[64];
-	int validZone[] = { 131, 171, 81, 11, 21, 41, 221};
-	float dst[3];
-	rp_GetClientTarget(client, dst);
-	int zone = rp_GetZoneFromPoint(dst);
-	
-	for(int i=0; i<sizeof(validZone); i++) {
-		if( validZone[i] == zone ) {
-			return true;
-		}
-	}
-	
 	return false;
 }
