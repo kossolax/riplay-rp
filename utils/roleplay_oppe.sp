@@ -163,7 +163,7 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 			countBadThing(expl[1], weapon, plant, machine);
 			
 			if ( rp_GetClientJobID(client) == 91 && (StrEqual(tmp, "bunker") || StrEqual(tmp, "villa") || StrEqual(tmp, "1") || StrEqual(tmp, "101") ) ) {
-				CPrintToChat(client, "" ...MOD_TAG... " C'est du lourd ici, mieux vaut éviter de les provoquer");
+				c
 			}
 			
 			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "91") ) {
@@ -413,6 +413,11 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	
 	if( !MafiaInZone(zone) ) {
 		array[PQ_timeout] = 0;
+		CPrintToChat(client, "" ...MOD_TAG... " pas de mafieux sur la zone");
+	}
+	if( MafiaInZone(zone) ) {
+		array[PQ_timeout] = 0;
+		CPrintToChat(client, "" ...MOD_TAG... " Mafieux sur zone");
 	}
 	else {
 		array[PQ_timeout]++;
