@@ -411,12 +411,8 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		}
 	}
 	
-	if( !MafiaInZone(zone) ) {
-		array[PQ_timeout] = 0;
-		CPrintToChat(zone, "" ...MOD_TAG... " pas de mafieux sur la zone");
-	}
 	if( MafiaInZone(zone) ) {
-		CPrintToChat(zone, "" ...MOD_TAG... " Mafieux sur zone");
+		array[PQ_timeout] = 0;
 	}
 	else {
 		array[PQ_timeout]++;
