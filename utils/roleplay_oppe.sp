@@ -147,7 +147,7 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 			}
 	
 			else {
-				INIT_OPPE(client, zone, StrEqual(expl[0], "control") );
+				INIT_OPPE(client, zone, StrEqual(expl[2], "control") );
 				g_bCanOppe[client] = false;
 				LogToGame("[MAFIA] Une prise de controle est lancée dans %s.", tmp2);
 		
