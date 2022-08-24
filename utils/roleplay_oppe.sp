@@ -375,7 +375,7 @@ public Action fwdHookDead(int victim, int attacker, float& respawn, int& tdm, fl
 public Action task_respawn(Handle timer, any client) {
 	rp_ClientRespawn(client);
 }
-public Action TIMER_OPPE(Handle timer, any zone, int client) {
+public Action TIMER_OPPE(Handle timer, any zone) {
 	int[] array = new int[PQ_Max];
 	char tmp[64], tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
@@ -413,11 +413,10 @@ public Action TIMER_OPPE(Handle timer, any zone, int client) {
 	
 	if( !MafiaInZone(zone) ) {
 		array[PQ_timeout] = 0;
-		CPrintToChat(client, "" ...MOD_TAG... " pas de mafieux sur la zone");
+		CPrintToChat(zone, "" ...MOD_TAG... " pas de mafieux sur la zone");
 	}
 	if( MafiaInZone(zone) ) {
-		array[PQ_timeout] = 0;
-		CPrintToChat(client, "" ...MOD_TAG... " Mafieux sur zone");
+		CPrintToChat(zone, "" ...MOD_TAG... " Mafieux sur zone");
 	}
 	else {
 		array[PQ_timeout]++;
