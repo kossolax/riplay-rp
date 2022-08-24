@@ -163,7 +163,7 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 			countBadThing(expl[1], weapon, plant, machine);
 			
 			if ( rp_GetClientJobID(client) == 91 && (StrEqual(tmp, "bunker") || StrEqual(tmp, "villa") || StrEqual(tmp, "1") || StrEqual(tmp, "101") ) ) {
-				c
+				CPrintToChat(client, "" ...MOD_TAG... " C'est du lourd ici, mieux vaut éviter de les provoquer");
 			}
 			
 			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "91") ) {
@@ -375,7 +375,7 @@ public Action fwdHookDead(int victim, int attacker, float& respawn, int& tdm, fl
 public Action task_respawn(Handle timer, any client) {
 	rp_ClientRespawn(client);
 }
-public Action TIMER_OPPE(Handle timer, any zone) {
+public Action TIMER_OPPE(Handle timer, any zone, int client) {
 	int[] array = new int[PQ_Max];
 	char tmp[64], tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
