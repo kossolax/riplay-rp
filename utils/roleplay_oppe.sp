@@ -90,7 +90,7 @@ public Action Cmd_Opperation(int client) {
 		return Plugin_Handled;
 	}
 	
-	Menu menu = new Menu(MenuPerquiz);
+	Menu menu = new Menu(MenuOppe);
 	menu.SetTitle("Quel est le but de l'oppération ?\n ");
 	
 	
@@ -105,7 +105,7 @@ public Action Cmd_Opperation(int client) {
 	
 	return Plugin_Handled;
 }
-public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
+public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 	if( action == MenuAction_Select ) {
 		char options[64], expl[4][32], tmp[64], tmp2[64];
 		GetMenuItem(menu, param2, options, sizeof(options));
@@ -137,23 +137,13 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 			
 			
 			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
-				INIT_OPPE(client, zone, 0, 0);
+				INIT_OPPE(client, zone, 0, 1 );
 				g_bCanOppe[client] = false;
-				LogToGame("[MAFIA] Une prise de controle est lancée dans %s.", tmp2);
-		
-				CPrintToChatAll("{red} =================================={default} ");
-				CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} La villa est maintenant sous notre contrôle, fuyez ou payez si vous voulez vivre.", tmp);
-				CPrintToChatAll("{red} =================================={default} ");
 			}
 	
 			else {
-				INIT_OPPE(client, zone, StringToInt(expl[2]), StrEqual(expl[0], "control") );
+				INIT_OPPE(client, zone, 0, 1);
 				g_bCanOppe[client] = false;
-				LogToGame("[MAFIA] Une prise de controle est lancée dans %s.", tmp2);
-		
-				CPrintToChatAll("{red} =================================={default} ");
-				CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} %s est maintenant sous notre contrôle, fuyez ou payez si vous voulez vivre.", tmp2);
-				CPrintToChatAll("{red} =================================={default} ");
 			}
 			
 		}
@@ -174,17 +164,6 @@ public int MenuPerquiz(Handle menu, MenuAction action, int client, int param2) {
 			else if( weapon > 3 || machine > 1 || plant > 1){
 				INIT_OPPE(client, zone, 0, 0);
 				g_bCanOppe[client] = false;
-				LogToGame("[MAFIA] Une oppération d'impayé est lancée dans %s.", tmp2);
-				if ( StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
-					CPrintToChatAll("{red} =================================={default} ");
-					CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} Le proprietaire de la villa n'a pas payé sa taxe de protection, il est temps de faire le ménage !", tmp);
-					CPrintToChatAll("{red} =================================={default} ");
-				}
-				else {
-					CPrintToChatAll("{red} =================================={default} ");
-					CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} %s n'a pas payé sa taxe de protection, il est temps de faire le ménage !", tmp2);
-					CPrintToChatAll("{red} =================================={default} ");
-				}
 			}
 			
 			else {
@@ -261,8 +240,9 @@ public void VERIF_OPPE(Handle owner, Handle row, const char[] error, any zone) {
 }
 void START_OPPE(int zone) {
 	int[] array = new int[PQ_Max];
-	char tmp[64];
+	char tmp[64], tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	rp_GetZoneData(zone, zone_type_name, tmp2, sizeof(tmp2));
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return;
@@ -273,6 +253,39 @@ void START_OPPE(int zone) {
 		
 	array[PQ_timeout] = 0;
 	updateOppeData(zone, array);
+	
+	if (array[PQ_target] == 0) {
+		if ( StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
+			LogToGame("[MAFIA] Une prise de controle est lancée dans %s.", tmp2);
+
+			CPrintToChatAll("{red} =================================={default} ");
+			CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} La villa est maintenant sous notre contrôle, fuyez ou payez si vous voulez vivre.", tmp);
+			CPrintToChatAll("{red} =================================={default} ");
+		}
+
+		else if {
+		
+			LogToGame("[MAFIA] Une prise de controle est lancée dans %s.", tmp2);
+
+			CPrintToChatAll("{red} =================================={default} ");
+			CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} %s est maintenant sous notre contrôle, fuyez ou payez si vous voulez vivre.", tmp2);
+			CPrintToChatAll("{red} =================================={default} ");
+		}
+	}
+	
+	else{
+		LogToGame("[MAFIA] Une oppération d'impayé est lancée dans %s.", tmp2);
+		if ( StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
+			CPrintToChatAll("{red} =================================={default} ");
+			CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} Le proprietaire de la villa n'a pas payé sa taxe de protection, il est temps de faire le ménage !", tmp);
+			CPrintToChatAll("{red} =================================={default} ");
+		}
+		else {
+			CPrintToChatAll("{red} =================================={default} ");
+			CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} %s n'a pas payé sa taxe de protection, il est temps de faire le ménage !", tmp2);
+			CPrintToChatAll("{red} =================================={default} ");
+		}
+	}
 	
 	
 	rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
