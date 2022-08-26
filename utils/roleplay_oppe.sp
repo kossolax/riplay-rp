@@ -136,13 +136,17 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 			}
 			
 			
-			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
-				INIT_OPPE(client, zone, 0, 1 );
+			else if ( rp_GetClientJobID(client) == 91 && PlayerInVilla(zone) && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
+				INIT_OPPE(client, zone, 1, 0 );
 				g_bCanOppe[client] = false;
 			}
 	
-			else {
-				INIT_OPPE(client, zone, 0, 1);
+			else if (!PlayerInJob(zone)){
+				CPrintToChat(client, "" ...MOD_TAG... " il n'y à pas suffisament de personne pour défendre ce bâtiment");
+			}
+			
+			else{
+				INIT_OPPE(client, zone, 1, 0);
 				g_bCanOppe[client] = false;
 			}
 			
@@ -291,13 +295,7 @@ void START_OPPE(int zone) {
 	rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
 
 	CreateTimer(1.0, TIMER_OPPE, zone, TIMER_REPEAT);
-
-	if( IsValidClient(array[PQ_target]) ) {
-		rp_HookEvent(array[PQ_target], RP_OnPlayerDead, fwdHookDead);
-		rp_HookEvent(array[PQ_target], RP_PreClientSendToJail, fwdHookJail);
-	}
-	
-	
+		
 	ServerCommand("rp_sick 0"); // Pas de maladie en oppe
 }
 public Action ChangeZoneSafe(Handle timer, any zone) {
@@ -317,11 +315,6 @@ void END_OPPE(int zone, bool abort) {
 	DoorLock(zone);
 	SetConVarInt(g_hActive, GetConVarInt(g_hActive) - 1);
 	
-	if( IsValidClient(array[PQ_target]) ) {
-		rp_UnhookEvent(array[PQ_target], RP_OnPlayerDead, fwdHookDead);
-		rp_UnhookEvent(array[PQ_target], RP_PreClientSendToJail, fwdHookJail);
-	}
-	
 	rp_GetDate(date, sizeof(date));
 	
 	rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
@@ -336,7 +329,7 @@ void END_OPPE(int zone, bool abort) {
 		Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP(), '%s', '%s', '%d');", tmp, date, array[PQ_target] > 0 ? "control" : "trafic", rp_GetClientJobID(array[PQ_client]));
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 		
-		rp_ClientMoney(array[PQ_client], i_AddToPay, 500);
+		//rp_ClientMoney(array[PQ_client], i_AddToPay, 500);
 	}
 	else if( abort ) {
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
@@ -348,47 +341,7 @@ void END_OPPE(int zone, bool abort) {
 	ServerCommand("rp_sick 1"); // On remet la maladie à la fin
 }
 // ----------------------------------------------------------------------------
-public Action fwdHookJail(int attacker, int victim) {
-	char tmp[64];
-	int zone = rp_GetZoneFromPoint(g_flLastPos[victim]);
-	int[] array = new int[PQ_Max];
-	rp_GetZoneData( zone, zone_type_type, tmp, sizeof(tmp));
-	
-	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
-		rp_UnhookEvent(victim, RP_PreClientSendToJail, fwdHookJail);
-	}
-	
-	END_OPPE(zone, false);
-	
-	return Plugin_Continue;
-}
-public Action fwdHookDead(int victim, int attacker, float& respawn, int& tdm, float& ctx) {
-	char tmp[64];
-	int zone = rp_GetZoneFromPoint(g_flLastPos[victim]);
-	int[] array = new int[PQ_Max];
-	rp_GetZoneData( zone, zone_type_type, tmp, sizeof(tmp));
-	
-	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
-		rp_UnhookEvent(victim, RP_OnPlayerDead, fwdHookDead);
-	}
-	
-	if( array[PQ_type] != 2 ) {
-		ServerCommand("rp_SendToJail %d %d", victim, array[PQ_client]);
-		rp_SetClientInt(victim, i_JailTime, (rp_GetClientInt(victim, i_JailTime) + 6 * 60));
-		END_OPPE(zone, false);
-	}
-	else
-		END_OPPE(zone, true);
-	
-	CreateTimer(0.1, task_respawn, victim);
-	
-	
-	
-	return Plugin_Continue;
-}
-public Action task_respawn(Handle timer, any client) {
-	rp_ClientRespawn(client);
-}
+
 public Action TIMER_OPPE(Handle timer, any zone) {
 	int[] array = new int[PQ_Max];
 	char tmp[64], tmp2[64];
@@ -490,12 +443,6 @@ int GetPerquizResp(int zone, bool afkCheck) {
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
-	if( StrEqual(tmp, "bunker") )
-		return GetPerquizRespByGroup( rp_GetCaptureInt(cap_bunker), afkCheck);
-	else if( StrEqual(tmp, "villa") )
-		return GetPerquizRespByGroup( rp_GetCaptureInt(cap_villa), afkCheck);
-	else if( StrEqual(tmp, "mairie") )
-		return GetPerquizRespMaire(); 
 	else if( StrContains(tmp, "appart_") == 0 ) {
 		ReplaceString(tmp, sizeof(tmp), "appart_", "");
 		return GetPerquizRespByAppart(StringToInt(tmp), afkCheck);
@@ -503,6 +450,7 @@ int GetPerquizResp(int zone, bool afkCheck) {
 	else
 		return GetPerquizRespByJob(StringToInt(tmp), afkCheck);
 }
+
 int GetPerquizRespByAppart(int appartID, bool afkCheck) {
 	int zone;
 	int res = 0;
@@ -526,6 +474,7 @@ int GetPerquizRespByAppart(int appartID, bool afkCheck) {
 	}
 	return res;
 }
+
 int GetPerquizRespByJob(int job_id, bool afkCheck) {
 	int zone;	
 	int min = 9999;
@@ -549,45 +498,6 @@ int GetPerquizRespByJob(int job_id, bool afkCheck) {
 	
 	
 	return res;
-}
-int GetPerquizRespByGroup(int gang_id, bool afkCheck) {
-	int zone;	
-	int min = 9999;
-	int res = 0;
-	
-	for(int i=1; i<=MaxClients; i++) {
-		if( !IsValidClient(i) )
-			continue;
-		if( afkCheck && rp_GetClientBool(i, b_IsAFK) )
-			continue;
-		zone = rp_GetZoneBit(rp_GetPlayerZone(i));
-		
-		if( zone & (BITZONE_JAIL|BITZONE_LACOURS|BITZONE_HAUTESECU) )
-			continue;
-		
-		if( gang_id == rp_GetClientGroupID(i) && min > rp_GetClientInt(i, i_Group) ) {
-			min = rp_GetClientInt(i, i_Job);
-			res = i;
-		}
-	}
-	
-	
-	return res;
-}
-int GetPerquizRespMaire() {
-	char tmp[32], tmp2[32];
-	rp_GetServerString(mairieID, tmp, sizeof(tmp));
-	
-	for(int i=1; i<=MaxClients; i++) {
-		if( !IsValidClient(i) )
-			continue;
-		
-		GetClientAuthId(i, AUTH_TYPE, tmp2, sizeof(tmp2));
-		if( StrEqual(tmp, tmp2) )
-			return i;
-	}
-	
-	return 0;
 }
 // ----------------------------------------------------------------------------
 void Effect_DrawPerqui(int zone) {
@@ -812,7 +722,10 @@ void TeleportT(int zone) {
 			continue;
 		if( rp_GetClientJobID(i) != 91 )
 			continue;
-		if( rp_GetClientJobID(i) == 91 ) {
+			
+		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
+		
+		if( StrEqual(tmp, tmp2) ) {
 			rp_ClientSendToSpawn(i, true);
 			rp_ClientColorize(i);
 		}
@@ -827,6 +740,7 @@ int getCooldown(int client, int zone) {
 	else
 		return 60 * 60; // toute les heures
 }
+
 bool MafiaInZone(int zone) {
 	char tmp[64], tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
@@ -843,12 +757,14 @@ bool MafiaInZone(int zone) {
 	}
 	return false;
 }
+
 bool PlayerInJob(int client, int zone) {
-	char tmp[64], tmp2[64];
+	char tmp[64];
 	float dst[3];
 	rp_GetClientTarget(client, dst);
 	int zone = rp_GetZoneFromPoint(dst);
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	int nbPlayer = 0;
 	
 	for (int i = 1; i <= MaxClients; i++) {
 		if( !IsValidClient(i) || !IsPlayerAlive(i) )
@@ -856,7 +772,36 @@ bool PlayerInJob(int client, int zone) {
 		if( GetClientTeam(i) == CS_TEAM_CT )
 			continue;
 		if( StrEqual(rp_GetClientJobID(i), tmp) == true)
-			return true;
+			nbPlayer++;
 	}
-	return false;
+	if (nbPlayer >= 3){
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+bool PlayerInVilla(int client, int zone) {
+	char tmp[64];
+	float dst[3];
+	rp_GetClientTarget(client, dst);
+	int zone = rp_GetZoneFromPoint(dst);
+	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	int nbPlayerVilla = 0;
+	
+	for (int i = 1; i <= MaxClients; i++) {
+		if ( !IsValidClient(i) || !IsPlayerAlive(i) || i == client )
+			continue;	
+		if ( rp_GetClientBool(i, b_HasVilla) == false )
+			continue;
+		subMenu.AddItem(options, tmp);
+		nbPlayerVilla++;
+				}
+	if (nbPlayerVilla >= 3){
+		return true;
+	}
+	else {
+		return false;
+	}
 }
