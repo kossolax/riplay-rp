@@ -158,7 +158,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 	
 			else {
 				for (int i = 1; i <= MaxClients; i++) {
-					job = rp_GetClientJobID(i);
+					int job = rp_GetClientJobID(i);
 					if( !IsValidClient(i) || !IsPlayerAlive(i) || i == client )
 						continue;	
 					if( !StrEqual(tmp, job) )
