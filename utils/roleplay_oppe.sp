@@ -760,8 +760,8 @@ bool MafiaInZone(int zone) {
 
 bool PlayerInJob(int client, int zone) {
 	char tmp[64];
-	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	int nbPlayer = 0;
+	int zoneId = rp_GetZoneInt(rp_GetZoneData(zone), zone_type_type);
 	
 	for (int i = 1; i <= MaxClients; i++) {
 	
@@ -771,7 +771,7 @@ bool PlayerInJob(int client, int zone) {
 			continue;
 		if( GetClientTeam(i) == CS_TEAM_CT )
 			continue;
-		if( StrEqual(jobId, tmp))
+		if( jobId == zoneId )
 			nbPlayer++;
 	}
 	if (nbPlayer >= 3){
