@@ -153,14 +153,15 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 				}
 				INIT_OPPE(client, zone, 0, 0 );
 				g_bCanOppe[client] = false;
-				control = 1
+				control = 1;
 			}
 	
 			else {
 				for (int i = 1; i <= MaxClients; i++) {
+					job = rp_GetClientJobID(i);
 					if( !IsValidClient(i) || !IsPlayerAlive(i) || i == client )
 						continue;	
-					if( !StrEqual(tmp, rp_GetClientJobID(i) ) )
+					if( !StrEqual(tmp, job) )
 						continue;
 					nbPlayerJob++;
 				}
