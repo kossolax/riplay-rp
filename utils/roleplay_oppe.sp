@@ -118,6 +118,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 		float dst[3];
 		rp_GetClientTarget(client, dst);
 		int zone = rp_GetZoneFromPoint(dst);
+		int zoneop = rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 		rp_GetZoneData(zone, zone_type_name, tmp2, sizeof(tmp2));
 		
@@ -159,7 +160,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 				for (int i = 1; i <= MaxClients; i++) {
 					if( !IsValidClient(i) || !IsPlayerAlive(i) || i == client )
 						continue;	
-					if( rp_GetClientJobID(i) != rp_GetZoneData(tmp) )
+					if( rp_GetClientJobID(i) != zoneop )
 						continue;
 					nbPlayerJob++;
 				}
