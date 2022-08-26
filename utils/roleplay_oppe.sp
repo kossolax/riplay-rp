@@ -122,7 +122,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 		rp_GetZoneData(zone, zone_type_name, tmp2, sizeof(tmp2));
 		
-		int zoneop = rp_GetZoneData(zone, zone_type_type);
+		int zoneop = tmp;
 		
 		if( !StrEqual(tmp, expl[1]) )
 			return 0;
