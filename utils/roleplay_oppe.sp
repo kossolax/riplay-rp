@@ -765,7 +765,7 @@ bool PlayerInJob(int client, int zone) {
 	
 	for (int i = 1; i <= MaxClients; i++) {
 	
-		int jobId = rp_GetClientJobID(i);
+		int jobId = rp_GetClientInt(i, i_Job);
 		
 		if( !IsValidClient(i) || !IsPlayerAlive(i) )
 			continue;
