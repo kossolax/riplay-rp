@@ -137,7 +137,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 			
 			
 			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
-				if (PlayerInVilla(zone)){
+				if (PlayerInVilla){
 					INIT_OPPE(client, zone, 1, 0 );
 					g_bCanOppe[client] = false;
 				}
