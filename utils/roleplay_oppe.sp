@@ -327,7 +327,7 @@ void START_OPPE(int zone) {
 public Action ChangeZoneSafe(Handle timer, any zone) {
 	changeZoneState(zone, false);
 }
-void END_OPPE(int zone, bool abort, int control) {
+void END_OPPE(int zone, bool abort) {
 	int[] array = new int[PQ_Max];
 	char tmp[64], date[64], query[512];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
