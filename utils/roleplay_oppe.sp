@@ -145,11 +145,9 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 						continue;	
 					if ( rp_GetClientBool(i, b_HasVilla) == false )
 						continue;
-					subMenu.AddItem(options, tmp);
 					nbPlayerVilla++;
 				}
 				if ( nbPlayerVilla <=2 ) {
-					delete subMenu;
 					CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas suffisament de personne pour defendre cette planque.");
 				}
 				INIT_OPPE(client, zone, 0, 0 );
@@ -162,11 +160,9 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 						continue;	
 					if( rp_GetClientJobID(i) != rp_GetZoneData(zone, zone_type_type, tmp)
 						continue;
-					subMenu.AddItem(options, tmp);
 					nbPlayerJob++;
 				}
 				if(nbPlayerJob <= 2) {
-					delete subMenu;
 					CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas suffisament de personnel pour defendre cette planque.");
 				}
 				INIT_OPPE(client, zone, 0, 0);
