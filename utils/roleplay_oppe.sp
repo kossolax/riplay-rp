@@ -762,9 +762,11 @@ bool PlayerInJob(int client, int zone) {
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	int nbPlayer = 0;
-	int jobId = rp_GetClientJobID(i);
 	
 	for (int i = 1; i <= MaxClients; i++) {
+	
+		int jobId = rp_GetClientJobID(i);
+		
 		if( !IsValidClient(i) || !IsPlayerAlive(i) )
 			continue;
 		if( GetClientTeam(i) == CS_TEAM_CT )
