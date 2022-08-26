@@ -761,17 +761,16 @@ bool MafiaInZone(int zone) {
 bool PlayerInJob(int client, int zone) {
 	char tmp[64];
 	int nbPlayer = 0;
-	int zoneId = rp_GetZoneInt(rp_GetZoneData(zone), zone_type_type);
 	
 	for (int i = 1; i <= MaxClients; i++) {
 	
-		int jobId = rp_GetClientInt(i, i_Job);
+		int jobID = rp_GetClientInt(i, i_Job);
 		
 		if( !IsValidClient(i) || !IsPlayerAlive(i) )
 			continue;
 		if( GetClientTeam(i) == CS_TEAM_CT )
 			continue;
-		if( jobId == zoneId )
+		if( rp_GetZoneInt(client, zone_type_type) == jobID )
 			nbPlayer++;
 	}
 	if (nbPlayer >= 3){
