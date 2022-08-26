@@ -112,6 +112,9 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 		
 		ExplodeString(options, " ", expl, sizeof(expl), sizeof(expl[]));
 		
+		int nbPlayerJob = 0;
+		int nbPlayerVilla = 0;
+		
 		float dst[3];
 		rp_GetClientTarget(client, dst);
 		int zone = rp_GetZoneFromPoint(dst);
@@ -137,12 +140,36 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 			
 			
 			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
-				INIT_OPPE(client, zone, 0, 1 );
+				for (int i = 1; i <= MaxClients; i++) {
+					if ( !IsValidClient(i) || !IsPlayerAlive(i) || i == client )
+						continue;	
+					if ( rp_GetClientBool(i, b_HasVilla) == false )
+						continue;
+					subMenu.AddItem(options, tmp);
+					nbPlayerVilla++;
+				}
+				if ( nbPlayerVilla <=2 ) {
+					delete subMenu;
+					CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas suffisament de personne pour defendre cette planque.");
+				}
+				INIT_OPPE(client, zone, 0, 0 );
 				g_bCanOppe[client] = false;
 			}
 	
 			else {
-				INIT_OPPE(client, zone, 0, 1);
+				for (int i = 1; i <= MaxClients; i++) {
+					if( !IsValidClient(i) || !IsPlayerAlive(i) || i == client )
+						continue;	
+					if( rp_GetClientJobID(i) != rp_GetZoneData(zone, zone_type_type, tmp)
+						continue;
+					subMenu.AddItem(options, tmp);
+					nbPlayerJob++;
+				}
+				if(nbPlayerJob <= 2) {
+					delete subMenu;
+					CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas suffisament de personnel pour defendre cette planque.");
+				}
+				INIT_OPPE(client, zone, 0, 0);
 				g_bCanOppe[client] = false;
 			}
 			
