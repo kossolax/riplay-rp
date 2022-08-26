@@ -114,7 +114,6 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 		
 		int nbPlayerJob = 0;
 		int nbPlayerVilla = 0;
-		int control = 0;
 		
 		float dst[3];
 		rp_GetClientTarget(client, dst);
@@ -151,9 +150,8 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 				if ( nbPlayerVilla <=2 ) {
 					CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas suffisament de personne pour defendre cette planque.");
 				}
-				INIT_OPPE(client, zone, 0, 0 );
+				INIT_OPPE(client, zone, 0, 0, 1);
 				g_bCanOppe[client] = false;
-				control = 1;
 			}
 	
 			else {
@@ -168,9 +166,8 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 				if(nbPlayerJob <= 2) {
 					CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas suffisament de personnel pour defendre cette planque.");
 				}
-				INIT_OPPE(client, zone, 0, 0);
+				INIT_OPPE(client, zone, 0, 0, 1);
 				g_bCanOppe[client] = false;
-				control = 1;
 			}
 			
 		}
@@ -189,7 +186,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 			}
 			
 			else if( weapon > 3 || machine > 1 || plant > 1){
-				INIT_OPPE(client, zone, 0, 0);
+				INIT_OPPE(client, zone, 0, 0, 0);
 				g_bCanOppe[client] = false;
 			}
 			
@@ -374,7 +371,6 @@ void END_OPPE(int zone, bool abort, int control) {
 	
 	ServerCommand("rp_sick 1"); // On remet la maladie à la fin
 	if (control = 1)
-		control = 0;
 }
 // ----------------------------------------------------------------------------
 public Action fwdHookJail(int attacker, int victim) {
