@@ -119,9 +119,10 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 		float dst[3];
 		rp_GetClientTarget(client, dst);
 		int zone = rp_GetZoneFromPoint(dst);
-		int zoneop = rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 		rp_GetZoneData(zone, zone_type_name, tmp2, sizeof(tmp2));
+		
+		int zoneop = rp_GetZoneData(tmp);
 		
 		if( !StrEqual(tmp, expl[1]) )
 			return 0;
