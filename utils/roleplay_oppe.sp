@@ -136,13 +136,14 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 			}
 			
 			
-			else if ( rp_GetClientJobID(client) == 91 && PlayerInVilla(zone) && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
-				INIT_OPPE(client, zone, 1, 0 );
-				g_bCanOppe[client] = false;
-			}
-	
-			else if (!PlayerInJob(zone)){
+			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
+				if (PlayerInVilla(zone)){
+					INIT_OPPE(client, zone, 1, 0 );
+					g_bCanOppe[client] = false;
+				}
+				else {
 				CPrintToChat(client, "" ...MOD_TAG... " il n'y à pas suffisament de personne pour défendre ce bâtiment");
+				}
 			}
 			
 			else{
@@ -759,7 +760,6 @@ bool MafiaInZone(int zone) {
 }
 
 bool PlayerInJob(int client, int zone) {
-	char tmp[64];
 	int nbPlayer = 0;
 	
 	for (int i = 1; i <= MaxClients; i++) {
@@ -770,7 +770,7 @@ bool PlayerInJob(int client, int zone) {
 			continue;
 		if( GetClientTeam(i) == CS_TEAM_CT )
 			continue;
-		if( rp_GetZoneInt(client, zone_type_type) == jobID )
+		if( rp_GetZoneInt(zone, zone_type_type) == jobID )
 			nbPlayer++;
 	}
 	if (nbPlayer >= 3){
