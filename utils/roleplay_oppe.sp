@@ -443,7 +443,7 @@ int GetPerquizResp(int zone, bool afkCheck) {
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
-	else if( StrContains(tmp, "appart_") == 0 ) {
+	if( StrContains(tmp, "appart_") == 0 ) {
 		ReplaceString(tmp, sizeof(tmp), "appart_", "");
 		return GetPerquizRespByAppart(StringToInt(tmp), afkCheck);
 	}
@@ -771,7 +771,7 @@ bool PlayerInJob(int client, int zone) {
 			continue;
 		if( GetClientTeam(i) == CS_TEAM_CT )
 			continue;
-		if( StrEqual(rp_GetClientJobID(i), tmp) == true)
+		if( StrEqual(rp_GetClientJobID(i), tmp))
 			nbPlayer++;
 	}
 	if (nbPlayer >= 3){
@@ -795,9 +795,10 @@ bool PlayerInVilla(int client, int zone) {
 			continue;	
 		if ( rp_GetClientBool(i, b_HasVilla) == false )
 			continue;
-		subMenu.AddItem(options, tmp);
+			
 		nbPlayerVilla++;
-				}
+	}
+	
 	if (nbPlayerVilla >= 3){
 		return true;
 	}
