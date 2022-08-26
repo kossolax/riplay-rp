@@ -290,7 +290,7 @@ void START_OPPE(int zone) {
 			CPrintToChatAll("{red} =================================={default} ");
 		}
 
-		else {
+		else if {
 		
 			LogToGame("[MAFIA] Une prise de controle est lancée dans %s.", tmp2);
 
@@ -300,7 +300,7 @@ void START_OPPE(int zone) {
 		}
 	}
 	
-	else {
+	else{
 		LogToGame("[MAFIA] Une oppération d'impayé est lancée dans %s.", tmp2);
 		if ( StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
 			CPrintToChatAll("{red} =================================={default} ");
