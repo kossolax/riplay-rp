@@ -370,7 +370,6 @@ void END_OPPE(int zone, bool abort, int control) {
 	}
 	
 	ServerCommand("rp_sick 1"); // On remet la maladie à la fin
-	if (control = 1)
 }
 // ----------------------------------------------------------------------------
 public Action fwdHookJail(int attacker, int victim) {
