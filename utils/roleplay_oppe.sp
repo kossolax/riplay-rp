@@ -112,9 +112,6 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 		
 		ExplodeString(options, " ", expl, sizeof(expl), sizeof(expl[]));
 		
-		int nbPlayerJob = 0;
-		int nbPlayerVilla = 0;
-		
 		float dst[3];
 		rp_GetClientTarget(client, dst);
 		int zone = rp_GetZoneFromPoint(dst);
@@ -140,33 +137,12 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 			
 			
 			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
-				for (int i = 1; i <= MaxClients; i++) {
-					if ( !IsValidClient(i) || !IsPlayerAlive(i) || i == client )
-						continue;	
-					if ( rp_GetClientBool(i, b_HasVilla) == false )
-						continue;
-					nbPlayerVilla++;
-				}
-				if ( nbPlayerVilla <=2 ) {
-					CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas suffisament de personne pour defendre cette planque.");
-				}
-				INIT_OPPE(client, zone, 0, 0, 1);
+				INIT_OPPE(client, zone, 0, 1 );
 				g_bCanOppe[client] = false;
 			}
 	
 			else {
-				for (int i = 1; i <= MaxClients; i++) {
-					int job = rp_GetClientJobID(i);
-					if( !IsValidClient(i) || !IsPlayerAlive(i) || i == client )
-						continue;	
-					if( !StrEqual(tmp, job) )
-						continue;
-					nbPlayerJob++;
-				}
-				if(nbPlayerJob <= 2) {
-					CPrintToChat(client, "" ...MOD_TAG... " Il n'y a pas suffisament de personnel pour defendre cette planque.");
-				}
-				INIT_OPPE(client, zone, 0, 0, 1);
+				INIT_OPPE(client, zone, 0, 1);
 				g_bCanOppe[client] = false;
 			}
 			
@@ -186,7 +162,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 			}
 			
 			else if( weapon > 3 || machine > 1 || plant > 1){
-				INIT_OPPE(client, zone, 0, 0, 0);
+				INIT_OPPE(client, zone, 0, 0);
 				g_bCanOppe[client] = false;
 			}
 			
@@ -205,7 +181,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 	return 0;
 }
 // ----------------------------------------------------------------------------
-void INIT_OPPE(int client, int zone, int target, int type, int control) {	
+void INIT_OPPE(int client, int zone, int target, int type) {	
 	
 	char tmp[64], query[512];
 	int resp = 0;
@@ -225,7 +201,7 @@ void INIT_OPPE(int client, int zone, int target, int type, int control) {
 
 	setPerquizData(client, zone, target, resp, type, 0);
 	
-	Format(query, sizeof(query), "SELECT `time` FROM `rp_oppe` WHERE `type`='%s' AND `job_id`='%d' AND `zone`='%s' ORDER BY `time` DESC;", control > 0 ? "control" : "trafic", rp_GetClientJobID(client), tmp);
+	Format(query, sizeof(query), "SELECT `time` FROM `rp_oppe` WHERE `type`='%s' AND `job_id`='%d' AND `zone`='%s' ORDER BY `time` DESC;", target > 0 ? "control" : "trafic", rp_GetClientJobID(client), tmp);
 	
 	SQL_TQuery(rp_GetDatabase(), VERIF_OPPE, query, zone);
 }
@@ -278,7 +254,7 @@ void START_OPPE(int zone) {
 	array[PQ_timeout] = 0;
 	updateOppeData(zone, array);
 	
-	if (array[PQ_target] >= 3) {
+	if (array[PQ_target] == 0) {
 		if ( StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
 			LogToGame("[MAFIA] Une prise de controle est lancée dans %s.", tmp2);
 
@@ -287,7 +263,7 @@ void START_OPPE(int zone) {
 			CPrintToChatAll("{red} =================================={default} ");
 		}
 
-		else if {
+		else {
 		
 			LogToGame("[MAFIA] Une prise de controle est lancée dans %s.", tmp2);
 
@@ -297,7 +273,7 @@ void START_OPPE(int zone) {
 		}
 	}
 	
-	else{
+	else {
 		LogToGame("[MAFIA] Une oppération d'impayé est lancée dans %s.", tmp2);
 		if ( StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
 			CPrintToChatAll("{red} =================================={default} ");
@@ -357,7 +333,7 @@ void END_OPPE(int zone, bool abort) {
 	if( !abort ) {
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 		GetClientAuthId(array[PQ_client], AUTH_TYPE, date, sizeof(date));
-		Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP(), '%s', '%s', '%d');", tmp, date, control > 0 ? "control" : "trafic", rp_GetClientJobID(array[PQ_client]));
+		Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP(), '%s', '%s', '%d');", tmp, date, array[PQ_target] > 0 ? "control" : "trafic", rp_GetClientJobID(array[PQ_client]));
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 		
 		rp_ClientMoney(array[PQ_client], i_AddToPay, 500);
@@ -365,7 +341,7 @@ void END_OPPE(int zone, bool abort) {
 	else if( abort ) {
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 		GetClientAuthId(array[PQ_client], AUTH_TYPE, date, sizeof(date));
-		Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP()-%d, '%s', '%s', '%d');", tmp, getCooldown(array[PQ_client], zone)*60+6*60, date, control > 0 ? "control" : "trafic", rp_GetClientJobID(array[PQ_client]));
+		Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP()-%d, '%s', '%s', '%d');", tmp, getCooldown(array[PQ_client], zone)*60+6*60, date, array[PQ_target] > 0 ? "control" : "trafic", rp_GetClientJobID(array[PQ_client]));
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 	}
 	
