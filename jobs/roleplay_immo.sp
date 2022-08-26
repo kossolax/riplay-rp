@@ -748,10 +748,9 @@ public Action fwdOnPlayerUse(int client) {
 	}
 }*/
 
-public Action Cmd_eventBedConfirm(int args) {
+public Action Cmd_eventBedConfirm(int client) {
 
 	char szSteamID[32], query[1024];
-	int client = GetCmdArgInt(1);
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 	Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_villa` WHERE `steamid`='%s';", szSteamID);
 	SQL_TQuery(rp_GetDatabase(), SQL_GetVillaCount, query, client, DBPrio_Low);
@@ -759,9 +758,8 @@ public Action Cmd_eventBedConfirm(int args) {
 
 }
 
-public void SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, int args) {
+public void SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, any client) {
 	
-	int client = GetCmdArgInt(1);
 	
 	if( SQL_FetchRow(hQuery) ) {
 		int cpt = SQL_FetchInt(hQuery, 0);
