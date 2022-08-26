@@ -152,13 +152,14 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 				}
 				INIT_OPPE(client, zone, 0, 0 );
 				g_bCanOppe[client] = false;
+				array[PQ_target] == nbPlayerVilla;
 			}
 	
 			else {
 				for (int i = 1; i <= MaxClients; i++) {
 					if( !IsValidClient(i) || !IsPlayerAlive(i) || i == client )
 						continue;	
-					if( rp_GetClientJobID(i) != StrContains(tmp) )
+					if( rp_GetClientJobID(i) != rp_GetZoneData(tmp) )
 						continue;
 					nbPlayerJob++;
 				}
@@ -167,6 +168,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 				}
 				INIT_OPPE(client, zone, 0, 0);
 				g_bCanOppe[client] = false;
+				array[PQ_target] == nbPlayerJob;
 			}
 			
 		}
@@ -277,7 +279,7 @@ void START_OPPE(int zone) {
 	array[PQ_timeout] = 0;
 	updateOppeData(zone, array);
 	
-	if (array[PQ_target] == 0) {
+	if (array[PQ_target] >= 3) {
 		if ( StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
 			LogToGame("[MAFIA] Une prise de controle est lancée dans %s.", tmp2);
 
