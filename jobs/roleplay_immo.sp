@@ -758,7 +758,7 @@ public Action Cmd_eventBedConfirm(int client) {
 
 }
 
-public void SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, any client) {
+public void SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, int client) {
 	
 	
 	if( SQL_FetchRow(hQuery) ) {
