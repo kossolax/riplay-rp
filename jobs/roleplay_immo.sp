@@ -748,19 +748,19 @@ public Action fwdOnPlayerUse(int client) {
 	}
 }*/
 
-public Action Cmd_eventBedConfirm(int client) {
-
+public Action Cmd_eventBedConfirm(int args) {
+	
+	int item_id = GetCmdArgInt(args);
+	int client = GetCmdArgInt(1);
+	
 	char szSteamID[32], query[1024];
 	GetClientAuthId(client, AUTH_TYPE, szSteamID, sizeof(szSteamID), false);
 	Format(query, sizeof(query), "SELECT COUNT(*) FROM `rp_villa` WHERE `steamid`='%s';", szSteamID);
-	CPrintToChatAll("{red} %s à et dans la liste {default} ", szSteamID);
 	SQL_TQuery(rp_GetDatabase(), SQL_GetVillaCount, query, client, DBPrio_Low);
-	//rp_ClientMoney(client, i_Bank, -VILLA_PRICE);
 
 }
 
-public void SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, int client) {
-	
+public void SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, any client) {
 	
 	if( SQL_FetchRow(hQuery) ) {
 		int cpt = SQL_FetchInt(hQuery, 0);
@@ -774,7 +774,7 @@ public void SQL_GetVillaCount(Handle owner, Handle hQuery, const char[] error, i
 			CPrintToChat(client, "" ...MOD_TAG... " Votre ticket a été validé, le tirage à lieux tout les vendredi à 21h.");
 		}
 		else {
-			rp_ClientMoney(client, i_Bank, VILLA_PRICE);
+			rp_ClientGiveItem(client, 370);
 			CPrintToChat(client, "" ...MOD_TAG... " Votre ticket a déjà été validé, il vous a été remboursé.");
 		}
 	}		
