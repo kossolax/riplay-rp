@@ -1439,11 +1439,12 @@ public Action Cmd_ItemFouet(int args) {
 	return Plugin_Handled;
 }
 public Action Cmd_ItemAlcool(int args) {
-	char arg[16];
-	int client, target, item_id;
-	client = GetCmdArgInt(3);
-	item_id = GetCmdArgInt(args);
+
+	char arg[64];
 	GetCmdArg(1, arg, sizeof(arg));
+	int client = GetCmdArgInt(2);
+	int item_id = GetCmdArgInt(args);
+	int target = rp_GetClientTarget(client);
 	float dur = DRUG_DURATION;
 	
 	if(StrEqual(arg,"me")){
