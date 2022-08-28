@@ -100,6 +100,7 @@ public Action Cmd_Opperation(int client) {
 	else {
 		Format(tmp2, sizeof(tmp2), "trafic %s", tmp);	menu.AddItem(tmp2, "Taxe de protection impayé");
 		Format(tmp2, sizeof(tmp2), "control %s", tmp);	menu.AddItem(tmp2, "Prendre possesion des lieux");
+		Format(tmp2, sizeof(tmp2), "cancel %s", tmp);	menu.AddItem(tmp2, "Ne pas toucher");
 	}
 	menu.Display(client, MENU_TIME_FOREVER);
 	
