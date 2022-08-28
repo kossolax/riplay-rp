@@ -138,7 +138,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 				CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
 			}
 			
-			else if (isZoneInOppe) {
+			else if (rp_GetZoneBit(zone) & BITZONE_PERQUIZ) {
 				CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
 			}
 		
@@ -172,7 +172,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 				CPrintToChat(client, "" ...MOD_TAG... " C'est du lourd ici, mieux vaut éviter de les provoquer");
 			}
 			
-			else if (isZoneInOppe){
+			else if (rp_GetZoneBit(zone) & BITZONE_PERQUIZ){
 				CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
 			}
 			
