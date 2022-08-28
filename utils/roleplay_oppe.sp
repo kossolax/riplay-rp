@@ -124,18 +124,8 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 		if( !StrEqual(tmp, expl[1]) )
 			return 0;
 			
-		if ( StrEqual(tmp, "111") || StrEqual(tmp, "51") || StrEqual(tmp, "31") || StrEqual(tmp, "211") || StrEqual(tmp, "71") || StrEqual(tmp, "91")) {
+		if ( StrEqual(tmp, "111") || StrEqual(tmp, "51") || StrEqual(tmp, "31") || StrEqual(tmp, "211") || StrEqual(tmp, "71")) {
 			CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
-			return Plugin_Handled;
-		}
-			
-		if (rp_GetZoneBit(zone) & BITZONE_PERQUIZ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
-			return Plugin_Handled;
-		}
-
-		if(g_flAppartProtection[appartID] > GetGameTime()) {
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[appartID] - GetGameTime()) / 60.0);
 			return Plugin_Handled;
 		}
 
@@ -152,7 +142,15 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 		if(StrEqual(expl[0], "control") ) {
 			
 			if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
-				if (PlayerInVilla){
+				if (rp_GetZoneBit(zone) & BITZONE_PERQUIZ) {
+					CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
+				}
+				
+				else if(g_flAppartProtection[appartID] > GetGameTime()) {
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[appartID] - GetGameTime()) / 60.0);
+				}
+				
+				else if (PlayerInVilla){
 					INIT_OPPE(client, zone, 0, 1 );
 					g_bCanOppe[client] = false;
 				}
@@ -163,7 +161,15 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 			}
 			
 			else {
-				if (PlayerInJob){
+				if (rp_GetZoneBit(zone) & BITZONE_PERQUIZ) {
+					CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
+				}
+				
+				else if(g_flAppartProtection[appartID] > GetGameTime()) {
+					CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[appartID] - GetGameTime()) / 60.0);
+				}
+				
+				else if (PlayerInJob){
 					INIT_OPPE(client, zone, 0, 1 );
 					g_bCanOppe[client] = false;
 				}
@@ -812,7 +818,7 @@ bool PlayerInVilla(int client, int zone) {
 		nbPlayerVilla++;
 	}
 	
-	if (nbPlayerVilla >= 3){
+	if (nbPlayerVilla <= 1){
 		return true;
 	}
 	else {
