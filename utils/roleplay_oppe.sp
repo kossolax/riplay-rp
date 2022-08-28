@@ -327,7 +327,7 @@ void END_OPPE(int zone, bool abort) {
 	if( !abort ) {
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 		GetClientAuthId(array[PQ_client], AUTH_TYPE, date, sizeof(date));
-		Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP(), '%s', '%s', '%d');", tmp, date, type > 0 ? "control" : "trafic", rp_GetClientJobID(array[PQ_client]));
+		Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP(), '%s', '%s', '%d');", tmp, date, array[PQ_type] > 0 ? "control" : "trafic", rp_GetClientJobID(array[PQ_client]));
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 		
 		//rp_ClientMoney(array[PQ_client], i_AddToPay, 500);
@@ -335,7 +335,7 @@ void END_OPPE(int zone, bool abort) {
 	else if( abort ) {
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 		GetClientAuthId(array[PQ_client], AUTH_TYPE, date, sizeof(date));
-		Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP()-%d, '%s', '%s', '%d');", tmp, getCooldown(array[PQ_client], zone)*60+6*60, date, type > 0 ? "control" : "trafic", rp_GetClientJobID(array[PQ_client]));
+		Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP()-%d, '%s', '%s', '%d');", tmp, getCooldown(array[PQ_client], zone)*60+6*60, date, array[PQ_type]> 0 ? "control" : "trafic", rp_GetClientJobID(array[PQ_client]));
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 	}
 	
