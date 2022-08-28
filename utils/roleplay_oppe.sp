@@ -177,7 +177,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 				
 		}
 		else if( StrEqual(expl[0], "cancel") ) {
-			END_OPPE(zone, true);
+			END_OPPE(zone);
 		}
 	}
 	else if( action == MenuAction_End ) {
@@ -206,7 +206,7 @@ void INIT_OPPE(int client, int zone, int target, int type) {
 
 	setPerquizData(client, zone, target, resp, type, 0);
 	
-	Format(query, sizeof(query), "SELECT `time` FROM `rp_oppe` WHERE `type`='%s' AND `job_id`='%d' AND `zone`='%s' ORDER BY `time` DESC;", array[PQ_type] > 0 ? "control" : "trafic", rp_GetClientJobID(client), tmp);
+	Format(query, sizeof(query), "SELECT `time` FROM `rp_oppe` WHERE `type`='%s' AND `job_id`='%d' AND `zone`='%s' ORDER BY `time` DESC;", array[PQ_type] == 1 ? "control" : "trafic", rp_GetClientJobID(client), tmp);
 	
 	SQL_TQuery(rp_GetDatabase(), VERIF_OPPE, query, zone);
 }
@@ -326,7 +326,7 @@ void END_OPPE(int zone) {
 	
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	GetClientAuthId(array[PQ_client], AUTH_TYPE, date, sizeof(date));
-	Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP()-%d, '%s', '%s', '%d');", tmp, getCooldown(array[PQ_client], zone)*60+6*60, date, array[PQ_type]> 0 ? "control" : "trafic", rp_GetClientJobID(array[PQ_client]));
+	Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP()-%d, '%s', '%s', '%d');", tmp, getCooldown(array[PQ_client], zone)*60+6*60, date, array[PQ_type] == 1 ? "control" : "trafic", rp_GetClientJobID(array[PQ_client]));
 	SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 	
 	ServerCommand("rp_sick 1"); // On remet la maladie à la fin
@@ -346,7 +346,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	
 	if( array[PQ_target] > 0 ) {
 		if( !IsValidClient(array[PQ_target]) ) {
-			END_OPPE(zone, true);
+			END_OPPE(zone);
 			return Plugin_Stop;
 		}
 
@@ -365,7 +365,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 			
 		countBadThing(tmp, weapon, plant, machine);
 		if( (weapon + plant + machine) == 0 ) {
-			END_OPPE(zone, false);
+			END_OPPE(zone);
 			return Plugin_Stop;
 		}
 	}
@@ -383,7 +383,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 			CPrintToChat(zone, "{red} =================================={default} ");
 		}
 		else if( array[PQ_timeout] >= 40 ) {
-			END_OPPE(zone, true);
+			END_OPPE(zone);
 			return Plugin_Stop;
 		}
 	}
