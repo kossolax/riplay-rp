@@ -207,15 +207,15 @@ void INIT_OPPE(int client, int zone, int target, int type) {
 
 	setPerquizData(client, zone, target, resp, type, 0);
 	
-	if (array[PQ_type] >= 1){
+	if (array[PQ_type] == 1){
 		Format(query, sizeof(query), "SELECT `time` FROM `rp_oppe` WHERE `type`='%s' AND `job_id`='%d' AND `zone`='%s' ORDER BY `time` DESC;", "control", rp_GetClientJobID(client), tmp);
+		SQL_TQuery(rp_GetDatabase(), VERIF_OPPE, query, zone);
 	}
 	
 	else {
 		Format(query, sizeof(query), "SELECT `time` FROM `rp_oppe` WHERE `type`='%s' AND `job_id`='%d' AND `zone`='%s' ORDER BY `time` DESC;", "trafic", rp_GetClientJobID(client), tmp);
+		SQL_TQuery(rp_GetDatabase(), VERIF_OPPE, query, zone);
 	}
-	
-	SQL_TQuery(rp_GetDatabase(), VERIF_OPPE, query, zone);
 }
 public void VERIF_OPPE(Handle owner, Handle row, const char[] error, any zone) {
 	
@@ -266,7 +266,7 @@ void START_OPPE(int zone) {
 	array[PQ_timeout] = 0;
 	updateOppeData(zone, array);
 	
-	if (array[PQ_type] >= 1) {
+	if (array[PQ_type] == 1) {
 		if ( StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
 			LogToGame("[MAFIA] Une prise de controle est lancée dans %s.", tmp2);
 
@@ -334,13 +334,14 @@ void END_OPPE(int zone) {
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	GetClientAuthId(array[PQ_client], AUTH_TYPE, date, sizeof(date));
 	
-	if (array[PQ_type] >= 1){
+	if (array[PQ_type] == 1){
 		Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP()-%d, '%s', '%s', '%d');", tmp, getCooldown(array[PQ_client], zone)*60+6*60, date, "control", rp_GetClientJobID(array[PQ_client]));
+		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 	}
 	else {
 		Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP()-%d, '%s', '%s', '%d');", tmp, getCooldown(array[PQ_client], zone)*60+6*60, date, "trafic", rp_GetClientJobID(array[PQ_client]));
+		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 	}
-	SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 	
 	ServerCommand("rp_sick 1"); // On remet la maladie à la fin
 }
