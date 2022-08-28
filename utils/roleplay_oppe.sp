@@ -740,7 +740,7 @@ int getCooldown(int client, int zone) {
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
-	if( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) )
+	if( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") )
 		return 4 * 60 * 60; // toute les 4h
 	else
 		return 60 * 60; // toute les heures
