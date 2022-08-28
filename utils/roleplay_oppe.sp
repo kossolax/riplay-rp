@@ -354,7 +354,23 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	
 	changeZoneState(zone, true);
 	
-	if {
+	if( array[PQ_target] > 0 ) {
+		if( !IsValidClient(array[PQ_target]) ) {
+			END_OPPE(zone, true);
+			return Plugin_Stop;
+		}
+
+		rp_GetZoneData( rp_GetPlayerZone(array[PQ_target]) , zone_type_type, tmp2, sizeof(tmp2));
+		if( !StrEqual(tmp, tmp2) ) {		
+			rp_ClientTeleport(array[PQ_target], g_flLastPos[array[PQ_target]]);
+		}
+		else {
+			int vehicle = Client_GetVehicle(array[PQ_target]);
+			Entity_GetAbsOrigin(vehicle > 0 ? vehicle : array[PQ_target], g_flLastPos[array[PQ_target]]);
+		}
+	}
+	
+	else if (array[PQ_type] == 0) {
 		int weapon, machine, plant;
 			
 		countBadThing(tmp, weapon, plant, machine);
