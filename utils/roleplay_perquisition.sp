@@ -99,6 +99,10 @@ public Action Cmd_Perquiz(int client) {
 		return Plugin_Handled;
 	}
 	
+	if (isZoneInPerquiz)) {
+		CPrintToChat(client, "" ...MOD_TAG... " Ce batiment est déjà occupé, repassez plus tard les loosers !");
+	}
+	
 	Menu menu = new Menu(MenuPerquiz);
 	menu.SetTitle("Quel est le motif de perquisition?\n ");
 	
