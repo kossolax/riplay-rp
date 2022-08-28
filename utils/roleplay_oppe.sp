@@ -138,7 +138,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 				CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
 			}
 			
-			else if (isZoneInOppe)) {
+			else if (isZoneInOppe) {
 				CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
 			}
 		
