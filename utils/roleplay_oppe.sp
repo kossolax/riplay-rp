@@ -22,7 +22,7 @@ StringMap g_hOpperation;
 enum perquiz_data { PQ_client, PQ_zone, PQ_target, PQ_resp, PQ_type, PQ_timeout, PQ_Max};
 int g_cBeam;
 float g_flLastPos[65][3];
-float g_flAppartProtection[200];
+float g_flAppartProtection[500];
 bool g_bCanOppe[65];
 Handle g_hActive;
 
