@@ -259,7 +259,7 @@ void START_OPPE(int zone) {
 	array[PQ_timeout] = 0;
 	updateOppeData(zone, array);
 	
-	if (array[PQ_target] == 0) {
+	if (array[PQ_type] == 1) {
 		if ( StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
 			LogToGame("[MAFIA] Une prise de controle est lancée dans %s.", tmp2);
 
@@ -354,22 +354,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	
 	changeZoneState(zone, true);
 	
-	if( array[PQ_target] > 0 ) {
-		if( !IsValidClient(array[PQ_target]) ) {
-			END_OPPE(zone, true);
-			return Plugin_Stop;
-		}
-		
-		rp_GetZoneData( rp_GetPlayerZone(array[PQ_target]) , zone_type_type, tmp2, sizeof(tmp2));
-		if( !StrEqual(tmp, tmp2) ) {		
-			rp_ClientTeleport(array[PQ_target], g_flLastPos[array[PQ_target]]);
-		}
-		else {
-			int vehicle = Client_GetVehicle(array[PQ_target]);
-			Entity_GetAbsOrigin(vehicle > 0 ? vehicle : array[PQ_target], g_flLastPos[array[PQ_target]]);
-		}
-	}
-	else {
+	if {
 		int weapon, machine, plant;
 			
 		countBadThing(tmp, weapon, plant, machine);
