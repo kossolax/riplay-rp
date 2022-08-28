@@ -99,7 +99,7 @@ public Action Cmd_Perquiz(int client) {
 		return Plugin_Handled;
 	}
 	
-	if (isZoneInPerquiz)) {
+	if (isZoneInPerquiz) {
 		CPrintToChat(client, "" ...MOD_TAG... " Ce batiment est déjà occupé, repassez plus tard les loosers !");
 	}
 	
