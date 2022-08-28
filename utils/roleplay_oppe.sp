@@ -119,6 +119,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 		int zone = rp_GetZoneFromPoint(dst);
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 		rp_GetZoneData(zone, zone_type_name, tmp2, sizeof(tmp2));
+		int appartID = zoneToAppartID(rp_GetPlayerZone(door));
 		
 		if( !StrEqual(tmp, expl[1]) )
 			return 0;
@@ -137,8 +138,8 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 				CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
 			}
 		
-			else if(g_flAppartProtection[appartID] > GetGameTime()) {
-				CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[appartID] - GetGameTime()) / 60.0);
+			else if(g_flAppartProtection[tmp] > GetGameTime()) {
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[tmp] - GetGameTime()) / 60.0);
 			}
 			
 			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
@@ -169,6 +170,10 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 			
 			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "91") ) {
 				CPrintToChat(client, "" ...MOD_TAG... " Tu n'es pas le couteau le plus aiguisé du triroir toi ... c'est chez nous ici !");
+			}
+			
+			else if(g_flAppartProtection[tmp] > GetGameTime()) {
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[tmp] - GetGameTime()) / 60.0);
 			}
 			
 			else if( weapon > 3 || machine > 1 || plant > 1){
