@@ -22,6 +22,7 @@ StringMap g_hOpperation;
 enum perquiz_data { PQ_client, PQ_zone, PQ_target, PQ_resp, PQ_type, PQ_timeout, PQ_Max};
 int g_cBeam;
 float g_flLastPos[65][3];
+float g_flAppartProtection[200];
 bool g_bCanOppe[65];
 Handle g_hActive;
 
@@ -33,6 +34,7 @@ public Plugin myinfo = {
 public void OnPluginStart() {
 	LoadTranslations("core.phrases");
 	LoadTranslations("roleplay.phrases");
+	LoadTranslations("roleplay.mafia.phrases");
 	
 	g_hActive 		= CreateConVar("rp_opperation", "0");
 	g_hOpperation = new StringMap();
@@ -100,7 +102,6 @@ public Action Cmd_Opperation(int client) {
 	else {
 		Format(tmp2, sizeof(tmp2), "trafic %s", tmp);	menu.AddItem(tmp2, "Taxe de protection impayé");
 		Format(tmp2, sizeof(tmp2), "control %s", tmp);	menu.AddItem(tmp2, "Prendre possesion des lieux");
-		Format(tmp2, sizeof(tmp2), "cancel %s", tmp);	menu.AddItem(tmp2, "Ne pas toucher");
 	}
 	menu.Display(client, MENU_TIME_FOREVER);
 	
@@ -135,7 +136,10 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "111") || StrEqual(tmp, "51") || StrEqual(tmp, "31") || StrEqual(tmp, "211") || StrEqual(tmp, "71") || StrEqual(tmp, "91")) {
 				CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
 			}
-			
+		
+			else if(g_flAppartProtection[appartID] > GetGameTime()) {
+				CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[appartID] - GetGameTime()) / 60.0);
+			}
 			
 			else if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
 				if (PlayerInVilla){
@@ -391,10 +395,9 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		array[PQ_timeout]++;
 		
 		if( array[PQ_timeout] == 30 ) {
-			rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
-			CPrintToChat(zone, "{red} =================================={default} ");
-			CPrintToChat(zone, "{red}"... MOD_TAG ..." [MAFIA]{default} Les poulets prennent du terrain, BOUGEZ-VOUS !", tmp);
-			CPrintToChat(zone, "{red} =================================={default} ");
+			CPrintToChatAll("{red} =================================={default} ");
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} Les poulets prennent du terrain, BOUGEZ-VOUS !", tmp);
+			CPrintToChatAll("{red} =================================={default} ");
 		}
 		else if( array[PQ_timeout] >= 40 ) {
 			END_OPPE(zone);
