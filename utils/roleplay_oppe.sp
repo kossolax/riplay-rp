@@ -208,12 +208,12 @@ void INIT_OPPE(int client, int zone, int target, int type) {
 	setPerquizData(client, zone, target, resp, type, 0);
 	
 	if (array[PQ_type] == 1){
-		Format(query, sizeof(query), "SELECT `time` FROM `rp_oppe` WHERE `type`='%s' AND `job_id`='%d' AND `zone`='%s' ORDER BY `time` DESC;", "control", rp_GetClientJobID(client), tmp);
+		Format(query, sizeof(query), "SELECT `time` FROM `rp_oppe` WHERE `type`='control' AND `job_id`='%d' AND `zone`='%s' ORDER BY `time` DESC;", rp_GetClientJobID(client), tmp);
 		SQL_TQuery(rp_GetDatabase(), VERIF_OPPE, query, zone);
 	}
 	
 	else {
-		Format(query, sizeof(query), "SELECT `time` FROM `rp_oppe` WHERE `type`='%s' AND `job_id`='%d' AND `zone`='%s' ORDER BY `time` DESC;", "trafic", rp_GetClientJobID(client), tmp);
+		Format(query, sizeof(query), "SELECT `time` FROM `rp_oppe` WHERE `type`='trafic' AND `job_id`='%d' AND `zone`='%s' ORDER BY `time` DESC;", rp_GetClientJobID(client), tmp);
 		SQL_TQuery(rp_GetDatabase(), VERIF_OPPE, query, zone);
 	}
 }
@@ -335,11 +335,11 @@ void END_OPPE(int zone) {
 	GetClientAuthId(array[PQ_client], AUTH_TYPE, date, sizeof(date));
 	
 	if (array[PQ_type] == 1){
-		Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP()-%d, '%s', '%s', '%d');", tmp, getCooldown(array[PQ_client], zone)*60+6*60, date, "control", rp_GetClientJobID(array[PQ_client]));
+		Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP()-%d, '%s', 'control', '%d');", tmp, getCooldown(array[PQ_client], zone)*60+6*60, date, rp_GetClientJobID(array[PQ_client]));
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 	}
 	else {
-		Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP()-%d, '%s', '%s', '%d');", tmp, getCooldown(array[PQ_client], zone)*60+6*60, date, "trafic", rp_GetClientJobID(array[PQ_client]));
+		Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP()-%d, '%s', 'trafic', '%d');", tmp, getCooldown(array[PQ_client], zone)*60+6*60, date, rp_GetClientJobID(array[PQ_client]));
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 	}
 	
