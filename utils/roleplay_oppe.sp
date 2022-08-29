@@ -151,35 +151,35 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 			if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
 			
 				if (rp_GetZoneBit(zone) & BITZONE_PERQUIZ) {
-					CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
+					CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable (action RP en cours)");
 					return Plugin_Handled;
 				}
 				
-				else if (getConnectedPlayerHaveVilla (client) >= 30){
+				else if (getConnectedPlayerHaveVilla (client) > 2){
 					INIT_OPPE(client, zone, 0, 1 );
 					g_bCanOppe[client] = false;
 					CPrintToChat(client, "" ...MOD_TAG... " test nombre client villa");
 				}
 				
-				else if (getConnectedPlayerHaveVilla (client) <= 29){
-					CPrintToChat(client, "" ...MOD_TAG... " il n'y à pas suffisament de personne pour défendre ce bâtiment");
+				else if (getConnectedPlayerHaveVilla (client) < 2){
+					CPrintToChat(client, "" ...MOD_TAG... " il n'y a pas suffisament de personne pour défendre ce bâtiment");
 				}
 			}
 			
 			else {
 				if (rp_GetZoneBit(zone) & BITZONE_PERQUIZ) {
-					CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
+					CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable (action RP en cours)");
 					return Plugin_Handled;
 				}
 
-				else if (getConnectedPlayerInsideJob (job_id) >= 3){
+				else if (getConnectedPlayerInsideJob (job_id) > 2){
 					INIT_OPPE(client, zone, 0, 1 );
 					g_bCanOppe[client] = false;
 					CPrintToChat(client, "" ...MOD_TAG... " test protection job");
 				}
 				
-				else if (getConnectedPlayerInsideJob (job_id) <= 2) {
-					CPrintToChat(client, "" ...MOD_TAG... " il n'y à pas suffisament de personne pour défendre ce bâtiment");
+				else if (getConnectedPlayerInsideJob (job_id) < 2) {
+					CPrintToChat(client, "" ...MOD_TAG... " il n'y a pas suffisament de personne pour défendre ce bâtiment");
 				}
 			}
 			
@@ -191,7 +191,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 			countBadThing(expl[1], plant, machine);
 			
 			if (rp_GetZoneBit(zone) & BITZONE_PERQUIZ) {
-				CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
+				CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable (action RP en cours)");
 			}
 			
 			else if( machine > 2 || plant > 2){
