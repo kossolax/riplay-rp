@@ -84,7 +84,7 @@ public void OnPluginStart() {
 		if( !IsValidEntity(i) )
 			continue;
 			
-		if(job_ID == rp_GetClientJobID(i)) ) {
+		if(job_ID == rp_GetClientJobID(i) ) {
 			
 			rp_SetClientBool(i, ch_Breath, true);
 			rp_SetClientBool(i, ch_Heal, true);
