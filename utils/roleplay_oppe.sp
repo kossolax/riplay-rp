@@ -228,7 +228,7 @@ void INIT_OPPE(int client, int zone, int target, int type) {
 
 	setPerquizData(client, zone, target, resp, type, 0);
 	
-	Format(query, sizeof(query), "SELECT `time` FROM `rp_oppe` WHERE `type`='%s' AND `job_id`='%d' AND `zone`='%s' ORDER BY `time` DESC;", type > 0 ? "search" : "trafic", rp_GetClientJobID(client), tmp);
+	Format(query, sizeof(query), "SELECT `time` FROM `rp_oppe` WHERE `type`='%s' AND `job_id`='%d' AND `zone`='%s' ORDER BY `time` DESC;", type > 0 ? "control" : "trafic", rp_GetClientJobID(client), tmp);
 	
 }
 public void VERIF_OPPE(Handle owner, Handle row, const char[] error, any zone) {
@@ -280,7 +280,7 @@ void START_OPPE(int zone) {
 	array[PQ_timeout] = 0;
 	updateOppeData(zone, array);
 	
-	if (array[PQ_type] == 1) {
+	if (array[PQ_type] > 0) {
 		if ( StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
 			LogToGame("[MAFIA] Une prise de controle est lancée dans %s.", tmp2);
 
@@ -348,7 +348,7 @@ void END_OPPE(int zone) {
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	GetClientAuthId(array[PQ_client], AUTH_TYPE, date, sizeof(date));
 	
-	Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP(), '%s', '%s', '%d');", tmp, date, array[PQ_type] > 0 ? "search" : "trafic", rp_GetClientJobID(array[PQ_client]));
+	Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP(), '%s', '%s', '%d');", tmp, date, array[PQ_type] > 0 ? "control" : "trafic", rp_GetClientJobID(array[PQ_client]));
 	SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 	
 	ServerCommand("rp_sick 1"); // On remet la maladie à la fin
@@ -366,23 +366,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	
 	changeZoneState(zone, true);
 	
-	if( array[PQ_target] > 0 ) {
-		if( !IsValidClient(array[PQ_target]) ) {
-			END_OPPE(zone);
-			return Plugin_Stop;
-		}
-
-		rp_GetZoneData( rp_GetPlayerZone(array[PQ_target]) , zone_type_type, tmp2, sizeof(tmp2));
-		if( !StrEqual(tmp, tmp2) ) {		
-			rp_ClientTeleport(array[PQ_target], g_flLastPos[array[PQ_target]]);
-		}
-		else {
-			int vehicle = Client_GetVehicle(array[PQ_target]);
-			Entity_GetAbsOrigin(vehicle > 0 ? vehicle : array[PQ_target], g_flLastPos[array[PQ_target]]);
-		}
-	}
-	
-	else if (array[PQ_type] == 0) {
+	if (array[PQ_type] == 0) {
 		int weapon, machine, plant;
 			
 		countBadThing(tmp, weapon, plant, machine);
