@@ -120,7 +120,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 		int appartID = rp_GetZoneInt(zone, zone_type_type);
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 		rp_GetZoneData(zone, zone_type_name, tmp2, sizeof(tmp2));
-		int job_id = rp_getZoneInt(zone, zone_type_type);
+		int job_id = rp_GetZoneInt(zone, zone_type_type);
 		
 		if( !StrEqual(tmp, expl[1]) )
 			return 0;
@@ -358,7 +358,7 @@ void END_OPPE(int zone) {
 
 public Action TIMER_OPPE(Handle timer, any zone) {
 	int[] array = new int[PQ_Max];
-	char tmp[64], tmp2[64];
+	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
@@ -808,7 +808,7 @@ int getConnectedPlayerInsideJob(int jobID) {
 
         if ( !IsValidClient(i) || !IsPlayerAlive(i) )
             continue;
-        if ( job == jobID)  )
+        if (job == jobID)
             nbPlayerInsideJob++;
     }
 }
