@@ -583,7 +583,7 @@ void OnGameFrame_10(float time) {
 					}
 				}	
 				
-				if (rp_GetClientJobID(i, i_Job) == 11){
+				if (rp_GetClientJobID(i) == 11){
 					rp_SetClientBool(i, ch_Breath, true);
 					rp_SetClientBool(i, ch_Heal, true);
 					rp_SetClientBool(i, ch_Regen, true);
