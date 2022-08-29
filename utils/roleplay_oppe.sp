@@ -348,7 +348,7 @@ void END_OPPE(int zone) {
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	GetClientAuthId(array[PQ_client], AUTH_TYPE, date, sizeof(date));
 	
-	Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP()-%d, '%s', '%s', '%d');", tmp, getCooldown(array[PQ_client], zone)*60+6*60, date, array[PQ_type] > 0 ? "search" : "trafic", rp_GetClientJobID(array[PQ_client]));
+	Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP(), '%s', '%s', '%d');", tmp, date, array[PQ_type] > 0 ? "search" : "trafic", rp_GetClientJobID(array[PQ_client]));
 	SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 	
 	ServerCommand("rp_sick 1"); // On remet la maladie à la fin
