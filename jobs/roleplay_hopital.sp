@@ -94,15 +94,6 @@ public void OnPluginStart() {
 			rp_SetClientBool(i, ch_Force, true);
 		}
 	}
-	
-	if( g_iUserData[client][i_Job] == 11) {
-		rp_SetClientBool(client, ch_Breath, true);
-		rp_SetClientBool(client, ch_Heal, true);
-		rp_SetClientBool(client, ch_Regen, true);
-		rp_SetClientBool(client, ch_Jump, true);
-		rp_SetClientBool(client, ch_Speed, true);
-		rp_SetClientBool(client, ch_Force, true);
-	}
 }
 public void OnMapStart() {
 	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt", true);
