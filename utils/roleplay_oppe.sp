@@ -188,7 +188,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 			
 			countBadThing(expl[1], plant, machine);
 			
-			if( machine > 1 || plant > 1){
+			if( machine > 2 || plant > 2){
 				INIT_OPPE(client, zone, 0, 0);
 				g_bCanOppe[client] = false;
 			}
@@ -379,12 +379,15 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	if( MafiaInZone(zone) ) {
 		array[PQ_timeout] = 0;
 	}
+	if (hasCopInZone(zone) ){
+		TeleportCT(zone);
+	}
 	else {
 		array[PQ_timeout]++;
 		
 		if( array[PQ_timeout] == 30 ) {
 			CPrintToChatAll("{red} =================================={default} ");
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} Les poulets prennent du terrain, BOUGEZ-VOUS !", tmp);
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} On perd du terrain, BOUGEZ-VOUS !", tmp);
 			CPrintToChatAll("{red} =================================={default} ");
 		}
 		else if( array[PQ_timeout] >= 40 ) {
@@ -722,6 +725,25 @@ void TeleportT(int zone) {
 		}
 	}
 }
+
+void TeleportCT(int zone) {
+	char tmp[64], tmp2[64];
+	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	
+	for (int i = 1; i <= MaxClients; i++) {
+		if( !IsValidClient(i) || !IsPlayerAlive(i) )
+			continue;
+		if( GetClientTeam(i) == CS_TEAM_T )
+			continue;
+		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
+		
+		if( StrEqual(tmp, tmp2) ) {
+			rp_ClientSendToSpawn(i, true);
+			rp_ClientColorize(i);
+		}
+	}
+}
+
 int getCooldown(int client, int zone) {
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
@@ -748,6 +770,28 @@ bool MafiaInZone(int zone) {
 	}
 	return false;
 }
+
+bool hasCopInZone(int zone) {
+	char tmp[64], tmp2[64];
+	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	
+	for (int i = 1; i <= MaxClients; i++) {
+		if( !IsValidClient(i) || !IsPlayerAlive(i) )
+			continue;
+		if( GetClientTeam(i) == CS_TEAM_T )
+			continue;
+		if( rp_GetClientInt(i, i_KidnappedBy) > 0 )
+			continue;
+		if( GetPlayerWeaponSlot(i, CS_SLOT_PRIMARY) <= 0 &&  GetPlayerWeaponSlot(i, CS_SLOT_SECONDARY) <= 0 )
+			continue;
+		
+		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
+		if( StrEqual(tmp, tmp2) )
+			return true;
+	}
+	return false;
+}
+
 
 bool PlayerInJob(int client, int zone) {
 	int nbPlayer = 0;
