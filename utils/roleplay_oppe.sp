@@ -136,50 +136,45 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 		}
 
 		if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "91") ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Tu n'es pas le couteau le plus aiguisé du triroir toi ... c'est chez nous ici !");
+			CPrintToChat(client, "" ...MOD_TAG... " Tu n'es pas le couteau le plus aiguisé du tirroir toi ... c'est chez nous ici !");
+			return Plugin_Handled;
+		}
+		
+		if(g_flAppartProtection[appartID] > GetGameTime()) {
+			CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[appartID] - GetGameTime()) / 60.0);
+			CPrintToChat(client, "" ...MOD_TAG... " test contrat protect villa");
+			return Plugin_Handled;
+		}
+		
+		if (rp_GetZoneBit(zone) & BITZONE_PERQUIZ) {
+			CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
 			return Plugin_Handled;
 		}
 		
 		if(StrEqual(expl[0], "control") ) {
 			
 			if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
-				if (rp_GetZoneBit(zone) & BITZONE_PERQUIZ) {
-					CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
-				}
-				
-				if(g_flAppartProtection[appartID] > GetGameTime()) {
-					CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[appartID] - GetGameTime()) / 60.0);
-					CPrintToChat(client, "" ...MOD_TAG... " test protection contrat");
-				}
 				
 				if (getConnectedPlayerHaveVilla (client) >= 30){
 					INIT_OPPE(client, zone, 0, 1 );
 					g_bCanOppe[client] = false;
-					CPrintToChat(client, "" ...MOD_TAG... " test protection villa");
+					CPrintToChat(client, "" ...MOD_TAG... " test nombre client villa");
 				}
 				
-				else {
+				else if (getConnectedPlayerHaveVilla (client) <= 29){
 					CPrintToChat(client, "" ...MOD_TAG... " il n'y à pas suffisament de personne pour défendre ce bâtiment");
 				}
 			}
 			
 			else {
-				if (rp_GetZoneBit(zone) & BITZONE_PERQUIZ) {
-					CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
-				}
-				
-				if(g_flAppartProtection[appartID] > GetGameTime()) {
-					CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[appartID] - GetGameTime()) / 60.0);
-					CPrintToChat(client, "" ...MOD_TAG... " test protection");
-				}
-				
+
 				if (getConnectedPlayerInsideJob (job_id) >= 3){
 					INIT_OPPE(client, zone, 0, 1 );
 					g_bCanOppe[client] = false;
 					CPrintToChat(client, "" ...MOD_TAG... " test protection job");
 				}
 				
-				else {
+				else if (getConnectedPlayerInsideJob (job_id) <= 2) {
 					CPrintToChat(client, "" ...MOD_TAG... " il n'y à pas suffisament de personne pour défendre ce bâtiment");
 				}
 			}
