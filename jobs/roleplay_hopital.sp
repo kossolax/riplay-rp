@@ -78,7 +78,7 @@ public void OnPluginStart() {
 	}
 	
 	for (int i = MaxClients; i <= 2048; i++) {
-		job_ID = 11;
+		int job_ID = 11;
 		if( !IsValidEdict(i) )
 			continue;
 		if( !IsValidEntity(i) )
