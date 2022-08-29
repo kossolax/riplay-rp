@@ -146,12 +146,12 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 					CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
 				}
 				
-				if(g_flAppartProtection[appartID] > GetGameTime()) {
+				else if(g_flAppartProtection[appartID] > GetGameTime()) {
 					CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[appartID] - GetGameTime()) / 60.0);
 					CPrintToChat(client, "" ...MOD_TAG... " test protection");
 				}
 				
-				if (PlayerInVilla){
+				else if (PlayerInVilla){
 					INIT_OPPE(client, zone, 0, 1 );
 					g_bCanOppe[client] = false;
 				}
@@ -166,12 +166,12 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 					CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
 				}
 				
-				if(g_flAppartProtection[appartID] > GetGameTime()) {
+				else if(g_flAppartProtection[appartID] > GetGameTime()) {
 					CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[appartID] - GetGameTime()) / 60.0);
 					CPrintToChat(client, "" ...MOD_TAG... " test protection");
 				}
 				
-				if (PlayerInJob){
+				else if (PlayerInJob){
 					INIT_OPPE(client, zone, 0, 1 );
 					g_bCanOppe[client] = false;
 				}
