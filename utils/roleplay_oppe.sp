@@ -234,7 +234,7 @@ void INIT_OPPE(int client, int zone, int target, int type) {
 	}
 	
 	else {
-		Format(query, sizeof(query), "SELECT `time` FROM `rp_oppe` WHERE `type`='trafic' AND `job_id`='%d' AND `zone`='%s' ORDER BY `time` DESC;", rp_GetClientJobID(client), tmp);
+		Format(query, sizeof(query), "SELECT `time` FROM `rp_oppe` WHERE `type`='trafic1' AND `job_id`='%d' AND `zone`='%s' ORDER BY `time` DESC;", rp_GetClientJobID(client), tmp);
 		SQL_TQuery(rp_GetDatabase(), VERIF_OPPE, query, zone);
 	}
 }
@@ -360,7 +360,7 @@ void END_OPPE(int zone) {
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 	}
 	else {
-		Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP()-%d, '%s', 'trafic', '%d');", tmp, getCooldown(array[PQ_client], zone)*60+6*60, date, rp_GetClientJobID(array[PQ_client]));
+		Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP()-%d, '%s', 'trafic2', '%d');", tmp, getCooldown(array[PQ_client], zone)*60+6*60, date, rp_GetClientJobID(array[PQ_client]));
 		SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
 	}
 	
