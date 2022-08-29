@@ -55,7 +55,7 @@ public void OnClientPostAdminCheck(int client) {
 public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
 	
 	if( !g_bCanOppe[client] && (rp_GetClientJobID(client) == 91) ) {
-		if( rp_GetZoneInt(newZone, zone_type_type) == rp_GetClientJobID(client) && rp_GetClientInt(client, i_Job) == 91 || rp_GetClientInt(client, i_Job) == 92 || rp_GetClientInt(client, i_Job) == 93) {
+		if( rp_GetZoneInt(newZone, zone_type_type) == rp_GetClientJobID(client) && rp_GetClientInt(client, i_Job) == 91 || rp_GetZoneInt(newZone, zone_type_type) == rp_GetClientJobID(client) && rp_GetClientInt(client, i_Job) == 92 || rp_GetZoneInt(newZone, zone_type_type) == rp_GetClientJobID(client) && rp_GetClientInt(client, i_Job) == 93) {
 			g_bCanOppe[client] = true;
 			CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez maintenant effectuer une oppération");
 		}
