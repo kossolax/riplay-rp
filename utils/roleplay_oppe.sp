@@ -155,13 +155,13 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 					return Plugin_Handled;
 				}
 				
-				else if (getConnectedPlayerHaveVilla (client) > 2){
+				else if (getConnectedPlayerHaveVilla (client) >= 2){
 					INIT_OPPE(client, zone, 0, 1 );
 					g_bCanOppe[client] = false;
 					CPrintToChat(client, "" ...MOD_TAG... " test nombre client villa");
 				}
 				
-				else if (getConnectedPlayerHaveVilla (client) < 2){
+				else if (getConnectedPlayerHaveVilla (client) <= 1){
 					CPrintToChat(client, "" ...MOD_TAG... " il n'y a pas suffisament de personne pour défendre ce bâtiment");
 				}
 			}
@@ -172,13 +172,13 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 					return Plugin_Handled;
 				}
 
-				else if (getConnectedPlayerInsideJob (job_id) > 2){
+				else if (getConnectedPlayerInsideJob (job_id) >= 2){
 					INIT_OPPE(client, zone, 0, 1 );
 					g_bCanOppe[client] = false;
 					CPrintToChat(client, "" ...MOD_TAG... " test protection job");
 				}
 				
-				else if (getConnectedPlayerInsideJob (job_id) < 2) {
+				else if (getConnectedPlayerInsideJob (job_id) <= 1) {
 					CPrintToChat(client, "" ...MOD_TAG... " il n'y a pas suffisament de personne pour défendre ce bâtiment");
 				}
 			}
@@ -816,6 +816,8 @@ int getConnectedPlayerInsideJob(int jobID) {
         if (job == jobID)
             nbPlayerInsideJob++;
     }
+    
+    return nbPlayerInsideJob;
 }
 
 int getConnectedPlayerHaveVilla (int client) {
@@ -827,4 +829,6 @@ int getConnectedPlayerHaveVilla (int client) {
 		if ( rp_GetClientBool(i, b_HasVilla) == true )
 			nbPlayerVilla++;
 	}
+	
+	return nbPlayerVilla;
 }
