@@ -184,11 +184,11 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 		}
 		
 		else if( StrEqual(expl[0], "trafic") ) {
-			int weapon, machine, plant;
+			int machine, plant;
 			
-			countBadThing(expl[1], weapon, plant, machine);
+			countBadThing(expl[1], plant, machine);
 			
-			if( weapon > 3 || machine > 1 || plant > 1){
+			if( machine > 1 || plant > 1){
 				INIT_OPPE(client, zone, 0, 0);
 				g_bCanOppe[client] = false;
 			}
@@ -367,10 +367,10 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	changeZoneState(zone, true);
 	
 	if (array[PQ_type] == 0) {
-		int weapon, machine, plant;
+		int machine, plant;
 			
-		countBadThing(tmp, weapon, plant, machine);
-		if( (weapon + plant + machine) == 0 ) {
+		countBadThing(tmp, plant, machine);
+		if( (plant + machine) == 0 ) {
 			END_OPPE(zone);
 			return Plugin_Stop;
 		}
@@ -672,7 +672,7 @@ void updateOppeData(int zone, int[] array) {
 	g_hOpperation.SetArray(tmp, array, PQ_Max);
 }
 // ----------------------------------------------------------------------------
-void countBadThing(char[] zone, int& weapon, int& plant, int& machine) {
+void countBadThing(char[] zone, int& plant, int& machine) {
 	char tmp[64], tmp2[64];
 	
 	float vecOrigin[3];
@@ -682,10 +682,6 @@ void countBadThing(char[] zone, int& weapon, int& plant, int& machine) {
 			continue;
 		
 		GetEdictClassname(i, tmp, sizeof(tmp));
-		if( StrContains(tmp, "weapon_") == -1 && StrContains(tmp, "rp_") == -1 )
-			continue;
-		if( StrContains(tmp, "snowball") >= 0 )
-			continue;
 		
 		Entity_GetAbsOrigin(i, vecOrigin);
 		vecOrigin[2] += 16.0;
@@ -697,8 +693,6 @@ void countBadThing(char[] zone, int& weapon, int& plant, int& machine) {
 		if( !StrEqual(tmp2, zone) )
 			continue;
 		
-		if( StrContains(tmp, "weapon_") == 0 && StrContains(tmp, "knife") == -1 &&  Weapon_GetOwner(i) <= 0 )
-			weapon++;
 		if( StrContains(tmp, "rp_plant") == 0 )
 			plant++;
 		if( StrContains(tmp, "rp_cash") == 0 )
