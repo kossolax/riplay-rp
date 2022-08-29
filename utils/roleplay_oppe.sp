@@ -146,16 +146,16 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 			return Plugin_Handled;
 		}
 		
-		if (rp_GetZoneBit(zone) & BITZONE_PERQUIZ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
-			return Plugin_Handled;
-		}
-		
 		if(StrEqual(expl[0], "control") ) {
 			
 			if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "appart_50") || StrEqual(tmp, "appart_51") ) {
+			
+				if (rp_GetZoneBit(zone) & BITZONE_PERQUIZ) {
+					CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
+					return Plugin_Handled;
+				}
 				
-				if (getConnectedPlayerHaveVilla (client) >= 30){
+				else if (getConnectedPlayerHaveVilla (client) >= 30){
 					INIT_OPPE(client, zone, 0, 1 );
 					g_bCanOppe[client] = false;
 					CPrintToChat(client, "" ...MOD_TAG... " test nombre client villa");
@@ -167,8 +167,12 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 			}
 			
 			else {
+				if (rp_GetZoneBit(zone) & BITZONE_PERQUIZ) {
+					CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
+					return Plugin_Handled;
+				}
 
-				if (getConnectedPlayerInsideJob (job_id) >= 3){
+				else if (getConnectedPlayerInsideJob (job_id) >= 3){
 					INIT_OPPE(client, zone, 0, 1 );
 					g_bCanOppe[client] = false;
 					CPrintToChat(client, "" ...MOD_TAG... " test protection job");
@@ -186,7 +190,11 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 			
 			countBadThing(expl[1], plant, machine);
 			
-			if( machine > 2 || plant > 2){
+			if (rp_GetZoneBit(zone) & BITZONE_PERQUIZ) {
+				CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
+			}
+			
+			else if( machine > 2 || plant > 2){
 				INIT_OPPE(client, zone, 0, 0);
 				g_bCanOppe[client] = false;
 			}
