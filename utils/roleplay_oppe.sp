@@ -152,7 +152,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 					CPrintToChat(client, "" ...MOD_TAG... " test protection");
 				}
 				
-				else if (getConnectedPlayerHaveVilla () >= 3){
+				else if (getConnectedPlayerHaveVilla (client) >= 3){
 					INIT_OPPE(client, zone, 0, 1 );
 					g_bCanOppe[client] = false;
 				}
@@ -813,7 +813,7 @@ int getConnectedPlayerInsideJob(int jobID) {
     }
 }
 
-int getConnectedPlayerHaveVilla () {
+int getConnectedPlayerHaveVilla (int client) {
     int nbPlayerVilla = 0;
     
     	for (int i = 1; i <= MaxClients; i++) {
