@@ -813,7 +813,7 @@ int getConnectedPlayerInsideJob(int jobID) {
     }
 }
 
-int getConnectedPlayerHaveVilla {
+int getConnectedPlayerHaveVilla () {
     int nbPlayerVilla = 0;
     
     	for (int i = 1; i <= MaxClients; i++) {
