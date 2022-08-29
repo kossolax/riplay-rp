@@ -146,8 +146,9 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 					CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
 				}
 				
-				else if(g_flAppartProtection[appartID] > GetGameTime()) {
+				if(g_flAppartProtection[appartID] > GetGameTime()) {
 					CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[appartID] - GetGameTime()) / 60.0);
+					CPrintToChat(client, "" ...MOD_TAG... " test protection");
 				}
 				
 				else if (PlayerInVilla){
@@ -165,8 +166,9 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 					CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
 				}
 				
-				else if(g_flAppartProtection[appartID] > GetGameTime()) {
+				if(g_flAppartProtection[appartID] > GetGameTime()) {
 					CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[appartID] - GetGameTime()) / 60.0);
+					CPrintToChat(client, "" ...MOD_TAG... " test protection");
 				}
 				
 				else if (PlayerInJob){
@@ -795,13 +797,12 @@ bool PlayerInJob(int client, int zone) {
 			continue;
 		if( rp_GetZoneInt(zone, zone_type_type) == jobID )
 			nbPlayer++;
+			
+		if (nbPlayer >= 3){
+			return true;
+		}
 	}
-	if (nbPlayer >= 3){
-		return true;
-	}
-	else {
-		return false;
-	}
+	return false;
 }
 
 bool PlayerInVilla(int client, int zone) {
@@ -816,12 +817,10 @@ bool PlayerInVilla(int client, int zone) {
 			continue;
 			
 		nbPlayerVilla++;
+		
+		if (nbPlayerVilla >= 15){
+			return true;
+		}
 	}
-	
-	if (nbPlayerVilla <= 1){
-		return true;
-	}
-	else {
-		return false;
-	}
+	return false;
 }
