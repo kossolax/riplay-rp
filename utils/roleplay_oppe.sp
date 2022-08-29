@@ -769,11 +769,13 @@ bool PlayerInJob(int client, int zone) {
 		if( rp_GetZoneInt(zone, zone_type_type) == jobID )
 			nbPlayer++;
 			
-		if (nbPlayer >= 3){
-			return true;
-		}
 	}
-	return false;
+	if (nbPlayer >= 3){
+		return true;
+	}
+	else{
+		return false;
+	}
 }
 
 bool PlayerInVilla(int client, int zone) {
@@ -788,10 +790,11 @@ bool PlayerInVilla(int client, int zone) {
 			continue;
 			
 		nbPlayerVilla++;
-		
-		if (nbPlayerVilla >= 15){
-			return true;
-		}
 	}
-	return false;
+	if (nbPlayerVilla >= 15){
+		return true;
+	}
+	else {
+		return false;
+	 }
 }
