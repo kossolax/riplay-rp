@@ -120,6 +120,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 		int appartID = rp_GetZoneInt(zone, zone_type_type);
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 		rp_GetZoneData(zone, zone_type_name, tmp2, sizeof(tmp2));
+		int job_id = rp_getZoneInt(zone, zone_type_type);
 		
 		if( !StrEqual(tmp, expl[1]) )
 			return 0;
@@ -151,7 +152,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 					CPrintToChat(client, "" ...MOD_TAG... " test protection");
 				}
 				
-				else if (PlayerInVilla){
+				else if (getConnectedPlayerHaveVilla >= 3){
 					INIT_OPPE(client, zone, 0, 1 );
 					g_bCanOppe[client] = false;
 				}
@@ -171,7 +172,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 					CPrintToChat(client, "" ...MOD_TAG... " test protection");
 				}
 				
-				else if (PlayerInJob){
+				else if (getConnectedPlayerInsideJob (job_id) >= 3){
 					INIT_OPPE(client, zone, 0, 1 );
 					g_bCanOppe[client] = false;
 				}
@@ -798,46 +799,27 @@ bool hasCopInZone(int zone) {
 }
 
 
-bool PlayerInJob(int client, int zone) {
-	int nbPlayer = 0;
-	
-	for (int i = 1; i <= MaxClients; i++) {
-	
-		int jobID = rp_GetClientInt(i, i_Job);
-		
-		if( !IsValidClient(i) || !IsPlayerAlive(i) )
-			continue;
-		if( GetClientTeam(i) == CS_TEAM_CT )
-			continue;
-		if( rp_GetZoneInt(zone, zone_type_type) == jobID )
-			nbPlayer++;
-			
-	}
-	if (nbPlayer >= 3){
-		return true;
-	}
-	else{
-		return false;
-	}
+int getConnectedPlayerInsideJob(int jobID) {
+    int nbPlayerInsideJob = 0;
+
+    for (int i = 1; i <= MaxClients; i++) {
+
+        int job = rp_GetClientInt(i, i_Job);
+
+        if ( !IsValidClient(i) || !IsPlayerAlive(i) )
+            continue;
+        if ( job == jobID)  )
+            nbPlayerInsideJob++;
+    }
 }
 
-bool PlayerInVilla(int client, int zone) {
-	char tmp[64];
-	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
-	int nbPlayerVilla = 0;
-	
-	for (int i = 1; i <= MaxClients; i++) {
+int getConnectedPlayerHaveVilla {
+    int nbPlayerVilla = 0;
+    
+    	for (int i = 1; i <= MaxClients; i++) {
 		if ( !IsValidClient(i) || !IsPlayerAlive(i) || i == client )
 			continue;	
-		if ( rp_GetClientBool(i, b_HasVilla) == false )
-			continue;
-			
-		nbPlayerVilla++;
+		if ( rp_GetClientBool(i, b_HasVilla) == true )
+			nbPlayerVilla++;
 	}
-	if (nbPlayerVilla >= 15){
-		return true;
-	}
-	else {
-		return false;
-	 }
 }
