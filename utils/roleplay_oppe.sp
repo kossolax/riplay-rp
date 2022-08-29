@@ -381,6 +381,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	}
 	if (hasCopInZone(zone) ){
 		TeleportCT(zone);
+		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} Les poulets essaient d'entrer mais visiblement ils ont trop peur... ", tmp);
 	}
 	else {
 		array[PQ_timeout]++;
