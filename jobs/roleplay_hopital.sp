@@ -76,6 +76,33 @@ public void OnPluginStart() {
 			CreateTimer(Math_GetRandomFloat(0.0, 1.0), BuildingHealBox_post, i);
 		}
 	}
+	
+	for (int i = MaxClients; i <= 2048; i++) {
+		job_ID = 11;
+		if( !IsValidEdict(i) )
+			continue;
+		if( !IsValidEntity(i) )
+			continue;
+			
+		if(job_ID == rp_GetClientJobID(i)) ) {
+			
+			rp_SetClientBool(i, ch_Breath, true);
+			rp_SetClientBool(i, ch_Heal, true);
+			rp_SetClientBool(i, ch_Regen, true);
+			rp_SetClientBool(i, ch_Jump, true);
+			rp_SetClientBool(i, ch_Speed, true);
+			rp_SetClientBool(i, ch_Force, true);
+		}
+	}
+	
+	if( g_iUserData[client][i_Job] == 11) {
+		rp_SetClientBool(client, ch_Breath, true);
+		rp_SetClientBool(client, ch_Heal, true);
+		rp_SetClientBool(client, ch_Regen, true);
+		rp_SetClientBool(client, ch_Jump, true);
+		rp_SetClientBool(client, ch_Speed, true);
+		rp_SetClientBool(client, ch_Force, true);
+	}
 }
 public void OnMapStart() {
 	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt", true);
