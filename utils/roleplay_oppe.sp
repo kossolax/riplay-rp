@@ -117,7 +117,8 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 		float dst[3];
 		rp_GetClientTarget(client, dst);
 		int zone = rp_GetZoneFromPoint(dst);
-		int appartID = rp_GetZoneInt(zone, zone_type_type);
+		int door = rp_GetZoneInt(zone, zone_type_type);
+		int appartID = zoneToAppartID(rp_GetPlayerZone(door));
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 		rp_GetZoneData(zone, zone_type_name, tmp2, sizeof(tmp2));
 		int job_id = rp_GetZoneInt(zone, zone_type_type);
