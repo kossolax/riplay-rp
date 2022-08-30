@@ -83,9 +83,7 @@ public Action Cmd_Opperation(int client) {
 	char tmp[64], tmp2[64];
 	rp_GetClientTarget(client, dst);
 	rp_GetZoneData(rp_GetZoneFromPoint(dst), zone_type_type, tmp, sizeof(tmp));
-	//int zone = rp_GetZoneFromPoint(dst);
-	//int ZoneID = rp_GetZoneInt(zone, zone_type_type);
-	//int appartID = ZoneOpID(rp_GetPlayerZone(ZoneID));
+
 	if( strlen(tmp) == 0 )
 		return Plugin_Handled;
 	
@@ -109,11 +107,11 @@ public Action Cmd_Opperation(int client) {
 		return Plugin_Handled;
 	}
 		
-	if(g_flAppartProtection[51] > GetGameTime()) {
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[51] - GetGameTime()) / 60.0);
-		CPrintToChat(client, "" ...MOD_TAG... " test contrat protect villa");
-		return Plugin_Handled;
-	}
+	//if(g_flAppartProtection[51] > GetGameTime()) {
+	//	CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[51] - GetGameTime()) / 60.0);
+	//	CPrintToChat(client, "" ...MOD_TAG... " test contrat protect villa");
+	//	return Plugin_Handled;
+	//}
 	
 	if(g_flAppartProtection[52] > GetGameTime()) {
 		CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[52] - GetGameTime()) / 60.0);
@@ -857,117 +855,4 @@ int IsAppart(int zone) {
 	}
 	
 	return false;
-}
-
-int getManyPlant(char[] zone, int& plant) {
-
-	char tmp[64], tmp2[64];
-	
-	float vecOrigin[3];
-	
-	int NbPlant = 0;
-	for (int i = MaxClients; i <= MAX_ENTITIES; i++) {
-		if( !IsValidEdict(i) || !IsValidEntity(i) )
-			continue;
-		
-		GetEdictClassname(i, tmp, sizeof(tmp));
-		if( StrContains(tmp, "weapon_") == -1 && StrContains(tmp, "rp_") == -1 )
-			continue;
-		if( StrContains(tmp, "snowball") >= 0 )
-			continue;
-			
-		Entity_GetAbsOrigin(i, vecOrigin);
-		vecOrigin[2] += 16.0;
-		
-		rp_GetZoneData(rp_GetZoneFromPoint(vecOrigin), zone_type_type, tmp2, sizeof(tmp2));
-		if( StrEqual(tmp2, "14") )
-			tmp2[1] = '1';
-		
-		if( !StrEqual(tmp2, zone) )
-			continue;
-		
-		if( StrContains(tmp, "rp_plant") == 0 )
-			NbPlant++;
-	}
-    
-    return NbPlant;
-}
-int getManyMachine(char[] zone, int& machine) {
-
-	char tmp[64], tmp2[64];
-	
-	float vecOrigin[3];
-	
-	int NbMachine = 0;
-	for (int i = MaxClients; i <= MAX_ENTITIES; i++) {
-		if( !IsValidEdict(i) || !IsValidEntity(i) )
-			continue;
-		
-		GetEdictClassname(i, tmp, sizeof(tmp));
-		if( StrContains(tmp, "weapon_") == -1 && StrContains(tmp, "rp_") == -1 )
-			continue;
-		if( StrContains(tmp, "snowball") >= 0 )
-			continue;
-			
-		Entity_GetAbsOrigin(i, vecOrigin);
-		vecOrigin[2] += 16.0;
-		
-		rp_GetZoneData(rp_GetZoneFromPoint(vecOrigin), zone_type_type, tmp2, sizeof(tmp2));
-		if( StrEqual(tmp2, "14") )
-			tmp2[1] = '1';
-		
-		if( !StrEqual(tmp2, zone) )
-			continue;
-		
-		if( StrContains(tmp, "rp_machine") == 0 )
-			NbMachine++;
-	}
-    
-    return NbMachine;
-}
-
-int MafiaInZone(int zone) {
-	char tmp[64], tmp2[64];
-	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
-	
-	for (int i = 1; i <= MaxClients; i++) {
-		if( !IsValidClient(i) || !IsPlayerAlive(i) )
-			continue;
-		if( rp_GetClientJobID(i) != 91 )
-			continue;
-		
-		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
-		if( tmp == tmp2)
-			addClientToTeam(client, TEAM_MAFIA);
-	}
-}
-
-void addClientToTeam(int client, int team) {
-	removeClientTeam(client);
-	
-	if( team != TEAM_NONE )
-		g_stkTeam[team][ g_stkTeamCount[team]++ ] = client;
-	
-	g_iPlayerTeam[client] = team;
-	
-	if( client <= MaxClients )
-		LogToGame("[DEBUG] [OPPE] %L was added to team: %d", client, team);
-}
-
-int countBadThingReward(char[] zone, int& plant, int& machine) {
-	char tmp[64], tmp2[64];
-	int reward = 0;
-	float vecOrigin[3];
-	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
-	
-	if (getManyPlant(tmp, plant) == getManyPlant(tmp, plant) - 1{
-		reward = 100
-	}
-	if (getManyMachine(tmp, machine) == getManyMachine(tmp, machine) - 1{
-		reward = 50
-	}
-	
-	for (int j = 0; j < g_stkTeamCount[TEAM_MAFIA]; j++) {
-		rp_ClientMoney(g_stkTeam[TTEAM_MAFIA][j], i_AddToPay, reward);
-	}
 }
