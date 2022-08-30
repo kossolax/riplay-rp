@@ -114,7 +114,7 @@ public Action fwdDeath(int victim, int attacker, float& respawn, int& tdm, float
 	return Plugin_Continue;
 }
 // ----------------------------------------------------------------------------
-public Action fwdOnPlayerUse(int client) {
+public Action fwdOnPlayerUse(int client, float& cooldown) {
 
 	if( rp_GetClientJobID(client) == 11 && rp_GetPlayerZone(client) == 123 ) { // bureau
 		
@@ -146,7 +146,7 @@ public Action fwdOnPlayerUse(int client) {
 	
 	return Plugin_Stop;
 	}
-	
+	cooldown = 10.0;
 	return Plugin_Continue;
 }
 
