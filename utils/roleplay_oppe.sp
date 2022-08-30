@@ -21,7 +21,6 @@
 StringMap g_hOpperation;
 enum perquiz_data { PQ_client, PQ_zone, PQ_target, PQ_resp, PQ_type, PQ_timeout, PQ_Max};
 int g_cBeam;
-float g_flLastPos[65][3];
 float g_flAppartProtection[500];
 bool g_bCanOppe[65];
 Handle g_hActive;
@@ -84,11 +83,33 @@ public Action Cmd_Opperation(int client) {
 	char tmp[64], tmp2[64];
 	rp_GetClientTarget(client, dst);
 	rp_GetZoneData(rp_GetZoneFromPoint(dst), zone_type_type, tmp, sizeof(tmp));
+	int ZoneOpID = rp_GetZoneInt(zone, zone_type_type);
 	if( strlen(tmp) == 0 )
 		return Plugin_Handled;
 	
 	if( !g_bCanOppe[client] && !g_hOpperation.GetArray(tmp, array, PQ_Max)) {
 		CPrintToChat(client, "" ...MOD_TAG... " Vous devez retourner aux QG, avant de pouvoir planifier une autre oppération.");
+		return Plugin_Handled;
+	}
+	
+	if ( StrEqual(tmp, "111") || StrEqual(tmp, "51") || StrEqual(tmp, "31") || StrEqual(tmp, "211") || StrEqual(tmp, "71")) {
+		CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
+		return Plugin_Handled;
+	}
+
+	if ( rp_GetClientJobID(client) == 91 && (StrEqual(tmp, "bunker") || StrEqual(tmp, "villa") || StrEqual(tmp, "1") || StrEqual(tmp, "101") ) ) {
+		CPrintToChat(client, "" ...MOD_TAG... " C'est du lourd ici, mieux vaut éviter de les provoquer");
+		return Plugin_Handled;
+	}
+
+	if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "91") ) {
+		CPrintToChat(client, "" ...MOD_TAG... " Tu n'es pas le couteau le plus aiguisé du tirroir toi ... c'est chez nous ici !");
+		return Plugin_Handled;
+	}
+		
+	if(g_flAppartProtection[ZoneOpID] > GetGameTime()) {
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[appartID] - GetGameTime()) / 60.0);
+		CPrintToChat(client, "" ...MOD_TAG... " test contrat protect villa");
 		return Plugin_Handled;
 	}
 	
@@ -117,35 +138,12 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 		float dst[3];
 		rp_GetClientTarget(client, dst);
 		int zone = rp_GetZoneFromPoint(dst);
-		int door = rp_GetZoneInt(zone, zone_type_type);
-		int appartID = zoneToAppartID(rp_GetPlayerZone(door));
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 		rp_GetZoneData(zone, zone_type_name, tmp2, sizeof(tmp2));
 		int job_id = rp_GetZoneInt(zone, zone_type_type);
 		
 		if( !StrEqual(tmp, expl[1]) )
 			return 0;
-			
-		if ( StrEqual(tmp, "111") || StrEqual(tmp, "51") || StrEqual(tmp, "31") || StrEqual(tmp, "211") || StrEqual(tmp, "71")) {
-			CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable");
-			return Plugin_Handled;
-		}
-
-		if ( rp_GetClientJobID(client) == 91 && (StrEqual(tmp, "bunker") || StrEqual(tmp, "villa") || StrEqual(tmp, "1") || StrEqual(tmp, "101") ) ) {
-			CPrintToChat(client, "" ...MOD_TAG... " C'est du lourd ici, mieux vaut éviter de les provoquer");
-			return Plugin_Handled;
-		}
-
-		if ( rp_GetClientJobID(client) == 91 && StrEqual(tmp, "91") ) {
-			CPrintToChat(client, "" ...MOD_TAG... " Tu n'es pas le couteau le plus aiguisé du tirroir toi ... c'est chez nous ici !");
-			return Plugin_Handled;
-		}
-		
-		if(g_flAppartProtection[appartID] > GetGameTime()) {
-			CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[appartID] - GetGameTime()) / 60.0);
-			CPrintToChat(client, "" ...MOD_TAG... " test contrat protect villa");
-			return Plugin_Handled;
-		}
 		
 		if(StrEqual(expl[0], "control") ) {
 			
