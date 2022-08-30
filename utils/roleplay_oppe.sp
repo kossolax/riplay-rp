@@ -838,7 +838,7 @@ int ZoneOpID(int zone) {
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
-	int res = 0;
+	int res = rp_GetZoneInt(zone, zone_type_type);
 	
 	if( StrContains(tmp, "appart_", false) == 0 ) {
 		ReplaceString(tmp, sizeof(tmp), "appart_", "");
