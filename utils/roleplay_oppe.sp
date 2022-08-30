@@ -109,8 +109,14 @@ public Action Cmd_Opperation(int client) {
 		return Plugin_Handled;
 	}
 		
-	if(g_flAppartProtection[51] > GetGameTime() || g_flAppartProtection[52] > GetGameTime()) {
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[appartID] - GetGameTime()) / 60.0);
+	if(g_flAppartProtection[51] > GetGameTime()) {
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[51] - GetGameTime()) / 60.0);
+		CPrintToChat(client, "" ...MOD_TAG... " test contrat protect villa");
+		return Plugin_Handled;
+	}
+	
+	if(g_flAppartProtection[52] > GetGameTime()) {
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[52] - GetGameTime()) / 60.0);
 		CPrintToChat(client, "" ...MOD_TAG... " test contrat protect villa");
 		return Plugin_Handled;
 	}
