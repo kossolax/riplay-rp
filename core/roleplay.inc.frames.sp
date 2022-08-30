@@ -583,15 +583,6 @@ void OnGameFrame_10(float time) {
 					}
 				}	
 				
-				if (rp_GetClientJobID(i) == 11){
-					rp_SetClientBool(i, ch_Breath, true);
-					rp_SetClientBool(i, ch_Heal, true);
-					rp_SetClientBool(i, ch_Regen, true);
-					rp_SetClientBool(i, ch_Jump, true);
-					rp_SetClientBool(i, ch_Speed, true);
-					rp_SetClientBool(i, ch_Force, true);
-				}
-				
 				GetClientAbsOrigin(i, fNow);
 				if( GetVectorDistance(fNow, g_fSuccess_last_move[i]) > 50 && Math_GetRandomInt(0, 1) ) {
 					g_iUserStat[i][i_RunDistance]++;
