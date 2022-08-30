@@ -118,8 +118,9 @@ public Action fwdOnPlayerUse(int client) {
 
 	if( rp_GetClientJobID(client) == 11 && rp_GetPlayerZone(client) == 123 ) { // bureau
 		
-		if( rp_GetClientJobID(client) != 11 )
+		if( rp_GetClientJobID(client) != 11 ){
 			return Plugin_Continue;
+		}
 	
 	char tmp1[64], tmp2[64];
 	Handle menu = CreateMenu(BonusChiru);
@@ -142,7 +143,6 @@ public Action fwdOnPlayerUse(int client) {
 	}
 	
 	DisplayMenu(menu, client, 60);
-	cooldown = 0.1;
 	
 	return Plugin_Stop;
 	}
