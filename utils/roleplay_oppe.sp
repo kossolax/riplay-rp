@@ -818,7 +818,7 @@ int getConnectedPlayerInsideJob(int jobID) {
 
         int job = rp_GetClientInt(i, i_Job);
 
-        if ( !IsValidClient(i) || !IsPlayerAlive(i) )
+        if ( !IsValidClient(i) )
             continue;
         if (job == jobID)
             nbPlayerInsideJob++;
@@ -831,7 +831,7 @@ int getConnectedPlayerHaveVilla (int client) {
     int nbPlayerVilla = 0;
     
     	for (int i = 1; i <= MaxClients; i++) {
-		if ( !IsValidClient(i) || !IsPlayerAlive(i) || i == client )
+		if ( !IsValidClient(i) || i == client )
 			continue;	
 		if ( rp_GetClientBool(i, b_HasVilla) == true )
 			nbPlayerVilla++;
