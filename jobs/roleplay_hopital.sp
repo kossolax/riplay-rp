@@ -76,24 +76,6 @@ public void OnPluginStart() {
 			CreateTimer(Math_GetRandomFloat(0.0, 1.0), BuildingHealBox_post, i);
 		}
 	}
-	
-	for (int i = MaxClients; i <= 2048; i++) {
-		int job_ID = 11;
-		if( !IsValidEdict(i) )
-			continue;
-		if( !IsValidEntity(i) )
-			continue;
-			
-		if(job_ID == rp_GetClientJobID(i) ) {
-			
-			rp_SetClientBool(i, ch_Breath, true);
-			rp_SetClientBool(i, ch_Heal, true);
-			rp_SetClientBool(i, ch_Regen, true);
-			rp_SetClientBool(i, ch_Jump, true);
-			rp_SetClientBool(i, ch_Speed, true);
-			rp_SetClientBool(i, ch_Force, true);
-		}
-	}
 }
 public void OnMapStart() {
 	g_cBeam = PrecacheModel("materials/sprites/laserbeam.vmt", true);
@@ -132,6 +114,93 @@ public Action fwdDeath(int victim, int attacker, float& respawn, int& tdm, float
 	return Plugin_Continue;
 }
 // ----------------------------------------------------------------------------
+public Action fwdOnPlayerUse(int client) {
+
+	if( rp_GetClientJobID(client) == 11 && rp_GetPlayerZone(client) == 123 ) { // bureau
+		
+		if( rp_GetClientJobID(client) != 11 )
+			return Plugin_Continue;
+	
+	char tmp1[64], tmp2[64];
+	Handle menu = CreateMenu(BonusChiru);
+	SetMenuTitle(menu, "Modification corporel");
+	
+	char szMenu[][][] = {
+		{"Amélioration de toutes mes capacités",		"Gratuit",	"ch_full"},
+		{"Amélioration de force",			"Gratuit",	"ch_Force"},
+		{"Amélioration de vitesse",		"Gratuit",	"ch_Speed"},
+		{"Amélioration du saut", 		"Gratuit",	"ch_Jump"},
+		{"Amélioration de la regénération",		"Gratuit",	"ch_Regen"},
+		{"Amélioration de la vie",			"Gratuit",	"ch_Heal"},
+		{"Amélioration respiration aquatique",			"Gratuit",	"ch_Breath"}
+	};
+	
+	for (int i = 0; i < sizeof(szMenu); i++) {
+		Format(tmp1, sizeof(tmp1), "%s_%s", szMenu[i][0], szMenu[i][1]);
+		Format(tmp2, sizeof(tmp2), "%T - %s$", szMenu[i][2], client, szMenu[i][1]);
+		AddMenuItem(menu, tmp1, tmp2);
+	}
+	
+	DisplayMenu(menu, client, 60);
+	cooldown = 0.1;
+	
+	return Plugin_Stop;
+	}
+	
+	return Plugin_Continue;
+}
+
+public int BonusChiru(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_iParam2) {
+
+	if (p_oAction == MenuAction_Select) {
+		char szMenuItem[32];
+		if (GetMenuItem(p_hItemMenu, p_iParam2, szMenuItem, sizeof(szMenuItem))){
+
+			char data[2][32];
+			ExplodeString(szMenuItem, "_", data, sizeof(data), sizeof(data[]));
+
+			char type[32];
+			strcopy(type, 31, data[0]);
+			
+			if( StrEqual(type, "force") || StrEqual(type, "full") ) {
+				if( !rp_GetClientBool(client, ch_Force) )
+					rp_HookEvent(client, RP_PreGiveDamage, fwdChiruForce); 
+				rp_SetClientBool(client, ch_Force, true);
+			}
+			if( StrEqual(type, "speed") || StrEqual(type, "full") ) {
+				if( !rp_GetClientBool(client, ch_Speed) )
+					rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruSpeed); 
+				rp_SetClientBool(client, ch_Speed, true);
+			}
+			if( StrEqual(type, "jump") || StrEqual(type, "full") ) {
+				if( !rp_GetClientBool(client, ch_Jump) )
+					rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruJump);
+				rp_SetClientBool(client, ch_Jump, true);
+			}
+			if( StrEqual(type, "regen") || StrEqual(type, "full") ) {
+				if( !rp_GetClientBool(client, ch_Regen))
+					rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruHealing);
+				rp_SetClientBool(client, ch_Regen, true);
+			}
+			if( StrEqual(type, "heal") || StrEqual(type, "full") ) {
+				SetEntityHealth(client, 500);
+				if( !rp_GetClientBool(client, ch_Heal))
+					rp_HookEvent(client, RP_OnPlayerSpawn, fwdSpawn);
+				rp_SetClientBool(client, ch_Heal, true);
+			}
+			if( StrEqual(type, "breath") || StrEqual(type, "full") ) {
+				if( !rp_GetClientBool(client, ch_Breath))
+					rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruBreath);
+				rp_SetClientBool(client, ch_Breath, true);
+			}
+			CPrintToChat(client, "" ...MOD_TAG... " Amélioration effectué !");
+
+		}
+	}
+	else if (p_oAction == MenuAction_End) {
+		CloseHandle(p_hItemMenu);
+	}
+}
 public Action Cmd_ItemChirurgie(int args) {
 		
 	char arg1[12];
