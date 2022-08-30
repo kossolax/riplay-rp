@@ -84,7 +84,8 @@ public Action Cmd_Opperation(int client) {
 	rp_GetClientTarget(client, dst);
 	rp_GetZoneData(rp_GetZoneFromPoint(dst), zone_type_type, tmp, sizeof(tmp));
 	int zone = rp_GetZoneFromPoint(dst);
-	int ZoneOpID = rp_GetZoneInt(zone, zone_type_type);
+	int ZoneID = rp_GetZoneInt(zone, zone_type_type);
+	int appartID = ZoneOpID(rp_GetPlayerZone(ZoneID));
 	if( strlen(tmp) == 0 )
 		return Plugin_Handled;
 	
@@ -108,8 +109,8 @@ public Action Cmd_Opperation(int client) {
 		return Plugin_Handled;
 	}
 		
-	if(g_flAppartProtection[ZoneOpID] > GetGameTime()) {
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[ZoneOpID] - GetGameTime()) / 60.0);
+	if(g_flAppartProtection[appartID] > GetGameTime()) {
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[appartID] - GetGameTime()) / 60.0);
 		CPrintToChat(client, "" ...MOD_TAG... " test contrat protect villa");
 		return Plugin_Handled;
 	}
@@ -831,4 +832,18 @@ int getConnectedPlayerHaveVilla (int client) {
 	}
 	
 	return nbPlayerVilla;
+}
+
+int ZoneOpID(int zone) {
+	char tmp[64];
+	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	
+	int res = 0;
+	
+	if( StrContains(tmp, "appart_", false) == 0 ) {
+		ReplaceString(tmp, sizeof(tmp), "appart_", "");
+		res = StringToInt(tmp);
+	}
+	
+	return res;
 }
