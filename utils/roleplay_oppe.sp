@@ -167,6 +167,12 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 				}
 			}
 			
+			else if (IsAppart (zone) ) {
+				
+				CPrintToChat(client, "" ...MOD_TAG... " On mérite mieux que ça ... visons plus gros qu'un appart !");
+				
+			}
+			
 			else {
 				if (rp_GetZoneBit(zone) & BITZONE_PERQUIZ) {
 					CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable (action RP en cours)");
@@ -846,4 +852,17 @@ int ZoneOpID(int zone) {
 	}
 	
 	return res;
+}
+
+int IsAppart(int zone) {
+	char tmp[64];
+	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	
+	int res = rp_GetZoneInt(zone, zone_type_type);
+	
+	if( StrContains(tmp, "appart_", false) == 0 ) {
+		return true;
+	}
+	
+	return false;
 }
