@@ -387,7 +387,12 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		int machine, plant;
 			
 		countBadThing(tmp, plant, machine);
-		if( (plant + machine) == 0 ) {
+		
+		if (machine == machine -1){
+			CPrintToChatAll("{red} Et 1 de moins ! {default} ");
+		}
+		
+		else if( (plant + machine) == 0 ) {
 			END_OPPE(zone);
 			return Plugin_Stop;
 		}
