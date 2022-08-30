@@ -83,6 +83,7 @@ public Action Cmd_Opperation(int client) {
 	char tmp[64], tmp2[64];
 	rp_GetClientTarget(client, dst);
 	rp_GetZoneData(rp_GetZoneFromPoint(dst), zone_type_type, tmp, sizeof(tmp));
+	int zone = rp_GetZoneFromPoint(dst);
 	int ZoneOpID = rp_GetZoneInt(zone, zone_type_type);
 	if( strlen(tmp) == 0 )
 		return Plugin_Handled;
@@ -108,7 +109,7 @@ public Action Cmd_Opperation(int client) {
 	}
 		
 	if(g_flAppartProtection[ZoneOpID] > GetGameTime()) {
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[appartID] - GetGameTime()) / 60.0);
+		CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[ZoneOpID] - GetGameTime()) / 60.0);
 		CPrintToChat(client, "" ...MOD_TAG... " test contrat protect villa");
 		return Plugin_Handled;
 	}
