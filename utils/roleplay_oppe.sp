@@ -387,11 +387,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	int machine, plant, Bigmachine, props;
-	int NumberOfPlant = CountHowManyPlant(tmp, plant);
-	int NumberOfMachine = CountHowManyMachine(tmp, machine);
-	int NumberOfBigMachine = CountHowManyBigMachine(tmp, Bigmachine);
-	int NumberOfProps = CountHowManyProps(tmp, props);
-	int reward = 0;
+	int EntPlant == "rp_plant";
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return Plugin_Stop;
@@ -406,7 +402,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		
 		if(plant >=1){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plants", plant);
-			HookSingleEntityOutput(plant, "OnBreak", BadThingDie);
+			HookSingleEntityOutput(EntPlant, "OnBreak", BadThingDie);
 		}
 		if(machine >= 1){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d imprimante trouvé", machine);
@@ -427,17 +423,21 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		countBadThing(tmp, plant, machine, Bigmachine);
 		countPropsThing(tmp, props);
 		
-		if(plant < NumberOfPlant){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d", plant, NumberOfPlant);
+		if(plant >=1){
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plants", plant);
+			HookSingleEntityOutput(EntPlant, "OnBreak", BadThingDie);
 		}
-		if(machine < NumberOfMachine){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d", machine, NumberOfMachine);
+		if(machine >= 1){
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d imprimante trouvé", machine);
+			HookSingleEntityOutput(machine, "OnBreak", BadThingDie);
 		}
-		if(Bigmachine < NumberOfBigMachine){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d", Bigmachine, NumberOfBigMachine);
+		if(props >= 1){
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d props", props);
+			HookSingleEntityOutput(props, "OnBreak", BadThingDie);
 		}
-		if(props < NumberOfProps){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d", props, NumberOfProps);
+		if(Bigmachine >= 1){
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d photocop", Bigmachine);
+			HookSingleEntityOutput(Bigmachine, "OnBreak", BadThingDie);
 		}
 	}
 	
@@ -747,6 +747,7 @@ void countBadThing(char[] zone, int& plant, int& machine,int& Bigmachine) {
 	plant = 0;
 	machine = 0;
 	Bigmachine = 0;
+	int EntPlant;
 	
 	float vecOrigin[3];
 	
@@ -770,8 +771,10 @@ void countBadThing(char[] zone, int& plant, int& machine,int& Bigmachine) {
 		if( !StrEqual(tmp2, zone) )
 			continue;
 		
-		if( StrContains(tmp, "rp_plant") == 0 )
+		if( StrContains(tmp, "rp_plant") == 0 ){
 			plant++;
+			EntPlant == "rp_plant";
+		}
 		if( StrContains(tmp, "rp_cash") == 0 )
 			machine++;
 		if( StrContains(tmp, "rp_bigcash") == 0 )
@@ -943,145 +946,6 @@ int IsAppart(int zone) {
 	}
 	
 	return false;
-}
-
-int CountHowManyPlant (char[] zone, int& plant) {
-	char tmp[64], tmp2[64];
-	float vecOrigin[3];
-	
-	for (int i = MaxClients; i <= MAX_ENTITIES; i++) {
-		if( !IsValidEdict(i) || !IsValidEntity(i) )
-			continue;
-			
-		GetEdictClassname(i, tmp, sizeof(tmp));
-		if( StrContains(tmp, "weapon_") == -1 && StrContains(tmp, "rp_") == -1 )
-			continue;
-		if( StrContains(tmp, "snowball") >= 0 )
-			continue;
-			
-		Entity_GetAbsOrigin(i, vecOrigin);
-		vecOrigin[2] += 16.0;
-		
-		rp_GetZoneData(rp_GetZoneFromPoint(vecOrigin), zone_type_type, tmp2, sizeof(tmp2));
-		if( StrEqual(tmp2, "14") )
-			tmp2[1] = '1';
-		
-		if( !StrEqual(tmp2, zone) )
-			continue;
-		
-		if( StrContains(tmp, "rp_plant") == 0 )
-			plant++;
-	}
-	
-	return plant;
-}
-
-int CountHowManyMachine (char[] zone, int& machine) {
-	char tmp[64], tmp2[64];
-	float vecOrigin[3];
-	
-	for (int i = MaxClients; i <= MAX_ENTITIES; i++) {
-		if( !IsValidEdict(i) || !IsValidEntity(i) )
-			continue;
-			
-		GetEdictClassname(i, tmp, sizeof(tmp));
-		if( StrContains(tmp, "weapon_") == -1 && StrContains(tmp, "rp_") == -1 )
-			continue;
-		if( StrContains(tmp, "snowball") >= 0 )
-			continue;
-			
-		Entity_GetAbsOrigin(i, vecOrigin);
-		vecOrigin[2] += 16.0;
-		
-		rp_GetZoneData(rp_GetZoneFromPoint(vecOrigin), zone_type_type, tmp2, sizeof(tmp2));
-		if( StrEqual(tmp2, "14") )
-			tmp2[1] = '1';
-		
-		if( !StrEqual(tmp2, zone) )
-			continue;
-		
-		if( StrContains(tmp, "rp_cash") == 0 )
-			machine++;
-		if(i == MAX_ENTITIES){
-			break;
-		}
-	}
-	
-	return machine;
-}
-
-int CountHowManyBigMachine (char[] zone, int& Bigmachine) {
-	char tmp[64], tmp2[64];
-	float vecOrigin[3];
-	
-	for (int i = MaxClients; i <= MAX_ENTITIES; i++) {
-		if( !IsValidEdict(i) || !IsValidEntity(i) )
-			continue;
-			
-		GetEdictClassname(i, tmp, sizeof(tmp));
-		if( StrContains(tmp, "weapon_") == -1 && StrContains(tmp, "rp_") == -1 )
-			continue;
-		if( StrContains(tmp, "snowball") >= 0 )
-			continue;
-			
-		Entity_GetAbsOrigin(i, vecOrigin);
-		vecOrigin[2] += 16.0;
-		
-		rp_GetZoneData(rp_GetZoneFromPoint(vecOrigin), zone_type_type, tmp2, sizeof(tmp2));
-		if( StrEqual(tmp2, "14") )
-			tmp2[1] = '1';
-		
-		if( !StrEqual(tmp2, zone) )
-			continue;
-		
-		if( StrContains(tmp, "rp_bigcash") == 0 )
-			Bigmachine++;
-	}
-	
-	return Bigmachine;
-}
-
-int CountHowManyProps (char[] zone, int& props) {
-	char tmp[64], tmp2[64];
-	float vecOrigin[3];
-	
-	for (int i = MaxClients; i <= MAX_ENTITIES; i++) {
-		if( !IsValidEdict(i) || !IsValidEntity(i) )
-			continue;
-			
-		GetEdictClassname(i, tmp, sizeof(tmp));
-		if( StrContains(tmp, "weapon_") == -1 && StrContains(tmp, "rp_") == -1 )
-			continue;
-		if( StrContains(tmp, "snowball") >= 0 )
-			continue;
-			
-		Entity_GetAbsOrigin(i, vecOrigin);
-		vecOrigin[2] += 16.0;
-		
-		rp_GetZoneData(rp_GetZoneFromPoint(vecOrigin), zone_type_type, tmp2, sizeof(tmp2));
-		if( StrEqual(tmp2, "14") )
-			tmp2[1] = '1';
-		
-		if( !StrEqual(tmp2, zone) )
-			continue;
-		
-		if( StrContains(tmp, "rp_bigcash") == 0 )
-			continue;
-			
-		if( StrContains(tmp, "rp_cash") == 0 )
-			continue;
-			
-		if( StrContains(tmp, "rp_plant") == 0 )
-			continue;
-			
-		if(i == MAX_ENTITIES){
-			break;
-		}
-		
-		props++;
-	}
-	
-	return props;
 }
 
 public void BadThingDie(const char[] output, int caller, int activator, float delay) {
