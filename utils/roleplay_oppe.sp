@@ -866,7 +866,7 @@ int IsAppart(int zone) {
 	return false;
 }
 
-int CountHowManyPlant (char[] zone, int plant) {
+int CountHowManyPlant (int zone, int plant) {
 	char tmp[64],tmp2[64],tmp3[64];
 	
 	for (int i = MaxClients; i <= MAX_ENTITIES; i++) {
