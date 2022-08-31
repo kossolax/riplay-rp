@@ -872,10 +872,10 @@ int CountHowManyPlant (char[] zone, int plant) {
 	for (int i = MaxClients; i <= MAX_ENTITIES; i++) {
 		if( !IsValidEdict(i) || !IsValidEntity(i) )
 			continue;
-		rp_GetZoneInt(i, zone_type_type, tmp2, sizeof(tmp2));
+		rp_GetZoneData(i, zone_type_type, tmp2, sizeof(tmp2));
 		rp_GetZoneData(zone, zone_type_type, tmp3, sizeof(tmp3));
 		GetEdictClassname(i, tmp, sizeof(tmp));
-		if( StrContains(tmp, "rp_plant") == 0 && tmp2 == tm3)
+		if( StrContains(tmp, "rp_plant") == 0 && tmp2 == tmp3)
 			plant++;
 	}
 	
