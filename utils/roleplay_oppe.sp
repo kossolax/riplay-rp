@@ -1020,6 +1020,7 @@ int CountHowManyMachine (char[] zone, int& machine) {
 	}
 	
 	return machine;
+	break;
 }
 
 int CountHowManyBigMachine (char[] zone, int& Bigmachine) {
@@ -1090,4 +1091,5 @@ int CountHowManyProps (char[] zone, int& props) {
 	}
 	
 	return props;
+	break;
 }
