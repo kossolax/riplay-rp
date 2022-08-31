@@ -387,6 +387,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	int plant;
+	int ZoneOp = array[PQ_zone];
 	int NumberOfPlant = CountHowManyPlant(tmp, plant);
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
@@ -395,14 +396,14 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	
 	changeZoneState(zone, true);
 	
-	if(CountHowManyPlant(zone, plant) < NumberOfPlant){
-		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plant trouvé c'est moins", CountHowManyPlant(zone, plant));
+	if(CountHowManyPlant(ZoneOp, plant) < NumberOfPlant){
+		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plant trouvé c'est moins", CountHowManyPlant(ZoneOp, plant));
 	}
-	if(CountHowManyPlant(zone, plant) == NumberOfPlant){
-		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plant trouvé ok", CountHowManyPlant(zone, plant));
+	if(CountHowManyPlant(ZoneOp, plant) == NumberOfPlant){
+		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plant trouvé ok", CountHowManyPlant(ZoneOp, plant));
 	}
-	if(CountHowManyPlant(zone, plant) > NumberOfPlant){
-		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plant trouvé c'es plus", CountHowManyPlant(zone, plant));
+	if(CountHowManyPlant(ZoneOp, plant) > NumberOfPlant){
+		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plant trouvé c'es plus", CountHowManyPlant(ZoneOp, plant));
 	}
 	
 	if (array[PQ_type] == 0) {
