@@ -281,13 +281,20 @@ public void VERIF_OPPE(Handle owner, Handle row, const char[] error, any zone) {
 		START_OPPE(zone);
 	}
 }
-void START_OPPE(int zone) {
+void START_OPPE(int zone, int client) {
 	int[] array = new int[PQ_Max];
 	char tmp[64], tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	rp_GetZoneData(zone, zone_type_name, tmp2, sizeof(tmp2));
-	int NumberOfPlant = CountHowManyPlant(zone, plant);
+	int NumberOfPlant = CountHowManyPlant(plant);
 	
+	if (NumberOfPlant >=1){
+		CPrintToChat(client, "" ...MOD_TAG... " Verif plant: ok !");
+	}
+	
+	if (NumberOfPlant == 0){
+		CPrintToChat(client, "" ...MOD_TAG... " Verif plant : aucun plant trouvé !");
+	}
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return;
@@ -858,7 +865,7 @@ int IsAppart(int zone) {
 	return false;
 }
 
-int CountHowManyPlant (char[] zone, int plant) {
+int CountHowManyPlant (int plant) {
 	char tmp[64], tmp2[64];
 	
 	float vecOrigin[3];
