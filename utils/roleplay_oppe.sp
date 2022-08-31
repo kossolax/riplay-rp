@@ -281,12 +281,14 @@ public void VERIF_OPPE(Handle owner, Handle row, const char[] error, any zone) {
 		START_OPPE(zone);
 	}
 }
-void START_OPPE(int zone, int client) {
+void START_OPPE(int zone) {
 	int[] array = new int[PQ_Max];
+	int client = int [PQ_client];
 	char tmp[64], tmp2[64];
+	int plant;
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	rp_GetZoneData(zone, zone_type_name, tmp2, sizeof(tmp2));
-	int NumberOfPlant = CountHowManyPlant(plant);
+	int NumberOfPlant = CountHowManyPlant(tmp, plant);
 	
 	if (NumberOfPlant >=1){
 		CPrintToChat(client, "" ...MOD_TAG... " Verif plant: ok !");
@@ -865,7 +867,7 @@ int IsAppart(int zone) {
 	return false;
 }
 
-int CountHowManyPlant (int plant) {
+int CountHowManyPlant (int zone, int plant) {
 	char tmp[64], tmp2[64];
 	
 	float vecOrigin[3];
