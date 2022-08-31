@@ -405,7 +405,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		countPropsThing(tmp, props);
 		
 		if(plant >=1){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plants, plant);
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plants", plant);
 			HookSingleEntityOutput(plant, "OnBreak", BadThingDie);
 		}
 		if(machine >= 1){
