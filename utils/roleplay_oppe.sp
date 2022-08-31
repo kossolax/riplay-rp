@@ -290,7 +290,7 @@ void START_OPPE(int zone) {
 	int NumberOfPlant = CountHowManyPlant(tmp, plant);
 	
 	if (NumberOfPlant >=1){
-		CPrintToChatAll(" Verif plant: %d plant trouvé !, NumberOfPlant");
+		CPrintToChatAll(" Verif plant: %d plant trouvé !", NumberOfPlant);
 	}
 	
 	if (NumberOfPlant == 0){
