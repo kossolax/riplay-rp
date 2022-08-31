@@ -1017,10 +1017,12 @@ int CountHowManyMachine (char[] zone, int& machine) {
 		
 		if( StrContains(tmp, "rp_cash") == 0 )
 			machine++;
+		if(i == MAX_ENTITIES){
+			break;
+		}
 	}
 	
 	return machine;
-	break;
 }
 
 int CountHowManyBigMachine (char[] zone, int& Bigmachine) {
@@ -1086,10 +1088,13 @@ int CountHowManyProps (char[] zone, int& props) {
 			
 		if( StrContains(tmp, "rp_plant") == 0 )
 			continue;
+			
+		if(i == MAX_ENTITIES){
+			break;
+		}
 		
 		props++;
 	}
 	
 	return props;
-	break;
 }
