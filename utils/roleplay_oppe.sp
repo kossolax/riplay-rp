@@ -763,8 +763,7 @@ void countBadThing(char[] zone, int& plant, int& machine,int& Bigmachine) {
 		
 		if( StrContains(tmp, "rp_plant") == 0 ){
 			plant++;
-			Format(tmp3, sizeof(tmp3), "rp_plant");
-			EntPlant = tmp3;
+			EntPlant= (tmp, classname)
 		}
 		if( StrContains(tmp, "rp_cash") == 0 )
 			machine++;
