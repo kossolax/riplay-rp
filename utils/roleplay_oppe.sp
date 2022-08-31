@@ -386,12 +386,18 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	int[] array = new int[PQ_Max];
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	int plant;
+	int NumberOfPlant = CountHowManyPlant(tmp, plant);
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return Plugin_Stop;
 	}
 	
 	changeZoneState(zone, true);
+	
+	if(NumberOfPlant == NumberOfPlant-1){
+		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} 1 plant détruit =)", tmp);
+	}
 	
 	if (array[PQ_type] == 0) {
 		int machine, plant;
