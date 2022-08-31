@@ -873,7 +873,7 @@ int CountHowManyPlant (char[] zone, int plant) {
 		if( !IsValidEdict(i) || !IsValidEntity(i) )
 			continue;
 			
-		if( StrContains(tmp, "rp_plant") == 0 )
+		if( StrContains(i, "rp_plant") == 0 )
 			plant++;
 	}
 	
