@@ -732,7 +732,7 @@ void updateOppeData(int zone, int[] array) {
 }
 // ----------------------------------------------------------------------------
 void countBadThing(char[] zone, int& plant, int& machine,int& Bigmachine) {
-	char tmp[64], tmp2[64];
+	char tmp[64], tmp2[64], tmp3[64];
 	
 	plant = 0;
 	machine = 0;
@@ -763,7 +763,8 @@ void countBadThing(char[] zone, int& plant, int& machine,int& Bigmachine) {
 		
 		if( StrContains(tmp, "rp_plant") == 0 ){
 			plant++;
-			EntPlant = "rp_plant";
+			Format(tmp3, sizeof(tmp3), "rp_plant");
+			EntPlant = tmp3;
 		}
 		if( StrContains(tmp, "rp_cash") == 0 )
 			machine++;
