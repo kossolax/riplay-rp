@@ -404,10 +404,9 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		countBadThing(tmp, plant, machine, Bigmachine);
 		countPropsThing(tmp, props);
 		
-		if(plant < NumberOfPlant){
+		if(plant >=1){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d", plant, NumberOfPlant);
-			reward += 50;
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / 10 000", reward);
+			HookSingleEntityOutput(plant, "OnBreak", BadThingDie);
 		}
 		if(machine == NumberOfMachine){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d props trouvé", machine, NumberOfMachine);
@@ -1097,4 +1096,14 @@ int CountHowManyProps (char[] zone, int& props) {
 	}
 	
 	return props;
+}
+
+public void BadThingDie(const char[] output, int caller, int activator, float delay) {
+
+	if( IsValidClient(activator) ) {
+		int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
+		if( IsValidClient(owner) ) {
+			rp_ClientXPIncrement(activator, 150);
+		}
+	}
 }
