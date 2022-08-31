@@ -395,14 +395,14 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	
 	changeZoneState(zone, true);
 	
-	if(CountHowManyPlant(tmp, plant) < NumberOfPlant){
-		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} 1 plant détruit =)", tmp);
+	if(CountHowManyPlant(zone, plant) < NumberOfPlant){
+		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plant trouvé c'est moins", CountHowManyPlant(zone, plant));
 	}
-	if(CountHowManyPlant(tmp, plant) == NumberOfPlant){
-		CPrintToChatAll("{red}"... MOD_TAG ..." aucun changement", tmp);
+	if(CountHowManyPlant(zone, plant) == NumberOfPlant){
+		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plant trouvé ok", CountHowManyPlant(zone, plant));
 	}
-	if(CountHowManyPlant(tmp, plant) > NumberOfPlant){
-		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plant trouvé", CountHowManyPlant(tmp, plant));
+	if(CountHowManyPlant(zone, plant) > NumberOfPlant){
+		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plant trouvé c'es plus", CountHowManyPlant(zone, plant));
 	}
 	
 	if (array[PQ_type] == 0) {
