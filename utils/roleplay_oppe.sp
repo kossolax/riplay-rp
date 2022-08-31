@@ -389,7 +389,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	int machine, plant, Bigmachine;
 	int NumberOfPlant = CountHowManyPlant(tmp, plant);
 	int NumberOfMachine = CountHowManyMachine(tmp, machine);
-	int NumberOfBigMachine = CountHowManyMachine(tmp, Bigmachine);
+	int NumberOfBigMachine = CountHowManyBigMachine(tmp, Bigmachine);
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return Plugin_Stop;
