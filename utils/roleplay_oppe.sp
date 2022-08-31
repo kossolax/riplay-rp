@@ -386,8 +386,10 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	int[] array = new int[PQ_Max];
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
-	int machine, plant;
+	int machine, plant, Bigmachine;
 	int NumberOfPlant = CountHowManyPlant(tmp, plant);
+	int NumberOfMachine = CountHowManyMachine(tmp, machine);
+	int NumberOfBigMachine = CountHowManyMachine(tmp, Bigmachine);
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return Plugin_Stop;
@@ -399,17 +401,17 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 			
 		countBadThing(tmp, plant, machine);
 		
-		if(plant < NumberOfPlant){
-		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plant trouvé c'est moins que %d ", plant, NumberOfPlant);
-		}
 		if(plant == NumberOfPlant){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d plant trouvé ok", plant, NumberOfPlant);
 		}
-		if(plant > NumberOfPlant){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plant trouvé c'est plus que %d", plant, NumberOfPlant);
+		if(machine == NumberOfMachine){
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d imprimante trouvé", machine, NumberOfMachine);
+		}
+		if(Bigmachine == NumberOfBigMachine){
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d Photocop trouvé", Bigmachine, NumberOfBigMachine);
 		}
 		
-		if( (plant + machine) == 0 ) {
+		if( (plant + machine + Bigmachine) == 0 ) {
 			END_OPPE(zone);
 			return Plugin_Stop;
 		}
@@ -715,11 +717,12 @@ void updateOppeData(int zone, int[] array) {
 	g_hOpperation.SetArray(tmp, array, PQ_Max);
 }
 // ----------------------------------------------------------------------------
-void countBadThing(char[] zone, int& plant, int& machine) {
+void countBadThing(char[] zone, int& plant, int& machine,int& Bigmachine) {
 	char tmp[64], tmp2[64];
 	
 	plant = 0;
 	machine = 0;
+	Bigmachine = 0;
 	
 	float vecOrigin[3];
 	
@@ -748,7 +751,7 @@ void countBadThing(char[] zone, int& plant, int& machine) {
 		if( StrContains(tmp, "rp_cash") == 0 )
 			machine++;
 		if( StrContains(tmp, "rp_bigcash") == 0 )
-			machine+=15;
+			Bigmachine++;
 	}
 	
 }
@@ -909,5 +912,67 @@ int CountHowManyPlant (char[] zone, int& plant) {
 	}
 	
 	return plant;
+}
+
+int CountHowManyMachine (char[] zone, int& machine) {
+	char tmp[64], tmp2[64];
+	float vecOrigin[3];
+	
+	for (int i = MaxClients; i <= MAX_ENTITIES; i++) {
+		if( !IsValidEdict(i) || !IsValidEntity(i) )
+			continue;
+			
+		GetEdictClassname(i, tmp, sizeof(tmp));
+		if( StrContains(tmp, "weapon_") == -1 && StrContains(tmp, "rp_") == -1 )
+			continue;
+		if( StrContains(tmp, "snowball") >= 0 )
+			continue;
+			
+		Entity_GetAbsOrigin(i, vecOrigin);
+		vecOrigin[2] += 16.0;
+		
+		rp_GetZoneData(rp_GetZoneFromPoint(vecOrigin), zone_type_type, tmp2, sizeof(tmp2));
+		if( StrEqual(tmp2, "14") )
+			tmp2[1] = '1';
+		
+		if( !StrEqual(tmp2, zone) )
+			continue;
+		
+		if( StrContains(tmp, "rp_cash") == 0 )
+			machine++;
+	}
+	
+	return machine;
+}
+
+int CountHowManyBigMachine (char[] zone, int& Bigmachine) {
+	char tmp[64], tmp2[64];
+	float vecOrigin[3];
+	
+	for (int i = MaxClients; i <= MAX_ENTITIES; i++) {
+		if( !IsValidEdict(i) || !IsValidEntity(i) )
+			continue;
+			
+		GetEdictClassname(i, tmp, sizeof(tmp));
+		if( StrContains(tmp, "weapon_") == -1 && StrContains(tmp, "rp_") == -1 )
+			continue;
+		if( StrContains(tmp, "snowball") >= 0 )
+			continue;
+			
+		Entity_GetAbsOrigin(i, vecOrigin);
+		vecOrigin[2] += 16.0;
+		
+		rp_GetZoneData(rp_GetZoneFromPoint(vecOrigin), zone_type_type, tmp2, sizeof(tmp2));
+		if( StrEqual(tmp2, "14") )
+			tmp2[1] = '1';
+		
+		if( !StrEqual(tmp2, zone) )
+			continue;
+		
+		if( StrContains(tmp, "rp_bigcash") == 0 )
+			Bigmachine++;
+	}
+	
+	return Bigmachine;
 }
 
