@@ -290,11 +290,11 @@ void START_OPPE(int zone) {
 	int NumberOfPlant = CountHowManyPlant(tmp, plant);
 	
 	if (NumberOfPlant >=1){
-		CPrintToChat(array[PQ_client], "" ...MOD_TAG... " Verif plant: ok !");
+		CPrintToChatAll(" Verif plant: ok !");
 	}
 	
 	if (NumberOfPlant == 0){
-		CPrintToChat(array[PQ_client], "" ...MOD_TAG... " Verif plant : aucun plant trouvé !");
+		CPrintToChatAll(" Verif plant : aucun plant trouvé !");
 	}
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
