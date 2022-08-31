@@ -286,6 +286,8 @@ void START_OPPE(int zone) {
 	char tmp[64], tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	rp_GetZoneData(zone, zone_type_name, tmp2, sizeof(tmp2));
+	int NumberOfPlant = CountHowManyPlant(zone, plant);
+	
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return;
@@ -388,11 +390,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 			
 		countBadThing(tmp, plant, machine);
 		
-		if (machine == machine -1){
-			CPrintToChatAll("{red} Et 1 de moins ! {default} ");
-		}
-		
-		else if( (plant + machine) == 0 ) {
+		if( (plant + machine) == 0 ) {
 			END_OPPE(zone);
 			return Plugin_Stop;
 		}
@@ -858,4 +856,30 @@ int IsAppart(int zone) {
 	}
 	
 	return false;
+}
+
+int CountHowManyPlant (char[] zone, int plant) {
+	char tmp[64], tmp2[64];
+	
+	float vecOrigin[3];
+	
+	for (int i = MaxClients; i <= MAX_ENTITIES; i++) {
+		if( !IsValidEdict(i) || !IsValidEntity(i) )
+			continue;
+			
+		Entity_GetAbsOrigin(i, vecOrigin);
+		vecOrigin[2] += 16.0;
+		
+		rp_GetZoneData(rp_GetZoneFromPoint(vecOrigin), zone_type_type, tmp2, sizeof(tmp2));
+		if( StrEqual(tmp2, "14") )
+			tmp2[1] = '1';
+		
+		if( !StrEqual(tmp2, zone) )
+			continue;
+		
+		if( StrContains(tmp, "rp_plant") == 0 )
+			plant++;
+	}
+	
+	return plant;
 }
