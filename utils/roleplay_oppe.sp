@@ -285,9 +285,10 @@ void START_OPPE(int zone) {
 	int[] array = new int[PQ_Max];
 	char tmp[64], tmp2[64];
 	int plant;
+	int zone = rp_GetZoneData(zone, zone_type_type);
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	rp_GetZoneData(zone, zone_type_name, tmp2, sizeof(tmp2));
-	int NumberOfPlant = CountHowManyPlant(tmp, plant);
+	int NumberOfPlant = CountHowManyPlant(zone, plant);
 	
 	if (NumberOfPlant >=1){
 		CPrintToChatAll(" Verif plant: %d plant trouvé !", NumberOfPlant);
@@ -867,15 +868,23 @@ int IsAppart(int zone) {
 }
 
 int CountHowManyPlant (int zone, int plant) {
-	char tmp[64],tmp2[64],tmp3[64];
+	char tmp[64];
+	float vecOrigin[3];
 	
 	for (int i = MaxClients; i <= MAX_ENTITIES; i++) {
 		if( !IsValidEdict(i) || !IsValidEntity(i) )
 			continue;
-		rp_GetZoneData(i, zone_type_type, tmp2, sizeof(tmp2));
-		rp_GetZoneData(zone, zone_type_type, tmp3, sizeof(tmp3));
-		GetEdictClassname(i, tmp, sizeof(tmp));
-		if( StrContains(tmp, "rp_plant") == 0 && tmp2 == tmp3)
+		Entity_GetAbsOrigin(i, vecOrigin);
+		vecOrigin[2] += 16.0;
+		
+		rp_GetZoneData(rp_GetZoneFromPoint(vecOrigin), zone_type_type, tmp2, sizeof(tmp2));
+		if( StrEqual(tmp2, "14") )
+			tmp2[1] = '1';
+		
+		if( !StrEqual(tmp2, zone) )
+			continue;
+		
+		if( StrContains(tmp, "rp_plant"))
 			plant++;
 	}
 	
