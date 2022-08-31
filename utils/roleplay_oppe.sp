@@ -410,6 +410,12 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		if(Bigmachine == NumberOfBigMachine){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d Photocop trouvé", Bigmachine, NumberOfBigMachine);
 		}
+		if(Bigmachine > NumberOfBigMachine){
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d Photocop trouvé +", Bigmachine, NumberOfBigMachine);
+		}
+		if(Bigmachine < NumberOfBigMachine){
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d Photocop trouvé -", Bigmachine, NumberOfBigMachine);
+		}
 		
 		if( (plant + machine + Bigmachine) == 0 ) {
 			END_OPPE(zone);
