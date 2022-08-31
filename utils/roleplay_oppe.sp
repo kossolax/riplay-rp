@@ -867,7 +867,7 @@ int IsAppart(int zone) {
 	return false;
 }
 
-int CountHowManyPlant (int zone, int plant) {
+int CountHowManyPlant (char[] zone, int plant) {
 	char tmp[64], tmp2[64];
 	
 	float vecOrigin[3];
