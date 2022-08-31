@@ -283,7 +283,7 @@ public void VERIF_OPPE(Handle owner, Handle row, const char[] error, any zone) {
 }
 void START_OPPE(int zone) {
 	int[] array = new int[PQ_Max];
-	int client = int [PQ_client];
+	int client = array[PQ_client];
 	char tmp[64], tmp2[64];
 	int plant;
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
