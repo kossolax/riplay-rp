@@ -402,7 +402,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		CPrintToChatAll("{red}"... MOD_TAG ..." aucun changement", tmp);
 	}
 	if(CountHowManyPlant(tmp, plant) > NumberOfPlant){
-		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} 1 plant ajouté =O", tmp);
+		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plant trouvé", CountHowManyPlant(tmp, plant));
 	}
 	
 	if (array[PQ_type] == 0) {
