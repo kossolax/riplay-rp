@@ -409,6 +409,12 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 			reward += 50;
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / 10 000", reward);
 		}
+		if(machine == NumberOfMachine){
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d props trouvé", machine, NumberOfMachine);
+		}
+		if(props == NumberOfProps){
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d props trouvé", props, NumberOfProps);
+		}
 		if(machine < NumberOfMachine){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d", machine, NumberOfMachine);
 			reward = reward+50;
