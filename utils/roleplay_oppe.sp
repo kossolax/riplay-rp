@@ -199,7 +199,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 		else if( StrEqual(expl[0], "trafic") ) {
 			int machine, plant, Bigmachine, props;
 			
-			countBadThing(expl[1], plant, machine, Bigmachine, props);
+			countBadThing(expl[1], plant, machine, Bigmachine);
 			
 			if (rp_GetZoneBit(zone) & BITZONE_PERQUIZ) {
 				CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable (action RP en cours)");
@@ -400,7 +400,8 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	
 	if (array[PQ_type] == 0) {
 			
-		countBadThing(tmp, plant, machine, Bigmachine, props);
+		countBadThing(tmp, plant, machine, Bigmachine);
+		countPropsThing(tmp, props);
 		
 		if(plant == NumberOfPlant){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d plant trouvé ok", plant, NumberOfPlant);
@@ -412,13 +413,13 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d Photocop trouvé", Bigmachine, NumberOfBigMachine);
 		}
 		if(props > NumberOfProps){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d Photocop trouvé +", props, NumberOfProps);
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d props trouvé +", props, NumberOfProps);
 		}
 		if(props < NumberOfProps){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d Photocop trouvé -", props, NumberOfProps);
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d props trouvé -", props, NumberOfProps);
 		}
 		if(props == NumberOfProps){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d Photocop trouvé", props, NumberOfProps);
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d props trouvé", props, NumberOfProps);
 		}
 		
 		
@@ -729,7 +730,46 @@ void updateOppeData(int zone, int[] array) {
 	g_hOpperation.SetArray(tmp, array, PQ_Max);
 }
 // ----------------------------------------------------------------------------
-void countBadThing(char[] zone, int& plant, int& machine,int& Bigmachine,int& props) {
+void countBadThing(char[] zone, int& plant, int& machine,int& Bigmachine) {
+	char tmp[64], tmp2[64];
+	
+	plant = 0;
+	machine = 0;
+	Bigmachine = 0;
+	
+	float vecOrigin[3];
+	
+	for (int i = MaxClients; i <= MAX_ENTITIES; i++) {
+		if( !IsValidEdict(i) || !IsValidEntity(i) )
+			continue;
+		
+		GetEdictClassname(i, tmp, sizeof(tmp));
+		if( StrContains(tmp, "weapon_") == -1 && StrContains(tmp, "rp_") == -1 )
+			continue;
+		if( StrContains(tmp, "snowball") >= 0 )
+			continue;
+			
+		Entity_GetAbsOrigin(i, vecOrigin);
+		vecOrigin[2] += 16.0;
+		
+		rp_GetZoneData(rp_GetZoneFromPoint(vecOrigin), zone_type_type, tmp2, sizeof(tmp2));
+		if( StrEqual(tmp2, "14") )
+			tmp2[1] = '1';
+		
+		if( !StrEqual(tmp2, zone) )
+			continue;
+		
+		if( StrContains(tmp, "rp_plant") == 0 )
+			plant++;
+		if( StrContains(tmp, "rp_cash") == 0 )
+			machine++;
+		if( StrContains(tmp, "rp_bigcash") == 0 )
+			Bigmachine++;
+	}
+	
+}
+
+void countPropsThing(char[] zone, int& props) {
 	char tmp[64], tmp2[64];
 	
 	plant = 0;
@@ -760,11 +800,11 @@ void countBadThing(char[] zone, int& plant, int& machine,int& Bigmachine,int& pr
 			continue;
 		
 		if( StrContains(tmp, "rp_plant") == 0 )
-			plant++;
+			continue;
 		if( StrContains(tmp, "rp_cash") == 0 )
-			machine++;
+			continue;
 		if( StrContains(tmp, "rp_bigcash") == 0 )
-			Bigmachine++;
+			continue;
 		
 		props++;
 	}
