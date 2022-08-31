@@ -197,7 +197,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 		}
 		
 		else if( StrEqual(expl[0], "trafic") ) {
-			int machine, plant;
+			int machine, plant, Bigmachine;
 			
 			countBadThing(expl[1], plant, machine, Bigmachine);
 			
