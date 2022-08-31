@@ -718,6 +718,9 @@ void updateOppeData(int zone, int[] array) {
 void countBadThing(char[] zone, int& plant, int& machine) {
 	char tmp[64], tmp2[64];
 	
+	plant = 0;
+	machine = 0;
+	
 	float vecOrigin[3];
 	
 	for (int i = MaxClients; i <= MAX_ENTITIES; i++) {
