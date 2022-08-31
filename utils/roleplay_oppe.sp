@@ -405,34 +405,20 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		countPropsThing(tmp, props);
 		
 		if(plant >=1){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d", plant, NumberOfPlant);
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plants, plant, NumberOfPlant);
 			HookSingleEntityOutput(plant, "OnBreak", BadThingDie);
 		}
-		if(machine == NumberOfMachine){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d props trouvé", machine, NumberOfMachine);
+		if(machine >= 1){
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %dimprimante props trouvé", machine);
+			HookSingleEntityOutput(machine, "OnBreak", BadThingDie);
 		}
-		if(props == NumberOfProps){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d props trouvé", props, NumberOfProps);
+		if(props >= 1){
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d props", props);
+			HookSingleEntityOutput(props, "OnBreak", BadThingDie);
 		}
-		if(machine < NumberOfMachine){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d", machine, NumberOfMachine);
-			reward = reward+50;
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / 10 000", reward);
-		}
-		if(Bigmachine < NumberOfBigMachine){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d", Bigmachine, NumberOfBigMachine);
-			reward = reward+50;
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / 10 000", reward);
-		}
-		if(props < NumberOfProps){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d", props, NumberOfProps);
-			reward += 50;
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / 10 000", reward);
-		}
-		
-		if( (plant + machine + Bigmachine) == 0 ) {
-			END_OPPE(zone);
-			return Plugin_Stop;
+		if(Bigmachine >= 1){
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d photocop", Bigmachine);
+			HookSingleEntityOutput(Bigmachine, "OnBreak", BadThingDie);
 		}
 	}
 	
