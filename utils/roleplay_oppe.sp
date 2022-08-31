@@ -868,7 +868,7 @@ int IsAppart(int zone) {
 }
 
 int CountHowManyPlant (int zone, int plant) {
-	char tmp[64];
+	char tmp[64], tmp2[64];
 	float vecOrigin[3];
 	
 	for (int i = MaxClients; i <= MAX_ENTITIES; i++) {
