@@ -395,7 +395,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	
 	changeZoneState(zone, true);
 	
-	if(NumberOfPlant--){
+	if(CountHowManyPlant(tmp, plant) < NumberOfPlant){
 		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} 1 plant détruit =)", tmp);
 	}
 	
