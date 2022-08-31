@@ -285,7 +285,6 @@ void START_OPPE(int zone) {
 	int[] array = new int[PQ_Max];
 	char tmp[64], tmp2[64];
 	int plant;
-	int zone = rp_GetZoneData(zone, zone_type_type);
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	rp_GetZoneData(zone, zone_type_name, tmp2, sizeof(tmp2));
 	int NumberOfPlant = CountHowManyPlant(zone, plant);
@@ -874,8 +873,10 @@ int CountHowManyPlant (int zone, int plant) {
 	for (int i = MaxClients; i <= MAX_ENTITIES; i++) {
 		if( !IsValidEdict(i) || !IsValidEntity(i) )
 			continue;
+			
+		GetEdictClassname(i, tmp, sizeof(tmp));	
 		Entity_GetAbsOrigin(i, vecOrigin);
-		vecOrigin[2] += 16.0;
+		vecOrigin[2] += 16.0
 		
 		rp_GetZoneData(rp_GetZoneFromPoint(vecOrigin), zone_type_type, tmp2, sizeof(tmp2));
 		if( StrEqual(tmp2, "14") )
@@ -884,9 +885,10 @@ int CountHowManyPlant (int zone, int plant) {
 		if( !StrEqual(tmp2, zone) )
 			continue;
 		
-		if( StrContains(tmp, "rp_plant"))
+		if( StrContains(tmp, "rp_plant") == 0 )
 			plant++;
 	}
 	
 	return plant;
 }
+
