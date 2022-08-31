@@ -400,13 +400,13 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		countBadThing(tmp, plant, machine);
 		
 		if(plant < NumberOfPlant){
-		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plant trouvé c'est moins que %s ", plant, NumberOfPlant);
+		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plant trouvé c'est moins que %d ", plant, NumberOfPlant);
 		}
 		if(plant == NumberOfPlant){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %s plant trouvé ok", plant, NumberOfPlant);
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d plant trouvé ok", plant, NumberOfPlant);
 		}
 		if(plant > NumberOfPlant){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plant trouvé c'est plus que %s", plant, NumberOfPlant);
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plant trouvé c'est plus que %d", plant, NumberOfPlant);
 		}
 		
 		if( (plant + machine) == 0 ) {
