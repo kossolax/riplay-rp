@@ -772,9 +772,6 @@ void countBadThing(char[] zone, int& plant, int& machine,int& Bigmachine) {
 void countPropsThing(char[] zone, int& props) {
 	char tmp[64], tmp2[64];
 	
-	plant = 0;
-	machine = 0;
-	Bigmachine = 0;
 	props = 0;
 	
 	float vecOrigin[3];
