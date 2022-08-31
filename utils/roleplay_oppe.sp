@@ -197,7 +197,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 		}
 		
 		else if( StrEqual(expl[0], "trafic") ) {
-			int machine, plant, Bigmachine, props;
+			int machine, plant, Bigmachine;
 			
 			countBadThing(expl[1], plant, machine, Bigmachine);
 			
@@ -287,7 +287,6 @@ void START_OPPE(int zone) {
 	int plant;
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	rp_GetZoneData(zone, zone_type_name, tmp2, sizeof(tmp2));
-	int NumberOfPlant = CountHowManyPlant(tmp, plant);
 	
 	if (NumberOfPlant >=1){
 		CPrintToChatAll(" Verif plant: %d plant trouvé !", NumberOfPlant);
@@ -387,7 +386,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	int machine, plant, Bigmachine, props;
-	int EntPlant == "rp_plant";
+	int EntPlant = "rp_plant";
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return Plugin_Stop;
@@ -773,7 +772,7 @@ void countBadThing(char[] zone, int& plant, int& machine,int& Bigmachine) {
 		
 		if( StrContains(tmp, "rp_plant") == 0 ){
 			plant++;
-			EntPlant == "rp_plant";
+			EntPlant = "rp_plant";
 		}
 		if( StrContains(tmp, "rp_cash") == 0 )
 			machine++;
