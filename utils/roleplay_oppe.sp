@@ -391,6 +391,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	int NumberOfMachine = CountHowManyMachine(tmp, machine);
 	int NumberOfBigMachine = CountHowManyBigMachine(tmp, Bigmachine);
 	int NumberOfProps = CountHowManyProps(tmp, props);
+	int reward = 0;
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return Plugin_Stop;
@@ -403,30 +404,49 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		countBadThing(tmp, plant, machine, Bigmachine);
 		countPropsThing(tmp, props);
 		
-		if(plant == NumberOfPlant){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d plant trouvé ok", plant, NumberOfPlant);
+		if(plant < NumberOfPlant){
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d", plant, NumberOfPlant);
+			reward += 50;
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / 10 000", reward);
 		}
-		if(machine == NumberOfMachine){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d imprimante trouvé", machine, NumberOfMachine);
+		if(machine < NumberOfMachine){
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d", machine, NumberOfMachine);
+			reward = reward+50;
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / 10 000", reward);
 		}
-		if(Bigmachine == NumberOfBigMachine){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d Photocop trouvé", Bigmachine, NumberOfBigMachine);
-		}
-		if(props > NumberOfProps){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d props trouvé +", props, NumberOfProps);
+		if(Bigmachine < NumberOfBigMachine){
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d", Bigmachine, NumberOfBigMachine);
+			reward = reward+50;
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / 10 000", reward);
 		}
 		if(props < NumberOfProps){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d props trouvé -", props, NumberOfProps);
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d", props, NumberOfProps);
+			reward += 50;
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / 10 000", reward);
 		}
-		if(props == NumberOfProps){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d props trouvé", props, NumberOfProps);
-		}
-		
-		
 		
 		if( (plant + machine + Bigmachine) == 0 ) {
 			END_OPPE(zone);
 			return Plugin_Stop;
+		}
+	}
+	
+	if (array[PQ_type] == 1) {
+			
+		countBadThing(tmp, plant, machine, Bigmachine);
+		countPropsThing(tmp, props);
+		
+		if(plant < NumberOfPlant){
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d", plant, NumberOfPlant);
+		}
+		if(machine < NumberOfMachine){
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d", machine, NumberOfMachine);
+		}
+		if(Bigmachine < NumberOfBigMachine){
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d", Bigmachine, NumberOfBigMachine);
+		}
+		if(props < NumberOfProps){
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d / %d", props, NumberOfProps);
 		}
 	}
 	
@@ -766,7 +786,6 @@ void countBadThing(char[] zone, int& plant, int& machine,int& Bigmachine) {
 		if( StrContains(tmp, "rp_bigcash") == 0 )
 			Bigmachine++;
 	}
-	
 }
 
 void countPropsThing(char[] zone, int& props) {
@@ -805,8 +824,8 @@ void countPropsThing(char[] zone, int& props) {
 		
 		props++;
 	}
-	
 }
+
 void TeleportT(int zone) {
 	char tmp[64], tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
