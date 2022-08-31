@@ -867,8 +867,9 @@ int IsAppart(int zone) {
 }
 
 int CountHowManyPlant (int zone, int plant) {
-	char tmp[64], tmp2[64];
+	char tmp[64], tmp2[64], tmp3[64];
 	float vecOrigin[3];
+	rp_GetZoneData(zone, zone_type_type, tmp3, sizeof(tmp3));
 	
 	for (int i = MaxClients; i <= MAX_ENTITIES; i++) {
 		if( !IsValidEdict(i) || !IsValidEntity(i) )
@@ -882,7 +883,7 @@ int CountHowManyPlant (int zone, int plant) {
 		if( StrEqual(tmp2, "14") )
 			tmp2[1] = '1';
 		
-		if( !StrEqual(tmp2, zone) )
+		if( !StrEqual(tmp2, tmp3) )
 			continue;
 		
 		if( StrContains(tmp, "rp_plant") == 0 )
