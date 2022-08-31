@@ -876,7 +876,7 @@ int CountHowManyPlant (int zone, int plant) {
 			
 		GetEdictClassname(i, tmp, sizeof(tmp));	
 		Entity_GetAbsOrigin(i, vecOrigin);
-		vecOrigin[2] += 16.0
+		vecOrigin[2] += 16.0;
 		
 		rp_GetZoneData(rp_GetZoneFromPoint(vecOrigin), zone_type_type, tmp2, sizeof(tmp2));
 		if( StrEqual(tmp2, "14") )
