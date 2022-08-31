@@ -287,7 +287,7 @@ void START_OPPE(int zone) {
 	int plant;
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	rp_GetZoneData(zone, zone_type_name, tmp2, sizeof(tmp2));
-	int NumberOfPlant = CountHowManyPlant(zone, plant);
+	int NumberOfPlant = CountHowManyPlant(tmp, plant);
 	
 	if (NumberOfPlant >=1){
 		CPrintToChatAll(" Verif plant: %d plant trouvé !", NumberOfPlant);
@@ -866,7 +866,7 @@ int IsAppart(int zone) {
 	return false;
 }
 
-int CountHowManyPlant (int zone, int plant) {
+int CountHowManyPlant (char[] zone, int& plant) {
 	char tmp[64], tmp2[64], tmp3[64];
 	float vecOrigin[3];
 	rp_GetZoneData(zone, zone_type_type, tmp3, sizeof(tmp3));
