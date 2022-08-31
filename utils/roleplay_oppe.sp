@@ -283,7 +283,6 @@ public void VERIF_OPPE(Handle owner, Handle row, const char[] error, any zone) {
 }
 void START_OPPE(int zone) {
 	int[] array = new int[PQ_Max];
-	int client = array[PQ_client];
 	char tmp[64], tmp2[64];
 	int plant;
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
@@ -291,11 +290,11 @@ void START_OPPE(int zone) {
 	int NumberOfPlant = CountHowManyPlant(tmp, plant);
 	
 	if (NumberOfPlant >=1){
-		CPrintToChat(client, "" ...MOD_TAG... " Verif plant: ok !");
+		CPrintToChat(array[PQ_client], "" ...MOD_TAG... " Verif plant: ok !");
 	}
 	
 	if (NumberOfPlant == 0){
-		CPrintToChat(client, "" ...MOD_TAG... " Verif plant : aucun plant trouvé !");
+		CPrintToChat(array[PQ_client], "" ...MOD_TAG... " Verif plant : aucun plant trouvé !");
 	}
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
