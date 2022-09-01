@@ -392,7 +392,8 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		
 		if(plant >=1){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plants", plant);
-			HookSingleEntityOutput(EntPlant, "OnBreak", BadThingDie);
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d trouvé", EntPlant);
+			//HookSingleEntityOutput(EntPlant, "OnBreak", BadThingDie);
 		}
 		if(machine >= 1){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d imprimante trouvé", machine);
