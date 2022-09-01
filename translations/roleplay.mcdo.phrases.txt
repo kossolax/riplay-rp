@@ -32,7 +32,7 @@
 	
 	"Microwave_Ready"
 	{
-		"fr"		"{blue}Votre micro-ondes vient de sonner!{default}"
+		"fr"		"{blue}Votre gazinniere vient de sonner!{default}"
 		"en"		"{blue}Your microwave is ready!{default}"		
 	}
 	
