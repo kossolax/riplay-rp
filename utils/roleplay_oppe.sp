@@ -377,7 +377,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	int machine, plant, Bigmachine, props;
-	int EntPlant = "rp_plant";
+	int EntPlant;
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return Plugin_Stop;
@@ -396,15 +396,12 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		}
 		if(machine >= 1){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d imprimante trouvé", machine);
-			HookSingleEntityOutput(machine, "OnBreak", BadThingDie);
 		}
 		if(props >= 1){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d props", props);
-			HookSingleEntityOutput(props, "OnBreak", BadThingDie);
 		}
 		if(Bigmachine >= 1){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d photocop", Bigmachine);
-			HookSingleEntityOutput(Bigmachine, "OnBreak", BadThingDie);
 		}
 	}
 	
@@ -763,7 +760,7 @@ void countBadThing(char[] zone, int& plant, int& machine,int& Bigmachine) {
 		
 		if( StrContains(tmp, "rp_plant") == 0 ){
 			plant++;
-			EntPlant= (tmp, classname)
+			EntPlant= GetEntPropEnt(tmp, Prop_Send, "m_hOwnerEntity");
 		}
 		if( StrContains(tmp, "rp_cash") == 0 )
 			machine++;
