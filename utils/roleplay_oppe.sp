@@ -393,7 +393,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		if(plant >=1){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plants", plant);
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d trouvé", EntPlant);
-			HookSingleEntityOutput(rp_plant, "OnBreak", BadThingDie);
+			HookSingleEntityOutput(EntPlant, "OnBreak", BadThingDie);
 		}
 		if(machine >= 1){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d imprimante trouvé", machine);
@@ -761,7 +761,7 @@ void countBadThing(char[] zone, int& plant, int& machine,int& Bigmachine) {
 		
 		if( StrContains(tmp, "rp_plant") == 0 ){
 			plant++;
-			//EntPlant = GetEntPropString(i, Prop_Data, "m_iName");
+			EntPlant = GetEntPropString(tmp, Prop_Data, "m_iName");
 		}
 		if( StrContains(tmp, "rp_cash") == 0 )
 			machine++;
