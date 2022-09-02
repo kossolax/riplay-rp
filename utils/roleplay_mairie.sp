@@ -53,7 +53,7 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 	if( abonne > 0 && rp_GetClientJobID(client) == 1 || abonne > 0 && rp_GetClientJobID(client) == 101) {
 		int sum = RoundFloat(float(salary) * 0.3 );
 		if( verbose )
-			CPrintToChat(client, "" ...MOD_TAG... " Votre abonnement a fait remporté %d$ supplémentaire.", sum);
+			CPrintToChat(client, "" ...MOD_TAG... " Votre abonnement vous a fait remporté %d$ supplémentaire.", sum);
 		
 		changed = true;
 		topay += sum;
@@ -62,7 +62,7 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 	if( abonne > 0 && rp_GetClientJobID(client) != 1 || abonne > 0 && rp_GetClientJobID(client) != 101) {
 		int sum = RoundFloat(float(salary) * 0.6 );
 		if( verbose )
-			CPrintToChat(client, "" ...MOD_TAG... " Votre abonnement a fait remporté %d$ supplémentaire.", sum);
+			CPrintToChat(client, "" ...MOD_TAG... " Votre abonnement vous a fait remporté %d$ supplémentaire.", sum);
 		
 		changed = true;
 		topay += sum;
@@ -71,7 +71,7 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 	if( prestige >= 1 ) {
 		int sum = RoundFloat(float(salary) * (float(prestige) / 10.0) );
 		if( verbose )
-			CPrintToChat(client, "" ...MOD_TAG... " Votre prestige a fait remporté %d$ supplémentaire.", sum);
+			CPrintToChat(client, "" ...MOD_TAG... " Votre prestige vous a fait remporté %d$ supplémentaire.", sum);
 		
 		changed = true;
 		topay += sum;
