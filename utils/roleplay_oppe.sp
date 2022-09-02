@@ -377,7 +377,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	int machine, plant, Bigmachine, props;
-	int EntPlant;
+	int EntPlant = CreateEntityByName("rp_plant");
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return Plugin_Stop;
@@ -735,7 +735,7 @@ void countBadThing(char[] zone, int& plant, int& machine,int& Bigmachine) {
 	plant = 0;
 	machine = 0;
 	Bigmachine = 0;
-	int EntPlant;
+	//int EntPlant;
 	
 	float vecOrigin[3];
 	
@@ -761,7 +761,7 @@ void countBadThing(char[] zone, int& plant, int& machine,int& Bigmachine) {
 		
 		if( StrContains(tmp, "rp_plant") == 0 ){
 			plant++;
-			EntPlant = tmp[0];
+			//EntPlant = tmp[0];
 		}
 		if( StrContains(tmp, "rp_cash") == 0 )
 			machine++;
