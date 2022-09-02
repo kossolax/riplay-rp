@@ -53,7 +53,7 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 	if( abonne > 0 && rp_GetClientJobID(client) == 1 || abonne > 0 && rp_GetClientJobID(client) == 101) {
 		int sum = RoundFloat(float(salary) * 0.3 );
 		if( verbose )
-			CPrintToChat(client, "" ...MOD_TAG... " Votre abonnement vous a fait remporté %d$ supplémentaire.", sum);
+			CPrintToChat(client, "" ...MOD_TAG... " Votre abonnement vous a fait remporté {green}%d{default}$ supplémentaire.", sum);
 		
 		changed = true;
 		topay += sum;
@@ -62,7 +62,7 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 	if( abonne > 0 && rp_GetClientJobID(client) != 1 || abonne > 0 && rp_GetClientJobID(client) != 101) {
 		int sum = RoundFloat(float(salary) * 0.6 );
 		if( verbose )
-			CPrintToChat(client, "" ...MOD_TAG... " Votre abonnement vous a fait remporté %d$ supplémentaire.", sum);
+			CPrintToChat(client, "" ...MOD_TAG... " Votre abonnement vous a fait remporté {green}%d{default}$ supplémentaire.", sum);
 		
 		changed = true;
 		topay += sum;
@@ -71,7 +71,7 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 	if( prestige >= 1 ) {
 		int sum = RoundFloat(float(salary) * (float(prestige) / 10.0) );
 		if( verbose )
-			CPrintToChat(client, "" ...MOD_TAG... " Votre prestige vous a fait remporté %d$ supplémentaire.", sum);
+			CPrintToChat(client, "" ...MOD_TAG... " Votre prestige vous a fait remporté {green}%d{default}$ supplémentaire.", sum);
 		
 		changed = true;
 		topay += sum;
@@ -85,9 +85,9 @@ public Action RP_OnPlayerGotPay(int client, int salary, int & topay, bool verbos
 			int sum = RoundFloat(float(salary) * (rp_GetServerRules(rules_Payes, rules_Arg) == 1 ? 0.05 : -0.1));
 			if( verbose ) {
 				if( rp_GetServerRules(rules_Payes, rules_Arg) == 1 )
-					CPrintToChat(client, "" ...MOD_TAG... " La mairie vous a fait gagné %d$ supplémentaire.", sum);
+					CPrintToChat(client, "" ...MOD_TAG... " La mairie vous a fait gagné {green}%d{default}$ supplémentaire.", sum);
 				else
-					CPrintToChat(client, "" ...MOD_TAG... " La mairie vous a taxé %d$.", sum);
+					CPrintToChat(client, "" ...MOD_TAG... " La mairie vous a taxé {red}%d{default}$.", sum);
 			}
 			
 			changed = true;
