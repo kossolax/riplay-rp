@@ -761,7 +761,7 @@ void countBadThing(char[] zone, int& plant, int& machine,int& Bigmachine) {
 		
 		if( StrContains(tmp, "rp_plant") == 0 ){
 			plant++;
-			EntPlant = GetEntPropString(tmp, Prop_Data, "m_iName");
+			EntPlant = tmp;
 		}
 		if( StrContains(tmp, "rp_cash") == 0 )
 			machine++;
