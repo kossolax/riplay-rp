@@ -940,8 +940,9 @@ public void BadThingDie(const char[] output, int caller, int activator, float de
 
 	if( IsValidClient(activator) ) {
 		int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
-		if( IsValidClient(owner) ) {
+		if( IsValidClient(owner) && rp_GetClientJobID(activator) == 91) {
 			rp_ClientXPIncrement(activator, 150);
+			CPrintToChat(activator, "" ...MOD_TAG... " Et de 1 !.");
 		}
 	}
 }
