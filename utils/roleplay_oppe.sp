@@ -407,7 +407,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	
 	if (array[PQ_type] == 1) {
 			
-		countBadThing(tmp, plant, machine, Bigmachine);
+		countBadThing(tmp, plant, machine, Bigmachine, EntPlant);
 		countPropsThing(tmp, props);
 		
 		if(plant >=1){
