@@ -273,14 +273,10 @@ public void VERIF_OPPE(Handle owner, Handle row, const char[] error, any zone) {
 	
 	SetConVarInt(g_hActive, GetConVarInt(g_hActive) + 1);
 	changeZoneState(zone, true);
-	
-	if( array[PQ_target] == 0 ) {
-		CreateTimer(1.0, TIMER_OPPE_LOOKUP, zone, TIMER_REPEAT);
-	}
-	else {	
-		START_OPPE(zone);
-	}
+		
+	START_OPPE(zone);
 }
+
 void START_OPPE(int zone) {
 	int[] array = new int[PQ_Max];
 	char tmp[64], tmp2[64];
