@@ -370,9 +370,10 @@ void END_OPPE(int zone) {
 
 public Action TIMER_OPPE(Handle timer, any zone) {
 	int[] array = new int[PQ_Max];
-	char tmp[64];
+	char tmp[64], tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	int machine, plant, Bigmachine, props, EntPlant;
+	rp_GetItemData(itemID, item_type_extra_cmd, tmp2, sizeof(tmp2));
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return Plugin_Stop;
@@ -382,13 +383,14 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	
 	if (array[PQ_type] == 0) {
 			
-		countBadThing(tmp, plant, machine, Bigmachine, EntPlant);
+		countBadThing(tmp, plant, machine, Bigmachine);
 		countPropsThing(tmp, props);
+		
 		
 		if(plant >=1){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plants", plant);
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d trouvé", EntPlant);
-			HookSingleEntityOutput(EntPlant, "OnBreak", BadThingDie);
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d trouvé", tmp2);
+			HookSingleEntityOutput(tmp2, "OnBreak", BadThingDie);
 		}
 		if(machine >= 1){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d imprimante trouvé", machine);
