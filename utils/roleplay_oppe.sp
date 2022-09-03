@@ -197,9 +197,9 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 		}
 		
 		else if( StrEqual(expl[0], "trafic") ) {
-			int machine, plant, Bigmachine;
+			int machine, plant, Bigmachine, EntPlant;
 			
-			countBadThing(expl[1], plant, machine, Bigmachine);
+			countBadThing(expl[1], plant, machine, Bigmachine, EntPlant);
 			
 			if (rp_GetZoneBit(zone) & BITZONE_PERQUIZ) {
 				CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable (action RP en cours)");
@@ -376,8 +376,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	int[] array = new int[PQ_Max];
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
-	int machine, plant, Bigmachine, props;
-	int EntPlant;
+	int machine, plant, Bigmachine, props, EntPlant;
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return Plugin_Stop;
@@ -387,7 +386,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	
 	if (array[PQ_type] == 0) {
 			
-		countBadThing(tmp, plant, machine, Bigmachine);
+		countBadThing(tmp, plant, machine, Bigmachine, EntPlant);
 		countPropsThing(tmp, props);
 		
 		if(plant >=1){
@@ -729,7 +728,7 @@ void updateOppeData(int zone, int[] array) {
 	g_hOpperation.SetArray(tmp, array, PQ_Max);
 }
 // ----------------------------------------------------------------------------
-void countBadThing(char[] zone, int& plant, int& machine,int& Bigmachine) {
+void countBadThing(char[] zone, int& plant, int& machine,int& Bigmachine, int& EntPlant) {
 	char tmp[64], tmp2[64];
 	
 	plant = 0;
