@@ -735,6 +735,7 @@ void countBadThing(char[] zone, int& plant, int& machine,int& Bigmachine) {
 	plant = 0;
 	machine = 0;
 	Bigmachine = 0;
+	int EntPlant;
 	
 	float vecOrigin[3];
 	
@@ -760,7 +761,7 @@ void countBadThing(char[] zone, int& plant, int& machine,int& Bigmachine) {
 		
 		if( StrContains(tmp, "rp_plant") == 0 ){
 			plant++;
-			HookSingleEntityOutput(tmp, "OnBreak", BadThingDie);
+			EntPlant = rp_GetBuildingData(i, BD_item_id);
 		}
 		if( StrContains(tmp, "rp_cash") == 0 )
 			machine++;
