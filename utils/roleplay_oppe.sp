@@ -199,7 +199,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 		else if( StrEqual(expl[0], "trafic") ) {
 			int machine, plant, Bigmachine, EntPlant;
 			
-			countBadThing(expl[1], plant, machine, Bigmachine, EntPlant);
+			countBadThing(expl[1], plant, machine, Bigmachine);
 			
 			if (rp_GetZoneBit(zone) & BITZONE_PERQUIZ) {
 				CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable (action RP en cours)");
@@ -405,7 +405,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	
 	if (array[PQ_type] == 1) {
 			
-		countBadThing(tmp, plant, machine, Bigmachine, EntPlant);
+		countBadThing(tmp, plant, machine, Bigmachine);
 		countPropsThing(tmp, props);
 		
 		if(plant >=1){
