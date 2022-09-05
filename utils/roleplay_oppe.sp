@@ -373,7 +373,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	char tmp[64], tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	int machine, plant, Bigmachine, props, EntPlant;
-	rp_GetItemData(itemID, item_type_extra_cmd, tmp2, sizeof(tmp2));
+	rp_GetItemData(101, item_type_extra_cmd, tmp2, sizeof(tmp2));
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return Plugin_Stop;
