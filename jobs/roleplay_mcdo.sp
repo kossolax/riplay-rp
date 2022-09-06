@@ -579,9 +579,9 @@ public void BuildingFountain_break(const char[] output, int caller, int activato
 	}
 	
 	if( IsValidClient(owner) ) {
-		char tmp[128];
-		GetEdictClassname(caller, tmp, sizeof(tmp));
-		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Build_Destroyed", owner, tmp);
+		//char tmp[128];
+		//GetEdictClassname(caller, tmp, sizeof(tmp));
+		CPrintToChat(owner, "" ...MOD_TAG... " Votre Machine à café à été détruite");
 		rp_UnhookEvent(owner, RP_OnPlayerUse, fwdOnPlayerUse);
 	}
 	
