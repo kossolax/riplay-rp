@@ -512,7 +512,7 @@ public Action TIMER_MaxOPPE (Handle timer, any zone) {
 	int time = GetTime();
 	int EndTime = GetTime()+30;
 	if (time == EndTime){
-		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} On à plus le temps ! on ce casse !", tmp);
+		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} On à plus le temps ! on ce casse !");
 		END_OPPE(zone);
 		return Plugin_Stop;
 	}
@@ -960,14 +960,13 @@ int IsAppart(int zone) {
 }
 
 public void BadThingDie(const char[] output, int caller, int activator, float delay) {
-	int reward;
 	
 	if( IsValidClient(activator) ) {
 		int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
 		if( IsValidClient(owner) && rp_GetClientJobID(activator) == 91) {
 		
-			rp_ClientXPIncrement(client, 100);
-			giveMoney(client, 75);
+			rp_ClientXPIncrement(activator, 100);
+			giveMoney(activator, 75);
 			
 		}
 	}
