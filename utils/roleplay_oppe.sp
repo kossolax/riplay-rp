@@ -517,8 +517,8 @@ public Action TIMER_MaxOPPE (Handle timer, any zone) {
 		END_OPPE(zone);
 		return Plugin_Stop;
 	}
-	else if (EndTime > GetTime() ){
-		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} encore %s avant la fin", EndTime);
+	if (EndTime > GetTime() ){
+		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} encore %d avant la fin", EndTime);
 	}
 	return Plugin_Continue;
 }
