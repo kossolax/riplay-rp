@@ -511,6 +511,7 @@ public Action TIMER_MaxOPPE (Handle timer, any zone) {
 	
 	int time = GetTime();
 	int EndTime = GetTime()+30;
+	
 	if (time == EndTime){
 		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} On à plus le temps ! on ce casse !");
 		END_OPPE(zone);
