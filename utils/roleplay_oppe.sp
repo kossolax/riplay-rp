@@ -516,6 +516,7 @@ public Action TIMER_MaxOPPE (Handle timer, any zone) {
 		END_OPPE(zone);
 		return Plugin_Stop;
 	}
+	return Plugin_Continue;
 }
 // ----------------------------------------------------------------------------
 int GetPerquizResp(int zone, bool afkCheck) {
