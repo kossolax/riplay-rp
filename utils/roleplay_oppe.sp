@@ -330,7 +330,7 @@ void START_OPPE(int zone) {
 	rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
 
 	CreateTimer(1.0, TIMER_OPPE, zone, TIMER_REPEAT);
-	CreateTimer(1.0, TIMER_MaxOPPE, zone, TIMER_REPEAT);
+	CreateTimer(30.0, TIMER_MaxOPPE, zone, TIMER_REPEAT);
 	
 	
 		
@@ -509,17 +509,10 @@ public Action TIMER_OPPE_LOOKUP(Handle timer, any zone) {
 }
 public Action TIMER_MaxOPPE (Handle timer, any zone) {
 	
-	int EndTime = GetTime()+30;
+	CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} On à plus le temps ! On ce s'arrache !");
+	END_OPPE(zone);
+	return Plugin_Stop;
 	
-	if (EndTime < GetTime() ){
-		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} On à plus le temps ! On ce s'arrache !");
-		END_OPPE(zone);
-		return Plugin_Stop;
-	}
-	if (EndTime > GetTime() ){
-		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} encore %d avant la fin", EndTime);
-	}
-	return Plugin_Continue;
 }
 // ----------------------------------------------------------------------------
 int GetPerquizResp(int zone, bool afkCheck) {
