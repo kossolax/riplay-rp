@@ -463,7 +463,7 @@ public void BuildingCafetiere_break(const char[] output, int caller, int activat
 	if( IsValidClient(owner) ) {
 		char tmp[128];
 		GetEdictClassname(caller, tmp, sizeof(tmp));
-		CPrintToChat(owner, "" ...MOD_TAG... " %T", "Build_Destroyed", owner, tmp);
+		CPrintToChat(owner, "" ...MOD_TAG... " Votre cafetiere à été détruite ! ");
 		rp_UnhookEvent(owner, RP_OnPlayerUse, fwdOnPlayerUse);
 	}
 	
