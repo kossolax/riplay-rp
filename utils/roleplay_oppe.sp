@@ -966,7 +966,7 @@ public void BadThingDie(const char[] output, int caller, int activator, float de
 		if( IsValidClient(owner) && rp_GetClientJobID(activator) == 91) {
 		
 			rp_ClientXPIncrement(activator, 100);
-			giveMoney(activator, 75);
+			rp_ClientMoney(activator, i_Money, 75);
 			
 		}
 	}
