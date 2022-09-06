@@ -516,7 +516,7 @@ public Action TIMER_MaxOPPE (Handle timer, any zone) {
 		END_OPPE(zone);
 		return Plugin_Stop;
 	}
-	int EndTime = GetTime()+30;
+	EndTime = GetTime()+30;
 	return Plugin_Continue;
 }
 // ----------------------------------------------------------------------------
