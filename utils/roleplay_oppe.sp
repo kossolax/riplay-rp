@@ -967,7 +967,7 @@ public void BadThingDie(const char[] output, int caller, int activator, float de
 		int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
 		if( IsValidClient(owner) && rp_GetClientJobID(activator) == 91) {
 			reward = reward + 75;
-			CPrintToChat(client, "" ...MOD_TAG... " reward = %d", reward);
+			CPrintToChat(activator, "" ...MOD_TAG... " reward = %d", reward);
 			//rp_ClientXPIncrement(activator, 100);
 			//rp_ClientMoney(activator, i_Money, 75);
 			
