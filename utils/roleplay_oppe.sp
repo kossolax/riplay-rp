@@ -509,14 +509,14 @@ public Action TIMER_OPPE_LOOKUP(Handle timer, any zone) {
 }
 public Action TIMER_MaxOPPE (Handle timer, any zone) {
 	
-	int time = GetTime();
-	int EndTime = GetTime()+30;
+	static int EndTime;
 	
-	if (time == EndTime){
-		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} On à plus le temps ! on ce casse !");
+	if (EndTime < GetTime() ){
+		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} On à plus le temps ! On ce s'arrache !");
 		END_OPPE(zone);
 		return Plugin_Stop;
 	}
+	int EndTime = GetTime()+30;
 	return Plugin_Continue;
 }
 // ----------------------------------------------------------------------------
