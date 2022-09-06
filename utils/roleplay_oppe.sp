@@ -390,15 +390,15 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		
 		
 		if(plant >=1){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plants", plant);
+			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plants", plant);
 			HookEntityOutput("rp_plant", "OnBreak", BadThingDie);
 		}
 		if(machine >= 1){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d imprimante trouvé", machine);
+			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d imprimante trouvé", machine);
 			HookEntityOutput("rp_item_cash", "OnBreak", BadThingDie);
 		}
 		if(props >= 1){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d props", props);
+			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d props", props);
 			HookEntityOutput("rp_item_distrib", "OnBreak", BadThingDie);
 			HookEntityOutput("rp_item_crafttable", "OnBreak", BadThingDie);
 			HookEntityOutput("rp_item_fountain", "OnBreak", BadThingDie);
@@ -409,7 +409,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 			
 		}
 		if(Bigmachine >= 1){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d photocop", Bigmachine);
+			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d photocop", Bigmachine);
 			HookEntityOutput("rp_item_cashbig", "OnBreak", BadThingDie);
 		}
 	}
@@ -420,15 +420,15 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		countPropsThing(tmp, props);
 		
 		if(plant >=1){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plants", plant);
+			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plants", plant);
 			HookEntityOutput("rp_plant", "OnBreak", BadThingDie);
 		}
 		if(machine >= 1){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d imprimante trouvé", machine);
+			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d imprimante trouvé", machine);
 			HookEntityOutput("rp_item_cash", "OnBreak", BadThingDie);
 		}
 		if(props >= 1){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d props", props);
+			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d props", props);
 			HookEntityOutput("rp_item_distrib", "OnBreak", BadThingDie);
 			HookEntityOutput("rp_item_crafttable", "OnBreak", BadThingDie);
 			HookEntityOutput("rp_item_fountain", "OnBreak", BadThingDie);
@@ -439,7 +439,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 			
 		}
 		if(Bigmachine >= 1){
-			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d photocop", Bigmachine);
+			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d photocop", Bigmachine);
 			HookEntityOutput("rp_item_cashbig", "OnBreak", BadThingDie);
 		}
 	}
