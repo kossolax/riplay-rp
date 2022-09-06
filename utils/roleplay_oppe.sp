@@ -330,6 +330,9 @@ void START_OPPE(int zone) {
 	rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
 
 	CreateTimer(1.0, TIMER_OPPE, zone, TIMER_REPEAT);
+	CreateTimer(1.0, TIMER_MaxOPPE, zone, TIMER_REPEAT);
+	
+	
 		
 	ServerCommand("rp_sick 0"); // Pas de maladie en oppe
 }
@@ -503,6 +506,16 @@ public Action TIMER_OPPE_LOOKUP(Handle timer, any zone) {
 	updateOppeData(zone, array);
 	Effect_DrawPerqui(zone);
 	return Plugin_Continue;
+}
+public Action TIMER_MaxOPPE (Handle timer, any zone) {
+	
+	int time = GetTime();
+	int EndTime = GetTime()+30;
+	if (time == EndTime){
+		CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} On à plus le temps ! on ce casse !", tmp);
+		END_OPPE(zone);
+		return Plugin_Stop;
+	}
 }
 // ----------------------------------------------------------------------------
 int GetPerquizResp(int zone, bool afkCheck) {
@@ -953,8 +966,9 @@ public void BadThingDie(const char[] output, int caller, int activator, float de
 		int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
 		if( IsValidClient(owner) && rp_GetClientJobID(activator) == 91) {
 		
-			reward += 75;
-			CPrintToChat(activator, "" ...MOD_TAG... " vous avez %d de récompense total", reward);
+			rp_ClientXPIncrement(client, 100);
+			giveMoney(client, 75);
+			
 		}
 	}
 }
