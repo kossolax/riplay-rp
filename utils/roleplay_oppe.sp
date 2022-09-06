@@ -199,7 +199,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 		else if( StrEqual(expl[0], "trafic") ) {
 			int machine, plant, Bigmachine, EntPlant;
 			
-			countBadThing(expl[1], plant, machine, Bigmachine);
+			countBadThing(expl[1], plant, machine, Bigmachine, EntPlant);
 			
 			if (rp_GetZoneBit(zone) & BITZONE_PERQUIZ) {
 				CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable (action RP en cours)");
@@ -383,14 +383,14 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	
 	if (array[PQ_type] == 0) {
 			
-		countBadThing(tmp, plant, machine, Bigmachine);
+		countBadThing(tmp, plant, machine, Bigmachine, Entplant);
 		countPropsThing(tmp, props);
 		
 		
 		if(plant >=1){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plants", plant);
-			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d trouvé", tmp2);
-			//HookSingleEntityOutput(tmp2, "OnBreak", BadThingDie);
+			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d trouvé", Entplant);
+			HookSingleEntityOutput(Entplant, "OnBreak", BadThingDie);
 		}
 		if(machine >= 1){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d imprimante trouvé", machine);
@@ -405,7 +405,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	
 	if (array[PQ_type] == 1) {
 			
-		countBadThing(tmp, plant, machine, Bigmachine);
+		countBadThing(tmp, plant, machine, Bigmachine, EntPlant);
 		countPropsThing(tmp, props);
 		
 		if(plant >=1){
@@ -726,13 +726,12 @@ void updateOppeData(int zone, int[] array) {
 	g_hOpperation.SetArray(tmp, array, PQ_Max);
 }
 // ----------------------------------------------------------------------------
-void countBadThing(char[] zone, int& plant, int& machine,int& Bigmachine) {
+void countBadThing(char[] zone, int& plant, int& machine, int& Bigmachine, int& EntPlant) {
 	char tmp[64], tmp2[64];
 	
 	plant = 0;
 	machine = 0;
 	Bigmachine = 0;
-	int EntPlant;
 	
 	float vecOrigin[3];
 	
