@@ -197,9 +197,9 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 		}
 		
 		else if( StrEqual(expl[0], "trafic") ) {
-			int machine, plant, Bigmachine, EntPlant;
+			int machine, plant, Bigmachine;
 			
-			countBadThing(expl[1], plant, machine, Bigmachine, EntPlant);
+			countBadThing(expl[1], plant, machine, Bigmachine);
 			
 			if (rp_GetZoneBit(zone) & BITZONE_PERQUIZ) {
 				CPrintToChat(client, "" ...MOD_TAG... " Ce batiment n'est pas prenable (action RP en cours)");
@@ -372,7 +372,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	int[] array = new int[PQ_Max];
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
-	int machine, plant, Bigmachine, props, EntPlant;
+	int machine, plant, Bigmachine, props;
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return Plugin_Stop;
@@ -382,7 +382,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	
 	if (array[PQ_type] == 0) {
 			
-		countBadThing(tmp, plant, machine, Bigmachine, EntPlant);
+		countBadThing(tmp, plant, machine, Bigmachine);
 		countPropsThing(tmp, props);
 		
 		
@@ -392,35 +392,52 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		}
 		if(machine >= 1){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d imprimante trouvé", machine);
+			HookEntityOutput("rp_item_cash", "OnBreak", BadThingDie);
 		}
 		if(props >= 1){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d props", props);
+			HookEntityOutput("rp_item_distrib", "OnBreak", BadThingDie);
+			HookEntityOutput("rp_item_crafttable", "OnBreak", BadThingDie);
+			HookEntityOutput("rp_item_fountain", "OnBreak", BadThingDie);
+			HookEntityOutput("rp_item_cafetiere", "OnBreak", BadThingDie);
+			HookEntityOutput("rp_item_healbox", "OnBreak", BadThingDie);
+			HookEntityOutput("rp_item_microwaves", "OnBreak", BadThingDie);
+			HookEntityOutput("rp_item_kevlarbox", "OnBreak", BadThingDie);
+			
 		}
 		if(Bigmachine >= 1){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d photocop", Bigmachine);
+			HookEntityOutput("rp_item_cashbig", "OnBreak", BadThingDie);
 		}
 	}
 	
 	if (array[PQ_type] == 1) {
 			
-		countBadThing(tmp, plant, machine, Bigmachine, EntPlant);
+		countBadThing(tmp, plant, machine, Bigmachine);
 		countPropsThing(tmp, props);
 		
 		if(plant >=1){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plants", plant);
-			HookSingleEntityOutput(EntPlant, "OnBreak", BadThingDie);
+			HookEntityOutput("rp_plant", "OnBreak", BadThingDie);
 		}
 		if(machine >= 1){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d imprimante trouvé", machine);
-			HookSingleEntityOutput(machine, "OnBreak", BadThingDie);
+			HookEntityOutput("rp_item_cash", "OnBreak", BadThingDie);
 		}
 		if(props >= 1){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d props", props);
-			HookSingleEntityOutput(props, "OnBreak", BadThingDie);
+			HookEntityOutput("rp_item_distrib", "OnBreak", BadThingDie);
+			HookEntityOutput("rp_item_crafttable", "OnBreak", BadThingDie);
+			HookEntityOutput("rp_item_fountain", "OnBreak", BadThingDie);
+			HookEntityOutput("rp_item_cafetiere", "OnBreak", BadThingDie);
+			HookEntityOutput("rp_item_healbox", "OnBreak", BadThingDie);
+			HookEntityOutput("rp_item_microwaves", "OnBreak", BadThingDie);
+			HookEntityOutput("rp_item_kevlarbox", "OnBreak", BadThingDie);
+			
 		}
 		if(Bigmachine >= 1){
 			CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d photocop", Bigmachine);
-			HookSingleEntityOutput(Bigmachine, "OnBreak", BadThingDie);
+			HookEntityOutput("rp_item_cashbig", "OnBreak", BadThingDie);
 		}
 	}
 	
@@ -724,7 +741,7 @@ void updateOppeData(int zone, int[] array) {
 	g_hOpperation.SetArray(tmp, array, PQ_Max);
 }
 // ----------------------------------------------------------------------------
-void countBadThing(char[] zone, int& plant, int& machine, int& Bigmachine, int& EntPlant) {
+void countBadThing(char[] zone, int& plant, int& machine, int& Bigmachine) {
 	char tmp[64], tmp2[64];
 	
 	plant = 0;
@@ -755,7 +772,6 @@ void countBadThing(char[] zone, int& plant, int& machine, int& Bigmachine, int& 
 		
 		if( StrContains(tmp, "rp_plant") == 0 ){
 			plant++;
-			EntPlant = rp_GetBuildingData(i, BD_item_id);
 		}
 		if( StrContains(tmp, "rp_cash") == 0 )
 			machine++;
@@ -931,12 +947,14 @@ int IsAppart(int zone) {
 }
 
 public void BadThingDie(const char[] output, int caller, int activator, float delay) {
-
+	int reward;
+	
 	if( IsValidClient(activator) ) {
 		int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
 		if( IsValidClient(owner) && rp_GetClientJobID(activator) == 91) {
-			rp_ClientXPIncrement(activator, 150);
-			CPrintToChat(activator, "" ...MOD_TAG... " Et de 1 !.");
+		
+			reward += 75;
+			CPrintToChat(activator, "" ...MOD_TAG... " vous avez %d de récompense total", reward);
 		}
 	}
 }
