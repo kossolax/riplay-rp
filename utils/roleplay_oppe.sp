@@ -961,12 +961,15 @@ int IsAppart(int zone) {
 
 public void BadThingDie(const char[] output, int caller, int activator, float delay) {
 	
+	int reward;
+	
 	if( IsValidClient(activator) ) {
 		int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
 		if( IsValidClient(owner) && rp_GetClientJobID(activator) == 91) {
-		
-			rp_ClientXPIncrement(activator, 100);
-			rp_ClientMoney(activator, i_Money, 75);
+			reward = reward + 75;
+			CPrintToChat(client, "" ...MOD_TAG... " reward = %d", reward);
+			//rp_ClientXPIncrement(activator, 100);
+			//rp_ClientMoney(activator, i_Money, 75);
 			
 		}
 	}
