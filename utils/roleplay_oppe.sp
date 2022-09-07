@@ -16,6 +16,7 @@
 #include <colors_csgo>
 
 #define		TEAM_MAFIA			91
+#define		TEAM_NONE			0
 
 #pragma newdecls required
 #include <roleplay.inc>	// https://www.ts-x.eu
@@ -23,7 +24,7 @@
 StringMap g_hOpperation;
 enum perquiz_data { PQ_client, PQ_zone, PQ_target, PQ_resp, PQ_type, PQ_timeout, PQ_Max};
 int g_cBeam;
-int g_iPlayerTeam[2049];
+int g_iPlayerTeam[2049],g_stkTeam[1][MAXPLAYERS + 1], g_stkTeamCount[1];
 float g_flAppartProtection[500];
 bool g_bCanOppe[65];
 Handle g_hActive;
@@ -1020,4 +1021,22 @@ void addClientToTeam(int client, int team) {
 	
 	if( client <= MaxClients )
 		LogToGame("[DEBUG] [OPP-MAFIA] %L was added to team: %d", client, team);
+}
+
+void removeClientTeam(int client) {
+	if( g_iPlayerTeam[client] != TEAM_NONE ) {
+		for (int i = 0; i < g_stkTeamCount[g_iPlayerTeam[client]]; i++) {
+			if( g_stkTeam[ g_iPlayerTeam[client] ][ i ] == client ) {
+				for (; i < g_stkTeamCount[g_iPlayerTeam[client]]; i++) {
+					g_stkTeam[g_iPlayerTeam[client]][i] = g_stkTeam[g_iPlayerTeam[client]][i + 1];
+				}
+				g_stkTeamCount[g_iPlayerTeam[client]]--;
+				break;
+			}
+		}
+		
+		if( client <= MaxClients )
+			LogToGame("[DEBUG] [BRAQUAGE] %L was removed from team %d", client, g_iPlayerTeam[client]);
+		g_iPlayerTeam[client] = TEAM_NONE;
+	}
 }
