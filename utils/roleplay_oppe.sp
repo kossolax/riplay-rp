@@ -985,7 +985,7 @@ public void BadThingDie(const char[] output, int caller, int activator, float de
 		
 			for (int j = 0; j < g_stkTeamCount[TEAM_MAFIA]; j++) { 
 				rp_ClientMoney(g_stkTeam[TEAM_MAFIA][j], i_AddToPay, 75);
-				rp_ClientXPIncrement(g_stkTeam[TEAM_MAFIA][j], 100);
+				rp_ClientXPIncrement(g_stkTeam[TEAM_MAFIA][j], 100); 
 			}
 			
 		}
