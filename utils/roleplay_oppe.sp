@@ -1009,3 +1009,15 @@ public Action fwdDead(int client, int attacker, float& respawn, float& ctx) {
 	}
 	return Plugin_Continue;
 }
+
+void addClientToTeam(int client, int team) {
+	removeClientTeam(client);
+	
+	if( team != TEAM_NONE )
+		g_stkTeam[team][ g_stkTeamCount[team]++ ] = client;
+	
+	g_iPlayerTeam[client] = team;
+	
+	if( client <= MaxClients )
+		LogToGame("[DEBUG] [OPP-MAFIA] %L was added to team: %d", client, team);
+}
