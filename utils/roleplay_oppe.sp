@@ -15,7 +15,7 @@
 #include <smlib>
 #include <colors_csgo>
 
-#define		TEAM_MAFIA			91
+#define		TEAM_MAFIA			10
 #define		TEAM_NONE			0
 
 #pragma newdecls required
@@ -24,7 +24,7 @@
 StringMap g_hOpperation;
 enum perquiz_data { PQ_client, PQ_zone, PQ_target, PQ_resp, PQ_type, PQ_timeout, PQ_Max};
 int g_cBeam;
-int g_iPlayerTeam[2049],g_stkTeam[1][MAXPLAYERS + 1], g_stkTeamCount[1];
+int g_iPlayerTeam[2049],g_stkTeam[11][MAXPLAYERS + 1], g_stkTeamCount[11];
 float g_flAppartProtection[500];
 bool g_bCanOppe[65];
 Handle g_hActive;
