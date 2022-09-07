@@ -511,6 +511,10 @@ public Action TIMER_OPPE_LOOKUP(Handle timer, any zone) {
 	return Plugin_Continue;
 }
 public Action TIMER_MaxOPPE (Handle timer, any zone) {
+
+	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
+		return Plugin_Stop;
+	}
 	
 	CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} On à plus le temps ! On ce s'arrache !");
 	END_OPPE(zone);
