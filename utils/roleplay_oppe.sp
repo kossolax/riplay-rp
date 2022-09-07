@@ -15,12 +15,15 @@
 #include <smlib>
 #include <colors_csgo>
 
+#define		TEAM_MAFIA			91
+
 #pragma newdecls required
 #include <roleplay.inc>	// https://www.ts-x.eu
 
 StringMap g_hOpperation;
 enum perquiz_data { PQ_client, PQ_zone, PQ_target, PQ_resp, PQ_type, PQ_timeout, PQ_Max};
 int g_cBeam;
+int g_iPlayerTeam[2049];
 float g_flAppartProtection[500];
 bool g_bCanOppe[65];
 Handle g_hActive;
@@ -49,6 +52,7 @@ public void OnClientPostAdminCheck(int client) {
 	g_bCanOppe[client] = true;
 	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 	rp_HookEvent(client, RP_OnPlayerZoneChange, fwdOnZoneChange);
+	rp_HookEvent(client, RP_OnPlayerDataLoaded, LoadedTeamMafia);
 }
 // ----------------------------------------------------------------------------
 public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
@@ -330,6 +334,11 @@ void START_OPPE(int zone) {
 		}
 	}
 	
+	for (int i = 1; i <= MaxClients; i++) {
+		if( !IsValidClient(i) )
+			continue;
+		rp_HookEvent(i, RP_OnPlayerDead, fwdDead);
+	}
 	
 	rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
 
@@ -511,7 +520,10 @@ public Action TIMER_OPPE_LOOKUP(Handle timer, any zone) {
 	return Plugin_Continue;
 }
 public Action TIMER_MaxOPPE (Handle timer, any zone) {
-
+	int[] array = new int[PQ_Max];
+	char tmp[64];
+	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return Plugin_Stop;
 	}
@@ -977,4 +989,23 @@ public void BadThingDie(const char[] output, int caller, int activator, float de
 			
 		}
 	}
+}
+public Action LoadedTeamMafia (int client) {
+	if( g_iPlayerTeam[client] != TEAM_MAFIA && (rp_GetClientJobID(client) == 91) ) {
+		addClientToTeam(client, TEAM_MAFIA);
+	}
+}
+
+public Action fwdDead(int client, int attacker, float& respawn, float& ctx) {
+		
+	if( g_iPlayerTeam[client] != TEAM_MAFIA ) {
+		if (g_iPlayerTeam[attacker] == TEAM_MAFIA) {
+			rp_ClientXPIncrement(attacker, 500);
+			LogToGame("[OPPE-MAFIA] [MORT] %L a été tué par %L.", client, attacker);
+		}
+	}
+	if( g_iPlayerTeam[attacker] == TEAM_MAFIA ) {
+		return Plugin_Handled;
+	}
+	return Plugin_Continue;
 }
