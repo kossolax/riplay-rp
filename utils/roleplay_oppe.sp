@@ -454,7 +454,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 			if( !IsValidClient(i) )
 				continue;
 				
-			rp_HookEvent(i, RP_OnPlayerDead, fwdDead);
+			//rp_HookEvent(i, RP_OnPlayerDead, fwdDead);
 		}
 	}
 	
