@@ -988,6 +988,12 @@ public void BadThingDie(const char[] output, int caller, int activator, float de
 				rp_ClientXPIncrement(g_stkTeam[TEAM_MAFIA][j], 100); 
 			}
 			
+			if( g_stkTeamCount[TEAM_MAFIA] < 0 ) {
+				CPrintToChat(activator, "" ...MOD_TAG... " pas de membre.");
+			}
+			if( g_stkTeamCount[TEAM_MAFIA] > 0 ) {
+				CPrintToChat(activator, "" ...MOD_TAG... " on a des membres.");
+			}
 		}
 	}
 }
