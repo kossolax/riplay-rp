@@ -401,7 +401,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 				CPrintToChatAll("{red} Pas de membre {default} ");
 			}
 			if( g_stkTeamCount[TEAM_MAFIA] >= 1 ) {
-				CPrintToChatAll("{red} on a des membres {default} ");
+				CPrintToChatAll("{red} on a %d membres {default} ", g_stkTeamCount[TEAM_MAFIA]);
 			}
 		}
 		if(machine >= 1){
