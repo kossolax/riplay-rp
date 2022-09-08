@@ -1017,7 +1017,6 @@ public Action LoadedTeamMafia (int client, int zone) {
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
 		if( StrEqual(tmp, tmp2) )
 			addClientToTeam(i, TEAM_MAFIA);
-			return true;
 	}
 }
 
