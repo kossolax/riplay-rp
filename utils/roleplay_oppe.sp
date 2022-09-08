@@ -1001,9 +1001,23 @@ public void BadThingDie(const char[] output, int caller, int activator, float de
 		}
 	}
 }
-public Action LoadedTeamMafia (int client) {
-	if( g_iPlayerTeam[client] != TEAM_MAFIA && (rp_GetClientJobID(client) == 91) ) {
-		addClientToTeam(client, TEAM_MAFIA);
+public Action LoadedTeamMafia (int client, int zone) {
+	char tmp[64], tmp2[64];
+	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	
+	for (int i = 1; i <= MaxClients; i++) {
+		if( !IsValidClient(i) || !IsPlayerAlive(i) )
+			continue;
+		if( rp_GetClientJobID(i) != 91 )
+			continue;
+			
+		if( g_iPlayerTeam[i] == TEAM_MAFIA)
+			continue;
+		
+		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
+		if( StrEqual(tmp, tmp2) )
+			addClientToTeam(i, TEAM_MAFIA);
+			return true;
 	}
 }
 
