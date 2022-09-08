@@ -168,7 +168,6 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 				else if (getConnectedPlayerHaveVilla (client) >= 3){
 					INIT_OPPE(client, zone, 0, 1 );
 					g_bCanOppe[client] = false;
-					CPrintToChat(client, "" ...MOD_TAG... " test nombre client villa");
 				}
 				
 				else if (getConnectedPlayerHaveVilla (client) <= 2){
@@ -191,7 +190,6 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 				else if (getConnectedPlayerInsideJob (job_id) >= 1){
 					INIT_OPPE(client, zone, 0, 1 );
 					g_bCanOppe[client] = false;
-					CPrintToChat(client, "" ...MOD_TAG... " test protection job");
 				}
 				
 				else if (getConnectedPlayerInsideJob (job_id) <= 0) {
@@ -399,6 +397,12 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		if(plant >=1){
 			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plants", plant);
 			HookEntityOutput("rp_plant", "OnBreak", BadThingDie);
+			if( g_stkTeamCount[TEAM_MAFIA] < 0 ) {
+				CPrintToChatAll(...MOD_TAG... " pas de membre.");
+			}
+			if( g_stkTeamCount[TEAM_MAFIA] > 0 ) {
+				CPrintToChatAll(...MOD_TAG... " on a des membres.");
+			}
 		}
 		if(machine >= 1){
 			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d imprimante trouvé", machine);
