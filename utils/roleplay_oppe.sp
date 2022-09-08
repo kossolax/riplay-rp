@@ -398,7 +398,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plants", plant);
 			HookEntityOutput("rp_plant", "OnBreak", BadThingDie);
 			if( g_stkTeamCount[TEAM_MAFIA] <= 0 ) {
-				CPrintToChatAll("{red} Pas de membre {default} ");
+				CPrintToChatAll("{red} on a %d membres {default} ", g_stkTeamCount[TEAM_MAFIA]);
 			}
 			if( g_stkTeamCount[TEAM_MAFIA] >= 1 ) {
 				CPrintToChatAll("{red} on a %d membres {default} ", g_stkTeamCount[TEAM_MAFIA]);
@@ -990,13 +990,6 @@ public void BadThingDie(const char[] output, int caller, int activator, float de
 			for (int j = 0; j < g_stkTeamCount[TEAM_MAFIA]; j++) { 
 				rp_ClientMoney(g_stkTeam[TEAM_MAFIA][j], i_AddToPay, 75);
 				rp_ClientXPIncrement(g_stkTeam[TEAM_MAFIA][j], 100); 
-			}
-			
-			if( g_stkTeamCount[TEAM_MAFIA] < 0 ) {
-				CPrintToChat(activator, "" ...MOD_TAG... " pas de membre.");
-			}
-			if( g_stkTeamCount[TEAM_MAFIA] > 0 ) {
-				CPrintToChat(activator, "" ...MOD_TAG... " on a des membres.");
 			}
 		}
 	}
