@@ -1017,6 +1017,7 @@ public Action LoadedTeamMafia (int client, int zone) {
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
 		if( StrEqual(tmp, tmp2) )
 			addClientToTeam(i, TEAM_MAFIA);
+			CPrintToChatAll("{red} membre detecté, tentative d'ajout {default} ");
 	}
 }
 
@@ -1035,15 +1036,13 @@ public Action fwdDead(int client, int attacker, float& respawn, float& ctx) {
 }
 
 void addClientToTeam(int client, int team) {
-	removeClientTeam(client);
-	
-	if( team != TEAM_NONE )
-		g_stkTeam[team][ g_stkTeamCount[team]++ ] = client;
+	g_stkTeam[team][ g_stkTeamCount[team]++ ] = client;
 	
 	g_iPlayerTeam[client] = team;
 	
 	if( client <= MaxClients )
 		LogToGame("[DEBUG] [OPP-MAFIA] %L was added to team: %d", client, team);
+		CPrintToChatAll("{red} %L est maintenant de la team %d {default}", client, team);
 }
 
 void removeClientTeam(int client) {
@@ -1060,6 +1059,7 @@ void removeClientTeam(int client) {
 		
 		if( client <= MaxClients )
 			LogToGame("[DEBUG] [OPP-MAFIA] %L was removed from team %d", client, g_iPlayerTeam[client]);
+			CPrintToChatAll("{red} %L est maintenant n'est plus dans la team %d team {default}", client, g_iPlayerTeam[client]);
 		g_iPlayerTeam[client] = TEAM_NONE;
 	}
 }
