@@ -398,10 +398,10 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plants", plant);
 			HookEntityOutput("rp_plant", "OnBreak", BadThingDie);
 			if( g_stkTeamCount[TEAM_MAFIA] < 0 ) {
-				CPrintToChatAll(...MOD_TAG... " pas de membre.");
+				CPrintToChatAll("{red} Pas de membre {default} ");
 			}
 			if( g_stkTeamCount[TEAM_MAFIA] > 0 ) {
-				CPrintToChatAll(...MOD_TAG... " on a des membres.");
+				CPrintToChatAll("{red} on a des membres {default} ");
 			}
 		}
 		if(machine >= 1){
