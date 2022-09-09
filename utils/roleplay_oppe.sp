@@ -53,7 +53,6 @@ public void OnClientPostAdminCheck(int client) {
 	g_bCanOppe[client] = true;
 	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 	rp_HookEvent(client, RP_OnPlayerZoneChange, fwdOnZoneChange);
-	rp_HookEvent(client, RP_OnPlayerDataLoaded, LoadedTeamMafia);
 }
 // ----------------------------------------------------------------------------
 public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
@@ -913,8 +912,10 @@ bool MafiaInZone(int zone) {
 			continue;
 		
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
-		if( StrEqual(tmp, tmp2) )
+		if( StrEqual(tmp, tmp2) ){
+			rp_HookEvent(i, RP_OnPlayerDataLoaded, LoadedTeamMafia);
 			return true;
+		}
 	}
 	return false;
 }
