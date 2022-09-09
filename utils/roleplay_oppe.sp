@@ -15,9 +15,6 @@
 #include <smlib>
 #include <colors_csgo>
 
-#define		TEAM_MAFIA			10
-#define		TEAM_NONE			0
-
 #pragma newdecls required
 #include <roleplay.inc>	// https://www.ts-x.eu
 
@@ -396,12 +393,6 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		if(plant >=1){
 			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plants", plant);
 			HookEntityOutput("rp_plant", "OnBreak", BadThingDie);
-			if( g_stkTeamCount[TEAM_MAFIA] <= 0 ) {
-				CPrintToChatAll("{red} on a %d membres (aucun) {default} ", g_stkTeamCount[TEAM_MAFIA]);
-			}
-			if( g_stkTeamCount[TEAM_MAFIA] >= 1 ) {
-				CPrintToChatAll("{red} on a %d membres (probleme calcule) {default} ", g_stkTeamCount[TEAM_MAFIA]);
-			}
 		}
 		if(machine >= 1){
 			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d imprimante trouvé", machine);
@@ -913,7 +904,6 @@ bool MafiaInZone(int zone) {
 		
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
 		if( StrEqual(tmp, tmp2) ){
-			rp_HookEvent(i, RP_OnPlayerDataLoaded, LoadedTeamMafia);
 			return true;
 		}
 	}
@@ -987,73 +977,23 @@ public void BadThingDie(const char[] output, int caller, int activator, float de
 	if( IsValidClient(activator) ) {
 		int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
 		if( IsValidClient(owner) && rp_GetClientJobID(activator) == 91) {
-		
-			for (int j = 0; j < g_stkTeamCount[TEAM_MAFIA]; j++) { 
-				rp_ClientMoney(g_stkTeam[TEAM_MAFIA][j], i_AddToPay, 75);
-				rp_ClientXPIncrement(g_stkTeam[TEAM_MAFIA][j], 100); 
-			}
+			rp_ClientMoney(g_stkTeam[TEAM_MAFIA][j], i_AddToPay, 75);
+			rp_ClientXPIncrement(g_stkTeam[TEAM_MAFIA][j], 100); 
 		}
-	}
-}
-public Action LoadedTeamMafia (int client, int zone) {
-	char tmp[64], tmp2[64];
-	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
-	
-	for (int i = 1; i <= MaxClients; i++) {
-		if( !IsValidClient(i) || !IsPlayerAlive(i) )
-			continue;
-		if( rp_GetClientJobID(i) != 91 )
-			continue;
-			
-		if( g_iPlayerTeam[i] == TEAM_MAFIA)
-			continue;
-		
-		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
-		if( StrEqual(tmp, tmp2) )
-			addClientToTeam(i, TEAM_MAFIA);
-			CPrintToChatAll("{red} membre detecté, tentative d'ajout {default} ");
 	}
 }
 
 public Action fwdDead(int client, int attacker, float& respawn, float& ctx) {
 		
-	if( g_iPlayerTeam[client] != TEAM_MAFIA ) {
-		if (g_iPlayerTeam[attacker] == TEAM_MAFIA) {
+	if( rp_GetClientJobID(client) != 91 ) {
+		if (rp_GetClientJobID(attacker) == 91) {
 			rp_ClientXPIncrement(attacker, 500);
 			LogToGame("[OPPE-MAFIA] [MORT] %L a été tué par %L.", client, attacker);
+			CPrintToChatAll("{red} [MORT] %L a été tué par %L.{default}", client, attacker);
 		}
 	}
 	if( g_iPlayerTeam[attacker] == TEAM_MAFIA ) {
 		return Plugin_Handled;
 	}
 	return Plugin_Continue;
-}
-
-void addClientToTeam(int client, int team) {
-	g_stkTeam[team][ g_stkTeamCount[team]++ ] = client;
-	
-	g_iPlayerTeam[client] = team;
-	
-	if( client <= MaxClients )
-		LogToGame("[DEBUG] [OPP-MAFIA] %L was added to team: %d", client, team);
-		CPrintToChatAll("{red} %L est maintenant de la team %d {default}", client, team);
-}
-
-void removeClientTeam(int client) {
-	if( g_iPlayerTeam[client] != TEAM_NONE ) {
-		for (int i = 0; i < g_stkTeamCount[g_iPlayerTeam[client]]; i++) {
-			if( g_stkTeam[ g_iPlayerTeam[client] ][ i ] == client ) {
-				for (; i < g_stkTeamCount[g_iPlayerTeam[client]]; i++) {
-					g_stkTeam[g_iPlayerTeam[client]][i] = g_stkTeam[g_iPlayerTeam[client]][i + 1];
-				}
-				g_stkTeamCount[g_iPlayerTeam[client]]--;
-				break;
-			}
-		}
-		
-		if( client <= MaxClients )
-			LogToGame("[DEBUG] [OPP-MAFIA] %L was removed from team %d", client, g_iPlayerTeam[client]);
-			CPrintToChatAll("{red} %L est maintenant n'est plus dans la team %d team {default}", client, g_iPlayerTeam[client]);
-		g_iPlayerTeam[client] = TEAM_NONE;
-	}
 }
