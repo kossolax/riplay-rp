@@ -448,7 +448,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	}
 	
 	if( (plant + machine + Bigmachine) == 0 ) {
-		END_OPPE(zone, false);
+		END_OPPE(zone);
 		return Plugin_Stop;
 	}
 	
