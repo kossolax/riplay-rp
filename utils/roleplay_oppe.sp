@@ -447,8 +447,8 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		}
 	}
 	
-	if( (weapon + plant + machine) == 0 ) {
-		END_PERQUIZ(zone, false);
+	if( (plant + machine + Bigmachine) == 0 ) {
+		END_OPPE(zone, false);
 		return Plugin_Stop;
 	}
 	
