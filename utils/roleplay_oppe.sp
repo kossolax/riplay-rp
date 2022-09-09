@@ -21,7 +21,6 @@
 StringMap g_hOpperation;
 enum perquiz_data { PQ_client, PQ_zone, PQ_target, PQ_resp, PQ_type, PQ_timeout, PQ_Max};
 int g_cBeam;
-int g_iPlayerTeam[2049],g_stkTeam[11][MAXPLAYERS + 1], g_stkTeamCount[11];
 float g_flAppartProtection[500];
 bool g_bCanOppe[65];
 Handle g_hActive;
@@ -977,8 +976,8 @@ public void BadThingDie(const char[] output, int caller, int activator, float de
 	if( IsValidClient(activator) ) {
 		int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
 		if( IsValidClient(owner) && rp_GetClientJobID(activator) == 91) {
-			rp_ClientMoney(g_stkTeam[TEAM_MAFIA][j], i_AddToPay, 75);
-			rp_ClientXPIncrement(g_stkTeam[TEAM_MAFIA][j], 100); 
+			rp_ClientMoney(activator, i_AddToPay, 75);
+			rp_ClientXPIncrement(activator, 100); 
 		}
 	}
 }
@@ -992,8 +991,6 @@ public Action fwdDead(int client, int attacker, float& respawn, float& ctx) {
 			CPrintToChatAll("{red} [MORT] %L a été tué par %L.{default}", client, attacker);
 		}
 	}
-	if( g_iPlayerTeam[attacker] == TEAM_MAFIA ) {
-		return Plugin_Handled;
-	}
+	
 	return Plugin_Continue;
 }
