@@ -382,11 +382,10 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	}
 	
 	changeZoneState(zone, true);
+	countBadThing(tmp, plant, machine, Bigmachine);
+	countPropsThing(tmp, props);
 	
 	if (array[PQ_type] == 0) {
-			
-		countBadThing(tmp, plant, machine, Bigmachine);
-		countPropsThing(tmp, props);
 		
 		
 		if(plant >=1){
@@ -415,9 +414,6 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	}
 	
 	if (array[PQ_type] == 1) {
-			
-		countBadThing(tmp, plant, machine, Bigmachine);
-		countPropsThing(tmp, props);
 		
 		if(plant >=1){
 			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plants", plant);
@@ -449,6 +445,11 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 				
 			//rp_HookEvent(i, RP_OnPlayerDead, fwdDead);
 		}
+	}
+	
+	if( (weapon + plant + machine) == 0 ) {
+		END_PERQUIZ(zone, false);
+		return Plugin_Stop;
 	}
 	
 	if( MafiaInZone(zone) ) {
