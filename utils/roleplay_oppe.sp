@@ -387,63 +387,37 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	
 	if (array[PQ_type] == 0) {
 		
+		HookEntityOutput("rp_plant", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_item_cash", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_item_distrib", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_item_crafttable", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_item_fountain", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_item_cafetiere", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_item_healbox", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_item_microwaves", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_item_kevlarbox", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_item_cashbig", "OnBreak", BadThingDie);
 		
-		if(plant >=1){
-			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plants", plant);
-			HookEntityOutput("rp_plant", "OnBreak", BadThingDie);
-		}
-		if(machine >= 1){
-			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d imprimante trouvé", machine);
-			HookEntityOutput("rp_item_cash", "OnBreak", BadThingDie);
-		}
-		if(props >= 1){
-			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d props", props);
-			HookEntityOutput("rp_item_distrib", "OnBreak", BadThingDie);
-			HookEntityOutput("rp_item_crafttable", "OnBreak", BadThingDie);
-			HookEntityOutput("rp_item_fountain", "OnBreak", BadThingDie);
-			HookEntityOutput("rp_item_cafetiere", "OnBreak", BadThingDie);
-			HookEntityOutput("rp_item_healbox", "OnBreak", BadThingDie);
-			HookEntityOutput("rp_item_microwaves", "OnBreak", BadThingDie);
-			HookEntityOutput("rp_item_kevlarbox", "OnBreak", BadThingDie);
-			
-		}
-		if(Bigmachine >= 1){
-			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d photocop", Bigmachine);
-			HookEntityOutput("rp_item_cashbig", "OnBreak", BadThingDie);
-		}
 	}
 	
 	if (array[PQ_type] == 1) {
 		
-		if(plant >=1){
-			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plants", plant);
-			HookEntityOutput("rp_plant", "OnBreak", BadThingDie);
-		}
-		if(machine >= 1){
-			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d imprimante trouvé", machine);
-			HookEntityOutput("rp_cashmachine", "OnBreak", BadThingDie);
-		}
-		if(props >= 1){
-			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d props", props);
-			HookEntityOutput("rp_item_distrib", "OnBreak", BadThingDie);
-			HookEntityOutput("rp_item_crafttable", "OnBreak", BadThingDie);
-			HookEntityOutput("rp_item_fountain", "OnBreak", BadThingDie);
-			HookEntityOutput("rp_item_cafetiere", "OnBreak", BadThingDie);
-			HookEntityOutput("rp_item_healbox", "OnBreak", BadThingDie);
-			HookEntityOutput("rp_item_microwaves", "OnBreak", BadThingDie);
-			HookEntityOutput("rp_item_kevlarbox", "OnBreak", BadThingDie);
-			
-		}
-		if(Bigmachine >= 1){
-			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d photocop", Bigmachine);
-			HookEntityOutput("rp_bigcashmachine", "OnBreak", BadThingDie);
-		}
+		HookEntityOutput("rp_plant", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_item_cash", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_item_distrib", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_item_crafttable", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_item_fountain", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_item_cafetiere", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_item_healbox", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_item_microwaves", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_item_kevlarbox", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_item_cashbig", "OnBreak", BadThingDie);
 		
 		for (int i = 1; i <= MaxClients; i++) {
 			if( !IsValidClient(i) )
 				continue;
 				
-			//rp_HookEvent(i, RP_OnPlayerDead, fwdDead);
+			rp_HookEvent(i, RP_OnPlayerDead, fwdDead);
 		}
 	}
 	
