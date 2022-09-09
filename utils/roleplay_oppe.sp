@@ -396,12 +396,12 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		if(plant >=1){
 			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d plants", plant);
 			HookEntityOutput("rp_plant", "OnBreak", BadThingDie);
-			//if( g_stkTeamCount[TEAM_MAFIA] <= 0 ) {
-			//	CPrintToChatAll("{red} on a %d membres {default} ", g_stkTeamCount[TEAM_MAFIA]);
-			//}
-			//if( g_stkTeamCount[TEAM_MAFIA] >= 1 ) {
-			//	CPrintToChatAll("{red} on a %d membres {default} ", g_stkTeamCount[TEAM_MAFIA]);
-			//}
+			if( g_stkTeamCount[TEAM_MAFIA] <= 0 ) {
+				CPrintToChatAll("{red} on a %d membres {default} ", g_stkTeamCount[TEAM_MAFIA]);
+			}
+			if( g_stkTeamCount[TEAM_MAFIA] >= 1 ) {
+				CPrintToChatAll("{red} on a %d membres {default} ", g_stkTeamCount[TEAM_MAFIA]);
+			}
 		}
 		if(machine >= 1){
 			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d imprimante trouvé", machine);
@@ -1011,7 +1011,7 @@ public Action LoadedTeamMafia (int client, int zone) {
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
 		if( StrEqual(tmp, tmp2) )
 			addClientToTeam(i, TEAM_MAFIA);
-			//CPrintToChatAll("{red} membre detecté, tentative d'ajout {default} ");
+			CPrintToChatAll("{red} membre detecté, tentative d'ajout {default} ");
 	}
 }
 
@@ -1036,7 +1036,7 @@ void addClientToTeam(int client, int team) {
 	
 	if( client <= MaxClients )
 		LogToGame("[DEBUG] [OPP-MAFIA] %L was added to team: %d", client, team);
-		//CPrintToChatAll("{red} %L est maintenant de la team %d {default}", client, team);
+		CPrintToChatAll("{red} %L est maintenant de la team %d {default}", client, team);
 }
 
 void removeClientTeam(int client) {
@@ -1053,7 +1053,7 @@ void removeClientTeam(int client) {
 		
 		if( client <= MaxClients )
 			LogToGame("[DEBUG] [OPP-MAFIA] %L was removed from team %d", client, g_iPlayerTeam[client]);
-			//CPrintToChatAll("{red} %L est maintenant n'est plus dans la team %d team {default}", client, g_iPlayerTeam[client]);
+			CPrintToChatAll("{red} %L est maintenant n'est plus dans la team %d team {default}", client, g_iPlayerTeam[client]);
 		g_iPlayerTeam[client] = TEAM_NONE;
 	}
 }
