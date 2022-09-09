@@ -425,7 +425,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		}
 		if(machine >= 1){
 			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d imprimante trouvé", machine);
-			HookEntityOutput("rp_item_cash", "OnBreak", BadThingDie);
+			HookEntityOutput("rp_cashmachine", "OnBreak", BadThingDie);
 		}
 		if(props >= 1){
 			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d props", props);
@@ -440,7 +440,7 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		}
 		if(Bigmachine >= 1){
 			//CPrintToChatAll("{red}"... MOD_TAG ..." [MAFIA]{default} %d photocop", Bigmachine);
-			HookEntityOutput("rp_item_cashbig", "OnBreak", BadThingDie);
+			HookEntityOutput("rp_bigcashmachine", "OnBreak", BadThingDie);
 		}
 		
 		for (int i = 1; i <= MaxClients; i++) {
@@ -797,9 +797,9 @@ void countBadThing(char[] zone, int& plant, int& machine, int& Bigmachine) {
 		if( StrContains(tmp, "rp_plant") == 0 ){
 			plant++;
 		}
-		if( StrContains(tmp, "rp_cash") == 0 )
+		if( StrContains(tmp, "rp_cashmachine") == 0 )
 			machine++;
-		if( StrContains(tmp, "rp_bigcash") == 0 )
+		if( StrContains(tmp, "rp_bigcashmachine") == 0 )
 			Bigmachine++;
 	}
 }
@@ -833,9 +833,9 @@ void countPropsThing(char[] zone, int& props) {
 		
 		if( StrContains(tmp, "rp_plant") == 0 )
 			continue;
-		if( StrContains(tmp, "rp_cash") == 0 )
+		if( StrContains(tmp, "rp_cashmachine") == 0 )
 			continue;
-		if( StrContains(tmp, "rp_bigcash") == 0 )
+		if( StrContains(tmp, "rp_bigcashmachine") == 0 )
 			continue;
 		
 		props++;
