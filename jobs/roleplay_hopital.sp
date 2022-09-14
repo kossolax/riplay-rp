@@ -133,31 +133,33 @@ public Action Cmd_BonusChiru(int client) {
 		ACCESS_DENIED(client);
 	}
 	
-	char tmp1[64], tmp2[64];
+	else {
+		char tmp1[64], tmp2[64];
 	
-	Handle menu = CreateMenu(BonusChiru);
-	SetMenuTitle(menu, "Modification corporel");
+		Handle menu = CreateMenu(BonusChiru);
+		SetMenuTitle(menu, "Modification corporel");
 	
-	char szMenu[][][] = {
-		{"Amélioration de toutes mes capacités",		"Gratuit",	"ch_full"},
-		{"Amélioration de force",			"Gratuit",	"ch_Force"},
-		{"Amélioration de vitesse",		"Gratuit",	"ch_Speed"},
-		{"Amélioration du saut", 		"Gratuit",	"ch_Jump"},
-		{"Amélioration de la regénération",		"Gratuit",	"ch_Regen"},
-		{"Amélioration de la vie",			"Gratuit",	"ch_Heal"},
-		{"Amélioration respiration aquatique",			"Gratuit",	"ch_Breath"}
-	};
+		char szMenu[][][] = {
+			{"Amélioration de toutes mes capacités",		"Gratuit",	"ch_full"},
+			{"Amélioration de force",			"Gratuit",	"ch_Force"},
+			{"Amélioration de vitesse",		"Gratuit",	"ch_Speed"},
+			{"Amélioration du saut", 		"Gratuit",	"ch_Jump"},
+			{"Amélioration de la regénération",		"Gratuit",	"ch_Regen"},
+			{"Amélioration de la vie",			"Gratuit",	"ch_Heal"},
+			{"Amélioration respiration aquatique",			"Gratuit",	"ch_Breath"}
+		};
 	
-	for (int i = 0; i < sizeof(szMenu); i++) {
-		Format(tmp1, sizeof(tmp1), "%s_%s", szMenu[i][0], szMenu[i][1]);
-		Format(tmp2, sizeof(tmp2), "%T - %s$", szMenu[i][2], client, szMenu[i][1]);
-		AddMenuItem(menu, tmp1, tmp2);
+		for (int i = 0; i < sizeof(szMenu); i++) {
+			Format(tmp1, sizeof(tmp1), "%s_%s", szMenu[i][0], szMenu[i][1]);
+			Format(tmp2, sizeof(tmp2), "%T - %s$", szMenu[i][2], client, szMenu[i][1]);
+			AddMenuItem(menu, tmp1, tmp2);
+		}
+	
+		DisplayMenu(menu, client, 60);
+
+		return Plugin_Stop;
 	}
 	
-	DisplayMenu(menu, client, 60);
-	
-	return Plugin_Stop;
-	}
 	int cooldown = 10.0;
 	return Plugin_Continue;
 }
@@ -213,6 +215,7 @@ public int BonusChiru(Handle p_hItemMenu, MenuAction p_oAction, int client, int 
 		CloseHandle(p_hItemMenu);
 	}
 }
+
 public Action Cmd_ItemChirurgie(int args) {
 		
 	char arg1[12];
