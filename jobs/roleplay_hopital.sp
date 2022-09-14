@@ -121,7 +121,7 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 	return Plugin_Continue;
 }
 
-public Action Cmd_BonusChiru(int client) {
+public Action Cmd_BonusChiru(int client, float& cooldown) {
 	
 	if( rp_GetClientJobID(client) != 11) {
 		ACCESS_DENIED(client);
