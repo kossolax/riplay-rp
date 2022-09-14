@@ -133,7 +133,7 @@ public Action Cmd_BonusChiru(int client) {
 		ACCESS_DENIED(client);
 	}
 	
-	char tmp[64], tmp2[64];
+	char tmp1[64], tmp2[64];
 	
 	Handle menu = CreateMenu(BonusChiru);
 	SetMenuTitle(menu, "Modification corporel");
