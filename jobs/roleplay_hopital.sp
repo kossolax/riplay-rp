@@ -114,15 +114,27 @@ public Action fwdDeath(int victim, int attacker, float& respawn, int& tdm, float
 	return Plugin_Continue;
 }
 // ----------------------------------------------------------------------------
-public Action fwdOnPlayerUse(int client, float& cooldown) {
+public Action fwdCommand(int client, char[] command, char[] arg) {
+	if( StrContains(command, "messo") == 0 || StrContains(command, "mess") == 0 ) {
+		return Cmd_BonusChiru(client);
+	}
+	return Plugin_Continue;
+}
 
-	if( rp_GetClientJobID(client) == 11 && rp_GetPlayerZone(client) == 123 ) { // bureau
-		
-		if( rp_GetClientJobID(client) != 11 ){
-			return Plugin_Continue;
-		}
+public Action Cmd_BonusChiru(int client) {
 	
-	char tmp1[64], tmp2[64];
+	if( rp_GetClientJobID(client) != 11) {
+		ACCESS_DENIED(client);
+	}
+	if( rp_GetClientInt(client, i_Job) == 13 || rp_GetClientInt(client, i_Job) == 14 || rp_GetClientInt(client, i_Job) == 15) {
+		ACCESS_DENIED(client);
+	}
+	if( GetClientTeam(client) != CS_TEAM_T ) {
+		ACCESS_DENIED(client);
+	}
+	
+	char tmp[64], tmp2[64];
+	
 	Handle menu = CreateMenu(BonusChiru);
 	SetMenuTitle(menu, "Modification corporel");
 	
