@@ -116,6 +116,8 @@ public Action fwdDeath(int victim, int attacker, float& respawn, int& tdm, float
 // ----------------------------------------------------------------------------
 public Action fwdCommand(int client, char[] command, char[] arg) {
 	if( StrContains(command, "messo") == 0 || StrContains(command, "mess") == 0 ) {
+		LogToGame("[HOPITAL] LE MENU EST OUVERT");
+		CPrintToChat(client, "" ...MOD_TAG... " Le dieux Messorem vous accordes ses faveurs !");
 		return Cmd_BonusChiru(client);
 	}
 	return Plugin_Continue;
