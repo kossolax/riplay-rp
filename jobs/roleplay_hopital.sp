@@ -134,7 +134,7 @@ public Action fwdOnPlayerUse(int client) {
 			if ( !rp_GetClientBool(client, ch_Jump) ) {
 				rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruJump);
 				rp_SetClientBool(client, ch_Jump, true);
-			}}
+			}
 			if ( !rp_GetClientBool(client, ch_Regen) ) {
 				rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruHealing);
 				rp_SetClientBool(client, ch_Regen, true);
