@@ -119,7 +119,7 @@ public Action fwdOnPlayerUse(int client) {
 	if( rp_GetClientJobID(client) == 11 && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 11 ) {
 		LogToGame("[HOPITAL] LE MENU EST OUVERT");
 		CPrintToChat(client, "" ...MOD_TAG... " Le dieux Messorem vous accordes ses faveurs !");
-		return Cmd_BonusChiru(client);
+		return Cmd_BonusChiru(client, 0.1);
 	}
 	return Plugin_Continue;
 }
@@ -154,7 +154,7 @@ public Action Cmd_BonusChiru(int client, float& cooldown) {
 	}
 	
 	DisplayMenu(menu, client, 60);
-	int cooldown = 0.1;
+	cooldown = 0.1;
 	return Plugin_Stop;
 }
 
