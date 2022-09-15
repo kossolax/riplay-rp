@@ -92,6 +92,7 @@ public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnAssurance,	fwdAssurance);
 	rp_HookEvent(client, RP_OnPlayerDead,	fwdDeath);
 	rp_HookEvent(client, RP_OnPlayerBuild,	fwdOnPlayerBuild);
+	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 	
 	if( rp_GetClientBool(client, ch_Force) )
 		rp_HookEvent(client, RP_PreGiveDamage, fwdChiruForce); 
