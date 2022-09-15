@@ -121,28 +121,28 @@ public Action fwdOnPlayerUse(int client) {
 		CPrintToChat(client, "" ...MOD_TAG... " Le dieux Messorem vous accordes ses faveurs !");
 		FakeClientCommand(client, "say Gloire à toi dieux Messorem !");
 		
-		if ( !rp_GetClientBool(client, ch_Force) {
+		if ( !rp_GetClientBool(client, ch_Force) ) {
 			rp_HookEvent(client, RP_PreGiveDamage, fwdChiruForce);
 			rp_SetClientBool(client, ch_Force, true);
 		}
-		if ( !rp_GetClientBool(client, ch_Speed) {
+		if ( !rp_GetClientBool(client, ch_Speed) ) {
 			rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruSpeed); 
 			rp_SetClientBool(client, ch_Speed, true);
 		}
-		if ( !rp_GetClientBool(client, ch_Jump) {
+		if ( !rp_GetClientBool(client, ch_Jump) ) {
 			rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruJump);
 			rp_SetClientBool(client, ch_Jump, true);
 		}}
-		if ( !rp_GetClientBool(client, ch_Regen) {
+		if ( !rp_GetClientBool(client, ch_Regen) ) {
 			rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruHealing);
 			rp_SetClientBool(client, ch_Regen, true);
 		}
-		if ( !rp_GetClientBool(client, ch_Heal) {
+		if ( !rp_GetClientBool(client, ch_Heal) ) {
 			SetEntityHealth(client, 500);
 			rp_HookEvent(client, RP_OnPlayerSpawn, fwdSpawn);
 			rp_SetClientBool(client, ch_Heal, true);
 		}
-		if ( !rp_GetClientBool(client, ch_Breath) {
+		if ( !rp_GetClientBool(client, ch_Breath) ) {
 			rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruBreath);
 			rp_SetClientBool(client, ch_Breath, true);
 		}
