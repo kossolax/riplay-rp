@@ -92,7 +92,7 @@ public void OnClientPostAdminCheck(int client) {
 	rp_HookEvent(client, RP_OnAssurance,	fwdAssurance);
 	rp_HookEvent(client, RP_OnPlayerDead,	fwdDeath);
 	rp_HookEvent(client, RP_OnPlayerBuild,	fwdOnPlayerBuild);
-	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
+	rp_HookEvent(client, RP_OnPlayerUse,	fwdOnPlayerUse);
 	
 	if( rp_GetClientBool(client, ch_Force) )
 		rp_HookEvent(client, RP_PreGiveDamage, fwdChiruForce); 
@@ -115,8 +115,8 @@ public Action fwdDeath(int victim, int attacker, float& respawn, int& tdm, float
 	return Plugin_Continue;
 }
 // ----------------------------------------------------------------------------
-public Action fwdCommand(int client, char[] command, char[] arg) {
-	if( StrContains(command, "messo") == 0 || StrContains(command, "mess") == 0 ) {
+public Action fwdOnPlayerUse(int client) {
+	if( rp_GetClientJobID(client) == 11 && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 11 ) {
 		LogToGame("[HOPITAL] LE MENU EST OUVERT");
 		CPrintToChat(client, "" ...MOD_TAG... " Le dieux Messorem vous accordes ses faveurs !");
 		return Cmd_BonusChiru(client);
@@ -124,47 +124,38 @@ public Action fwdCommand(int client, char[] command, char[] arg) {
 	return Plugin_Continue;
 }
 
-public Action Cmd_BonusChiru(int client) {
+public Action Cmd_BonusChiru(int client, float& cooldown) {
 	
-	if( rp_GetClientJobID(client) != 11) {
-		ACCESS_DENIED(client);
-	}
-	if( rp_GetClientInt(client, i_Job) == 13 || rp_GetClientInt(client, i_Job) == 14 || rp_GetClientInt(client, i_Job) == 15) {
-		ACCESS_DENIED(client);
-	}
-	if( GetClientTeam(client) != CS_TEAM_T ) {
-		ACCESS_DENIED(client);
+	if( rp_GetClientJobID(client) != 11 || rp_GetClientInt(client, i_Job) == 13 || rp_GetClientInt(client, i_Job) == 14 || rp_GetClientInt(client, i_Job) == 15) {
+		ACCESS_DENIED(client); 
+		return Plugin_Continue;
 	}
 	
-	else {
-		char tmp1[64], tmp2[64];
+	CPrintToChat(client, "" ...MOD_TAG... " Creation du menu ok !");
 	
-		Handle menu = CreateMenu(BonusChiru);
-		SetMenuTitle(menu, "Modification corporel");
+	char tmp1[64], tmp2[64];
+	Handle menu = CreateMenu(BonusChiru);
+	SetMenuTitle(menu, "Modification corporel");
 	
-		char szMenu[][][] = {
-			{"Amélioration de toutes mes capacités",		"Gratuit",	"ch_full"},
-			{"Amélioration de force",			"Gratuit",	"ch_Force"},
-			{"Amélioration de vitesse",		"Gratuit",	"ch_Speed"},
-			{"Amélioration du saut", 		"Gratuit",	"ch_Jump"},
-			{"Amélioration de la regénération",		"Gratuit",	"ch_Regen"},
-			{"Amélioration de la vie",			"Gratuit",	"ch_Heal"},
-			{"Amélioration respiration aquatique",			"Gratuit",	"ch_Breath"}
-		};
+	char szMenu[][][] = {
+		{"Amélioration de toutes mes capacités",		"Gratuit",	"ch_full"},
+		{"Amélioration de force",			"Gratuit",	"ch_Force"},
+		{"Amélioration de vitesse",		"Gratuit",	"ch_Speed"},
+		{"Amélioration du saut", 		"Gratuit",	"ch_Jump"},
+		{"Amélioration de la regénération",		"Gratuit",	"ch_Regen"},
+		{"Amélioration de la vie",			"Gratuit",	"ch_Heal"},
+		{"Amélioration respiration aquatique",			"Gratuit",	"ch_Breath"}
+	};
 	
-		for (int i = 0; i < sizeof(szMenu); i++) {
-			Format(tmp1, sizeof(tmp1), "%s_%s", szMenu[i][0], szMenu[i][1]);
-			Format(tmp2, sizeof(tmp2), "%T - %s$", szMenu[i][2], client, szMenu[i][1]);
-			AddMenuItem(menu, tmp1, tmp2);
-		}
-	
-		DisplayMenu(menu, client, 60);
-
-		return Plugin_Stop;
+	for (int i = 0; i < sizeof(szMenu); i++) {
+		Format(tmp1, sizeof(tmp1), "%s_%s", szMenu[i][0], szMenu[i][1]);
+		Format(tmp2, sizeof(tmp2), "%T - %s$", szMenu[i][2], client, szMenu[i][1]);
+		AddMenuItem(menu, tmp1, tmp2);
 	}
 	
-	int cooldown = 10.0;
-	return Plugin_Continue;
+	DisplayMenu(menu, client, 60);
+	int cooldown = 0.1;
+	return Plugin_Stop;
 }
 
 public int BonusChiru(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_iParam2) {
