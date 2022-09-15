@@ -117,122 +117,38 @@ public Action fwdDeath(int victim, int attacker, float& respawn, int& tdm, float
 // ----------------------------------------------------------------------------
 public Action fwdOnPlayerUse(int client) {
 	if( rp_GetClientJobID(client) == 11 && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 11 ) {
-		LogToGame("[HOPITAL] Bonus Chiru Invoqué ! ");
-		CPrintToChat(client, "" ...MOD_TAG... " Le dieux Messorem vous accordes ses faveurs !");
-		FakeClientCommand(client, "say Gloire à toi dieux Messorem !");
 		
-		if ( !rp_GetClientBool(client, ch_Force) ) {
-			rp_HookEvent(client, RP_PreGiveDamage, fwdChiruForce);
-			rp_SetClientBool(client, ch_Force, true);
-		}
-		if ( !rp_GetClientBool(client, ch_Speed) ) {
-			rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruSpeed); 
-			rp_SetClientBool(client, ch_Speed, true);
-		}
-		if ( !rp_GetClientBool(client, ch_Jump) ) {
-			rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruJump);
-			rp_SetClientBool(client, ch_Jump, true);
-		}}
-		if ( !rp_GetClientBool(client, ch_Regen) ) {
-			rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruHealing);
-			rp_SetClientBool(client, ch_Regen, true);
-		}
-		if ( !rp_GetClientBool(client, ch_Heal) ) {
-			SetEntityHealth(client, 500);
-			rp_HookEvent(client, RP_OnPlayerSpawn, fwdSpawn);
-			rp_SetClientBool(client, ch_Heal, true);
-		}
-		if ( !rp_GetClientBool(client, ch_Breath) ) {
-			rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruBreath);
-			rp_SetClientBool(client, ch_Breath, true);
-		}
-	}
-	return Plugin_Continue;
-}
+		if ( rp_GetClientInt(client, i_Job) == 11 || rp_GetClientInt(client, i_Job) == 12 ){
+			LogToGame("[HOPITAL] Bonus Chiru Invoqué ! ");
+			CPrintToChat(client, "" ...MOD_TAG... " Le dieux Messorem vous accordes ses faveurs !");
+			FakeClientCommand(client, "say Gloire à toi dieux Messorem !");
 
-public Action Cmd_BonusChiru(int client, float& cooldown) {
-	
-	if( rp_GetClientJobID(client) != 11 || rp_GetClientInt(client, i_Job) == 13 || rp_GetClientInt(client, i_Job) == 14 || rp_GetClientInt(client, i_Job) == 15) {
-		ACCESS_DENIED(client); 
-		return Plugin_Continue;
-	}
-	
-	CPrintToChat(client, "" ...MOD_TAG... " Creation du menu ok !");
-	
-	char tmp1[64], tmp2[64];
-	Handle menu = CreateMenu(BonusChiru);
-	SetMenuTitle(menu, "Modification corporel");
-	
-	char szMenu[][][] = {
-		{"Amélioration de toutes mes capacités",		"Gratuit",	"ch_full"},
-		{"Amélioration de force",			"Gratuit",	"ch_Force"},
-		{"Amélioration de vitesse",		"Gratuit",	"ch_Speed"},
-		{"Amélioration du saut", 		"Gratuit",	"ch_Jump"},
-		{"Amélioration de la regénération",		"Gratuit",	"ch_Regen"},
-		{"Amélioration de la vie",			"Gratuit",	"ch_Heal"},
-		{"Amélioration respiration aquatique",			"Gratuit",	"ch_Breath"}
-	};
-	
-	for (int i = 0; i < sizeof(szMenu); i++) {
-		Format(tmp1, sizeof(tmp1), "%s_%s", szMenu[i][0], szMenu[i][1]);
-		Format(tmp2, sizeof(tmp2), "%T - %s$", szMenu[i][2], client, szMenu[i][1]);
-		AddMenuItem(menu, tmp1, tmp2);
-	}
-	
-	DisplayMenu(menu, client, 60);
-	cooldown = 0.1;
-	return Plugin_Stop;
-}
-
-public int BonusChiru(Handle p_hItemMenu, MenuAction p_oAction, int client, int p_iParam2) {
-
-	if (p_oAction == MenuAction_Select) {
-		char szMenuItem[32];
-		if (GetMenuItem(p_hItemMenu, p_iParam2, szMenuItem, sizeof(szMenuItem))){
-
-			char data[2][32];
-			ExplodeString(szMenuItem, "_", data, sizeof(data), sizeof(data[]));
-
-			char type[32];
-			strcopy(type, 31, data[0]);
-			
-			if( StrEqual(type, "force") || StrEqual(type, "full") ) {
-				if( !rp_GetClientBool(client, ch_Force) )
-					rp_HookEvent(client, RP_PreGiveDamage, fwdChiruForce); 
+			if ( !rp_GetClientBool(client, ch_Force) ) {
+				rp_HookEvent(client, RP_PreGiveDamage, fwdChiruForce);
 				rp_SetClientBool(client, ch_Force, true);
 			}
-			if( StrEqual(type, "speed") || StrEqual(type, "full") ) {
-				if( !rp_GetClientBool(client, ch_Speed) )
-					rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruSpeed); 
+			if ( !rp_GetClientBool(client, ch_Speed) ) {
+				rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruSpeed); 
 				rp_SetClientBool(client, ch_Speed, true);
 			}
-			if( StrEqual(type, "jump") || StrEqual(type, "full") ) {
-				if( !rp_GetClientBool(client, ch_Jump) )
-					rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruJump);
+			if ( !rp_GetClientBool(client, ch_Jump) ) {
+				rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruJump);
 				rp_SetClientBool(client, ch_Jump, true);
-			}
-			if( StrEqual(type, "regen") || StrEqual(type, "full") ) {
-				if( !rp_GetClientBool(client, ch_Regen))
-					rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruHealing);
+			}}
+			if ( !rp_GetClientBool(client, ch_Regen) ) {
+				rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruHealing);
 				rp_SetClientBool(client, ch_Regen, true);
 			}
-			if( StrEqual(type, "heal") || StrEqual(type, "full") ) {
+			if ( !rp_GetClientBool(client, ch_Heal) ) {
 				SetEntityHealth(client, 500);
-				if( !rp_GetClientBool(client, ch_Heal))
-					rp_HookEvent(client, RP_OnPlayerSpawn, fwdSpawn);
+				rp_HookEvent(client, RP_OnPlayerSpawn, fwdSpawn);
 				rp_SetClientBool(client, ch_Heal, true);
 			}
-			if( StrEqual(type, "breath") || StrEqual(type, "full") ) {
-				if( !rp_GetClientBool(client, ch_Breath))
-					rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruBreath);
+			if ( !rp_GetClientBool(client, ch_Breath) ) {
+				rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruBreath);
 				rp_SetClientBool(client, ch_Breath, true);
 			}
-			CPrintToChat(client, "" ...MOD_TAG... " Amélioration effectué !");
-
 		}
-	}
-	else if (p_oAction == MenuAction_End) {
-		CloseHandle(p_hItemMenu);
 	}
 }
 
