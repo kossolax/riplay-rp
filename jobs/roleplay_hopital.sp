@@ -117,29 +117,35 @@ public Action fwdDeath(int victim, int attacker, float& respawn, int& tdm, float
 // ----------------------------------------------------------------------------
 public Action fwdOnPlayerUse(int client) {
 	if( rp_GetClientJobID(client) == 11 && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 11 ) {
-		LogToGame("[HOPITAL] LE MENU EST OUVERT");
+		LogToGame("[HOPITAL] Bonus Chiru Invoqué ! ");
 		CPrintToChat(client, "" ...MOD_TAG... " Le dieux Messorem vous accordes ses faveurs !");
-		//return Cmd_BonusChiru(client, 0.1);
+		FakeClientCommand(client, "say Gloire à toi dieux Messorem !");
 		
-		rp_HookEvent(client, RP_PreGiveDamage, fwdChiruForce);
-		rp_SetClientBool(client, ch_Force, true);
-		
-		rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruSpeed); 
-		rp_SetClientBool(client, ch_Speed, true);
-		
-		rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruJump);
-		rp_SetClientBool(client, ch_Jump, true);
-		
-		rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruHealing);
-		rp_SetClientBool(client, ch_Regen, true);
-		
-		SetEntityHealth(client, 500);
-		rp_HookEvent(client, RP_OnPlayerSpawn, fwdSpawn);
-		rp_SetClientBool(client, ch_Heal, true);
-
-		rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruBreath);
-		rp_SetClientBool(client, ch_Breath, true);
-		
+		if ( !rp_GetClientBool(client, ch_Force) {
+			rp_HookEvent(client, RP_PreGiveDamage, fwdChiruForce);
+			rp_SetClientBool(client, ch_Force, true);
+		}
+		if ( !rp_GetClientBool(client, ch_Speed) {
+			rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruSpeed); 
+			rp_SetClientBool(client, ch_Speed, true);
+		}
+		if ( !rp_GetClientBool(client, ch_Jump) {
+			rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruJump);
+			rp_SetClientBool(client, ch_Jump, true);
+		}}
+		if ( !rp_GetClientBool(client, ch_Regen) {
+			rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruHealing);
+			rp_SetClientBool(client, ch_Regen, true);
+		}
+		if ( !rp_GetClientBool(client, ch_Heal) {
+			SetEntityHealth(client, 500);
+			rp_HookEvent(client, RP_OnPlayerSpawn, fwdSpawn);
+			rp_SetClientBool(client, ch_Heal, true);
+		}
+		if ( !rp_GetClientBool(client, ch_Breath) {
+			rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruBreath);
+			rp_SetClientBool(client, ch_Breath, true);
+		}
 	}
 	return Plugin_Continue;
 }
