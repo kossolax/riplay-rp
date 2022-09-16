@@ -962,7 +962,7 @@ int IsAppart(int zone) {
 public void BadThingDie(const char[] output, int caller, int activator, float delay) {
 	int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
 	
-	if( IsValidClient(activator) && g_bInOppe[activator] && && rp_GetClientJobID(activator) == 91 && IsValidClient(owner)) {
+	if( IsValidClient(activator) && g_bInOppe[activator] && rp_GetClientJobID(activator) == 91 && IsValidClient(owner)) {
 	
 		char tmp[64], tmp2[64];
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
