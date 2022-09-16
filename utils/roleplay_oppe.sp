@@ -62,6 +62,7 @@ public void OnClientPostAdminCheck(int client) {
 	g_bInOppe[client] = false;
 	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 	rp_HookEvent(client, RP_OnPlayerZoneChange, fwdOnZoneChange);
+	// BONUS KILL A CORRIGER
 	//rp_HookEvent(client, RP_OnPlayerDead, fwdDead);
 }
 // ----------------------------------------------------------------------------
@@ -121,18 +122,19 @@ public Action Cmd_Opperation(int client) {
 		CPrintToChat(client, "" ...MOD_TAG... " Tu n'es pas le couteau le plus aiguisé du tirroir toi ... c'est chez nous ici !");
 		return Plugin_Handled;
 	}
-		
+	
+	// CONTRAT PROTECTION A CORRIGER	
 	//if(g_flAppartProtection[51] > GetGameTime()) {
 	//	CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[51] - GetGameTime()) / 60.0);
 	//	CPrintToChat(client, "" ...MOD_TAG... " test contrat protect villa");
 	//	return Plugin_Handled;
 	//}
 	
-	if(g_flAppartProtection[52] > GetGameTime()) {
-		CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[52] - GetGameTime()) / 60.0);
-		CPrintToChat(client, "" ...MOD_TAG... " test contrat protect villa");
-		return Plugin_Handled;
-	}
+	//if(g_flAppartProtection[52] > GetGameTime()) {
+	//	CPrintToChat(client, "" ...MOD_TAG... " %T", "Mafia_Protect", client, (g_flAppartProtection[52] - GetGameTime()) / 60.0);
+	//	CPrintToChat(client, "" ...MOD_TAG... " test contrat protect villa");
+	//	return Plugin_Handled;
+	//}
 	
 	Menu menu = new Menu(MenuOppe);
 	menu.SetTitle("Quel est le but de l'oppération ?\n ");
@@ -143,7 +145,7 @@ public Action Cmd_Opperation(int client) {
 	}
 	else {
 		Format(tmp2, sizeof(tmp2), "trafic %s", tmp);	menu.AddItem(tmp2, "Taxe de protection impayé");
-		Format(tmp2, sizeof(tmp2), "control %s", tmp);	menu.AddItem(tmp2, "Prendre possesion des lieux");
+		//Format(tmp2, sizeof(tmp2), "control %s", tmp);	menu.AddItem(tmp2, "Prendre possesion des lieux");
 	}
 	menu.Display(client, MENU_TIME_FOREVER);
 	
@@ -858,7 +860,7 @@ void TeleportCT(int zone) {
 	for (int i = 1; i <= MaxClients; i++) {
 		if( !IsValidClient(i) || !IsPlayerAlive(i) )
 			continue;
-		if( rp_GetClientJobID(i) != 1 ||  rp_GetClientJobID(i) != 101)
+		if( GetClientTeam(i) == CS_TEAM_T )
 			continue;
 			
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
