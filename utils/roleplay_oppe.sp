@@ -23,6 +23,7 @@ enum perquiz_data { PQ_client, PQ_zone, PQ_target, PQ_resp, PQ_type, PQ_timeout,
 int g_cBeam;
 float g_flAppartProtection[500];
 bool g_bCanOppe[65];
+bool g_bInOppe[65];
 Handle g_hActive;
 
 public Plugin myinfo = {
@@ -47,6 +48,7 @@ public void OnMapStart() {
 }
 public void OnClientPostAdminCheck(int client) {
 	g_bCanOppe[client] = true;
+	g_bInOppe[client] = false;
 	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 	rp_HookEvent(client, RP_OnPlayerZoneChange, fwdOnZoneChange);
 	//rp_HookEvent(client, RP_OnPlayerDead, fwdDead);
@@ -57,6 +59,7 @@ public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
 	if( !g_bCanOppe[client] && (rp_GetClientJobID(client) == 91) ) {
 		if( rp_GetZoneInt(newZone, zone_type_type) == rp_GetClientJobID(client) && rp_GetClientInt(client, i_Job) == 91 || rp_GetZoneInt(newZone, zone_type_type) == rp_GetClientJobID(client) && rp_GetClientInt(client, i_Job) == 92 || rp_GetZoneInt(newZone, zone_type_type) == rp_GetClientJobID(client) && rp_GetClientInt(client, i_Job) == 93) {
 			g_bCanOppe[client] = true;
+			g_bInOppe[client] = false;
 			CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez maintenant effectuer une oppération");
 		}
 	}
@@ -164,6 +167,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 				else if (getConnectedPlayerHaveVilla (client) >= 3){
 					INIT_OPPE(client, zone, 0, 1 );
 					g_bCanOppe[client] = false;
+					g_bInOppe[client] = true;
 				}
 				
 				else if (getConnectedPlayerHaveVilla (client) <= 2){
@@ -186,6 +190,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 				else if (getConnectedPlayerInsideJob (job_id) >= 1){
 					INIT_OPPE(client, zone, 0, 1 );
 					g_bCanOppe[client] = false;
+					g_bInOppe[client] = true;
 				}
 				
 				else if (getConnectedPlayerInsideJob (job_id) <= 0) {
@@ -207,6 +212,7 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 			else if( machine > 2 || plant > 2){
 				INIT_OPPE(client, zone, 0, 0);
 				g_bCanOppe[client] = false;
+				g_bInOppe[client] = true;
 			}
 			
 			else {
@@ -263,6 +269,7 @@ public void VERIF_OPPE(Handle owner, Handle row, const char[] error, any zone) {
 		
 		if( SQL_FetchInt(row, 0) + cd > GetTime() ) {
 			g_bCanOppe[array[PQ_client]] = true;
+			g_bInOppe[client] = false;
 			
 			CPrintToChat(array[PQ_client], "" ...MOD_TAG... " Impossible programmer une oppération ici avant %d minutes.", ((SQL_FetchInt(row, 0) + cd - GetTime())/60) + 1);
 			g_hOpperation.Remove(tmp);
@@ -942,7 +949,7 @@ int IsAppart(int zone) {
 
 public void BadThingDie(const char[] output, int caller, int activator, float delay) {
 	
-	if( IsValidClient(activator) && BITZONE_PERQUIZ) {
+	if( IsValidClient(activator) && g_bInOppe[client] = true;) {
 		int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
 		if( IsValidClient(owner) && rp_GetClientJobID(activator) == 91) {
 			rp_ClientMoney(activator, i_AddToPay, 200);
