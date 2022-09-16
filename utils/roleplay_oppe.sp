@@ -1000,7 +1000,6 @@ public Action fwdDead(int client, int attacker, float& respawn, float& ctx) {
 
 public Action Timer_InOpp(Handle timer, any zone) {
 	int[] array = new int[PQ_Max];
-	int client = array [PQ_client];
 	char tmp[64],tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
@@ -1016,11 +1015,11 @@ public Action Timer_InOpp(Handle timer, any zone) {
 		
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
 		if( StrEqual(tmp, tmp2) ){
-			if(array [PQ_timeopp] > 30 ){
+			if(array [PQ_timeopp] == 30 ){
 				rp_ClientXPIncrement(i, 200);
-				CPrintToChat(i, "" ...MOD_TAG... " Gloire à Messorem !");
-				array [PQ_timeopp] == 0;	
+				CPrintToChat(i, "" ...MOD_TAG... " Gloire à Messorem !");	
 			}
+			CPrintToChat(i, "" ...MOD_TAG... " timer en cour !");
 		}
 	}
 	array [PQ_timeopp]++;
