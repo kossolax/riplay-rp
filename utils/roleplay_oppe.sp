@@ -19,7 +19,18 @@
 #include <roleplay.inc>	// https://www.ts-x.eu
 
 StringMap g_hOpperation;
-enum perquiz_data { PQ_client, PQ_zone, PQ_target, PQ_resp, PQ_type, PQ_timeout, PQ_Max};
+
+enum perquiz_data { 
+	PQ_client,
+	PQ_zone,
+	PQ_target,
+	PQ_resp, 
+	PQ_type,
+	PQ_timeout,
+	PQ_timeopp,
+	PQ_Max
+};
+
 int g_cBeam;
 float g_flAppartProtection[500];
 bool g_bCanOppe[65];
@@ -339,6 +350,7 @@ void START_OPPE(int zone) {
 	rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
 
 	CreateTimer(1.0, TIMER_OPPE, zone, TIMER_REPEAT);
+	CreateTimer(1.0, Timer_InOpp, zone, TIMER_REPEAT);
 	
 	
 		
@@ -968,5 +980,25 @@ public Action fwdDead(int client, int attacker, float& respawn, float& ctx) {
 		}
 	}
 	
+	return Plugin_Continue;
+}
+
+public Action Timer_InOpp(Handle timer, any zone) {
+
+	char tmp[64];
+	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	
+	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
+		return Plugin_Stop;
+	}
+	
+	if(array [PQ_timeopp] > 300 ){
+		int client = array [PQ_client];
+		rp_ClientXPIncrement(client, 200);
+		CPrintToChat(client, "" ...MOD_TAG... " Gloire à Messorem !");
+		array [PQ_timeopp] == 0;	
+	}
+	
+	array [PQ_timeopp]++;
 	return Plugin_Continue;
 }
