@@ -121,7 +121,8 @@ public Action fwdOnPlayerUse(int client) {
 		if ( rp_GetClientInt(client, i_Job) == 11 || rp_GetClientInt(client, i_Job) == 12 ){
 			LogToGame("[HOPITAL] Bonus Chiru Invoqué ! ");
 			CPrintToChat(client, "" ...MOD_TAG... " Le dieux Messorem vous accordes ses faveurs !");
-			FakeClientCommand(client, "say Gloire à toi dieux Messorem !");
+			CPrintToChat(client, "" ...MOD_TAG... " Gloire à Messorem !");
+			//FakeClientCommand(client, "say Gloire à toi dieux Messorem !");
 
 			if ( !rp_GetClientBool(client, ch_Force) ) {
 				rp_HookEvent(client, RP_PreGiveDamage, fwdChiruForce);
