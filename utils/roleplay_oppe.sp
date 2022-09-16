@@ -965,6 +965,9 @@ public void BadThingDie(const char[] output, int caller, int activator, float de
 	if( IsValidClient(activator) && g_bInOppe[activator] && rp_GetClientJobID(activator) == 91 && IsValidClient(owner)) {
 	
 		char tmp[64], tmp2[64];
+		float dst[3];
+		rp_GetClientTarget(activator, dst);
+		int zone = rp_GetZoneFromPoint(dst);
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
 		for (int i = 1; i <= MaxClients; i++) {
