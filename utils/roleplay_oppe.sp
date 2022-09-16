@@ -1020,7 +1020,7 @@ public Action fwdDead(int client, int attacker, float& respawn, float& ctx) {
 	return Plugin_Continue;
 }
 
-public Action Timer_InOpp(Handle timer, any zone) {
+public Action Timer_InOpp(Handle timer, int zone) {
 	int[] array = new int[PQ_Max];
 	char tmp[64],tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
@@ -1040,9 +1040,9 @@ public Action Timer_InOpp(Handle timer, any zone) {
 		
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
 		if( StrEqual(tmp, tmp2) ){
-			rp_ClientXPIncrement(i, 600);
-			rp_ClientMoney(i, i_AddToPay, money);
-			rp_SetJobCapital(cap, rp_GetJobCapital(cap) - money);
+			//rp_ClientXPIncrement(i, 600);
+			//rp_ClientMoney(i, i_AddToPay, money);
+			//rp_SetJobCapital(cap, rp_GetJobCapital(cap) - money);
 			CPrintToChat(i, ""...MOD_TAG..." Vous etes %d mafieux.", mafieux);
 			CPrintToChat(i, ""...MOD_TAG..." la récompense est de %d $.", money);
 			CPrintToChat(i, ""...MOD_TAG..." %d perd %d $.",cap, money);
