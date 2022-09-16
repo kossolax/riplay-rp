@@ -417,6 +417,11 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		HookEntityOutput("rp_kevlarbox", "OnBreak", BadThingDie);
 		HookEntityOutput("rp_bigcashmachine", "OnBreak", BadThingDie);
 		
+		if( (plant + machine + Bigmachine) == 0 ) {
+			END_OPPE(zone);
+			return Plugin_Stop;
+		}
+		
 	}
 	
 	if (array[PQ_type] == 1) {
@@ -431,11 +436,6 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		HookEntityOutput("rp_microwave", "OnBreak", BadThingDie);
 		HookEntityOutput("rp_kevlarbox", "OnBreak", BadThingDie);
 		HookEntityOutput("rp_bigcashmachine", "OnBreak", BadThingDie);
-	}
-	
-	if( (plant + machine + Bigmachine) == 0 ) {
-		END_OPPE(zone);
-		return Plugin_Stop;
 	}
 	
 	if( MafiaInZone(zone) ) {
@@ -1026,7 +1026,6 @@ public Action Timer_InOpp(Handle timer, int zone) {
 	char tmp[64],tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	int mafieux = countMafiaInZone(zone);
-	int money = 2500 / mafieux;
 
 	for (int i = 1; i <= MaxClients; i++) {
 		if( !IsValidClient(i) || !IsPlayerAlive(i) )
