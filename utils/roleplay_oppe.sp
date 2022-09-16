@@ -20,7 +20,7 @@
 
 StringMap g_hOpperation;
 
-enum oppe_data { 
+enum perquiz_data { 
 	PQ_client,
 	PQ_zone,
 	PQ_target,
