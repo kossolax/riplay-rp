@@ -1026,9 +1026,6 @@ public Action Timer_InOpp(Handle timer, int zone) {
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	int mafieux = countMafiaInZone(zone);
 	int money = 2500 / mafieux;
-	
-	if (!g_bInOppe)
-		return Plugin_Stop;
 
 	for (int i = 1; i <= MaxClients; i++) {
 		if( !IsValidClient(i) || !IsPlayerAlive(i) )
@@ -1044,5 +1041,4 @@ public Action Timer_InOpp(Handle timer, int zone) {
 			rp_SetJobCapital(cap, rp_GetJobCapital(cap) - money);
 		}
 	}
-	return Plugin_Continue;
 }
