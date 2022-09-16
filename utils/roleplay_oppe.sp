@@ -269,7 +269,7 @@ public void VERIF_OPPE(Handle owner, Handle row, const char[] error, any zone) {
 		
 		if( SQL_FetchInt(row, 0) + cd > GetTime() ) {
 			g_bCanOppe[array[PQ_client]] = true;
-			g_bInOppe[client] = false;
+			g_bInOppe[array[PQ_client]] = false;
 			
 			CPrintToChat(array[PQ_client], "" ...MOD_TAG... " Impossible programmer une oppération ici avant %d minutes.", ((SQL_FetchInt(row, 0) + cd - GetTime())/60) + 1);
 			g_hOpperation.Remove(tmp);
@@ -949,7 +949,7 @@ int IsAppart(int zone) {
 
 public void BadThingDie(const char[] output, int caller, int activator, float delay) {
 	
-	if( IsValidClient(activator) && g_bInOppe[client] = true;) {
+	if( IsValidClient(activator) && g_bInOppe[activator] = true;) {
 		int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
 		if( IsValidClient(owner) && rp_GetClientJobID(activator) == 91) {
 			rp_ClientMoney(activator, i_AddToPay, 200);
