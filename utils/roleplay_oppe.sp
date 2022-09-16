@@ -49,6 +49,7 @@ public void OnClientPostAdminCheck(int client) {
 	g_bCanOppe[client] = true;
 	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 	rp_HookEvent(client, RP_OnPlayerZoneChange, fwdOnZoneChange);
+	rp_HookEvent(client, RP_OnPlayerDead, fwdDead);
 }
 // ----------------------------------------------------------------------------
 public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
@@ -412,13 +413,6 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		//HookEntityOutput("rp_item_microwaves", "OnBreak", BadThingDie);
 		HookEntityOutput("rp_kevlarbox", "OnBreak", BadThingDie);
 		HookEntityOutput("rp_bigcashmachine", "OnBreak", BadThingDie);
-		
-		for (int i = 1; i <= MaxClients; i++) {
-			if( !IsValidClient(i) )
-				continue;
-				
-			rp_HookEvent(i, RP_OnPlayerDead, fwdDead);
-		}
 	}
 	
 	if( (plant + machine + Bigmachine) == 0 ) {
