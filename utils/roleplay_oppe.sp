@@ -1024,9 +1024,9 @@ public Action Timer_InOpp(Handle timer, any zone) {
 	int[] array = new int[PQ_Max];
 	char tmp[64],tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
-	int mafieux = countMafiaInZone(tmp);
+	int mafieux = countMafiaInZone(zone);
 	int money = 2500 / mafieux;
-	int cap = rp_GetRandomCapital(tmp);
+	int cap = rp_GetRandomCapital(zone);
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return Plugin_Stop;
@@ -1045,6 +1045,7 @@ public Action Timer_InOpp(Handle timer, any zone) {
 			rp_SetJobCapital(cap, rp_GetJobCapital(cap) - money);
 			CPrintToChat(i, ""...MOD_TAG..." Vous etes %d mafieux.", mafieux);
 			CPrintToChat(i, ""...MOD_TAG..." la récompense est de %d $.", money);
+			CPrintToChat(i, ""...MOD_TAG..." %d perd %d $.",cap, money);
 			
 		}
 	}
