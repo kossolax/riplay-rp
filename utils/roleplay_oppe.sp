@@ -1019,7 +1019,8 @@ public Action Timer_InOpp(Handle timer, any zone) {
 				rp_ClientXPIncrement(i, 200);
 				CPrintToChat(i, "" ...MOD_TAG... " Gloire à Messorem !");	
 			}
-			CPrintToChat(i, "" ...MOD_TAG... " timer en cour !");
+			array [PQ_timeopp]++;
+			CPrintToChat(i, "" ...MOD_TAG... " timer en cour %d !", array [PQ_timeopp]);
 		}
 	}
 	array [PQ_timeopp]++;
