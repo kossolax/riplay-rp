@@ -960,12 +960,24 @@ int IsAppart(int zone) {
 }
 
 public void BadThingDie(const char[] output, int caller, int activator, float delay) {
+	int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
 	
-	if( IsValidClient(activator) && g_bInOppe[activator]) {
-		int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
-		if( IsValidClient(owner) && rp_GetClientJobID(activator) == 91) {
-			rp_ClientMoney(activator, i_AddToPay, 200);
-			rp_ClientXPIncrement(activator, 200); 
+	if( IsValidClient(activator) && g_bInOppe[activator] && && rp_GetClientJobID(activator) == 91 && IsValidClient(owner)) {
+	
+		char tmp[64], tmp2[64];
+		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	
+		for (int i = 1; i <= MaxClients; i++) {
+			if( !IsValidClient(i) || !IsPlayerAlive(i) )
+				continue;
+			if( rp_GetClientJobID(i) != 91 )
+				continue;
+		
+			rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
+			if( StrEqual(tmp, tmp2) ){
+					rp_ClientMoney(i, i_AddToPay, 200);
+					rp_ClientXPIncrement(i, 200); 
+			}
 		}
 	}
 }
