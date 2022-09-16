@@ -1015,14 +1015,9 @@ public Action Timer_InOpp(Handle timer, any zone) {
 		
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
 		if( StrEqual(tmp, tmp2) ){
-			if(array [PQ_timeopp] == 30 ){
-				rp_ClientXPIncrement(i, 200);
-				CPrintToChat(i, "" ...MOD_TAG... " Gloire à Messorem !");	
-			}
-			array [PQ_timeopp]++;
-			CPrintToChat(i, "" ...MOD_TAG... " timer en cour %d !", array [PQ_timeopp]);
+			rp_ClientXPIncrement(i, 200);
+			CPrintToChat(i, "" ...MOD_TAG... " Gloire à Messorem !");	
 		}
 	}
-	array [PQ_timeopp]++;
 	return Plugin_Continue;
 }
