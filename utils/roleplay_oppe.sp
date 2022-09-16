@@ -984,7 +984,7 @@ public Action fwdDead(int client, int attacker, float& respawn, float& ctx) {
 }
 
 public Action Timer_InOpp(Handle timer, any zone) {
-
+	int[] array = new int[PQ_Max];
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
