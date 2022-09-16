@@ -49,7 +49,7 @@ public void OnClientPostAdminCheck(int client) {
 	g_bCanOppe[client] = true;
 	rp_HookEvent(client, RP_OnPlayerCommand, fwdCommand);
 	rp_HookEvent(client, RP_OnPlayerZoneChange, fwdOnZoneChange);
-	rp_HookEvent(client, RP_OnPlayerDead, fwdDead);
+	//rp_HookEvent(client, RP_OnPlayerDead, fwdDead);
 }
 // ----------------------------------------------------------------------------
 public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
