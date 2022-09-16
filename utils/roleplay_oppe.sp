@@ -858,8 +858,9 @@ void TeleportCT(int zone) {
 	for (int i = 1; i <= MaxClients; i++) {
 		if( !IsValidClient(i) || !IsPlayerAlive(i) )
 			continue;
-		if( GetClientTeam(i) == CS_TEAM_T )
+		if( rp_GetClientJobID(i) != 1 ||  rp_GetClientJobID(i) != 101)
 			continue;
+			
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
 		
 		if( StrEqual(tmp, tmp2) ) {
@@ -1036,6 +1037,7 @@ public Action Timer_InOpp(Handle timer, int zone) {
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
 		if( StrEqual(tmp, tmp2) && g_bInOppe [i] && BITZONE_PERQUIZ){
 			int cap = rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type);
+			int money = 2500 / mafieux;
 			rp_ClientXPIncrement(i, 600);
 			rp_ClientMoney(i, i_AddToPay, money);
 			rp_SetJobCapital(cap, rp_GetJobCapital(cap) - money);
