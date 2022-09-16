@@ -1038,7 +1038,7 @@ public Action Timer_InOpp(Handle timer, any zone) {
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
 		if( StrEqual(tmp, tmp2) ){
 			rp_ClientXPIncrement(i, 600);
-			rp_ClientMoney(client, i_AddToPay, money);
+			rp_ClientMoney(i, i_AddToPay, money);
 			rp_SetJobCapital(cap, rp_GetJobCapital(cap) - money);
 			CPrintToChat(i, ""...MOD_TAG..." Vous etes %d mafieux.", mafieux);
 			CPrintToChat(i, ""...MOD_TAG..." la récompense est de %d $.", money);
