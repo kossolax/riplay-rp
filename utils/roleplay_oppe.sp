@@ -1046,7 +1046,7 @@ public Action Timer_InOpp(Handle timer, int zone) {
 			//rp_SetJobCapital(cap, rp_GetJobCapital(cap) - money);
 			CPrintToChat(i, ""...MOD_TAG..." Vous etes %d mafieux.", mafieux);
 			CPrintToChat(i, ""...MOD_TAG..." la récompense est de %d $.", money);
-			CPrintToChat(i, ""...MOD_TAG..." %d perd %d $.",tmp, cap);
+			CPrintToChat(i, ""...MOD_TAG..." %d perd %d $.",tmp, tmp2);
 			
 		}
 	}
