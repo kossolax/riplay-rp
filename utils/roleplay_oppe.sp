@@ -318,6 +318,7 @@ void START_OPPE(int zone) {
 			CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} La villa est maintenant sous notre contrôle, fuyez ou payez si vous voulez vivre.", tmp);
 			CPrintToChatAll("{red} =================================={default} ");
 			CreateTimer(1800.0, TIMER_MaxOPPE, zone, TIMER_REPEAT);
+			CreateTimer(1.0, Timer_InOpp, zone, TIMER_REPEAT);
 		}
 
 		else {
@@ -328,6 +329,7 @@ void START_OPPE(int zone) {
 			CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} %s est maintenant sous notre contrôle, fuyez ou payez si vous voulez vivre.", tmp2);
 			CPrintToChatAll("{red} =================================={default} ");
 			CreateTimer(1800.0, TIMER_MaxOPPE, zone, TIMER_REPEAT);
+			CreateTimer(1.0, Timer_InOpp, zone, TIMER_REPEAT);
 		}
 	}
 	
@@ -350,9 +352,6 @@ void START_OPPE(int zone) {
 	rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
 
 	CreateTimer(1.0, TIMER_OPPE, zone, TIMER_REPEAT);
-	CreateTimer(1.0, Timer_InOpp, zone, TIMER_REPEAT);
-	
-	
 		
 	ServerCommand("rp_sick 0"); // Pas de maladie en oppe
 }
