@@ -392,10 +392,10 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		HookEntityOutput("rp_cashmachine", "OnBreak", BadThingDie);
 		HookEntityOutput("rp_bank", "OnBreak", BadThingDie);
 		HookEntityOutput("rp_table", "OnBreak", BadThingDie);
-		//HookEntityOutput("rp_item_fountain", "OnBreak", BadThingDie);
-		//HookEntityOutput("rp_item_cafetiere", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_fountain", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_cafetiere", "OnBreak", BadThingDie);
 		HookEntityOutput("rp_healbox", "OnBreak", BadThingDie);
-		//HookEntityOutput("rp_item_microwaves", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_microwave", "OnBreak", BadThingDie);
 		HookEntityOutput("rp_kevlarbox", "OnBreak", BadThingDie);
 		HookEntityOutput("rp_bigcashmachine", "OnBreak", BadThingDie);
 		
@@ -407,10 +407,10 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 		HookEntityOutput("rp_cashmachine", "OnBreak", BadThingDie);
 		HookEntityOutput("rp_bank", "OnBreak", BadThingDie);
 		HookEntityOutput("rp_table", "OnBreak", BadThingDie);
-		//HookEntityOutput("rp_item_fountain", "OnBreak", BadThingDie);
-		//HookEntityOutput("rp_item_cafetiere", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_fountain", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_cafetiere", "OnBreak", BadThingDie);
 		HookEntityOutput("rp_healbox", "OnBreak", BadThingDie);
-		//HookEntityOutput("rp_item_microwaves", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_microwave", "OnBreak", BadThingDie);
 		HookEntityOutput("rp_kevlarbox", "OnBreak", BadThingDie);
 		HookEntityOutput("rp_bigcashmachine", "OnBreak", BadThingDie);
 	}
@@ -945,8 +945,8 @@ public void BadThingDie(const char[] output, int caller, int activator, float de
 	if( IsValidClient(activator) ) {
 		int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
 		if( IsValidClient(owner) && rp_GetClientJobID(activator) == 91) {
-			rp_ClientMoney(activator, i_AddToPay, 75);
-			rp_ClientXPIncrement(activator, 100); 
+			rp_ClientMoney(activator, i_AddToPay, 200);
+			rp_ClientXPIncrement(activator, 200); 
 		}
 	}
 }
