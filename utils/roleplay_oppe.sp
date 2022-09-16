@@ -20,7 +20,7 @@
 
 StringMap g_hOpperation;
 
-enum perquiz_data { 
+enum oppe_data { 
 	PQ_client,
 	PQ_zone,
 	PQ_target,
@@ -386,7 +386,7 @@ void END_OPPE(int zone) {
 	
 	Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP(), '%s', '%s', '%d');", tmp, date, array[PQ_type] > 0 ? "search" : "trafic", rp_GetClientJobID(array[PQ_client]));
 	SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
-	
+	g_bInOppe[client] = false;
 	ServerCommand("rp_sick 1"); // On remet la maladie à la fin
 }
 // ----------------------------------------------------------------------------
