@@ -1039,8 +1039,8 @@ public Action Timer_InOpp(Handle timer, int zone) {
 			continue;
 		
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
-		int cap = rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type);
 		if( StrEqual(tmp, tmp2) ){
+			int cap = rp_GetZoneData(rp_GetPlayerZone(i));
 			//rp_ClientXPIncrement(i, 600);
 			//rp_ClientMoney(i, i_AddToPay, money);
 			//rp_SetJobCapital(cap, rp_GetJobCapital(cap) - money);
