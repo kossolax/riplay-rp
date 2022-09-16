@@ -1036,7 +1036,7 @@ public Action Timer_InOpp(Handle timer, int zone) {
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
 		if( StrEqual(tmp, tmp2) ){
 			float dst[3];
-			rp_GetClientTarget(client, dst);
+			rp_GetClientTarget(i, dst);
 			int cap = rp_GetZoneFromPoint(dst);
 			//rp_ClientXPIncrement(i, 600);
 			//rp_ClientMoney(i, i_AddToPay, money);
