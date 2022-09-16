@@ -386,7 +386,7 @@ void END_OPPE(int zone) {
 	
 	Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP(), '%s', '%s', '%d');", tmp, date, array[PQ_type] > 0 ? "search" : "trafic", rp_GetClientJobID(array[PQ_client]));
 	SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
-	g_bInOppe[client] = false;
+
 	ServerCommand("rp_sick 1"); // On remet la maladie à la fin
 }
 // ----------------------------------------------------------------------------
@@ -847,6 +847,7 @@ void TeleportT(int zone) {
 		if( StrEqual(tmp, tmp2) ) {
 			rp_ClientSendToSpawn(i, true);
 			rp_ClientColorize(i);
+			g_bInOppe[i] = false;
 		}
 	}
 }
@@ -985,20 +986,21 @@ public Action fwdDead(int client, int attacker, float& respawn, float& ctx) {
 
 public Action Timer_InOpp(Handle timer, any zone) {
 	int[] array = new int[PQ_Max];
+	int client = array [PQ_client];
 	char tmp[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return Plugin_Stop;
+		CPrintToChat(client, "" ...MOD_TAG... " Plugin timer stop !");
 	}
 	
 	if(array [PQ_timeopp] > 30 ){
-		int client = array [PQ_client];
 		rp_ClientXPIncrement(client, 200);
 		CPrintToChat(client, "" ...MOD_TAG... " Gloire à Messorem !");
 		array [PQ_timeopp] == 0;	
 	}
-	
+	CPrintToChat(client, "" ...MOD_TAG... " pas encore temps %d !", array [PQ_timeopp]);
 	array [PQ_timeopp]++;
 	return Plugin_Continue;
 }
