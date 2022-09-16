@@ -388,36 +388,36 @@ public Action TIMER_OPPE(Handle timer, any zone) {
 	if (array[PQ_type] == 0) {
 		
 		HookEntityOutput("rp_plant", "OnBreak", BadThingDie);
-		HookEntityOutput("rp_item_cash", "OnBreak", BadThingDie);
-		HookEntityOutput("rp_item_distrib", "OnBreak", BadThingDie);
-		HookEntityOutput("rp_item_crafttable", "OnBreak", BadThingDie);
-		HookEntityOutput("rp_item_fountain", "OnBreak", BadThingDie);
-		HookEntityOutput("rp_item_cafetiere", "OnBreak", BadThingDie);
-		HookEntityOutput("rp_item_healbox", "OnBreak", BadThingDie);
-		HookEntityOutput("rp_item_microwaves", "OnBreak", BadThingDie);
-		HookEntityOutput("rp_item_kevlarbox", "OnBreak", BadThingDie);
-		HookEntityOutput("rp_item_cashbig", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_cashmachine", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_bank", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_table", "OnBreak", BadThingDie);
+		//HookEntityOutput("rp_item_fountain", "OnBreak", BadThingDie);
+		//HookEntityOutput("rp_item_cafetiere", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_healbox", "OnBreak", BadThingDie);
+		//HookEntityOutput("rp_item_microwaves", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_kevlarbox", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_bigcashmachine", "OnBreak", BadThingDie);
 		
 	}
 	
 	if (array[PQ_type] == 1) {
 		
 		HookEntityOutput("rp_plant", "OnBreak", BadThingDie);
-		HookEntityOutput("rp_item_cash", "OnBreak", BadThingDie);
-		HookEntityOutput("rp_item_distrib", "OnBreak", BadThingDie);
-		HookEntityOutput("rp_item_crafttable", "OnBreak", BadThingDie);
-		HookEntityOutput("rp_item_fountain", "OnBreak", BadThingDie);
-		HookEntityOutput("rp_item_cafetiere", "OnBreak", BadThingDie);
-		HookEntityOutput("rp_item_healbox", "OnBreak", BadThingDie);
-		HookEntityOutput("rp_item_microwaves", "OnBreak", BadThingDie);
-		HookEntityOutput("rp_item_kevlarbox", "OnBreak", BadThingDie);
-		HookEntityOutput("rp_item_cashbig", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_cashmachine", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_bank", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_table", "OnBreak", BadThingDie);
+		//HookEntityOutput("rp_item_fountain", "OnBreak", BadThingDie);
+		//HookEntityOutput("rp_item_cafetiere", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_healbox", "OnBreak", BadThingDie);
+		//HookEntityOutput("rp_item_microwaves", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_kevlarbox", "OnBreak", BadThingDie);
+		HookEntityOutput("rp_bigcashmachine", "OnBreak", BadThingDie);
 		
 		for (int i = 1; i <= MaxClients; i++) {
 			if( !IsValidClient(i) )
 				continue;
 				
-			//rp_HookEvent(i, RP_OnPlayerDead, fwdDead);
+			rp_HookEvent(i, RP_OnPlayerDead, fwdDead);
 		}
 	}
 	
