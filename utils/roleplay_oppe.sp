@@ -937,6 +937,9 @@ int getConnectedPlayerInsideJob(int jobID) {
 
 int countMafiaInZone(int zone) {
 	
+	char tmp[64],tmp2[64];
+	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	
 	int mafia = 0;
 	
 	for (int i = 1; i <= MaxClients; i++) {
