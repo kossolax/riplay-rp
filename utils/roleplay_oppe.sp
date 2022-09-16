@@ -1027,10 +1027,6 @@ public Action Timer_InOpp(Handle timer, int zone) {
 	int mafieux = countMafiaInZone(zone);
 	int money = 2500 / mafieux;
 	//int cap = rp_GetRandomCapital(zone);
-	
-	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
-		return Plugin_Stop;
-	}
 
 	for (int i = 1; i <= MaxClients; i++) {
 		if( !IsValidClient(i) || !IsPlayerAlive(i) )
@@ -1040,13 +1036,13 @@ public Action Timer_InOpp(Handle timer, int zone) {
 		
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
 		if( StrEqual(tmp, tmp2) ){
-			int cap = rp_GetPlayerZone(i);
+			int cap = rp_GetClientInt(i, i_Job);
 			//rp_ClientXPIncrement(i, 600);
 			//rp_ClientMoney(i, i_AddToPay, money);
 			//rp_SetJobCapital(cap, rp_GetJobCapital(cap) - money);
 			CPrintToChat(i, ""...MOD_TAG..." Vous etes %d mafieux.", mafieux);
 			CPrintToChat(i, ""...MOD_TAG..." la récompense est de %d $.", money);
-			CPrintToChat(i, ""...MOD_TAG..." %d perd %d $.",tmp, zone);
+			CPrintToChat(i, ""...MOD_TAG..." %d perd %d $.",tmp, cap);
 			
 		}
 	}
