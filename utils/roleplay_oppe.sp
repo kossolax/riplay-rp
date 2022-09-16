@@ -992,7 +992,7 @@ public Action Timer_InOpp(Handle timer, any zone) {
 		return Plugin_Stop;
 	}
 	
-	if(array [PQ_timeopp] > 300 ){
+	if(array [PQ_timeopp] > 30 ){
 		int client = array [PQ_client];
 		rp_ClientXPIncrement(client, 200);
 		CPrintToChat(client, "" ...MOD_TAG... " Gloire à Messorem !");
