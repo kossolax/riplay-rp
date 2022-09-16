@@ -942,7 +942,7 @@ int IsAppart(int zone) {
 
 public void BadThingDie(const char[] output, int caller, int activator, float delay) {
 	
-	if( IsValidClient(activator) ) {
+	if( IsValidClient(activator) && BITZONE_PERQUIZ) {
 		int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
 		if( IsValidClient(owner) && rp_GetClientJobID(activator) == 91) {
 			rp_ClientMoney(activator, i_AddToPay, 200);
@@ -953,7 +953,7 @@ public void BadThingDie(const char[] output, int caller, int activator, float de
 
 public Action fwdDead(int client, int attacker, float& respawn, float& ctx) {
 		
-	if( rp_GetClientJobID(client) != 91 ) {
+	if( rp_GetClientJobID(client) != 91 && BITZONE_PERQUIZ) {
 		if (rp_GetClientJobID(attacker) == 91) {
 			rp_ClientXPIncrement(attacker, 500);
 			LogToGame("[OPPE-MAFIA] [MORT] %L a été tué par %L.", client, attacker);
