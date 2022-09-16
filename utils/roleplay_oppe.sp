@@ -1001,20 +1001,28 @@ public Action fwdDead(int client, int attacker, float& respawn, float& ctx) {
 public Action Timer_InOpp(Handle timer, any zone) {
 	int[] array = new int[PQ_Max];
 	int client = array [PQ_client];
-	char tmp[64];
+	char tmp[64],char tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return Plugin_Stop;
-		CPrintToChat(client, "" ...MOD_TAG... " Plugin timer stop !");
 	}
-	
-	if(array [PQ_timeopp] > 30 ){
-		rp_ClientXPIncrement(client, 200);
-		CPrintToChat(client, "" ...MOD_TAG... " Gloire à Messorem !");
-		array [PQ_timeopp] == 0;	
+
+	for (int i = 1; i <= MaxClients; i++) {
+		if( !IsValidClient(i) || !IsPlayerAlive(i) )
+			continue;
+		if( rp_GetClientJobID(i) != 91 )
+			continue;
+		
+		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
+		if( StrEqual(tmp, tmp2) ){
+			if(array [PQ_timeopp] > 30 ){
+				rp_ClientXPIncrement(i, 200);
+				CPrintToChat(i, "" ...MOD_TAG... " Gloire à Messorem !");
+				array [PQ_timeopp] == 0;	
+			}
+		}
 	}
-	CPrintToChat(client, "" ...MOD_TAG... " pas encore temps %d !", array [PQ_timeopp]);
 	array [PQ_timeopp]++;
 	return Plugin_Continue;
 }
