@@ -949,7 +949,7 @@ int IsAppart(int zone) {
 
 public void BadThingDie(const char[] output, int caller, int activator, float delay) {
 	
-	if( IsValidClient(activator) && g_bInOppe[activator] = true;) {
+	if( IsValidClient(activator) && g_bInOppe[activator]) {
 		int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
 		if( IsValidClient(owner) && rp_GetClientJobID(activator) == 91) {
 			rp_ClientMoney(activator, i_AddToPay, 200);
