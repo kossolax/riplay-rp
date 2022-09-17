@@ -895,6 +895,10 @@ bool MafiaInZone(int zone) {
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
 		if( StrEqual(tmp, tmp2) ){
 			return true;
+			g_bInOppe[i] = true;
+		}
+		else if( !StrEqual(tmp, tmp2) ){
+			g_bInOppe[i] = false;
 		}
 	}
 	return false;
@@ -915,13 +919,8 @@ bool hasCopInZone(int zone) {
 			continue;
 		
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
-		if( StrEqual(tmp, tmp2) ){
+		if( StrEqual(tmp, tmp2) )
 			return true;
-			g_bInOppe[i] = true;
-		}
-		else if( !StrEqual(tmp, tmp2) ){
-			g_bInOppe[i] = false;
-		}
 		
 	}
 	return false;
