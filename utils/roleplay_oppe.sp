@@ -991,7 +991,7 @@ int IsAppart(int zone) {
 public void BadThingDie(const char[] output, int caller, int activator, float delay) {
 	int owner = GetEntPropEnt(caller, Prop_Send, "m_hOwnerEntity");
 	
-	if( IsValidClient(activator) && rp_GetClientJobID(activator) == 91 && IsValidClient(owner) && g_bInOppe[activator] && BITZONE_PERQUIZ) {
+	if( IsValidClient(activator) && rp_GetClientJobID(activator) == 91 && IsValidClient(owner) && BITZONE_PERQUIZ) {
 	
 		char tmp[64], tmp2[64];
 		float dst[3];
@@ -1040,7 +1040,7 @@ public Action Timer_InOpp(Handle timer, int zone) {
 			continue;
 		
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
-		if( StrEqual(tmp, tmp2) && g_bInOppe [i] && BITZONE_PERQUIZ){
+		if( StrEqual(tmp, tmp2) && BITZONE_PERQUIZ){
 			int cap = rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type);
 			int money = 2500 / mafieux;
 			//rp_ClientXPIncrement(i, 600);
