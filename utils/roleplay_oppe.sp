@@ -315,7 +315,7 @@ void START_OPPE(int zone) {
 			CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} La villa est maintenant sous notre contrôle, fuyez ou payez si vous voulez vivre.", tmp);
 			CPrintToChatAll("{red} =================================={default} ");
 			CreateTimer(1800.0, TIMER_MaxOPPE, zone, TIMER_REPEAT);
-			CreateTimer(30.0, Timer_InOpp, zone, TIMER_REPEAT);
+			CreateTimer(300.0, Timer_InOpp, zone, TIMER_REPEAT);
 		}
 
 		else {
@@ -326,7 +326,7 @@ void START_OPPE(int zone) {
 			CPrintToChatAll(""... MOD_TAG ..." {red}[MAFIA]{default} %s est maintenant sous notre contrôle, fuyez ou payez si vous voulez vivre.", tmp2);
 			CPrintToChatAll("{red} =================================={default} ");
 			CreateTimer(1800.0, TIMER_MaxOPPE, zone, TIMER_REPEAT);
-			CreateTimer(30.0, Timer_InOpp, zone, TIMER_REPEAT);
+			CreateTimer(300.0, Timer_InOpp, zone, TIMER_REPEAT);
 		}
 	}
 	
@@ -1038,10 +1038,9 @@ public Action Timer_InOpp(Handle timer, int zone) {
 		if( StrEqual(tmp, tmp2) && g_bInOppe[zone] && BITZONE_PERQUIZ){
 			int cap = rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type);
 			int money = 2500 / mafieux;
-			//rp_ClientXPIncrement(i, 600);
-			//rp_ClientMoney(i, i_AddToPay, money);
-			//rp_SetJobCapital(cap, rp_GetJobCapital(cap) - money);
-			CPrintToChat(i, "" ...MOD_TAG... " tu win de l'xp et de l'argent ;)");
+			rp_ClientXPIncrement(i, 600);
+			rp_ClientMoney(i, i_AddToPay, money);
+			rp_SetJobCapital(cap, rp_GetJobCapital(cap) - money);
 			
 		}
 	}
