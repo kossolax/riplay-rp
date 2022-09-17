@@ -399,10 +399,8 @@ int GetClientAimedLocationData( int client, float position[3], float angles[3], 
 	int player = client;
 	
 	float _origin[3], _angles[3];
-	GetClientEyePosition( client, _origin );
-	GetClientEyeAngles( client, _angles );
-	/*float vecOrigin[3], vecOrigin2[3];
-	GetClientAbsOrigin(client, vecOrigin);*/
+	GetClientEyePosition( player, _origin );
+	GetClientEyeAngles( player, _angles );
 	
 	Handle trace = TR_TraceRayFilterEx( _origin, _angles, MASK_SOLID_BRUSHONLY, RayType_Infinite, TraceEntityFilterPlayers );
 	if( !TR_DidHit( trace ) ) { 
