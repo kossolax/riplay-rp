@@ -34,7 +34,7 @@ enum perquiz_data {
 int g_cBeam;
 float g_flAppartProtection[500];
 bool g_bCanOppe[65];
-bool g_bInOppe[65];
+bool g_bInOppe[500];
 Handle g_hActive;
 
 public Plugin myinfo = {
