@@ -71,7 +71,6 @@ public Action fwdOnZoneChange(int client, int newZone, int oldZone) {
 	if( !g_bCanOppe[client] && (rp_GetClientJobID(client) == 91) ) {
 		if( rp_GetZoneInt(newZone, zone_type_type) == rp_GetClientJobID(client) && rp_GetClientInt(client, i_Job) == 91 || rp_GetZoneInt(newZone, zone_type_type) == rp_GetClientJobID(client) && rp_GetClientInt(client, i_Job) == 92 || rp_GetZoneInt(newZone, zone_type_type) == rp_GetClientJobID(client) && rp_GetClientInt(client, i_Job) == 93) {
 			g_bCanOppe[client] = true;
-			g_bInOppe[client] = false;
 			CPrintToChat(client, "" ...MOD_TAG... " Vous pouvez maintenant effectuer une oppération");
 		}
 	}
@@ -180,7 +179,6 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 				else if (getConnectedPlayerHaveVilla (client) >= 3){
 					INIT_OPPE(client, zone, 0, 1 );
 					g_bCanOppe[client] = false;
-					g_bInOppe[client] = true;
 				}
 				
 				else if (getConnectedPlayerHaveVilla (client) <= 2){
@@ -203,7 +201,6 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 				else if (getConnectedPlayerInsideJob (job_id) >= 1){
 					INIT_OPPE(client, zone, 0, 1 );
 					g_bCanOppe[client] = false;
-					g_bInOppe[client] = true;
 				}
 				
 				else if (getConnectedPlayerInsideJob (job_id) <= 0) {
@@ -225,7 +222,6 @@ public int MenuOppe(Handle menu, MenuAction action, int client, int param2) {
 			else if( machine > 2 || plant > 2){
 				INIT_OPPE(client, zone, 0, 0);
 				g_bCanOppe[client] = false;
-				g_bInOppe[client] = true;
 			}
 			
 			else {
@@ -282,7 +278,6 @@ public void VERIF_OPPE(Handle owner, Handle row, const char[] error, any zone) {
 		
 		if( SQL_FetchInt(row, 0) + cd > GetTime() ) {
 			g_bCanOppe[array[PQ_client]] = true;
-			g_bInOppe[array[PQ_client]] = false;
 			
 			CPrintToChat(array[PQ_client], "" ...MOD_TAG... " Impossible programmer une oppération ici avant %d minutes.", ((SQL_FetchInt(row, 0) + cd - GetTime())/60) + 1);
 			g_hOpperation.Remove(tmp);
@@ -301,6 +296,7 @@ void START_OPPE(int zone) {
 	char tmp[64], tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	rp_GetZoneData(zone, zone_type_name, tmp2, sizeof(tmp2));
+	g_bInOppe[zone] = true;
 
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return;
@@ -364,6 +360,7 @@ void END_OPPE(int zone) {
 	int[] array = new int[PQ_Max];
 	char tmp[64], date[64], query[512];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
+	g_bInOppe[zone] = false;
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return;
@@ -994,17 +991,19 @@ public void BadThingDie(const char[] output, int caller, int activator, float de
 		rp_GetClientTarget(activator, dst);
 		int zone = rp_GetZoneFromPoint(dst);
 		rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
-	
-		for (int i = 1; i <= MaxClients; i++) {
-			if( !IsValidClient(i) || !IsPlayerAlive(i) )
-				continue;
-			if( rp_GetClientJobID(i) != 91 )
-				continue;
 		
-			rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
-			if( StrEqual(tmp, tmp2) ){
-					rp_ClientMoney(i, i_AddToPay, 200);
-					rp_ClientXPIncrement(i, 200); 
+		if (g_bInOppe[zone]){
+			for (int i = 1; i <= MaxClients; i++) {
+				if( !IsValidClient(i) || !IsPlayerAlive(i) )
+					continue;
+				if( rp_GetClientJobID(i) != 91 )
+					continue;
+		
+				rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
+				if( StrEqual(tmp, tmp2) ){
+						rp_ClientMoney(i, i_AddToPay, 200);
+						rp_ClientXPIncrement(i, 200); 
+				}
 			}
 		}
 	}
@@ -1036,7 +1035,7 @@ public Action Timer_InOpp(Handle timer, int zone) {
 			continue;
 		
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
-		if( StrEqual(tmp, tmp2) && BITZONE_PERQUIZ){
+		if( StrEqual(tmp, tmp2) && g_bInOppe[zone] && BITZONE_PERQUIZ){
 			int cap = rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type);
 			int money = 2500 / mafieux;
 			//rp_ClientXPIncrement(i, 600);
