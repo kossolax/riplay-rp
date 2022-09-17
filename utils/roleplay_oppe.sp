@@ -1036,7 +1036,7 @@ public Action Timer_InOpp(Handle timer, int zone) {
 			continue;
 		
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
-		if( StrEqual(tmp, tmp2) && g_bInOppe [i] && BITZONE_PERQUIZ){
+		if( StrEqual(tmp, tmp2)){
 			int cap = rp_GetZoneInt(rp_GetPlayerZone(i), zone_type_type);
 			int money = 2500 / mafieux;
 			//rp_ClientXPIncrement(i, 600);
