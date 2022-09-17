@@ -325,7 +325,7 @@ public Action Cmd_ItemStuffPvP(int args) {
 	ItemRand[amount++] = 6;		// Seringue du Berserker
 	ItemRand[amount++] = 114;	// Big Mac
 	ItemRand[amount++] = 231;	// Cartouches explosives
-	ItemRand[amount++] = 285;	// Bouclier Anti-émeute
+	//ItemRand[amount++] = 285;	// Bouclier Anti-émeute
 	ItemRand[amount++] = 296;	// Paire de baskets
 	ItemRand[amount++] = 53;	// Amelioration précision de tir
 	
