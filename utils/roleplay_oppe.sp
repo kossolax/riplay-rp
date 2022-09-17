@@ -954,10 +954,6 @@ int countMafiaInZone(int zone) {
 		rp_GetZoneData(rp_GetPlayerZone(i), zone_type_type, tmp2, sizeof(tmp2));
 		if( StrEqual(tmp, tmp2) ){
 			mafia++;
-			g_bInOppe[i] = true;
-		}
-		else if( !StrEqual(tmp, tmp2) ){
-			g_bInOppe[i] = false;
 		}
 	}
 	
