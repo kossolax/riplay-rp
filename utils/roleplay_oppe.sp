@@ -296,7 +296,6 @@ void START_OPPE(int zone) {
 	char tmp[64], tmp2[64];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	rp_GetZoneData(zone, zone_type_name, tmp2, sizeof(tmp2));
-	g_bInOppe[zone] = true;
 
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return;
@@ -348,7 +347,8 @@ void START_OPPE(int zone) {
 	}
 	
 	rp_GetZoneData(zone, zone_type_name, tmp, sizeof(tmp));
-
+	g_bInOppe[zone] = true;
+	
 	CreateTimer(1.0, TIMER_OPPE, zone, TIMER_REPEAT);
 		
 	ServerCommand("rp_sick 0"); // Pas de maladie en oppe
@@ -360,7 +360,6 @@ void END_OPPE(int zone) {
 	int[] array = new int[PQ_Max];
 	char tmp[64], date[64], query[512];
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
-	g_bInOppe[zone] = false;
 	
 	if( !g_hOpperation.GetArray(tmp, array, PQ_Max) ) {
 		return;
@@ -381,6 +380,7 @@ void END_OPPE(int zone) {
 	
 	rp_GetZoneData(zone, zone_type_type, tmp, sizeof(tmp));
 	GetClientAuthId(array[PQ_client], AUTH_TYPE, date, sizeof(date));
+	g_bInOppe[zone] = false;
 	
 	Format(query, sizeof(query), "INSERT INTO `rp_oppe` (`id`, `zone`, `time`, `steamid`, `type`, `job_id`) VALUES (NULL, '%s', UNIX_TIMESTAMP(), '%s', '%s', '%d');", tmp, date, array[PQ_type] > 0 ? "search" : "trafic", rp_GetClientJobID(array[PQ_client]));
 	SQL_TQuery(rp_GetDatabase(), SQL_QueryCallBack, query);
