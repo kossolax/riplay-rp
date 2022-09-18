@@ -26,6 +26,7 @@ public Plugin myinfo = {
 };
 
 int g_cBeam;
+bool g_bCanChiru[65];
 int g_iSuccess_last_faster_dead[65];
 // ----------------------------------------------------------------------------
 public Action Cmd_Reload(int args) {
@@ -104,6 +105,8 @@ public void OnClientPostAdminCheck(int client) {
 		rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruHealing);
 	if( rp_GetClientBool(client, ch_Heal))
 		rp_HookEvent(client, RP_OnPlayerSpawn, fwdSpawn);
+		
+	g_bCanChiru [client] = true;
 }
 public Action fwdDeath(int victim, int attacker, float& respawn, int& tdm, float& ctx) {
 	if ( rp_CanMakeSuccess(attacker, success_list_faster_dead) ){
@@ -118,43 +121,37 @@ public Action fwdDeath(int victim, int attacker, float& respawn, int& tdm, float
 public Action fwdOnPlayerUse(int client) {
 	if( rp_GetClientJobID(client) == 11 && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 11 ) {
 		
-		if ( rp_GetClientInt(client, i_Job) == 11 || rp_GetClientInt(client, i_Job) == 12 ){
+		if ( rp_GetClientInt(client, i_Job) == 11 && g_bCanChiru || rp_GetClientInt(client, i_Job) == 12 && g_bCanChiru){
 			LogToGame("[HOPITAL] Bonus Chiru Invoqué ! ");
 			CPrintToChat(client, "" ...MOD_TAG... " Le dieux Messorem vous accordes ses faveurs !");
 			CPrintToChat(client, "" ...MOD_TAG... " Gloire à Messorem !");
 			//FakeClientCommand(client, "say Gloire à toi dieux Messorem !");
+			g_bCanChiru [client] = false;
+			
+			rp_HookEvent(client, RP_PreGiveDamage, fwdChiruForce);
+			rp_SetClientBool(client, ch_Force, true);
+			CPrintToChat(client, "" ...MOD_TAG... " Force !");
 
-			if ( !rp_GetClientBool(client, ch_Force) ) {
-				rp_HookEvent(client, RP_PreGiveDamage, fwdChiruForce);
-				rp_SetClientBool(client, ch_Force, true);
-				//CPrintToChat(client, "" ...MOD_TAG... " Force !");
-			}
-			if ( !rp_GetClientBool(client, ch_Speed) ) {
-				rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruSpeed); 
-				rp_SetClientBool(client, ch_Speed, true);
-				//CPrintToChat(client, "" ...MOD_TAG... " speed !");
-			}
-			if ( !rp_GetClientBool(client, ch_Jump) ) {
-				rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruJump);
-				rp_SetClientBool(client, ch_Jump, true);
-				//CPrintToChat(client, "" ...MOD_TAG... " jump !");
-			}
-			if ( !rp_GetClientBool(client, ch_Regen) ) {
-				rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruHealing);
-				rp_SetClientBool(client, ch_Regen, true);
-				//CPrintToChat(client, "" ...MOD_TAG... " regen !");
-			}
-			if ( !rp_GetClientBool(client, ch_Heal) ) {
-				SetEntityHealth(client, 500);
-				rp_HookEvent(client, RP_OnPlayerSpawn, fwdSpawn);
-				rp_SetClientBool(client, ch_Heal, true);
-				//CPrintToChat(client, "" ...MOD_TAG... " vie !");
-			}
-			if ( !rp_GetClientBool(client, ch_Breath) ) {
-				rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruBreath);
-				rp_SetClientBool(client, ch_Breath, true);
-				//CPrintToChat(client, "" ...MOD_TAG... " respiration !");
-			}
+			rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruSpeed); 
+			rp_SetClientBool(client, ch_Speed, true);
+			CPrintToChat(client, "" ...MOD_TAG... " speed !");
+
+			rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruJump);
+			rp_SetClientBool(client, ch_Jump, true);
+			CPrintToChat(client, "" ...MOD_TAG... " jump !");
+
+			rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruHealing);
+			rp_SetClientBool(client, ch_Regen, true);
+			CPrintToChat(client, "" ...MOD_TAG... " regen !");
+
+			SetEntityHealth(client, 500);
+			rp_HookEvent(client, RP_OnPlayerSpawn, fwdSpawn);
+			rp_SetClientBool(client, ch_Heal, true);
+			CPrintToChat(client, "" ...MOD_TAG... " vie !");
+
+			rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruBreath);
+			rp_SetClientBool(client, ch_Breath, true);
+			CPrintToChat(client, "" ...MOD_TAG... " respiration !");
 		}
 	}
 }
