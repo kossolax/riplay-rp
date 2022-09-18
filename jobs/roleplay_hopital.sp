@@ -122,7 +122,7 @@ public Action fwdOnPlayerUse(int client) {
 	if( rp_GetClientJobID(client) == 11 && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 11 ) {
 		
 		if ( rp_GetClientInt(client, i_Job) == 11 && g_bCanChiru [client] || rp_GetClientInt(client, i_Job) == 12 && g_bCanChiru [client]){
-			LogToGame("[HOPITAL] Bonus Chiru Invoqué par %t ! ", client);
+			LogToGame("[HOPITAL] Bonus Chiru Invoqué par %T ! ", client);
 			g_bCanChiru [client] = false;
 			
 			rp_HookEvent(client, RP_PreGiveDamage, fwdChiruForce);
