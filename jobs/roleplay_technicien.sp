@@ -215,8 +215,7 @@ public Action Cmd_ItemPropulseur(int args) {
 	
 	TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, velocity);
 	
-	ServerCommand("sm_effect_particles %d Trail12 1 footplant_L", client);
-	ServerCommand("sm_effect_particles %d Trail12 1 footplant_R", client);
+	ServerCommand("sm_effect_particles %d Trail11 1 weapon_bone", client);
 	
 }
 // ------------------------------------------------------------------------------
