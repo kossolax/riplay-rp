@@ -152,6 +152,7 @@ public Action fwdOnPlayerUse(int client) {
 			
 			CPrintToChat(client, "" ...MOD_TAG... " Le dieux Messorem vous accordes ses faveurs !");
 			CPrintToChat(client, "" ...MOD_TAG... " Gloire à Messorem !");
+			ServerCommand("sm_effect_particles %d Trail4 2 weapon_bone", client);
 		}
 	}
 }
