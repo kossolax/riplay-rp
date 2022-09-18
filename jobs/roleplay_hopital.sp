@@ -122,36 +122,37 @@ public Action fwdOnPlayerUse(int client) {
 	if( rp_GetClientJobID(client) == 11 && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 11 ) {
 		
 		if ( rp_GetClientInt(client, i_Job) == 11 && g_bCanChiru [client] || rp_GetClientInt(client, i_Job) == 12 && g_bCanChiru [client]){
-			LogToGame("[HOPITAL] Bonus Chiru Invoqué ! ");
-			CPrintToChat(client, "" ...MOD_TAG... " Le dieux Messorem vous accordes ses faveurs !");
-			CPrintToChat(client, "" ...MOD_TAG... " Gloire à Messorem !");
-			//FakeClientCommand(client, "say Gloire à toi dieux Messorem !");
+			LogToGame("[HOPITAL] Bonus Chiru Invoqué par %t ! ", client);
 			g_bCanChiru [client] = false;
 			
 			rp_HookEvent(client, RP_PreGiveDamage, fwdChiruForce);
 			rp_SetClientBool(client, ch_Force, true);
 			CPrintToChat(client, "" ...MOD_TAG... " Force !");
-
+			int f = "Force";
+			
 			rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruSpeed); 
 			rp_SetClientBool(client, ch_Speed, true);
-			CPrintToChat(client, "" ...MOD_TAG... " speed !");
+			int s = "Speed";
 
 			rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruJump);
 			rp_SetClientBool(client, ch_Jump, true);
-			CPrintToChat(client, "" ...MOD_TAG... " jump !");
+			int j = "Jump";
 
 			rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruHealing);
 			rp_SetClientBool(client, ch_Regen, true);
-			CPrintToChat(client, "" ...MOD_TAG... " regen !");
+			int r = "Regen";
 
 			SetEntityHealth(client, 500);
 			rp_HookEvent(client, RP_OnPlayerSpawn, fwdSpawn);
 			rp_SetClientBool(client, ch_Heal, true);
-			CPrintToChat(client, "" ...MOD_TAG... " vie !");
+			int v = "Vie";
 
 			rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruBreath);
 			rp_SetClientBool(client, ch_Breath, true);
-			CPrintToChat(client, "" ...MOD_TAG... " respiration !");
+			int a = "Respiraction aquatique";
+			
+			CPrintToChat(client, "" ...MOD_TAG... " Le dieux Messorem vous accordes un bonus : %t %t %t %t %t %t", f, s, j ,r, v, a);
+			CPrintToChat(client, "" ...MOD_TAG... " Gloire à Messorem !");
 		}
 	}
 }
