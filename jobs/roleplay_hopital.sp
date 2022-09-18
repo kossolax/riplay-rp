@@ -121,7 +121,7 @@ public Action fwdDeath(int victim, int attacker, float& respawn, int& tdm, float
 public Action fwdOnPlayerUse(int client) {
 	if( rp_GetClientJobID(client) == 11 && rp_GetZoneInt(rp_GetPlayerZone(client), zone_type_type) == 11 ) {
 		
-		if ( rp_GetClientInt(client, i_Job) == 11 && g_bCanChiru || rp_GetClientInt(client, i_Job) == 12 && g_bCanChiru){
+		if ( rp_GetClientInt(client, i_Job) == 11 && g_bCanChiru [client] || rp_GetClientInt(client, i_Job) == 12 && g_bCanChiru [client]){
 			LogToGame("[HOPITAL] Bonus Chiru Invoqué ! ");
 			CPrintToChat(client, "" ...MOD_TAG... " Le dieux Messorem vous accordes ses faveurs !");
 			CPrintToChat(client, "" ...MOD_TAG... " Gloire à Messorem !");
