@@ -793,8 +793,8 @@ public int Native_rp_CreateVehicle(Handle plugin, int numParams) {
 		Format(ScriptPath, sizeof(ScriptPath), "scripts/vehicles/jeep.txt");
 	}
 	
-	LogToGame(model);
-	LogToGame(ScriptPath);
+	//LogToGame(model);
+	//LogToGame(ScriptPath);
 	
 	DispatchKeyValue(ent, "model", 				model);
 	DispatchKeyValue(ent, "vehiclescript", 		ScriptPath);
