@@ -128,28 +128,28 @@ public Action fwdOnPlayerUse(int client) {
 			rp_HookEvent(client, RP_PreGiveDamage, fwdChiruForce);
 			rp_SetClientBool(client, ch_Force, true);
 			CPrintToChat(client, "" ...MOD_TAG... " Force !");
-			int f = "Force";
+			var f = "Force";
 			
 			rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruSpeed); 
 			rp_SetClientBool(client, ch_Speed, true);
-			int s = "Speed";
+			var s = "Speed";
 
 			rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruJump);
 			rp_SetClientBool(client, ch_Jump, true);
-			int j = "Jump";
+			var j = "Jump";
 
 			rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruHealing);
 			rp_SetClientBool(client, ch_Regen, true);
-			int r = "Regen";
+			var r = "Regen";
 
 			SetEntityHealth(client, 500);
 			rp_HookEvent(client, RP_OnPlayerSpawn, fwdSpawn);
 			rp_SetClientBool(client, ch_Heal, true);
-			int v = "Vie";
+			var v = "Vie";
 
 			rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruBreath);
 			rp_SetClientBool(client, ch_Breath, true);
-			int a = "Respiraction aquatique";
+			var a = "Respiraction aquatique";
 			
 			CPrintToChat(client, "" ...MOD_TAG... " Le dieux Messorem vous accordes un bonus : %t %t %t %t %t %t", f, s, j ,r, v, a);
 			CPrintToChat(client, "" ...MOD_TAG... " Gloire à Messorem !");
