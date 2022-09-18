@@ -127,31 +127,30 @@ public Action fwdOnPlayerUse(int client) {
 			
 			rp_HookEvent(client, RP_PreGiveDamage, fwdChiruForce);
 			rp_SetClientBool(client, ch_Force, true);
-			CPrintToChat(client, "" ...MOD_TAG... " Force !");
-			var f = "Force";
+			PrintToConsole(client, "[DEBUG] Force ok !");
 			
 			rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruSpeed); 
 			rp_SetClientBool(client, ch_Speed, true);
-			var s = "Speed";
+			PrintToConsole(client, "[DEBUG] Speed ok !");
 
 			rp_HookEvent(client, RP_PrePlayerPhysic, fwdChiruJump);
 			rp_SetClientBool(client, ch_Jump, true);
-			var j = "Jump";
+			PrintToConsole(client, "[DEBUG] Jump ok !");
 
 			rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruHealing);
 			rp_SetClientBool(client, ch_Regen, true);
-			var r = "Regen";
+			PrintToConsole(client, "[DEBUG] Regen ok !");
 
 			SetEntityHealth(client, 500);
 			rp_HookEvent(client, RP_OnPlayerSpawn, fwdSpawn);
 			rp_SetClientBool(client, ch_Heal, true);
-			var v = "Vie";
+			PrintToConsole(client, "[DEBUG] Vie ok !");
 
 			rp_HookEvent(client, RP_OnFrameSeconde, fwdChiruBreath);
 			rp_SetClientBool(client, ch_Breath, true);
-			var a = "Respiraction aquatique";
+			PrintToConsole(client, "[DEBUG] Aqua ok !");
 			
-			CPrintToChat(client, "" ...MOD_TAG... " Le dieux Messorem vous accordes un bonus : %t %t %t %t %t %t", f, s, j ,r, v, a);
+			CPrintToChat(client, "" ...MOD_TAG... " Le dieux Messorem vous accordes ses faveurs !");
 			CPrintToChat(client, "" ...MOD_TAG... " Gloire à Messorem !");
 		}
 	}
