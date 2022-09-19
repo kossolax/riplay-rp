@@ -116,7 +116,7 @@ public Action RP_OnSentryAttack(int entity, int target) {
 
 // ----------------------------------------------------------------------------
 public bool fwdCanStart(int client) {
-	PrintToConsole(client, "[DEBUG] [BRAQUAGE] Test faisabilité de la quête:");
+	PrintToConsole(client, "[DEBUG] [BRAQUAGE] Test faisabilité de la quête : conditions non remplient");
 	if( g_bDoingQuest == true ) {
 		//PrintToConsole(client, "[DEBUG] [BRAQUAGE] la quête est déjà en cours");
 		return false;
@@ -187,7 +187,7 @@ public bool fwdCanStart(int client) {
 		return false;
 	}
 	
-	PrintToConsole(client, "[DEBUG] [BRAQUAGE] la quête est disponible");
+	PrintToConsole(client, "[DEBUG] [BRAQUAGE] la quête est disponible !");
 	return true;
 }
 // ----------------------------------------------------------------------------
