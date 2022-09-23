@@ -152,7 +152,7 @@ public Action fwdOnPlayerUse(int client) {
 			
 			CPrintToChat(client, "" ...MOD_TAG... " Le dieux Messorem vous accordes ses faveurs !");
 			CPrintToChat(client, "" ...MOD_TAG... " Gloire à Messorem !");
-			ServerCommand("sm_effect_particles %d Trail4 2 weapon_bone", client);
+			ServerCommand("sm_effect_particles %d Trail4 2 legacy_weapon_bone", client);
 		}
 	}
 }
@@ -416,7 +416,7 @@ public Action Cmd_ItemPoison(int args) {
 	}
 	
 	rp_SetClientInt(client, i_LastAgression, GetTime());
-	ServerCommand("sm_effect_particles %d Trail7 11 weapon_bone", client);
+	ServerCommand("sm_effect_particles %d Trail7 11 legacy_weapon_bone", client);
 	CPrintToChat(target, "" ...MOD_TAG... " %T", "poison_self", target);
 	rp_ClientPoison(target, 120.0, client);
 	rp_ClientAggroIncrement(client, target, 1000);
