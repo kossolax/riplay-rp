@@ -872,7 +872,7 @@ public Action ItemPiedBiche_frame(Handle timer, Handle dp) {
 	if( Math_GetRandomInt(1, 10) == 8 )
 		ServerCommand("sm_effect_particles %d Trail2 2 legacy_weapon_bone", client);
 	if( Math_GetRandomInt(1, 30) == 8 )
-		ServerCommand("sm_effect_particles %d Aura2 1 weapon_bone", client);
+		ServerCommand("sm_effect_particles %d Aura2 1 legacy_weapon_bone", client);
 		
 	if( Math_GetRandomInt(1, 500) == 42 )
 		CreateTimer(0.01, timerAlarm, target); 
