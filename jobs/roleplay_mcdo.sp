@@ -927,7 +927,7 @@ public Action Cmd_ItemHamburger(int args) {
 		TE_SetupBeamRingPoint(vecTarget, 10.0, 300.0, g_cBeam, g_cGlow, 0, 15, 0.5, 50.0, 0.0, {255, 255, 0, 50}, 10, 0);
 		TE_SendToAll();
 		
-		ServerCommand("sm_effect_particles %d Trail5 5 legacy_weapon_bone", client);
+		ServerCommand("sm_effect_particles %d Trail5 5 weapon_bone", client);
 		
 		if( item_id > 0 ) {
 			rp_SetClientBool(client, b_MayUseUltimate, false);
