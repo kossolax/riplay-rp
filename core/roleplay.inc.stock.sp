@@ -922,12 +922,12 @@ void RP_SpawnBank() {
 				else if( rp_GetZoneInt(GetPointZone(vecOrigin), zone_type_type) == 211 ) {
 					DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/tm_professional_var2.mdl");
 				}
-				//else if( rp_GetZoneInt(GetPointZone(vecOrigin), zone_type_type) == 11 ) {
-				//	DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/lara/lara.mdl");
-				//}
-				//else if( rp_GetZoneInt(GetPointZone(vecOrigin), zone_type_type) == 14 ) {
-				//	DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/nick/nick.mdl");
-				//}
+				else if( rp_GetZoneInt(GetPointZone(vecOrigin), zone_type_type) == 11 ) {
+					DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/lara/lara.mdl");
+				}
+				else if( rp_GetZoneInt(GetPointZone(vecOrigin), zone_type_type) == 14 ) {
+					DispatchKeyValue(ent, "model", "models/player/custom_player/legacy/nick/nick.mdl");
+				}
 				else if( rp_GetZoneInt(GetPointZone(vecOrigin), zone_type_type) == 111 ) {
 					DispatchKeyValue(ent, "model", "models/player/custom_player/riplay/nathandrake/nathandrake.mdl");
 				}
