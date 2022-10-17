@@ -225,16 +225,16 @@ public Action Cmd_ItemChirurgie(int args) {
 	}
 	
 	char target_name[128], client_name[128];
-	GetClientName2(client, client_name, sizeof(client_name), false);
+	//GetClientName2(client, client_name, sizeof(client_name), false);
 	//GetClientName2(vendeur, target_name, sizeof(target_name), false);
 	
-	CPrintToChat(client, "" ...MOD_TAG... " %T", "Chiru_By", client, target_name);
+	//CPrintToChat(client, "" ...MOD_TAG... " %T", "Chiru_By", client, target_name);
 	//CPrintToChat(vendeur, "" ...MOD_TAG... " %T", "Chiru_Target", vendeur, client_name);
 	
-	rp_HookEvent(client, RP_PrePlayerPhysic, fwdFrozen, time);
+	//rp_HookEvent(client, RP_PrePlayerPhysic, fwdFrozen, time);
 	//rp_HookEvent(vendeur, RP_PrePlayerPhysic, fwdFrozen, time);
 	
-	rp_SetClientFloat(client, fl_TazerTime, GetGameTime() + time);
+	//rp_SetClientFloat(client, fl_TazerTime, GetGameTime() + time);
 	//rp_SetClientFloat(vendeur, fl_TazerTime, GetGameTime() + time);
 
 	rp_SetClientFloat(vendeur, fl_LastVente, GetGameTime() + time + 17.0);
