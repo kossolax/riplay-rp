@@ -173,33 +173,45 @@ public Action Cmd_ItemChirurgie(int args) {
 			rp_GetClientBool(client, ch_Regen) &&
 			rp_GetClientBool(client, ch_Heal) &&
 			rp_GetClientBool(client, ch_Heal) ) {
-			rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+			//rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
 			return Plugin_Handled;
 		}
 	}
 	
 	if( StrEqual(arg1, "force") && rp_GetClientBool(client, ch_Force) ) {
-		rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+		//rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+		CPrintToChat(client, "" ...MOD_TAG... " Cette chiru est déjà activé !");
+		rp_ClientGiveItem(client, item_id, 1);
 		return Plugin_Handled;
 	}
 	if( StrEqual(arg1, "speed") && rp_GetClientBool(client, ch_Speed) ) {
-		rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+		//rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+		CPrintToChat(client, "" ...MOD_TAG... " Cette chiru est déjà activé !");
+		rp_ClientGiveItem(client, item_id, 1);
 		return Plugin_Handled;
 	}
 	if( StrEqual(arg1, "jump") && rp_GetClientBool(client, ch_Jump) ) {
-		rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+		//rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+		CPrintToChat(client, "" ...MOD_TAG... " Cette chiru est déjà activé !");
+		rp_ClientGiveItem(client, item_id, 1);
 		return Plugin_Handled;
 	}
 	if( StrEqual(arg1, "regen") && rp_GetClientBool(client, ch_Regen) ) {
-		rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+		//rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+		CPrintToChat(client, "" ...MOD_TAG... " Cette chiru est déjà activé !");
+		rp_ClientGiveItem(client, item_id, 1);
 		return Plugin_Handled;
 	}
 	if( StrEqual(arg1, "heal") && rp_GetClientBool(client, ch_Heal) ) {
-		rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+		//rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+		CPrintToChat(client, "" ...MOD_TAG... " Cette chiru est déjà activé !");
+		rp_ClientGiveItem(client, item_id, 1);
 		return Plugin_Handled;
 	}
 	if( StrEqual(arg1, "breath") && rp_GetClientBool(client, ch_Breath) ) {
-		rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+		//rp_CANCEL_AUTO_ITEM(client, vendeur, item_id);
+		CPrintToChat(client, "" ...MOD_TAG... " Cette chiru est déjà activé !");
+		rp_ClientGiveItem(client, item_id, 1);
 		return Plugin_Handled;
 	}
 	
@@ -209,7 +221,7 @@ public Action Cmd_ItemChirurgie(int args) {
 		Handle dp = CreateDataPack();
 		CreateDataTimer(i, ChiruEffect, dp);
 		WritePackCell(dp, client);
-		WritePackCell(dp, vendeur);
+		//WritePackCell(dp, vendeur);
 	}
 	
 	char target_name[128], client_name[128];
@@ -217,20 +229,20 @@ public Action Cmd_ItemChirurgie(int args) {
 	GetClientName2(vendeur, target_name, sizeof(target_name), false);
 	
 	CPrintToChat(client, "" ...MOD_TAG... " %T", "Chiru_By", client, target_name);
-	CPrintToChat(vendeur, "" ...MOD_TAG... " %T", "Chiru_Target", vendeur, client_name);
+	//CPrintToChat(vendeur, "" ...MOD_TAG... " %T", "Chiru_Target", vendeur, client_name);
 	
 	rp_HookEvent(client, RP_PrePlayerPhysic, fwdFrozen, time);
-	rp_HookEvent(vendeur, RP_PrePlayerPhysic, fwdFrozen, time);
+	//rp_HookEvent(vendeur, RP_PrePlayerPhysic, fwdFrozen, time);
 	
 	rp_SetClientFloat(client, fl_TazerTime, GetGameTime() + time);
-	rp_SetClientFloat(vendeur, fl_TazerTime, GetGameTime() + time);
+	//rp_SetClientFloat(vendeur, fl_TazerTime, GetGameTime() + time);
 
 	rp_SetClientFloat(vendeur, fl_LastVente, GetGameTime() + time + 17.0);
 	
 	g_iSuccess_last_faster_dead[client] = GetTime() - RoundToCeil(time);
 	
 	ServerCommand("sm_effect_panel %d %f \"%T\"", client, time, "Chiru_Doing", client);
-	ServerCommand("sm_effect_panel %d %f \"%T\"", vendeur, time, "Chiru_Doing", vendeur);
+	//ServerCommand("sm_effect_panel %d %f \"%T\"", vendeur, time, "Chiru_Doing", vendeur);
 	
 	rp_Effect_Particle(client, "blood_pool");
 	
