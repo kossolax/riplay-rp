@@ -151,7 +151,7 @@ public Action fwdOnPlayerUse(int client) {
 			PrintToConsole(client, "[DEBUG] Aqua ok !");
 			
 			CPrintToChat(client, "" ...MOD_TAG... " Le dieux Messorem vous accordes ses faveurs !");
-			CPrintToChat(client, "" ...MOD_TAG... " Gloire à Messorem !");
+			CPrintToChat(client, "" ...MOD_TAG... " Gloire à toi Messorem !");
 			ServerCommand("sm_effect_particles %d Trail4 2 legacy_weapon_bone", client);
 		}
 	}
