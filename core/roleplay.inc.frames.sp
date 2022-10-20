@@ -613,6 +613,8 @@ void OnGameFrame_10(float time) {
 				}
 				if (g_bUserData[i][b_IsMutePvP] && g_iUserData[i][i_Group] != 0) { g_iUserData[i][i_Group] = 0; }
 				
+				if (g_bUserData[i][b_IsMutePvP]{ g_bUserData[i][b_GameModePassive]==true; }
+				
 				if( GetZoneBit( GetPlayerZone(i) ) & BITZONE_DENY ) {
 					SDKHooks_TakeDamage(i, i, i, 5000.0);
 				}
