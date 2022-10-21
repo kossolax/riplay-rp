@@ -161,7 +161,7 @@ void OnGameFrame_01(float time) {
 				speed += 0.1;
 		}
 		
-		if( g_bUserData[Client][b_GameModePassive] == true && g_iUserData[Client][i_Job] >= 1 && g_iUserData[Client][i_Job] <= 8 || g_bUserData[Client][b_GameModePassive] == true && g_iUserData[Client][i_Job] >= 101 && g_iUserData[Client][i_Job] <= 107  || g_bUserData[Client][b_GameModePassive] == true && g_iUserData[Client][i_Job] >= 91 && g_iUserData[Client][i_Job] <= 95 && !g_bUserData[Client][b_IsMutePvP]) {
+		if( g_bUserData[Client][b_GameModePassive] == true && g_iUserData[Client][i_Job] >= 1 && g_iUserData[Client][i_Job] <= 8 && !g_bUserData[Client][b_IsMutePvP] || g_bUserData[Client][b_GameModePassive] == true && g_iUserData[Client][i_Job] >= 101 && g_iUserData[Client][i_Job] <= 107 && !g_bUserData[Client][b_IsMutePvP] || g_bUserData[Client][b_GameModePassive] == true && g_iUserData[Client][i_Job] >= 91 && g_iUserData[Client][i_Job] <= 95 && !g_bUserData[Client][b_IsMutePvP]) {
 			g_bUserData[Client][b_GameModePassive] = false;
 			CPrintToChat(Client, "" ...MOD_TAG... " %T", "Passive_Disabled", Client);
 		}
@@ -612,9 +612,13 @@ void OnGameFrame_10(float time) {
 					}
 				}
 				if (g_bUserData[i][b_IsMutePvP] && g_iUserData[i][i_Group] != 0) { g_iUserData[i][i_Group] = 0; }
-				if (g_bUserData[i][b_IsMutePvP] && g_iUserData[i][i_Job] == 91) { g_iUserData[i][i_Job] = 0; }
+				if (g_bUserData[i][b_IsMutePvP] && g_iUserData[i][i_Job] >= 91 && g_iUserData[i][i_Job] <= 95 || g_bUserData[i][b_IsMutePvP] && g_iUserData[i][i_Job] >= 101 && g_iUserData[i][i_Job] <= 107 || g_bUserData[i][b_IsMutePvP] && g_iUserData[i][i_Job] >= 1 && g_iUserData[i][i_Job] <= 8) { 
+					g_iUserData[i][i_Job] = 0; 
+				}
 				
-				if (g_bUserData[i][b_IsMutePvP]){ g_bUserData[i][b_GameModePassive]==true; }
+				if (g_bUserData[i][b_IsMutePvP]){ 
+					g_bUserData[i][b_GameModePassive] = true;
+				}
 				
 				if( GetZoneBit( GetPlayerZone(i) ) & BITZONE_DENY ) {
 					SDKHooks_TakeDamage(i, i, i, 5000.0);
