@@ -47,3 +47,4 @@
 		"fr"		"{blue}Votre boisson est servie !{default}"
 		"en"		"{blue}Your drink is served !{default}"		
 	}
+}
