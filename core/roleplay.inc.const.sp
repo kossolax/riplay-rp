@@ -56,6 +56,7 @@ char g_szSuperAdmin[][] = {
 	"76561198007500554", // Messorem
 	"76561198188535251", // Exodus (Il m'a forcé :'( )
 	"76561198992350563", // Mimou
+	"76561198018435874", // Judgedead
 };
 
 int g_iPlayerCount;
