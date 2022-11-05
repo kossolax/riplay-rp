@@ -173,7 +173,7 @@ void SaveDoors() {
 	
 	for(int i=1; i < MAX_ENTITIES; i++) {
 		
-		if( IsValidDoor(i) ) {
+		if( IsValidDoor(i) && IsValidEdict(i) && IsValidEntity(i) && HasEntProp(i, Prop_Data, "m_bLocked") ) {
 			
 			int i_bdd = (i-MaxClients);
 			char query[1024], szMapname[64];
