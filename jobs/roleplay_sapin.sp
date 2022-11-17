@@ -31,7 +31,7 @@ int g_bLoading = false;
 
 public void OnPluginStart() {
 	RegAdminCmd("rp_sapin_add", Cmd_AddSapin, ADMFLAG_ROOT);
-	CreateConVar("rp_sapin_speed", "60.0");
+	CreateConVar("rp_sapin_speed", "120.0");
 	
 	HookEvent("round_start", 		EventRoundStart, 	EventHookMode_Post);
 	
@@ -134,7 +134,7 @@ public Action SapinLoop(Handle timer, any none) {
 		
 		Entity_GetModel(stack[rand], tmp, sizeof(tmp));
 		float dist = 32.0;
-		amount = Math_GetRandomInt(1, 3);
+		amount = Math_GetRandomInt(3, 6);
 		if( StrEqual(tmp, "models/models_kit/xmas/xmastree.mdl") ) {
 			amount += 5 + Math_GetRandomPow(1, 20);
 			dist = 128.0;
