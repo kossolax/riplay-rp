@@ -149,8 +149,8 @@ public Action SapinLoop(Handle timer, any none) {
 			pos2[2] = (pos[2] + 64.0);
 			
 			ServerCommand("rp_zombie_die %f %f %f", pos2[0], pos2[1], pos2[2]);
-			CPrintToChatAll("{red}Ho ! Ho ! Ho !{default} ");
 		}
+		CPrintToChatAll("{red}Ho ! Ho ! Ho !{default} ");
 	}
 	
 	float time = GetConVarFloat(FindConVar("rp_sapin_speed")) - GetClientCount(true) * 1.5;
