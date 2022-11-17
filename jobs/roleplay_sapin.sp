@@ -31,7 +31,7 @@ int g_bLoading = false;
 
 public void OnPluginStart() {
 	RegAdminCmd("rp_sapin_add", Cmd_AddSapin, ADMFLAG_ROOT);
-	CreateConVar("rp_sapin_speed", "120.0");
+	CreateConVar("rp_sapin_speed", "60.0");
 	
 	HookEvent("round_start", 		EventRoundStart, 	EventHookMode_Post);
 	
@@ -134,7 +134,7 @@ public Action SapinLoop(Handle timer, any none) {
 		
 		Entity_GetModel(stack[rand], tmp, sizeof(tmp));
 		float dist = 32.0;
-		amount = Math_GetRandomInt(3, 6);
+		amount = Math_GetRandomInt(1, 3);
 		if( StrEqual(tmp, "models/models_kit/xmas/xmastree.mdl") ) {
 			amount += 5 + Math_GetRandomPow(1, 20);
 			dist = 128.0;
@@ -149,6 +149,7 @@ public Action SapinLoop(Handle timer, any none) {
 			pos2[2] = (pos[2] + 64.0);
 			
 			ServerCommand("rp_zombie_die %f %f %f", pos2[0], pos2[1], pos2[2]);
+			CPrintToChatAll("{red}Ho ! Ho ! Ho !{default} ");
 		}
 	}
 	
