@@ -127,7 +127,7 @@ public Action SapinLoop(Handle timer, any none) {
 	}
 	
 	
-	if( amount > 0 && GetClientCount(true) >= 1 ) {
+	if( amount > 0 && GetClientCount(true) >= 3 ) {
 		int rand = Math_GetRandomInt(0, amount - 1);
 		Entity_GetAbsOrigin(stack[rand], pos);
 		
